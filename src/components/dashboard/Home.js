@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,6 +41,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import HomeRight from "./homeRight";
 import Barchart from "./barChart";
 import FilterModal from "./filterModal";
+import moment from "moment";
+
+import { getTaskQueueForDay, getMonthlyStats } from "../../ApiHelper";
+
 const currencies = [
   {
     value: "USD",
@@ -84,18 +88,68 @@ const useStyles = makeStyles({
 function Home() {
   const classes = useStyles();
   const [currency, setCurrency] = useState("EUR");
+  const [selectedDateQueue, setSelectedDateQueue] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
-
+  const [monthlyStats, setMontlyStats] = useState(null);
+  const [user, setUser] = useState(false);
+  const [queueDate, setQueueDate] = useState(new Date());
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
+
+  const getTaskQueueByDate = (date) => {
+    // setLoading(true);
+    console.log("This is the date", date);
+    // || "2020-12-13"
+    getTaskQueueForDay(date).then(
+      (res) => {
+        console.log(res);
+        if (res.statusText === "OK") {
+          console.log("This is the task queue by date", res.data);
+          setSelectedDateQueue(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error", error);
+      }
+    );
+  };
+
+  const myMonthlyStats = () => {
+    // || "2020-12-13"
+    getMonthlyStats().then(
+      (res) => {
+        console.log(res);
+        if (res.statusText === "OK") {
+          console.log("This is the monthlly stats", res.data.table);
+          setMontlyStats(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      setUser(JSON.parse(localStorage.getItem("user")));
+      console.log("This is user", JSON.parse(localStorage.getItem("user")));
+      getTaskQueueByDate();
+      myMonthlyStats();
+    } else {
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <DashboardContainer>
       <FilterModal filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
       <Grid container style={{ margin: 0, padding: 0 }}>
         <Grid item xs={12} lg={8}>
           <Title>
-            <Titleheading>Welcome back Coach Smith!</Titleheading>
+            <Titleheading>{`Welcome back ${
+              user.first_name + " " + user.last_name
+            }!`}</Titleheading>
             <Titleparagrapg>
               You have 15 unread messages in your RS Text Chat feed.{" "}
               <span style={{ color: "#3871DA" }}>
@@ -108,15 +162,23 @@ function Home() {
               <Grid item xs={12} lg={6}>
                 <TableHeaderCol1Heading>Team Queue</TableHeaderCol1Heading>
                 <TableHeaderCol2P>
-                  You have <span style={{ color: "#3871DA" }}>13 items</span> in
-                  your queue
+                  You have{" "}
+                  <span style={{ color: "#3871DA" }}>
+                    {selectedDateQueue ? selectedDateQueue.length : 0} items
+                  </span>{" "}
+                  in your queue
                 </TableHeaderCol2P>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <TableHeaderRight>
                   <DateField>
                     <TextField
-                      type='date'
+                      type="date"
+                      onChange={(e) => {
+                        // setQueueDate(e.target.value);
+                        getTaskQueueByDate(e.target.value);
+                      }}
+                      // value={queueDate}
                       InputProps={{ disableUnderline: true }}
                       fullWidth={true}
                       style={{ zIndex: 0 }}
@@ -124,14 +186,15 @@ function Home() {
                   </DateField>
                   <FilterField
                     onClick={() => setFilterOpen(true)}
-                    filterOpen={filterOpen}>
+                    filterOpen={filterOpen}
+                  >
                     <FilterText filterOpen={filterOpen}>Filter</FilterText>
                     <FilterIcon filterOpen={filterOpen} />
                   </FilterField>
                 </TableHeaderRight>
               </Grid>
             </Grid>
-            <Table />
+            <Table selectedDateQueue={selectedDateQueue} />
             <TableFooter>
               <TableFooterText>View More (10)</TableFooterText>
             </TableFooter>
@@ -164,7 +227,8 @@ function Home() {
                           InputProps={{
                             disableUnderline: true,
                             className: classes.input,
-                          }}>
+                          }}
+                        >
                           {currencies.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
                               {option.label}
@@ -173,10 +237,12 @@ function Home() {
                         </TextField>
                       </MonthField>
                     </MM>
-                    <Count>375</Count>
+                    <Count>
+                      {monthlyStats ? monthlyStats.total_messages : 0}
+                    </Count>
                   </ChartTop>
                   <ChartDivS>
-                    <Chart />
+                    <Chart monthlyStats={monthlyStats} />
                   </ChartDivS>
 
                   <ChartFooter>
@@ -188,7 +254,7 @@ function Home() {
                           color: "#0091FF",
                         }}
                       />
-                      <ChartFooterContent>Twitter DM’s</ChartFooterContent>
+                      <ChartFooterContent>By Recruites</ChartFooterContent>
                     </ChartFooterButton>
                     <ChartFooterButton2>
                       <FiberManualRecordIcon
@@ -198,7 +264,7 @@ function Home() {
                           color: "#8BB14C",
                         }}
                       />
-                      <ChartFooterContent>Personal Text</ChartFooterContent>
+                      <ChartFooterContent>Average Daily</ChartFooterContent>
                     </ChartFooterButton2>
                     <ChartFooterButton3>
                       <FiberManualRecordIcon
@@ -209,7 +275,7 @@ function Home() {
                           marginLeft: "3px",
                         }}
                       />
-                      <ChartFooterContent>RS Text</ChartFooterContent>
+                      <ChartFooterContent>Toal DM</ChartFooterContent>
                     </ChartFooterButton3>
                   </ChartFooter>
                 </ChartDiv>
@@ -239,7 +305,8 @@ function Home() {
                           InputProps={{
                             disableUnderline: true,
                             className: classes.input,
-                          }}>
+                          }}
+                        >
                           {currencies.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
                               {option.label}
@@ -248,10 +315,12 @@ function Home() {
                         </TextField>
                       </MonthField>
                     </MM>
-                    <Count>375</Count>
+                    <Count>
+                      {monthlyStats ? monthlyStats.total_messages : 0}
+                    </Count>
                   </ChartTop>
                   <div>
-                    <Barchart />
+                    <Barchart monthlyStats={monthlyStats} />
                   </div>
 
                   <ChartFooter>
@@ -293,7 +362,7 @@ function Home() {
           </ChartSection>
         </Grid>
         <Grid item xs={12} lg={4}>
-          <HomeRight />
+          <HomeRight user={user && user} />
         </Grid>
       </Grid>
     </DashboardContainer>

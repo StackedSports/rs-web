@@ -75,7 +75,7 @@ const useStyles = makeStyles({
   },
 });
 
-function HomeRight() {
+function HomeRight(props) {
   const classes = useStyles();
   const [currency, setCurrency] = React.useState("EUR");
 
@@ -88,7 +88,9 @@ function HomeRight() {
         <Num>1.</Num>
         <AvatartInfo>
           <Avatar src={AvatarImg} />
-          <AvatarName>Coach Smith</AvatarName>
+          <AvatarName>
+            {props.user.first_name + " " + props.user.last_name}
+          </AvatarName>
           <AvatarButton>Score Details</AvatarButton>
         </AvatartInfo>
       </PersonContainer>
@@ -137,7 +139,8 @@ function HomeRight() {
               InputProps={{
                 disableUnderline: true,
                 className: classes.input,
-              }}>
+              }}
+            >
               {currencies.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}

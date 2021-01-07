@@ -1,9 +1,9 @@
+import CanvasJSReact from "./canvaJS/canvasjs.react";
 var React = require("react");
 var Component = React.Component;
-import CanvasJSReact from "./canvaJS/canvasjs.react";
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-const Chart = () => {
+const Chart = (props) => {
   const options = {
     animationEnabled: true,
 
@@ -14,9 +14,20 @@ const Chart = () => {
         indexLabel: "{name}: {y}",
         yValueFormatString: "#,###'%'",
         dataPoints: [
-          { name: "Unsatisfied", y: 2 },
-          { name: "Very Unsatisfied", y: 11 },
-          { name: "Very Satisfied", y: 10 },
+          {
+            name: "Recruite Messages",
+            y: props.monthlyStats
+              ? props.monthlyStats.total_recruits_messaged
+              : 0,
+          },
+          {
+            name: "Average Daily Messages",
+            y: props.monthlyStats ? props.monthlyStats.avg_daily_messages : 0,
+          },
+          {
+            name: "Total DM's",
+            y: props.monthlyStats ? props.monthlyStats.total_dms : 0,
+          },
         ],
       },
     ],
@@ -25,7 +36,7 @@ const Chart = () => {
     <div>
       <CanvasJSChart
         options={options}
-        width='342.5px'
+        width="342.5px"
         /* onRef={ref => this.chart = ref} */
       />
       {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}

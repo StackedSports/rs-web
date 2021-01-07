@@ -1,3 +1,7 @@
 .body {
   font-family: ProximaNovaRegular;
 }
+
+.Toastify__progress-bar--default {
+  background: #348ef7 !important;
+}
