@@ -154,7 +154,7 @@ export const FormButton = styled.button`
   border: none;
   border-radius: 4px;
   color: #3fa2f9;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   background: #ffffff;
   width: 45%;
@@ -168,7 +168,7 @@ export const FormButton1 = styled.button`
   border: none;
   border-radius: 4px;
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   width: 45%;
   height: 40px;
   cursor: pointer;
@@ -184,6 +184,7 @@ export const Text = styled.span`
 export const RememberWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 1.5rem;
 `;
 
 export const Underline = styled.div`

@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "./App.css";
 import Signup from "./components/signup";
 import Dashboard from "./components/dashboard/index";
@@ -7,9 +8,9 @@ function App() {
   return (
     <div className='body'>
       <Router>
-        <Dashboard />
         <Switch>
-          <Route path='/' exact component={Home} />
+          <Route path='/' exact component={Signup} />
+          <Route path='/dashboard' exact component={Dashboard} />
         </Switch>
       </Router>
     </div>

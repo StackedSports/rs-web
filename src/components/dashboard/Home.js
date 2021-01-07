@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Chart from "./chart";
-import Chart2 from "./chart2";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import {
@@ -40,6 +39,8 @@ import {
 import Table from "./table";
 import MenuItem from "@material-ui/core/MenuItem";
 import HomeRight from "./homeRight";
+import Barchart from "./barChart";
+import FilterModal from "./filterModal";
 const currencies = [
   {
     value: "USD",
@@ -82,13 +83,15 @@ const useStyles = makeStyles({
 });
 function Home() {
   const classes = useStyles();
-  const [currency, setCurrency] = React.useState("EUR");
+  const [currency, setCurrency] = useState("EUR");
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
   return (
     <DashboardContainer>
+      <FilterModal filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
       <Grid container style={{ margin: 0, padding: 0 }}>
         <Grid item xs={12} lg={8}>
           <Title>
@@ -119,9 +122,11 @@ function Home() {
                       style={{ zIndex: 0 }}
                     />
                   </DateField>
-                  <FilterField>
-                    <FilterText>Filter</FilterText>
-                    <FilterIcon />
+                  <FilterField
+                    onClick={() => setFilterOpen(true)}
+                    filterOpen={filterOpen}>
+                    <FilterText filterOpen={filterOpen}>Filter</FilterText>
+                    <FilterIcon filterOpen={filterOpen} />
                   </FilterField>
                 </TableHeaderRight>
               </Grid>
@@ -246,7 +251,7 @@ function Home() {
                     <Count>375</Count>
                   </ChartTop>
                   <div>
-                    <Chart />
+                    <Barchart />
                   </div>
 
                   <ChartFooter>

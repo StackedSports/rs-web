@@ -14,7 +14,7 @@ import { IoIosSettings } from "react-icons/io";
 export const SidebarData = [
   {
     title: "Dashboard",
-    path: "/overview",
+    path: "/",
     icon: (
       <BiHome
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
@@ -26,7 +26,7 @@ export const SidebarData = [
   },
   {
     title: "Contact",
-    path: "/reports",
+    path: "/",
     icon: (
       <BsPerson
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
@@ -38,7 +38,7 @@ export const SidebarData = [
   },
   {
     title: "Message Create",
-    path: "/products",
+    path: "/",
     icon: (
       <BiCommentAdd
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
@@ -48,7 +48,7 @@ export const SidebarData = [
   },
   {
     title: "Media",
-    path: "/team",
+    path: "/",
     icon: (
       <TiImageOutline
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
@@ -58,7 +58,7 @@ export const SidebarData = [
   },
   {
     title: "Publishing",
-    path: "/messages",
+    path: "/",
     icon: (
       <TiSocialTwitter
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
@@ -71,7 +71,7 @@ export const SidebarData = [
   },
   {
     title: "Reports",
-    path: "/support",
+    path: "/",
     icon: (
       <BsBarChart
         style={{
@@ -85,7 +85,7 @@ export const SidebarData = [
   },
   {
     title: "Settings",
-    path: "/support",
+    path: "/",
     icon: (
       <IoIosSettings
         style={{ height: "24px", width: "24px", opacity: 0.9 }}

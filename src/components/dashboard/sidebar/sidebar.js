@@ -11,20 +11,22 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
 import { BiChat, BiBell } from "react-icons/bi";
-
+import Modal from "../model";
+import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
 import ForumOutlinedIcon from "@material-ui/icons/ForumOutlined";
 
 const Nav = styled.div`
-  background: white;
   height: 70px;
   display: flex;
+  background: white;
   justify-content: flex-start;
   align-items: center;
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
+  z-index: 100;
   @media screen and (max-width: 1000px) {
     display: none;
   }
@@ -173,11 +175,21 @@ const HeaderIcons = styled.div`
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const setOpen = (a) => {
+    setShowModal(a);
+  };
 
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
     <>
+      <Modal open={showModal} setShowModal={setShowModal} />
       <IconContext.Provider value={{ color: "#fff" }}>
         <NavResponsive>
           <IoIosMenu
@@ -268,7 +280,7 @@ const Sidebar = () => {
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
-            <Button>+ New</Button>
+            <Button onClick={openModal}>+ New</Button>
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })}

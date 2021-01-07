@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import FilterListIcon from "@material-ui/icons/FilterList";
-
+import { FaSlidersH } from "react-icons/fa";
 export const DashboardContainer = styled.div`
   margin-left: 270px;
   background: rgb(233, 234, 239);
@@ -83,8 +82,9 @@ export const DateField = styled.div`
   align-items: center;
 
   @media screen and (max-width: 1000px) {
-    padding-left: 0rem;
+    padding-left: 1rem;
     margin-left: 0px;
+    width: 122px;
   }
 `;
 
@@ -102,13 +102,17 @@ export const FilterField = styled.div`
   align-items: center;
   margin: 1rem;
   width: 130px;
+  background: ${({ filterOpen }) => (filterOpen ? "#1DA1F2" : "white")};
 `;
 
-export const FilterIcon = styled(FilterListIcon)``;
+export const FilterIcon = styled(FaSlidersH)`
+  color: ${({ filterOpen }) => (filterOpen ? "white" : "#222222")};
+`;
 
 export const FilterText = styled.p`
   font-size: 14px;
   font-family: ProximaNovaBold;
+  color: ${({ filterOpen }) => (filterOpen ? "white" : "#222222")};
 `;
 
 export const TableFooter = styled.div`
@@ -228,6 +232,9 @@ export const ChartFooterButton = styled.div`
   width: 116.8px;
   border: 0.8px solid #e1e1e1;
   border-radius: 4px;
+  @media screen and (max-width: 1000px) {
+    margin: 1px;
+  }
 `;
 
 export const ChartFooterContent = styled.div`
@@ -251,6 +258,9 @@ export const ChartFooterButton2 = styled.div`
   width: 112px;
   border: 0.8px solid #e1e1e1;
   border-radius: 4px;
+  @media screen and (max-width: 1000px) {
+    margin: 1px;
+  }
 `;
 
 export const ChartFooterButton3 = styled.div`
@@ -262,6 +272,9 @@ export const ChartFooterButton3 = styled.div`
   width: 87px;
   border: 0.8px solid #e1e1e1;
   border-radius: 4px;
+  @media screen and (max-width: 1000px) {
+    margin: 1px;
+  }
 `;
 
 export const ChartDivS = styled.div`

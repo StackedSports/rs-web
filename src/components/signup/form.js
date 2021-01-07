@@ -34,7 +34,7 @@ import Logo from "../../images/logo.png";
 import { BsEyeFill } from "react-icons/bs";
 export default function Signin() {
   const [checked, setChecked] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleCheckboxChange = (event) => {
     console.log("checked :: ", checked);
     setChecked(!checked);
@@ -45,7 +45,7 @@ export default function Signin() {
         <FormWrap>
           <Header>
             <Logoimage src={Logo}></Logoimage>
-            <HomeButton>Home</HomeButton>
+            <HomeButton to='/dashboard'>Home</HomeButton>
           </Header>
           <FormContent>
             <Form action='#'>
@@ -75,7 +75,7 @@ export default function Signin() {
                   }}
                 />
                 <FormInput
-                  type='password'
+                  type={showPassword ? "text" : "password"}
                   required
                   placeholder='Your Password'></FormInput>
                 <BsEyeFill
@@ -85,6 +85,7 @@ export default function Signin() {
                     height: "16px",
                     width: "20px",
                   }}
+                  onClick={() => setShowPassword(!showPassword)}
                 />
               </FormInputWrap>
               <FormButtonWrap>
@@ -92,7 +93,6 @@ export default function Signin() {
                 <FormButton1 type='submit'>login</FormButton1>
               </FormButtonWrap>
 
-              <Text>Forgot password</Text>
               <RememberWrap>
                 <label>
                   <Checkbox checked={checked} onChange={handleCheckboxChange} />
