@@ -3,11 +3,6 @@ import { Bar } from "react-chartjs-2";
 
 export default class Barchart extends React.Component {
   render() {
-    console.log(
-      "THis is the ",
-      this.props.monthlyStats &&
-        this.props.monthlyStats.total_messages_by_period
-    );
     var lbl = [];
     var ds = [];
     const data =

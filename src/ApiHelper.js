@@ -86,9 +86,16 @@ export const getTaskQueue = () => {
 };
 
 export const getTaskQueueForDay = (date) => {
+  var endpoint = "";
+  console.log("This is date", date === null);
+  if (date === null) {
+    endpoint = "task_queues";
+  } else {
+    endpoint = `task_queues?date=${date}`;
+  }
   return axios({
     method: "get",
-    url: URL + `task_queues?date=${date}`,
+    url: URL + endpoint,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",

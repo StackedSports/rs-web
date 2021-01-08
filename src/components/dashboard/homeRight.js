@@ -78,7 +78,8 @@ const useStyles = makeStyles({
 function HomeRight(props) {
   const classes = useStyles();
   const [currency, setCurrency] = React.useState("EUR");
-
+  // console.log("These are stats in homeright", props.monthlyStats);
+  var stats = props.monthlyStats && props.monthlyStats;
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
@@ -99,15 +100,15 @@ function HomeRight(props) {
         <InfoBox>
           <InfoSubBox style={{ paddingLeft: "21px" }}>
             <InfoP>DM’s</InfoP>
-            <InfoH>359</InfoH>
+            <InfoH>{stats ? stats.total_dms : 0}</InfoH>
           </InfoSubBox>
           <InfoSubBox>
             <InfoP>Personal Text</InfoP>
-            <InfoH>234</InfoH>
+            <InfoH>{stats ? stats.total_personal_texts : 0}</InfoH>
           </InfoSubBox>
           <InfoSubBox style={{ paddingRight: "21px" }}>
             <InfoP>RS Text</InfoP>
-            <InfoH>18</InfoH>
+            <InfoH>{stats ? stats.total_rs_texts : 0}</InfoH>
           </InfoSubBox>
         </InfoBox>
       </InfoSection>
@@ -151,17 +152,25 @@ function HomeRight(props) {
         </MM>
 
         <ListSec>
-          <ListItem>
-            <ListNum>1.</ListNum>
-            <ListAvatartSec>
-              <ListAvatart src={Ex1} />
-              <ListStart src={Start} />
-            </ListAvatartSec>
-            <ListName>Coach Smith</ListName>
-            <ListNumber>611</ListNumber>
-          </ListItem>
+          {stats &&
+            stats.users.map((user, index) => {
+              console.log("THis is user", user);
+              if (index < 4) {
+                return (
+                  <ListItem>
+                    <ListNum>{index + 1}.</ListNum>
+                    <ListAvatartSec>
+                      <ListAvatart src={user.table.image} />
+                      <ListStart src={Start} />
+                    </ListAvatartSec>
+                    <ListName>{user.table.name}</ListName>
+                    <ListNumber>{user.table.total}</ListNumber>
+                  </ListItem>
+                );
+              }
+            })}
 
-          <ListItem>
+          {/* <ListItem>
             <ListNum>2.</ListNum>
             <ListAvatartSec>
               <ListAvatart src={Ex1} />
@@ -179,7 +188,7 @@ function HomeRight(props) {
             </ListAvatartSec>
             <ListName>Coach Smith</ListName>
             <ListNumber>611</ListNumber>
-          </ListItem>
+          </ListItem> */}
         </ListSec>
       </StackSecion>
       <ListBottom>

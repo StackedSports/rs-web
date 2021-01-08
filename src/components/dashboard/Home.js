@@ -110,7 +110,7 @@ function Home() {
         }
       },
       (error) => {
-        console.log("this is error", error);
+        console.log("this is error taks queue by date", error);
       }
     );
   };
@@ -119,7 +119,6 @@ function Home() {
     // || "2020-12-13"
     getMonthlyStats().then(
       (res) => {
-        console.log(res);
         if (res.statusText === "OK") {
           console.log("This is the monthlly stats", res.data.table);
           setMontlyStats(res.data.table);
@@ -135,7 +134,7 @@ function Home() {
     if (localStorage.getItem("user")) {
       setUser(JSON.parse(localStorage.getItem("user")));
       console.log("This is user", JSON.parse(localStorage.getItem("user")));
-      getTaskQueueByDate();
+      getTaskQueueByDate(null);
       myMonthlyStats();
     } else {
       window.location.href = "/";
@@ -251,10 +250,10 @@ function Home() {
                         style={{
                           width: "12px",
                           height: "12px",
-                          color: "#0091FF",
+                          color: "#c0504e",
                         }}
                       />
-                      <ChartFooterContent>By Recruites</ChartFooterContent>
+                      <ChartFooterContent>Personal Texts</ChartFooterContent>
                     </ChartFooterButton>
                     <ChartFooterButton2>
                       <FiberManualRecordIcon
@@ -264,18 +263,18 @@ function Home() {
                           color: "#8BB14C",
                         }}
                       />
-                      <ChartFooterContent>Average Daily</ChartFooterContent>
+                      <ChartFooterContent>Total DM's</ChartFooterContent>
                     </ChartFooterButton2>
                     <ChartFooterButton3>
                       <FiberManualRecordIcon
                         style={{
                           width: "12px",
                           height: "12px",
-                          color: "#373D4A",
+                          color: "#4f81bc",
                           marginLeft: "3px",
                         }}
                       />
-                      <ChartFooterContent>Toal DM</ChartFooterContent>
+                      <ChartFooterContent>By Recruites</ChartFooterContent>
                     </ChartFooterButton3>
                   </ChartFooter>
                 </ChartDiv>
@@ -362,7 +361,10 @@ function Home() {
           </ChartSection>
         </Grid>
         <Grid item xs={12} lg={4}>
-          <HomeRight user={user && user} />
+          <HomeRight
+            user={user && user}
+            monthlyStats={monthlyStats && monthlyStats}
+          />
         </Grid>
       </Grid>
     </DashboardContainer>

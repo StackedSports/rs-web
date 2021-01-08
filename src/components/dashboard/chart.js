@@ -21,8 +21,8 @@ const Chart = (props) => {
               : 0,
           },
           {
-            name: "Average Daily Messages",
-            y: props.monthlyStats ? props.monthlyStats.avg_daily_messages : 0,
+            name: "Personal texts",
+            y: props.monthlyStats ? props.monthlyStats.total_personal_texts : 0,
           },
           {
             name: "Total DM's",
