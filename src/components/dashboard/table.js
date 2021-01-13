@@ -119,7 +119,8 @@ export default function AcccessibleTable(props) {
                         fontSize: 13,
                       }}
                     >
-                      Individuals ({item.recipients && item.recipients.count})
+                      Individuals{" "}
+                      {item.recipients && "(" + item.recipients.count + ")"}
                     </TableCell>
                     <TableCell
                       align="left"
