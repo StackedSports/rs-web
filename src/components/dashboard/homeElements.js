@@ -12,7 +12,7 @@ export const DashboardContainer = styled.div`
 
 export const Title = styled.div`
   margin: 2rem;
-  margin-left: 1rem;
+  // margin-left: 1rem;
 `;
 
 export const Titleheading = styled.h1`
@@ -28,13 +28,15 @@ export const Titleparagrapg = styled.p`
   color: #222222;
   font-size: 16px;
   font-weight: 600;
+  margin: 0px;
   letter-spacing: 0;
   line-height: 19px;
 `;
 
 export const TableSection = styled.div`
   margin: 2rem;
-  margin-left: 1rem;
+  margin-right: 0rem;
+  // margin-left: 1rem;
   background: white;
   padding: 1rem;
   border-radius: 5px;
@@ -61,10 +63,43 @@ export const TableHeaderCol2P = styled.p`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 16px;
+  margin: 0px;
 `;
 
 export const TableHeaderRight = styled.div`
   display: flex;
+`;
+
+export const MonthField = styled.div`
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d8d8d8;
+  width: 130px;
+  height: 30px;
+  border-radius: 5px;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MonthField2 = styled.div`
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d8d8d8;
+  width: 130px;
+  height: 30px;
+  border-radius: 5px;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const DateField = styled.div`
@@ -72,11 +107,11 @@ export const DateField = styled.div`
   border-style: solid;
   border-color: #d8d8d8;
   display: flex;
-  padding: 5px;
+  // padding: 5px;
   padding-left: 1rem;
   padding-right: 1rem;
   width: 130px;
-  height: 30px;
+  height: 40px;
   border-radius: 5px;
   margin: 1rem;
   align-items: center;
@@ -92,10 +127,10 @@ export const FilterField = styled.div`
   border-width: 1px;
   border-style: solid;
   border-color: #d8d8d8;
-  padding: 5px;
+  // padding: 5px;
   padding-left: 1rem;
   padding-right: 1rem;
-  height: 30px;
+  height: 40px;
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
@@ -111,6 +146,7 @@ export const FilterIcon = styled(FaSlidersH)`
 
 export const FilterText = styled.p`
   font-size: 14px;
+  margin: 0px;
   font-family: ProximaNovaBold;
   color: ${({ filterOpen }) => (filterOpen ? "white" : "#222222")};
 `;
@@ -127,12 +163,14 @@ export const TableFooterText = styled.h1`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 19px;
+  margin: 0px;
   cursor: pointer;
 `;
 
 export const ChartSection = styled.div`
   margin: 2rem;
-  margin-left: 1rem;
+  // margin-left: 1rem;
+  margin-right: 0rem;
 `;
 
 export const ChartDiv = styled.div`
@@ -174,37 +212,6 @@ export const MMH2 = styled.h2`
   font-weight: bold;
   letter-spacing: -0.1px;
   line-height: 22px;
-`;
-
-export const MonthField = styled.div`
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d8d8d8;
-  width: 130px;
-  height: 30px;
-  border-radius: 5px;
-  align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 7rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-export const MonthField2 = styled.div`
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d8d8d8;
-  width: 130px;
-  height: 30px;
-  border-radius: 5px;
-  align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 7rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export const Count = styled.h1`

@@ -32,24 +32,37 @@ import Start from "../../images/star.svg";
 import AvatarImg from "../../images/avatar.jpeg";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 const currencies = [
   {
-    value: "USD",
-    label: "$",
+    value: "1",
+    label: "Last 30 Days",
   },
   {
-    value: "EUR",
+    value: "2",
     label: "This Month",
   },
   {
-    value: "BTC",
-    label: "฿",
+    value: "3",
+    label: "This Quarter",
   },
   {
-    value: "JPY",
-    label: "¥",
+    value: "4",
+    label: "This Year",
+  },
+  {
+    value: "5",
+    label: "Last Month",
+  },
+  {
+    value: "6",
+    label: "Last Quarter",
+  },
+  {
+    value: "7",
+    label: "Last Year",
   },
 ];
 
@@ -77,7 +90,7 @@ const useStyles = makeStyles({
 
 function HomeRight(props) {
   const classes = useStyles();
-  const [currency, setCurrency] = React.useState("EUR");
+  const [currency, setCurrency] = React.useState("This Month");
   // console.log("These are stats in homeright", props.monthlyStats);
   var stats = props.monthlyStats && props.monthlyStats;
   const handleChange = (event) => {
@@ -117,7 +130,23 @@ function HomeRight(props) {
         <MM>
           <MMH>The StackUp</MMH>
           <MonthField>
-            <TextField
+            <DropdownButton
+              drop={"right"}
+              id="dropdown-basic-button"
+              title={currency}
+            >
+              {currencies.map((option) => (
+                <Dropdown.Item
+                  onClick={(e) => {
+                    setCurrency(option.label);
+                  }}
+                >
+                  {" "}
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </DropdownButton>
+            {/* <TextField
               select
               value={currency}
               style={{
@@ -148,6 +177,8 @@ function HomeRight(props) {
                 </MenuItem>
               ))}
             </TextField>
+          
+           */}
           </MonthField>
         </MM>
 
@@ -161,7 +192,7 @@ function HomeRight(props) {
                     <ListNum>{index + 1}.</ListNum>
                     <ListAvatartSec>
                       <ListAvatart src={user.table.image} />
-                      <ListStart src={Start} />
+                      {index === 0 && <ListStart src={Start} />}
                     </ListAvatartSec>
                     <ListName>{user.table.name}</ListName>
                     <ListNumber>{user.table.total}</ListNumber>

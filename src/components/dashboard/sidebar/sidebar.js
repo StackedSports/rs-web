@@ -94,9 +94,10 @@ const Button = styled(Link)`
   box-sizing: border-box;
   font-weight: bold;
   color: white;
-  font-size: 20px;
+  font-size: 14px;
   outline: none;
   border: none;
+  height: 40px;
   cursor: pointer;
   display: flex;
   text-decoration: none;
@@ -234,8 +235,9 @@ const Sidebar = () => {
               }}
             />
             <FormInput
-              type='email'
-              placeholder='Search for contacts by name, phone number, Twitter Handle or School'></FormInput>
+              type="email"
+              placeholder="Search for contacts by name, phone number, Twitter Handle or School"
+            ></FormInput>
           </FormInputWrap>
           <LeftSectionNav>
             <div
@@ -243,7 +245,8 @@ const Sidebar = () => {
                 height: "70px",
                 width: "2px",
                 background: "#d8d8d8",
-              }}></div>
+              }}
+            ></div>
             <BiBell
               style={{
                 color: "#222222",
@@ -259,7 +262,8 @@ const Sidebar = () => {
                 height: "70px",
                 width: "2px",
                 background: "#d8d8d8",
-              }}></div>
+              }}
+            ></div>
             <BiChat
               style={{
                 color: "#222222",
@@ -274,7 +278,8 @@ const Sidebar = () => {
                 height: "70px",
                 width: "2px",
                 background: "#d8d8d8",
-              }}></div>
+              }}
+            ></div>
             <Logoimage src={Logo}></Logoimage>
           </LeftSectionNav>
         </Nav>

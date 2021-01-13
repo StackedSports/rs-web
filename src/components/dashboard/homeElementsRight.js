@@ -132,7 +132,7 @@ export const MonthField = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: 30px;
 `;
 
 export const ListSec = styled.div``;

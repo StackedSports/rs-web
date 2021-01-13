@@ -58,7 +58,7 @@ const Heading2 = styled.p`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 17px;
-  margin: 0;
+  margin: 0px;
   padding: 0;
 `;
 
@@ -69,6 +69,7 @@ const Option = styled.p`
   letter-spacing: 0;
   line-height: 17px;
   cursor: pointer;
+  margin: 0px;
 `;
 
 export default function TransitionsModal({ filterOpen, setFilterOpen }) {
@@ -89,7 +90,8 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
-        }}>
+        }}
+      >
         <Fade in={filterOpen}>
           <div className={classes.paper}>
             <Container>
@@ -97,7 +99,7 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
                 <Heading>Message Type</Heading>
                 <HeadingContainer>
                   <CheckCircleIcon
-                    fontSize='inherit'
+                    fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
                   />
                   <ListCol>
@@ -113,7 +115,7 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
                 <Heading>Sender</Heading>
                 <HeadingContainer>
                   <CheckCircleIcon
-                    fontSize='inherit'
+                    fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
                   />
                   <ListCol>
@@ -129,7 +131,7 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
                 <Heading>Message Status</Heading>
                 <HeadingContainer>
                   <CheckCircleIcon
-                    fontSize='inherit'
+                    fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
                   />
                   <ListCol>

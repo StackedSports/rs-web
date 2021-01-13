@@ -41,29 +41,41 @@ import MenuItem from "@material-ui/core/MenuItem";
 import HomeRight from "./homeRight";
 import Barchart from "./barChart";
 import FilterModal from "./filterModal";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import moment from "moment";
 
 import { getTaskQueueForDay, getMonthlyStats } from "../../ApiHelper";
 
 const currencies = [
   {
-    value: "USD",
-    label: "$",
+    value: "1",
+    label: "Last 30 Days",
   },
   {
-    value: "EUR",
+    value: "2",
     label: "This Month",
   },
   {
-    value: "BTC",
-    label: "฿",
+    value: "3",
+    label: "This Quarter",
   },
   {
-    value: "JPY",
-    label: "¥",
+    value: "4",
+    label: "This Year",
+  },
+  {
+    value: "5",
+    label: "Last Month",
+  },
+  {
+    value: "6",
+    label: "Last Quarter",
+  },
+  {
+    value: "7",
+    label: "Last Year",
   },
 ];
-
 const useStyles = makeStyles({
   underline: {
     "&&&:before": {
@@ -87,7 +99,7 @@ const useStyles = makeStyles({
 });
 function Home() {
   const classes = useStyles();
-  const [currency, setCurrency] = useState("EUR");
+  const [currency, setCurrency] = useState("This Month");
   const [selectedDateQueue, setSelectedDateQueue] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [monthlyStats, setMontlyStats] = useState(null);
@@ -157,7 +169,7 @@ function Home() {
             </Titleparagrapg>
           </Title>
           <TableSection>
-            <Grid container spacing={3} style={{ margin: 0, padding: 0 }}>
+            <Grid container style={{ margin: 0, padding: 0 }} direction>
               <Grid item xs={12} lg={6}>
                 <TableHeaderCol1Heading>Team Queue</TableHeaderCol1Heading>
                 <TableHeaderCol2P>
@@ -200,14 +212,30 @@ function Home() {
           </TableSection>
 
           <ChartSection>
-            <Grid container spacing={2} style={{ margin: 0, padding: 0 }}>
+            <Grid container style={{ margin: 0, padding: 0 }}>
               <Grid item xs={12} lg={6}>
-                <ChartDiv>
+                <ChartDiv style={{ marginRight: "0.5rem" }}>
                   <ChartTop>
                     <MM>
                       <MMH>Monthly Messages</MMH>
                       <MonthField>
-                        <TextField
+                        <DropdownButton
+                          id="dropdown-basic-button"
+                          title={currency}
+                          drop={"right"}
+                        >
+                          {currencies.map((option) => (
+                            <Dropdown.Item
+                              onClick={(e) => {
+                                setCurrency(option.label);
+                              }}
+                            >
+                              {" "}
+                              {option.label}
+                            </Dropdown.Item>
+                          ))}
+                        </DropdownButton>
+                        {/* <TextField
                           select
                           value={currency}
                           style={{
@@ -234,6 +262,7 @@ function Home() {
                             </MenuItem>
                           ))}
                         </TextField>
+                       */}
                       </MonthField>
                     </MM>
                     <Count>
@@ -280,12 +309,28 @@ function Home() {
                 </ChartDiv>
               </Grid>
               <Grid item xs={12} lg={6}>
-                <ChartDiv2>
+                <ChartDiv2 style={{ marginLeft: "0.5rem" }}>
                   <ChartTop>
                     <MM>
                       <MMH>Monthly Messages</MMH>
                       <MonthField>
-                        <TextField
+                        <DropdownButton
+                          id="dropdown-basic-button"
+                          title={currency}
+                          drop={"right"}
+                        >
+                          {currencies.map((option) => (
+                            <Dropdown.Item
+                              onClick={(e) => {
+                                setCurrency(option.label);
+                              }}
+                            >
+                              {" "}
+                              {option.label}
+                            </Dropdown.Item>
+                          ))}
+                        </DropdownButton>
+                        {/* <TextField
                           select
                           value={currency}
                           style={{
@@ -312,6 +357,7 @@ function Home() {
                             </MenuItem>
                           ))}
                         </TextField>
+                       */}
                       </MonthField>
                     </MM>
                     <Count>

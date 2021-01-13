@@ -39,6 +39,7 @@ const Heading = styled.p`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 17px;
+  margin: 0px;
 `;
 
 const Option = styled.p`
@@ -48,6 +49,7 @@ const Option = styled.p`
   letter-spacing: 0;
   line-height: 17px;
   cursor: pointer;
+  margin: 0px;
 `;
 
 export default function TransitionsModal({ open, setShowModal }) {
@@ -68,11 +70,12 @@ export default function TransitionsModal({ open, setShowModal }) {
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
-        }}>
+        }}
+      >
         <Fade in={open}>
           <>
             <ArrowDropUpIcon
-              fontSize='large'
+              fontSize="large"
               style={{ color: "white", position: "fixed", top: 149, left: 120 }}
             />
             <div className={classes.paper}>
