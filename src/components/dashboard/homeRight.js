@@ -154,7 +154,7 @@ function HomeRight(props) {
         <ListSec>
           {stats &&
             stats.users.map((user, index) => {
-              console.log("THis is user", user);
+              // console.log("THis is user", user);
               if (index < 4) {
                 return (
                   <ListItem>

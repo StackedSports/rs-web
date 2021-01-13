@@ -30,121 +30,149 @@ export default function AcccessibleTable(props) {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="caption table">
-        <TableHead
-          style={{
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderColor: "#d8d8d8",
-            background: "#F5F6F9",
-          }}
+      <div style={{ maxHeight: 190, overflow: "scroll", minWidth: 630 }}>
+        <Table
+          stickyHeader
+          className={classes.table}
+          aria-label="caption table"
         >
-          <TableRow>
-            <TableCell
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Send Time
-            </TableCell>
-            <TableCell
-              align="left"
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Sender
-            </TableCell>
-            <TableCell
-              align="left"
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Recipients
-            </TableCell>
-            <TableCell
-              align="left"
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Type
-            </TableCell>
-            <TableCell
-              align="left"
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Send Time
-            </TableCell>
-            <TableCell
-              align="left"
-              style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
-            >
-              Status
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.selectedDateQueue &&
-            props.selectedDateQueue.map((item) => {
-              return (
-                <TableRow>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ color: "#A4A4A4", fontWeight: 600, fontSize: 13 }}
-                  >
-                    {moment(item.send_at).format("h:mm:ss a")}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{ color: "#A4A4A4", fontWeight: 600, fontSize: 13 }}
-                  >
-                    {item.sender.first_name + " " + item.sender.last_name}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{ color: "#A4A4A4", fontWeight: 600, fontSize: 13 }}
-                  >
-                    Individuals ({item.recipients.count})
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{ color: "#A4A4A4", fontWeight: 600, fontSize: 13 }}
-                  >
-                    {item.item_type}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{ color: "#A4A4A4", fontWeight: 600, fontSize: 13 }}
-                  >
-                    {moment(item.next_send_at).format("h:mm:ss a")}
-                  </TableCell>
-                  <TableCell align="left">
-                    <div
+          <TableHead
+            style={{
+              borderStyle: "solid",
+              borderWidth: "1px",
+              borderColor: "#d8d8d8",
+              background: "#F5F6F9",
+            }}
+          >
+            <TableRow>
+              <TableCell
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Send Time
+              </TableCell>
+              <TableCell
+                align="left"
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Sender
+              </TableCell>
+              <TableCell
+                align="left"
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Recipients
+              </TableCell>
+              <TableCell
+                align="left"
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Type
+              </TableCell>
+              <TableCell
+                align="left"
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Send Time
+              </TableCell>
+              <TableCell
+                align="left"
+                style={{ color: "#222222", fontWeight: 600, fontSize: 14 }}
+              >
+                Status
+              </TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {props.selectedDateQueue &&
+              props.selectedDateQueue.map((item) => {
+                return (
+                  <TableRow>
+                    <TableCell
+                      component="th"
+                      scope="row"
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        color: "#A4A4A4",
+                        fontWeight: 600,
+                        fontSize: 13,
                       }}
                     >
-                      {item.status != "In Progress" && (
-                        <CheckCircleIcon
-                          fontSize="inherit"
-                          style={{ color: "#006644" }}
-                        />
-                      )}
-
-                      <p
+                      {moment(item.send_at).format("h:mm:ss a")}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      style={{
+                        color: "#A4A4A4",
+                        fontWeight: 600,
+                        fontSize: 13,
+                      }}
+                    >
+                      {item.sender
+                        ? item.sender.first_name + " " + item.sender.last_name
+                        : item.queued_by}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      style={{
+                        color: "#A4A4A4",
+                        fontWeight: 600,
+                        fontSize: 13,
+                      }}
+                    >
+                      Individuals ({item.recipients && item.recipients.count})
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      style={{
+                        color: "#A4A4A4",
+                        fontWeight: 600,
+                        fontSize: 13,
+                      }}
+                    >
+                      {item.item_type}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      style={{
+                        color: "#A4A4A4",
+                        fontWeight: 600,
+                        fontSize: 13,
+                      }}
+                    >
+                      {moment(item.next_send_at).format("h:mm:ss a")}
+                    </TableCell>
+                    <TableCell align="left">
+                      <div
                         style={{
-                          color: "#A4A4A4",
-                          margin: 0,
-                          padding: 0,
-                          fontWeight: 600,
-                          fontSize: 13,
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
                         }}
                       >
-                        {item.status}
-                      </p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          {/*         
+                        {item.status != "In Progress" && (
+                          <CheckCircleIcon
+                            fontSize="inherit"
+                            style={{ color: "#006644" }}
+                          />
+                        )}
+
+                        <p
+                          style={{
+                            color: "#A4A4A4",
+                            margin: 0,
+                            padding: 0,
+                            fontWeight: 600,
+                            fontSize: 13,
+                          }}
+                        >
+                          {item.status}
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            {/*         
           <TableRow>
             <TableCell
               component='th'
@@ -200,8 +228,9 @@ export default function AcccessibleTable(props) {
             </TableCell>
           </TableRow>
         */}
-        </TableBody>
-      </Table>
+          </TableBody>
+        </Table>{" "}
+      </div>
     </TableContainer>
   );
 }

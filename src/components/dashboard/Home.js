@@ -103,7 +103,7 @@ function Home() {
     // || "2020-12-13"
     getTaskQueueForDay(date).then(
       (res) => {
-        console.log(res);
+        console.log("THis is takee queue res", res);
         if (res.statusText === "OK") {
           console.log("This is the task queue by date", res.data);
           setSelectedDateQueue(res.data);
@@ -133,7 +133,7 @@ function Home() {
   useEffect(() => {
     if (localStorage.getItem("user")) {
       setUser(JSON.parse(localStorage.getItem("user")));
-      console.log("This is user", JSON.parse(localStorage.getItem("user")));
+      // console.log("This is user", JSON.parse(localStorage.getItem("user")));
       getTaskQueueByDate(null);
       myMonthlyStats();
     } else {
