@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
+import { Grid } from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import styled from "styled-components";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -31,7 +32,7 @@ const Container = styled.div`
 `;
 
 const ListCol = styled.div`
-  margin-right: 3rem;
+  margin-right: 2rem;
   @media screen and (max-width: 1000px) {
     margin-top: 1rem;
   }
@@ -72,19 +73,33 @@ const Option = styled.p`
   margin: 0px;
 `;
 
-export default function TransitionsModal({ filterOpen, setFilterOpen }) {
+export default function TransitionsModal(props) {
   const classes = useStyles();
 
   const handleClose = () => {
-    setFilterOpen(false);
+    props.setFilterOpen(false);
   };
+
+  const messageType = ["All types", "Personal Text", "Twitter DM’s", "Tweets"];
+  const messageSender = [
+    "All Team Members",
+    "Personal Text",
+    "Twitter DM’s",
+    "Tweets",
+  ];
+  const messageStatus = [
+    "All status (Excluding Draft)",
+    "Personal Text",
+    "Twitter DM’s",
+    "Tweets",
+  ];
 
   return (
     <div>
       <Modal
         disableEnforceFocus
         disableAutoFocus
-        open={filterOpen}
+        open={props.filterOpen}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -92,21 +107,42 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
           timeout: 500,
         }}
       >
-        <Fade in={filterOpen}>
+        <Fade in={props.filterOpen}>
           <div className={classes.paper}>
             <Container>
               <ListCol>
                 <Heading>Message Type</Heading>
                 <HeadingContainer>
-                  <CheckCircleIcon
-                    fontSize="inherit"
-                    style={{ color: "#006644", marginRight: 5 }}
-                  />
                   <ListCol>
-                    <Heading2>All types</Heading2>
-                    <Option>Personal Text</Option>
-                    <Option>Twitter DM’s</Option>
-                    <Option>Tweets</Option>
+                    {messageType.map((type) => {
+                      if (props.messageType === type) {
+                        return (
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ width: 110 }}
+                          >
+                            {" "}
+                            <CheckCircleIcon
+                              fontSize="inherit"
+                              style={{ color: "#006644", marginRight: 5 }}
+                            />
+                            <Heading2>{type}</Heading2>
+                          </Grid>
+                        );
+                      } else {
+                        return (
+                          <Option
+                            style={{ marginLeft: 20 }}
+                            onClick={() => {
+                              props.setMessageType(type);
+                            }}
+                          >
+                            {type}
+                          </Option>
+                        );
+                      }
+                    })}
                   </ListCol>
                 </HeadingContainer>
               </ListCol>
@@ -114,15 +150,44 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
               <ListCol>
                 <Heading>Sender</Heading>
                 <HeadingContainer>
-                  <CheckCircleIcon
+                  {/* <CheckCircleIcon
                     fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
-                  />
+                  /> */}
                   <ListCol>
-                    <Heading2>All Team Members</Heading2>
+                    {messageSender.map((type) => {
+                      if (props.messageSender === type) {
+                        return (
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ width: 150 }}
+                          >
+                            {" "}
+                            <CheckCircleIcon
+                              fontSize="inherit"
+                              style={{ color: "#006644", marginRight: 5 }}
+                            />
+                            <Heading2>{type}</Heading2>
+                          </Grid>
+                        );
+                      } else {
+                        return (
+                          <Option
+                            style={{ marginLeft: 20 }}
+                            onClick={() => {
+                              props.setMessageSender(type);
+                            }}
+                          >
+                            {type}
+                          </Option>
+                        );
+                      }
+                    })}
+                    {/* <Heading2>All Team Members</Heading2>
                     <Option>Personal Text</Option>
                     <Option>Twitter DM’s</Option>
-                    <Option>Tweets</Option>
+                    <Option>Tweets</Option> */}
                   </ListCol>
                 </HeadingContainer>
               </ListCol>
@@ -130,15 +195,44 @@ export default function TransitionsModal({ filterOpen, setFilterOpen }) {
               <ListCol>
                 <Heading>Message Status</Heading>
                 <HeadingContainer>
-                  <CheckCircleIcon
+                  {/* <CheckCircleIcon
                     fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
-                  />
+                  /> */}
                   <ListCol>
-                    <Heading2>All status (Excluding Draft)</Heading2>
+                    {messageStatus.map((type) => {
+                      if (props.messageStatus === type) {
+                        return (
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ width: 200 }}
+                          >
+                            {" "}
+                            <CheckCircleIcon
+                              fontSize="inherit"
+                              style={{ color: "#006644", marginRight: 5 }}
+                            />
+                            <Heading2>{type}</Heading2>
+                          </Grid>
+                        );
+                      } else {
+                        return (
+                          <Option
+                            style={{ marginLeft: 20 }}
+                            onClick={() => {
+                              props.setMessageStatus(type);
+                            }}
+                          >
+                            {type}
+                          </Option>
+                        );
+                      }
+                    })}
+                    {/* <Heading2>All status (Excluding Draft)</Heading2>
                     <Option>Personal Text</Option>
                     <Option>Twitter DM’s</Option>
-                    <Option>Tweets</Option>
+                    <Option>Tweets</Option> */}
                   </ListCol>
                 </HeadingContainer>
               </ListCol>

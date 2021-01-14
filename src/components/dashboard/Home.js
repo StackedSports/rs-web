@@ -101,7 +101,53 @@ function Home() {
   const classes = useStyles();
   const [currency, setCurrency] = useState("This Month");
   const [selectedDateQueue, setSelectedDateQueue] = useState(null);
+  const [selectedDateQueueCopy, setSelectedDateQueueCopy] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [messageType, setMessageType] = useState("All types");
+  const [messageSender, setMessageSender] = useState("All Team Members");
+  const [messageStatus, setMessageStatus] = useState(
+    "All status (Excluding Draft)"
+  );
+
+  const onMessageTypeChange = (type) => {
+    console.log("THis is message type", type);
+    setMessageType(type);
+    var filteredQueue = [];
+    if (selectedDateQueue != null) {
+      selectedDateQueueCopy.map((queue) => {
+        console.log("this is queue", queue);
+        if (queue.platform.name == type) {
+          filteredQueue.push(queue);
+        }
+      });
+    }
+    if (type === "All types") {
+      console.log("IT is coming herer", selectedDateQueueCopy);
+      setSelectedDateQueue(selectedDateQueueCopy);
+    } else {
+      setSelectedDateQueue(filteredQueue);
+    }
+  };
+
+  const onMessageStatusChange = (type) => {
+    console.log("THis is message type", type);
+    setMessageStatus(type);
+    var filteredQueue = [];
+    if (selectedDateQueue != null) {
+      selectedDateQueueCopy.map((queue) => {
+        console.log("this is queue", queue);
+        if (queue.platform.name == type) {
+          filteredQueue.push(queue);
+        }
+      });
+    }
+    if (type === "All types") {
+      console.log("IT is coming herer", selectedDateQueueCopy);
+      setSelectedDateQueue(selectedDateQueueCopy);
+    } else {
+      setSelectedDateQueue(filteredQueue);
+    }
+  };
   const [monthlyStats, setMontlyStats] = useState(null);
   const [user, setUser] = useState(false);
   const [queueDate, setQueueDate] = useState(new Date());
@@ -118,7 +164,10 @@ function Home() {
         console.log("THis is takee queue res", res);
         if (res.statusText === "OK") {
           console.log("This is the task queue by date", res.data);
+          var fileredQueue = [];
+
           setSelectedDateQueue(res.data);
+          setSelectedDateQueueCopy(res.data);
         }
       },
       (error) => {
@@ -154,7 +203,16 @@ function Home() {
   }, []);
   return (
     <DashboardContainer>
-      <FilterModal filterOpen={filterOpen} setFilterOpen={setFilterOpen} />
+      <FilterModal
+        messageType={messageType}
+        setMessageType={onMessageTypeChange}
+        messageSender={messageSender}
+        setMessageSender={setMessageSender}
+        messageStatus={messageStatus}
+        setMessageStatus={setMessageStatus}
+        filterOpen={filterOpen}
+        setFilterOpen={setFilterOpen}
+      />
       <Grid container style={{ margin: 0, padding: 0 }}>
         <Grid item xs={12} lg={8}>
           <Title>
@@ -205,7 +263,12 @@ function Home() {
                 </TableHeaderRight>
               </Grid>
             </Grid>
-            <Table selectedDateQueue={selectedDateQueue} />
+            <Table
+              messageType={messageType}
+              messageStatus={messageStatus}
+              messageSender={messageSender}
+              selectedDateQueue={selectedDateQueue}
+            />
             <TableFooter>
               <TableFooterText>View More (10)</TableFooterText>
             </TableFooter>
@@ -214,7 +277,7 @@ function Home() {
           <ChartSection>
             <Grid container style={{ margin: 0, padding: 0 }}>
               <Grid item xs={12} lg={6}>
-                <ChartDiv style={{ marginRight: "0.5rem" }}>
+                <ChartDiv>
                   <ChartTop>
                     <MM>
                       <MMH>Monthly Messages</MMH>
@@ -309,7 +372,7 @@ function Home() {
                 </ChartDiv>
               </Grid>
               <Grid item xs={12} lg={6}>
-                <ChartDiv2 style={{ marginLeft: "0.5rem" }}>
+                <ChartDiv2>
                   <ChartTop>
                     <MM>
                       <MMH>Monthly Messages</MMH>

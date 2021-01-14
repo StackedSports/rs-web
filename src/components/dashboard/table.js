@@ -38,10 +38,11 @@ export default function AcccessibleTable(props) {
         >
           <TableHead
             style={{
-              borderStyle: "solid",
-              borderWidth: "1px",
-              borderColor: "#d8d8d8",
+              // borderStyle: "solid",
+              // borderWidth: "1px",
+              // borderColor: "#d8d8d8",
               background: "#F5F6F9",
+              boxShadow: "none",
             }}
           >
             <TableRow>
@@ -130,7 +131,7 @@ export default function AcccessibleTable(props) {
                         fontSize: 13,
                       }}
                     >
-                      {item.item_type}
+                      {item.platform.name}
                     </TableCell>
                     <TableCell
                       align="left"

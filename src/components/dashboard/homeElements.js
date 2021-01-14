@@ -40,7 +40,7 @@ export const TableSection = styled.div`
   background: white;
   padding: 1rem;
   border-radius: 5px;
-  height: 330px;
+  max-height: 330px;
 
   @media screen and (max-width: 1000px) {
     height: auto;
@@ -110,7 +110,7 @@ export const DateField = styled.div`
   // padding: 5px;
   padding-left: 1rem;
   padding-right: 1rem;
-  width: 130px;
+  // width: 140px;
   height: 40px;
   border-radius: 5px;
   margin: 1rem;
@@ -171,16 +171,27 @@ export const ChartSection = styled.div`
   margin: 2rem;
   // margin-left: 1rem;
   margin-right: 0rem;
+  @media screen and (max-width: 1100px) {
+    margin-right: 2rem;
+  }
 `;
 
 export const ChartDiv = styled.div`
   border-radius: 5px;
   background: white;
+  @media screen and (min-width: 1100px) {
+    margin-right: 0.5rem;
+  }
 `;
 export const ChartDiv2 = styled.div`
   border-radius: 5px;
   background: white;
-
+  @media screen and (min-width: 1280px) {
+    margin-left: 0.5rem;
+  }
+  // @media screen and (max-width: 1100px) {
+  //   margin-left: 0.5rem;
+  // }
   /* margin-left: 1rem; */
 `;
 
