@@ -131,7 +131,7 @@ export default function AcccessibleTable(props) {
                         fontSize: 13,
                       }}
                     >
-                      {item.platform.name}
+                      {item.platform && item.platform.name}
                     </TableCell>
                     <TableCell
                       align="left"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -75,7 +75,8 @@ const Option = styled.p`
 
 export default function TransitionsModal(props) {
   const classes = useStyles();
-
+  const [search, setSearch] = useState("");
+  var number = 0;
   const handleClose = () => {
     props.setFilterOpen(false);
   };
@@ -89,11 +90,10 @@ export default function TransitionsModal(props) {
   ];
   const messageStatus = [
     "All status (Excluding Draft)",
-    "Personal Text",
-    "Twitter DM’s",
-    "Tweets",
+    "In Progress",
+    "Pending",
   ];
-
+  console.log("These are monthly stats", props.monthlyStats);
   return (
     <div>
       <Modal
@@ -154,36 +154,94 @@ export default function TransitionsModal(props) {
                     fontSize="inherit"
                     style={{ color: "#006644", marginRight: 5 }}
                   /> */}
+                  <Grid container direction="column"></Grid>
                   <ListCol>
-                    {messageSender.map((type) => {
-                      if (props.messageSender === type) {
-                        return (
-                          <Grid
-                            container
-                            direction="row"
-                            style={{ width: 150 }}
-                          >
-                            {" "}
-                            <CheckCircleIcon
-                              fontSize="inherit"
-                              style={{ color: "#006644", marginRight: 5 }}
-                            />
-                            <Heading2>{type}</Heading2>
-                          </Grid>
-                        );
-                      } else {
-                        return (
-                          <Option
-                            style={{ marginLeft: 20 }}
-                            onClick={() => {
-                              props.setMessageSender(type);
-                            }}
-                          >
-                            {type}
-                          </Option>
-                        );
-                      }
-                    })}
+                    <Grid container direction="row" style={{ width: 150 }}>
+                      {" "}
+                      {props.messageSender === "All Team Members" && (
+                        <CheckCircleIcon
+                          fontSize="inherit"
+                          style={{ color: "#006644", marginRight: 5 }}
+                        />
+                      )}
+                      <Heading2
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          props.setMessageSender("All Team Members");
+                        }}
+                      >
+                        {"All Team Members"}
+                      </Heading2>
+                      <input
+                        type="text"
+                        style={{
+                          border: "1px solid #e6e7ec",
+                          borderRadius: 4,
+                        }}
+                        value={search}
+                        onChange={(e) => {
+                          setSearch(e.target.value);
+                        }}
+                      ></input>
+                    </Grid>
+                    {props.monthlyStats &&
+                      props.monthlyStats.users.map((user, index) => {
+                        // console.log("This is the atbel", user.table);
+
+                        if (number < 3) {
+                          if (props.messageSender === user.table.name) {
+                            return (
+                              <Grid
+                                container
+                                direction="row"
+                                style={{ width: 150 }}
+                              >
+                                {" "}
+                                <CheckCircleIcon
+                                  fontSize="inherit"
+                                  style={{ color: "#006644", marginRight: 5 }}
+                                />
+                                <Heading2>{user.table.name}</Heading2>
+                              </Grid>
+                            );
+                          } else {
+                            if (search != "") {
+                              if (
+                                user.table.name.toLowerCase().search(search) !=
+                                -1
+                              ) {
+                                number = number + 1;
+                                return (
+                                  <Grid container direction="column">
+                                    <Option
+                                      style={{ marginLeft: 20 }}
+                                      onClick={() => {
+                                        props.setMessageSender(user.table.name);
+                                      }}
+                                    >
+                                      {user.table.name}
+                                    </Option>
+                                  </Grid>
+                                );
+                              }
+                            } else {
+                              number = number + 1;
+                              return (
+                                <Grid container direction="column">
+                                  <Option
+                                    style={{ marginLeft: 20 }}
+                                    onClick={() => {
+                                      props.setMessageSender(user.table.name);
+                                    }}
+                                  >
+                                    {user.table.name}
+                                  </Option>
+                                </Grid>
+                              );
+                            }
+                          }
+                        }
+                      })}
                     {/* <Heading2>All Team Members</Heading2>
                     <Option>Personal Text</Option>
                     <Option>Twitter DM’s</Option>

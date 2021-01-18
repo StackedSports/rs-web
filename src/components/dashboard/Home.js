@@ -39,10 +39,11 @@ import {
 import Table from "./table";
 import MenuItem from "@material-ui/core/MenuItem";
 import HomeRight from "./homeRight";
-import Barchart from "./barChart";
+// import Barchart from "./barChart";
 import FilterModal from "./filterModal";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import moment from "moment";
+import Barchart from "../charts/BarChart";
+import DoughnutChart from "../charts/Doughnut";
 
 import { getTaskQueueForDay, getMonthlyStats } from "../../ApiHelper";
 
@@ -116,7 +117,7 @@ function Home() {
     if (selectedDateQueue != null) {
       selectedDateQueueCopy.map((queue) => {
         console.log("this is queue", queue);
-        if (queue.platform.name == type) {
+        if (queue.platform && queue.platform.name == type) {
           filteredQueue.push(queue);
         }
       });
@@ -129,25 +130,46 @@ function Home() {
     }
   };
 
-  const onMessageStatusChange = (type) => {
-    console.log("THis is message type", type);
-    setMessageStatus(type);
+  const onMessageSenderChange = (senderName) => {
+    console.log("THis is message type", senderName);
+    setMessageSender(senderName);
     var filteredQueue = [];
     if (selectedDateQueue != null) {
       selectedDateQueueCopy.map((queue) => {
         console.log("this is queue", queue);
-        if (queue.platform.name == type) {
+        if (queue.queued_by == senderName) {
           filteredQueue.push(queue);
         }
       });
     }
-    if (type === "All types") {
+    if (senderName === "All Team Members") {
       console.log("IT is coming herer", selectedDateQueueCopy);
       setSelectedDateQueue(selectedDateQueueCopy);
     } else {
       setSelectedDateQueue(filteredQueue);
     }
   };
+
+  const onMessageStatusChange = (status) => {
+    console.log("THis is message type", status);
+    setMessageStatus(status);
+    var filteredQueue = [];
+    if (selectedDateQueue != null) {
+      selectedDateQueueCopy.map((queue) => {
+        console.log("this is queue", queue);
+        if (queue.status.toLowerCase() == status.toLowerCase()) {
+          filteredQueue.push(queue);
+        }
+      });
+    }
+    if (status === "All status (Excluding Draft)") {
+      console.log("IT is coming herer", selectedDateQueueCopy);
+      setSelectedDateQueue(selectedDateQueueCopy);
+    } else {
+      setSelectedDateQueue(filteredQueue);
+    }
+  };
+
   const [monthlyStats, setMontlyStats] = useState(null);
   const [user, setUser] = useState(false);
   const [queueDate, setQueueDate] = useState(new Date());
@@ -207,11 +229,12 @@ function Home() {
         messageType={messageType}
         setMessageType={onMessageTypeChange}
         messageSender={messageSender}
-        setMessageSender={setMessageSender}
+        setMessageSender={onMessageSenderChange}
         messageStatus={messageStatus}
-        setMessageStatus={setMessageStatus}
+        setMessageStatus={onMessageStatusChange}
         filterOpen={filterOpen}
         setFilterOpen={setFilterOpen}
+        monthlyStats={monthlyStats}
       />
       <Grid container style={{ margin: 0, padding: 0 }}>
         <Grid item xs={12} lg={8}>
@@ -333,7 +356,15 @@ function Home() {
                     </Count>
                   </ChartTop>
                   <ChartDivS>
-                    <Chart monthlyStats={monthlyStats} />
+                    {/* <Chart monthlyStats={monthlyStats} /> */}
+                    {monthlyStats && (
+                      <DoughnutChart
+                        monthlyStats={monthlyStats}
+                        // className="chart"
+                        // data={[1, 2, 3, 4, 5, 6, 7]}
+                        // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+                      />
+                    )}
                   </ChartDivS>
 
                   <ChartFooter>
@@ -428,7 +459,7 @@ function Home() {
                     </Count>
                   </ChartTop>
                   <div>
-                    <Barchart monthlyStats={monthlyStats} />
+                    {monthlyStats && <Barchart monthlyStats={monthlyStats} />}
                   </div>
 
                   <ChartFooter>
