@@ -14,6 +14,7 @@ import { BiChat, BiBell } from "react-icons/bi";
 import Modal from "../model";
 import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
+import { Grid } from "@material-ui/core";
 import ForumOutlinedIcon from "@material-ui/icons/ForumOutlined";
 
 const Nav = styled.div`
@@ -95,7 +96,8 @@ const Button = styled(Link)`
   font-weight: bold;
   color: white;
   font-size: 14px;
-  outline: none;
+  outtion: all 0.2s ease-in-out;
+  @medialine: none;
   border: none;
   height: 40px;
   cursor: pointer;
@@ -103,8 +105,7 @@ const Button = styled(Link)`
   text-decoration: none;
   justify-content: center;
   align-items: center;
-  transition: all 0.2s ease-in-out;
-  @media screen and (max-width: 1000px) {
+  transi screen and (max-width: 1000px) {
     width: 180px;
   }
 `;
@@ -284,12 +285,47 @@ const Sidebar = () => {
           </LeftSectionNav>
         </Nav>
         <SidebarNav sidebar={sidebar}>
-          <SidebarWrap>
-            <Button onClick={openModal}>+ New</Button>
-            {SidebarData.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
-            })}
-          </SidebarWrap>
+          <Grid container direction="column">
+            <SidebarWrap>
+              <Button onClick={openModal}>+ New</Button>
+              {SidebarData.map((item, index) => {
+                return <SubMenu item={item} key={index} />;
+              })}
+            </SidebarWrap>
+            <div>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                style={{ padding: 20, paddingTop: 0 }}
+              >
+                <Grid item md={4} xs={4} lg={4}>
+                  {" "}
+                  <img
+                    style={{ width: 40, height: 40, borderRadius: 20 }}
+                    src={
+                      JSON.parse(localStorage.getItem("user")).twitter_profile
+                        .profile_image
+                    }
+                  ></img>
+                </Grid>
+                <Grid item md={8} xs={8} lg={8}>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{ height: "100%" }}
+                  >
+                    <p style={{ margin: 0, fontWeight: "bold" }}>
+                      {JSON.parse(localStorage.getItem("user")).first_name +
+                        " " +
+                        JSON.parse(localStorage.getItem("user")).last_name}
+                    </p>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </div>
+          </Grid>
         </SidebarNav>
       </IconContext.Provider>
     </>

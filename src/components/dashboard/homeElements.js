@@ -34,16 +34,18 @@ export const Titleparagrapg = styled.p`
 `;
 
 export const TableSection = styled.div`
-  margin: 2rem;
-  margin-right: 0rem;
+  margin: 20px;
+  margin-right: 0px;
   // margin-left: 1rem;
   background: white;
   padding: 1rem;
   border-radius: 5px;
   max-height: 330px;
+  minheight: 330px;
 
   @media screen and (max-width: 1000px) {
     height: auto;
+    margin: 20px;
   }
 `;
 
@@ -168,11 +170,11 @@ export const TableFooterText = styled.h1`
 `;
 
 export const ChartSection = styled.div`
-  margin: 2rem;
+  margin: 20px;
   // margin-left: 1rem;
   margin-right: 0rem;
   @media screen and (max-width: 1100px) {
-    margin-right: 2rem;
+    margin-right: 20px;
   }
 `;
 
@@ -180,14 +182,14 @@ export const ChartDiv = styled.div`
   border-radius: 5px;
   background: white;
   @media screen and (min-width: 1100px) {
-    margin-right: 0.5rem;
+    margin-right: 10px;
   }
 `;
 export const ChartDiv2 = styled.div`
   border-radius: 5px;
   background: white;
   @media screen and (min-width: 1280px) {
-    margin-left: 0.5rem;
+    margin-left: 10px;
   }
   // @media screen and (max-width: 1100px) {
   //   margin-left: 0.5rem;

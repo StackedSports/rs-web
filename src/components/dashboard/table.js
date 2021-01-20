@@ -29,8 +29,27 @@ export default function AcccessibleTable(props) {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
-      <div style={{ maxHeight: 190, overflow: "scroll", minWidth: 630 }}>
+    <TableContainer
+      PaperProps={{
+        style: {
+          backgroundColor: "red",
+          boxShadow: "none",
+        },
+      }}
+      style={{ borderCollapse: "unset" }}
+      // component={Paper}
+    >
+      <div
+        style={{
+          maxHeight: 190,
+          overflow:
+            props.selectedDateQueue != null && props.selectedDateQueue != 0
+              ? "scroll"
+              : "hidden",
+          minWidth: 630,
+          minHeight: 190,
+        }}
+      >
         <Table
           stickyHeader
           className={classes.table}
@@ -38,9 +57,6 @@ export default function AcccessibleTable(props) {
         >
           <TableHead
             style={{
-              // borderStyle: "solid",
-              // borderWidth: "1px",
-              // borderColor: "#d8d8d8",
               background: "#F5F6F9",
               boxShadow: "none",
             }}
@@ -83,98 +99,99 @@ export default function AcccessibleTable(props) {
               </TableCell>
             </TableRow>
           </TableHead>
-
-          <TableBody>
-            {props.selectedDateQueue &&
-              props.selectedDateQueue.map((item) => {
-                return (
-                  <TableRow>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{
-                        color: "#A4A4A4",
-                        fontWeight: 600,
-                        fontSize: 13,
-                      }}
-                    >
-                      {moment(item.send_at).format("h:mm:ss a")}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      style={{
-                        color: "#A4A4A4",
-                        fontWeight: 600,
-                        fontSize: 13,
-                      }}
-                    >
-                      {item.sender
-                        ? item.sender.first_name + " " + item.sender.last_name
-                        : item.queued_by}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      style={{
-                        color: "#A4A4A4",
-                        fontWeight: 600,
-                        fontSize: 13,
-                      }}
-                    >
-                      Individuals{" "}
-                      {item.recipients && "(" + item.recipients.count + ")"}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      style={{
-                        color: "#A4A4A4",
-                        fontWeight: 600,
-                        fontSize: 13,
-                      }}
-                    >
-                      {item.platform && item.platform.name}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      style={{
-                        color: "#A4A4A4",
-                        fontWeight: 600,
-                        fontSize: 13,
-                      }}
-                    >
-                      {moment(item.next_send_at).format("h:mm:ss a")}
-                    </TableCell>
-                    <TableCell align="left">
-                      <div
+          {props.selectedDateQueue != null &&
+          props.selectedDateQueue.length != 0 ? (
+            <TableBody>
+              {props.selectedDateQueue &&
+                props.selectedDateQueue.map((item) => {
+                  return (
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
+                          color: "#A4A4A4",
+                          fontWeight: 600,
+                          fontSize: 13,
                         }}
                       >
-                        {item.status != "In Progress" && (
-                          <CheckCircleIcon
-                            fontSize="inherit"
-                            style={{ color: "#006644" }}
-                          />
-                        )}
-
-                        <p
+                        {moment(item.send_at).format("h:mm:ss a")}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        style={{
+                          color: "#A4A4A4",
+                          fontWeight: 600,
+                          fontSize: 13,
+                        }}
+                      >
+                        {item.sender
+                          ? item.sender.first_name + " " + item.sender.last_name
+                          : item.queued_by}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        style={{
+                          color: "#A4A4A4",
+                          fontWeight: 600,
+                          fontSize: 13,
+                        }}
+                      >
+                        Individuals{" "}
+                        {item.recipients && "(" + item.recipients.count + ")"}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        style={{
+                          color: "#A4A4A4",
+                          fontWeight: 600,
+                          fontSize: 13,
+                        }}
+                      >
+                        {item.platform && item.platform.name}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        style={{
+                          color: "#A4A4A4",
+                          fontWeight: 600,
+                          fontSize: 13,
+                        }}
+                      >
+                        {moment(item.next_send_at).format("h:mm:ss a")}
+                      </TableCell>
+                      <TableCell align="left">
+                        <div
                           style={{
-                            color: "#A4A4A4",
-                            margin: 0,
-                            padding: 0,
-                            fontWeight: 600,
-                            fontSize: 13,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
                         >
-                          {item.status}
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            {/*         
+                          {item.status == "Completed" && (
+                            <CheckCircleIcon
+                              fontSize="inherit"
+                              style={{ color: "#006644" }}
+                            />
+                          )}
+
+                          <p
+                            style={{
+                              color: "#A4A4A4",
+                              margin: 0,
+                              padding: 0,
+                              fontWeight: 600,
+                              fontSize: 13,
+                            }}
+                          >
+                            {item.status}
+                          </p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              {/*         
           <TableRow>
             <TableCell
               component='th'
@@ -230,8 +247,11 @@ export default function AcccessibleTable(props) {
             </TableCell>
           </TableRow>
         */}
-          </TableBody>
-        </Table>{" "}
+            </TableBody>
+          ) : (
+            <div></div>
+          )}
+        </Table>
       </div>
     </TableContainer>
   );

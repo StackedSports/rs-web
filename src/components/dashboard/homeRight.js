@@ -96,12 +96,21 @@ function HomeRight(props) {
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
+  console.log(
+    "THis should be image",
+    JSON.parse(localStorage.getItem("user")).twitter_profile.profile_image
+  );
   return (
     <RightSectionContainer>
       <PersonContainer>
         <Num>1.</Num>
         <AvatartInfo>
-          <Avatar src={AvatarImg} />
+          <Avatar
+            src={
+              JSON.parse(localStorage.getItem("user")).twitter_profile
+                .profile_image || AvatarImg
+            }
+          />
           <AvatarName>
             {props.user.first_name + " " + props.user.last_name}
           </AvatarName>
@@ -137,6 +146,10 @@ function HomeRight(props) {
             >
               {currencies.map((option) => (
                 <Dropdown.Item
+                  style={{
+                    background: currency === option.label ? "#348ef7" : "white",
+                    color: currency === option.label ? "white" : "black",
+                  }}
                   onClick={(e) => {
                     setCurrency(option.label);
                   }}

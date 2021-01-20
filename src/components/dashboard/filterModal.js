@@ -93,7 +93,7 @@ export default function TransitionsModal(props) {
     "In Progress",
     "Pending",
   ];
-  console.log("These are monthly stats", props.monthlyStats);
+  // console.log("These are monthly stats", props.monthlyStats);
   return (
     <div>
       <Modal
@@ -120,7 +120,7 @@ export default function TransitionsModal(props) {
                           <Grid
                             container
                             direction="row"
-                            style={{ width: 110 }}
+                            style={{ width: 120 }}
                           >
                             {" "}
                             <CheckCircleIcon

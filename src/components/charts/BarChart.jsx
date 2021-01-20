@@ -87,10 +87,10 @@ export default class ListingChart extends React.Component {
     });
     console.log("this is coming here", lbl);
   }
-  componentWillReceiveProps(nextProps) {
-    this.myChart.data.datasets[0].data = nextProps.data;
-    this.myChart.update();
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.myChart.data.datasets[0].data = nextProps.data;
+  //   this.myChart.update();
+  // }
   render() {
     return (
       <canvas

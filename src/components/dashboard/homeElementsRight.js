@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const RightSectionContainer = styled.div`
-  margin: 2rem;
+  margin: 20px;
 `;
 
 export const PersonContainer = styled.div`
@@ -56,7 +56,7 @@ export const AvatarButton = styled.button`
   line-height: 17px;
   text-align: center;
   border: none;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
 `;
 
 export const InfoSection = styled.div`
@@ -64,7 +64,7 @@ export const InfoSection = styled.div`
 
   background: white;
   border-radius: 5px;
-  margin-top: 1.5rem;
+  margin-top: 20px;
 `;
 
 export const InfoBox = styled.div`
@@ -82,6 +82,7 @@ export const InfoP = styled.p`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 14px;
+  margin-top: 7px;
 `;
 
 export const InfoH = styled.h1`
@@ -95,7 +96,7 @@ export const InfoH = styled.h1`
 `;
 
 export const StackSecion = styled.div`
-  margin-top: 1.5rem;
+  margin-top: 20px;
   height: 424px;
   border-radius: 4px;
   background-color: #ffffff;

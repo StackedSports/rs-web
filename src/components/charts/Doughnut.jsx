@@ -12,6 +12,7 @@ export default class Doughnut extends React.Component {
           {
             data: [
               this.props.monthlyStats.total_recruits_messaged,
+
               this.props.monthlyStats.total_personal_texts,
               this.props.monthlyStats.total_dms,
             ],
@@ -71,10 +72,10 @@ export default class Doughnut extends React.Component {
     });
     console.log("this is coming here");
   }
-  componentWillReceiveProps(nextProps) {
-    this.myChart.data.datasets[0].data = nextProps.data;
-    this.myChart.update();
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.myChart.data.datasets[0].data = nextProps.data;
+  //   this.myChart.update();
+  // }
   render() {
     return (
       <canvas

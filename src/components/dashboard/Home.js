@@ -3,8 +3,10 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Chart from "./chart";
+import styled from "styled-components";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import { Link } from "react-router-dom";
 import {
   DashboardContainer,
   Title,
@@ -44,8 +46,36 @@ import FilterModal from "./filterModal";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import Barchart from "../charts/BarChart";
 import DoughnutChart from "../charts/Doughnut";
+import DatePicker from "react-date-picker";
+import moment from "moment";
 
 import { getTaskQueueForDay, getMonthlyStats } from "../../ApiHelper";
+
+const Button = styled.button`
+  border-radius: 5px;
+  background: #1da1f2;
+  white-space: nowrap;
+  padding: 0.5rem;
+  width: 150px;
+  margin: 20px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+  outtion: all 0.2s ease-in-out;
+  @medialine: none;
+  border: none;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  transi screen and (max-width: 1000px) {
+    width: 180px;
+  }
+`;
 
 const currencies = [
   {
@@ -100,6 +130,7 @@ const useStyles = makeStyles({
 });
 function Home() {
   const classes = useStyles();
+  // console.log("This is logged in user", localStorage.getItem("user"));
   const [currency, setCurrency] = useState("This Month");
   const [selectedDateQueue, setSelectedDateQueue] = useState(null);
   const [selectedDateQueueCopy, setSelectedDateQueueCopy] = useState(null);
@@ -109,9 +140,13 @@ function Home() {
   const [messageStatus, setMessageStatus] = useState(
     "All status (Excluding Draft)"
   );
+  const [value, onChange] = useState(new Date());
 
   const onMessageTypeChange = (type) => {
     console.log("THis is message type", type);
+    if (type === "Tweets") {
+      type = "Twitter";
+    }
     setMessageType(type);
     var filteredQueue = [];
     if (selectedDateQueue != null) {
@@ -131,7 +166,7 @@ function Home() {
   };
 
   const onMessageSenderChange = (senderName) => {
-    console.log("THis is message type", senderName);
+    // console.log("THis is message type", senderName);
     setMessageSender(senderName);
     var filteredQueue = [];
     if (selectedDateQueue != null) {
@@ -183,7 +218,7 @@ function Home() {
     // || "2020-12-13"
     getTaskQueueForDay(date).then(
       (res) => {
-        console.log("THis is takee queue res", res);
+        // console.log("THis is takee queue res", res);
         if (res.statusText === "OK") {
           console.log("This is the task queue by date", res.data);
           var fileredQueue = [];
@@ -264,7 +299,16 @@ function Home() {
               <Grid item xs={12} lg={6}>
                 <TableHeaderRight>
                   <DateField>
-                    <TextField
+                    <DatePicker
+                      onChange={(e) => {
+                        var dt = new moment(e).format("YYYY-MM-DD");
+                        console.log("This is it", dt);
+                        getTaskQueueByDate(dt);
+                        onChange(e);
+                      }}
+                      value={value}
+                    />
+                    {/* <input
                       type="date"
                       onChange={(e) => {
                         // setQueueDate(e.target.value);
@@ -273,8 +317,9 @@ function Home() {
                       // value={queueDate}
                       InputProps={{ disableUnderline: true }}
                       fullWidth={true}
-                      style={{ zIndex: 0 }}
-                    />
+                      className="dateTextField"
+                      // style={{ zIndex: 0, border: "none" }}
+                    /> */}
                   </DateField>
                   <FilterField
                     onClick={() => setFilterOpen(true)}
@@ -292,8 +337,62 @@ function Home() {
               messageSender={messageSender}
               selectedDateQueue={selectedDateQueue}
             />
+            {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                style={{ marginTop: -100 }}
+              >
+                <p
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    color: "#74777c",
+                    fontWeight: "bold",
+                    margin: 0,
+                    fontSize: 12,
+                  }}
+                >
+                  Your task queue is clear!
+                </p>
+                <p
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    color: "#74777c",
+                    fontWeight: "bold",
+                    margin: 0,
+                    fontSize: 12,
+                  }}
+                >
+                  Consistent messaging is key
+                </p>
+                <p
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    color: "#74777c",
+                    fontWeight: "bold",
+                    margin: 0,
+                    fontSize: 12,
+                  }}
+                >
+                  to building an engaging audience!
+                </p>
+
+                <Button>+ New</Button>
+              </Grid>
+            ) : (
+              <div></div>
+            )}
             <TableFooter>
-              <TableFooterText>View More (10)</TableFooterText>
+              <TableFooterText>
+                View More{" "}
+                {selectedDateQueue && selectedDateQueue.length != 0
+                  ? `(${selectedDateQueue.length})`
+                  : ""}
+              </TableFooterText>
             </TableFooter>
           </TableSection>
 
@@ -312,11 +411,18 @@ function Home() {
                         >
                           {currencies.map((option) => (
                             <Dropdown.Item
+                              style={{
+                                background:
+                                  currency === option.label
+                                    ? "#348ef7"
+                                    : "white",
+                                color:
+                                  currency === option.label ? "white" : "black",
+                              }}
                               onClick={(e) => {
                                 setCurrency(option.label);
                               }}
                             >
-                              {" "}
                               {option.label}
                             </Dropdown.Item>
                           ))}
@@ -357,7 +463,7 @@ function Home() {
                   </ChartTop>
                   <ChartDivS>
                     {/* <Chart monthlyStats={monthlyStats} /> */}
-                    {monthlyStats && (
+                    {monthlyStats != null && (
                       <DoughnutChart
                         monthlyStats={monthlyStats}
                         // className="chart"
@@ -373,7 +479,7 @@ function Home() {
                         style={{
                           width: "12px",
                           height: "12px",
-                          color: "#c0504e",
+                          color: "#8BB14C",
                         }}
                       />
                       <ChartFooterContent>Personal Texts</ChartFooterContent>
@@ -382,8 +488,8 @@ function Home() {
                       <FiberManualRecordIcon
                         style={{
                           width: "12px",
+                          color: "#4f81bc",
                           height: "12px",
-                          color: "#8BB14C",
                         }}
                       />
                       <ChartFooterContent>Total DM's</ChartFooterContent>
@@ -393,7 +499,8 @@ function Home() {
                         style={{
                           width: "12px",
                           height: "12px",
-                          color: "#4f81bc",
+                          color: "#c0504e",
+
                           marginLeft: "3px",
                         }}
                       />
@@ -415,6 +522,14 @@ function Home() {
                         >
                           {currencies.map((option) => (
                             <Dropdown.Item
+                              style={{
+                                background:
+                                  currency === option.label
+                                    ? "#348ef7"
+                                    : "white",
+                                color:
+                                  currency === option.label ? "white" : "black",
+                              }}
                               onClick={(e) => {
                                 setCurrency(option.label);
                               }}
