@@ -143,7 +143,7 @@ function Home() {
   const [value, onChange] = useState(new Date());
 
   const onMessageTypeChange = (type) => {
-    console.log("THis is message type", type);
+    console.log("THis is message type etc", type);
     if (type === "Tweets") {
       type = "Twitter";
     }
