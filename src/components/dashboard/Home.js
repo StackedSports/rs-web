@@ -547,7 +547,7 @@ function Home() {
                 <ChartDiv>
                   <ChartTop>
                     <MM>
-                      <MMH>Monthly Messages</MMH>
+                      <MMH>{currency} Messages</MMH>
                       <MonthField>
                         <DropdownButton
                           id="dropdown-basic-button"
@@ -636,7 +636,7 @@ function Home() {
                           marginLeft: "3px",
                         }}
                       />
-                      <ChartFooterContent>By Recruites</ChartFooterContent>
+                      <ChartFooterContent>RS Text</ChartFooterContent>
                     </ChartFooterButton3>
                   </ChartFooter>
                 </ChartDiv>
@@ -645,7 +645,7 @@ function Home() {
                 <ChartDiv2>
                   <ChartTop>
                     <MM>
-                      <MMH>Monthly Messages</MMH>
+                      <MMH>{filterBar} Messages</MMH>
                       <MonthField>
                         <DropdownButton
                           id="dropdown-basic-button"
