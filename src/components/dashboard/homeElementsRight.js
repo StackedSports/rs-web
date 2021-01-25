@@ -48,7 +48,7 @@ export const AvatarButton = styled.button`
   height: 40px;
   width: 155px;
   border-radius: 4px;
-  background-color: #1da1f2;
+  background-color: #3871da;
   color: #ffffff;
   font-size: 14px;
   font-weight: bold;

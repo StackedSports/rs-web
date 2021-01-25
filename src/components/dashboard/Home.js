@@ -62,7 +62,7 @@ import {
 
 const Button = styled.button`
   border-radius: 5px;
-  background: #1da1f2;
+  background: #3871da;
   white-space: nowrap;
   padding: 0.5rem;
   width: 150px;

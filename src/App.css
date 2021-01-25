@@ -3,7 +3,7 @@
 }
 
 .Toastify__progress-bar--default {
-  background: #348ef7 !important;
+  background: #3871da !important;
 }
 
 .btn-primary {
@@ -18,8 +18,8 @@
 
 .btn-primary:focus {
   color: white !important;
-  background-color: #348ef7 !important;
-  border-color: #348ef7 !important;
+  background-color: #3871da !important;
+  border-color: #3871da !important;
   width: 110px !important;
   margin: 0px !important;
   height: 40px !important;

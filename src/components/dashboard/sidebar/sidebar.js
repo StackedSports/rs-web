@@ -87,7 +87,7 @@ const Logoimage = styled.img`
 
 const Button = styled(Link)`
   border-radius: 5px;
-  background: #1da1f2;
+  background: #3871da;
   white-space: nowrap;
   padding: 0.5rem;
   width: 219px;
@@ -292,12 +292,22 @@ const Sidebar = () => {
                 return <SubMenu item={item} key={index} />;
               })}
             </SidebarWrap>
-            <div>
+            <div
+              style={{
+                height: "100%",
+                position: "absolute",
+              }}
+            >
               <Grid
                 container
                 direction="row"
-                alignItems="center"
-                style={{ padding: 20, paddingTop: 0 }}
+                alignItems="flex-end"
+                style={{
+                  padding: 20,
+                  paddingTop: 0,
+
+                  height: "90%",
+                }}
               >
                 <Grid item md={4} xs={4} lg={4}>
                   {" "}
