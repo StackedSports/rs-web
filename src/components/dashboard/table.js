@@ -104,13 +104,25 @@ export default function AcccessibleTable(props) {
             <TableBody>
               {props.selectedDateQueue &&
                 props.selectedDateQueue.map((item) => {
+                  var type = item.platform && item.platform.name;
+                  if (
+                    item.item_type === "Message" &&
+                    item.platform.name === "Twitter"
+                  ) {
+                    type = "Twitter DM";
+                  }
                   return (
-                    <TableRow>
+                    <TableRow
+                      style={{
+                        color: item.status == "Completed" ? "#A4A4A4" : "black",
+                      }}
+                    >
                       <TableCell
                         component="th"
                         scope="row"
                         style={{
-                          color: "#A4A4A4",
+                          // color: "#A4A4A4",
+                          color: "black",
                           fontWeight: 600,
                           fontSize: 13,
                         }}
@@ -120,7 +132,7 @@ export default function AcccessibleTable(props) {
                       <TableCell
                         align="left"
                         style={{
-                          color: "#A4A4A4",
+                          // color: "#A4A4A4",
                           fontWeight: 600,
                           fontSize: 13,
                         }}
@@ -132,28 +144,28 @@ export default function AcccessibleTable(props) {
                       <TableCell
                         align="left"
                         style={{
-                          color: "#A4A4A4",
+                          // color: "#A4A4A4",
                           fontWeight: 600,
                           fontSize: 13,
                         }}
                       >
-                        Individuals{" "}
+                        {item.recipients.filter_list[0].name || "Individuals"}{" "}
                         {item.recipients && "(" + item.recipients.count + ")"}
                       </TableCell>
                       <TableCell
                         align="left"
                         style={{
-                          color: "#A4A4A4",
+                          // color: "#A4A4A4",
                           fontWeight: 600,
                           fontSize: 13,
                         }}
                       >
-                        {item.platform && item.platform.name}
+                        {type}
                       </TableCell>
                       <TableCell
                         align="left"
                         style={{
-                          color: "#A4A4A4",
+                          // color: "#A4A4A4",
                           fontWeight: 600,
                           fontSize: 13,
                         }}
@@ -177,7 +189,7 @@ export default function AcccessibleTable(props) {
 
                           <p
                             style={{
-                              color: "#A4A4A4",
+                              // color: "#A4A4A4",
                               margin: 0,
                               padding: 0,
                               fontWeight: 600,

@@ -87,7 +87,7 @@ export const getTaskQueue = () => {
 
 export const getTaskQueueForDay = (date) => {
   var endpoint = "";
-  console.log("This is date", date === null);
+  // console.log("This is date", date === null);
   if (date === null) {
     endpoint = "task_queues";
   } else {
@@ -111,9 +111,174 @@ export const getTaskQueueForDay = (date) => {
 export const getMonthlyStats = () => {
   var start = new moment().startOf("month").format("YYYY-MM-DD");
   var end = new moment().endOf("month").format("YYYY-MM-DD");
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getThisQuarterStats = () => {
+  var start = new moment().startOf("quarter").format("YYYY-MM-DD");
+  var end = new moment().endOf("quarter").format("YYYY-MM-DD");
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getLastQuarterStats = () => {
+  var quarterAdjustment = (moment().month() % 3) + 1;
+  var lastQuarterEndDate = moment()
+    .subtract({ months: quarterAdjustment })
+    .endOf("month");
+  var lastQuarterStartDate = lastQuarterEndDate
+    .clone()
+    .subtract({ months: 3 })
+    .startOf("month");
+
+  var start = lastQuarterEndDate
+    .clone()
+    .subtract({ months: 3 })
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  var end = moment()
+    .subtract({ months: quarterAdjustment })
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getThisYearStats = () => {
+  var start = new moment().startOf("year").format("YYYY-MM-DD");
+  var end = new moment().endOf("year").format("YYYY-MM-DD");
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getLastYearStats = () => {
+  var start = new moment()
+    .startOf("year")
+    .clone()
+    .subtract({ years: 1 })
+    .startOf("year")
+    .format("YYYY-MM-DD");
+  var end = new moment()
+    .endOf("year")
+    .clone()
+    .subtract({ years: 1 })
+    .endOf("year")
+    .format("YYYY-MM-DD");
   console.log("This is start", start);
   console.log("This is end", end);
   console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getLastMonthStats = () => {
+  var start = new moment()
+    .startOf("month")
+    .clone()
+    .subtract({ months: 1 })
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  var end = new moment()
+    .endOf("month")
+    .clone()
+    .subtract({ months: 1 })
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  // console.log("This is start of last month", start);
+  // console.log("This is end of last month", end);
+  // console.log(
+  //   "This is  url",
+  //   URL + `stats?start_date=${start}&end_date=${end}`
+  // );
+  return axios({
+    method: "get",
+    url: URL + `stats?start_date=${start}&end_date=${end}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getLast30Stats = () => {
+  var start = new moment().clone().subtract({ days: 30 }).format("YYYY-MM-DD");
+  var end = new moment().format("YYYY-MM-DD");
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
   return axios({
     method: "get",
     url: URL + `stats?start_date=${start}&end_date=${end}`,

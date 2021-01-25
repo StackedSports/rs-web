@@ -49,7 +49,16 @@ import DoughnutChart from "../charts/Doughnut";
 import DatePicker from "react-date-picker";
 import moment from "moment";
 
-import { getTaskQueueForDay, getMonthlyStats } from "../../ApiHelper";
+import {
+  getTaskQueueForDay,
+  getMonthlyStats,
+  getThisQuarterStats,
+  getThisYearStats,
+  getLastQuarterStats,
+  getLastYearStats,
+  getLastMonthStats,
+  getLast30Stats,
+} from "../../ApiHelper";
 
 const Button = styled.button`
   border-radius: 5px;
@@ -132,6 +141,7 @@ function Home() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [currency, setCurrency] = useState("This Month");
+  const [filterBar, setFilterBar] = useState("This Month");
   const [selectedDateQueue, setSelectedDateQueue] = useState(null);
   const [selectedDateQueueCopy, setSelectedDateQueueCopy] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -140,6 +150,18 @@ function Home() {
   const [messageStatus, setMessageStatus] = useState(
     "All status (Excluding Draft)"
   );
+
+  const [barChartData, setBarchartData] = useState(null);
+  const [doughnutChartData, setDoughnutChatData] = useState(null);
+  const [monthlyStats, setMontlyStats] = useState(null);
+  const [quarterlyStats, setQuarterlyStats] = useState(null);
+  const [yearlyStats, setYearlyStats] = useState(null);
+  const [lastMonthStats, setLastMonthStates] = useState(null);
+  const [last30Stats, setLast30Stats] = useState(null);
+  const [homeRightStats, setHomeRightStats] = useState(null);
+  const [lastQuarterStats, setLastQuarterStates] = useState(null);
+  const [lastYearStats, setLastYearStates] = useState(null);
+  const [loggedInUserStats, setLoggedInUserStats] = useState(null);
   const [value, onChange] = useState(new Date());
 
   const onMessageTypeChange = (type) => {
@@ -166,13 +188,16 @@ function Home() {
   };
 
   const onMessageSenderChange = (senderName) => {
-    // console.log("THis is message type", senderName);
+    console.log("THis is sender name", senderName);
     setMessageSender(senderName);
     var filteredQueue = [];
     if (selectedDateQueue != null) {
       selectedDateQueueCopy.map((queue) => {
-        console.log("this is queue", queue);
-        if (queue.queued_by == senderName) {
+        console.log("this is queue sender name", queue);
+        if (
+          queue.queued_by.first_name + " " + queue.queued_by.last_name ===
+          senderName
+        ) {
           filteredQueue.push(queue);
         }
       });
@@ -205,7 +230,6 @@ function Home() {
     }
   };
 
-  const [monthlyStats, setMontlyStats] = useState(null);
   const [user, setUser] = useState(false);
   const [queueDate, setQueueDate] = useState(new Date());
   const handleChange = (event) => {
@@ -240,6 +264,46 @@ function Home() {
         if (res.statusText === "OK") {
           console.log("This is the monthlly stats", res.data.table);
           setMontlyStats(res.data.table);
+          setBarchartData(res.data.table);
+          setDoughnutChatData(res.data.table);
+          setHomeRightStats(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myQuarterlyStats = () => {
+    // || "2020-12-13"
+    getThisQuarterStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the quarterly stats", res.data.table);
+          setQuarterlyStats(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myYearlyStats = () => {
+    // || "2020-12-13"
+    getThisYearStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the yearly stats", res.data.table);
+          setYearlyStats(res.data.table);
         }
       },
       (error) => {
@@ -248,16 +312,93 @@ function Home() {
     );
   };
 
+  const myLastQuarterStats = () => {
+    // || "2020-12-13"
+    getLastQuarterStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the last quarter stats", res.data.table);
+          setLastQuarterStates(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myLastYearStats = () => {
+    // || "2020-12-13"
+    getLastYearStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the last year stats", res.data.table);
+          setLastYearStates(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myLastMonthStats = () => {
+    // || "2020-12-13"
+    getLastMonthStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the last month stats", res.data.table);
+          setLastMonthStates(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  const myLast30DaysStats = () => {
+    // || "2020-12-13"
+    getLast30Stats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("This is the last 30 days stats", res.data.table);
+          setLast30Stats(res.data.table);
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  console.log(
+    "This is todays of Quarter",
+    new moment().format("YYYY-MM-DD"),
+    "This is 30 days back",
+    new moment().clone().subtract({ days: 30 }).format("YYYY-MM-DD")
+  );
+  if (localStorage.getItem("user")) {
+  } else {
+    window.location.href = "/";
+  }
   useEffect(() => {
     if (localStorage.getItem("user")) {
+      console.log("There is a user");
       setUser(JSON.parse(localStorage.getItem("user")));
       // console.log("This is user", JSON.parse(localStorage.getItem("user")));
       getTaskQueueByDate(null);
       myMonthlyStats();
+      myQuarterlyStats();
+      myYearlyStats();
+      myLastQuarterStats();
+      myLastYearStats();
+      myLastMonthStats();
+      myLast30DaysStats();
     } else {
       window.location.href = "/";
     }
   }, []);
+
+  console.log("This is filter bar", filterBar);
   return (
     <DashboardContainer>
       <FilterModal
@@ -386,14 +527,18 @@ function Home() {
             ) : (
               <div></div>
             )}
-            <TableFooter>
-              <TableFooterText>
-                View More{" "}
-                {selectedDateQueue && selectedDateQueue.length != 0
-                  ? `(${selectedDateQueue.length})`
-                  : ""}
-              </TableFooterText>
-            </TableFooter>
+            {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
+              <div></div>
+            ) : (
+              <TableFooter style={{ borderTop: "1px solid #dadada" }}>
+                <TableFooterText style={{ marginTop: 12 }}>
+                  View More{" "}
+                  {selectedDateQueue && selectedDateQueue.length != 0
+                    ? `(${selectedDateQueue.length})`
+                    : ""}
+                </TableFooterText>
+              </TableFooter>
+            )}
           </TableSection>
 
           <ChartSection>
@@ -420,6 +565,21 @@ function Home() {
                                   currency === option.label ? "white" : "black",
                               }}
                               onClick={(e) => {
+                                if (option.label === "This Quarter") {
+                                  setDoughnutChatData(quarterlyStats);
+                                } else if (option.label === "This Year") {
+                                  setDoughnutChatData(yearlyStats);
+                                } else if (option.label === "Last Quarter") {
+                                  setDoughnutChatData(lastQuarterStats);
+                                } else if (option.label === "Last Year") {
+                                  setDoughnutChatData(lastYearStats);
+                                } else if (option.label === "Last Month") {
+                                  setDoughnutChatData(lastMonthStats);
+                                } else if (option.label === "Last 30 Days") {
+                                  setDoughnutChatData(last30Stats);
+                                } else {
+                                  setDoughnutChatData(monthlyStats);
+                                }
                                 setCurrency(option.label);
                               }}
                             >
@@ -427,45 +587,17 @@ function Home() {
                             </Dropdown.Item>
                           ))}
                         </DropdownButton>
-                        {/* <TextField
-                          select
-                          value={currency}
-                          style={{
-                            background: "transparent",
-                          }}
-                          SelectProps={{
-                            classes: { icon: classes.icon },
-                            IconComponent: () => (
-                              <KeyboardArrowDownIcon
-                                style={{ margin: 0, padding: 0 }}
-                              />
-                            ),
-                          }}
-                          onChange={handleChange}
-                          fullWidth={true}
-                          InputProps={{
-                            disableUnderline: true,
-                            className: classes.input,
-                          }}
-                        >
-                          {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                       */}
                       </MonthField>
                     </MM>
                     <Count>
-                      {monthlyStats ? monthlyStats.total_messages : 0}
+                      {doughnutChartData ? doughnutChartData.total_messages : 0}
                     </Count>
                   </ChartTop>
                   <ChartDivS>
                     {/* <Chart monthlyStats={monthlyStats} /> */}
-                    {monthlyStats != null && (
+                    {doughnutChartData != null && (
                       <DoughnutChart
-                        monthlyStats={monthlyStats}
+                        monthlyStats={doughnutChartData}
                         // className="chart"
                         // data={[1, 2, 3, 4, 5, 6, 7]}
                         // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
@@ -517,21 +649,38 @@ function Home() {
                       <MonthField>
                         <DropdownButton
                           id="dropdown-basic-button"
-                          title={currency}
+                          title={filterBar}
                           drop={"right"}
                         >
                           {currencies.map((option) => (
                             <Dropdown.Item
                               style={{
                                 background:
-                                  currency === option.label
+                                  filterBar === option.label
                                     ? "#348ef7"
                                     : "white",
                                 color:
-                                  currency === option.label ? "white" : "black",
+                                  filterBar === option.label
+                                    ? "white"
+                                    : "black",
                               }}
                               onClick={(e) => {
-                                setCurrency(option.label);
+                                if (option.label === "This Quarter") {
+                                  setBarchartData(quarterlyStats);
+                                } else if (option.label === "This Year") {
+                                  setBarchartData(yearlyStats);
+                                } else if (option.label === "Last Quarter") {
+                                  setBarchartData(lastQuarterStats);
+                                } else if (option.label === "Last Year") {
+                                  setBarchartData(lastYearStats);
+                                } else if (option.label === "Last Month") {
+                                  setBarchartData(lastMonthStats);
+                                } else if (option.label === "Last 30 Days") {
+                                  setBarchartData(last30Stats);
+                                } else {
+                                  setBarchartData(monthlyStats);
+                                }
+                                setFilterBar(option.label);
                               }}
                             >
                               {" "}
@@ -539,42 +688,15 @@ function Home() {
                             </Dropdown.Item>
                           ))}
                         </DropdownButton>
-                        {/* <TextField
-                          select
-                          value={currency}
-                          style={{
-                            background: "transparent",
-                          }}
-                          SelectProps={{
-                            classes: { icon: classes.icon },
-                            IconComponent: () => (
-                              <KeyboardArrowDownIcon
-                                style={{ margin: 0, padding: 0 }}
-                              />
-                            ),
-                          }}
-                          onChange={handleChange}
-                          fullWidth={true}
-                          InputProps={{
-                            disableUnderline: true,
-                            className: classes.input,
-                          }}
-                        >
-                          {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                       */}
                       </MonthField>
                     </MM>
                     <Count>
-                      {monthlyStats ? monthlyStats.total_messages : 0}
+                      {barChartData ? barChartData.total_messages : 0}
                     </Count>
                   </ChartTop>
+
                   <div>
-                    {monthlyStats && <Barchart monthlyStats={monthlyStats} />}
+                    {barChartData && <Barchart monthlyStats={barChartData} />}
                   </div>
 
                   <ChartFooter>
@@ -618,7 +740,89 @@ function Home() {
         <Grid item xs={12} lg={4}>
           <HomeRight
             user={user && user}
-            monthlyStats={monthlyStats && monthlyStats}
+            loggedInUserStats={loggedInUserStats}
+            monthlyStats={homeRightStats && homeRightStats}
+            onFilterChange={(filter) => {
+              if (filter === "This Quarter") {
+                quarterlyStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+
+                setHomeRightStats(quarterlyStats);
+              } else if (filter === "This Year") {
+                yearlyStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(yearlyStats);
+              } else if (filter === "Last Quarter") {
+                lastQuarterStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(lastQuarterStats);
+              } else if (filter === "Last Year") {
+                lastYearStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(lastYearStats);
+              } else if (filter === "Last Month") {
+                lastMonthStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(lastMonthStats);
+              } else if (filter === "Last 30 Days") {
+                last30Stats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(last30Stats);
+              } else {
+                monthlyStats.users.map((user, index) => {
+                  var name =
+                    JSON.parse(localStorage.getItem("user")).first_name +
+                    " " +
+                    JSON.parse(localStorage.getItem("user")).last_name;
+                  if (name === user.table.name) {
+                    setLoggedInUserStats(user.table);
+                  }
+                });
+                setHomeRightStats(monthlyStats);
+              }
+            }}
           />
         </Grid>
       </Grid>

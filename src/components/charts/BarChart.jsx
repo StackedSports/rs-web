@@ -2,6 +2,10 @@ import React from "react";
 import Chart from "chart.js";
 
 export default class ListingChart extends React.Component {
+  constructor() {
+    super();
+    this.myChart = null;
+  }
   componentDidMount() {
     var ctx = document.getElementById("myChart2");
     var lbl = [];
@@ -11,24 +15,10 @@ export default class ListingChart extends React.Component {
       this.props.monthlyStats &&
       this.props.monthlyStats.total_messages_by_period;
     if (data) {
-      lbl = [
-        data[0][0],
-        data[1][0],
-        data[2][0],
-        data[3][0],
-        data[4][0],
-        data[5][0],
-        data[6][0],
-      ];
-      ds = [
-        data[0][1],
-        data[1][1],
-        data[2][1],
-        data[3][1],
-        data[4][1],
-        data[5][1],
-        data[6][1],
-      ];
+      for (var i = 0; i < data.length; i++) {
+        lbl.push(data[i][0]);
+        ds.push(data[i][1]);
+      }
     }
 
     this.myChart = new Chart(ctx, {
@@ -85,13 +75,38 @@ export default class ListingChart extends React.Component {
         },
       },
     });
-    console.log("this is coming here", lbl);
+    // console.log("this is coming here", lbl);
   }
-  // componentWillReceiveProps(nextProps) {
-  //   this.myChart.data.datasets[0].data = nextProps.data;
-  //   this.myChart.update();
-  // }
+
   render() {
+    var lbl = [];
+    var ds = [];
+    const data =
+      this.props.monthlyStats &&
+      this.props.monthlyStats.total_messages_by_period;
+    if (data) {
+      for (var i = 0; i < data.length; i++) {
+        lbl.push(data[i][0]);
+        ds.push(data[i][1]);
+      }
+    }
+    var dataSets = [
+      {
+        data: ds,
+        label: "Trends",
+        lineTension: 0,
+        fill: false,
+        backgroundColor: "#19a5d3",
+        hoverBackgroundColor: "#26a69a",
+      },
+    ];
+    if (this.myChart) {
+      this.myChart.data.datasets[0].data = ds;
+      this.myChart.data.labels = lbl;
+      this.myChart.update();
+    }
+
+    // console.log("this is coming here in render", lbl);
     return (
       <canvas
         className={this.props.className}

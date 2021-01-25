@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   PersonContainer,
   RightSectionContainer,
@@ -91,19 +91,18 @@ const useStyles = makeStyles({
 function HomeRight(props) {
   const classes = useStyles();
   const [currency, setCurrency] = React.useState("This Month");
+  const [rank, setRank] = React.useState(1);
   // console.log("These are stats in homeright", props.monthlyStats);
   var stats = props.monthlyStats && props.monthlyStats;
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
-  console.log(
-    "THis should be image",
-    JSON.parse(localStorage.getItem("user")).twitter_profile.profile_image
-  );
+
+  console.log("THis should be image", props.loggedInUserStats);
   return (
     <RightSectionContainer>
       <PersonContainer>
-        <Num>1.</Num>
+        <Num>{props.loggedInUserStats ? props.loggedInUserStats.rank : 1}.</Num>
         <AvatartInfo>
           <Avatar
             src={
@@ -122,15 +121,21 @@ function HomeRight(props) {
         <InfoBox>
           <InfoSubBox style={{ paddingLeft: "21px" }}>
             <InfoP>DM’s</InfoP>
-            <InfoH>{stats ? stats.total_dms : 0}</InfoH>
+            <InfoH>
+              {props.loggedInUserStats ? props.loggedInUserStats.dms : 0}
+            </InfoH>
           </InfoSubBox>
           <InfoSubBox>
             <InfoP>Personal Text</InfoP>
-            <InfoH>{stats ? stats.total_personal_texts : 0}</InfoH>
+            <InfoH>
+              {props.loggedInUserStats ? props.loggedInUserStats.pts : 0}
+            </InfoH>
           </InfoSubBox>
           <InfoSubBox style={{ paddingRight: "21px" }}>
             <InfoP>RS Text</InfoP>
-            <InfoH>{stats ? stats.total_rs_texts : 0}</InfoH>
+            <InfoH>
+              {props.loggedInUserStats ? props.loggedInUserStats.rst : 0}
+            </InfoH>
           </InfoSubBox>
         </InfoBox>
       </InfoSection>
@@ -151,6 +156,7 @@ function HomeRight(props) {
                     color: currency === option.label ? "white" : "black",
                   }}
                   onClick={(e) => {
+                    props.onFilterChange(option.label);
                     setCurrency(option.label);
                   }}
                 >
@@ -199,6 +205,10 @@ function HomeRight(props) {
           {stats &&
             stats.users.map((user, index) => {
               // console.log("THis is user", user);
+              // var name = props.user.first_name + " " + props.user.last_name;
+              // if (name === user.table.name) {
+              //   setRank(user.rank);
+              // }
               if (index < 4) {
                 return (
                   <ListItem>
