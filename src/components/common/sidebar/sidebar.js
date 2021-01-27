@@ -11,7 +11,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
 import { BiChat, BiBell } from "react-icons/bi";
-import Modal from "../model";
+import Modal from "../../dashboard/model";
 import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
 import { Grid } from "@material-ui/core";
@@ -175,7 +175,7 @@ const HeaderIcons = styled.div`
   display: flex;
 `;
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -284,12 +284,20 @@ const Sidebar = () => {
             <Logoimage src={Logo}></Logoimage>
           </LeftSectionNav>
         </Nav>
-        <SidebarNav sidebar={sidebar}>
+        <SidebarNav
+          sidebar={sidebar}
+          style={{ width: props.contacts ? 60 : 250 }}
+        >
           <Grid container direction="column">
             <SidebarWrap>
-              <Button onClick={openModal}>+ New</Button>
+              {props.contacts === null && (
+                <Button onClick={openModal}>+ New</Button>
+              )}
+
               {SidebarData.map((item, index) => {
-                return <SubMenu item={item} key={index} />;
+                return (
+                  <SubMenu contacts={props.contacts} item={item} key={index} />
+                );
               })}
             </SidebarWrap>
             <div
@@ -320,18 +328,20 @@ const Sidebar = () => {
                   ></img>
                 </Grid>
                 <Grid item md={8} xs={8} lg={8}>
-                  <Grid
-                    container
-                    direction="row"
-                    alignItems="center"
-                    style={{ height: "100%" }}
-                  >
-                    <p style={{ margin: 0, fontWeight: "bold" }}>
-                      {JSON.parse(localStorage.getItem("user")).first_name +
-                        " " +
-                        JSON.parse(localStorage.getItem("user")).last_name}
-                    </p>
-                  </Grid>
+                  {props.contacts === null && (
+                    <Grid
+                      container
+                      direction="row"
+                      alignItems="center"
+                      style={{ height: "100%" }}
+                    >
+                      <p style={{ margin: 0, fontWeight: "bold" }}>
+                        {JSON.parse(localStorage.getItem("user")).first_name +
+                          " " +
+                          JSON.parse(localStorage.getItem("user")).last_name}
+                      </p>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
             </div>

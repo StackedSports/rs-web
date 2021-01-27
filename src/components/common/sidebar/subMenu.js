@@ -5,6 +5,7 @@ import styled from "styled-components";
 const SidebarLink = styled(Link)`
   display: flex;
   color: #373d4a;
+  cursor: pointer;
   justify-content: space-between;
   align-items: center;
   padding: 5px;
@@ -54,7 +55,7 @@ const LabelContainer = styled.div`
 
 const ImgIcon = styled.img``;
 
-const SubMenu = ({ item }) => {
+const SubMenu = ({ item, contacts }) => {
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
@@ -64,7 +65,7 @@ const SubMenu = ({ item }) => {
       <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
         <LabelContainer>
           {item.icon}
-          <SidebarLabel>{item.title}</SidebarLabel>
+          {contacts == null && <SidebarLabel>{item.title}</SidebarLabel>}
         </LabelContainer>
         <div>
           {item.subNav && subnav
