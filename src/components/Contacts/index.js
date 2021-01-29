@@ -85,7 +85,7 @@ function Home() {
     },
   ];
   const filtesSpacingStyle = {
-    marginRight: 15,
+    marginRight: 5,
   };
   const renderFilters = () => {
     return (
@@ -165,7 +165,7 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "Grade Year"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
@@ -186,7 +186,7 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "Time Zone"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
@@ -207,7 +207,7 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "State"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
@@ -228,7 +228,7 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "Position"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
@@ -249,7 +249,28 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "Coach"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Tag"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
