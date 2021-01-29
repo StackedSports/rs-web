@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, Grid, Checkbox } from "@material-ui/core";
+import { makeStyles, Grid, Checkbox, TextField } from "@material-ui/core";
 import { FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -11,7 +11,9 @@ import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
 import AvatarImg from "../../images/avatar.jpeg";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import styled from "styled-components";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
@@ -46,18 +48,229 @@ const useStyles = makeStyles({
   tags: {
     border: "1px solid #d8d8d8",
     height: 30,
-    width: 80,
+    width: 120,
     fontWeight: 600,
     borderRadius: 4,
   },
 });
+
 function Home() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState(null);
+  const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
+
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [rankFilter, setRankFilter] = useState(null);
+
+  const statuses = [
+    {
+      value: "1",
+      label: "Offer Hold",
+    },
+    {
+      value: "1",
+      label: "Offer Take",
+    },
+    {
+      value: "1",
+      label: "Off Board",
+    },
+    {
+      value: "1",
+      label: "Not Good Enough",
+    },
+  ];
+  const filtesSpacingStyle = {
+    marginRight: 15,
+  };
+  const renderFilters = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        spacing={1}
+        style={{
+          marginTop: 25,
+          borderBottom: "1px solid #f8f8f8",
+          paddingBottom: 20,
+        }}
+      >
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={statusFilter || "Status"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+                setFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: statusFilter === option.label ? "#348ef7" : "white",
+                color: statusFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setStatusFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+      </Grid>
+    );
+  };
 
   if (localStorage.getItem("user")) {
   } else {
@@ -171,6 +384,9 @@ function Home() {
                 ></IconTextField>
                 <IconTextField
                   text="Filter"
+                  onClick={() => {
+                    setShowFiltersRow(!showFiltersRow);
+                  }}
                   icon={<FaSlidersH style={{ color: "#3871DA" }}></FaSlidersH>}
                 ></IconTextField>
               </Grid>
@@ -200,6 +416,7 @@ function Home() {
               marginTop: 10,
             }}
           ></div>
+          {showFiltersRow === true ? renderFilters() : <div></div>}
           <Grid container direction="row" alignItems="center">
             <Grid item md={3} sm={3}>
               <p
@@ -356,7 +573,6 @@ function Home() {
               );
             })}
           </div>
-
           <Grid container direction="row" alignItems="center"></Grid>
         </div>
       </Grid>

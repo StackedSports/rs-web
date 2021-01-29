@@ -13,6 +13,12 @@ export default function FilterField(props) {
         height: 40,
         borderRadius: 4,
         marginLeft: 10,
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        if (props.onClick) {
+          props.onClick();
+        }
       }}
     >
       <Grid item md={8} sm={8}>

@@ -24,8 +24,14 @@
   margin: 0px !important;
   height: 40px !important;
   padding: 1px !important;
+  overflow: hidden !important;
 }
 
+.dropdown-toggle {
+  white-space: nowrap;
+  overflow: hidden !important;
+  font-size: 12px !important;
+}
 .MuiTable-stickyHeader {
   border-collapse: collapse !important;
 }
