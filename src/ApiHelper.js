@@ -293,3 +293,88 @@ export const getLast30Stats = () => {
     },
   });
 };
+
+export const getAllContacts = () => {
+  // console.log("This is start", start);
+  // console.log("This is end", end);
+  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+  var page = 1;
+  var perPage = 200;
+  return axios({
+    method: "get",
+    url: URL + `contacts?page=${page}&per_page=${perPage}`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getTags = () => {
+  return axios({
+    method: "get",
+    url: URL + `tags?type=Medium`,
+    headers: {
+      Accept: "application/json; version=3",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getRanks = () => {
+  return axios({
+    method: "get",
+    url: URL + `team/ranks`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getGradeYears = () => {
+  return axios({
+    method: "get",
+    url: URL + `team/grad_years`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getStatuses = () => {
+  return axios({
+    method: "get",
+    url: URL + `team/statuses`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
