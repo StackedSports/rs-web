@@ -65,6 +65,8 @@ function Home() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
+  const [filterType, setFilterType] = useState([]);
+  const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
@@ -80,6 +82,7 @@ function Home() {
   const [tagFilter, setTagFilter] = useState(null);
 
   const [contacts, setContacts] = useState(null);
+  const [copyContacts, setCopyContacts] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
   const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
@@ -95,6 +98,7 @@ function Home() {
         if (res.statusText === "OK") {
           console.log("These are all contacts", res.data);
           setContacts(res.data);
+          setCopyContacts(res.data);
         }
       },
       (error) => {
@@ -244,8 +248,7 @@ function Home() {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
                   } else {
-                    setStatusFilter(option.label, "status");
-                    addDataToFilter(option.label);
+                    addDataToFilter(option.label, "status");
                   }
                 }}
               >
@@ -272,7 +275,6 @@ function Home() {
                     setRankFilter(null);
                     addDataToFilter(option.label);
                   } else {
-                    setRankFilter(option.label);
                     addDataToFilter(option.label, "ranks");
                   }
                 }}
@@ -301,7 +303,6 @@ function Home() {
                     setGradeYearFilter(null);
                     addDataToFilter(option.label);
                   } else {
-                    setGradeYearFilter(option.label);
                     addDataToFilter(option.label, "gradeYear");
                   }
                 }}
@@ -415,8 +416,7 @@ function Home() {
                     setTagFilter(null);
                     addDataToFilter(option.label);
                   } else {
-                    setTagFilter(option.label);
-                    addDataToFilter(option.label, "gradeYear");
+                    addDataToFilter(option.label, "Tag");
                   }
                 }}
               >
@@ -432,17 +432,35 @@ function Home() {
   } else {
     window.location.href = "/";
   }
-  const addDataToFilter = (value) => {
+  const addDataToFilter = (value, type) => {
     if (filter.includes(value)) {
       var temp = filter;
-      temp.splice(value, 1);
-      console.log("This is temp", temp);
-      setFilter(temp);
+      if (temp.length === 1) {
+        setFilter(temp);
+      } else {
+        temp.splice(value, 1);
+        console.log("This is temp", temp);
+        setFilter(temp);
+      }
     } else {
       var temp = filter;
+      var tempType = filterType;
       temp.push(value);
+      tempType.push(type);
+      setFilterType(tempType);
       setFilter(temp);
+      setuseLessState(uselessState + 1);
     }
+  };
+  const removeDataFromFilter = (index) => {
+    var temp = filter;
+    var tempType = filterType;
+    temp.splice(index, 1);
+    tempType.splice(index, 1);
+    var newArray = temp;
+    setFilter(newArray);
+    setFilterType(tempType);
+    setuseLessState(uselessState + 1);
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -456,7 +474,54 @@ function Home() {
     }
   }, []);
 
-  console.log("This is filter bar", filterBar);
+  console.log("This is filter bar", filter, filterType);
+
+  const checkFilters = (item) => {
+    // console.log("These are tags for all", item.tags);
+    var isValid = false;
+    if (filter.length != 0) {
+      filter.map((filt, index) => {
+        if (filterType[index] === "status") {
+          if (item.status != null && item.status.status === filt) {
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "ranks") {
+          if (item.rank != null && item.rank.rank === filt) {
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "gradeYear") {
+          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+            console.log(
+              "This is inseide grader",
+              moment(item.grad_year).format("YYYY"),
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "Tag") {
+          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+            console.log(
+              "This is inseide grader",
+              moment(item.grad_year).format("YYYY"),
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+      });
+    } else {
+      isValid = true;
+    }
+    return isValid;
+  };
+
   return (
     <DarkContainer style={{ padding: 20, marginLeft: 60 }}>
       <Grid container direction="row">
@@ -565,7 +630,7 @@ function Home() {
           </Grid>
           <Grid container direction="row">
             {filter.length != 0 &&
-              filter.map((fil) => {
+              filter.map((fil, index) => {
                 return (
                   <div
                     container
@@ -577,7 +642,7 @@ function Home() {
                     {fil}
                     <ClearIcon
                       onClick={() => {
-                        addDataToFilter(fil);
+                        removeDataFromFilter(index);
                       }}
                       style={{ color: "red", fontSize: 17, cursor: "pointer" }}
                     ></ClearIcon>{" "}
@@ -705,92 +770,91 @@ function Home() {
             </Grid>
             {contacts &&
               contacts.map((item) => {
-                // console.log(
-                //   "This is status",
-                //   item.twitter_profile.profile_image.includes(
-                //     "contact-missing-image"
-                //   )
-                // );
-                return (
-                  <Grid
-                    container
-                    direction="row"
-                    alignItems="center"
-                    style={{
-                      border: "1px solid #d8d8d8",
-                      borderRadius: 4,
-                      paddingTop: 4,
-                      paddingBottom: 4,
-                      marginBottom: 2,
-                      minWidth: 1110,
-                    }}
-                  >
-                    <Grid item md={1} xs={1}>
-                      <img
-                        src={
-                          item.twitter_profile.profile_image.includes(
-                            "contact-missing-image"
-                          ) == false
-                            ? item.twitter_profile.profile_image
-                            : AvatarImg
-                        }
-                        style={{ width: 30, height: 30, borderRadius: "50%" }}
-                      ></img>
+                // console.log("This is filter funtion", checkFilters(item));
+                if (checkFilters(item) === true) {
+                  return (
+                    <Grid
+                      container
+                      direction="row"
+                      alignItems="center"
+                      style={{
+                        border: "1px solid #d8d8d8",
+                        borderRadius: 4,
+                        paddingTop: 4,
+                        paddingBottom: 4,
+                        marginBottom: 2,
+                        minWidth: 1110,
+                      }}
+                    >
+                      <Grid item md={1} xs={1}>
+                        <img
+                          src={
+                            item.twitter_profile.profile_image.includes(
+                              "contact-missing-image"
+                            ) == false
+                              ? item.twitter_profile.profile_image
+                              : AvatarImg
+                          }
+                          style={{ width: 30, height: 30, borderRadius: "50%" }}
+                        ></img>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.first_name}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.last_name}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.twitter_profile.screen_name
+                            ? "@" + item.twitter_profile.screen_name
+                            : ""}
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span
+                          className={classes.tableFields}
+                          style={{ marginLeft: 40 }}
+                        >
+                          {item.phone}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.state}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.grad_year
+                            ? moment(item.grad_year).format("YYYY")
+                            : ""}
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span className={classes.tableFields}>
+                          {item.high_school}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.status &&
+                            new moment(item.status.created_at).fromNow()}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {" "}
+                          {item.status && item.status.status}
+                        </span>
+                      </Grid>
                     </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {item.first_name}
-                      </span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {item.last_name}
-                      </span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {item.twitter_profile.screen_name
-                          ? "@" + item.twitter_profile.screen_name
-                          : ""}
-                      </span>
-                    </Grid>
-                    <Grid item md={2} xs={2}>
-                      <span
-                        className={classes.tableFields}
-                        style={{ marginLeft: 40 }}
-                      >
-                        {item.phone}
-                      </span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>{item.state}</span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {item.grad_year
-                          ? moment(item.grad_year).format("YYYY")
-                          : ""}
-                      </span>
-                    </Grid>
-                    <Grid item md={2} xs={2}>
-                      <span className={classes.tableFields}>
-                        {item.high_school}
-                      </span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {item.status &&
-                          new moment(item.status.created_at).fromNow()}
-                      </span>
-                    </Grid>
-                    <Grid item md={1} xs={1}>
-                      <span className={classes.tableFields}>
-                        {" "}
-                        {item.status && item.status.status}
-                      </span>
-                    </Grid>
-                  </Grid>
-                );
+                  );
+                }
               })}
           </div>
           <Grid container direction="row" alignItems="center"></Grid>
