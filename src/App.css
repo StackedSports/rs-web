@@ -69,3 +69,18 @@
 .react-calendar__month-view__days__day {
   border-radius: 5px !important;
 }
+
+.dropdown-menu.show {
+  display: block;
+  max-height: 200px !important;
+  overflow-y: scroll !important;
+}
+
+.hideScrollBar {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hideScrollBar::-webkit-scrollbar {
+  display: none;
+}

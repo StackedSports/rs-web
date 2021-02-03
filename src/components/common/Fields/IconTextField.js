@@ -24,7 +24,7 @@ export default function FilterField(props) {
       <Grid item md={8} sm={8}>
         <span
           style={{
-            padding: 5,
+            paddingLeft: 12,
             fontWeight: "bold",
             color: props.textColor || "black",
           }}
@@ -33,8 +33,14 @@ export default function FilterField(props) {
         </span>{" "}
       </Grid>
       <Grid item md={4} sm={4}>
-        {" "}
-        {props.icon}
+        <Grid
+          container
+          direction="row"
+          justify="flex-end"
+          style={{ paddingRight: 12 }}
+        >
+          {props.icon}
+        </Grid>
       </Grid>
     </Grid>
   );

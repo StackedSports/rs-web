@@ -71,6 +71,7 @@ function Home() {
   const [showSideFilters, setshowSideFilters] = useState(false);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
+  const [stateSearch, setStateSearch] = useState("");
 
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
@@ -80,6 +81,7 @@ function Home() {
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
@@ -213,6 +215,59 @@ function Home() {
       label: "Not Good Enough",
     },
   ];
+  const states = [
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    " New Mexico",
+    " New York",
+    " North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    " Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming",
+  ];
+
   const filtesSpacingStyle = {
     marginRight: 5,
   };
@@ -340,19 +395,60 @@ function Home() {
           placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {statuses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background: stateFilter === option.label ? "#348ef7" : "white",
-                color: stateFilter === option.label ? "white" : "black",
-              }}
-              onClick={() => {
-                setStateFilter(option.label);
-              }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
+          <div>
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "90%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                }}
+                placeholder="Search States"
+                value={stateSearch}
+                onChange={(e) => {
+                  setStateSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
+
+            {states.map((option) => {
+              if (stateSearch != "") {
+                if (
+                  option.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background:
+                          stateFilter === option ? "#348ef7" : "white",
+                        color: stateFilter === option ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        addDataToFilter(option, "State");
+                      }}
+                    >
+                      {option}
+                    </Dropdown.Item>
+                  );
+                }
+              } else {
+                return (
+                  <Dropdown.Item
+                    style={{
+                      background: stateFilter === option ? "#348ef7" : "white",
+                      color: stateFilter === option ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      addDataToFilter(option, "State");
+                    }}
+                  >
+                    {option}
+                  </Dropdown.Item>
+                );
+              }
+            })}
+          </div>
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
@@ -523,7 +619,7 @@ function Home() {
   };
 
   return (
-    <DarkContainer style={{ padding: 20, marginLeft: 60 }}>
+    <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
       <Grid container direction="row">
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
@@ -620,6 +716,7 @@ function Home() {
                 ></IconTextField>
                 <IconTextField
                   text="Filter"
+                  width={120}
                   onClick={() => {
                     setShowFiltersRow(!showFiltersRow);
                   }}
@@ -689,7 +786,7 @@ function Home() {
               <IconButton
                 text="Send Message"
                 textColor="white"
-                width={170}
+                width={180}
                 icon={<SendIcon style={{ color: "white" }}></SendIcon>}
               ></IconButton>
             </Grid>
@@ -697,13 +794,13 @@ function Home() {
               <Grid container direction="row" justify="flex-end">
                 <IconTextField
                   // width={180}
-                  width={90}
+                  width={100}
                   text="Action"
                   textColor="gray"
                   icon={<RowingIcon style={{ color: "#3871DA" }}></RowingIcon>}
                 ></IconTextField>
                 <IconTextField
-                  width={80}
+                  width={100}
                   text="Tag"
                   icon={
                     <LocalOfferOutlinedIcon
@@ -712,7 +809,7 @@ function Home() {
                   }
                 ></IconTextField>
                 <IconTextField
-                  width={80}
+                  width={100}
                   text={
                     <ViewCarouselIcon
                       style={{ color: "#3871DA" }}
@@ -769,7 +866,7 @@ function Home() {
               </Grid>
             </Grid>
             {contacts &&
-              contacts.map((item) => {
+              contacts.map((item, index) => {
                 // console.log("This is filter funtion", checkFilters(item));
                 if (checkFilters(item) === true) {
                   return (
@@ -779,24 +876,43 @@ function Home() {
                       alignItems="center"
                       style={{
                         border: "1px solid #d8d8d8",
+                        borderBottom: "none",
                         borderRadius: 4,
                         paddingTop: 4,
                         paddingBottom: 4,
-                        marginBottom: 2,
                         minWidth: 1110,
                       }}
                     >
                       <Grid item md={1} xs={1}>
-                        <img
-                          src={
-                            item.twitter_profile.profile_image.includes(
-                              "contact-missing-image"
-                            ) == false
-                              ? item.twitter_profile.profile_image
-                              : AvatarImg
-                          }
-                          style={{ width: 30, height: 30, borderRadius: "50%" }}
-                        ></img>
+                        {hoveredIndex === index ? (
+                          <Checkbox
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : (
+                          <img
+                            onMouseEnter={() => {
+                              setHoveredIndex(index);
+                            }}
+                            src={
+                              item.twitter_profile.profile_image.includes(
+                                "contact-missing-image"
+                              ) == false
+                                ? item.twitter_profile.profile_image
+                                : AvatarImg
+                            }
+                            style={{
+                              width: 35,
+                              height: 35,
+                              borderRadius: "50%",
+                              marginLeft: 5,
+                              marginTop: 5,
+                              marginBottom: 5,
+                            }}
+                          ></img>
+                        )}
                       </Grid>
                       <Grid item md={1} xs={1}>
                         <span className={classes.tableFields}>

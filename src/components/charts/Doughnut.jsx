@@ -7,7 +7,7 @@ export default class Doughnut extends React.Component {
     this.myChart = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["Recruite Messages", "Personal texts", "Total DM's"],
+        labels: ["RS Text", "Personal texts", "Total DM's"],
         datasets: [
           {
             data: [

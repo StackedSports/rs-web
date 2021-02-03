@@ -189,6 +189,7 @@ const Sidebar = (props) => {
 
   const showSidebar = () => setSidebar(!sidebar);
 
+  console.log("This is props contacts", props.contacts);
   return (
     <>
       <Modal open={showModal} setShowModal={setShowModal} />
@@ -222,9 +223,21 @@ const Sidebar = (props) => {
           </LeftSectionNav>
         </NavResponsive>
         <Nav>
-          <LogoContainer>
-            <NavLogo src={DashboardLogo} />
-          </LogoContainer>
+          {props.contacts === true ? (
+            <LogoContainer style={{ width: 60 }}>
+              <NavLogo src={DashboardLogo} style={{ width: 50 }} />
+            </LogoContainer>
+          ) : (
+            <LogoContainer>
+              <NavLogo src={DashboardLogo} />
+            </LogoContainer>
+          )}
+          {props.contacts === true ? (
+            <Button onClick={openModal}>+ Add Contact</Button>
+          ) : (
+            <div></div>
+          )}
+
           <FormInputWrap>
             <FiSearch
               style={{
@@ -289,8 +302,10 @@ const Sidebar = (props) => {
           style={{ width: props.contacts ? 60 : 250 }}
         >
           <Grid container direction="column">
-            <SidebarWrap>
-              {props.contacts === null && (
+            <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
+              {props.contacts === true ? (
+                <div></div>
+              ) : (
                 <Button onClick={openModal}>+ New</Button>
               )}
 
@@ -328,7 +343,9 @@ const Sidebar = (props) => {
                   ></img>
                 </Grid>
                 <Grid item md={8} xs={8} lg={8}>
-                  {props.contacts === null && (
+                  {props.contacts === true ? (
+                    <div></div>
+                  ) : (
                     <Grid
                       container
                       direction="row"

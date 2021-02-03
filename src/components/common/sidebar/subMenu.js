@@ -59,7 +59,7 @@ const SubMenu = ({ item, contacts }) => {
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
-
+  console.log("THis is path", item.path);
   return (
     <>
       <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
