@@ -30,7 +30,8 @@
 .dropdown-toggle {
   white-space: nowrap;
   overflow: hidden !important;
-  font-size: 12px !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
 }
 .MuiTable-stickyHeader {
   border-collapse: collapse !important;
@@ -83,4 +84,9 @@
 /* Hide scrollbar for Chrome, Safari and Opera */
 .hideScrollBar::-webkit-scrollbar {
   display: none;
+}
+
+.fullHeightContacts {
+  min-height: calc(100vh - 250px);
+  max-height: calc(100vh - 250px);
 }

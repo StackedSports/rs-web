@@ -378,3 +378,19 @@ export const getStatuses = () => {
     },
   });
 };
+
+export const getBoardFilters = () => {
+  return axios({
+    method: "get",
+    url: URL + `filters`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};

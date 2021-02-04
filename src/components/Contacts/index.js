@@ -13,6 +13,7 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+import { FaMagic, FaColumns } from "react-icons/fa";
 
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
@@ -23,6 +24,7 @@ import {
   getRanks,
   getStatuses,
   getGradeYears,
+  getBoardFilters,
 } from "../../ApiHelper";
 
 const useStyles = makeStyles({
@@ -53,11 +55,13 @@ const useStyles = makeStyles({
   },
   tags: {
     border: "1px solid #d8d8d8",
-    height: 30,
+    height: 40,
     width: "max-content",
     fontWeight: 600,
     borderRadius: 4,
     marginLeft: 4,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
 });
 
@@ -66,9 +70,11 @@ function Home() {
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
+  const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
+  const [showBoardFilters, setshowBoardFilters] = useState(false);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
@@ -89,6 +95,7 @@ function Home() {
   const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
+  const [allBoards, setAllBoards] = useState(null);
 
   const getMyContacts = (date) => {
     // setLoading(true);
@@ -96,7 +103,7 @@ function Home() {
     // || "2020-12-13"
     getAllContacts().then(
       (res) => {
-        console.log("THis is all contacts res", res);
+        // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           console.log("These are all contacts", res.data);
           setContacts(res.data);
@@ -115,7 +122,7 @@ function Home() {
         // console.log("THis is all grade Years", res);
         var gradYears = [];
         if (res.statusText === "OK") {
-          console.log("These are all contacts", res.data);
+          // console.log("These are all contacts", res.data);
           res.data.map((item) => {
             gradYears.push({
               value: item,
@@ -131,13 +138,29 @@ function Home() {
     );
   };
 
+  const getAllBoards = () => {
+    getBoardFilters().then(
+      (res) => {
+        console.log("THis is all boards", res);
+        var gradYears = [];
+        if (res.statusText === "OK") {
+          console.log("These are all boards", res.data);
+          setAllBoards(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all grad year", error);
+      }
+    );
+  };
+
   const getAllTags = () => {
     getTags().then(
       (res) => {
         // console.log("THis is all tags", res);
         var TAGS = [];
         if (res.statusText === "OK") {
-          console.log("These are all tags", res.data);
+          // console.log("These are all tags", res.data);
           res.data.map((item) => {
             TAGS.push({
               value: item.name,
@@ -159,7 +182,7 @@ function Home() {
         // console.log("THis is all statuses", res);
         var STATUSES = [];
         if (res.statusText === "OK") {
-          console.log("These are all statuses", res.data);
+          // console.log("These are all statuses", res.data);
           res.data.map((item) => {
             STATUSES.push({
               value: item.status,
@@ -181,7 +204,7 @@ function Home() {
         // console.log("THis is all ranks", res);
         var RANKS = [];
         if (res.statusText === "OK") {
-          console.log("These are all ranks", res.data);
+          // console.log("These are all ranks", res.data);
           res.data.map((item) => {
             RANKS.push({
               value: item.rank,
@@ -548,6 +571,25 @@ function Home() {
       setuseLessState(uselessState + 1);
     }
   };
+
+  const makeCheckBoxSelected = (index) => {
+    if (selectedCheckBoxes.indexOf(index) > -1) {
+      var temp = selectedCheckBoxes;
+      console.log("This is temp", temp);
+      console.log("This is index", index);
+      temp.splice(index, 1);
+      var newArray = temp;
+      setSelectedCheckboxes(newArray);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedCheckBoxes;
+      temp.push(index);
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    }
+    console.log("THis is selected Checkbox", selectedCheckBoxes);
+  };
+
   const removeDataFromFilter = (index) => {
     var temp = filter;
     var tempType = filterType;
@@ -565,12 +607,17 @@ function Home() {
       getAllRanks();
       getAllStatuses();
       getAllTags();
+      getAllBoards();
     } else {
       window.location.href = "/";
     }
   }, []);
 
-  console.log("This is filter bar", filter, filterType);
+  // console.log("This is filter bar", filter, filterType);
+
+  const isSelectedCheckbox = (index) => {
+    console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
+  };
 
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
@@ -643,7 +690,7 @@ function Home() {
             <p
               className={classes.sideFilter}
               onClick={() => {
-                setshowSubSideFilters(!showSideSubFilters);
+                setshowBoardFilters(!showBoardFilters);
               }}
             >
               My Boards
@@ -651,17 +698,20 @@ function Home() {
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
             </p>
-            {showSideSubFilters === true && (
+            {showBoardFilters === true && (
               <div>
-                <p
-                  className={classes.sideSubFilter}
-                  onClick={() => {
-                    setFilter("Fl Offer");
-                  }}
-                >
-                  Fl Offers Take
-                </p>
-                <p className={classes.sideSubFilter}>Fl Offers Hold</p>
+                {allBoards.map((board) => {
+                  return (
+                    <p
+                      className={classes.sideSubFilter}
+                      onClick={() => {
+                        addDataToFilter(board.name, "Board");
+                      }}
+                    >
+                      {board.name}
+                    </p>
+                  );
+                })}
               </div>
             )}
 
@@ -736,13 +786,24 @@ function Home() {
                     justify="center"
                     className={classes.tags}
                   >
-                    {fil}
-                    <ClearIcon
-                      onClick={() => {
-                        removeDataFromFilter(index);
-                      }}
-                      style={{ color: "red", fontSize: 17, cursor: "pointer" }}
-                    ></ClearIcon>{" "}
+                    <Grid
+                      style={{ height: 40 }}
+                      container
+                      direction="row"
+                      alignItems="center"
+                    >
+                      {fil}
+                      <ClearIcon
+                        onClick={() => {
+                          removeDataFromFilter(index);
+                        }}
+                        style={{
+                          color: "red",
+                          fontSize: 17,
+                          cursor: "pointer",
+                        }}
+                      ></ClearIcon>{" "}
+                    </Grid>
                   </div>
                 );
               })}
@@ -797,7 +858,7 @@ function Home() {
                   width={100}
                   text="Action"
                   textColor="gray"
-                  icon={<RowingIcon style={{ color: "#3871DA" }}></RowingIcon>}
+                  icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
                 ></IconTextField>
                 <IconTextField
                   width={100}
@@ -810,11 +871,7 @@ function Home() {
                 ></IconTextField>
                 <IconTextField
                   width={100}
-                  text={
-                    <ViewCarouselIcon
-                      style={{ color: "#3871DA" }}
-                    ></ViewCarouselIcon>
-                  }
+                  text={<FaColumns style={{ color: "#3871DA" }}></FaColumns>}
                   icon={<ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>}
                 ></IconTextField>
               </Grid>
@@ -822,6 +879,7 @@ function Home() {
           </Grid>
           <div
             style={{ maxWidth: "100%", maxHeight: 400, overflowX: "scroll" }}
+            className="fullHeightContacts"
           >
             <Grid
               container
@@ -867,7 +925,10 @@ function Home() {
             </Grid>
             {contacts &&
               contacts.map((item, index) => {
-                // console.log("This is filter funtion", checkFilters(item));
+                // console.log(
+                //   "This is filter funtion",
+                //   isSelectedCheckbox(index)
+                // );
                 if (checkFilters(item) === true) {
                   return (
                     <Grid
@@ -886,6 +947,22 @@ function Home() {
                       <Grid item md={1} xs={1}>
                         {hoveredIndex === index ? (
                           <Checkbox
+                            color="primary"
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
+                          <Checkbox
+                            color="primary"
+                            checked={true}
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
                             style={{ marginTop: 1, marginBottom: 1 }}
                             onMouseLeave={() => {
                               setHoveredIndex(null);
