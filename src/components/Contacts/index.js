@@ -574,12 +574,18 @@ function Home() {
 
   const makeCheckBoxSelected = (index) => {
     if (selectedCheckBoxes.indexOf(index) > -1) {
-      var temp = selectedCheckBoxes;
+      var temp = [];
+      selectedCheckBoxes.map((item) => {
+        if (index != item) {
+          temp.push(item);
+        }
+      });
       console.log("This is temp", temp);
-      console.log("This is index", index);
-      temp.splice(index, 1);
-      var newArray = temp;
-      setSelectedCheckboxes(newArray);
+      // console.log("This is index", index);
+      // var other = temp.splice(index, 1);
+      // console.log("This is other", other);
+      // var newArray = temp;
+      setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = selectedCheckBoxes;
