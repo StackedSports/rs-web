@@ -23,29 +23,18 @@ export default function FilterField(props) {
       }}
     >
       {" "}
-      <Grid item md={props.icon ? 8 : 12} sm={props.icon ? 8 : 12}>
-        <span
-          style={{
-            paddingLeft: 12,
-            fontWeight: "bold",
-            color: props.textColor || "black",
-          }}
-        >
-          {props.text}
-        </span>{" "}
-      </Grid>
-      {props.icon && (
-        <Grid item md={4} sm={4}>
-          <Grid
-            container
-            direction="row"
-            justify="flex-end"
-            style={{ paddingRight: 12 }}
+      <Grid item md={12} sm={12}>
+        <Grid container direction="row" justify="center">
+          <span
+            style={{
+              fontWeight: "bold",
+              color: props.textColor || "black",
+            }}
           >
-            {props.icon}
-          </Grid>
+            {props.text}
+          </span>{" "}
         </Grid>
-      )}
+      </Grid>
     </Grid>
   );
 }

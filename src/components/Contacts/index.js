@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, Grid, Checkbox, TextField } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+import {
+  makeStyles,
+  Grid,
+  Checkbox,
+  TextField,
+  Snackbar,
+} from "@material-ui/core";
 import { FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -14,9 +21,11 @@ import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { FaMagic, FaColumns } from "react-icons/fa";
+import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
+import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import {
   getAllContacts,
@@ -25,8 +34,20 @@ import {
   getStatuses,
   getGradeYears,
   getBoardFilters,
+  getPositions,
 } from "../../ApiHelper";
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
+// const useStyles2 = makeStyles((theme) => ({
+//   root: {
+//     width: "100%",
+//     "& > * + *": {
+//       marginTop: theme.spacing(2),
+//     },
+//   },
+// }));
 const useStyles = makeStyles({
   tableHeading: {
     fontWeight: 700,
@@ -74,6 +95,9 @@ function Home() {
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
+  const [showTagsDialog, setShowTagsDialog] = useState(false);
+  const [tagSearch, setTagSearch] = useState("");
+
   const [showBoardFilters, setshowBoardFilters] = useState(false);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
@@ -96,6 +120,21 @@ function Home() {
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
+  const [positions, setAllPositions] = useState(null);
+
+  const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  const handleClick = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
 
   const getMyContacts = (date) => {
     // setLoading(true);
@@ -160,7 +199,7 @@ function Home() {
         // console.log("THis is all tags", res);
         var TAGS = [];
         if (res.statusText === "OK") {
-          // console.log("These are all tags", res.data);
+          console.log("These are all tags", res.data);
           res.data.map((item) => {
             TAGS.push({
               value: item.name,
@@ -198,6 +237,27 @@ function Home() {
     );
   };
 
+  const getAllPositions = () => {
+    getPositions().then(
+      (res) => {
+        // console.log("THis is all ranks", res);
+        var POSITIONS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all positions", res.data);
+          res.data.map((item) => {
+            POSITIONS.push({
+              value: item.name,
+              label: item.name,
+            });
+          });
+          setAllPositions(POSITIONS);
+        }
+      },
+      (error) => {
+        console.log("this is error all poistion", error);
+      }
+    );
+  };
   const getAllRanks = () => {
     getRanks().then(
       (res) => {
@@ -477,23 +537,23 @@ function Home() {
           id="dropdown-basic-button"
           title={positionFilter || "Position"}
           drop={"down"}
-          placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {statuses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background:
-                  positionFilter === option.label ? "#348ef7" : "white",
-                color: positionFilter === option.label ? "white" : "black",
-              }}
-              onClick={() => {
-                setPositionFilter(option.label);
-              }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
+          {positions &&
+            positions.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    positionFilter === option.label ? "#348ef7" : "white",
+                  color: positionFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  addDataToFilter(option, "Position");
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
@@ -614,6 +674,7 @@ function Home() {
       getAllStatuses();
       getAllTags();
       getAllBoards();
+      getAllPositions();
     } else {
       window.location.href = "/";
     }
@@ -673,6 +734,16 @@ function Home() {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openSnakBar}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success">
+          {selectedCheckBoxes.length + " "} contacts have been tagged!
+        </Alert>
+      </Snackbar>
       <Grid container direction="row">
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
@@ -737,6 +808,8 @@ function Home() {
             background: "white",
             borderRadius: 5,
             padding: 10,
+            paddingLeft: 30,
+            paddingRight: 30,
           }}
         >
           <Grid container direction="row">
@@ -836,18 +909,34 @@ function Home() {
               >
                 Contacts
               </p>
-              <span
-                style={{
-                  padding: 5,
-                  fontWeight: "bold",
-                  marginTop: 20,
-                  fontSize: 14,
-                  width: "100%",
-                }}
-              >
-                You have <span style={{ color: "#3871DA" }}>1806</span> contacts
-                in the system
-              </span>
+              {selectedCheckBoxes.length != 0 ? (
+                <span
+                  style={{
+                    padding: 5,
+                    fontWeight: "bold",
+                    marginTop: 20,
+                    fontSize: 14,
+                    width: "100%",
+                  }}
+                >
+                  <span style={{ color: "#3871DA" }}>
+                    {selectedCheckBoxes.length + " "} contacts selected
+                  </span>{" "}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    padding: 5,
+                    fontWeight: "bold",
+                    marginTop: 20,
+                    fontSize: 14,
+                    width: "100%",
+                  }}
+                >
+                  You have <span style={{ color: "#3871DA" }}>1806</span>{" "}
+                  contacts in the system
+                </span>
+              )}
             </Grid>
             <Grid item md={3} sm={3}>
               <IconButton
@@ -868,6 +957,9 @@ function Home() {
                 ></IconTextField>
                 <IconTextField
                   width={100}
+                  onClick={() => {
+                    setShowTagsDialog(true);
+                  }}
                   text="Tag"
                   icon={
                     <LocalOfferOutlinedIcon
@@ -883,52 +975,53 @@ function Home() {
               </Grid>
             </Grid>
           </Grid>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            style={{
+              background: "#f5f6f9",
+              minWidth: 1080,
+            }}
+          >
+            <Grid item md={1} xs={1}>
+              <Checkbox color="primary"></Checkbox>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Name</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Last Name</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Twitter</span>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
+                Phone
+              </span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>State</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Grade Year</span>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              <span className={classes.tableHeading}>School</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Date Added</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableHeading}>Status</span>
+            </Grid>
+          </Grid>
+
           <div
-            style={{ maxWidth: "100%", maxHeight: 400, overflowX: "scroll" }}
+            style={{ maxWidth: "100%", maxHeight: 370, overflowX: "scroll" }}
             className="fullHeightContacts"
           >
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              style={{ background: "#f5f6f9", minWidth: 1080 }}
-            >
-              <Grid item md={1} xs={1}>
-                <Checkbox></Checkbox>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Name</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Last Name</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Twitter</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span
-                  className={classes.tableHeading}
-                  style={{ marginLeft: 40 }}
-                >
-                  Phone
-                </span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>State</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Grade Year</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>School</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Date Added</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Status</span>
-              </Grid>
-            </Grid>
             {contacts &&
               contacts.map((item, index) => {
                 // console.log(
@@ -1059,6 +1152,112 @@ function Home() {
           <Grid container direction="row" alignItems="center"></Grid>
         </div>
       </Grid>
+      <DialogBox
+        // title={"POST"}
+        maxWidth="sm"
+        open={showTagsDialog}
+        message={
+          <div>
+            <p
+              style={{
+                fontSize: 22,
+                color: "black",
+                marginTop: 0,
+                marginBottom: 0,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: -25,
+              }}
+            >
+              Tags
+            </p>
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "100%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                  height: 40,
+                }}
+                placeholder="Search Tag Name"
+                value={tagSearch}
+                onChange={(e) => {
+                  setTagSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
+            <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
+              {allTags &&
+                allTags.map((tags) => {
+                  if (tags.label.indexOf(tagSearch) > -1) {
+                    return (
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        style={{
+                          borderBottom: "1px solid #d8d8d8",
+                          paddingTop: 4,
+                          paddingBottom: 4,
+                        }}
+                      >
+                        <Grid item md={3} sm={3}>
+                          <Checkbox
+                            color="primary"
+                            onChange={() => {
+                              // makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                          ></Checkbox>
+                        </Grid>
+                        <Grid item md={9} sm={9}>
+                          {tags.label}
+                        </Grid>
+                      </Grid>
+                    );
+                  }
+                })}
+            </div>
+            <Grid
+              container
+              direction="row"
+              justify="flex-end"
+              style={{ marginTop: 20, marginBottom: 5 }}
+            >
+              <HollowWhiteButton
+                width={100}
+                onClick={() => {
+                  setShowTagsDialog(true);
+                }}
+                text="Cancel"
+                textColor="#3871DA"
+                background="white"
+              ></HollowWhiteButton>
+              <IconTextField
+                width={100}
+                onClick={() => {
+                  setShowTagsDialog(false);
+                  setOpenSnackBar(true);
+                }}
+                text="Tag"
+                textColor="white"
+                background="#3871DA"
+                icon={
+                  <LocalOfferOutlinedIcon
+                    style={{ color: "white" }}
+                  ></LocalOfferOutlinedIcon>
+                }
+              ></IconTextField>
+            </Grid>
+          </div>
+        }
+        // applyForm={() => dispatch(hidePost())}
+        cancelForm={() => {
+          setShowTagsDialog(false);
+        }}
+        hideActions={true}
+      />
     </DarkContainer>
   );
 }
