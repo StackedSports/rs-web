@@ -264,7 +264,7 @@ export default function TransitionsModal(props) {
                           <Grid
                             container
                             direction="row"
-                            style={{ width: 200 }}
+                            style={{ width: 230 }}
                           >
                             {" "}
                             <CheckCircleIcon
