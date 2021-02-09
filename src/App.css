@@ -90,3 +90,7 @@
   min-height: calc(100vh - 285px);
   max-height: calc(100vh - 285px);
 }
+
+.uselessClass {
+  min-height: 20px;
+}
