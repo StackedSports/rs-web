@@ -302,7 +302,8 @@ export const getAllContacts = () => {
   var perPage = 200;
   return axios({
     method: "get",
-    url: URL + `contacts?page=${page}&per_page=${perPage}`,
+    url:
+      URL + `contacts?page=${page}&per_page=${perPage}&sort_column=last_name`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",

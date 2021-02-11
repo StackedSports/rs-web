@@ -7,7 +7,7 @@ import {
   TextField,
   Snackbar,
 } from "@material-ui/core";
-import { FaSlidersH } from "react-icons/fa";
+import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
@@ -20,7 +20,15 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { FaMagic, FaColumns } from "react-icons/fa";
+import {
+  FaMagic,
+  FaColumns,
+  FaUserCircle,
+  FaPhone,
+  FaTwitter,
+  FaMapMarker,
+  FaLocationArrow,
+} from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
@@ -84,7 +92,69 @@ const useStyles = makeStyles({
     paddingLeft: 12,
     paddingRight: 12,
   },
+  icons: {
+    color: "#d8d8d8",
+  },
 });
+const columnNames = [
+  {
+    name: "First Name",
+    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+  },
+  {
+    name: "Last Name",
+    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+  },
+  {
+    name: "Nick Name",
+    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+  },
+  {
+    name: "Twitter",
+    icon: <FaTwitter className={classes.icons}></FaTwitter>,
+  },
+  {
+    name: "Phone Number",
+    icon: <FaPhone className={classes.icons}></FaPhone>,
+  },
+  {
+    name: "State",
+    icon: <FaMapMarker className={classes.icons}></FaMapMarker>,
+  },
+  {
+    name: "High School",
+    icon: <FaLocationArrow className={classes.icons}></FaLocationArrow>,
+  },
+  { name: "Grad Year" },
+  { name: "Position" },
+  { name: "Area Coach" },
+  { name: "Recruiting Coach" },
+  { name: "Status" },
+  { name: "Rank" },
+  { name: "Last Messaged" },
+  { name: "Most Active Time" },
+  { name: "Date Added" },
+  {
+    name: "Total Messages Sent",
+  },
+  { name: "Personal Text", sub: true },
+  { name: "Twitter DM's", sub: true },
+
+  { name: "RS Text", sub: true },
+  { name: "Relationships Type", Heading: "Display Relationship Detail" },
+  { name: "First Name" },
+  { name: "Last Name" },
+  { name: "Nick Name" },
+  { name: "Twitter" },
+  { name: "Phone Number" },
+  { name: "Lives With" },
+  { name: "Active In life" },
+  { name: "Top Influencer" },
+  { name: "Opponent Week", Heading: "Opponent Details" },
+  { name: "Opponent Name", sub: true },
+  { name: "Game Results", sub: true },
+  { name: "Game Notes", sub: true },
+];
 
 function Home() {
   const classes = useStyles();
@@ -967,11 +1037,47 @@ function Home() {
                     ></LocalOfferOutlinedIcon>
                   }
                 ></IconTextField>
-                <IconTextField
-                  width={100}
-                  text={<FaColumns style={{ color: "#3871DA" }}></FaColumns>}
-                  icon={<ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>}
-                ></IconTextField>
+                <div class="dropdown">
+                  <IconTextField
+                    width={100}
+                    text={<FaColumns style={{ color: "#3871DA" }}></FaColumns>}
+                    icon={<ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>}
+                  ></IconTextField>
+                  <div class="dropdown-content">
+                    <p style={{ color: "black", margin: 12 }}>
+                      Displayed Recruite Data
+                    </p>
+                    {columnNames.map((item) => {
+                      return (
+                        <Grid
+                          container
+                          alignItems="center"
+                          style={{
+                            height: item.Heading ? 60 : 30,
+                            marginLeft: item.sub ? 35 : 0,
+                          }}
+                        >
+                          {item.Heading && (
+                            <p
+                              style={{
+                                marginTop: 10,
+                                marginBottom: 0,
+                                width: "100%",
+                                paddingLeft: 4,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.Heading}
+                            </p>
+                          )}
+                          <Checkbox color="primary"></Checkbox>
+                          {item.icon}
+                          <p style={{ margin: 0 }}>{item.name}</p>
+                        </Grid>
+                      );
+                    })}
+                  </div>
+                </div>
               </Grid>
             </Grid>
           </Grid>
@@ -988,7 +1094,7 @@ function Home() {
               <Checkbox color="primary"></Checkbox>
             </Grid>
             <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Name</span>
+              <span className={classes.tableHeading}>First Name</span>
             </Grid>
             <Grid item md={1} xs={1}>
               <span className={classes.tableHeading}>Last Name</span>
@@ -998,7 +1104,7 @@ function Home() {
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
-                Phone
+                Phone Number
               </span>
             </Grid>
             <Grid item md={1} xs={1}>
