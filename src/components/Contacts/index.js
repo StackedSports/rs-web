@@ -96,65 +96,6 @@ const useStyles = makeStyles({
     color: "#d8d8d8",
   },
 });
-const columnNames = [
-  {
-    name: "First Name",
-    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-  },
-  {
-    name: "Last Name",
-    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-  },
-  {
-    name: "Nick Name",
-    icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-  },
-  {
-    name: "Twitter",
-    icon: <FaTwitter className={classes.icons}></FaTwitter>,
-  },
-  {
-    name: "Phone Number",
-    icon: <FaPhone className={classes.icons}></FaPhone>,
-  },
-  {
-    name: "State",
-    icon: <FaMapMarker className={classes.icons}></FaMapMarker>,
-  },
-  {
-    name: "High School",
-    icon: <FaLocationArrow className={classes.icons}></FaLocationArrow>,
-  },
-  { name: "Grad Year" },
-  { name: "Position" },
-  { name: "Area Coach" },
-  { name: "Recruiting Coach" },
-  { name: "Status" },
-  { name: "Rank" },
-  { name: "Last Messaged" },
-  { name: "Most Active Time" },
-  { name: "Date Added" },
-  {
-    name: "Total Messages Sent",
-  },
-  { name: "Personal Text", sub: true },
-  { name: "Twitter DM's", sub: true },
-
-  { name: "RS Text", sub: true },
-  { name: "Relationships Type", Heading: "Display Relationship Detail" },
-  { name: "First Name" },
-  { name: "Last Name" },
-  { name: "Nick Name" },
-  { name: "Twitter" },
-  { name: "Phone Number" },
-  { name: "Lives With" },
-  { name: "Active In life" },
-  { name: "Top Influencer" },
-  { name: "Opponent Week", Heading: "Opponent Details" },
-  { name: "Opponent Name", sub: true },
-  { name: "Game Results", sub: true },
-  { name: "Game Notes", sub: true },
-];
 
 function Home() {
   const classes = useStyles();
@@ -193,6 +134,81 @@ function Home() {
   const [positions, setAllPositions] = useState(null);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  const columnNames = [
+    {
+      name: "First Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Last Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Nick Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Twitter",
+      icon: <FaTwitter className={classes.icons}></FaTwitter>,
+    },
+    {
+      name: "Phone Number",
+      icon: <FaPhone className={classes.icons}></FaPhone>,
+    },
+    {
+      name: "State",
+      icon: <FaMapMarker className={classes.icons}></FaMapMarker>,
+    },
+    {
+      name: "High School",
+      icon: <FaLocationArrow className={classes.icons}></FaLocationArrow>,
+    },
+    { name: "Grad Year" },
+    { name: "Position" },
+    { name: "Area Coach" },
+    { name: "Recruiting Coach" },
+    { name: "Status" },
+    { name: "Rank" },
+    { name: "Last Messaged" },
+    { name: "Most Active Time" },
+    { name: "Date Added" },
+    {
+      name: "Total Messages Sent",
+    },
+    { name: "Personal Text", sub: true },
+    { name: "Twitter DM's", sub: true },
+
+    { name: "RS Text", sub: true },
+    { name: "Relationships Type", Heading: "Display Relationship Detail" },
+    {
+      name: "First Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Last Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Nick Name",
+      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
+    },
+    {
+      name: "Twitter",
+      icon: <FaTwitter className={classes.icons}></FaTwitter>,
+    },
+    {
+      name: "Phone Number",
+      icon: <FaPhone className={classes.icons}></FaPhone>,
+    },
+    { name: "Lives With" },
+    { name: "Active In life" },
+    { name: "Top Influencer" },
+    { name: "Opponent Week", Heading: "Opponent Details" },
+    { name: "Opponent Name", sub: true },
+    { name: "Game Results", sub: true },
+    { name: "Game Notes", sub: true },
+  ];
 
   const handleClick = () => {
     setOpenSnackBar(true);
