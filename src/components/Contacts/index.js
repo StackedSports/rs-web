@@ -43,7 +43,9 @@ import {
   getGradeYears,
   getBoardFilters,
   getPositions,
+  getAllColumns,
 } from "../../ApiHelper";
+import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -105,6 +107,7 @@ function Home() {
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
@@ -126,6 +129,7 @@ function Home() {
 
   const [contacts, setContacts] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
+  const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
   const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
@@ -337,6 +341,27 @@ function Home() {
             });
           });
           setAllPositions(POSITIONS);
+        }
+      },
+      (error) => {
+        console.log("this is error all poistion", error);
+      }
+    );
+  };
+  const getColumns = () => {
+    getAllColumns().then(
+      (res) => {
+        // console.log("THis is all ranks", res);
+        var POSITIONS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all cols", res.data);
+          // res.data.map((item) => {
+          //   POSITIONS.push({
+          //     value: item.name,
+          //     label: item.name,
+          //   });
+          // });
+          setAllColumns(res.data);
         }
       },
       (error) => {
@@ -761,6 +786,7 @@ function Home() {
       getAllTags();
       getAllBoards();
       getAllPositions();
+      getColumns();
     } else {
       window.location.href = "/";
     }
@@ -1044,12 +1070,18 @@ function Home() {
                 <IconTextField
                   width={100}
                   onClick={() => {
-                    setShowTagsDialog(true);
+                    if (selectedCheckBoxes.length > 0) {
+                      setShowTagsDialog(true);
+                    }
                   }}
                   text="Tag"
+                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
                   icon={
                     <LocalOfferOutlinedIcon
-                      style={{ color: "#3871DA" }}
+                      style={{
+                        color:
+                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
+                      }}
                     ></LocalOfferOutlinedIcon>
                   }
                 ></IconTextField>
@@ -1063,213 +1095,243 @@ function Home() {
                     <p style={{ color: "black", margin: 12 }}>
                       Displayed Recruite Data
                     </p>
-                    {columnNames.map((item) => {
-                      return (
-                        <Grid
-                          container
-                          alignItems="center"
-                          style={{
-                            height: item.Heading ? 60 : 30,
-                            marginLeft: item.sub ? 35 : 0,
-                          }}
-                        >
-                          {item.Heading && (
-                            <p
-                              style={{
-                                marginTop: 10,
-                                marginBottom: 0,
-                                width: "100%",
-                                paddingLeft: 4,
-                                fontWeight: 600,
-                              }}
-                            >
-                              {item.Heading}
-                            </p>
-                          )}
-                          <Checkbox color="primary"></Checkbox>
-                          {item.icon}
-                          <p style={{ margin: 0 }}>{item.name}</p>
-                        </Grid>
-                      );
-                    })}
+                    {allColumns &&
+                      allColumns.map((item) => {
+                        return (
+                          <Grid
+                            container
+                            alignItems="center"
+                            style={{
+                              height: item.Heading ? 60 : 30,
+                              marginLeft: item.sub ? 35 : 0,
+                            }}
+                          >
+                            {item.Heading && (
+                              <p
+                                style={{
+                                  marginTop: 10,
+                                  marginBottom: 0,
+                                  width: "100%",
+                                  paddingLeft: 4,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {item.Heading}
+                              </p>
+                            )}
+                            <Checkbox color="primary"></Checkbox>
+                            {/* {item.icon} */}
+                            {/* <i
+                              class="fa fa-user-circle"
+                              style={{ color: "#dadada", marginRight: 10 }}
+                            ></i> */}
+                            <i
+                              class={item.fa_classes}
+                              style={{ color: "#dadada", marginRight: 10 }}
+                            ></i>
+                            <p style={{ margin: 0 }}>{item.name}</p>
+                          </Grid>
+                        );
+                      })}
                   </div>
                 </div>
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              background: "#f5f6f9",
-              minWidth: 1080,
-            }}
-          >
-            <Grid item md={1} xs={1}>
-              <Checkbox color="primary"></Checkbox>
+          <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                background: "#f5f6f9",
+                width: "100%",
+                minWidth: 1110,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  checked={selectAll}
+                  onChange={() => {
+                    if (selectAll === false) {
+                      setSelectAll(true);
+                      contacts &&
+                        contacts.map((item) => {
+                          makeCheckBoxSelected(item.id);
+                        });
+                    } else {
+                      setSelectAll(false);
+                      setSelectedCheckboxes([]);
+                    }
+                  }}
+                  color="primary"
+                ></Checkbox>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>First Name</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Last Name</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Twitter</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span
+                  className={classes.tableHeading}
+                  style={{ marginLeft: 40 }}
+                >
+                  Phone Number
+                </span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>State</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Grad Year</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>School</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Date Added</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Status</span>
+              </Grid>
             </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>First Name</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Last Name</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Twitter</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
-                Phone Number
-              </span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>State</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Grade Year</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableHeading}>School</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Date Added</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableHeading}>Status</span>
-            </Grid>
-          </Grid>
 
-          <div
-            style={{ maxWidth: "100%", maxHeight: 370, overflowX: "scroll" }}
-            className="fullHeightContacts"
-          >
-            {contacts &&
-              contacts.map((item, index) => {
-                // console.log(
-                //   "This is filter funtion",
-                //   isSelectedCheckbox(index)
-                // );
-                if (checkFilters(item) === true) {
-                  return (
-                    <Grid
-                      container
-                      direction="row"
-                      alignItems="center"
-                      style={{
-                        border: "1px solid #d8d8d8",
-                        borderBottom: "none",
-                        borderRadius: 4,
-                        paddingTop: 4,
-                        paddingBottom: 4,
-                        minWidth: 1110,
-                      }}
-                    >
-                      <Grid item md={1} xs={1}>
-                        {hoveredIndex === index ? (
-                          <Checkbox
-                            color="primary"
-                            onChange={() => {
-                              makeCheckBoxSelected(item.id);
-                            }}
-                            style={{ marginTop: 1, marginBottom: 1 }}
-                            onMouseLeave={() => {
-                              setHoveredIndex(null);
-                            }}
-                          ></Checkbox>
-                        ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
-                          <Checkbox
-                            color="primary"
-                            checked={true}
-                            onChange={() => {
-                              makeCheckBoxSelected(item.id);
-                            }}
-                            style={{ marginTop: 1, marginBottom: 1 }}
-                            onMouseLeave={() => {
-                              setHoveredIndex(null);
-                            }}
-                          ></Checkbox>
-                        ) : (
-                          <img
-                            onMouseEnter={() => {
-                              setHoveredIndex(index);
-                            }}
-                            src={
-                              item.twitter_profile.profile_image.includes(
-                                "contact-missing-image"
-                              ) == false
-                                ? item.twitter_profile.profile_image
-                                : AvatarImg
-                            }
-                            style={{
-                              width: 35,
-                              height: 35,
-                              borderRadius: "50%",
-                              marginLeft: 5,
-                              marginTop: 5,
-                              marginBottom: 5,
-                            }}
-                          ></img>
-                        )}
+            <div
+              style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
+              className="fullHeightContacts"
+            >
+              {contacts &&
+                contacts.map((item, index) => {
+                  // console.log(
+                  //   "This is filter funtion",
+                  //   isSelectedCheckbox(index)
+                  // );
+                  if (checkFilters(item) === true) {
+                    return (
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        style={{
+                          border: "1px solid #d8d8d8",
+                          borderBottom: "none",
+                          borderRadius: 4,
+                          paddingTop: 4,
+                          paddingBottom: 4,
+                          minWidth: 1110,
+                        }}
+                      >
+                        <Grid item md={1} xs={1}>
+                          {hoveredIndex === index ? (
+                            <Checkbox
+                              color="primary"
+                              onChange={() => {
+                                makeCheckBoxSelected(item.id);
+                              }}
+                              style={{ marginTop: 1, marginBottom: 1 }}
+                              onMouseLeave={() => {
+                                setHoveredIndex(null);
+                              }}
+                            ></Checkbox>
+                          ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
+                            <Checkbox
+                              color="primary"
+                              checked={true}
+                              onChange={() => {
+                                makeCheckBoxSelected(item.id);
+                              }}
+                              style={{ marginTop: 1, marginBottom: 1 }}
+                              onMouseLeave={() => {
+                                setHoveredIndex(null);
+                              }}
+                            ></Checkbox>
+                          ) : (
+                            <img
+                              onMouseEnter={() => {
+                                setHoveredIndex(index);
+                              }}
+                              src={
+                                item.twitter_profile.profile_image.includes(
+                                  "contact-missing-image"
+                                ) == false
+                                  ? item.twitter_profile.profile_image
+                                  : AvatarImg
+                              }
+                              style={{
+                                width: 35,
+                                height: 35,
+                                borderRadius: "50%",
+                                marginLeft: 5,
+                                marginTop: 5,
+                                marginBottom: 5,
+                              }}
+                            ></img>
+                          )}
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.first_name}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.last_name}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.twitter_profile.screen_name
+                              ? "@" + item.twitter_profile.screen_name
+                              : ""}
+                          </span>
+                        </Grid>
+                        <Grid item md={2} xs={2}>
+                          <span
+                            className={classes.tableFields}
+                            style={{ marginLeft: 40 }}
+                          >
+                            {item.phone}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.state}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.grad_year
+                              ? moment(item.grad_year).format("YYYY")
+                              : ""}
+                          </span>
+                        </Grid>
+                        <Grid item md={2} xs={2}>
+                          <span className={classes.tableFields}>
+                            {item.high_school}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {item.status &&
+                              new moment(item.status.created_at).fromNow()}
+                          </span>
+                        </Grid>
+                        <Grid item md={1} xs={1}>
+                          <span className={classes.tableFields}>
+                            {" "}
+                            {item.status && item.status.status}
+                          </span>
+                        </Grid>
                       </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.first_name}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.last_name}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.twitter_profile.screen_name
-                            ? "@" + item.twitter_profile.screen_name
-                            : ""}
-                        </span>
-                      </Grid>
-                      <Grid item md={2} xs={2}>
-                        <span
-                          className={classes.tableFields}
-                          style={{ marginLeft: 40 }}
-                        >
-                          {item.phone}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.state}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.grad_year
-                            ? moment(item.grad_year).format("YYYY")
-                            : ""}
-                        </span>
-                      </Grid>
-                      <Grid item md={2} xs={2}>
-                        <span className={classes.tableFields}>
-                          {item.high_school}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {item.status &&
-                            new moment(item.status.created_at).fromNow()}
-                        </span>
-                      </Grid>
-                      <Grid item md={1} xs={1}>
-                        <span className={classes.tableFields}>
-                          {" "}
-                          {item.status && item.status.status}
-                        </span>
-                      </Grid>
-                    </Grid>
-                  );
-                }
-              })}
+                    );
+                  }
+                })}
+            </div>
           </div>
           <Grid container direction="row" alignItems="center"></Grid>
         </div>
