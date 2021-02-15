@@ -3,6 +3,7 @@ import "./App.css";
 import Signup from "./components/signup";
 import Dashboard from "./components/dashboard/index";
 import Contacts from "./Pages/Contacts";
+import Media from "./Pages/Media";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" exact component={Signup} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/contacts" exact component={Contacts} />
+          <Route path="/media" exact component={Media} />
         </Switch>
       </Router>
     </div>

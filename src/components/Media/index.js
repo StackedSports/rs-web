@@ -12,10 +12,8 @@ import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
-import RowingIcon from "@material-ui/icons/Rowing";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
-import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
 import AvatarImg from "../../images/avatar.jpeg";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -900,10 +898,10 @@ function Home() {
                 marginBottom: 0,
               }}
             >
-              Contacts
+              Media
             </p>
             <p className={classes.sideFilter}>
-              All Contacts{" "}
+              My Media{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
@@ -914,7 +912,40 @@ function Home() {
                 setshowBoardFilters(!showBoardFilters);
               }}
             >
-              My Boards
+              Recent
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            <p
+              className={classes.sideFilter}
+              onClick={() => {
+                setshowBoardFilters(!showBoardFilters);
+              }}
+            >
+              Images
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            <p
+              className={classes.sideFilter}
+              onClick={() => {
+                setshowBoardFilters(!showBoardFilters);
+              }}
+            >
+              Videos
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            <p
+              className={classes.sideFilter}
+              onClick={() => {
+                setshowBoardFilters(!showBoardFilters);
+              }}
+            >
+              Gifs
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
@@ -937,7 +968,13 @@ function Home() {
             )}
 
             <p className={classes.sideFilter}>
-              All Contacts{" "}
+              Personalized Media
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            <p className={classes.sideFilter}>
+              Placeholders
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
@@ -972,12 +1009,12 @@ function Home() {
                   marginLeft: 20,
                 }}
               >
-                All Contacts
+                Media
               </span>
             </Grid>
             <Grid item md={6} sm={6}>
               <Grid container direction="row" justify="flex-end">
-                <IconTextField
+                {/* <IconTextField
                   width={180}
                   text="Save as Board"
                   textColor="gray"
@@ -985,6 +1022,31 @@ function Home() {
                     <AccountBoxIcon
                       style={{ color: "#3871DA" }}
                     ></AccountBoxIcon>
+                  }
+                ></IconTextField> */}
+                <IconTextField
+                  // width={180}
+                  width={100}
+                  text="Action"
+                  textColor="gray"
+                  icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                ></IconTextField>
+                <IconTextField
+                  width={100}
+                  onClick={() => {
+                    if (selectedCheckBoxes.length > 0) {
+                      setShowTagsDialog(true);
+                    }
+                  }}
+                  text="Tag"
+                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
+                  icon={
+                    <LocalOfferOutlinedIcon
+                      style={{
+                        color:
+                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
+                      }}
+                    ></LocalOfferOutlinedIcon>
                   }
                 ></IconTextField>
                 <IconTextField
@@ -1091,7 +1153,7 @@ function Home() {
               ></IconButton>
             </Grid>
             <Grid item md={6} sm={6}>
-              <Grid container direction="row" justify="flex-end">
+              {/* <Grid container direction="row" justify="flex-end">
                 <IconTextField
                   // width={180}
                   width={100}
@@ -1153,10 +1215,10 @@ function Home() {
                             )}
                             <Checkbox color="primary"></Checkbox>
                             {/* {item.icon} */}
-                            {/* <i
+              {/* <i
                               class="fa fa-user-circle"
                               style={{ color: "#dadada", marginRight: 10 }}
-                            ></i> */}
+                            ></i> 
                             <i
                               class={item.fa_classes}
                               style={{ color: "#dadada", marginRight: 10 }}
@@ -1167,7 +1229,7 @@ function Home() {
                       })}
                   </div>
                 </div>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
           <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>

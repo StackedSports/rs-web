@@ -294,11 +294,11 @@ export const getLast30Stats = () => {
   });
 };
 
-export const getAllContacts = () => {
+export const getAllContacts = (page) => {
   // console.log("This is start", start);
   // console.log("This is end", end);
   // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
-  var page = 1;
+  var page = page || 1;
   var perPage = 200;
   return axios({
     method: "get",
