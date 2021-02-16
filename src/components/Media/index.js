@@ -8,6 +8,7 @@ import {
   Snackbar,
   CircularProgress,
 } from "@material-ui/core";
+import moment from "moment";
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -17,7 +18,6 @@ import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import AvatarImg from "../../images/avatar.jpeg";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
-import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import {
   FaMagic,
@@ -27,7 +27,11 @@ import {
   FaTwitter,
   FaMapMarker,
   FaLocationArrow,
+  FaFilePdf,
+  FaVideo,
+  FaImage,
 } from "react-icons/fa";
+import GifIcon from "@material-ui/icons/Gif";
 import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
@@ -36,6 +40,7 @@ import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import {
   getAllContacts,
+  getMedia,
   getTags,
   getRanks,
   getStatuses,
@@ -98,7 +103,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Home() {
+function Media() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
@@ -128,6 +133,8 @@ function Home() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
+  const [media, setMedia] = useState(null);
+
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -139,82 +146,6 @@ function Home() {
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-
-  const columnNames = [
-    {
-      name: "First Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Last Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Nick Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Twitter",
-      icon: <FaTwitter className={classes.icons}></FaTwitter>,
-    },
-    {
-      name: "Phone Number",
-      icon: <FaPhone className={classes.icons}></FaPhone>,
-    },
-    {
-      name: "State",
-      icon: <FaMapMarker className={classes.icons}></FaMapMarker>,
-    },
-    {
-      name: "High School",
-      icon: <FaLocationArrow className={classes.icons}></FaLocationArrow>,
-    },
-    { name: "Grad Year" },
-    { name: "Position" },
-    { name: "Area Coach" },
-    { name: "Recruiting Coach" },
-    { name: "Status" },
-    { name: "Rank" },
-    { name: "Last Messaged" },
-    { name: "Most Active Time" },
-    { name: "Date Added" },
-    {
-      name: "Total Messages Sent",
-    },
-    { name: "Personal Text", sub: true },
-    { name: "Twitter DM's", sub: true },
-
-    { name: "RS Text", sub: true },
-    { name: "Relationships Type", Heading: "Display Relationship Detail" },
-    {
-      name: "First Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Last Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Nick Name",
-      icon: <FaUserCircle className={classes.icons}></FaUserCircle>,
-    },
-    {
-      name: "Twitter",
-      icon: <FaTwitter className={classes.icons}></FaTwitter>,
-    },
-    {
-      name: "Phone Number",
-      icon: <FaPhone className={classes.icons}></FaPhone>,
-    },
-    { name: "Lives With" },
-    { name: "Active In life" },
-    { name: "Top Influencer" },
-    { name: "Opponent Week", Heading: "Opponent Details" },
-    { name: "Opponent Name", sub: true },
-    { name: "Game Results", sub: true },
-    { name: "Game Notes", sub: true },
-  ];
-
   const handleClick = () => {
     setOpenSnackBar(true);
   };
@@ -251,148 +182,17 @@ function Home() {
     );
   };
 
-  const getAllGradeYears = () => {
-    getGradeYears().then(
+  const getMyMedia = () => {
+    getMedia().then(
       (res) => {
-        // console.log("THis is all grade Years", res);
-        var gradYears = [];
+        // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          // console.log("These are all contacts", res.data);
-          res.data.map((item) => {
-            gradYears.push({
-              value: item,
-              label: item,
-            });
-          });
-          setAllGraderYears(gradYears);
+          console.log("These are all media", res.data);
+          setMedia(res.data);
         }
       },
       (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
-
-  const getAllBoards = () => {
-    getBoardFilters().then(
-      (res) => {
-        console.log("THis is all boards", res);
-        var gradYears = [];
-        if (res.statusText === "OK") {
-          console.log("These are all boards", res.data);
-          setAllBoards(res.data);
-        }
-      },
-      (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
-
-  const getAllTags = () => {
-    getTags().then(
-      (res) => {
-        // console.log("THis is all tags", res);
-        var TAGS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all tags", res.data);
-          res.data.map((item) => {
-            TAGS.push({
-              value: item.name,
-              label: item.name,
-            });
-          });
-          setAllTags(TAGS);
-        }
-      },
-      (error) => {
-        console.log("this is error all tags", error);
-      }
-    );
-  };
-
-  const getAllStatuses = () => {
-    getStatuses().then(
-      (res) => {
-        // console.log("THis is all statuses", res);
-        var STATUSES = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all statuses", res.data);
-          res.data.map((item) => {
-            STATUSES.push({
-              value: item.status,
-              label: item.status,
-            });
-          });
-          setAllStatuses(STATUSES);
-        }
-      },
-      (error) => {
-        console.log("this is error all statuses", error);
-      }
-    );
-  };
-
-  const getAllPositions = () => {
-    getPositions().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-        var POSITIONS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all positions", res.data);
-          res.data.map((item) => {
-            POSITIONS.push({
-              value: item.name,
-              label: item.name,
-            });
-          });
-          setAllPositions(POSITIONS);
-        }
-      },
-      (error) => {
-        console.log("this is error all poistion", error);
-      }
-    );
-  };
-  const getColumns = () => {
-    getAllColumns().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-        var POSITIONS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all cols", res.data);
-          // res.data.map((item) => {
-          //   POSITIONS.push({
-          //     value: item.name,
-          //     label: item.name,
-          //   });
-          // });
-          setAllColumns(res.data);
-        }
-      },
-      (error) => {
-        console.log("this is error all poistion", error);
-      }
-    );
-  };
-  const getAllRanks = () => {
-    getRanks().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-        var RANKS = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all ranks", res.data);
-          res.data.map((item) => {
-            RANKS.push({
-              value: item.rank,
-              label: item.rank,
-            });
-          });
-          setAllRanks(RANKS);
-        }
-      },
-      (error) => {
-        console.log("this is error all ranks", error);
+        console.log("this is error all media", error);
       }
     );
   };
@@ -485,13 +285,13 @@ function Home() {
       >
         <DropdownButton
           id="dropdown-basic-button"
-          title={statusFilter || "Status"}
+          title={statusFilter || "File Type"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {allStatuses &&
-            allStatuses.map((option) => (
+          {statuses &&
+            statuses.map((option) => (
               <Dropdown.Item
                 style={{
                   background:
@@ -514,12 +314,12 @@ function Home() {
 
         <DropdownButton
           id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
+          title={rankFilter || "Distibuted"}
           drop={"down"}
           style={filtesSpacingStyle}
         >
-          {allRanks &&
-            allRanks.map((option) => (
+          {statuses &&
+            statuses.map((option) => (
               <Dropdown.Item
                 style={{
                   background: rankFilter === option.label ? "#348ef7" : "white",
@@ -540,13 +340,13 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={gradeYearFilter || "Grade Year"}
+          title={gradeYearFilter || "Owner"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {allGradYears &&
-            allGradYears.map((option) => (
+          {statuses &&
+            statuses.map((option) => (
               <Dropdown.Item
                 style={{
                   background:
@@ -568,7 +368,7 @@ function Home() {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={timeZoneFilter || "Time Zone"}
+          title={timeZoneFilter || "Associated To"}
           drop={"down"}
           placeholder="Status"
           style={filtesSpacingStyle}
@@ -588,11 +388,32 @@ function Home() {
             </Dropdown.Item>
           ))}
         </DropdownButton>
+
         <DropdownButton
           id="dropdown-basic-button"
-          title={stateFilter || "State"}
+          title={timeZoneFilter || "Date"}
           drop={"down"}
-          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background:
+                  timeZoneFilter === option.label ? "#348ef7" : "white",
+                color: timeZoneFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setTimeZoneFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={stateFilter || "Tag"}
+          drop={"down"}
           style={filtesSpacingStyle}
         >
           <div>
@@ -604,7 +425,7 @@ function Home() {
                   border: "1px solid #ebebeb",
                   borderRadius: 4,
                 }}
-                placeholder="Search States"
+                placeholder="Tag"
                 value={stateSearch}
                 onChange={(e) => {
                   setStateSearch(e.target.value);
@@ -649,76 +470,6 @@ function Home() {
               }
             })}
           </div>
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={positionFilter || "Position"}
-          drop={"down"}
-          style={filtesSpacingStyle}
-        >
-          {positions &&
-            positions.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background:
-                    positionFilter === option.label ? "#348ef7" : "white",
-                  color: positionFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  addDataToFilter(option, "Position");
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={coachFilter || "Coach"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {statuses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background: coachFilter === option.label ? "#348ef7" : "white",
-                color: coachFilter === option.label ? "white" : "black",
-              }}
-              onClick={() => {
-                setCoachFilter(option.label);
-              }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={tagFilter || "Tag"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {allTags &&
-            allTags.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background: tagFilter === option.label ? "#348ef7" : "white",
-                  color: tagFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setTagFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "Tag");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
         </DropdownButton>
       </Grid>
     );
@@ -785,14 +536,15 @@ function Home() {
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      getMyContacts();
-      getAllGradeYears();
-      getAllRanks();
-      getAllStatuses();
-      getAllTags();
-      getAllBoards();
-      getAllPositions();
-      getColumns();
+      // getMyContacts();
+      getMyMedia();
+      // getAllGradeYears();
+      // getAllRanks();
+      // getAllStatuses();
+      // getAllTags();
+      // getAllBoards();
+      // getAllPositions();
+      // getColumns();
       // setupPage();
     } else {
       window.location.href = "/";
@@ -876,16 +628,6 @@ function Home() {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openSnakBar}
-        autoHideDuration={2000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success">
-          {selectedCheckBoxes.length + " "} contacts have been tagged!
-        </Alert>
-      </Snackbar>
       <Grid container direction="row">
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
@@ -952,7 +694,7 @@ function Home() {
             </p>
             {showBoardFilters === true && (
               <div>
-                {allBoards.map((board) => {
+                {/* {allBoards.map((board) => {
                   return (
                     <p
                       className={classes.sideSubFilter}
@@ -963,7 +705,7 @@ function Home() {
                       {board.name}
                     </p>
                   );
-                })}
+                })} */}
               </div>
             )}
 
@@ -1102,340 +844,94 @@ function Home() {
             }}
           ></div>
           {showFiltersRow === true ? renderFilters() : <div></div>}
-          <Grid container direction="row" alignItems="center">
-            <Grid item md={3} sm={3}>
-              <p
-                style={{
-                  padding: 5,
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  paddingBottom: 0,
-                  marginBottom: 0,
-                }}
-              >
-                Contacts
-              </p>
-              {selectedCheckBoxes.length != 0 ? (
-                <span
-                  style={{
-                    padding: 5,
-                    fontWeight: "bold",
-                    marginTop: 20,
-                    fontSize: 14,
-                    width: "100%",
-                  }}
-                >
-                  <span style={{ color: "#3871DA" }}>
-                    {selectedCheckBoxes.length + " "} contacts selected
-                  </span>{" "}
-                </span>
-              ) : (
-                <span
-                  style={{
-                    padding: 5,
-                    fontWeight: "bold",
-                    marginTop: 20,
-                    fontSize: 14,
-                    width: "100%",
-                  }}
-                >
-                  You have <span style={{ color: "#3871DA" }}>1806</span>{" "}
-                  contacts in the system
-                </span>
-              )}
-            </Grid>
-            <Grid item md={3} sm={3}>
-              <IconButton
-                text="Send Message"
-                textColor="white"
-                width={180}
-                icon={<SendIcon style={{ color: "white" }}></SendIcon>}
-              ></IconButton>
-            </Grid>
-            <Grid item md={6} sm={6}>
-              {/* <Grid container direction="row" justify="flex-end">
-                <IconTextField
-                  // width={180}
-                  width={100}
-                  text="Action"
-                  textColor="gray"
-                  icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
-                ></IconTextField>
-                <IconTextField
-                  width={100}
-                  onClick={() => {
-                    if (selectedCheckBoxes.length > 0) {
-                      setShowTagsDialog(true);
-                    }
-                  }}
-                  text="Tag"
-                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
-                  icon={
-                    <LocalOfferOutlinedIcon
-                      style={{
-                        color:
-                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
-                      }}
-                    ></LocalOfferOutlinedIcon>
-                  }
-                ></IconTextField>
-                <div class="dropdown">
-                  <IconTextField
-                    width={100}
-                    text={<FaColumns style={{ color: "#3871DA" }}></FaColumns>}
-                    icon={<ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>}
-                  ></IconTextField>
-                  <div class="dropdown-content">
-                    <p style={{ color: "black", margin: 12 }}>
-                      Displayed Recruite Data
-                    </p>
-                    {allColumns &&
-                      allColumns.map((item) => {
-                        return (
-                          <Grid
-                            container
-                            alignItems="center"
-                            style={{
-                              height: item.Heading ? 60 : 30,
-                              marginLeft: item.sub ? 35 : 0,
-                            }}
-                          >
-                            {item.Heading && (
-                              <p
-                                style={{
-                                  marginTop: 10,
-                                  marginBottom: 0,
-                                  width: "100%",
-                                  paddingLeft: 4,
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {item.Heading}
-                              </p>
-                            )}
-                            <Checkbox color="primary"></Checkbox>
-                            {/* {item.icon} */}
-              {/* <i
-                              class="fa fa-user-circle"
-                              style={{ color: "#dadada", marginRight: 10 }}
-                            ></i> 
-                            <i
-                              class={item.fa_classes}
-                              style={{ color: "#dadada", marginRight: 10 }}
-                            ></i>
-                            <p style={{ margin: 0 }}>{item.name}</p>
-                          </Grid>
-                        );
-                      })}
-                  </div>
-                </div>
-              </Grid> */}
-            </Grid>
-          </Grid>
           <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              style={{
-                background: "#f5f6f9",
-                width: "100%",
-                minWidth: 1110,
-              }}
-            >
-              <Grid item md={1} xs={1}>
-                <Checkbox
-                  checked={selectAll}
-                  onChange={() => {
-                    if (selectAll === false) {
-                      setSelectAll(true);
-                      contacts &&
-                        contacts.map((item) => {
-                          makeCheckBoxSelected(item.id);
-                        });
-                    } else {
-                      setSelectAll(false);
-                      setSelectedCheckboxes([]);
-                    }
-                  }}
-                  color="primary"
-                ></Checkbox>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>First Name</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Last Name</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Twitter</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span
-                  className={classes.tableHeading}
-                  style={{ marginLeft: 40 }}
-                >
-                  Phone Number
-                </span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>State</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Grad Year</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>School</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Date Added</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Status</span>
-              </Grid>
-            </Grid>
-
             <div
-              style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
+              style={{ width: "100%", maxHeight: 440, minWidth: 1110 }}
               className="fullHeightContacts"
               id="infinit"
-              onScroll={() => {
-                handleScroll();
-              }}
+              // onScroll={() => {
+              //   handleScroll();
+              // }}
             >
-              {contacts &&
-                contacts.map((item, index) => {
-                  // console.log(
-                  //   "This is filter funtion",
-                  //   isSelectedCheckbox(index)
-                  // );
-                  if (checkFilters(item) === true) {
+              <p>Quick Access</p>
+              <Grid container>
+                {media &&
+                  media.map((m) => {
                     return (
-                      <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
+                      <div
                         style={{
-                          border: "1px solid #d8d8d8",
-                          borderBottom: "none",
+                          width: 270,
+                          height: 250,
+                          marginLeft: 10,
+                          border: "1px solid #d2d2d2",
                           borderRadius: 4,
-                          paddingTop: 4,
-                          paddingBottom: 4,
-                          minWidth: 1110,
+                          marginBottom: 10,
                         }}
                       >
-                        <Grid item md={1} xs={1}>
-                          {hoveredIndex === index ? (
-                            <Checkbox
-                              color="primary"
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
-                          ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
-                            <Checkbox
-                              color="primary"
-                              checked={true}
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          style={{ background: "#f6f6f6" }}
+                        >
+                          <img
+                            style={{ width: "80%", height: 190 }}
+                            src={m.urls.thumb}
+                          ></img>
+                        </Grid>
+                        <Grid
+                          container
+                          direction="row"
+                          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+                          alignItems="center"
+                        >
+                          {m.file_type === "image/gif" ? (
+                            <GifIcon></GifIcon>
+                          ) : m.file_type.indexOf("image") > -1 ? (
+                            <FaVideo
+                              style={{ color: "#3871da", fontSize: 20 }}
+                            ></FaVideo>
+                          ) : m.file_type.indexOf("image") > -1 ? (
+                            <FaImage></FaImage>
                           ) : (
-                            <img
-                              onMouseEnter={() => {
-                                setHoveredIndex(index);
-                              }}
-                              src={
-                                item.twitter_profile.profile_image.includes(
-                                  "contact-missing-image"
-                                ) == false
-                                  ? item.twitter_profile.profile_image
-                                  : AvatarImg
-                              }
-                              style={{
-                                width: 35,
-                                height: 35,
-                                borderRadius: "50%",
-                                marginLeft: 5,
-                                marginTop: 5,
-                                marginBottom: 5,
-                              }}
-                            ></img>
+                            <FaFilePdf
+                              style={{ color: "#3871da", fontSize: 20 }}
+                            ></FaFilePdf>
                           )}
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.first_name}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.last_name}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.twitter_profile.screen_name
-                              ? "@" + item.twitter_profile.screen_name
-                              : ""}
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span
-                            className={classes.tableFields}
-                            style={{ marginLeft: 40 }}
+                          <p
+                            style={{
+                              fontWeight: "bold",
+                              fontSize: 12,
+                              margin: 0,
+                              marginLeft: 10,
+                              fontSize: 15,
+                            }}
                           >
-                            {item.phone}
-                          </span>
+                            {m.file_name}
+                          </p>
+                          <div style={{ width: "100%" }}></div>
                         </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.state}
-                          </span>
+                        <Grid
+                          container
+                          direction="row"
+                          style={{ height: 30, marginLeft: 12 }}
+                        >
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: 13,
+                              color: "#5a5a5a",
+                            }}
+                          >
+                            Uploaded at :{" "}
+                            {new moment(m.created_at).format("YYYY-MM-DD")} by
+                            Coach Graves
+                          </p>
                         </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.grad_year
-                              ? moment(item.grad_year).format("YYYY")
-                              : ""}
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span className={classes.tableFields}>
-                            {item.high_school}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.status &&
-                              new moment(item.status.created_at).fromNow()}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {" "}
-                            {item.status && item.status.status}
-                          </span>
-                        </Grid>
-                        {index === contacts.length - 1 && (
-                          <Grid item md={12} xs={12}>
-                            <Grid container direction="row" justify="center">
-                              <CircularProgress />
-                            </Grid>
-                          </Grid>
-                        )}
-                      </Grid>
+                      </div>
                     );
-                  }
-                })}
+                  })}
+              </Grid>
             </div>
           </div>
           <Grid container direction="row" alignItems="center"></Grid>
@@ -1551,4 +1047,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Media;

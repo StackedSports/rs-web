@@ -48,7 +48,7 @@ export const SidebarData = [
   },
   {
     title: "Media",
-    path: "/",
+    path: "/media",
     icon: (
       <TiImageOutline
         style={{ height: "24px", width: "24px", opacity: 0.9 }}

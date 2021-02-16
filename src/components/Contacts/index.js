@@ -238,15 +238,28 @@ function Home() {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all contacts", res.data);
-          setContacts(res.data);
-          setCopyContacts(res.data);
-          document.getElementById("infinit").scrollTop = 0;
-          setFetching(false);
+          if (page > 1) {
+            var temp = contacts;
+            temp = temp.concat(res.data);
+            // temp.push(res.data);
+            setContacts(temp);
+            setCopyContacts(temp);
+            setuseLessState(uselessState + 1);
+            console.log("These are all new contacts", temp);
+            // document.getElementById("infinit").scrollTop = 0;
+            setFetching(false);
+          } else {
+            console.log("These are all contacts", res.data);
+            setContacts(res.data);
+            setCopyContacts(res.data);
+            document.getElementById("infinit").scrollTop = 0;
+            setFetching(false);
+          }
         }
       },
       (error) => {
-        getMyContacts(1);
+        // getMyContacts(1);
+        document.getElementById("infinit").scrollTop = 0;
         setPage(1);
         console.log("this is error all contacts", error);
       }
@@ -1292,6 +1305,7 @@ function Home() {
                                 setHoveredIndex(index);
                               }}
                               src={
+                                item.twitter_profile &&
                                 item.twitter_profile.profile_image.includes(
                                   "contact-missing-image"
                                 ) == false
@@ -1321,7 +1335,8 @@ function Home() {
                         </Grid>
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
-                            {item.twitter_profile.screen_name
+                            {item.twitter_profile &&
+                            item.twitter_profile.screen_name
                               ? "@" + item.twitter_profile.screen_name
                               : ""}
                           </span>
