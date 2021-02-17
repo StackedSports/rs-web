@@ -48,6 +48,7 @@ import {
   getBoardFilters,
   getPositions,
   getAllColumns,
+  getPlaceholder,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
@@ -134,6 +135,7 @@ function Media() {
 
   const [contacts, setContacts] = useState(null);
   const [media, setMedia] = useState(null);
+  const [placeholders, setPlaceHolders] = useState(null);
 
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
@@ -189,6 +191,21 @@ function Media() {
         if (res.statusText === "OK") {
           console.log("These are all media", res.data);
           setMedia(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all media", error);
+      }
+    );
+  };
+
+  const getMyPlaceholders = () => {
+    getPlaceholder().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all placeholder", res.data);
+          setPlaceHolders(res.data);
         }
       },
       (error) => {
@@ -538,6 +555,7 @@ function Media() {
     if (localStorage.getItem("user")) {
       // getMyContacts();
       getMyMedia();
+      getMyPlaceholders();
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -625,6 +643,140 @@ function Media() {
       // agreement.scrollTop = 0;
     }
   }
+
+  const mediaContainer = (m) => {
+    return (
+      <div
+        style={{
+          width: 270,
+          height: 250,
+          marginLeft: 10,
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginBottom: 10,
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ background: "#f6f6f6" }}
+        >
+          <img
+            style={{ width: "80%", height: 190 }}
+            src={m.urls && m.urls.thumb}
+          ></img>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+          alignItems="center"
+        >
+          {m.file_type === "image/gif" ? (
+            <GifIcon></GifIcon>
+          ) : m.file_type.indexOf("image") > -1 ? (
+            <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+          ) : m.file_type.indexOf("image") > -1 ? (
+            <FaImage></FaImage>
+          ) : (
+            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+          )}
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: 12,
+              margin: 0,
+              marginLeft: 10,
+              fontSize: 15,
+            }}
+          >
+            {m.file_name}
+          </p>
+          <div style={{ width: "100%" }}></div>
+        </Grid>
+        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              color: "#5a5a5a",
+            }}
+          >
+            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
+            Coach Graves
+          </p>
+        </Grid>
+      </div>
+    );
+  };
+
+  const placeholderContainer = (m) => {
+    return (
+      <div
+        style={{
+          width: 270,
+          height: 250,
+          marginLeft: 10,
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginBottom: 10,
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ background: "#f6f6f6" }}
+        >
+          <img
+            style={{ width: "80%", height: 190 }}
+            src={m.media_preview}
+          ></img>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+          alignItems="center"
+        >
+          {m.media_preview.indexOf(".gif") > -1 ? (
+            <GifIcon></GifIcon>
+          ) : m.media_preview.indexOf(".png") > -1 ? (
+            <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+          ) : m.media_preview.indexOf(".mp4") > -1 ? (
+            <FaImage></FaImage>
+          ) : (
+            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+          )}
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: 12,
+              margin: 0,
+              marginLeft: 10,
+              fontSize: 15,
+            }}
+          >
+            {m.name}
+          </p>
+          <div style={{ width: "100%" }}></div>
+        </Grid>
+        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              color: "#5a5a5a",
+            }}
+          >
+            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
+            Coach Graves
+          </p>
+        </Grid>
+      </div>
+    );
+  };
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
@@ -857,79 +1009,14 @@ function Media() {
               <Grid container>
                 {media &&
                   media.map((m) => {
-                    return (
-                      <div
-                        style={{
-                          width: 270,
-                          height: 250,
-                          marginLeft: 10,
-                          border: "1px solid #d2d2d2",
-                          borderRadius: 4,
-                          marginBottom: 10,
-                        }}
-                      >
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          style={{ background: "#f6f6f6" }}
-                        >
-                          <img
-                            style={{ width: "80%", height: 190 }}
-                            src={m.urls.thumb}
-                          ></img>
-                        </Grid>
-                        <Grid
-                          container
-                          direction="row"
-                          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
-                          alignItems="center"
-                        >
-                          {m.file_type === "image/gif" ? (
-                            <GifIcon></GifIcon>
-                          ) : m.file_type.indexOf("image") > -1 ? (
-                            <FaVideo
-                              style={{ color: "#3871da", fontSize: 20 }}
-                            ></FaVideo>
-                          ) : m.file_type.indexOf("image") > -1 ? (
-                            <FaImage></FaImage>
-                          ) : (
-                            <FaFilePdf
-                              style={{ color: "#3871da", fontSize: 20 }}
-                            ></FaFilePdf>
-                          )}
-                          <p
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: 12,
-                              margin: 0,
-                              marginLeft: 10,
-                              fontSize: 15,
-                            }}
-                          >
-                            {m.file_name}
-                          </p>
-                          <div style={{ width: "100%" }}></div>
-                        </Grid>
-                        <Grid
-                          container
-                          direction="row"
-                          style={{ height: 30, marginLeft: 12 }}
-                        >
-                          <p
-                            style={{
-                              margin: 0,
-                              fontSize: 13,
-                              color: "#5a5a5a",
-                            }}
-                          >
-                            Uploaded at :{" "}
-                            {new moment(m.created_at).format("YYYY-MM-DD")} by
-                            Coach Graves
-                          </p>
-                        </Grid>
-                      </div>
-                    );
+                    return mediaContainer(m);
+                  })}
+              </Grid>
+              <p>Placeholders</p>
+              <Grid container>
+                {placeholders &&
+                  placeholders.map((m) => {
+                    return placeholderContainer(m);
                   })}
               </Grid>
             </div>

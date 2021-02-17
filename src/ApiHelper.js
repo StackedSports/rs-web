@@ -299,7 +299,10 @@ export const getAllContacts = (page) => {
   // console.log("This is end", end);
   // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
   var page = page || 1;
-  var perPage = 200;
+  var pageCount = page || 1;
+  console.log("THis is page count", pageCount, "this is page", page);
+  var perPage = 200 * pageCount;
+  console.log("This is perpage", perPage);
   return axios({
     method: "get",
     url:
@@ -432,6 +435,22 @@ export const getMedia = () => {
   return axios({
     method: "get",
     url: URL + `media`,
+    headers: {
+      Accept: "application/json; version=3",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getPlaceholder = () => {
+  return axios({
+    method: "get",
+    url: URL + `media/placeholders`,
     headers: {
       Accept: "application/json; version=3",
       "Content-Type": "application/json",

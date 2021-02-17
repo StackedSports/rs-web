@@ -109,12 +109,12 @@ function Home() {
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  const [showSideFilters, setshowSideFilters] = useState(false);
+  const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
 
-  const [showBoardFilters, setshowBoardFilters] = useState(false);
+  const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
@@ -227,6 +227,22 @@ function Home() {
     }
 
     setOpenSnackBar(false);
+  };
+  let formatPhoneNumber = (str) => {
+    //Filter only numbers from the input
+    let cleaned = ("" + str).replace(/\D/g, "");
+
+    //Check if the input is of correct
+    let match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+
+    if (match) {
+      //Remove the matched extension code
+      //Change this to format for any country code.
+      let intlCode = match[1] ? "+1 " : "";
+      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+    }
+
+    return null;
   };
 
   const getMyContacts = (page) => {
@@ -934,18 +950,19 @@ function Home() {
             </p>
             {showBoardFilters === true && (
               <div>
-                {allBoards.map((board) => {
-                  return (
-                    <p
-                      className={classes.sideSubFilter}
-                      onClick={() => {
-                        addDataToFilter(board.name, "Board");
-                      }}
-                    >
-                      {board.name}
-                    </p>
-                  );
-                })}
+                {allBoards &&
+                  allBoards.map((board) => {
+                    return (
+                      <p
+                        className={classes.sideSubFilter}
+                        onClick={() => {
+                          addDataToFilter(board.name, "Board");
+                        }}
+                      >
+                        {board.name}
+                      </p>
+                    );
+                  })}
               </div>
             )}
 
@@ -1346,7 +1363,7 @@ function Home() {
                             className={classes.tableFields}
                             style={{ marginLeft: 40 }}
                           >
-                            {item.phone}
+                            {formatPhoneNumber(item.phone)}
                           </span>
                         </Grid>
                         <Grid item md={1} xs={1}>
