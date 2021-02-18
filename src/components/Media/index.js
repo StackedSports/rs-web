@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import moment from "moment";
-import { FaMarker, FaSlidersH } from "react-icons/fa";
+import { FaMarker, FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
@@ -41,13 +41,7 @@ import IconButton from "../common/Buttons/IconButton";
 import {
   getAllContacts,
   getMedia,
-  getTags,
-  getRanks,
-  getStatuses,
-  getGradeYears,
-  getBoardFilters,
-  getPositions,
-  getAllColumns,
+  getMediaTag,
   getPlaceholder,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
@@ -128,7 +122,7 @@ function Media() {
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
-  const [positionFilter, setPositionFilter] = useState(null);
+  const [showlistView, setShowlistView] = useState(false);
   const [coachFilter, setCoachFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -136,6 +130,7 @@ function Media() {
   const [contacts, setContacts] = useState(null);
   const [media, setMedia] = useState(null);
   const [placeholders, setPlaceHolders] = useState(null);
+  const [taggedMedia, setTaggedMedia] = useState(null);
 
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
@@ -206,6 +201,21 @@ function Media() {
         if (res.statusText === "OK") {
           console.log("These are all placeholder", res.data);
           setPlaceHolders(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all media", error);
+      }
+    );
+  };
+
+  const getTaggedMedia = () => {
+    getMediaTag().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all tagged  Media", res.data);
+          setTaggedMedia(res.data);
         }
       },
       (error) => {
@@ -556,6 +566,7 @@ function Media() {
       // getMyContacts();
       getMyMedia();
       getMyPlaceholders();
+      getTaggedMedia();
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -675,7 +686,7 @@ function Media() {
         >
           {m.file_type === "image/gif" ? (
             <GifIcon></GifIcon>
-          ) : m.file_type.indexOf("image") > -1 ? (
+          ) : m.file_type.indexOf("video") > -1 ? (
             <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
           ) : m.file_type.indexOf("image") > -1 ? (
             <FaImage></FaImage>
@@ -742,10 +753,12 @@ function Media() {
         >
           {m.media_preview.indexOf(".gif") > -1 ? (
             <GifIcon></GifIcon>
-          ) : m.media_preview.indexOf(".png") > -1 ? (
-            <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+          ) : m.media_preview.indexOf(".png") > -1 ||
+            m.media_preview.indexOf(".jpg") > -1 ||
+            m.media_preview.indexOf(".jpeg") > -1 ? (
+            <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
           ) : m.media_preview.indexOf(".mp4") > -1 ? (
-            <FaImage></FaImage>
+            <FaVideo></FaVideo>
           ) : (
             <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
           )}
@@ -1012,11 +1025,207 @@ function Media() {
                     return mediaContainer(m);
                   })}
               </Grid>
+              <Grid container direction="row" justify="flex-end">
+                <div
+                  style={{
+                    border: "1px solid #d2d2d2",
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 30,
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                    style={{ height: 30, cursor: "pointer" }}
+                    onClick={() => {
+                      setShowlistView(!showlistView);
+                    }}
+                  >
+                    {showlistView === true ? (
+                      <FaTh style={{ color: "#3871DA" }}></FaTh>
+                    ) : (
+                      <FaBars style={{ color: "#3871DA" }}></FaBars>
+                    )}
+                  </Grid>
+                </div>
+              </Grid>
               <p>Placeholders</p>
+              {showlistView === true ? (
+                <div
+                  style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      background: "#f5f6f9",
+                      width: "100%",
+                      minWidth: 1110,
+                    }}
+                  >
+                    <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
+                      <span className={classes.tableHeading}>Name</span>
+                    </Grid>
+                    <Grid item md={1} xs={1}>
+                      <span className={classes.tableHeading}>File</span>
+                    </Grid>
+                    <Grid item md={1} xs={1}>
+                      <span className={classes.tableHeading}>File Sent</span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span
+                        className={classes.tableHeading}
+                        style={{ marginLeft: 40 }}
+                      >
+                        Associated To
+                      </span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableHeading}>Owner</span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableHeading}>
+                        Last Modified
+                      </span>
+                    </Grid>
+                  </Grid>
+
+                  <div
+                    style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
+                    className="fullHeightContacts"
+                    id="infinit"
+                    onScroll={() => {
+                      handleScroll();
+                    }}
+                  >
+                    {placeholders &&
+                      placeholders.map((item, index) => {
+                        return (
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            style={{
+                              border: "1px solid #d8d8d8",
+                              borderBottom: "none",
+                              borderRadius: 4,
+                              paddingTop: 4,
+                              paddingBottom: 4,
+                              minWidth: 1110,
+                            }}
+                          >
+                            <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
+                              {item.media_preview.indexOf(".gif") > -1 ? (
+                                <GifIcon></GifIcon>
+                              ) : item.media_preview.indexOf(".png") > -1 ||
+                                item.media_preview.indexOf(".jpg") > -1 ||
+                                item.media_preview.indexOf(".jpeg") > -1 ? (
+                                <FaImage
+                                  style={{ color: "#3871da", fontSize: 20 }}
+                                ></FaImage>
+                              ) : item.media_preview.indexOf(".mp4") > -1 ? (
+                                <FaVideo></FaVideo>
+                              ) : (
+                                <FaFilePdf
+                                  style={{ color: "#3871da", fontSize: 20 }}
+                                ></FaFilePdf>
+                              )}
+                              <span
+                                className={classes.tableFields}
+                                style={{ marginLeft: 5 }}
+                              >
+                                {item.name}
+                              </span>
+                            </Grid>
+                            <Grid item md={1} xs={1}>
+                              <img
+                                style={{ width: 30, height: 30 }}
+                                src={item.media_preview}
+                              ></img>
+                            </Grid>
+                            <Grid item md={1} xs={1}>
+                              <span className={classes.tableFields}>
+                                {item.twitter_profile &&
+                                item.twitter_profile.screen_name
+                                  ? "@" + item.twitter_profile.screen_name
+                                  : ""}
+                              </span>
+                            </Grid>
+                            <Grid item md={2} xs={2}>
+                              <span
+                                className={classes.tableFields}
+                                style={{ marginLeft: 40 }}
+                              >
+                                {/* {formatPhoneNumber(item.phone)} */}
+                              </span>
+                            </Grid>
+                            <Grid item md={2} xs={2}>
+                              <span className={classes.tableFields}>
+                                {item.state}
+                              </span>
+                            </Grid>
+                            <Grid item md={2} xs={2}>
+                              <span className={classes.tableFields}>
+                                {moment(item.created_at).format("MMMM Do YYYY")}
+                              </span>
+                            </Grid>
+                            <Grid item md={2} xs={2}>
+                              <span className={classes.tableFields}>
+                                {item.high_school}
+                              </span>
+                            </Grid>
+                            <Grid item md={1} xs={1}>
+                              <span className={classes.tableFields}>
+                                {item.status &&
+                                  new moment(item.status.created_at).fromNow()}
+                              </span>
+                            </Grid>
+                            <Grid item md={1} xs={1}>
+                              <span className={classes.tableFields}>
+                                {" "}
+                                {item.status && item.status.status}
+                              </span>
+                            </Grid>
+                          </Grid>
+                        );
+                      })}
+                  </div>
+                </div>
+              ) : (
+                <Grid container>
+                  {placeholders &&
+                    placeholders.map((m) => {
+                      return placeholderContainer(m);
+                    })}
+                </Grid>
+              )}
+
+              <p>Tagged Media</p>
               <Grid container>
-                {placeholders &&
-                  placeholders.map((m) => {
-                    return placeholderContainer(m);
+                {taggedMedia &&
+                  taggedMedia.map((tag) => {
+                    return (
+                      <IconTextField
+                        // width={100}
+                        onClick={() => {
+                          setShowTagsDialog(false);
+                          setOpenSnackBar(true);
+                        }}
+                        text={tag.name}
+                        textColor="#3871DA"
+                        background="white"
+                        icon={
+                          <LocalOfferOutlinedIcon
+                            style={{ color: "#3871DA" }}
+                          ></LocalOfferOutlinedIcon>
+                        }
+                      ></IconTextField>
+                    );
                   })}
               </Grid>
             </div>

@@ -9,7 +9,7 @@ export default function FilterField(props) {
       alignItems="center"
       style={{
         border: "1px solid #d8d8d8",
-        width: props.width || 130,
+        width: props.width || "max-content",
         background: props.background || "white",
         height: 40,
         borderRadius: 4,
@@ -24,15 +24,18 @@ export default function FilterField(props) {
     >
       {" "}
       <Grid item md={props.icon ? 8 : 12} sm={props.icon ? 8 : 12}>
-        <span
+        <p
           style={{
             paddingLeft: 12,
             fontWeight: "bold",
             color: props.textColor || "black",
+            width: "max-content",
+            margin: 0,
+            marginRight: 10,
           }}
         >
           {props.text}
-        </span>{" "}
+        </p>{" "}
       </Grid>
       {props.icon && (
         <Grid item md={4} sm={4}>
