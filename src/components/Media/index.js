@@ -1,50 +1,30 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import {
-  makeStyles,
-  Grid,
-  Checkbox,
-  TextField,
-  Snackbar,
-  CircularProgress,
-} from "@material-ui/core";
+import { makeStyles, Grid, Checkbox } from "@material-ui/core";
 import moment from "moment";
-import { FaMarker, FaSlidersH, FaBars, FaTh } from "react-icons/fa";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-import SendIcon from "@material-ui/icons/Send";
+
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
-import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
-import AvatarImg from "../../images/avatar.jpeg";
+
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import {
-  FaMagic,
-  FaColumns,
-  FaUserCircle,
-  FaPhone,
-  FaTwitter,
-  FaMapMarker,
-  FaLocationArrow,
-  FaFilePdf,
-  FaVideo,
-  FaImage,
-} from "react-icons/fa";
+import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 import GifIcon from "@material-ui/icons/Gif";
 import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
-import IconButton from "../common/Buttons/IconButton";
+
 import {
   getAllContacts,
   getMedia,
   getMediaTag,
   getPlaceholder,
 } from "../../ApiHelper";
-import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -113,7 +93,8 @@ function Media() {
   const [tagSearch, setTagSearch] = useState("");
 
   const [showBoardFilters, setshowBoardFilters] = useState(false);
-  const [showSideSubFilters, setshowSubSideFilters] = useState(false);
+  const [viewMorePlaceholder, setViewMorePlaceholder] = useState(false);
+  const [viewMoreQuickAccess, setViewMoreQuickAccess] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
 
@@ -123,23 +104,13 @@ function Media() {
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [showlistView, setShowlistView] = useState(false);
-  const [coachFilter, setCoachFilter] = useState(null);
-  const [tagFilter, setTagFilter] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
   const [media, setMedia] = useState(null);
   const [placeholders, setPlaceHolders] = useState(null);
   const [taggedMedia, setTaggedMedia] = useState(null);
 
-  const [copyContacts, setCopyContacts] = useState(null);
-  const [allColumns, setAllColumns] = useState(null);
-  const [allStatuses, setAllStatuses] = useState(null);
-  const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
-  const [allRanks, setAllRanks] = useState(null);
-  const [allBoards, setAllBoards] = useState(null);
-  const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
@@ -241,58 +212,6 @@ function Media() {
       value: "1",
       label: "Not Good Enough",
     },
-  ];
-  const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    " New Mexico",
-    " New York",
-    " North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    " Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
   ];
 
   const filtesSpacingStyle = {
@@ -460,42 +379,47 @@ function Media() {
               ></input>
             </Grid>
 
-            {states.map((option) => {
-              if (stateSearch != "") {
-                if (
-                  option.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
-                ) {
+            {taggedMedia &&
+              taggedMedia.map((option) => {
+                if (stateSearch != "") {
+                  if (
+                    option.name
+                      .toLowerCase()
+                      .indexOf(stateSearch.toLowerCase()) > -1
+                  ) {
+                    return (
+                      <Dropdown.Item
+                        style={{
+                          background:
+                            stateFilter === option.name ? "#348ef7" : "white",
+                          color:
+                            stateFilter === option.name ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          addDataToFilter(option.name, "State");
+                        }}
+                      >
+                        {option.name}
+                      </Dropdown.Item>
+                    );
+                  }
+                } else {
                   return (
                     <Dropdown.Item
                       style={{
                         background:
-                          stateFilter === option ? "#348ef7" : "white",
-                        color: stateFilter === option ? "white" : "black",
+                          stateFilter === option.name ? "#348ef7" : "white",
+                        color: stateFilter === option.name ? "white" : "black",
                       }}
                       onClick={() => {
-                        addDataToFilter(option, "State");
+                        addDataToFilter(option.name, "State");
                       }}
                     >
-                      {option}
+                      {option.name}
                     </Dropdown.Item>
                   );
                 }
-              } else {
-                return (
-                  <Dropdown.Item
-                    style={{
-                      background: stateFilter === option ? "#348ef7" : "white",
-                      color: stateFilter === option ? "white" : "black",
-                    }}
-                    onClick={() => {
-                      addDataToFilter(option, "State");
-                    }}
-                  >
-                    {option}
-                  </Dropdown.Item>
-                );
-              }
-            })}
+              })}
           </div>
         </DropdownButton>
       </Grid>
@@ -1021,9 +945,31 @@ function Media() {
               <p>Quick Access</p>
               <Grid container>
                 {media &&
-                  media.map((m) => {
-                    return mediaContainer(m);
+                  media.map((m, index) => {
+                    if (viewMoreQuickAccess) {
+                      return mediaContainer(m);
+                    } else {
+                      if (index < 4) {
+                        return mediaContainer(m);
+                      }
+                    }
                   })}
+                <div style={{ width: "100%" }}>
+                  <Grid container direction="row" justify="center">
+                    <span
+                      style={{
+                        color: "#3871DA",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        setViewMoreQuickAccess(!viewMoreQuickAccess);
+                      }}
+                    >
+                      {viewMoreQuickAccess == true ? "View Less" : "View More"}
+                    </span>
+                  </Grid>
+                </div>
               </Grid>
               <Grid container direction="row" justify="flex-end">
                 <div
@@ -1105,127 +1051,164 @@ function Media() {
                   >
                     {placeholders &&
                       placeholders.map((item, index) => {
-                        return (
-                          <Grid
-                            container
-                            direction="row"
-                            alignItems="center"
-                            style={{
-                              border: "1px solid #d8d8d8",
-                              borderBottom: "none",
-                              borderRadius: 4,
-                              paddingTop: 4,
-                              paddingBottom: 4,
-                              minWidth: 1110,
-                            }}
-                          >
-                            <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
-                              {item.media_preview.indexOf(".gif") > -1 ? (
-                                <GifIcon></GifIcon>
-                              ) : item.media_preview.indexOf(".png") > -1 ||
-                                item.media_preview.indexOf(".jpg") > -1 ||
-                                item.media_preview.indexOf(".jpeg") > -1 ? (
-                                <FaImage
-                                  style={{ color: "#3871da", fontSize: 20 }}
-                                ></FaImage>
-                              ) : item.media_preview.indexOf(".mp4") > -1 ? (
-                                <FaVideo></FaVideo>
-                              ) : (
-                                <FaFilePdf
-                                  style={{ color: "#3871da", fontSize: 20 }}
-                                ></FaFilePdf>
-                              )}
-                              <span
-                                className={classes.tableFields}
-                                style={{ marginLeft: 5 }}
+                        if (index < 4) {
+                          return (
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              style={{
+                                border: "1px solid #d8d8d8",
+                                borderBottom: "none",
+                                borderRadius: 4,
+                                paddingTop: 4,
+                                paddingBottom: 4,
+                                minWidth: 1110,
+                              }}
+                            >
+                              <Grid
+                                item
+                                md={3}
+                                xs={3}
+                                style={{ marginLeft: 12 }}
                               >
-                                {item.name}
-                              </span>
+                                {item.media_preview.indexOf(".gif") > -1 ? (
+                                  <GifIcon></GifIcon>
+                                ) : item.media_preview.indexOf(".png") > -1 ||
+                                  item.media_preview.indexOf(".jpg") > -1 ||
+                                  item.media_preview.indexOf(".jpeg") > -1 ? (
+                                  <FaImage
+                                    style={{ color: "#3871da", fontSize: 20 }}
+                                  ></FaImage>
+                                ) : item.media_preview.indexOf(".mp4") > -1 ? (
+                                  <FaVideo></FaVideo>
+                                ) : (
+                                  <FaFilePdf
+                                    style={{ color: "#3871da", fontSize: 20 }}
+                                  ></FaFilePdf>
+                                )}
+                                <span
+                                  className={classes.tableFields}
+                                  style={{ marginLeft: 5 }}
+                                >
+                                  {item.name}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <img
+                                  style={{ width: 30, height: 30 }}
+                                  src={item.media_preview}
+                                ></img>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {item.twitter_profile &&
+                                  item.twitter_profile.screen_name
+                                    ? "@" + item.twitter_profile.screen_name
+                                    : ""}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span
+                                  className={classes.tableFields}
+                                  style={{ marginLeft: 40 }}
+                                >
+                                  {/* {formatPhoneNumber(item.phone)} */}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {item.state}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {moment(item.created_at).format(
+                                    "MMMM Do YYYY"
+                                  )}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {item.high_school}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {item.status &&
+                                    new moment(
+                                      item.status.created_at
+                                    ).fromNow()}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {" "}
+                                  {item.status && item.status.status}
+                                </span>
+                              </Grid>
                             </Grid>
-                            <Grid item md={1} xs={1}>
-                              <img
-                                style={{ width: 30, height: 30 }}
-                                src={item.media_preview}
-                              ></img>
-                            </Grid>
-                            <Grid item md={1} xs={1}>
-                              <span className={classes.tableFields}>
-                                {item.twitter_profile &&
-                                item.twitter_profile.screen_name
-                                  ? "@" + item.twitter_profile.screen_name
-                                  : ""}
-                              </span>
-                            </Grid>
-                            <Grid item md={2} xs={2}>
-                              <span
-                                className={classes.tableFields}
-                                style={{ marginLeft: 40 }}
-                              >
-                                {/* {formatPhoneNumber(item.phone)} */}
-                              </span>
-                            </Grid>
-                            <Grid item md={2} xs={2}>
-                              <span className={classes.tableFields}>
-                                {item.state}
-                              </span>
-                            </Grid>
-                            <Grid item md={2} xs={2}>
-                              <span className={classes.tableFields}>
-                                {moment(item.created_at).format("MMMM Do YYYY")}
-                              </span>
-                            </Grid>
-                            <Grid item md={2} xs={2}>
-                              <span className={classes.tableFields}>
-                                {item.high_school}
-                              </span>
-                            </Grid>
-                            <Grid item md={1} xs={1}>
-                              <span className={classes.tableFields}>
-                                {item.status &&
-                                  new moment(item.status.created_at).fromNow()}
-                              </span>
-                            </Grid>
-                            <Grid item md={1} xs={1}>
-                              <span className={classes.tableFields}>
-                                {" "}
-                                {item.status && item.status.status}
-                              </span>
-                            </Grid>
-                          </Grid>
-                        );
+                          );
+                        }
                       })}
                   </div>
                 </div>
               ) : (
                 <Grid container>
                   {placeholders &&
-                    placeholders.map((m) => {
-                      return placeholderContainer(m);
+                    placeholders.map((m, index) => {
+                      if (viewMorePlaceholder) {
+                        return placeholderContainer(m);
+                      } else {
+                        if (index < 4) {
+                          return placeholderContainer(m);
+                        }
+                      }
                     })}
+                  <div style={{ width: "100%" }}>
+                    <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setViewMorePlaceholder(!viewMorePlaceholder);
+                        }}
+                      >
+                        {viewMorePlaceholder == true
+                          ? "View Less"
+                          : "View More"}
+                      </span>
+                    </Grid>
+                  </div>
                 </Grid>
               )}
 
               <p>Tagged Media</p>
               <Grid container>
                 {taggedMedia &&
-                  taggedMedia.map((tag) => {
-                    return (
-                      <IconTextField
-                        // width={100}
-                        onClick={() => {
-                          setShowTagsDialog(false);
-                          setOpenSnackBar(true);
-                        }}
-                        text={tag.name}
-                        textColor="#3871DA"
-                        background="white"
-                        icon={
-                          <LocalOfferOutlinedIcon
-                            style={{ color: "#3871DA" }}
-                          ></LocalOfferOutlinedIcon>
-                        }
-                      ></IconTextField>
-                    );
+                  taggedMedia.map((tag, index) => {
+                    if (index < 7) {
+                      return (
+                        <IconTextField
+                          // width={100}
+                          onClick={() => {
+                            setShowTagsDialog(false);
+                            setOpenSnackBar(true);
+                          }}
+                          text={tag.name}
+                          textColor="#3871DA"
+                          background="white"
+                          icon={
+                            <LocalOfferOutlinedIcon
+                              style={{ color: "#3871DA" }}
+                            ></LocalOfferOutlinedIcon>
+                          }
+                        ></IconTextField>
+                      );
+                    }
                   })}
               </Grid>
             </div>

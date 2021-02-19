@@ -29,7 +29,7 @@ import {
 } from "./homeElementsRight";
 import Ex1 from "../../images/p1.jpg";
 import Start from "../../images/star.svg";
-import AvatarImg from "../../images/avatar.jpeg";
+import AvatarImg from "../../images/avatar.png";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { Dropdown, DropdownButton } from "react-bootstrap";

@@ -16,7 +16,7 @@ import RowingIcon from "@material-ui/icons/Rowing";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
-import AvatarImg from "../../images/avatar.jpeg";
+import AvatarImg from "../../images/avatar.png";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
@@ -1093,8 +1093,17 @@ function Home() {
                     width: "100%",
                   }}
                 >
-                  <span style={{ color: "#3871DA" }}>
+                  <span style={{ color: "#3871DA", width: "100%" }}>
                     {selectedCheckBoxes.length + " "} contacts selected
+                  </span>{" "}
+                  <br></br>
+                  <span
+                    style={{ color: "black", cursor: "pointer" }}
+                    onClick={() => {
+                      setSelectedCheckboxes([]);
+                    }}
+                  >
+                    Clear Selected
                   </span>{" "}
                 </span>
               ) : (
