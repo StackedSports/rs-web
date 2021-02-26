@@ -21,12 +21,38 @@ export default function FilterField(props) {
           props.onClick();
         }
       }}
+      onMouseEnter={() => {
+        if (props.onMouseEnter) {
+          props.onMouseEnter();
+        }
+      }}
+      onMouseLeave={() => {
+        if (props.onMouseLeave) {
+          props.onMouseLeave();
+        }
+      }}
     >
       {" "}
-      <Grid item md={props.icon ? 8 : 12} sm={props.icon ? 8 : 12}>
+      {props.iconStart && (
+        <Grid item md={4} sm={4}>
+          <Grid
+            container
+            direction="row"
+            justify="flex-start"
+            style={{ paddingLeft: 12 }}
+          >
+            {props.iconStart}
+          </Grid>
+        </Grid>
+      )}
+      <Grid
+        item
+        md={props.icon || props.iconStart ? 8 : 12}
+        sm={props.icon || props.iconStart ? 8 : 12}
+      >
         <p
           style={{
-            paddingLeft: 12,
+            paddingLeft: props.iconStart ? 0 : 12,
             fontWeight: "bold",
             color: props.textColor || "black",
             width: "max-content",
