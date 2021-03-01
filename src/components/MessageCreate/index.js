@@ -8,13 +8,21 @@ import {
   Snackbar,
   CircularProgress,
 } from "@material-ui/core";
+import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { FaPhone, FaTwitter, FaComment, FaPlus } from "react-icons/fa";
+import {
+  FaPhone,
+  FaTwitter,
+  FaComment,
+  FaPlus,
+  FaCalendar,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
@@ -31,6 +39,7 @@ import {
   getPositions,
   getAllColumns,
 } from "../../ApiHelper";
+import { TramRounded } from "@material-ui/icons";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -97,6 +106,22 @@ const useStyles = makeStyles({
     overflowY: "hidden",
     overflowX: "hidden",
   },
+  blueButtonActive: {
+    width: "100%",
+    borderRadius: 4,
+    background: "#3871da",
+    color: "white",
+    height: 40,
+    border: "none",
+  },
+  blueButton: {
+    width: "100%",
+    borderRadius: 4,
+    background: "transparent",
+    height: 40,
+    border: "none",
+    color: "#b5b9c0",
+  },
 });
 
 function Home() {
@@ -110,16 +135,16 @@ function Home() {
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
-  const [displaySendTo, setDisplaySendTo] = useState(false);
+  const [displaySendTo, setDisplaySendTo] = useState(true);
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
+  const [messageSender, setMessageSender] = useState(null);
+  const [messageReceiver, setMessageReceiver] = useState(null);
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
-  const [showSideSubFilters, setshowSubSideFilters] = useState(false);
-  const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
 
   const [statusFilter, setStatusFilter] = useState(null);
@@ -1010,443 +1035,706 @@ function Home() {
           {showFiltersRow === true ? renderFilters() : <div></div>}
           <Grid container direction="row" alignItems="center"></Grid>
           <div style={{ width: "100%", overflowX: "hide", marginTop: 10 }}>
-            <div
-              style={{
-                width: "100%",
-                maxHeight: 330,
-                //  minWidth: 1110
-              }}
-              className="fullHeightCreateMessage"
-              id="infinit"
-              onScroll={() => {
-                handleScroll();
-              }}
-            >
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  // background: "#f5f6f9",
-                  width: "100%",
-                  // minWidth: 1110,
-                  border: "1px solid #d8d8d8",
-                  borderRadius: 4,
-                  height: 70,
-                }}
-              >
-                <Grid item md={1} xs={1}>
-                  <p style={{ margin: 0, marginLeft: 12 }}>Send As:</p>
-                </Grid>
-                <Grid item md={11} xs={11}>
-                  {messageType ? (
-                    renderMessageTypeTag(messageType)
-                  ) : (
-                    <div class="dropdown">
-                      <IconTextField
-                        width={170}
-                        background={displayCreateMessage ? "#3871da" : "white"}
-                        text={
-                          <p
-                            style={{
-                              margin: 0,
-                              color: displayCreateMessage ? "white" : "black",
-                            }}
-                          >
-                            Message Type
-                          </p>
-                        }
-                        icon={
-                          <ExpandMoreOutlinedIcon
-                            style={{
-                              color: displayCreateMessage ? "white" : "black",
-                            }}
-                          ></ExpandMoreOutlinedIcon>
-                        }
-                        onMouseEnter={() => {
-                          setDisplayCreateMessage(true);
-                          setDisplayMessageSenders(false);
-                        }}
-                      ></IconTextField>
-                      <div
-                        // class="dropdown-content"
-                        className={classes.dropdownHidden}
-                        style={{
-                          marginLeft: 180,
-                          marginTop: -40,
-                          display: displayCreateMessage ? "block" : "none",
-                        }}
-                        onMouseLeave={() => {
-                          setDisplayCreateMessage(false);
-                        }}
-                      >
-                        <p
+            <Grid container direction="row">
+              {displaySendTo ? (
+                <Grid item md={4} xs={4}>
+                  <Grid container direction="row" justify="flex-start">
+                    <div
+                      style={{
+                        background: "#edeef2",
+                        width: "97%",
+                        height: 40,
+                        borderRadius: 4,
+                      }}
+                    >
+                      <Grid container direction="row">
+                        <Grid item md={4} xs={4}>
+                          <button className={classes.blueButton}>
+                            My Boards
+                          </button>
+                        </Grid>
+                        <Grid item md={4} xs={4}>
+                          <button className={classes.blueButtonActive}>
+                            Team Boards
+                          </button>
+                        </Grid>
+                        <Grid item md={4} xs={4}>
+                          <button className={classes.blueButton}>
+                            Individuals
+                          </button>
+                        </Grid>
+                      </Grid>
+                      <Grid container style={{ marginTop: 10 }}>
+                        <div
                           style={{
-                            color: "black",
-                            padding: 12,
-                            background: "#3871da",
-                            color: "white",
-                            fontWeight: 600,
+                            width: "100%",
+                            maxHeight: 330,
+                            //  minWidth: 1110
                           }}
+                          className="fullHeightCreateMessageSide"
                         >
-                          Set Message Type
-                        </p>
-                        {[
-                          {
-                            title: "Twitter DM",
-                            icon: (
-                              <FaTwitter
-                                style={{ color: "#3871da", marginLeft: 12 }}
-                              ></FaTwitter>
-                            ),
-                          },
-                          {
-                            title: "Personal Text",
-                            icon: (
-                              <FaPhone
-                                style={{ color: "#3871da", marginLeft: 12 }}
-                              ></FaPhone>
-                            ),
-                          },
-                          {
-                            title: "RS Text",
-                            icon: (
-                              <FaComment
-                                style={{ color: "#3871da", marginLeft: 12 }}
-                              ></FaComment>
-                            ),
-                          },
-                        ].map((type) => {
-                          return (
-                            <Grid
-                              container
-                              alignItems="center"
-                              style={{
-                                height: 50,
-                                marginLeft: 0,
-                                marginTop: -12,
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                setMessageType(type);
-                              }}
-                            >
-                              {type.icon}
+                          {allBoards &&
+                            allBoards.map((boards) => {
+                              return (
+                                <div
+                                  style={{
+                                    borderTop: "1px solid #edeef2",
+                                    width: "100%",
+                                    height: 100,
+                                    color: "#9e9e9e",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setMessageReceiver({ title: boards.name });
+                                  }}
+                                >
+                                  {boards.name}
+                                  <Grid container direction="row">
+                                    {boards.athletes.profile_images.map(
+                                      (image, index) => {
+                                        if (index < 8) {
+                                          return (
+                                            <img
+                                              src={image || AvatarImg}
+                                              style={{
+                                                width: 35,
+                                                height: 35,
+                                                borderRadius: 20,
+                                                marginTop: 5,
+                                                marginLeft:
+                                                  index != 0 ? -10 : 0,
+                                              }}
+                                            ></img>
+                                          );
+                                        }
+                                      }
+                                    )}
+                                    <img></img>
+                                  </Grid>
+                                  <p style={{ color: "#3871da" }}>
+                                    {boards.athletes.profile_images.length}{" "}
+                                    contacts
+                                  </p>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </Grid>
+                    </div>
+                  </Grid>
+                </Grid>
+              ) : (
+                <div></div>
+              )}
+
+              <Grid
+                item
+                md={displaySendTo ? 8 : 12}
+                xs={displaySendTo ? 8 : 12}
+              >
+                {" "}
+                <div
+                  style={{
+                    width: "100%",
+                    maxHeight: 330,
+                    //  minWidth: 1110
+                  }}
+                  className="fullHeightCreateMessage"
+                  id="infinit"
+                  onScroll={() => {
+                    handleScroll();
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 70,
+                    }}
+                    onMouseEnter={() => {
+                      setDisplayCreateMessage(false);
+                      setDisplayMessageSenders(false);
+                    }}
+                  >
+                    <Grid item md={1} xs={1}>
+                      <p style={{ margin: 0, marginLeft: 12 }}>Send As:</p>
+                    </Grid>
+                    <Grid item md={11} xs={11}>
+                      {messageType ? (
+                        renderMessageTypeTag(messageType)
+                      ) : (
+                        <div class="dropdown">
+                          <IconTextField
+                            width={170}
+                            background={
+                              displayCreateMessage ? "#3871da" : "white"
+                            }
+                            text={
                               <p
                                 style={{
                                   margin: 0,
-                                  fontWeight: 600,
-                                  marginLeft: 12,
+                                  color: displayCreateMessage
+                                    ? "white"
+                                    : "black",
                                 }}
                               >
-                                {type.title}
+                                Message Type
                               </p>
-                            </Grid>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  // background: "#f5f6f9",
-                  width: "100%",
-                  // minWidth: 1110,
-                  border: "1px solid #d8d8d8",
-                  borderRadius: 4,
-                  height: 70,
-                  marginTop: 12,
-                }}
-              >
-                <Grid item md={1} xs={1}>
-                  <p style={{ margin: 0, marginLeft: 12 }}>Send As:</p>
-                </Grid>
-                <Grid item md={11} xs={11}>
-                  <div class="dropdown">
-                    <IconTextField
-                      width={170}
-                      background={displayMessageSenders ? "#3871da" : "white"}
-                      text={
-                        <p
-                          style={{
-                            margin: 0,
-                            color: displayMessageSenders ? "white" : "black",
-                          }}
-                        >
-                          Add Sender
-                        </p>
-                      }
-                      iconStart={
-                        <FaPlus
-                          style={{
-                            color: displayMessageSenders ? "white" : "#3871da",
-                          }}
-                        ></FaPlus>
-                      }
-                      onMouseEnter={() => {
-                        setDisplayCreateMessage(false);
-                        setDisplayMessageSenders(true);
-                      }}
-                    ></IconTextField>
-                    <div
-                      // class="dropdown-content"
-                      className={classes.dropdownHidden}
-                      style={{
-                        marginLeft: 180,
-                        marginTop: -40,
-                        display: displayMessageSenders ? "block" : "none",
-                      }}
-                      onMouseLeave={() => {
-                        setDisplayMessageSenders(false);
-                      }}
-                    >
-                      <p
-                        style={{
-                          color: "black",
-                          padding: 12,
-                          marginBottom: 0,
-                          background: "#3871da",
-                          color: "white",
-                          fontWeight: 600,
-                        }}
-                      >
-                        Send on the behalf of
-                      </p>
-
-                      <p
-                        style={{
-                          color: "black",
-                          padding: 12,
-                          marginBottom: 0,
-                          fontWeight: 600,
-                        }}
-                      >
-                        Area Recruiting Coach
-                      </p>
-                      <div
-                        style={{ width: "100%", border: "1px solid #d8d8d8" }}
-                      ></div>
-                      <p
-                        style={{
-                          color: "black",
-                          padding: 12,
-                          marginTop: 0,
-                          marginBottom: 0,
-                          fontWeight: 600,
-                        }}
-                      >
-                        Position Coach
-                      </p>
-                      <div
-                        style={{ width: "100%", border: "1px solid #d8d8d8" }}
-                      ></div>
-                      <p
-                        style={{
-                          color: "gray",
-                          fontSize: 11,
-                          width: 200,
-                          marginLeft: 12,
-                        }}
-                      >
-                        ** select a default send account if recruite do not have
-                        a coach assigned
-                      </p>
-                      {[
-                        {
-                          title:
-                            "You (@" +
-                            JSON.parse(localStorage.getItem("user"))
-                              .twitter_profile.screen_name +
-                            ")",
-                          icon: (
-                            <img
-                              style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 20,
-                                marginLeft: 12,
-                              }}
-                              src={
-                                JSON.parse(localStorage.getItem("user"))
-                                  .twitter_profile.profile_image
-                              }
-                            ></img>
-                          ),
-                        },
-                      ].map((type) => {
-                        console.log(
-                          JSON.parse(localStorage.getItem("user"))
-                            .twitter_profile.screen_name
-                        );
-                        return (
-                          <Grid
-                            container
-                            alignItems="center"
-                            style={{
-                              height: 50,
-                              marginLeft: 0,
-                              marginTop: -12,
-                              cursor: "pointer",
+                            }
+                            icon={
+                              <ExpandMoreOutlinedIcon
+                                style={{
+                                  color: displayCreateMessage
+                                    ? "white"
+                                    : "black",
+                                }}
+                              ></ExpandMoreOutlinedIcon>
+                            }
+                            onMouseEnter={() => {
+                              setDisplayCreateMessage(true);
+                              setDisplayMessageSenders(false);
                             }}
-                            onClick={() => {
-                              setMessageType(type);
+                          ></IconTextField>
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 180,
+                              marginTop: -40,
+                              display: displayCreateMessage ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplayCreateMessage(false);
                             }}
                           >
-                            {type.icon}
                             <p
                               style={{
-                                margin: 0,
+                                color: "black",
+                                padding: 12,
+                                background: "#3871da",
+                                color: "white",
                                 fontWeight: 600,
+                              }}
+                            >
+                              Set Message Type
+                            </p>
+                            {[
+                              {
+                                title: "Twitter DM",
+                                icon: (
+                                  <FaTwitter
+                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                  ></FaTwitter>
+                                ),
+                              },
+                              {
+                                title: "Personal Text",
+                                icon: (
+                                  <FaPhone
+                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                  ></FaPhone>
+                                ),
+                              },
+                              {
+                                title: "RS Text",
+                                icon: (
+                                  <FaComment
+                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                  ></FaComment>
+                                ),
+                              },
+                            ].map((type) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: 50,
+                                    marginLeft: 0,
+                                    marginTop: -12,
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setMessageType(type);
+                                  }}
+                                >
+                                  {type.icon}
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 12,
+                                    }}
+                                  >
+                                    {type.title}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </Grid>
+                  </Grid>
+
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 70,
+                      marginTop: 12,
+                    }}
+                  >
+                    <Grid item md={1} xs={1}>
+                      <p style={{ margin: 0, marginLeft: 12 }}>Send As:</p>
+                    </Grid>
+                    <Grid item md={11} xs={11}>
+                      {messageSender ? (
+                        renderMessageTypeTag(messageSender)
+                      ) : (
+                        <div class="dropdown">
+                          <IconTextField
+                            width={170}
+                            background={
+                              displayMessageSenders ? "#3871da" : "white"
+                            }
+                            text={
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: displayMessageSenders
+                                    ? "white"
+                                    : "black",
+                                }}
+                              >
+                                Add Sender
+                              </p>
+                            }
+                            iconStart={
+                              <FaPlus
+                                style={{
+                                  color: displayMessageSenders
+                                    ? "white"
+                                    : "#3871da",
+                                }}
+                              ></FaPlus>
+                            }
+                            onMouseEnter={() => {
+                              setDisplayCreateMessage(false);
+                              setDisplayMessageSenders(true);
+                            }}
+                          ></IconTextField>
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 180,
+                              marginTop: -40,
+                              display: displayMessageSenders ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplayMessageSenders(false);
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 12,
+                                marginBottom: 0,
+                                background: "#3871da",
+                                color: "white",
+                                fontWeight: 600,
+                              }}
+                            >
+                              Send on the behalf of
+                            </p>
+
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 12,
+                                marginBottom: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              Area Recruiting Coach
+                            </p>
+                            <div
+                              style={{
+                                width: "100%",
+                                border: "1px solid #d8d8d8",
+                              }}
+                            ></div>
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 12,
+                                marginTop: 0,
+                                marginBottom: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              Position Coach
+                            </p>
+                            <div
+                              style={{
+                                width: "100%",
+                                border: "1px solid #d8d8d8",
+                              }}
+                            ></div>
+                            <p
+                              style={{
+                                color: "gray",
+                                fontSize: 11,
+                                width: 200,
                                 marginLeft: 12,
                               }}
                             >
-                              {type.title}
+                              ** select a default send account if recruite do
+                              not have a coach assigned
                             </p>
-                          </Grid>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </Grid>
-              </Grid>
-
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  // background: "#f5f6f9",
-                  width: "100%",
-                  // minWidth: 1110,
-                  border: "1px solid #d8d8d8",
-                  borderRadius: 4,
-                  height: 70,
-                  marginTop: 12,
-                }}
-              >
-                <Grid item md={1} xs={1}>
-                  <p style={{ margin: 0, marginLeft: 12 }}>Send To:</p>
-                </Grid>
-                <Grid item md={11} xs={11}>
-                  <div class="dropdown">
-                    <IconTextField
-                      width={170}
-                      background={displayMessageReceivers ? "#3871da" : "white"}
-                      text={
-                        <p
-                          style={{
-                            margin: 0,
-                            color: displayMessageReceivers ? "white" : "black",
-                          }}
-                        >
-                          Add Contact
-                        </p>
-                      }
-                      iconStart={
-                        <FaPlus
-                          style={{
-                            color: displayMessageReceivers
-                              ? "white"
-                              : "#3871da",
-                          }}
-                        ></FaPlus>
-                      }
-                      onMouseEnter={() => {
-                        setDisplayCreateMessage(false);
-                        setDisplayMessageSenders(false);
-                      }}
-                    ></IconTextField>
-                  </div>
-                </Grid>
-              </Grid>
-
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  // background: "#f5f6f9",
-                  width: "100%",
-                  // minWidth: 1110,
-                  border: "1px solid #d8d8d8",
-                  borderRadius: 4,
-                  height: 170,
-                  marginTop: 12,
-                }}
-              >
-                <Grid item md={2} xs={2}>
-                  <p style={{ margin: 0, marginLeft: 12, height: 160 }}>
-                    Add Media:
-                  </p>
-                </Grid>
-                <Grid item md={10} xs={10}>
-                  <div class="dropdown">
-                    <Grid
-                      container
-                      direction="row"
-                      style={{
-                        border: "1px solid #d8d8d8",
-                        height: 150,
-                        width: 150,
-
-                        borderRadius: 4,
-                      }}
-                      alignItems="center"
-                      justify="center"
-                    >
-                      {" "}
-                      <FaPlus
-                        style={{
-                          // color: displayMessageSenders ? "white" : "#3871da",
-                          color: "#3871da",
-                        }}
-                      ></FaPlus>{" "}
-                      Add Media
+                            {[
+                              {
+                                title:
+                                  "You (@" +
+                                  JSON.parse(localStorage.getItem("user"))
+                                    .twitter_profile.screen_name +
+                                  ")",
+                                icon: (
+                                  <img
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      borderRadius: 20,
+                                      marginLeft: 12,
+                                    }}
+                                    src={
+                                      JSON.parse(localStorage.getItem("user"))
+                                        .twitter_profile.profile_image
+                                    }
+                                  ></img>
+                                ),
+                              },
+                            ].map((type) => {
+                              console.log(
+                                JSON.parse(localStorage.getItem("user"))
+                                  .twitter_profile.screen_name
+                              );
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: 50,
+                                    marginLeft: 0,
+                                    marginTop: -12,
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setMessageSender(type);
+                                  }}
+                                >
+                                  {type.icon}
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 12,
+                                    }}
+                                  >
+                                    {type.title}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </Grid>
-                  </div>
-                </Grid>
-              </Grid>
+                  </Grid>
 
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  // background: "#f5f6f9",
-                  width: "100%",
-                  // minWidth: 1110,
-                  border: "1px solid #d8d8d8",
-                  borderRadius: 4,
-                  height: 170,
-                  marginTop: 12,
-                }}
-              >
-                <Grid item md={2} xs={2}>
-                  <p style={{ margin: 0, marginLeft: 12 }}>Message Text:</p>
-                </Grid>
-                <Grid item md={12} xs={12}>
-                  <div class="dropdown">
-                    <textarea
-                      type="text"
-                      style={{
-                        border: "none",
-                        height: 140,
-                        width: "100%",
-                        borderRadius: 4,
-                        paddingLeft: 12,
-                      }}
-                      placeholder="Type message"
-                    ></textarea>
-                  </div>
-                </Grid>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 70,
+                      marginTop: 12,
+                    }}
+                    onMouseEnter={() => {
+                      setDisplayCreateMessage(false);
+                      setDisplayMessageSenders(false);
+                    }}
+                  >
+                    <Grid item md={1} xs={1}>
+                      <p style={{ margin: 0, marginLeft: 12 }}>Send To:</p>
+                    </Grid>
+                    <Grid item md={11} xs={11}>
+                      {messageReceiver ? (
+                        <Grid container direction="row">
+                          {displaySendTo ? (
+                            <IconTextField
+                              width={170}
+                              background={"#3871da"}
+                              text={
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    color: "white",
+                                  }}
+                                >
+                                  Done Adding
+                                </p>
+                              }
+                              iconStart={
+                                <ArrowForwardIosIcon
+                                  style={{
+                                    color: "white",
+                                  }}
+                                ></ArrowForwardIosIcon>
+                              }
+                              onMouseEnter={() => {
+                                setDisplayCreateMessage(false);
+                                setDisplayMessageSenders(false);
+                              }}
+                              onClick={() => {
+                                setDisplaySendTo(false);
+                              }}
+                            ></IconTextField>
+                          ) : (
+                            <IconTextField
+                              width={170}
+                              background={
+                                displayMessageReceivers ? "#3871da" : "white"
+                              }
+                              text={
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    color: displayMessageReceivers
+                                      ? "white"
+                                      : "black",
+                                  }}
+                                >
+                                  Add Contact
+                                </p>
+                              }
+                              iconStart={
+                                <FaPlus
+                                  style={{
+                                    color: displayMessageReceivers
+                                      ? "white"
+                                      : "#3871da",
+                                  }}
+                                ></FaPlus>
+                              }
+                              // onMouseEnter={() => {
+                              //   setDisplayCreateMessage(false);
+                              //   setDisplayMessageSenders(false);
+                              // }}
+                              onClick={() => {
+                                setDisplaySendTo(true);
+                              }}
+                            ></IconTextField>
+                          )}
+                          {renderMessageTypeTag(messageReceiver)}
+                        </Grid>
+                      ) : (
+                        <div class="dropdown">
+                          <IconTextField
+                            width={170}
+                            background={
+                              displayMessageReceivers ? "#3871da" : "white"
+                            }
+                            text={
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: displayMessageReceivers
+                                    ? "white"
+                                    : "black",
+                                }}
+                              >
+                                Add Contact
+                              </p>
+                            }
+                            iconStart={
+                              <FaPlus
+                                style={{
+                                  color: displayMessageReceivers
+                                    ? "white"
+                                    : "#3871da",
+                                }}
+                              ></FaPlus>
+                            }
+                            // onMouseEnter={() => {
+                            //   setDisplayCreateMessage(false);
+                            //   setDisplayMessageSenders(false);
+                            // }}
+                            onClick={() => {
+                              setDisplaySendTo(true);
+                            }}
+                          ></IconTextField>
+                        </div>
+                      )}
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 70,
+                      marginTop: 12,
+                    }}
+                  >
+                    <Grid item md={2} xs={2}>
+                      <p style={{ margin: 0, marginLeft: 12 }}>
+                        Begin Sending At:
+                      </p>
+                    </Grid>
+                    <Grid item md={10} xs={10}>
+                      <div class="dropdown">
+                        <IconTextField
+                          width={170}
+                          background={
+                            displayMessageReceivers ? "#3871da" : "white"
+                          }
+                          text={
+                            <p
+                              style={{
+                                margin: 0,
+                                color: displayMessageReceivers
+                                  ? "white"
+                                  : "black",
+                              }}
+                            >
+                              ASAP
+                            </p>
+                          }
+                          iconStart={
+                            <FaCalendarAlt
+                              style={{
+                                color: displayMessageReceivers
+                                  ? "white"
+                                  : "#3871da",
+                              }}
+                            ></FaCalendarAlt>
+                          }
+                          onMouseEnter={() => {
+                            setDisplayCreateMessage(false);
+                            setDisplayMessageSenders(false);
+                          }}
+                        ></IconTextField>
+                      </div>
+                    </Grid>
+                  </Grid>
+
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 170,
+                      marginTop: 12,
+                    }}
+                  >
+                    <Grid item md={2} xs={2}>
+                      <p style={{ margin: 0, marginLeft: 12, height: 160 }}>
+                        Add Media:
+                      </p>
+                    </Grid>
+                    <Grid item md={10} xs={10}>
+                      <div class="dropdown">
+                        <Grid
+                          container
+                          direction="row"
+                          style={{
+                            border: "1px solid #d8d8d8",
+                            height: 150,
+                            width: 150,
+
+                            borderRadius: 4,
+                          }}
+                          alignItems="center"
+                          justify="center"
+                        >
+                          {" "}
+                          <FaPlus
+                            style={{
+                              // color: displayMessageSenders ? "white" : "#3871da",
+                              color: "#3871da",
+                            }}
+                          ></FaPlus>{" "}
+                          Add Media
+                        </Grid>
+                      </div>
+                    </Grid>
+                  </Grid>
+
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+                      border: "1px solid #d8d8d8",
+                      borderRadius: 4,
+                      height: 170,
+                      marginTop: 12,
+                    }}
+                  >
+                    <Grid item md={2} xs={2}>
+                      <p style={{ margin: 0, marginLeft: 12 }}>Message Text:</p>
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                      <div class="dropdown">
+                        <textarea
+                          type="text"
+                          style={{
+                            border: "none",
+                            height: 140,
+                            width: "100%",
+                            borderRadius: 4,
+                            paddingLeft: 12,
+                          }}
+                          placeholder="Type message"
+                        ></textarea>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </div>
               </Grid>
-            </div>
+            </Grid>
           </div>
           <Grid container direction="row" alignItems="center"></Grid>
         </div>

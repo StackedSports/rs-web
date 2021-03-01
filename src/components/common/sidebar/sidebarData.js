@@ -38,7 +38,7 @@ export const SidebarData = [
   },
   {
     title: "Message Create",
-    path: "/",
+    path: "/message-create",
     icon: (
       <BiCommentAdd
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
