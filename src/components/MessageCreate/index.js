@@ -170,6 +170,7 @@ function Home() {
   const [displaySendTo, setDisplaySendTo] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
@@ -960,7 +961,10 @@ function Home() {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
-      <TimePicker></TimePicker>
+      <TimePicker
+        open={showTimePicker}
+        onClose={() => setShowTimePicker(false)}
+      ></TimePicker>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}
@@ -1594,7 +1598,7 @@ function Home() {
                                       : "black",
                                   }}
                                 >
-                                  Add Contactsss
+                                  Add Contacts
                                 </p>
                               }
                               iconStart={
@@ -1633,7 +1637,7 @@ function Home() {
                                     : "black",
                                 }}
                               >
-                                Add Contact111
+                                Add Contacts
                               </p>
                             }
                             iconStart={
@@ -1704,6 +1708,9 @@ function Home() {
                               }}
                             ></FaCalendarAlt>
                           }
+                          onClick={() => {
+                            setShowTimePicker(true);
+                          }}
                           onMouseEnter={() => {
                             setDisplayCreateMessage(false);
                             setDisplayMessageSenders(false);

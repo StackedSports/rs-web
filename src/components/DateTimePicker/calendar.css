@@ -12,10 +12,10 @@
   height: 50px !important;
 }
 
-.calendar .react-calendar__tile--now {
-  /* background: transparent !important;
-  color: white; */
-}
+/* .calendar .react-calendar__tile--now {
+   background: transparent !important;
+  color: white; 
+} */
 
 .calendar .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {

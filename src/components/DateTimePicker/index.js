@@ -5,7 +5,7 @@ import moment from "moment";
 import "./calendar.css";
 import { time } from "./Data";
 
-export default function DateTimePicker() {
+export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
 
   //   function valuetext(value) {
@@ -22,9 +22,12 @@ export default function DateTimePicker() {
   console.log("THis is value", value);
   return (
     <Dialog
-      open={true}
+      open={props.open}
       maxWidth="md"
       fullWidth={true}
+      onClose={() => {
+        props.onClose();
+      }}
       scroll={"body"}
       PaperProps={{
         style: {
