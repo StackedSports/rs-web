@@ -29,6 +29,7 @@ import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
+import TimePicker from "../DateTimePicker/index";
 import {
   getAllContacts,
   getTags,
@@ -122,6 +123,37 @@ const useStyles = makeStyles({
     border: "none",
     color: "#b5b9c0",
   },
+  messagetypeGrid: {
+    height: 50,
+    marginLeft: 0,
+    // marginTop: -12,
+    cursor: "pointer",
+    color: "#3871da",
+    "&>p": {
+      color: "black",
+    },
+    "&:hover": {
+      background: "#3871da",
+      color: "white",
+      "&>p": {
+        color: "white",
+      },
+    },
+  },
+  sendAsP: {
+    color: "black",
+    padding: 12,
+    marginTop: 0,
+    marginBottom: 0,
+    fontWeight: 600,
+    "&:hover": {
+      background: "#3871da",
+      color: "white",
+    },
+  },
+  messageTypeIcon: {
+    marginLeft: 12,
+  },
 });
 
 function Home() {
@@ -135,14 +167,14 @@ function Home() {
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
-  const [displaySendTo, setDisplaySendTo] = useState(true);
+  const [displaySendTo, setDisplaySendTo] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
   const [messageSender, setMessageSender] = useState(null);
-  const [messageReceiver, setMessageReceiver] = useState(null);
+  const [messageReceiver, setMessageReceiver] = useState([]);
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [stateSearch, setStateSearch] = useState("");
@@ -733,28 +765,24 @@ function Home() {
     }
   };
 
-  const makeCheckBoxSelected = (index) => {
-    if (selectedCheckBoxes.indexOf(index) > -1) {
+  const addDataToReceivers = (value, type) => {
+    if (messageReceiver.includes(value)) {
       var temp = [];
-      selectedCheckBoxes.map((item) => {
-        if (index != item) {
+      messageReceiver.map((item) => {
+        if (value != item) {
           temp.push(item);
         }
       });
+      setMessageReceiver(temp);
       console.log("This is temp", temp);
-      // console.log("This is index", index);
-      // var other = temp.splice(index, 1);
-      // console.log("This is other", other);
-      // var newArray = temp;
-      setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     } else {
-      var temp = selectedCheckBoxes;
-      temp.push(index);
-      setSelectedCheckboxes(temp);
+      var temp = messageReceiver;
+      temp.push(value);
+      setMessageReceiver(temp);
+      console.log("This is temp", temp);
       setuseLessState(uselessState + 1);
     }
-    console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
 
   const removeDataFromFilter = (index) => {
@@ -860,6 +888,41 @@ function Home() {
 
   console.log("THis is great message type", messageType);
 
+  const renderMessageReceiver = (messageType) => {
+    return messageType.map((item) => {
+      return (
+        <div
+          container
+          direction="row"
+          alignItems="center"
+          justify="center"
+          className={classes.tags}
+          style={{ paddingLeft: 0, marginBottom: 6, marginLeft: 4 }}
+        >
+          <Grid
+            style={{ height: 40 }}
+            container
+            direction="row"
+            alignItems="center"
+          >
+            {messageType.icon}
+            <p style={{ margin: 0, marginLeft: 5, marginRight: 5 }}>{item}</p>
+            <ClearIcon
+              onClick={() => {
+                addDataToReceivers(item);
+              }}
+              style={{
+                color: "red",
+                fontSize: 17,
+                cursor: "pointer",
+              }}
+            ></ClearIcon>{" "}
+          </Grid>
+        </div>
+      );
+    });
+  };
+
   const renderMessageTypeTag = (messageType) => {
     return (
       <div
@@ -897,6 +960,7 @@ function Home() {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
+      <TimePicker></TimePicker>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}
@@ -1085,7 +1149,8 @@ function Home() {
                                     cursor: "pointer",
                                   }}
                                   onClick={() => {
-                                    setMessageReceiver({ title: boards.name });
+                                    addDataToReceivers(boards.name);
+                                    // setMessageReceiver();
                                   }}
                                 >
                                   {boards.name}
@@ -1220,6 +1285,7 @@ function Home() {
                                 background: "#3871da",
                                 color: "white",
                                 fontWeight: 600,
+                                marginBottom: -4,
                               }}
                             >
                               Set Message Type
@@ -1229,7 +1295,7 @@ function Home() {
                                 title: "Twitter DM",
                                 icon: (
                                   <FaTwitter
-                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                    className={classes.messageTypeIcon}
                                   ></FaTwitter>
                                 ),
                               },
@@ -1237,7 +1303,7 @@ function Home() {
                                 title: "Personal Text",
                                 icon: (
                                   <FaPhone
-                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                    className={classes.messageTypeIcon}
                                   ></FaPhone>
                                 ),
                               },
@@ -1245,7 +1311,7 @@ function Home() {
                                 title: "RS Text",
                                 icon: (
                                   <FaComment
-                                    style={{ color: "#3871da", marginLeft: 12 }}
+                                    className={classes.messageTypeIcon}
                                   ></FaComment>
                                 ),
                               },
@@ -1254,12 +1320,7 @@ function Home() {
                                 <Grid
                                   container
                                   alignItems="center"
-                                  style={{
-                                    height: 50,
-                                    marginLeft: 0,
-                                    marginTop: -12,
-                                    cursor: "pointer",
-                                  }}
+                                  className={classes.messagetypeGrid}
                                   onClick={() => {
                                     setMessageType(type);
                                   }}
@@ -1362,12 +1423,14 @@ function Home() {
                             </p>
 
                             <p
-                              style={{
-                                color: "black",
-                                padding: 12,
-                                marginBottom: 0,
-                                fontWeight: 600,
-                              }}
+                              // style={{
+                              //   color: "black",
+                              //   padding: 12,
+                              //   marginBottom: 0,
+                              //   fontWeight: 600,
+
+                              // }}
+                              className={classes.sendAsP}
                             >
                               Area Recruiting Coach
                             </p>
@@ -1378,13 +1441,8 @@ function Home() {
                               }}
                             ></div>
                             <p
-                              style={{
-                                color: "black",
-                                padding: 12,
-                                marginTop: 0,
-                                marginBottom: 0,
-                                fontWeight: 600,
-                              }}
+                              // style={}
+                              className={classes.sendAsP}
                             >
                               Position Coach
                             </p>
@@ -1436,12 +1494,13 @@ function Home() {
                                 <Grid
                                   container
                                   alignItems="center"
-                                  style={{
-                                    height: 50,
-                                    marginLeft: 0,
-                                    marginTop: -12,
-                                    cursor: "pointer",
-                                  }}
+                                  // style={{
+                                  //   height: 50,
+                                  //   marginLeft: 0,
+                                  //   marginTop: -12,
+                                  //   cursor: "pointer",
+                                  // }}
+                                  className={classes.sendAsP}
                                   onClick={() => {
                                     setMessageSender(type);
                                   }}
@@ -1475,8 +1534,10 @@ function Home() {
                       // minWidth: 1110,
                       border: "1px solid #d8d8d8",
                       borderRadius: 4,
-                      height: 70,
+                      minHeight: 70,
                       marginTop: 12,
+                      padding: 12,
+                      paddingLeft: 0,
                     }}
                     onMouseEnter={() => {
                       setDisplayCreateMessage(false);
@@ -1487,7 +1548,7 @@ function Home() {
                       <p style={{ margin: 0, marginLeft: 12 }}>Send To:</p>
                     </Grid>
                     <Grid item md={11} xs={11}>
-                      {messageReceiver ? (
+                      {messageReceiver.length > 0 ? (
                         <Grid container direction="row">
                           {displaySendTo ? (
                             <IconTextField
@@ -1533,7 +1594,7 @@ function Home() {
                                       : "black",
                                   }}
                                 >
-                                  Add Contact
+                                  Add Contactsss
                                 </p>
                               }
                               iconStart={
@@ -1554,7 +1615,7 @@ function Home() {
                               }}
                             ></IconTextField>
                           )}
-                          {renderMessageTypeTag(messageReceiver)}
+                          {renderMessageReceiver(messageReceiver)}
                         </Grid>
                       ) : (
                         <div class="dropdown">
@@ -1572,7 +1633,7 @@ function Home() {
                                     : "black",
                                 }}
                               >
-                                Add Contact
+                                Add Contact111
                               </p>
                             }
                             iconStart={
