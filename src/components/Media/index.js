@@ -598,7 +598,7 @@ function Media() {
           style={{ background: "#f6f6f6" }}
         >
           <img
-            style={{ width: "80%", height: 190 }}
+            style={{ width: "80%", height: 190, objectFit: "cover" }}
             src={m.urls && m.urls.thumb}
           ></img>
         </Grid>
@@ -665,7 +665,7 @@ function Media() {
           style={{ background: "#f6f6f6" }}
         >
           <img
-            style={{ width: "80%", height: 190 }}
+            style={{ width: "80%", height: 190, objectFit: "cover" }}
             src={m.media_preview}
           ></img>
         </Grid>
