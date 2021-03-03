@@ -962,8 +962,8 @@ function Home() {
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
       <TimePicker
-        open={true}
-        onClose={() => setShowTimePicker(true)}
+        open={showTimePicker}
+        onClose={() => setShowTimePicker(false)}
       ></TimePicker>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
