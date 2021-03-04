@@ -73,6 +73,7 @@ export default function DateTimePicker(props) {
 
   const handleChange = (event, newValue) => {
     setRangeValue(newValue);
+    props.onTimeChange(timeSlots[newValue] + " " + timeType);
   };
 
   // function valuetext(value) {
@@ -148,7 +149,13 @@ export default function DateTimePicker(props) {
             className={timeType === "pm" ? "calendarPm" : "calendar"}
             style={{ marginTop: 25 }}
           >
-            <Calendar onChange={onChange} value={value} />
+            <Calendar
+              onChange={(e) => {
+                onChange(e);
+                props.onDateChange(e);
+              }}
+              value={value}
+            />
           </Grid>
         </Grid>
         <Grid item md={6} xs={12}>
@@ -182,6 +189,9 @@ export default function DateTimePicker(props) {
               onClick={() => {
                 if (rangeValue > 0) {
                   setRangeValue(rangeValue - 1);
+                  props.onTimeChange(
+                    timeSlots[rangeValue - 1] + " " + timeType
+                  );
                 }
               }}
             >
@@ -206,12 +216,17 @@ export default function DateTimePicker(props) {
                 if (rangeValue < 134) {
                   console.log("This is value");
                   setRangeValue(rangeValue + 1);
+                  props.onTimeChange(
+                    timeSlots[rangeValue + 1] + " " + timeType
+                  );
                 } else {
                   setRangeValue(0);
                   if (timeType === "am") {
                     setTimeType("pm");
+                    props.onTimeChange(timeSlots[0] + " " + "pm");
                   } else {
                     setTimeType("am");
+                    props.onTimeChange(timeSlots[0] + " " + "am");
                   }
                 }
               }}
@@ -227,6 +242,7 @@ export default function DateTimePicker(props) {
               }
               onClick={() => {
                 setTimeType("am");
+                props.onTimeChange(timeSlots[rangeValue] + " " + "am");
               }}
             >
               am
@@ -237,6 +253,7 @@ export default function DateTimePicker(props) {
               }
               onClick={() => {
                 setTimeType("pm");
+                props.onTimeChange(timeSlots[rangeValue] + " " + "pm");
               }}
             >
               pm

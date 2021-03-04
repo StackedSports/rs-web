@@ -170,6 +170,8 @@ function Home() {
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [time, setTime] = useState(null);
+  const [date, setDate] = useState(new Date());
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
@@ -963,6 +965,12 @@ function Home() {
       <TimePicker
         open={showTimePicker}
         onClose={() => setShowTimePicker(false)}
+        onTimeChange={(time) => {
+          setTime(time);
+        }}
+        onDateChange={(time) => {
+          setDate(time);
+        }}
       ></TimePicker>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -1682,7 +1690,7 @@ function Home() {
                     <Grid item md={10} xs={10}>
                       <div class="dropdown">
                         <IconTextField
-                          width={170}
+                          width={time ? 220 : 170}
                           background={
                             displayMessageReceivers ? "#3871da" : "white"
                           }
@@ -1690,12 +1698,15 @@ function Home() {
                             <p
                               style={{
                                 margin: 0,
+                                marginLeft: time ? -20 : 0,
                                 color: displayMessageReceivers
                                   ? "white"
                                   : "black",
                               }}
                             >
-                              ASAP
+                              {time
+                                ? moment(date).format("MM-DD-YYYY") + " " + time
+                                : "ASAP"}
                             </p>
                           }
                           iconStart={
