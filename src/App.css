@@ -93,6 +93,13 @@
   overflow-x: hidden;
 }
 
+.fullHeightMedia {
+  min-height: calc(100vh - 295px);
+  /* max-height: calc(100vh - 285px); */
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .fullHeightCreateMessage {
   min-height: calc(100vh - 200px);
   /* max-height: calc(100vh - 285px); */

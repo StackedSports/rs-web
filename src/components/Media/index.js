@@ -626,7 +626,9 @@ function Media() {
               fontSize: 15,
             }}
           >
-            {m.file_name}
+            {m.file_name.length > 17
+              ? m.file_name.substring(0, 17) + " ..."
+              : m.file_name}
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
@@ -936,7 +938,7 @@ function Media() {
           <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
             <div
               style={{ width: "100%", maxHeight: 440, minWidth: 1110 }}
-              className="fullHeightContacts"
+              className="fullHeightMedia"
               id="infinit"
               // onScroll={() => {
               //   handleScroll();
