@@ -24,6 +24,7 @@ import {
   getMedia,
   getMediaTag,
   getPlaceholder,
+  getMediaUsers,
 } from "../../ApiHelper";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -96,6 +97,7 @@ function Media() {
   const [viewMorePlaceholder, setViewMorePlaceholder] = useState(false);
   const [viewMoreQuickAccess, setViewMoreQuickAccess] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
+  const [contactSearch, setContactSearch] = useState("");
   const [stateSearch, setStateSearch] = useState("");
 
   const [statusFilter, setStatusFilter] = useState(null);
@@ -106,8 +108,10 @@ function Media() {
   const [showlistView, setShowlistView] = useState(false);
 
   const [contacts, setContacts] = useState(null);
+  const [myMediaContacts, setMyMediaContacts] = useState(null);
   const [media, setMedia] = useState(null);
   const [placeholders, setPlaceHolders] = useState(null);
+  const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
   const [taggedMedia, setTaggedMedia] = useState(null);
 
   const [allTags, setAllTags] = useState(null);
@@ -157,6 +161,21 @@ function Media() {
         if (res.statusText === "OK") {
           console.log("These are all media", res.data);
           setMedia(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all media", error);
+      }
+    );
+  };
+
+  const getMyMediaContacts = () => {
+    getMediaUsers().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all my media contacts", res.data);
+          setMyMediaContacts(res.data);
         }
       },
       (error) => {
@@ -264,25 +283,34 @@ function Media() {
           drop={"down"}
           style={filtesSpacingStyle}
         >
-          {statuses &&
-            statuses.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background: rankFilter === option.label ? "#348ef7" : "white",
-                  color: rankFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setRankFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "ranks");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
+          {[
+            {
+              label: "File Sent",
+            },
+            {
+              label: "File Not Yet Sent",
+            },
+            {
+              label: "Failed to Send",
+            },
+          ].map((option) => (
+            <Dropdown.Item
+              style={{
+                background: rankFilter === option.label ? "#348ef7" : "white",
+                color: rankFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                if (rankFilter === option.label) {
+                  setRankFilter(null);
+                  addDataToFilter(option.label);
+                } else {
+                  addDataToFilter(option.label, "ranks");
+                }
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
@@ -319,20 +347,69 @@ function Media() {
           placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {statuses.map((option) => (
-            <Dropdown.Item
+          <Grid container direction="row" justify="center">
+            <input
+              type="text"
               style={{
-                background:
-                  timeZoneFilter === option.label ? "#348ef7" : "white",
-                color: timeZoneFilter === option.label ? "white" : "black",
+                width: "90%",
+                border: "1px solid #ebebeb",
+                borderRadius: 4,
               }}
-              onClick={() => {
-                setTimeZoneFilter(option.label);
+              placeholder="Search Contacts"
+              value={contactSearch}
+              onChange={(e) => {
+                setContactSearch(e.target.value);
               }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
+            ></input>
+          </Grid>
+          {myMediaContacts &&
+            myMediaContacts.map((option) => {
+              var name = option.first_name + " " + option.last_name;
+              if (contactSearch != "") {
+                if (
+                  name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background:
+                          timeZoneFilter === option.label ? "#348ef7" : "white",
+                        color:
+                          timeZoneFilter === option.label ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        // setTimeZoneFilter(
+                        //   option.first_name + " " + option.last_name
+                        // );
+                        addDataToFilter(
+                          option.first_name + " " + option.last_name
+                        );
+                      }}
+                    >
+                      {option.first_name + " " + option.last_name}
+                    </Dropdown.Item>
+                  );
+                }
+              } else {
+                return (
+                  <Dropdown.Item
+                    style={{
+                      background:
+                        timeZoneFilter === option.label ? "#348ef7" : "white",
+                      color:
+                        timeZoneFilter === option.label ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      addDataToFilter(
+                        option.first_name + " " + option.last_name
+                      );
+                    }}
+                  >
+                    {option.first_name + " " + option.last_name}
+                  </Dropdown.Item>
+                );
+              }
+            })}
         </DropdownButton>
 
         <DropdownButton
@@ -430,16 +507,19 @@ function Media() {
   } else {
     window.location.href = "/";
   }
+
+  console.log("THis is selected placeholders", selectedPlaceholder);
+
   const addDataToFilter = (value, type) => {
     if (filter.includes(value)) {
-      var temp = filter;
-      if (temp.length === 1) {
-        setFilter(temp);
-      } else {
-        temp.splice(value, 1);
-        console.log("This is temp", temp);
-        setFilter(temp);
-      }
+      var temp = [];
+      filter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setFilter(temp);
+      setuseLessState(uselessState + 1);
     } else {
       var temp = filter;
       var tempType = filterType;
@@ -491,6 +571,7 @@ function Media() {
       getMyMedia();
       getMyPlaceholders();
       getTaggedMedia();
+      getMyMediaContacts();
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -659,6 +740,9 @@ function Media() {
           borderRadius: 4,
           marginBottom: 10,
         }}
+        onClick={() => {
+          setSelectedPlaceHolder(m);
+        }}
       >
         <Grid
           container
@@ -729,6 +813,10 @@ function Media() {
                 fontSize: 20,
                 paddingBottom: 0,
                 marginBottom: 0,
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setSelectedPlaceHolder(null);
               }}
             >
               Media
@@ -739,6 +827,22 @@ function Media() {
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
             </p>
+            {myMediaContacts &&
+              myMediaContacts.map((item) => {
+                return (
+                  <p
+                    className={classes.sideSubFilter}
+                    onClick={() => {
+                      addDataToFilter(
+                        item.first_name + " " + item.last_name,
+                        "Board"
+                      );
+                    }}
+                  >
+                    {item.first_name + " " + item.last_name}
+                  </p>
+                );
+              })}
             <p
               className={classes.sideFilter}
               onClick={() => {
@@ -783,22 +887,7 @@ function Media() {
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
             </p>
-            {showBoardFilters === true && (
-              <div>
-                {/* {allBoards.map((board) => {
-                  return (
-                    <p
-                      className={classes.sideSubFilter}
-                      onClick={() => {
-                        addDataToFilter(board.name, "Board");
-                      }}
-                    >
-                      {board.name}
-                    </p>
-                  );
-                })} */}
-              </div>
-            )}
+            {showBoardFilters === true && <div></div>}
 
             <p className={classes.sideFilter}>
               Personalized Media
@@ -945,34 +1034,73 @@ function Media() {
               // }}
             >
               <p>Quick Access</p>
-              <Grid container>
-                {media &&
-                  media.map((m, index) => {
-                    if (viewMoreQuickAccess) {
-                      return mediaContainer(m);
-                    } else {
-                      if (index < 4) {
+              {selectedPlaceholder === null ? (
+                <Grid container>
+                  {media &&
+                    media.map((m, index) => {
+                      if (viewMoreQuickAccess) {
                         return mediaContainer(m);
+                      } else {
+                        if (index < 4) {
+                          return mediaContainer(m);
+                        }
                       }
-                    }
-                  })}
-                <div style={{ width: "100%" }}>
-                  <Grid container direction="row" justify="center">
-                    <span
-                      style={{
-                        color: "#3871DA",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setViewMoreQuickAccess(!viewMoreQuickAccess);
-                      }}
-                    >
-                      {viewMoreQuickAccess == true ? "View Less" : "View More"}
-                    </span>
+                    })}
+                  <div style={{ width: "100%" }}>
+                    <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setViewMoreQuickAccess(!viewMoreQuickAccess);
+                        }}
+                      >
+                        {viewMoreQuickAccess == true
+                          ? "View Less"
+                          : "View More"}
+                      </span>
+                    </Grid>
+                  </div>
+                </Grid>
+              ) : (
+                <Grid container direction="row">
+                  <Grid item md={3} xs={3}>
+                    {placeholderContainer(selectedPlaceholder)}
                   </Grid>
-                </div>
-              </Grid>
+                  <Grid item md={9} xs={9}>
+                    <p style={{ fontWeight: "bold", fontSize: 20 }}>
+                      {selectedPlaceholder.name}
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      FileType: image/jpeg
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Uploaded On:{" "}
+                      {new moment(selectedPlaceholder.created_at).format(
+                        "YYYY-MM-DD"
+                      )}
+                    </p>{" "}
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Uploaded By: Tim Glover
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      File Size : 40.5 kb
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Dimensions : 160 x 200
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Last Sent :{" "}
+                      {new moment(selectedPlaceholder.created_at).format(
+                        "YYYY-MM-DD"
+                      )}
+                    </p>
+                  </Grid>
+                </Grid>
+              )}
               <Grid container direction="row" justify="flex-end">
                 <div
                   style={{
@@ -1056,6 +1184,9 @@ function Media() {
                         if (index < 4) {
                           return (
                             <Grid
+                              onClick={() => {
+                                setSelectedPlaceHolder(item);
+                              }}
                               container
                               direction="row"
                               alignItems="center"
