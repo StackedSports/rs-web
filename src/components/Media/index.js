@@ -86,6 +86,10 @@ function Media() {
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
+  const [quickAccessStartIndex, setQuickAccessStartIndex] = useState(0);
+  const [quickAccessEndIndex, setQuickAccessEndIndex] = useState(15);
+  const [placeholderStartIndex, setPlaceholderStartIndex] = useState(0);
+  const [placeholderEndIndex, setPlaceholderEndIndex] = useState(15);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(false);
@@ -340,35 +344,60 @@ function Media() {
               </Dropdown.Item>
             ))}
         </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={timeZoneFilter || "Associated To"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          <Grid container direction="row" justify="center">
-            <input
-              type="text"
-              style={{
-                width: "90%",
-                border: "1px solid #ebebeb",
-                borderRadius: 4,
-              }}
-              placeholder="Search Contacts"
-              value={contactSearch}
-              onChange={(e) => {
-                setContactSearch(e.target.value);
-              }}
-            ></input>
-          </Grid>
-          {myMediaContacts &&
-            myMediaContacts.map((option) => {
-              var name = option.first_name + " " + option.last_name;
-              if (contactSearch != "") {
-                if (
-                  name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
-                ) {
+        <div className="associatedButton">
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={timeZoneFilter || "Associated To"}
+            drop={"down"}
+            placeholder="Status"
+            style={filtesSpacingStyle}
+          >
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "90%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                }}
+                placeholder="Search Contacts"
+                value={contactSearch}
+                onChange={(e) => {
+                  setContactSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
+            {myMediaContacts &&
+              myMediaContacts.map((option) => {
+                var name = option.first_name + " " + option.last_name;
+                if (contactSearch != "") {
+                  if (
+                    name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
+                  ) {
+                    return (
+                      <Dropdown.Item
+                        style={{
+                          background:
+                            timeZoneFilter === option.label
+                              ? "#348ef7"
+                              : "white",
+                          color:
+                            timeZoneFilter === option.label ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          // setTimeZoneFilter(
+                          //   option.first_name + " " + option.last_name
+                          // );
+                          addDataToFilter(
+                            option.first_name + " " + option.last_name
+                          );
+                        }}
+                      >
+                        {option.first_name + " " + option.last_name}
+                      </Dropdown.Item>
+                    );
+                  }
+                } else {
                   return (
                     <Dropdown.Item
                       style={{
@@ -378,9 +407,6 @@ function Media() {
                           timeZoneFilter === option.label ? "white" : "black",
                       }}
                       onClick={() => {
-                        // setTimeZoneFilter(
-                        //   option.first_name + " " + option.last_name
-                        // );
                         addDataToFilter(
                           option.first_name + " " + option.last_name
                         );
@@ -390,27 +416,9 @@ function Media() {
                     </Dropdown.Item>
                   );
                 }
-              } else {
-                return (
-                  <Dropdown.Item
-                    style={{
-                      background:
-                        timeZoneFilter === option.label ? "#348ef7" : "white",
-                      color:
-                        timeZoneFilter === option.label ? "white" : "black",
-                    }}
-                    onClick={() => {
-                      addDataToFilter(
-                        option.first_name + " " + option.last_name
-                      );
-                    }}
-                  >
-                    {option.first_name + " " + option.last_name}
-                  </Dropdown.Item>
-                );
-              }
-            })}
-        </DropdownButton>
+              })}
+          </DropdownButton>
+        </div>
 
         <DropdownButton
           id="dropdown-basic-button"
@@ -1026,7 +1034,7 @@ function Media() {
           {showFiltersRow === true ? renderFilters() : <div></div>}
           <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
             <div
-              style={{ width: "100%", maxHeight: 440, minWidth: 1110 }}
+              style={{ width: "100%", maxHeight: 460, minWidth: 1110 }}
               className="fullHeightMedia"
               id="infinit"
               // onScroll={() => {
@@ -1039,7 +1047,12 @@ function Media() {
                   {media &&
                     media.map((m, index) => {
                       if (viewMoreQuickAccess) {
-                        return mediaContainer(m);
+                        if (
+                          index >= quickAccessStartIndex &&
+                          index < quickAccessEndIndex
+                        ) {
+                          return mediaContainer(m);
+                        }
                       } else {
                         if (index < 4) {
                           return mediaContainer(m);
@@ -1055,10 +1068,19 @@ function Media() {
                           cursor: "pointer",
                         }}
                         onClick={() => {
-                          setViewMoreQuickAccess(!viewMoreQuickAccess);
+                          if (quickAccessEndIndex >= media.length) {
+                            setViewMoreQuickAccess(false);
+                            setQuickAccessStartIndex(0);
+                            setQuickAccessEndIndex(15);
+                          } else {
+                            setViewMoreQuickAccess(true);
+                            setQuickAccessStartIndex(quickAccessEndIndex);
+                            setQuickAccessEndIndex(quickAccessEndIndex + 15);
+                          }
                         }}
                       >
-                        {viewMoreQuickAccess == true
+                        {viewMoreQuickAccess == true &&
+                        quickAccessEndIndex >= media.length
                           ? "View Less"
                           : "View More"}
                       </span>
@@ -1291,7 +1313,12 @@ function Media() {
                   {placeholders &&
                     placeholders.map((m, index) => {
                       if (viewMorePlaceholder) {
-                        return placeholderContainer(m);
+                        if (
+                          index >= placeholderStartIndex &&
+                          index < placeholderEndIndex
+                        ) {
+                          return placeholderContainer(m);
+                        }
                       } else {
                         if (index < 4) {
                           return placeholderContainer(m);
@@ -1307,10 +1334,20 @@ function Media() {
                           cursor: "pointer",
                         }}
                         onClick={() => {
-                          setViewMorePlaceholder(!viewMorePlaceholder);
+                          // setViewMorePlaceholder(!viewMorePlaceholder);
+                          if (placeholderEndIndex >= placeholders.length) {
+                            setViewMorePlaceholder(false);
+                            setPlaceholderStartIndex(0);
+                            setPlaceholderEndIndex(15);
+                          } else {
+                            setViewMorePlaceholder(true);
+                            setPlaceholderStartIndex(placeholderEndIndex);
+                            setPlaceholderEndIndex(placeholderEndIndex + 15);
+                          }
                         }}
                       >
-                        {viewMorePlaceholder == true
+                        {viewMorePlaceholder == true &&
+                        placeholderEndIndex >= placeholders.length
                           ? "View Less"
                           : "View More"}
                       </span>
