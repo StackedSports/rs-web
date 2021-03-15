@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, Grid, Checkbox } from "@material-ui/core";
+import { makeStyles, Grid, Checkbox, Dialog } from "@material-ui/core";
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 
@@ -26,6 +26,7 @@ import {
   getPlaceholder,
   getMediaUsers,
 } from "../../ApiHelper";
+import { MoreHoriz } from "@material-ui/icons";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -103,6 +104,9 @@ function Media() {
   const [filterBar, setFilterBar] = useState("This Month");
   const [contactSearch, setContactSearch] = useState("");
   const [stateSearch, setStateSearch] = useState("");
+  const [placeholderHover, setPlaceholderHover] = useState(null);
+  const [mediaHover, setMediaHover] = useState(null);
+  const [lightboxPicture, setLightboxPicture] = useState(null);
 
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
@@ -685,9 +689,68 @@ function Media() {
           direction="row"
           justify="center"
           style={{ background: "#f6f6f6" }}
+          onMouseEnter={() => {
+            if (m.urls) {
+              setMediaHover(m.urls.thumb);
+            }
+          }}
+          onMouseLeave={() => {
+            setMediaHover(null);
+          }}
         >
+          {m.urls && mediaHover === m.urls.thumb ? (
+            <div
+              style={{
+                width: "100%",
+                height: 190,
+                background: "rgba(0,0,0,0.6)",
+                marginBottom: -190,
+                position: "relative",
+                zIndex: 100,
+              }}
+            >
+              <Grid container direction="row">
+                <Grid item md={2} xs={2}>
+                  <Checkbox color="primary"></Checkbox>
+                </Grid>
+                <Grid item md={9} xs={9}></Grid>
+                <Grid item md={1} xs={1}>
+                  <MoreHoriz
+                    style={{ marginTop: 12, marginLeft: -12 }}
+                  ></MoreHoriz>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justify="center"
+                style={{ height: 100 }}
+              >
+                <button
+                  style={{
+                    border: "1px solid white",
+                    background: "transparent",
+                    borderRadius: 4,
+                    color: "white",
+                    fontWeight: 600,
+                    height: 35,
+                  }}
+                  onClick={() => {
+                    if (m.urls) {
+                      setLightboxPicture(m.urls.thumb);
+                    }
+                  }}
+                >
+                  View Media
+                </button>
+              </Grid>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <img
-            style={{ width: "80%", height: 190, objectFit: "cover" }}
+            style={{ width: "80%", height: 190, objectFit: "contain" }}
             src={m.urls && m.urls.thumb}
           ></img>
         </Grid>
@@ -751,6 +814,12 @@ function Media() {
         onClick={() => {
           setSelectedPlaceHolder(m);
         }}
+        onMouseEnter={() => {
+          setPlaceholderHover(m.media_preview);
+        }}
+        onMouseLeave={() => {
+          setPlaceholderHover(null);
+        }}
       >
         <Grid
           container
@@ -758,8 +827,58 @@ function Media() {
           justify="center"
           style={{ background: "#f6f6f6" }}
         >
+          {placeholderHover === m.media_preview ? (
+            <div
+              style={{
+                width: "100%",
+                height: 190,
+                background: "rgba(0,0,0,0.6)",
+                marginBottom: -190,
+                position: "relative",
+                zIndex: 100,
+              }}
+            >
+              <Grid container direction="row">
+                <Grid item md={2} xs={2}>
+                  <Checkbox color="primary"></Checkbox>
+                </Grid>
+                <Grid item md={9} xs={9}></Grid>
+                <Grid item md={1} xs={1}>
+                  <MoreHoriz
+                    style={{ marginTop: 12, marginLeft: -12 }}
+                  ></MoreHoriz>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justify="center"
+                style={{ height: 100 }}
+              >
+                <button
+                  style={{
+                    border: "1px solid white",
+                    background: "transparent",
+                    borderRadius: 4,
+                    color: "white",
+                    fontWeight: 600,
+                    height: 35,
+                  }}
+                  onClick={() => {
+                    setLightboxPicture(m.media_preview);
+                  }}
+                >
+                  View Media
+                </button>
+              </Grid>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
           <img
-            style={{ width: "80%", height: 190, objectFit: "cover" }}
+            style={{ width: "80%", height: 190, objectFit: "contain" }}
             src={m.media_preview}
           ></img>
         </Grid>
@@ -811,6 +930,17 @@ function Media() {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
+      {lightboxPicture && (
+        <Dialog
+          open={true}
+          onClose={() => {
+            setLightboxPicture(null);
+          }}
+        >
+          <img src={lightboxPicture}></img>
+        </Dialog>
+      )}
+
       <Grid container direction="row">
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
@@ -937,6 +1067,10 @@ function Media() {
                   padding: 5,
                   fontWeight: "bold",
                   marginLeft: 20,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setSelectedPlaceHolder(null);
                 }}
               >
                 Media
@@ -1048,7 +1182,7 @@ function Media() {
                     media.map((m, index) => {
                       if (viewMoreQuickAccess) {
                         if (
-                          index >= quickAccessStartIndex &&
+                          // index >= quickAccessStartIndex &&
                           index < quickAccessEndIndex
                         ) {
                           return mediaContainer(m);
@@ -1061,6 +1195,25 @@ function Media() {
                     })}
                   <div style={{ width: "100%" }}>
                     <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          marginRight: 10,
+                        }}
+                        onClick={() => {
+                          if (quickAccessEndIndex >= 20) {
+                            setViewMoreQuickAccess(true);
+                            setQuickAccessEndIndex(quickAccessEndIndex - 15);
+                          } else if (quickAccessEndIndex >= 4) {
+                            setViewMoreQuickAccess(false);
+                            setQuickAccessEndIndex(quickAccessEndIndex - 4);
+                          }
+                        }}
+                      >
+                        {viewMoreQuickAccess == true ? "View Less" : ""}
+                      </span>
                       <span
                         style={{
                           color: "#3871DA",
@@ -1081,7 +1234,7 @@ function Media() {
                       >
                         {viewMoreQuickAccess == true &&
                         quickAccessEndIndex >= media.length
-                          ? "View Less"
+                          ? ""
                           : "View More"}
                       </span>
                     </Grid>
@@ -1313,10 +1466,7 @@ function Media() {
                   {placeholders &&
                     placeholders.map((m, index) => {
                       if (viewMorePlaceholder) {
-                        if (
-                          index >= placeholderStartIndex &&
-                          index < placeholderEndIndex
-                        ) {
+                        if (index < placeholderEndIndex) {
                           return placeholderContainer(m);
                         }
                       } else {
@@ -1327,6 +1477,25 @@ function Media() {
                     })}
                   <div style={{ width: "100%" }}>
                     <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          marginRight: 10,
+                        }}
+                        onClick={() => {
+                          if (placeholderEndIndex >= 20) {
+                            setViewMorePlaceholder(true);
+                            setPlaceholderEndIndex(placeholderEndIndex - 15);
+                          } else if (placeholderEndIndex >= 4) {
+                            setViewMorePlaceholder(false);
+                            setPlaceholderEndIndex(placeholderEndIndex - 4);
+                          }
+                        }}
+                      >
+                        {viewMorePlaceholder == true ? "View Less" : ""}
+                      </span>
                       <span
                         style={{
                           color: "#3871DA",
@@ -1348,7 +1517,7 @@ function Media() {
                       >
                         {viewMorePlaceholder == true &&
                         placeholderEndIndex >= placeholders.length
-                          ? "View Less"
+                          ? ""
                           : "View More"}
                       </span>
                     </Grid>
