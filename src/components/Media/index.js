@@ -691,14 +691,14 @@ function Media() {
           style={{ background: "#f6f6f6" }}
           onMouseEnter={() => {
             if (m.urls) {
-              setMediaHover(m.urls.thumb);
+              setMediaHover(m.urls.medium);
             }
           }}
           onMouseLeave={() => {
             setMediaHover(null);
           }}
         >
-          {m.urls && mediaHover === m.urls.thumb ? (
+          {m.urls && mediaHover === m.urls.medium ? (
             <div
               style={{
                 width: "100%",
@@ -738,7 +738,7 @@ function Media() {
                   }}
                   onClick={() => {
                     if (m.urls) {
-                      setLightboxPicture(m.urls.thumb);
+                      setLightboxPicture(m.urls.medium);
                     }
                   }}
                 >
