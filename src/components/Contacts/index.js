@@ -1496,7 +1496,7 @@ function Home() {
               <HollowWhiteButton
                 width={100}
                 onClick={() => {
-                  setShowTagsDialog(true);
+                  setShowTagsDialog(false);
                 }}
                 text="Cancel"
                 textColor="#3871DA"

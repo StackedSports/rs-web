@@ -333,14 +333,15 @@ const Sidebar = (props) => {
                 }}
               >
                 <Grid item md={4} xs={4} lg={4}>
-                  {" "}
-                  <img
-                    style={{ width: 40, height: 40, borderRadius: 20 }}
-                    src={
-                      JSON.parse(localStorage.getItem("user")).twitter_profile
-                        .profile_image
-                    }
-                  ></img>
+                  <Grid container direction="row" justify="center">
+                    <img
+                      style={{ width: 40, height: 40, borderRadius: 20 }}
+                      src={
+                        JSON.parse(localStorage.getItem("user")).twitter_profile
+                          .profile_image
+                      }
+                    ></img>
+                  </Grid>
                 </Grid>
                 <Grid item md={8} xs={8} lg={8}>
                   {props.contacts === true ? (
