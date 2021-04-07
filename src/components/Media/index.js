@@ -93,7 +93,7 @@ function Media() {
   const [placeholderEndIndex, setPlaceholderEndIndex] = useState(15);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
-  const [showSideFilters, setshowSideFilters] = useState(false);
+  const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
