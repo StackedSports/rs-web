@@ -107,6 +107,7 @@ function Media() {
   const [placeholderHover, setPlaceholderHover] = useState(null);
   const [mediaHover, setMediaHover] = useState(null);
   const [lightboxPicture, setLightboxPicture] = useState(null);
+  const [lightboxVideo, setLightboxVideo] = useState(null);
 
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
@@ -673,13 +674,18 @@ function Media() {
   }
 
   const mediaContainer = (m) => {
+    console.log("THis is container ", m);
     return (
       <div
         style={{
           width: 270,
           height: 250,
           marginLeft: 10,
-          border: "1px solid #d2d2d2",
+          // border: "1px solid #d2d2d2",
+          border:
+            selectedCheckBoxes.indexOf(m.hashid) > -1
+              ? "3px solid #4d83e0"
+              : "1px solid #d2d2d2",
           borderRadius: 4,
           marginBottom: 10,
         }}
@@ -698,7 +704,8 @@ function Media() {
             setMediaHover(null);
           }}
         >
-          {m.urls && mediaHover === m.urls.medium ? (
+          {(m.urls && mediaHover === m.urls.medium) ||
+          selectedCheckBoxes.indexOf(m.hashid) > -1 ? (
             <div
               style={{
                 width: "100%",
@@ -711,12 +718,34 @@ function Media() {
             >
               <Grid container direction="row">
                 <Grid item md={2} xs={2}>
-                  <Checkbox color="primary"></Checkbox>
+                  <Checkbox
+                    color="primary"
+                    checked={
+                      selectedCheckBoxes.indexOf(m.hashid) > -1 ? true : false
+                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      makeCheckBoxSelected(m.hashid);
+                    }}
+                    style={{
+                      // color: "#4d83e0",
+                      cursor: "pointer",
+                      zIndex: 500,
+                      position: "relative",
+                    }}
+                  ></Checkbox>
                 </Grid>
                 <Grid item md={9} xs={9}></Grid>
                 <Grid item md={1} xs={1}>
                   <MoreHoriz
-                    style={{ marginTop: 12, marginLeft: -12 }}
+                    style={{
+                      marginTop: 12,
+                      marginLeft: -12,
+                      color: "#979797",
+                      cursor: "pointer",
+                      zIndex: 500,
+                      position: "relative",
+                    }}
                   ></MoreHoriz>
                 </Grid>
               </Grid>
@@ -737,7 +766,11 @@ function Media() {
                     height: 35,
                   }}
                   onClick={() => {
-                    if (m.urls) {
+                    if (m.file_type.indexOf("video") > -1) {
+                      if (m.urls) {
+                        setLightboxVideo(m.urls.large);
+                      }
+                    } else if (m.urls) {
                       setLightboxPicture(m.urls.medium);
                     }
                   }}
@@ -801,13 +834,17 @@ function Media() {
   };
 
   const placeholderContainer = (m) => {
+    console.log("THis is media placeholderContainer ", m);
     return (
       <div
         style={{
           width: 270,
           height: 250,
           marginLeft: 10,
-          border: "1px solid #d2d2d2",
+          border:
+            selectedCheckBoxes.indexOf(m.media_preview) > -1
+              ? "3px solid #4d83e0"
+              : "1px solid #d2d2d2",
           borderRadius: 4,
           marginBottom: 10,
         }}
@@ -827,7 +864,8 @@ function Media() {
           justify="center"
           style={{ background: "#f6f6f6" }}
         >
-          {placeholderHover === m.media_preview ? (
+          {placeholderHover === m.media_preview ||
+          selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
             <div
               style={{
                 width: "100%",
@@ -840,12 +878,36 @@ function Media() {
             >
               <Grid container direction="row">
                 <Grid item md={2} xs={2}>
-                  <Checkbox color="primary"></Checkbox>
+                  <Checkbox
+                    color="primary"
+                    checked={
+                      selectedCheckBoxes.indexOf(m.media_preview) > -1
+                        ? true
+                        : false
+                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      makeCheckBoxSelected(m.media_preview);
+                    }}
+                    style={{
+                      // color: "#979797",
+                      cursor: "pointer",
+                      zIndex: 500,
+                      position: "relative",
+                    }}
+                  ></Checkbox>
                 </Grid>
                 <Grid item md={9} xs={9}></Grid>
                 <Grid item md={1} xs={1}>
                   <MoreHoriz
-                    style={{ marginTop: 12, marginLeft: -12 }}
+                    style={{
+                      marginTop: 12,
+                      marginLeft: -12,
+                      color: "#979797",
+                      cursor: "pointer",
+                      zIndex: 500,
+                      position: "relative",
+                    }}
                   ></MoreHoriz>
                 </Grid>
               </Grid>
@@ -938,6 +1000,19 @@ function Media() {
           }}
         >
           <img src={lightboxPicture}></img>
+        </Dialog>
+      )}
+
+      {lightboxVideo && (
+        <Dialog
+          open={true}
+          onClose={() => {
+            setLightboxVideo(null);
+          }}
+        >
+          <video width="400" height="400" loop autoPlay controls>
+            <source src={lightboxVideo} type="video/mp4"></source>
+          </video>
         </Dialog>
       )}
 
@@ -1178,7 +1253,7 @@ function Media() {
               <p>Quick Access</p>
               {selectedPlaceholder === null ? (
                 <Grid container>
-                  {media &&
+                  {media != null ? (
                     media.map((m, index) => {
                       if (viewMoreQuickAccess) {
                         if (
@@ -1192,7 +1267,14 @@ function Media() {
                           return mediaContainer(m);
                         }
                       }
-                    })}
+                    })
+                  ) : (
+                    <Grid container direction="row" justify="center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </Grid>
+                  )}
                   <div style={{ width: "100%" }}>
                     <Grid container direction="row" justify="center">
                       <span
@@ -1463,7 +1545,7 @@ function Media() {
                 </div>
               ) : (
                 <Grid container>
-                  {placeholders &&
+                  {placeholders ? (
                     placeholders.map((m, index) => {
                       if (viewMorePlaceholder) {
                         if (index < placeholderEndIndex) {
@@ -1474,7 +1556,14 @@ function Media() {
                           return placeholderContainer(m);
                         }
                       }
-                    })}
+                    })
+                  ) : (
+                    <Grid container direction="row" justify="center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </Grid>
+                  )}
                   <div style={{ width: "100%" }}>
                     <Grid container direction="row" justify="center">
                       <span

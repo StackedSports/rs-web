@@ -595,13 +595,19 @@ function Home() {
                   </ChartTop>
                   <ChartDivS>
                     {/* <Chart monthlyStats={monthlyStats} /> */}
-                    {doughnutChartData != null && (
+                    {doughnutChartData != null ? (
                       <DoughnutChart
                         monthlyStats={doughnutChartData}
                         // className="chart"
                         // data={[1, 2, 3, 4, 5, 6, 7]}
                         // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
                       />
+                    ) : (
+                      <Grid container direction="row" justify="center">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                      </Grid>
                     )}
                   </ChartDivS>
 
@@ -696,7 +702,15 @@ function Home() {
                   </ChartTop>
 
                   <div>
-                    {barChartData && <Barchart monthlyStats={barChartData} />}
+                    {barChartData != null ? (
+                      <Barchart monthlyStats={barChartData} />
+                    ) : (
+                      <Grid container direction="row" justify="center">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                      </Grid>
+                    )}
                   </div>
 
                   <ChartFooter>
