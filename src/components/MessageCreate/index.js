@@ -25,9 +25,6 @@ import {
   FaFilePdf,
   FaVideo,
   FaImage,
-  FaSlidersH,
-  FaBars,
-  FaTh,
 } from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 
@@ -37,32 +34,10 @@ import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import TimePicker from "../DateTimePicker/index";
 import MediaComponnet from "../Media/MediaComponent";
-import {
-  getAllContacts,
-  getTags,
-  getRanks,
-  getStatuses,
-  getGradeYears,
-  getBoardFilters,
-  getPositions,
-  getAllColumns,
-  getMedia,
-  getMediaTag,
-  getPlaceholder,
-} from "../../ApiHelper";
-import { TramRounded } from "@material-ui/icons";
+import { getAllContacts, getBoardFilters, getMedia } from "../../ApiHelper";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-// const useStyles2 = makeStyles((theme) => ({
-//   root: {
-//     width: "100%",
-//     "& > * + *": {
-//       marginTop: theme.spacing(2),
-//     },
-//   },
-// }));
 
 function Home() {
   const classes = useStyles();
@@ -70,6 +45,7 @@ function Home() {
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
@@ -115,9 +91,30 @@ function Home() {
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
-  const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
-  const [viewMorePlaceholder, setViewMorePlaceholder] = useState(false);
-  const [viewMoreQuickAccess, setViewMoreQuickAccess] = useState(false);
+  const makeMediaSelected = (index) => {
+    var alreadySelected = false;
+    selectedMedia.map((item) => {
+      if (index.hashid === item.hashid) {
+        alreadySelected = true;
+      }
+    });
+    if (alreadySelected) {
+      var temp = [];
+      selectedMedia.map((item) => {
+        if (index.hashid != item.hashid) {
+          temp.push(item);
+        }
+      });
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedMedia;
+      temp.push(index);
+      setSelectedMedia(temp);
+      setuseLessState(uselessState + 1);
+    }
+    console.log("This is selected media", selectedMedia);
+  };
 
   const handleClick = () => {
     setOpenSnackBar(true);
@@ -289,6 +286,86 @@ function Home() {
   const filtesSpacingStyle = {
     marginRight: 5,
   };
+
+  const mediaContainer = (m) => {
+    // console.log("THis is container ", m);
+    return (
+      <div
+        style={{
+          width: 270,
+          height: 250,
+          marginLeft: 10,
+          // border: "1px solid #d2d2d2",
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginBottom: 10,
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ background: "#f6f6f6" }}
+          // onMouseEnter={() => {
+          //   if (m.urls) {
+          //     setMediaHover(m.urls.medium);
+          //   }
+          // }}
+          // onMouseLeave={() => {
+          //   setMediaHover(null);
+          // }}
+        >
+          <img
+            style={{ width: "80%", height: 190, objectFit: "contain" }}
+            src={m.urls && m.urls.thumb}
+          ></img>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+          alignItems="center"
+        >
+          {m.file_type === "image/gif" ? (
+            <GifIcon></GifIcon>
+          ) : m.file_type.indexOf("video") > -1 ? (
+            <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+          ) : m.file_type.indexOf("image") > -1 ? (
+            <FaImage></FaImage>
+          ) : (
+            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+          )}
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: 12,
+              margin: 0,
+              marginLeft: 10,
+              fontSize: 15,
+            }}
+          >
+            {m.file_name.length > 17
+              ? m.file_name.substring(0, 17) + " ..."
+              : m.file_name}
+          </p>
+          <div style={{ width: "100%" }}></div>
+        </Grid>
+        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              color: "#5a5a5a",
+            }}
+          >
+            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
+            Coach Graves
+          </p>
+        </Grid>
+      </div>
+    );
+  };
+
   const renderFilters = () => {
     return (
       <Grid
@@ -844,6 +921,7 @@ function Home() {
             filter={filter}
             addDataToFilter={addDataToFilter}
             message
+            makeMediaSelected={makeMediaSelected}
           ></MediaComponnet>
         ) : (
           <div
@@ -1559,10 +1637,13 @@ function Home() {
                         // minWidth: 1110,
                         border: "1px solid #d8d8d8",
                         borderRadius: 4,
-                        height: 170,
+                        minHeight: 170,
                         marginTop: 12,
                       }}
                     >
+                      {selectedMedia.map((m) => {
+                        return mediaContainer(m);
+                      })}
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 12, height: 160 }}>
                           Add Media:

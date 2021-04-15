@@ -139,7 +139,7 @@ function MediaComponent(props) {
 
     setOpenSnackBar(false);
   };
-
+  console.log("These are selected checkboxes", selectedCheckBoxes);
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -554,10 +554,6 @@ function MediaComponent(props) {
         }
       });
       console.log("This is temp", temp);
-      // console.log("This is index", index);
-      // var other = temp.splice(index, 1);
-      // console.log("This is other", other);
-      // var newArray = temp;
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     } else {
@@ -566,7 +562,6 @@ function MediaComponent(props) {
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     }
-    console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
 
   const removeDataFromFilter = (index) => {
@@ -675,7 +670,7 @@ function MediaComponent(props) {
   }
 
   const mediaContainer = (m) => {
-    console.log("THis is container ", m);
+    // console.log("THis is container ", m);
     return (
       <div
         style={{
@@ -726,6 +721,9 @@ function MediaComponent(props) {
                     }
                     onClick={(e) => {
                       e.preventDefault();
+                      if (props.makeMediaSelected) {
+                        props.makeMediaSelected(m);
+                      }
                       makeCheckBoxSelected(m.hashid);
                     }}
                     style={{
@@ -835,7 +833,7 @@ function MediaComponent(props) {
   };
 
   const placeholderContainer = (m) => {
-    console.log("THis is media placeholderContainer ", m);
+    // console.log("THis is media placeholderContainer ", m);
     return (
       <div
         style={{
@@ -1179,7 +1177,7 @@ function MediaComponent(props) {
           // }}
         >
           <p>Quick Access</p>
-          {selectedPlaceholder === null ? (
+          {selectedPlaceholder === null || props.message ? (
             <Grid container>
               {media != null ? (
                 media.map((m, index) => {
@@ -1315,7 +1313,7 @@ function MediaComponent(props) {
             </div>
           </Grid>
           <p>Placeholders</p>
-          {showlistView === true ? (
+          {showlistView === true && props.message === null ? (
             <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
               <Grid
                 container
@@ -1528,32 +1526,35 @@ function MediaComponent(props) {
               </div>
             </Grid>
           )}
-
-          <p>Tagged Media</p>
-          <Grid container>
-            {taggedMedia &&
-              taggedMedia.map((tag, index) => {
-                if (index < 7) {
-                  return (
-                    <IconTextField
-                      // width={100}
-                      onClick={() => {
-                        setShowTagsDialog(false);
-                        setOpenSnackBar(true);
-                      }}
-                      text={tag.name}
-                      textColor="#3871DA"
-                      background="white"
-                      icon={
-                        <LocalOfferOutlinedIcon
-                          style={{ color: "#3871DA" }}
-                        ></LocalOfferOutlinedIcon>
-                      }
-                    ></IconTextField>
-                  );
-                }
-              })}
-          </Grid>
+          {props.message ? <div></div> : <p>Tagged Media</p>}
+          {props.message ? (
+            <div></div>
+          ) : (
+            <Grid container>
+              {taggedMedia &&
+                taggedMedia.map((tag, index) => {
+                  if (index < 7) {
+                    return (
+                      <IconTextField
+                        // width={100}
+                        onClick={() => {
+                          setShowTagsDialog(false);
+                          setOpenSnackBar(true);
+                        }}
+                        text={tag.name}
+                        textColor="#3871DA"
+                        background="white"
+                        icon={
+                          <LocalOfferOutlinedIcon
+                            style={{ color: "#3871DA" }}
+                          ></LocalOfferOutlinedIcon>
+                        }
+                      ></IconTextField>
+                    );
+                  }
+                })}
+            </Grid>
+          )}
         </div>
       </div>
       <Grid container direction="row" alignItems="center"></Grid>
@@ -1664,6 +1665,29 @@ function MediaComponent(props) {
         }}
         hideActions={true}
       />
+      {lightboxPicture && (
+        <Dialog
+          open={true}
+          onClose={() => {
+            setLightboxPicture(null);
+          }}
+        >
+          <img src={lightboxPicture}></img>
+        </Dialog>
+      )}
+
+      {lightboxVideo && (
+        <Dialog
+          open={true}
+          onClose={() => {
+            setLightboxVideo(null);
+          }}
+        >
+          <video width="400" height="400" loop autoPlay controls>
+            <source src={lightboxVideo} type="video/mp4"></source>
+          </video>
+        </Dialog>
+      )}
     </div>
   );
 }
