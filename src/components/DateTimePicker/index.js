@@ -57,10 +57,17 @@ const useStyles = makeStyles({
 });
 export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
-  const [rangeValue, setRangeValue] = useState(0);
+  const [rangeValue, setRangeValue] = useState(null);
   const [timeType, setTimeType] = useState("am");
   const [slots, setSlots] = useState([]);
   const classes = useStyles();
+  console.log("New data", new Date().getHours());
+  var currentTime = "";
+  if (new Date().getHours() < 12) {
+    currentTime = new Date().getHours() + " : 0" + new Date().getMinutes();
+  } else {
+    currentTime = new Date().getHours() + " : " + new Date().getMinutes();
+  }
 
   // function valuetext(value) {
   //   console.log("THis is vlaue", value);
@@ -209,7 +216,8 @@ export default function DateTimePicker(props) {
                 color: timeType === "am" ? "black" : "white",
               }}
             >
-              {timeSlots[rangeValue]} {timeType}
+              {rangeValue != null ? timeSlots[rangeValue] : currentTime}
+              {rangeValue ? timeType : ""}
             </div>
             <IconButton
               onClick={() => {

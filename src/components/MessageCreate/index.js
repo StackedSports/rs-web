@@ -6,6 +6,7 @@ import {
   Checkbox,
   Snackbar,
   CircularProgress,
+  Badge,
 } from "@material-ui/core";
 import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -49,7 +50,7 @@ function Home() {
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
-  const [addMedia, setAddMedia] = useState(true);
+  const [addMedia, setAddMedia] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
   const [displaySendTo, setDisplaySendTo] = useState(false);
@@ -261,15 +262,15 @@ function Home() {
     "Nevada",
     "New Hampshire",
     "New Jersey",
-    " New Mexico",
-    " New York",
-    " North Carolina",
+    "New Mexico",
+    "New York",
+    "North Carolina",
     "North Dakota",
     "Ohio",
     "Oklahoma",
     "Oregon",
     "Pennsylvania",
-    " Rhode Island",
+    "Rhode Island",
     "South Carolina",
     "South Dakota",
     "Tennessee",
@@ -290,79 +291,111 @@ function Home() {
   const mediaContainer = (m) => {
     // console.log("THis is container ", m);
     return (
-      <div
-        style={{
-          width: 270,
-          height: 250,
-          marginLeft: 10,
-          // border: "1px solid #d2d2d2",
-          border: "1px solid #d2d2d2",
-          borderRadius: 4,
-          marginBottom: 10,
-        }}
+      <Badge
+        badgeContent={
+          <ClearIcon
+            style={{ height: 10, width: 10, cursor: "pointer" }}
+            onClick={() => {
+              var alreadySelected = false;
+              selectedMedia.map((item) => {
+                if (m.hashid === item.hashid) {
+                  alreadySelected = true;
+                }
+              });
+              if (alreadySelected) {
+                var temp = [];
+                selectedMedia.map((item) => {
+                  if (m.hashid != item.hashid) {
+                    temp.push(item);
+                  }
+                });
+                setSelectedMedia(temp);
+                setuseLessState(uselessState + 1);
+              }
+            }}
+          ></ClearIcon>
+        }
+        color="error"
       >
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ background: "#f6f6f6" }}
-          // onMouseEnter={() => {
-          //   if (m.urls) {
-          //     setMediaHover(m.urls.medium);
-          //   }
-          // }}
-          // onMouseLeave={() => {
-          //   setMediaHover(null);
-          // }}
+        <div
+          style={{
+            width: 270,
+            height: 250,
+            marginLeft: 20,
+            // border: "1px solid #d2d2d2",
+            border: "1px solid #d2d2d2",
+            borderRadius: 4,
+            // marginTop: 20,
+            marginBottom: 10,
+          }}
         >
-          <img
-            style={{ width: "80%", height: 190, objectFit: "contain" }}
-            src={m.urls && m.urls.thumb}
-          ></img>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
-          alignItems="center"
-        >
-          {m.file_type === "image/gif" ? (
-            <GifIcon></GifIcon>
-          ) : m.file_type.indexOf("video") > -1 ? (
-            <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
-          ) : m.file_type.indexOf("image") > -1 ? (
-            <FaImage></FaImage>
-          ) : (
-            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
-          )}
-          <p
-            style={{
-              fontWeight: "bold",
-              fontSize: 12,
-              margin: 0,
-              marginLeft: 10,
-              fontSize: 15,
-            }}
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            style={{ background: "#f6f6f6" }}
+            // onMouseEnter={() => {
+            //   if (m.urls) {
+            //     setMediaHover(m.urls.medium);
+            //   }
+            // }}
+            // onMouseLeave={() => {
+            //   setMediaHover(null);
+            // }}
           >
-            {m.file_name.length > 17
-              ? m.file_name.substring(0, 17) + " ..."
-              : m.file_name}
-          </p>
-          <div style={{ width: "100%" }}></div>
-        </Grid>
-        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 13,
-              color: "#5a5a5a",
-            }}
+            <img
+              style={{ width: "80%", height: 190, objectFit: "contain" }}
+              src={m.urls && m.urls.thumb}
+            ></img>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+            alignItems="center"
           >
-            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
-            Coach Graves
-          </p>
-        </Grid>
-      </div>
+            {m.file_type === "image/gif" ? (
+              <GifIcon></GifIcon>
+            ) : m.file_type.indexOf("video") > -1 ? (
+              <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+            ) : m.file_type.indexOf("image") > -1 ? (
+              <FaImage></FaImage>
+            ) : (
+              <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+            )}
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 12,
+                margin: 0,
+                marginLeft: 10,
+                fontSize: 15,
+              }}
+            >
+              {m.file_name.length > 17
+                ? m.file_name.substring(0, 17) + " ..."
+                : m.file_name}
+            </p>
+            <div style={{ width: "100%" }}></div>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            style={{ height: 30, marginLeft: 12 }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                color: "#5a5a5a",
+              }}
+            >
+              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
+              Coach Graves
+            </p>
+          </Grid>
+        </div>
+      </Badge>
     );
   };
 
@@ -1639,45 +1672,50 @@ function Home() {
                         borderRadius: 4,
                         minHeight: 170,
                         marginTop: 12,
+                        paddingTop: 15,
                       }}
                     >
-                      {selectedMedia.map((m) => {
-                        return mediaContainer(m);
-                      })}
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 12, height: 160 }}>
                           Add Media:
                         </p>
                       </Grid>
-                      <Grid item md={10} xs={10}>
-                        <div class="dropdown">
-                          <Grid
-                            container
-                            direction="row"
-                            style={{
-                              border: "1px solid #d8d8d8",
-                              height: 150,
-                              width: 150,
-                              cursor: "pointer",
-                              borderRadius: 4,
-                            }}
-                            onClick={() => {
-                              setAddMedia(true);
-                            }}
-                            alignItems="center"
-                            justify="center"
-                          >
-                            {" "}
-                            <FaPlus
+
+                      {selectedMedia.length > 0 ? (
+                        selectedMedia.map((m) => {
+                          return mediaContainer(m);
+                        })
+                      ) : (
+                        <Grid item md={10} xs={10}>
+                          <div class="dropdown">
+                            <Grid
+                              container
+                              direction="row"
                               style={{
-                                // color: displayMessageSenders ? "white" : "#3871da",
-                                color: "#3871da",
+                                border: "1px solid #d8d8d8",
+                                height: 150,
+                                width: 150,
+                                cursor: "pointer",
+                                borderRadius: 4,
                               }}
-                            ></FaPlus>{" "}
-                            Add Media
-                          </Grid>
-                        </div>
-                      </Grid>
+                              onClick={() => {
+                                setAddMedia(true);
+                              }}
+                              alignItems="center"
+                              justify="center"
+                            >
+                              {" "}
+                              <FaPlus
+                                style={{
+                                  // color: displayMessageSenders ? "white" : "#3871da",
+                                  color: "#3871da",
+                                }}
+                              ></FaPlus>{" "}
+                              Add Media
+                            </Grid>
+                          </div>{" "}
+                        </Grid>
+                      )}
                     </Grid>
 
                     <Grid
