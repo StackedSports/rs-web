@@ -35,7 +35,12 @@ import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import TimePicker from "../DateTimePicker/index";
 import MediaComponnet from "../Media/MediaComponent";
-import { getAllContacts, getBoardFilters, getMedia } from "../../ApiHelper";
+import {
+  getAllContacts,
+  getBoardFilters,
+  getMedia,
+  getTeamContacts,
+} from "../../ApiHelper";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -88,6 +93,7 @@ function Home() {
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
+  const [teamContacts, setTeamContacts] = useState(null);
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
@@ -145,6 +151,37 @@ function Home() {
     return null;
   };
 
+  const getMyTeamContacts = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all team contacts", res.data);
+
+          var temp = [];
+          temp.push(JSON.parse(localStorage.getItem("user")));
+          var alldata = [];
+          var cont = res.data;
+          res.data &&
+            res.data.map((d) => {
+              if (d.id != JSON.parse(localStorage.getItem("user")).id) {
+                alldata.push(d);
+              }
+            });
+          var temp2 = temp.concat(alldata);
+
+          setTeamContacts(temp2);
+        }
+      },
+      (error) => {
+        // getMyContacts(1);
+        document.getElementById("infinit").scrollTop = 0;
+        setPage(1);
+        console.log("this is error all contacts", error);
+      }
+    );
+  };
+
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -168,7 +205,10 @@ function Home() {
             console.log("These are all contacts", res.data);
             setContacts(res.data);
             setCopyContacts(res.data);
-            document.getElementById("infinit").scrollTop = 0;
+            if (document.getElementById("infinit")) {
+              document.getElementById("infinit").scrollTop = 0;
+            }
+
             setFetching(false);
           }
         }
@@ -711,6 +751,7 @@ function Home() {
     if (localStorage.getItem("user")) {
       getMyContacts();
       getMyMedia();
+      getMyTeamContacts();
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -799,7 +840,7 @@ function Home() {
     }
   }
 
-  console.log("THis is great message type", messageType);
+  // console.log("THis is great message type", messageType);
 
   const renderMessageReceiver = (messageType) => {
     return messageType.map((item) => {
@@ -836,6 +877,57 @@ function Home() {
     });
   };
 
+  const renderMessageSenderTag = (sender) => {
+    return (
+      <div
+        container
+        direction="row"
+        alignItems="center"
+        justify="center"
+        className={classes.tags}
+        style={{ paddingLeft: 0 }}
+      >
+        <Grid
+          style={{ height: 40 }}
+          container
+          direction="row"
+          alignItems="center"
+        >
+          <img
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 20,
+              marginLeft: 12,
+            }}
+            src={sender.twitter_profile && sender.twitter_profile.profile_image}
+          ></img>
+          <p style={{ margin: 0, marginLeft: 5, marginRight: 5 }}>
+            <p
+              style={{
+                margin: 0,
+                fontWeight: 600,
+                marginLeft: 12,
+              }}
+            >
+              {"(@" + sender.twitter_profile &&
+                sender.twitter_profile.screen_name + ")"}
+            </p>
+          </p>
+          <ClearIcon
+            onClick={() => {
+              setMessageSender(null);
+            }}
+            style={{
+              color: "red",
+              fontSize: 17,
+              cursor: "pointer",
+            }}
+          ></ClearIcon>{" "}
+        </Grid>
+      </div>
+    );
+  };
   const renderMessageTypeTag = (messageType) => {
     return (
       <div
@@ -1300,7 +1392,7 @@ function Home() {
                       </Grid>
                       <Grid item md={11} xs={11}>
                         {messageSender ? (
-                          renderMessageTypeTag(messageSender)
+                          renderMessageSenderTag(messageSender)
                         ) : (
                           <div class="dropdown">
                             <IconTextField
@@ -1402,61 +1494,94 @@ function Home() {
                                 ** select a default send account if recruite do
                                 not have a coach assigned
                               </p>
-                              {[
-                                {
-                                  title:
-                                    "You (@" +
-                                    JSON.parse(localStorage.getItem("user"))
-                                      .twitter_profile.screen_name +
-                                    ")",
-                                  icon: (
-                                    <img
-                                      style={{
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 20,
-                                        marginLeft: 12,
-                                      }}
-                                      src={
-                                        JSON.parse(localStorage.getItem("user"))
-                                          .twitter_profile.profile_image
-                                      }
-                                    ></img>
-                                  ),
-                                },
-                              ].map((type) => {
-                                console.log(
-                                  JSON.parse(localStorage.getItem("user"))
-                                    .twitter_profile.screen_name
-                                );
-                                return (
-                                  <Grid
-                                    container
-                                    alignItems="center"
-                                    // style={{
-                                    //   height: 50,
-                                    //   marginLeft: 0,
-                                    //   marginTop: -12,
-                                    //   cursor: "pointer",
-                                    // }}
-                                    className={classes.sendAsP}
-                                    onClick={() => {
-                                      setMessageSender(type);
-                                    }}
-                                  >
-                                    {type.icon}
-                                    <p
-                                      style={{
-                                        margin: 0,
-                                        fontWeight: 600,
-                                        marginLeft: 12,
-                                      }}
-                                    >
-                                      {type.title}
-                                    </p>
-                                  </Grid>
-                                );
-                              })}
+                              {
+                                // [
+                                //   {
+                                //     title:
+                                //       "You (@" +
+                                //       JSON.parse(localStorage.getItem("user"))
+                                //         .twitter_profile.screen_name +
+                                //       ")",
+                                //     icon: (
+                                //       <img
+                                //         style={{
+                                //           width: 30,
+                                //           height: 30,
+                                //           borderRadius: 20,
+                                //           marginLeft: 12,
+                                //         }}
+                                //         src={
+                                //           JSON.parse(localStorage.getItem("user"))
+                                //             .twitter_profile.profile_image
+                                //         }
+                                //       ></img>
+                                //     ),
+                                //   },
+                                // ]
+                                teamContacts &&
+                                  teamContacts.map((type) => {
+                                    return (
+                                      <Grid
+                                        container
+                                        alignItems="center"
+                                        // style={{
+                                        //   height: 50,
+                                        //   marginLeft: 0,
+                                        //   marginTop: -12,
+                                        //   cursor: "pointer",
+                                        // }}
+                                        className={classes.sendAsP}
+                                        onClick={() => {
+                                          setMessageSender(type);
+                                        }}
+                                      >
+                                        <img
+                                          style={{
+                                            width: 30,
+                                            height: 30,
+                                            borderRadius: 20,
+                                            marginLeft: 12,
+                                          }}
+                                          src={
+                                            type.twitter_profile &&
+                                            type.twitter_profile.profile_image
+                                          }
+                                        ></img>
+                                        {JSON.parse(
+                                          localStorage.getItem("user")
+                                        ).id === type.id ? (
+                                          <p
+                                            style={{
+                                              margin: 0,
+                                              fontWeight: 600,
+                                              marginLeft: 12,
+                                            }}
+                                          >
+                                            {type.twitter_profile &&
+                                              "You(@" +
+                                                type.twitter_profile
+                                                  .screen_name +
+                                                ")"}
+                                          </p>
+                                        ) : (
+                                          <p
+                                            style={{
+                                              margin: 0,
+                                              fontWeight: 600,
+                                              marginLeft: 12,
+                                            }}
+                                          >
+                                            {type.twitter_profile &&
+                                              "(@" +
+                                                type.twitter_profile
+                                                  .screen_name +
+                                                ")"}
+                                          </p>
+                                        )}
+                                      </Grid>
+                                    );
+                                  })
+                              }
                             </div>
                           </div>
                         )}
@@ -1921,7 +2046,7 @@ const useStyles = makeStyles({
     marginLeft: -140,
     zIndex: 1,
     maxHeight: "60vh",
-    overflowY: "hidden",
+    overflowY: "scroll",
     overflowX: "hidden",
   },
   blueButtonActive: {
