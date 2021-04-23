@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
+import { Link } from "react-router-dom";
 import { makeStyles, Grid, Checkbox, Dialog } from "@material-ui/core";
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
@@ -79,6 +80,21 @@ const useStyles = makeStyles({
   icons: {
     color: "#d8d8d8",
   },
+  dropdownHidden: {
+    display: "none",
+    position: "absolute",
+    backgroundColor: "white",
+    minWidth: 230,
+    boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
+    border: "1px solid #d5d5d5",
+    borderRadius: 4,
+    // padding: 5,
+    marginLeft: -240,
+    zIndex: 1,
+    // maxHeight: "60vh",
+    // overflowY: "scroll",
+    overflowX: "hidden",
+  },
 });
 
 function MediaComponent(props) {
@@ -123,6 +139,7 @@ function MediaComponent(props) {
   const [placeholders, setPlaceHolders] = useState(null);
   const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
   const [taggedMedia, setTaggedMedia] = useState(null);
+  const [displayAction, setDisplayAction] = useState(null);
 
   const [allTags, setAllTags] = useState(null);
   const [page, setPage] = useState(1);
@@ -1069,13 +1086,78 @@ function MediaComponent(props) {
             {props.message ? (
               <div></div>
             ) : (
-              <IconTextField
-                // width={180}
-                width={100}
-                text="Action"
-                textColor="gray"
-                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
-              ></IconTextField>
+              <div class="dropdown">
+                <Link id={"toMessage"} to="/message-create"></Link>
+                <IconTextField
+                  width={100}
+                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
+                  // background={displayAction ? "#3871da" : "white"}
+                  background={"white"}
+                  text="Action"
+                  icon={
+                    <FaMagic
+                      style={{
+                        color:
+                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
+                      }}
+                    ></FaMagic>
+                  }
+                  onMouseEnter={() => {
+                    setDisplayAction(true);
+                  }}
+                ></IconTextField>
+                <div
+                  // class="dropdown-content"
+                  className={classes.dropdownHidden}
+                  style={{
+                    marginLeft: -120,
+                    marginTop: 10,
+                    display: displayAction ? "block" : "none",
+                  }}
+                  onMouseLeave={() => {
+                    setDisplayAction(false);
+                  }}
+                >
+                  {[
+                    {
+                      title: "Send In Message",
+                    },
+                    {
+                      title: "Download",
+                    },
+                    {
+                      title: "Archive Media",
+                    },
+                    {
+                      title: "Archive Media & Placeholder",
+                    },
+                  ].map((type, index) => {
+                    return (
+                      <Grid
+                        container
+                        alignItems="center"
+                        className={classes.messagetypeGrid}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          document.getElementById("toMessage").click();
+                        }}
+                      >
+                        <p
+                          style={{
+                            margin: 0,
+                            marginBottom: 7,
+                            fontWeight: 500,
+                            marginLeft: 12,
+                            color: index > 1 ? "red" : "black",
+                          }}
+                        >
+                          {type.title}
+                        </p>
+                      </Grid>
+                    );
+                  })}
+                </div>
+              </div>
             )}
 
             {props.message ? (

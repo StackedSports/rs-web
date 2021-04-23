@@ -113,6 +113,7 @@ function Home() {
         }
       });
       setSelectedCheckboxes(temp);
+      setSelectedMedia(temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = selectedMedia;
@@ -120,6 +121,7 @@ function Home() {
       setSelectedMedia(temp);
       setuseLessState(uselessState + 1);
     }
+    localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
     console.log("This is selected media", selectedMedia);
   };
 
@@ -350,6 +352,7 @@ function Home() {
                   }
                 });
                 setSelectedMedia(temp);
+                localStorage.setItem("selectedMedia", JSON.stringify(temp));
                 setuseLessState(uselessState + 1);
               }
             }}
@@ -749,6 +752,11 @@ function Home() {
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
+      if (localStorage.getItem("selectedMedia")) {
+        console.log("THis is greate", localStorage.getItem("selectedMedia"));
+        setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
+      }
+
       getMyContacts();
       getMyMedia();
       getMyTeamContacts();
@@ -1558,10 +1566,10 @@ function Home() {
                                             }}
                                           >
                                             {type.twitter_profile &&
-                                              "You(@" +
+                                              "You @" +
                                                 type.twitter_profile
                                                   .screen_name +
-                                                ")"}
+                                                ""}
                                           </p>
                                         ) : (
                                           <p
@@ -1572,10 +1580,10 @@ function Home() {
                                             }}
                                           >
                                             {type.twitter_profile &&
-                                              "(@" +
+                                              " @" +
                                                 type.twitter_profile
                                                   .screen_name +
-                                                ")"}
+                                                " "}
                                           </p>
                                         )}
                                       </Grid>
@@ -2048,6 +2056,7 @@ const useStyles = makeStyles({
     maxHeight: "60vh",
     overflowY: "scroll",
     overflowX: "hidden",
+    zIndex: 200000000,
   },
   blueButtonActive: {
     width: "100%",

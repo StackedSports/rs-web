@@ -61,7 +61,7 @@ export default function DateTimePicker(props) {
   const [timeType, setTimeType] = useState("am");
   const [slots, setSlots] = useState([]);
   const classes = useStyles();
-  console.log("New data", new Date().getHours());
+  // console.log("New data", new Date().getHours());
   var currentTime = "";
   if (new Date().getHours() < 12) {
     currentTime = new Date().getHours() + " : 0" + new Date().getMinutes();
@@ -98,7 +98,7 @@ export default function DateTimePicker(props) {
   //
   // };
   // printTimeslots();
-  console.log("THis is slots", timeSlots.length);
+  // console.log("THis is slots", timeSlots.length);
   return (
     <Dialog
       open={props.open}

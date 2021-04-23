@@ -87,6 +87,8 @@ function Media() {
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  const [selectedMedia, setSelectedMedia] = useState([]);
+
   const [uselessState, setuseLessState] = useState(0);
   const [quickAccessStartIndex, setQuickAccessStartIndex] = useState(0);
   const [quickAccessEndIndex, setQuickAccessEndIndex] = useState(15);
@@ -991,6 +993,33 @@ function Media() {
     );
   };
 
+  const makeMediaSelected = (index) => {
+    var alreadySelected = false;
+    selectedMedia.map((item) => {
+      if (index.hashid === item.hashid) {
+        alreadySelected = true;
+      }
+    });
+    if (alreadySelected) {
+      var temp = [];
+      selectedMedia.map((item) => {
+        if (index.hashid != item.hashid) {
+          temp.push(item);
+        }
+      });
+      setSelectedCheckboxes(temp);
+      setSelectedMedia(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedMedia;
+      temp.push(index);
+      setSelectedMedia(temp);
+      setuseLessState(uselessState + 1);
+    }
+    localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
+    console.log("This is selected media", selectedMedia);
+  };
+
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
       {lightboxPicture && (
@@ -1122,6 +1151,7 @@ function Media() {
           setshowSideFilters={setshowSideFilters}
           filter={filter}
           addDataToFilter={addDataToFilter}
+          makeMediaSelected={makeMediaSelected}
         ></MediaComponnet>
         {/* <div
           style={{
