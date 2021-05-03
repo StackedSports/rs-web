@@ -10,7 +10,7 @@ export default function MediaPage() {
   };
   return (
     <>
-      <Sidebar contacts={true} />
+      <Sidebar media={true} />
       <Media contacts={true} media={true} />
     </>
   );

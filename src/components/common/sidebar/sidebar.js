@@ -14,8 +14,14 @@ import { BiChat, BiBell } from "react-icons/bi";
 import Modal from "../../dashboard/model";
 import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
-import { Grid } from "@material-ui/core";
-import ForumOutlinedIcon from "@material-ui/icons/ForumOutlined";
+import { Grid, Dialog, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { InputGroup, FormControl } from "react-bootstrap";
+
+import IconTextField from "../../common/Fields/IconTextField";
 
 const Nav = styled.div`
   height: 70px;
@@ -178,6 +184,19 @@ const HeaderIcons = styled.div`
 const Sidebar = (props) => {
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [addContact, setAddContact] = useState(false);
+  const [addMedia, setAddMedia] = useState(false);
+  const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
 
   const openModal = () => {
     setShowModal(true);
@@ -193,6 +212,228 @@ const Sidebar = (props) => {
   return (
     <>
       <Modal open={showModal} setShowModal={setShowModal} />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openSnakBar}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Contact Profile Created{" "}
+          <span style={{ textDecoration: "underline" }}>view profile</span>
+        </Alert>
+      </Snackbar>
+
+      <Dialog
+        maxWidth={"md"}
+        width={"md"}
+        open={addContact}
+        onClose={() => {
+          setAddContact(false);
+        }}
+      >
+        <Grid container direction="row" style={{ width: 650, padding: 20 }}>
+          <PermIdentityIcon style={{ color: "#3871da" }}></PermIdentityIcon>
+          <p style={{ width: "90%", fontWeight: 700, marginLeft: 5 }}>
+            New Contact Profile
+          </p>
+          <Grid item md={6} xs={6}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              First Name
+            </p>
+            <InputGroup className="mb-3">
+              {/* <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              </InputGroup.Prepend> */}
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60, width: "99%", marginRight: "2%" }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              First Name
+            </p>
+            <InputGroup className="mb-3">
+              {/* <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              </InputGroup.Prepend> */}
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60, width: "99%" }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Email
+            </p>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend style={{ width: 50 }}>
+                <InputGroup.Text id="basic-addon1" style={{ width: 50 }}>
+                  {" "}
+                  @
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60 }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Phone Number
+            </p>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend style={{ width: 50 }}>
+                <InputGroup.Text id="basic-addon1" style={{ width: 50 }}>
+                  +1
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60 }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={5} xs={5}></Grid>
+          <Grid item md={7} xs={7}>
+            <Grid container direction="row" justify="flex-end">
+              <IconTextField
+                width={150}
+                onClick={() => {
+                  setAddContact(false);
+                }}
+                text="Create Profile"
+                textColor={"#3871da"}
+                // border
+                // background={"#3871da"}
+              ></IconTextField>
+              <IconTextField
+                width={160}
+                onClick={() => {
+                  setAddContact(false);
+                  setOpenSnackBar(true);
+                }}
+                text="Create Profile"
+                textColor={"white"}
+                background={"#3871da"}
+                icon={
+                  <PermIdentityIcon
+                    style={{ color: "white" }}
+                  ></PermIdentityIcon>
+                }
+              ></IconTextField>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Dialog>
+
+      <Dialog
+        maxWidth={"md"}
+        width={"md"}
+        scroll={"body"}
+        open={addMedia}
+        onClose={() => {
+          setAddMedia(false);
+        }}
+      >
+        <Grid container direction="row" style={{ width: 650, padding: 20 }}>
+          <InsertDriveFileIcon
+            style={{ color: "#3871da" }}
+          ></InsertDriveFileIcon>
+          <p style={{ width: "90%", fontWeight: 700, marginLeft: 5 }}>
+            Create Placeholder & upload media
+          </p>
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Owner
+            </p>
+            <InputGroup className="mb-3">
+              {/* <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              </InputGroup.Prepend> */}
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60, width: "99%", marginRight: "2%" }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Tags
+            </p>
+            <InputGroup className="mb-3">
+              {/* <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              </InputGroup.Prepend> */}
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60, width: "99%" }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Associate to placeholder or create new
+            </p>
+            <InputGroup className="mb-3">
+              {/* <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+              </InputGroup.Prepend> */}
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                style={{ height: 60, width: "99%" }}
+              />
+            </InputGroup>
+          </Grid>
+          <Grid item md={5} xs={5}></Grid>
+          <Grid item md={7} xs={7}>
+            <Grid container direction="row" justify="flex-end">
+              <IconTextField
+                width={150}
+                onClick={() => {
+                  setAddContact(false);
+                }}
+                text="Create Profile"
+                textColor={"#3871da"}
+                // border
+                // background={"#3871da"}
+              ></IconTextField>
+              <IconTextField
+                width={120}
+                onClick={() => {
+                  setAddContact(false);
+                  setOpenSnackBar(true);
+                }}
+                text="Upload"
+                textColor={"white"}
+                background={"#3871da"}
+                icon={
+                  <CloudUploadIcon style={{ color: "white" }}></CloudUploadIcon>
+                }
+              ></IconTextField>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Dialog>
+
       <IconContext.Provider value={{ color: "#fff" }}>
         <NavResponsive>
           <IoIosMenu
@@ -223,7 +464,7 @@ const Sidebar = (props) => {
           </LeftSectionNav>
         </NavResponsive>
         <Nav>
-          {props.contacts === true ? (
+          {props.contacts === true || props.media == true ? (
             <LogoContainer style={{ width: 60 }}>
               <NavLogo src={DashboardLogo} style={{ width: 50 }} />
             </LogoContainer>
@@ -233,7 +474,13 @@ const Sidebar = (props) => {
             </LogoContainer>
           )}
           {props.contacts === true ? (
-            <Button onClick={openModal}>+ Add Contact</Button>
+            <Button onClick={setAddContact}>+ Add Contact</Button>
+          ) : (
+            <div></div>
+          )}
+
+          {props.media === true ? (
+            <Button onClick={setAddMedia}>+ Add Media</Button>
           ) : (
             <div></div>
           )}
@@ -299,11 +546,11 @@ const Sidebar = (props) => {
         </Nav>
         <SidebarNav
           sidebar={sidebar}
-          style={{ width: props.contacts ? 60 : 250 }}
+          style={{ width: props.contacts || props.media ? 60 : 250 }}
         >
           <Grid container direction="column">
             <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
-              {props.contacts === true ? (
+              {props.contacts === true || props.media === true ? (
                 <div></div>
               ) : (
                 <Button onClick={openModal}>+ New</Button>
@@ -311,7 +558,11 @@ const Sidebar = (props) => {
 
               {SidebarData.map((item, index) => {
                 return (
-                  <SubMenu contacts={props.contacts} item={item} key={index} />
+                  <SubMenu
+                    contacts={props.contacts || props.media}
+                    item={item}
+                    key={index}
+                  />
                 );
               })}
             </SidebarWrap>
@@ -344,7 +595,7 @@ const Sidebar = (props) => {
                   </Grid>
                 </Grid>
                 <Grid item md={8} xs={8} lg={8}>
-                  {props.contacts === true ? (
+                  {props.contacts === true || props.media === true ? (
                     <div></div>
                   ) : (
                     <Grid
