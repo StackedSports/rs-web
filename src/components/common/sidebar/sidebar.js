@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { SidebarData } from "./sidebarData";
 import SubMenu from "./subMenu";
 import { IconContext } from "react-icons/lib";
 import DashboardLogo from "../../../images/dashboardLogo.png";
+import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
 import Logo from "../../../images/logoRight.png";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -14,14 +15,15 @@ import { BiChat, BiBell } from "react-icons/bi";
 import Modal from "../../dashboard/model";
 import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
-import { Grid, Dialog, Snackbar } from "@material-ui/core";
+import { Grid, Dialog, Snackbar, makeStyles } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { InputGroup, FormControl } from "react-bootstrap";
-
+import ClearIcon from "@material-ui/icons/Clear";
 import IconTextField from "../../common/Fields/IconTextField";
+import { getTags, getTeamContacts } from "../../../ApiHelper";
 
 const Nav = styled.div`
   height: 70px;
@@ -181,12 +183,106 @@ const HeaderIcons = styled.div`
   display: flex;
 `;
 
+const useStyles = makeStyles({
+  tags: {
+    border: "1px solid #d8d8d8",
+    height: 50,
+    width: "max-content",
+    fontWeight: 600,
+    borderRadius: 4,
+    marginLeft: 4,
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
+});
+
 const Sidebar = (props) => {
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [addContact, setAddContact] = useState(false);
   const [addMedia, setAddMedia] = useState(false);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  const [filter, setFilter] = useState([]);
+  const [tagFilter, setTagFilter] = useState([]);
+  const [uselessState, setuseLessState] = useState(0);
+  const [teamContacts, setTeamContacts] = useState(null);
+  const [allTags, setAllTags] = useState(null);
+  const [searchTags, setSearchTags] = useState("");
+  const classes = useStyles();
+
+  const getMyTeamContacts = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          setTeamContacts(res.data);
+        }
+      },
+      (error) => {}
+    );
+  };
+
+  const getAllTags = () => {
+    getTags().then(
+      (res) => {
+        // console.log("THis is all tags", res);
+        var TAGS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all tags", res.data);
+          setAllTags(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all tags", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      getMyTeamContacts();
+      getAllTags();
+    } else {
+      window.location.href = "/";
+    }
+  }, []);
+
+  const addDataToFilter = (value, type) => {
+    if (filter.includes(value)) {
+      var temp = [];
+      filter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setFilter(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = filter;
+      temp.push(value);
+      setFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
+  const addTagToFilter = (value, type) => {
+    if (tagFilter.includes(value)) {
+      var temp = [];
+      tagFilter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setTagFilter(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = tagFilter;
+      temp.push(value);
+      setTagFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -340,15 +436,15 @@ const Sidebar = (props) => {
       </Dialog>
 
       <Dialog
-        maxWidth={"md"}
-        width={"md"}
+        maxWidth={"lg"}
+        width={"lg"}
         scroll={"body"}
         open={addMedia}
         onClose={() => {
           setAddMedia(false);
         }}
       >
-        <Grid container direction="row" style={{ width: 650, padding: 20 }}>
+        <Grid container direction="row" style={{ width: 800, padding: 20 }}>
           <InsertDriveFileIcon
             style={{ color: "#3871da" }}
           ></InsertDriveFileIcon>
@@ -359,49 +455,340 @@ const Sidebar = (props) => {
             <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
               Owner
             </p>
-            <InputGroup className="mb-3">
-              {/* <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              </InputGroup.Prepend> */}
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+            >
+              {filter.length != 0 &&
+                filter.map((fil, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.tags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {fil}
+                        <ClearIcon
+                          onClick={() => {
+                            addDataToFilter(fil);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
+              <div class="dropdownMedia">
+                <input
+                  type="text"
+                  style={{
+                    height: 60,
+                    flex: "auto",
+                    border: "none",
+                  }}
+                  placeholder="+ Add Owner"
+                ></input>
+                <div class="dropdown-content-media">
+                  {teamContacts &&
+                    teamContacts.map((type, index) => {
+                      return (
+                        <Grid
+                          container
+                          alignItems="center"
+                          style={{
+                            height: 50,
+                            marginLeft: 0,
+                            marginTop: -12,
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            if (type.twitter_profile) {
+                              addDataToFilter(type.twitter_profile.screen_name);
+                            }
+                          }}
+                          // className={classes.sendAsP}
+                        >
+                          <img
+                            style={{
+                              width: 30,
+                              height: 30,
+                              borderRadius: 20,
+                              marginLeft: 12,
+                            }}
+                            src={
+                              type.twitter_profile &&
+                              type.twitter_profile.profile_image
+                            }
+                          ></img>
+
+                          <p
+                            style={{
+                              margin: 0,
+                              fontWeight: 600,
+                              marginLeft: 12,
+                            }}
+                          >
+                            {type.twitter_profile &&
+                              type.twitter_profile.screen_name + " "}
+                          </p>
+                        </Grid>
+                      );
+                    })}
+                </div>{" "}
+              </div>
+            </Grid>
+
+            {/* <InputGroup className="mb-3">
+
               <FormControl
                 placeholder="Username"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
-                style={{ height: 60, width: "99%", marginRight: "2%" }}
+                
               />
-            </InputGroup>
+            </InputGroup> */}
           </Grid>
           <Grid item md={12} xs={12}>
             <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
               Tags
             </p>
-            <InputGroup className="mb-3">
-              {/* <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              </InputGroup.Prepend> */}
-              <FormControl
-                placeholder="Username"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                style={{ height: 60, width: "99%" }}
-              />
-            </InputGroup>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+            >
+              {tagFilter.length != 0 &&
+                tagFilter.map((fil, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.tags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {fil}
+                        <ClearIcon
+                          onClick={() => {
+                            addTagToFilter(fil);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
+              <div class="dropdownMedia">
+                <input
+                  type="text"
+                  style={{
+                    height: 60,
+                    flex: "auto",
+                    border: "none",
+                  }}
+                  placeholder="+ Add Tag"
+                ></input>
+                <div class="dropdown-content-media">
+                  <Grid container direction="row" justify="center">
+                    <input
+                      type="text"
+                      style={{
+                        width: "90%",
+                        border: "1px solid #ebebeb",
+                        borderRadius: 4,
+                      }}
+                      placeholder="Search States"
+                      value={searchTags}
+                      onChange={(e) => {
+                        setSearchTags(e.target.value);
+                      }}
+                    ></input>
+                  </Grid>
+                  {allTags &&
+                    allTags.map((type, index) => {
+                      if (searchTags != "") {
+                        if (
+                          type.toLowerCase().indexOf(searchTags.toLowerCase()) >
+                          -1
+                        ) {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                                height: 50,
+                                marginLeft: 0,
+                                marginTop: -12,
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                addTagToFilter(type.name);
+                              }}
+                              // className={classes.sendAsP}
+                            >
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                              >
+                                {type.name}
+                              </p>
+                            </Grid>
+                          );
+                        }
+                      } else {
+                        return (
+                          <Grid
+                            container
+                            alignItems="center"
+                            style={{
+                              height: 50,
+                              marginLeft: 0,
+                              marginTop: -12,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              addTagToFilter(type.name);
+                            }}
+                            // className={classes.sendAsP}
+                          >
+                            <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                            >
+                              {type.name}
+                            </p>
+                          </Grid>
+                        );
+                      }
+                    })}
+                </div>{" "}
+              </div>
+            </Grid>
           </Grid>
           <Grid item md={12} xs={12}>
             <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
               Associate to placeholder or create new
             </p>
-            <InputGroup className="mb-3">
-              {/* <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              </InputGroup.Prepend> */}
-              <FormControl
-                placeholder="Username"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                style={{ height: 60, width: "99%" }}
-              />
-            </InputGroup>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+            >
+              {tagFilter.length != 0 &&
+                tagFilter.map((fil, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.tags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {fil}
+                        <ClearIcon
+                          onClick={() => {
+                            addTagToFilter(fil);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
+              <div class="dropdownMedia">
+                <input
+                  type="text"
+                  style={{
+                    height: 60,
+                    flex: "auto",
+                    border: "none",
+                  }}
+                  placeholder="+ Add Tag"
+                ></input>
+                <div class="dropdown-content-media">
+                  {allTags &&
+                    allTags.map((type, index) => {
+                      return (
+                        <Grid
+                          container
+                          alignItems="center"
+                          style={{
+                            height: 50,
+                            marginLeft: 0,
+                            marginTop: -12,
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            addTagToFilter(type.name);
+                          }}
+                          // className={classes.sendAsP}
+                        >
+                          <p
+                            style={{
+                              margin: 0,
+                              fontWeight: 600,
+                              marginLeft: 12,
+                            }}
+                          >
+                            {type.name}
+                          </p>
+                        </Grid>
+                      );
+                    })}
+                </div>{" "}
+              </div>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            style={{ height: 200 }}
+          >
+            <img src={Upload}></img>
           </Grid>
           <Grid item md={5} xs={5}></Grid>
           <Grid item md={7} xs={7}>
