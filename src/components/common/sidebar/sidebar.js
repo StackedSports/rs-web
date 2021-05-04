@@ -204,6 +204,7 @@ const Sidebar = (props) => {
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [filter, setFilter] = useState([]);
   const [tagFilter, setTagFilter] = useState([]);
+  const [placeholderFilter, setPlaceholderFilter] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [teamContacts, setTeamContacts] = useState(null);
   const [allTags, setAllTags] = useState(null);
@@ -279,6 +280,24 @@ const Sidebar = (props) => {
       var temp = tagFilter;
       temp.push(value);
       setTagFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
+  const addPlaceholderToFilter = (value, type) => {
+    if (placeholderFilter.includes(value)) {
+      var temp = [];
+      placeholderFilter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setPlaceholderFilter(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = placeholderFilter;
+      temp.push(value);
+      setPlaceholderFilter(temp);
       setuseLessState(uselessState + 1);
     }
   };
@@ -622,7 +641,7 @@ const Sidebar = (props) => {
                         border: "1px solid #ebebeb",
                         borderRadius: 4,
                       }}
-                      placeholder="Search States"
+                      placeholder="Search Tags"
                       value={searchTags}
                       onChange={(e) => {
                         setSearchTags(e.target.value);
@@ -706,8 +725,8 @@ const Sidebar = (props) => {
               alignItems="center"
               style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
             >
-              {tagFilter.length != 0 &&
-                tagFilter.map((fil, index) => {
+              {placeholderFilter.length != 0 &&
+                placeholderFilter.map((fil, index) => {
                   return (
                     <div
                       container
@@ -725,7 +744,7 @@ const Sidebar = (props) => {
                         {fil}
                         <ClearIcon
                           onClick={() => {
-                            addTagToFilter(fil);
+                            addPlaceholderToFilter(fil);
                           }}
                           style={{
                             color: "red",
@@ -745,7 +764,7 @@ const Sidebar = (props) => {
                     flex: "auto",
                     border: "none",
                   }}
-                  placeholder="+ Add Tag"
+                  placeholder="+ Add Media placeholder or personalized graphics"
                 ></input>
                 <div class="dropdown-content-media">
                   {allTags &&
@@ -761,7 +780,7 @@ const Sidebar = (props) => {
                             cursor: "pointer",
                           }}
                           onClick={() => {
-                            addTagToFilter(type.name);
+                            addPlaceholderToFilter(type.name);
                           }}
                           // className={classes.sendAsP}
                         >
