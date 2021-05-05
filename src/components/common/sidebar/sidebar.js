@@ -190,9 +190,24 @@ const useStyles = makeStyles({
     width: "max-content",
     fontWeight: 600,
     borderRadius: 4,
-    marginLeft: 4,
     paddingLeft: 12,
     paddingRight: 12,
+    margin: 8,
+  },
+  dropdownHidden: {
+    display: "none",
+    position: "absolute",
+    backgroundColor: "white",
+    minWidth: 230,
+    boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
+    border: "1px solid #d5d5d5",
+    borderRadius: 4,
+    // padding: 5,
+    zIndex: 1,
+    maxHeight: 200,
+    overflowY: "scroll",
+    overflowX: "hidden",
+    zIndex: 200000000,
   },
 });
 
@@ -208,6 +223,8 @@ const Sidebar = (props) => {
   const [uselessState, setuseLessState] = useState(0);
   const [teamContacts, setTeamContacts] = useState(null);
   const [allTags, setAllTags] = useState(null);
+  const [displayOwner, setDisplayOwner] = useState(null);
+
   const [searchTags, setSearchTags] = useState("");
   const classes = useStyles();
 
@@ -282,6 +299,20 @@ const Sidebar = (props) => {
       setTagFilter(temp);
       setuseLessState(uselessState + 1);
     }
+  };
+
+  const [origin, setOrigin] = useState(["apple", "orange", "grape"]);
+  const [target, setTarget] = useState([]);
+
+  const drag = (ev, text) => {
+    ev.dataTransfer.setData("text", text);
+  };
+
+  const drop = (ev) => {
+    const text = ev.dataTransfer.getData("text");
+    const index = origin.findIndex((o) => o === text);
+    setOrigin((origin) => origin.filter((_, i) => i !== index));
+    setTarget((target) => [...target, text]);
   };
 
   const addPlaceholderToFilter = (value, type) => {
@@ -361,7 +392,7 @@ const Sidebar = (props) => {
                 <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
               </InputGroup.Prepend> */}
               <FormControl
-                placeholder="Username"
+                placeholder="+ Add Name"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60, width: "99%", marginRight: "2%" }}
@@ -377,7 +408,7 @@ const Sidebar = (props) => {
                 <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
               </InputGroup.Prepend> */}
               <FormControl
-                placeholder="Username"
+                placeholder="+ Add Name"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60, width: "99%" }}
@@ -386,7 +417,7 @@ const Sidebar = (props) => {
           </Grid>
           <Grid item md={12} xs={12}>
             <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
-              Email
+              Twitter
             </p>
             <InputGroup className="mb-3">
               <InputGroup.Prepend style={{ width: 50 }}>
@@ -396,7 +427,7 @@ const Sidebar = (props) => {
                 </InputGroup.Text>
               </InputGroup.Prepend>
               <FormControl
-                placeholder="Username"
+                placeholder="+ Add Twitter Handle"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60 }}
@@ -414,7 +445,7 @@ const Sidebar = (props) => {
                 </InputGroup.Text>
               </InputGroup.Prepend>
               <FormControl
-                placeholder="Username"
+                placeholder="+ Add Phone Number"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60 }}
@@ -429,7 +460,7 @@ const Sidebar = (props) => {
                 onClick={() => {
                   setAddContact(false);
                 }}
-                text="Create Profile"
+                text="Cancel"
                 textColor={"#3871da"}
                 // border
                 // background={"#3871da"}
@@ -461,6 +492,13 @@ const Sidebar = (props) => {
         open={addMedia}
         onClose={() => {
           setAddMedia(false);
+          // setDisplayOwner(false);
+        }}
+        onClick={(e) => {
+          console.log("This is id", e.target.id);
+          if (e.target.id != "owner") {
+            setDisplayOwner(false);
+          }
         }}
       >
         <Grid container direction="row" style={{ width: 800, padding: 20 }}>
@@ -518,10 +556,21 @@ const Sidebar = (props) => {
                     height: 60,
                     flex: "auto",
                     border: "none",
+                    padding: 16,
+                  }}
+                  id="owner"
+                  onClick={(e) => {
+                    console.log("This is ", e.target.id);
+                    setDisplayOwner(true);
                   }}
                   placeholder="+ Add Owner"
                 ></input>
-                <div class="dropdown-content-media">
+                <div
+                  className={classes.dropdownHidden}
+                  style={{
+                    display: displayOwner ? "block" : "none",
+                  }}
+                >
                   {teamContacts &&
                     teamContacts.map((type, index) => {
                       return (
@@ -582,7 +631,14 @@ const Sidebar = (props) => {
             </InputGroup> */}
           </Grid>
           <Grid item md={12} xs={12}>
-            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+            <p
+              style={{
+                color: "#b5bccd",
+                fontSize: 17,
+                fontWeight: 500,
+                marginTop: 16,
+              }}
+            >
               Tags
             </p>
             <Grid
@@ -629,6 +685,7 @@ const Sidebar = (props) => {
                     height: 60,
                     flex: "auto",
                     border: "none",
+                    padding: 16,
                   }}
                   placeholder="+ Add Tag"
                 ></input>
@@ -649,11 +706,13 @@ const Sidebar = (props) => {
                     ></input>
                   </Grid>
                   {allTags &&
-                    allTags.map((type, index) => {
+                    allTags.map((item, index) => {
+                      // console.log("This is item", item);
                       if (searchTags != "") {
                         if (
-                          type.toLowerCase().indexOf(searchTags.toLowerCase()) >
-                          -1
+                          item.name
+                            .toLowerCase()
+                            .indexOf(searchTags.toLowerCase()) > -1
                         ) {
                           return (
                             <Grid
@@ -666,7 +725,7 @@ const Sidebar = (props) => {
                                 cursor: "pointer",
                               }}
                               onClick={() => {
-                                addTagToFilter(type.name);
+                                addTagToFilter(item.name);
                               }}
                               // className={classes.sendAsP}
                             >
@@ -677,7 +736,7 @@ const Sidebar = (props) => {
                                   marginLeft: 12,
                                 }}
                               >
-                                {type.name}
+                                {item.name}
                               </p>
                             </Grid>
                           );
@@ -694,7 +753,7 @@ const Sidebar = (props) => {
                               cursor: "pointer",
                             }}
                             onClick={() => {
-                              addTagToFilter(type.name);
+                              addTagToFilter(item.name);
                             }}
                             // className={classes.sendAsP}
                           >
@@ -705,7 +764,7 @@ const Sidebar = (props) => {
                                 marginLeft: 12,
                               }}
                             >
-                              {type.name}
+                              {item.name}
                             </p>
                           </Grid>
                         );
@@ -716,7 +775,14 @@ const Sidebar = (props) => {
             </Grid>
           </Grid>
           <Grid item md={12} xs={12}>
-            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+            <p
+              style={{
+                color: "#b5bccd",
+                fontSize: 17,
+                fontWeight: 500,
+                marginTop: 16,
+              }}
+            >
               Associate to placeholder or create new
             </p>
             <Grid
@@ -763,6 +829,7 @@ const Sidebar = (props) => {
                     height: 60,
                     flex: "auto",
                     border: "none",
+                    padding: 16,
                   }}
                   placeholder="+ Add Media placeholder or personalized graphics"
                 ></input>
@@ -805,9 +872,40 @@ const Sidebar = (props) => {
             direction="row"
             alignItems="center"
             justify="center"
-            style={{ height: 200 }}
+            style={{
+              height: "max-content",
+              background: "#fafcfd",
+              marginTop: 16,
+              marginBottom: 16,
+              borderRadius: 4,
+              border: "1px dotted gray",
+              padding: 16,
+            }}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={drop}
           >
             <img src={Upload}></img>
+            <p
+              style={{
+                width: "100%",
+                textAlign: "center",
+                color: "#a2acc1",
+                margin: 0,
+              }}
+            >
+              Upload Your Document
+            </p>
+            <p
+              style={{
+                width: "100%",
+                textAlign: "center",
+                color: "#a2acc1",
+                margin: 0,
+              }}
+            >
+              Drag and Drop or <span style={{ color: "#6aa8f4" }}>Browse</span>{" "}
+              your file here
+            </p>
           </Grid>
           <Grid item md={5} xs={5}></Grid>
           <Grid item md={7} xs={7}>
