@@ -209,6 +209,24 @@ const useStyles = makeStyles({
     overflowX: "hidden",
     zIndex: 200000000,
   },
+  hoverGrid: {
+    height: 50,
+    marginLeft: 0,
+    // marginTop: -12,
+    cursor: "pointer",
+    color: "#3871da",
+    "&>p": {
+      color: "black",
+    },
+    "&:hover": {
+      background: "#3871da",
+      color: "white",
+      "&>p": {
+        color: "white",
+      },
+    },
+  },
+  tableP: { margin: 0, marginLeft: 12, fontSize: 16, fontWeight: 600 },
 });
 
 const Sidebar = (props) => {
@@ -224,6 +242,10 @@ const Sidebar = (props) => {
   const [teamContacts, setTeamContacts] = useState(null);
   const [allTags, setAllTags] = useState(null);
   const [displayOwner, setDisplayOwner] = useState(null);
+  const [displayTags, setDisplayTags] = useState(null);
+  const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
+  const [displayAssociate, setDisplayAssociate] = useState(null);
+  const [dropFiles, setDropFiles] = useState([]);
 
   const [searchTags, setSearchTags] = useState("");
   const classes = useStyles();
@@ -300,19 +322,18 @@ const Sidebar = (props) => {
       setuseLessState(uselessState + 1);
     }
   };
-
-  const [origin, setOrigin] = useState(["apple", "orange", "grape"]);
-  const [target, setTarget] = useState([]);
-
-  const drag = (ev, text) => {
-    ev.dataTransfer.setData("text", text);
-  };
-
+  console.log("These aree dropfiles", dropFiles);
   const drop = (ev) => {
-    const text = ev.dataTransfer.getData("text");
-    const index = origin.findIndex((o) => o === text);
-    setOrigin((origin) => origin.filter((_, i) => i !== index));
-    setTarget((target) => [...target, text]);
+    ev.preventDefault();
+
+    var tempFiles = [];
+    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+      tempFiles.push(ev.dataTransfer.files[i]);
+    }
+    console.log("These aree files ", tempFiles);
+    var temp = dropFiles;
+    var temp2 = temp.concat(tempFiles);
+    setDropFiles(temp2);
   };
 
   const addPlaceholderToFilter = (value, type) => {
@@ -499,6 +520,16 @@ const Sidebar = (props) => {
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
+          if (e.target.id != "tags") {
+            setDisplayTags(false);
+          }
+          if (e.target.id != "placeholder") {
+            setDisplayPlaceholder(false);
+          }
+          console.log("This is this id", e.target.id);
+          if (e.target.id != "associate" + displayAssociate) {
+            setDisplayAssociate(null);
+          }
         }}
       >
         <Grid container direction="row" style={{ width: 800, padding: 20 }}>
@@ -578,11 +609,12 @@ const Sidebar = (props) => {
                           container
                           alignItems="center"
                           style={{
-                            height: 50,
+                            height: 60,
                             marginLeft: 0,
                             marginTop: -12,
                             cursor: "pointer",
                           }}
+                          className={classes.hoverGrid}
                           onClick={() => {
                             if (type.twitter_profile) {
                               addDataToFilter(type.twitter_profile.screen_name);
@@ -687,9 +719,19 @@ const Sidebar = (props) => {
                     border: "none",
                     padding: 16,
                   }}
+                  id="tags"
+                  onClick={(e) => {
+                    console.log("This is ", e.target.id);
+                    setDisplayTags(true);
+                  }}
                   placeholder="+ Add Tag"
                 ></input>
-                <div class="dropdown-content-media">
+                <div
+                  className={classes.dropdownHidden}
+                  style={{
+                    display: displayTags ? "block" : "none",
+                  }}
+                >
                   <Grid container direction="row" justify="center">
                     <input
                       type="text"
@@ -721,9 +763,10 @@ const Sidebar = (props) => {
                               style={{
                                 height: 50,
                                 marginLeft: 0,
-                                marginTop: -12,
+
                                 cursor: "pointer",
                               }}
+                              className={classes.hoverGrid}
                               onClick={() => {
                                 addTagToFilter(item.name);
                               }}
@@ -749,9 +792,10 @@ const Sidebar = (props) => {
                             style={{
                               height: 50,
                               marginLeft: 0,
-                              marginTop: -12,
+                              marginTop: 0,
                               cursor: "pointer",
                             }}
+                            className={classes.hoverGrid}
                             onClick={() => {
                               addTagToFilter(item.name);
                             }}
@@ -831,9 +875,18 @@ const Sidebar = (props) => {
                     border: "none",
                     padding: 16,
                   }}
+                  id="placeholder"
+                  onClick={(e) => {
+                    setDisplayPlaceholder(true);
+                  }}
                   placeholder="+ Add Media placeholder or personalized graphics"
                 ></input>
-                <div class="dropdown-content-media">
+                <div
+                  className={classes.dropdownHidden}
+                  style={{
+                    display: displayPlaceholder ? "block" : "none",
+                  }}
+                >
                   {allTags &&
                     allTags.map((type, index) => {
                       return (
@@ -846,6 +899,7 @@ const Sidebar = (props) => {
                             marginTop: -12,
                             cursor: "pointer",
                           }}
+                          className={classes.hoverGrid}
                           onClick={() => {
                             addPlaceholderToFilter(type.name);
                           }}
@@ -867,46 +921,152 @@ const Sidebar = (props) => {
               </div>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justify="center"
-            style={{
-              height: "max-content",
-              background: "#fafcfd",
-              marginTop: 16,
-              marginBottom: 16,
-              borderRadius: 4,
-              border: "1px dotted gray",
-              padding: 16,
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={drop}
-          >
-            <img src={Upload}></img>
-            <p
+          {dropFiles.length < 1 ? (
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="center"
               style={{
+                height: "max-content",
+                background: "#fafcfd",
+                marginTop: 16,
+                marginBottom: 16,
+                borderRadius: 4,
+                border: "1px dotted gray",
+                padding: 16,
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                // alert("This is alert");
+                console.log("This is great");
+              }}
+              onDrop={drop}
+            >
+              <img src={Upload}></img>
+              <p
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#a2acc1",
+                  margin: 0,
+                }}
+              >
+                Upload Your Document
+              </p>
+              <p
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#a2acc1",
+                  margin: 0,
+                }}
+              >
+                Drag and Drop or{" "}
+                <span style={{ color: "#6aa8f4" }}>Browse</span> your file here
+              </p>
+            </Grid>
+          ) : (
+            <div
+              style={{
+                marginTop: 16,
+                marginBottom: 64,
                 width: "100%",
-                textAlign: "center",
-                color: "#a2acc1",
-                margin: 0,
+                border: "1px solid #dbe2ed",
+                borderRadius: 4,
               }}
             >
-              Upload Your Document
-            </p>
-            <p
-              style={{
-                width: "100%",
-                textAlign: "center",
-                color: "#a2acc1",
-                margin: 0,
-              }}
-            >
-              Drag and Drop or <span style={{ color: "#6aa8f4" }}>Browse</span>{" "}
-              your file here
-            </p>
-          </Grid>
+              <Grid
+                container
+                style={{
+                  background: "#f6f8fa",
+                  height: 50,
+                }}
+                alignItems="center"
+              >
+                <Grid item md={4}>
+                  <Grid container direction="row">
+                    <p className={classes.tableP}> File Name</p>
+                  </Grid>
+                </Grid>
+                <Grid item md={4}>
+                  <Grid container direction="row"></Grid>
+                  <p className={classes.tableP}>Associated</p>
+                </Grid>
+                <Grid item md={4}>
+                  <Grid container direction="row"></Grid>
+                  <p className={classes.tableP}>Upload Progress</p>
+                </Grid>
+              </Grid>
+              {dropFiles.map((item) => {
+                return (
+                  <Grid container style={{ height: 60 }} alignItems="center">
+                    <Grid item md={4}>
+                      <p className={classes.tableP}> {item.name}</p>
+                    </Grid>
+                    <Grid item md={4}>
+                      <div class="dropdownMedia">
+                        <input
+                          type="text"
+                          style={{
+                            height: 40,
+                            flex: "auto",
+                            border: "none",
+                            padding: 16,
+                          }}
+                          id={"associate" + item.name}
+                          onClick={(e) => {
+                            setDisplayAssociate(item.name);
+                          }}
+                          placeholder="+ Add"
+                        ></input>
+                        <div
+                          className={classes.dropdownHidden}
+                          style={{
+                            display:
+                              displayAssociate === item.name ? "block" : "none",
+                            maxHeight: 120,
+                          }}
+                        >
+                          {allTags &&
+                            allTags.map((type, index) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: 50,
+                                    marginLeft: 0,
+                                    marginTop: -12,
+                                    cursor: "pointer",
+                                  }}
+                                  className={classes.hoverGrid}
+                                  onClick={() => {
+                                    addPlaceholderToFilter(type.name);
+                                  }}
+                                  // className={classes.sendAsP}
+                                >
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 12,
+                                    }}
+                                  >
+                                    {type.name}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                        </div>{" "}
+                      </div>
+                    </Grid>
+                    <Grid item md={4}></Grid>
+                  </Grid>
+                );
+              })}
+            </div>
+          )}
           <Grid item md={5} xs={5}></Grid>
           <Grid item md={7} xs={7}>
             <Grid container direction="row" justify="flex-end">
