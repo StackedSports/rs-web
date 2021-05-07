@@ -244,7 +244,9 @@ const Sidebar = (props) => {
   const [displayOwner, setDisplayOwner] = useState(null);
   const [displayTags, setDisplayTags] = useState(null);
   const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
-  const [displayAssociate, setDisplayAssociate] = useState(null);
+  const [associatedPeople, setAssociatedPeople] = useState(null);
+  const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState(null);
+  var [displayAssociate, setDisplayAssociate] = useState(null);
   const [dropFiles, setDropFiles] = useState([]);
 
   const [searchTags, setSearchTags] = useState("");
@@ -516,7 +518,6 @@ const Sidebar = (props) => {
           // setDisplayOwner(false);
         }}
         onClick={(e) => {
-          console.log("This is id", e.target.id);
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
@@ -526,8 +527,9 @@ const Sidebar = (props) => {
           if (e.target.id != "placeholder") {
             setDisplayPlaceholder(false);
           }
-          console.log("This is this id", e.target.id);
-          if (e.target.id != "associate" + displayAssociate) {
+          if (e.target.id != displayAssociate) {
+            console.log("This is id", e.target.id, displayAssociate);
+            // alert("This will be null");
             setDisplayAssociate(null);
           }
         }}
@@ -1014,22 +1016,28 @@ const Sidebar = (props) => {
                             border: "none",
                             padding: 16,
                           }}
-                          id={"associate" + item.name}
+                          id={"associate" + item.name.substring(0, 3)}
                           onClick={(e) => {
-                            setDisplayAssociate(item.name);
+                            e.preventDefault();
+                            setDisplayAssociate(e.target.id);
+                            displayAssociate = e.target.id;
+                            console.log("This is id down", displayAssociate);
                           }}
-                          placeholder="+ Add"
+                          placeholder="+ Associate Contact"
                         ></input>
                         <div
                           className={classes.dropdownHidden}
                           style={{
                             display:
-                              displayAssociate === item.name ? "block" : "none",
+                              displayAssociate ===
+                              "associate" + item.name.substring(0, 3)
+                                ? "block"
+                                : "none",
                             maxHeight: 120,
                           }}
                         >
-                          {allTags &&
-                            allTags.map((type, index) => {
+                          {teamContacts &&
+                            teamContacts.map((type, index) => {
                               return (
                                 <Grid
                                   container
@@ -1042,10 +1050,31 @@ const Sidebar = (props) => {
                                   }}
                                   className={classes.hoverGrid}
                                   onClick={() => {
-                                    addPlaceholderToFilter(type.name);
+                                    // addPlaceholderToFilter(type.name);
+                                    if (type.twitter_profile) {
+                                      var temp = associatedPeople;
+                                      temp.push();
+                                      setAssociatedPeople(
+                                        type.twitter_profile.screen_name
+                                      );
+                                      setAssociatedPeopleIndex(index);
+                                    }
                                   }}
                                   // className={classes.sendAsP}
                                 >
+                                  <img
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      borderRadius: 20,
+                                      marginLeft: 12,
+                                    }}
+                                    src={
+                                      type.twitter_profile &&
+                                      type.twitter_profile.profile_image
+                                    }
+                                  ></img>
+
                                   <p
                                     style={{
                                       margin: 0,
@@ -1053,7 +1082,8 @@ const Sidebar = (props) => {
                                       marginLeft: 12,
                                     }}
                                   >
-                                    {type.name}
+                                    {type.twitter_profile &&
+                                      type.twitter_profile.screen_name + " "}
                                   </p>
                                 </Grid>
                               );
