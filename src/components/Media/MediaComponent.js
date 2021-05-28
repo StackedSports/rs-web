@@ -156,7 +156,7 @@ function MediaComponent(props) {
 
     setOpenSnackBar(false);
   };
-  console.log("These are selected checkboxes", selectedCheckBoxes);
+  // console.log("These are selected checkboxes", selectedCheckBoxes);
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -201,7 +201,7 @@ function MediaComponent(props) {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all my media contacts", res.data);
+          // console.log("These are all my media contacts", res.data);
           setMyMediaContacts(res.data);
         }
       },
@@ -539,7 +539,7 @@ function MediaComponent(props) {
     window.location.href = "/";
   }
 
-  console.log("THis is selected placeholders", selectedPlaceholder);
+  // console.log("THis is selected placeholders", selectedPlaceholder);
 
   const addDataToFilter = (value, type) => {
     if (props.filter.includes(value)) {

@@ -186,7 +186,7 @@ function Media() {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all my media contacts", res.data);
+          // console.log("These are all my media contacts", res.data);
           setMyMediaContacts(res.data);
         }
       },
@@ -524,7 +524,7 @@ function Media() {
     window.location.href = "/";
   }
 
-  console.log("THis is selected placeholders", selectedPlaceholder);
+  // console.log("THis is selected placeholders", selectedPlaceholder);
 
   const addDataToFilter = (value, type) => {
     if (filter.includes(value)) {
@@ -568,7 +568,7 @@ function Media() {
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     }
-    console.log("THis is selected Checkbox", selectedCheckBoxes);
+    // console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
 
   const removeDataFromFilter = (index) => {
@@ -1017,7 +1017,7 @@ function Media() {
       setuseLessState(uselessState + 1);
     }
     localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
-    console.log("This is selected media", selectedMedia);
+    // console.log("This is selected media", selectedMedia);
   };
 
   return (

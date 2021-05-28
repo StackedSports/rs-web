@@ -801,7 +801,7 @@ function Home() {
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     }
-    console.log("THis is selected Checkbox", selectedCheckBoxes);
+    // console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
 
   const removeDataFromFilter = (index) => {

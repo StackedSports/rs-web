@@ -122,7 +122,7 @@ function Home() {
       setuseLessState(uselessState + 1);
     }
     localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
-    console.log("This is selected media", selectedMedia);
+    // console.log("This is selected media", selectedMedia);
   };
 
   const handleClick = () => {

@@ -244,8 +244,8 @@ const Sidebar = (props) => {
   const [displayOwner, setDisplayOwner] = useState(null);
   const [displayTags, setDisplayTags] = useState(null);
   const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
-  const [associatedPeople, setAssociatedPeople] = useState(null);
-  const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState(null);
+  const [associatedPeople, setAssociatedPeople] = useState([]);
+  const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState([]);
   var [displayAssociate, setDisplayAssociate] = useState(null);
   const [dropFiles, setDropFiles] = useState([]);
 
@@ -324,7 +324,8 @@ const Sidebar = (props) => {
       setuseLessState(uselessState + 1);
     }
   };
-  console.log("These aree dropfiles", dropFiles);
+  console.log("These are associated people", associatedPeople);
+  console.log("These are associated people index", associatedPeopleIndex);
   const drop = (ev) => {
     ev.preventDefault();
 
@@ -354,6 +355,33 @@ const Sidebar = (props) => {
       setPlaceholderFilter(temp);
       setuseLessState(uselessState + 1);
     }
+  };
+
+  const associateContactToMedia = (value, index) => {
+    if (associatedPeople.includes(value)) {
+      var temp = [];
+      var tempIndex = [];
+      associatedPeople.map((item) => {
+        if (item != value) {
+          temp.push(item);
+          tempIndex.push(associatedPeopleIndex[index]);
+        }
+      });
+      setAssociatedPeople(temp);
+      setAssociatedPeopleIndex(tempIndex);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = associatedPeople;
+      var tempIndex = associatedPeopleIndex;
+      temp.push(value);
+      tempIndex.push(index);
+      setAssociatedPeople(temp);
+      setAssociatedPeopleIndex(tempIndex);
+      setuseLessState(uselessState + 1);
+    }
+    setuseLessState(uselessState + 1);
+    // console.log("thse are associated people", associatedPeople);
+    // console.log("This is associated people index", associatedPeopleIndex);
   };
 
   function Alert(props) {
@@ -1000,96 +1028,130 @@ const Sidebar = (props) => {
                   <p className={classes.tableP}>Upload Progress</p>
                 </Grid>
               </Grid>
-              {dropFiles.map((item) => {
+              {dropFiles.map((item, index) => {
                 return (
                   <Grid container style={{ height: 60 }} alignItems="center">
                     <Grid item md={4}>
                       <p className={classes.tableP}> {item.name}</p>
                     </Grid>
                     <Grid item md={4}>
-                      <div class="dropdownMedia">
-                        <input
-                          type="text"
-                          style={{
-                            height: 40,
-                            flex: "auto",
-                            border: "none",
-                            padding: 16,
-                          }}
-                          id={"associate" + item.name.substring(0, 3)}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setDisplayAssociate(e.target.id);
-                            displayAssociate = e.target.id;
-                            console.log("This is id down", displayAssociate);
-                          }}
-                          placeholder="+ Associate Contact"
-                        ></input>
-                        <div
-                          className={classes.dropdownHidden}
-                          style={{
-                            display:
-                              displayAssociate ===
-                              "associate" + item.name.substring(0, 3)
-                                ? "block"
-                                : "none",
-                            maxHeight: 120,
-                          }}
-                        >
-                          {teamContacts &&
-                            teamContacts.map((type, index) => {
-                              return (
-                                <Grid
-                                  container
-                                  alignItems="center"
-                                  style={{
-                                    height: 50,
-                                    marginLeft: 0,
-                                    marginTop: -12,
-                                    cursor: "pointer",
-                                  }}
-                                  className={classes.hoverGrid}
-                                  onClick={() => {
-                                    // addPlaceholderToFilter(type.name);
-                                    if (type.twitter_profile) {
-                                      var temp = associatedPeople;
-                                      temp.push();
-                                      setAssociatedPeople(
-                                        type.twitter_profile.screen_name
-                                      );
-                                      setAssociatedPeopleIndex(index);
-                                    }
-                                  }}
-                                  // className={classes.sendAsP}
-                                >
-                                  <img
+                      {associatedPeopleIndex.includes(index) === false ? (
+                        <div class="dropdownMedia">
+                          <input
+                            type="text"
+                            style={{
+                              height: 40,
+                              flex: "auto",
+                              border: "none",
+                              padding: 16,
+                            }}
+                            id={"associate" + item.name.substring(0, 3)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setDisplayAssociate(e.target.id);
+                              displayAssociate = e.target.id;
+                              console.log("This is id down", displayAssociate);
+                            }}
+                            placeholder="+ Associate Contact"
+                          ></input>
+                          <div
+                            className={classes.dropdownHidden}
+                            style={{
+                              display:
+                                displayAssociate ===
+                                "associate" + item.name.substring(0, 3)
+                                  ? "block"
+                                  : "none",
+                              maxHeight: 120,
+                            }}
+                          >
+                            {teamContacts &&
+                              teamContacts.map((type) => {
+                                return (
+                                  <Grid
+                                    container
+                                    alignItems="center"
                                     style={{
-                                      width: 30,
-                                      height: 30,
-                                      borderRadius: 20,
-                                      marginLeft: 12,
+                                      height: 50,
+                                      marginLeft: 0,
+                                      marginTop: -12,
+                                      cursor: "pointer",
                                     }}
-                                    src={
-                                      type.twitter_profile &&
-                                      type.twitter_profile.profile_image
-                                    }
-                                  ></img>
-
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontWeight: 600,
-                                      marginLeft: 12,
+                                    className={classes.hoverGrid}
+                                    onClick={() => {
+                                      // addPlaceholderToFilter(type.name);
+                                      console.log("This is great", type);
+                                      associateContactToMedia(type.id, index);
+                                      // if (type.twitter_profile) {
+                                      //   // setAssociatedPeople(
+                                      //   //   type.twitter_profile.screen_name
+                                      //   // );
+                                      //   // setAssociatedPeopleIndex(index);
+                                      //
+                                      // }
                                     }}
+                                    // className={classes.sendAsP}
                                   >
-                                    {type.twitter_profile &&
-                                      type.twitter_profile.screen_name + " "}
-                                  </p>
-                                </Grid>
-                              );
-                            })}
-                        </div>{" "}
-                      </div>
+                                    <img
+                                      style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 20,
+                                        marginLeft: 12,
+                                      }}
+                                      src={
+                                        type.twitter_profile &&
+                                        type.twitter_profile.profile_image
+                                      }
+                                    ></img>
+
+                                    <p
+                                      style={{
+                                        margin: 0,
+                                        fontWeight: 600,
+                                        marginLeft: 12,
+                                      }}
+                                    >
+                                      {type.twitter_profile &&
+                                        type.twitter_profile.screen_name + " "}
+                                    </p>
+                                  </Grid>
+                                );
+                              })}
+                          </div>{" "}
+                        </div>
+                      ) : (
+                        <div
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          className={classes.tags}
+                        >
+                          <Grid
+                            style={{ height: 50 }}
+                            container
+                            direction="row"
+                            alignItems="center"
+                          >
+                            {/* {fil} */}
+                            {associatedPeople[index]}
+                            <ClearIcon
+                              onClick={() => {
+                                associateContactToMedia(
+                                  associatedPeople[index],
+                                  index
+                                );
+                              }}
+                              style={{
+                                color: "red",
+                                fontSize: 17,
+                                cursor: "pointer",
+                              }}
+                            ></ClearIcon>{" "}
+                          </Grid>
+                        </div>
+                      )}
                     </Grid>
                     <Grid item md={4}></Grid>
                   </Grid>
