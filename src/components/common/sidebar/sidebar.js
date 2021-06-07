@@ -290,6 +290,7 @@ const Sidebar = (props) => {
   }, []);
 
   const addDataToFilter = (value, type) => {
+    console.log("This is the value", index);
     if (filter.includes(value)) {
       var temp = [];
       filter.map((item) => {
@@ -358,15 +359,21 @@ const Sidebar = (props) => {
   };
 
   const associateContactToMedia = (value, index) => {
+    console.log("This is the contact", value, index);
     if (associatedPeople.includes(value)) {
       var temp = [];
       var tempIndex = [];
       associatedPeople.map((item) => {
         if (item != value) {
           temp.push(item);
-          tempIndex.push(associatedPeopleIndex[index]);
         }
       });
+      associatedPeopleIndex.map((item) => {
+        if (item != index) {
+          tempIndex.push(item);
+        }
+      });
+      console.log("This is the contact temp", temp, tempIndex);
       setAssociatedPeople(temp);
       setAssociatedPeopleIndex(tempIndex);
       setuseLessState(uselessState + 1);
@@ -380,6 +387,8 @@ const Sidebar = (props) => {
       setuseLessState(uselessState + 1);
     }
     setuseLessState(uselessState + 1);
+    console.log("This is the contact", associatedPeople, associatedPeopleIndex);
+
     // console.log("thse are associated people", associatedPeople);
     // console.log("This is associated people index", associatedPeopleIndex);
   };
@@ -1045,7 +1054,7 @@ const Sidebar = (props) => {
                               border: "none",
                               padding: 16,
                             }}
-                            id={"associate" + item.name.substring(0, 3)}
+                            id={"associate" + item.name}
                             onClick={(e) => {
                               e.preventDefault();
                               setDisplayAssociate(e.target.id);
@@ -1058,8 +1067,7 @@ const Sidebar = (props) => {
                             className={classes.dropdownHidden}
                             style={{
                               display:
-                                displayAssociate ===
-                                "associate" + item.name.substring(0, 3)
+                                displayAssociate === "associate" + item.name
                                   ? "block"
                                   : "none",
                               maxHeight: 120,
@@ -1081,7 +1089,14 @@ const Sidebar = (props) => {
                                     onClick={() => {
                                       // addPlaceholderToFilter(type.name);
                                       console.log("This is great", type);
-                                      associateContactToMedia(type.id, index);
+                                      if (associatedPeople.includes(type.id)) {
+                                        alert(
+                                          "This id is already associated to other user!"
+                                        );
+                                      } else {
+                                        associateContactToMedia(type.id, index);
+                                      }
+
                                       // if (type.twitter_profile) {
                                       //   // setAssociatedPeople(
                                       //   //   type.twitter_profile.screen_name
