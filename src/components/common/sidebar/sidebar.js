@@ -11,11 +11,19 @@ import Logo from "../../../images/logoRight.png";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { BiChat, BiBell } from "react-icons/bi";
 import Modal from "../../dashboard/model";
 import { GlobalStyle } from "./globalStyle";
 import { IoIosMenu } from "react-icons/io";
-import { Grid, Dialog, Snackbar, makeStyles } from "@material-ui/core";
+import {
+  Grid,
+  Dialog,
+  Snackbar,
+  makeStyles,
+  withStyles,
+  Slider,
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
@@ -182,6 +190,39 @@ const NotificationIcon = styled(NotificationsIcon)``;
 const HeaderIcons = styled.div`
   display: flex;
 `;
+
+const PrettoSlider = withStyles({
+  root: {
+    // color: "#52af77",
+    color: "#5dd44d",
+    height: 8,
+  },
+  thumb: {
+    height: 10,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    display: "none",
+    marginTop: 2,
+    marginLeft: -12,
+    "&:focus, &:hover, &$active": {
+      boxShadow: "inherit",
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: "calc(-50% + 4px)",
+  },
+  track: {
+    height: 8,
+    borderRadius: 8,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 8,
+    color: "#dadada",
+  },
+})(Slider);
 
 const useStyles = makeStyles({
   tags: {
@@ -1168,7 +1209,31 @@ const Sidebar = (props) => {
                         </div>
                       )}
                     </Grid>
-                    <Grid item md={4}></Grid>
+                    <Grid item md={4}>
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        style={{ height: 40 }}
+                      >
+                        <PrettoSlider
+                          value={5}
+                          max={10}
+                          style={{ width: "60%" }}
+                        ></PrettoSlider>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginRight: 15,
+                            marginLeft: 15,
+                            color: "#b5bccd",
+                          }}
+                        >
+                          100%
+                        </p>
+                        <DeleteForeverIcon></DeleteForeverIcon>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 );
               })}

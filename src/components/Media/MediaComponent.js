@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Link } from "react-router-dom";
-import { makeStyles, Grid, Checkbox, Dialog } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Checkbox,
+  Dialog,
+  withStyles,
+  Slider,
+} from "@material-ui/core";
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 
@@ -97,6 +104,38 @@ const useStyles = makeStyles({
   },
 });
 
+const PrettoSlider = withStyles({
+  root: {
+    // color: "#52af77",
+    color: "#3768e7",
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    display: "none",
+    marginTop: 2,
+    marginLeft: -12,
+    "&:focus, &:hover, &$active": {
+      boxShadow: "inherit",
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: "calc(-50% + 4px)",
+  },
+  track: {
+    height: 20,
+    borderRadius: 20,
+  },
+  rail: {
+    height: 20,
+    borderRadius: 20,
+    color: "#dadada",
+  },
+})(Slider);
 function MediaComponent(props) {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
