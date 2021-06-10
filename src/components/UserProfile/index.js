@@ -8,7 +8,9 @@ import {
   Snackbar,
   CircularProgress,
 } from "@material-ui/core";
-import DoughnutChart from "../charts/Doughnut";
+// import DoughnutChart from "../charts/Doughnut";
+import InputEmoji from "react-input-emoji";
+import DoughnutChart from "../charts/DoughnutChartCenterText";
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -18,6 +20,9 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
 import AvatarImg from "../../images/avatar.png";
+import MyMedia from "../../images/media.jpg";
+import CameraAltIcon from "@material-ui/icons/CameraAlt";
+
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
@@ -1281,6 +1286,71 @@ function Home() {
                         );
                       })}
                     </div>
+                    <Grid
+                      container
+                      direction="row"
+                      style={{ borderRadius: 5, marginTop: 10 }}
+                      alignItems="center"
+                    >
+                      <Grid
+                        item
+                        md={11}
+                        sm={11}
+                        lg={11}
+                        xl={11}
+                        sm={11}
+                        xs={10}
+                      >
+                        <Grid style={{ background: "white", borderRadius: 5 }}>
+                          {/* {image && (
+                <img
+                  style={{ width: 100, height: 100 }}
+                  src={URL.createObjectURL(image)}
+                ></img>
+              )} */}
+
+                          <InputEmoji
+                            style={{
+                              width: "90%",
+                              borderRadius: 5,
+                              marginTop: 5,
+                            }}
+                            cleanOnEnter
+                            placeholder="Type message to send"
+                            // onEnter={handleOnEnter}
+                            borderColor={"white"}
+                          ></InputEmoji>
+                        </Grid>
+                      </Grid>
+                      <Grid item md={1} sm={1} lg={1} xl={1} sm={1} xs={1}>
+                        <Grid
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          style={{ height: 40 }}
+                        >
+                          <CameraAltIcon
+                            onClick={() => {
+                              // upload.click();
+                            }}
+                            style={{ fontSize: 30 }}
+                          ></CameraAltIcon>{" "}
+                        </Grid>
+                      </Grid>
+                      {/* <input
+                        type="file"
+                        // accept="video/mp4,video/x-m4v,video/*"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        ref={(ref) => {
+                          upload = ref;
+                        }}
+                        // // multiple
+                        onChange={handleFile}
+                        name="myfile"
+                      /> */}
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item md={3} sm={3}>
@@ -1303,8 +1373,8 @@ function Home() {
                         Message Stats
                       </p>
                     </div>
-                    {doughnutChartData != null ? (
-                      <DoughnutChart monthlyStats={doughnutChartData} />
+                    {loggedInUserStats != null ? (
+                      <DoughnutChart data={loggedInUserStats} />
                     ) : (
                       <Grid container direction="row" justify="center">
                         <div class="spinner-border text-primary" role="status">
@@ -1323,7 +1393,7 @@ function Home() {
                             >
                               <ComputerIcon></ComputerIcon>
                               <p className={classes.sideText}>DM’s</p>
-                              <p>
+                              <p style={{ color: "#1070ca" }}>
                                 {loggedInUserStats ? loggedInUserStats.dms : 0}
                               </p>
                             </Grid>
@@ -1336,7 +1406,7 @@ function Home() {
                             >
                               <PhoneAndroidIcon></PhoneAndroidIcon>
                               <p className={classes.sideText}>Personal Text</p>
-                              <p>
+                              <p style={{ color: "#ec4c47" }}>
                                 {loggedInUserStats ? loggedInUserStats.pts : 0}
                               </p>
                             </Grid>
@@ -1349,13 +1419,125 @@ function Home() {
                             >
                               <PhoneAndroidIcon></PhoneAndroidIcon>
                               <p className={classes.sideText}>RS Text</p>
-                              <p>
+                              <p style={{ color: "#f7d154" }}>
                                 {loggedInUserStats ? loggedInUserStats.rst : 0}
                               </p>
                             </Grid>
                           </Grid>
                         </Grid>
                       </div>
+                    </Grid>
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "2px solid #f8f8f8",
+                        borderTop: "2px solid #f8f8f8",
+                        width: "100%",
+                        height: 50,
+                      }}
+                      alignItems="center"
+                    >
+                      <p
+                        style={{
+                          color: "black",
+                          margin: 0,
+                          marginLeft: 10,
+                          fontWeight: 600,
+                          width: "100%",
+                        }}
+                      >
+                        Sent Media
+                      </p>
+                    </Grid>
+                    <Grid
+                      container
+                      style={{
+                        width: "100%",
+                        height: 100,
+                        padding: 8,
+                      }}
+                      alignItems="center"
+                    >
+                      <Grid item md={5} xs={5}>
+                        <img
+                          src={MyMedia}
+                          style={{
+                            width: "100%",
+                            marginRight: 5,
+                            width: "100%",
+                            height: 100,
+                            borderRadius: 4,
+                          }}
+                        ></img>
+                      </Grid>
+                      <Grid item md={2} xs={2}></Grid>
+                      <Grid item md={5} xs={5}>
+                        <img
+                          src={MyMedia}
+                          style={{
+                            width: "100%",
+                            height: 100,
+                            borderRadius: 4,
+                          }}
+                        ></img>
+                      </Grid>
+                    </Grid>
+
+                    <Grid
+                      container
+                      style={{
+                        borderBottom: "2px solid #f8f8f8",
+                        borderTop: "2px solid #f8f8f8",
+                        marginTop: 20,
+                        width: "100%",
+                        height: 50,
+                      }}
+                      alignItems="center"
+                    >
+                      <p
+                        style={{
+                          color: "black",
+                          margin: 0,
+                          marginLeft: 10,
+                          fontWeight: 600,
+                          width: "100%",
+                        }}
+                      >
+                        Associated Media
+                      </p>
+                    </Grid>
+                    <Grid
+                      container
+                      style={{
+                        width: "100%",
+                        height: 50,
+                        padding: 8,
+                      }}
+                      alignItems="center"
+                    >
+                      <Grid item md={5} xs={5}>
+                        <img
+                          src={MyMedia}
+                          style={{
+                            width: "100%",
+                            marginRight: 5,
+                            width: "100%",
+                            height: 100,
+                            borderRadius: 4,
+                          }}
+                        ></img>
+                      </Grid>
+                      <Grid item md={2} xs={2}></Grid>
+                      <Grid item md={5} xs={5}>
+                        <img
+                          src={MyMedia}
+                          style={{
+                            width: "100%",
+                            height: 100,
+                            borderRadius: 4,
+                          }}
+                        ></img>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>

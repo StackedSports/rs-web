@@ -58,7 +58,7 @@ export const SidebarData = [
   },
   {
     title: "Publishing",
-    path: "/",
+    path: "/user-profile",
     icon: (
       <TiSocialTwitter
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
