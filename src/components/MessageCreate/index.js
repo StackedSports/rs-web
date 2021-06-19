@@ -33,6 +33,9 @@ import {
   FaFilePdf,
   FaVideo,
   FaImage,
+  FaSlidersH,
+  FaBars,
+  FaTh,
 } from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 
@@ -48,6 +51,7 @@ import {
   getBoardFilters,
   getMedia,
   getTeamContacts,
+  getPlaceholder,
 } from "../../ApiHelper";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -79,6 +83,7 @@ function Home() {
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
   const [messageSender, setMessageSender] = useState(null);
+  const [messageDetails, setMessageDetails] = useState(null);
   const [messageReceiver, setMessageReceiver] = useState([]);
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
@@ -93,7 +98,7 @@ function Home() {
   const [coachFilter, setCoachFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
+  const [placeholders, setPlaceHolders] = useState(null);
   const [contacts, setContacts] = useState(null);
   const [media, setMedia] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
@@ -163,6 +168,93 @@ function Home() {
     }
 
     return null;
+  };
+
+  const placeholderContainer = (m) => {
+    console.log("THis is media placeholderContainer ", m);
+    return (
+      <div
+        style={{
+          width: 270,
+          height: 250,
+          marginLeft: 10,
+          border:
+            selectedCheckBoxes.indexOf(m.media_preview) > -1
+              ? "3px solid #4d83e0"
+              : "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginBottom: 10,
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ background: "#f6f6f6" }}
+        >
+          <img
+            style={{ width: "80%", height: 190, objectFit: "contain" }}
+            src={m.media_preview}
+          ></img>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+          alignItems="center"
+        >
+          {m.media_preview.indexOf(".gif") > -1 ? (
+            <GifIcon></GifIcon>
+          ) : m.media_preview.indexOf(".png") > -1 ||
+            m.media_preview.indexOf(".jpg") > -1 ||
+            m.media_preview.indexOf(".jpeg") > -1 ? (
+            <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
+          ) : m.media_preview.indexOf(".mp4") > -1 ? (
+            <FaVideo></FaVideo>
+          ) : (
+            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+          )}
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: 12,
+              margin: 0,
+              marginLeft: 10,
+              fontSize: 15,
+            }}
+          >
+            {m.name}
+          </p>
+          <div style={{ width: "100%" }}></div>
+        </Grid>
+        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              color: "#5a5a5a",
+            }}
+          >
+            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
+            Coach Graves
+          </p>
+        </Grid>
+      </div>
+    );
+  };
+  const getMyPlaceholders = () => {
+    getPlaceholder().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all placeholder", res.data);
+          setPlaceHolders(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all media", error);
+      }
+    );
   };
 
   const getMyTeamContacts = () => {
@@ -768,7 +860,7 @@ function Home() {
         console.log("THis is greate", localStorage.getItem("selectedMedia"));
         setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
       }
-
+      getMyPlaceholders();
       getMyContacts();
       getMyMedia();
       getMyTeamContacts();
@@ -1043,7 +1135,8 @@ function Home() {
             <p
               className={classes.sideFilter}
               onClick={() => {
-                setshowBoardFilters(!showBoardFilters);
+                // setshowBoardFilters(!showBoardFilters);
+                setMessageDetails(!messageDetails);
               }}
             >
               Messages
@@ -1053,20 +1146,6 @@ function Home() {
             </p>
             {showBoardFilters === true && (
               <div>
-                {/* {allBoards &&
-                  allBoards.map((board) => {
-                    return (
-                      <p
-                        className={classes.sideSubFilter}
-                        onClick={() => {
-                          addDataToFilter(board.name, "Board");
-                        }}
-                      >
-                        {board.name}
-                      </p>
-                    );
-                  })} */}
-
                 {["Scheduled", "In Progress", "Finished", "Archived"].map(
                   (item) => {
                     return (
@@ -1097,6 +1176,189 @@ function Home() {
             message
             makeMediaSelected={makeMediaSelected}
           ></MediaComponnet>
+        ) : messageDetails ? (
+          <div
+            style={{
+              width: showSideFilters === true ? "85%" : "100%",
+              height: "100%",
+              background: "white",
+              borderRadius: 5,
+              padding: 10,
+              paddingLeft: 30,
+              paddingRight: 30,
+            }}
+          >
+            {" "}
+            <Grid container direction="row">
+              <Grid item md={4} sm={4}>
+                <span
+                  style={{
+                    padding: 5,
+                    fontWeight: "bold",
+                    // marginLeft: 20,
+                    fontSize: 20,
+                  }}
+                >
+                  Messages
+                </span>
+              </Grid>
+              <Grid item md={8} sm={8}>
+                <Grid container direction="row" justify="flex-end">
+                  <IconTextField
+                    // width={180}
+                    width={100}
+                    text="Action"
+                    textColor="gray"
+                    icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                  ></IconTextField>
+                  <IconTextField
+                    text="Filter"
+                    width={120}
+                    onClick={() => {
+                      setShowFiltersRow(!showFiltersRow);
+                    }}
+                    icon={
+                      <FaSlidersH style={{ color: "#3871DA" }}></FaSlidersH>
+                    }
+                  ></IconTextField>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                {filter.length != 0 &&
+                  filter.map((fil, index) => {
+                    return (
+                      <div
+                        container
+                        direction="row"
+                        alignItems="center"
+                        justify="center"
+                        className={classes.tags}
+                      >
+                        <Grid
+                          style={{ height: 40 }}
+                          container
+                          direction="row"
+                          alignItems="center"
+                        >
+                          {fil}
+                          <ClearIcon
+                            onClick={() => {
+                              removeDataFromFilter(index);
+                            }}
+                            style={{
+                              color: "red",
+                              fontSize: 17,
+                              cursor: "pointer",
+                            }}
+                          ></ClearIcon>{" "}
+                        </Grid>
+                      </div>
+                    );
+                  })}
+              </Grid>
+
+              <div
+                style={{
+                  width: "100%",
+                  border: "1px solid #f8f8f8",
+                  marginTop: 10,
+                }}
+              ></div>
+              {showFiltersRow === true ? renderFilters() : <div></div>}
+              <div
+                style={{
+                  width: "100%",
+                  maxHeight: 330,
+                  //  minWidth: 1110
+                }}
+                className="fullHeightCreateMessageSide"
+              >
+                {placeholders &&
+                  placeholders.map((selectedPlaceholder) => {
+                    return (
+                      <Grid
+                        container
+                        direction="row"
+                        style={{
+                          border: "1px solid #d2d2d2",
+                          borderRadius: 4,
+                          marginTop: 10,
+                        }}
+                      >
+                        <Grid item md={4} xs={4}>
+                          {placeholderContainer(selectedPlaceholder)}
+                        </Grid>
+                        <Grid item md={8} xs={8}>
+                          <p style={{ fontWeight: "bold", fontSize: 20 }}>
+                            {selectedPlaceholder.name}
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            FileType: image/jpeg
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            Uploaded On:{" "}
+                            {new moment(selectedPlaceholder.created_at).format(
+                              "YYYY-MM-DD"
+                            )}
+                          </p>{" "}
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            Uploaded By: Tim Glover
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            File Size : 40.5 kb
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            Dimensions : 160 x 200
+                          </p>
+                          <p
+                            style={{
+                              fontWeight: 500,
+                              fontSize: 20,
+                              margin: 0,
+                            }}
+                          >
+                            Last Sent :{" "}
+                            {new moment(selectedPlaceholder.created_at).format(
+                              "YYYY-MM-DD"
+                            )}
+                          </p>
+                        </Grid>
+                      </Grid>
+                    );
+                  })}
+              </div>
+            </Grid>
+          </div>
         ) : (
           <div
             style={{
