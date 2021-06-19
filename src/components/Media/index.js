@@ -1147,6 +1147,7 @@ function Media() {
           </div>
         )}
         <MediaComponnet
+          message={null}
           showSideFilters={showSideFilters}
           setshowSideFilters={setshowSideFilters}
           filter={filter}

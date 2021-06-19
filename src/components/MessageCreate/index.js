@@ -11,10 +11,17 @@ import {
 import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
+import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { ArrowDropDown, Check, Send } from "@material-ui/icons";
+import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+import InputEmoji from "react-input-emoji";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
 import {
   FaPhone,
   FaTwitter,
@@ -31,6 +38,7 @@ import DialogBox from "../common/Dialogs";
 
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
+
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import TimePicker from "../DateTimePicker/index";
@@ -55,6 +63,9 @@ function Home() {
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
+  const [displaySnippets, setDisplaySnippets] = useState(false);
+  const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
+  const [displayTextPlaceholders, setDisplayTextPlaceholders] = useState(false);
   const [addMedia, setAddMedia] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
@@ -94,6 +105,7 @@ function Home() {
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
   const [teamContacts, setTeamContacts] = useState(null);
+  const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
@@ -1013,6 +1025,20 @@ function Home() {
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
+              <div>
+                {["Ben Graves"].map((item) => {
+                  return (
+                    <p
+                      className={classes.sideSubFilter}
+                      onClick={() => {
+                        addDataToFilter(item, "Board");
+                      }}
+                    >
+                      {item}
+                    </p>
+                  );
+                })}
+              </div>
             </p>
             <p
               className={classes.sideFilter}
@@ -1020,14 +1046,14 @@ function Home() {
                 setshowBoardFilters(!showBoardFilters);
               }}
             >
-              My Boards
+              Messages
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
             </p>
             {showBoardFilters === true && (
               <div>
-                {allBoards &&
+                {/* {allBoards &&
                   allBoards.map((board) => {
                     return (
                       <p
@@ -1039,7 +1065,22 @@ function Home() {
                         {board.name}
                       </p>
                     );
-                  })}
+                  })} */}
+
+                {["Scheduled", "In Progress", "Finished", "Archived"].map(
+                  (item) => {
+                    return (
+                      <p
+                        className={classes.sideSubFilter}
+                        onClick={() => {
+                          addDataToFilter(item, "Board");
+                        }}
+                      >
+                        {item}
+                      </p>
+                    );
+                  }
+                )}
               </div>
             )}
           </div>
@@ -1069,14 +1110,7 @@ function Home() {
             }}
           >
             <Grid container direction="row">
-              <Grid item md={6} sm={6}>
-                {/* <FormatAlignLeftIcon
-              onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-              }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon> */}
-
+              <Grid item md={4} sm={4}>
                 <span
                   style={{
                     padding: 5,
@@ -1088,7 +1122,35 @@ function Home() {
                   Create Message
                 </span>
               </Grid>
-              <Grid item md={6} sm={6}></Grid>
+              <Grid item md={8} sm={8}>
+                <Grid container direction="row" justify="flex-end">
+                  <IconTextField
+                    width={100}
+                    text="More"
+                    textColor="#3871DA"
+                    icon={
+                      <ArrowDropDown
+                        style={{ color: "#3871DA" }}
+                      ></ArrowDropDown>
+                    }
+                  ></IconTextField>
+                  <IconTextField
+                    text="Save and Close"
+                    textColor="#3871DA"
+                    width={180}
+                    onClick={() => {
+                      // setShowFiltersRow(!showFiltersRow);
+                    }}
+                    icon={<Check style={{ color: "#3871DA" }}></Check>}
+                  ></IconTextField>
+                  <IconButton
+                    text="Preview and Send"
+                    textColor="white"
+                    width={200}
+                    icon={<Send style={{ color: "white" }}></Send>}
+                  ></IconButton>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid container direction="row">
               {filter.length != 0 &&
@@ -1864,6 +1926,10 @@ function Home() {
                         height: 170,
                         marginTop: 12,
                       }}
+                      onMouseEnter={() => {
+                        setDisplaySnippets(false);
+                        setDisplayTextPlaceholders(false);
+                      }}
                     >
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 12 }}>
@@ -1881,11 +1947,313 @@ function Home() {
                               borderRadius: 4,
                               paddingLeft: 12,
                             }}
+                            value={messageText}
+                            onChange={(e) => {
+                              setMessageText(e.target.value);
+                            }}
                             placeholder="Type message"
                           ></textarea>
                         </div>
                       </Grid>
                     </Grid>
+                    <Grid container direction="row" alignItems="center">
+                      <div class="dropdown" style={{ marginLeft: 0 }}>
+                        <IconTextField
+                          width={170}
+                          marginTop={10}
+                          marginLeft={1}
+                          background={
+                            displayTextPlaceholders ? "#3871da" : "white"
+                          }
+                          text={
+                            <p
+                              style={{
+                                margin: 0,
+                                color: displayTextPlaceholders
+                                  ? "white"
+                                  : "black",
+                              }}
+                            >
+                              Text Placeholder
+                            </p>
+                          }
+                          icon={
+                            <ExpandLessOutlinedIcon
+                              style={{
+                                color: displayTextPlaceholders
+                                  ? "white"
+                                  : "#3871da",
+                              }}
+                            ></ExpandLessOutlinedIcon>
+                          }
+                          onMouseEnter={() => {
+                            setDisplayTextPlaceholders(true);
+                            setDisplaySnippets(false);
+                            setDisplayMessageSenders(false);
+                            setDisplayEmojiSelect(false);
+                          }}
+                        ></IconTextField>
+                        <div
+                          // class="dropdown-content"
+                          className={classes.dropdownHidden}
+                          style={{
+                            marginLeft: 180,
+                            marginTop: -40,
+                            maxHeight: 200,
+                            display: displayTextPlaceholders ? "block" : "none",
+                          }}
+                          onMouseLeave={() => {
+                            setDisplayTextPlaceholders(false);
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "black",
+                              padding: 12,
+                              background: "#3871da",
+                              color: "white",
+                              fontWeight: 600,
+                              marginBottom: -4,
+                            }}
+                          >
+                            Text Placeholders
+                          </p>
+                          <p
+                            style={{
+                              color: "black",
+                              padding: 12,
+                              // background: "#3871da",
+                              // color: "white",
+                              fontWeight: "bold",
+                              marginBottom: -4,
+                            }}
+                          >
+                            Contact Details
+                          </p>
+                          {[
+                            {
+                              title: "[Fist_Name]",
+                            },
+                            {
+                              title: "[Last_Name]",
+                            },
+                            {
+                              title: "[Nick_Name]",
+                            },
+                            {
+                              title: "[State]",
+                            },
+                            {
+                              title: "[HighSchool]",
+                            },
+                          ].map((type) => {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  setMessageType(type);
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 500,
+                                    marginLeft: 12,
+                                  }}
+                                >
+                                  {type.title}
+                                </p>
+                              </Grid>
+                            );
+                          })}
+                          <p
+                            style={{
+                              color: "black",
+                              padding: 12,
+                              // background: "#3871da",
+                              // color: "white",
+                              fontWeight: "bold",
+                              marginBottom: -4,
+                            }}
+                          >
+                            Contact Relationships
+                          </p>
+                          {[
+                            {
+                              title: "[Mother_Name]",
+                            },
+                            {
+                              title: "[Father_Name]",
+                            },
+                          ].map((type) => {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  setMessageType(type);
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 500,
+                                    marginLeft: 12,
+                                  }}
+                                >
+                                  {type.title}
+                                </p>
+                              </Grid>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div class="dropdown" style={{ marginLeft: 20 }}>
+                        <IconTextField
+                          width={170}
+                          marginTop={10}
+                          marginLeft={1}
+                          background={displaySnippets ? "#3871da" : "white"}
+                          text={
+                            <p
+                              style={{
+                                margin: 0,
+                                color: displaySnippets ? "white" : "black",
+                              }}
+                            >
+                              Snippets
+                            </p>
+                          }
+                          icon={
+                            <ExpandLessOutlinedIcon
+                              style={{
+                                color: displaySnippets ? "white" : "#3871da",
+                              }}
+                            ></ExpandLessOutlinedIcon>
+                          }
+                          onMouseEnter={() => {
+                            setDisplaySnippets(true);
+                            setDisplayMessageSenders(false);
+                            setDisplayEmojiSelect(false);
+                          }}
+                        ></IconTextField>
+                        <div
+                          // class="dropdown-content"
+                          className={classes.dropdownHidden}
+                          style={{
+                            marginLeft: 180,
+                            marginTop: -40,
+                            display: displaySnippets ? "block" : "none",
+                          }}
+                          onMouseLeave={() => {
+                            setDisplaySnippets(false);
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "black",
+                              padding: 12,
+                              background: "#3871da",
+                              color: "white",
+                              fontWeight: 600,
+                              marginBottom: -4,
+                            }}
+                          >
+                            Snippets
+                          </p>
+                          {[
+                            {
+                              title: "#StackedSports",
+                            },
+                            {
+                              title: "- Ben Graves",
+                            },
+                            {
+                              title: "#Beleive22",
+                            },
+                          ].map((type) => {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  setMessageType(type);
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 12,
+                                  }}
+                                >
+                                  {type.title}
+                                </p>
+                              </Grid>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      {/* <div className="partialOveride" style={{ width: 20 }}> */}
+                      {/* </div> */}
+                      <div class="dropdown" style={{ marginLeft: 20 }}>
+                        <div
+                          onClick={() => {
+                            setDisplayEmojiSelect(true);
+                          }}
+                          style={{
+                            fontSize: 30,
+                            marginLeft: 20,
+                            cursor: "pointer",
+                          }}
+                        >
+                          😀
+                        </div>{" "}
+                        <div
+                          // class="dropdown-content"
+                          className={classes.dropdownHidden}
+                          style={{
+                            marginLeft: 100,
+                            marginTop: -40,
+                            display: displayEmojiSelect ? "block" : "none",
+                          }}
+                          onMouseLeave={() => {
+                            setDisplayEmojiSelect(false);
+                          }}
+                        >
+                          <Picker
+                            set="apple"
+                            onSelect={(e) => {
+                              console.log("This si ", e.native);
+                              setMessageText(messageText + e.native);
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* <div
+                        onClick={() => {
+                          var emojiVar = document.getElementsByClassName(
+                            "react-input-emoji--button"
+                          );
+                          console.log("This is emoji var", emojiVar[0]);
+                          emojiVar[0].click();
+                        }}
+                        style={{
+                          fontSize: 30,
+                          marginLeft: 20,
+                          cursor: "pointer",
+                        }}
+                      >
+                        😀
+                      </div> */}
+                    </Grid>
+                    <div style={{ height: 200, width: "100%" }}></div>
                   </div>
                 </Grid>
               </Grid>

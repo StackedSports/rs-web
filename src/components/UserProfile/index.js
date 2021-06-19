@@ -6,40 +6,26 @@ import {
   Checkbox,
   TextField,
   Snackbar,
+  Backdrop,
   CircularProgress,
 } from "@material-ui/core";
 // import DoughnutChart from "../charts/Doughnut";
 import InputEmoji from "react-input-emoji";
 import DoughnutChart from "../charts/DoughnutChartCenterText";
-import { FaMarker, FaSlidersH } from "react-icons/fa";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-import SendIcon from "@material-ui/icons/Send";
-import RowingIcon from "@material-ui/icons/Rowing";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
-import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
-import AvatarImg from "../../images/avatar.png";
 import MyMedia from "../../images/media.jpg";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
-
+import { Accordion, Card, Dropdown, DropdownButton } from "react-bootstrap";
+import { Autorenew } from "@material-ui/icons";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
-import { Dropdown, DropdownButton } from "react-bootstrap";
-import {
-  FaMagic,
-  FaColumns,
-  FaUserCircle,
-  FaPhone,
-  FaTwitter,
-  FaMapMarker,
-  FaLocationArrow,
-} from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import ComputerIcon from "@material-ui/icons/Computer";
-
+import AvatarImg from "../../images/avatar.png";
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
@@ -54,6 +40,12 @@ import {
   getPositions,
   getAllColumns,
   getMonthlyStats,
+  getThisQuarterStats,
+  getThisYearStats,
+  getLastQuarterStats,
+  getLastYearStats,
+  getLastMonthStats,
+  getLast30Stats,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
@@ -68,7 +60,7 @@ function Alert(props) {
 //     },
 //   },
 // }));
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   tableHeading: {
     fontWeight: 700,
     fontSize: 15,
@@ -93,6 +85,10 @@ const useStyles = makeStyles({
     marginBottom: 0,
     marginLeft: 10,
     cursor: "pointer",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
   tags: {
     border: "1px solid #d8d8d8",
@@ -153,7 +149,23 @@ const useStyles = makeStyles({
     color: "gray",
     fontSize: 12,
   },
-});
+  accordionP: {
+    color: "black",
+    margin: 0,
+    fontWeight: 600,
+    fontSize: 12,
+    width: "85%",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: 18,
+    },
+  },
+  accordionGray: {
+    color: "gray",
+    marginLeft: 30,
+    fontWeight: 500,
+    fontSize: 12,
+  },
+}));
 
 function Home() {
   const classes = useStyles();
@@ -183,7 +195,7 @@ function Home() {
   const [coachFilter, setCoachFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
+  const [currency, setCurrency] = React.useState("This Month");
   const [contacts, setContacts] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
@@ -194,8 +206,40 @@ function Home() {
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  const currencies = [
+    {
+      value: "1",
+      label: "Last 30 Days",
+    },
+    {
+      value: "2",
+      label: "This Month",
+    },
+    {
+      value: "3",
+      label: "This Quarter",
+    },
+    {
+      value: "4",
+      label: "This Year",
+    },
+    {
+      value: "5",
+      label: "Last Month",
+    },
+    {
+      value: "6",
+      label: "Last Quarter",
+    },
+    {
+      value: "7",
+      label: "Last Year",
+    },
+  ];
 
   const handleClick = () => {
     setOpenSnackBar(true);
@@ -410,12 +454,13 @@ function Home() {
 
   const myMonthlyStats = () => {
     // || "2020-12-13"
+    setLoading(true);
     getMonthlyStats().then(
       (res) => {
         if (res.statusText === "OK") {
           console.log("This is the monthlly stats", res.data.table);
           setDoughnutChatData(res.data.table);
-
+          setLoading(false);
           res.data.table.users.map((user, index) => {
             var name =
               JSON.parse(localStorage.getItem("user")).first_name +
@@ -428,6 +473,160 @@ function Home() {
         }
       },
       (error) => {
+        setLoading(false);
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  const myQuarterlyStats = () => {
+    // || "2020-12-13"
+    setLoading(true);
+    getThisQuarterStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        console.log("this is error in the stats", error);
+        setLoading(false);
+      }
+    );
+  };
+  const myYearlyStats = () => {
+    // || "2020-12-13"
+    setLoading(true);
+    getThisYearStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        setLoading(false);
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  const myLastQuarterStats = () => {
+    // || "2020-12-13"
+
+    setLoading(true);
+    getLastQuarterStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        setLoading(false);
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myLastYearStats = () => {
+    // || "2020-12-13"
+    setLoading(true);
+    getLastYearStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        setLoading(false);
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+  const myLastMonthStats = () => {
+    setLoading(true);
+    getLastMonthStats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        setLoading(false);
+        console.log("this is error in the stats", error);
+      }
+    );
+  };
+
+  const myLast30DaysStats = () => {
+    // || "2020-12-13"
+    setLoading(true);
+    getLast30Stats().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          setLoading(false);
+          setDoughnutChatData(res.data.table);
+          res.data.table.users.map((user, index) => {
+            var name =
+              JSON.parse(localStorage.getItem("user")).first_name +
+              " " +
+              JSON.parse(localStorage.getItem("user")).last_name;
+            if (name === user.table.name) {
+              setLoggedInUserStats(user.table);
+            }
+          });
+        }
+      },
+      (error) => {
+        setLoading(false);
         console.log("this is error in the stats", error);
       }
     );
@@ -915,39 +1114,50 @@ function Home() {
     {
       message: "Hy there i am using Recruite Suite",
       left: true,
+      underText: "6:25pm",
     },
     {
       message:
         "Hy there i am using Recruite Suite, there i am using Recruite Suite",
       left: false,
+      underText: "Sent by Chris Highland at 8:25pm",
     },
     {
       message: "Hy there i am using Recruite Suite",
       left: true,
+      underText: "6:25pm",
+      date: "Wed Mar 17",
     },
     {
       message:
         "Hy there i am using Recruite Suite, there i am using Recruite Suite",
       left: true,
+      underText: "6:25pm",
     },
     {
       message:
         "Hy there i am using Recruite Suite, there i am using Recruite Suite",
       left: false,
+      underText: "Sent by Chris Highland at 8:25pm",
     },
     {
       message: "Hy there i am using Recruite Suite",
       left: true,
+      underText: "6:25pm",
     },
     {
       message:
         "Hy there i am using Recruite Suite, there i am using Recruite Suite",
       left: true,
+      underText: "6:25pm",
     },
   ];
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress />
+      </Backdrop>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}
@@ -1129,50 +1339,158 @@ function Home() {
                         Notes
                       </p>
                     </Grid>
-                    <Grid
-                      container
-                      direction="row"
-                      alignItems="center"
-                      style={{
-                        height: 60,
-                        background: "#f2f2f2",
-                        marginTop: 5,
-                      }}
+
+                    <Accordion
+                      defaultActiveKey="0"
+                      style={{ width: "100%", marginTop: 5 }}
                     >
-                      <p
-                        style={{
-                          color: "black",
-                          margin: 0,
-                          fontWeight: 600,
-                          marginLeft: 20,
-                          width: "75%",
-                        }}
-                      >
-                        General{" "}
-                        <span
-                          style={{
-                            color: "gray",
-                            marginLeft: 40,
-                            fontWeight: 500,
-                          }}
-                        >
-                          3/6 complete
-                        </span>
-                      </p>{" "}
-                      <ArrowForwardIosIcon
-                        style={{ fontSize: 15, marginLeft: 20 }}
-                      ></ArrowForwardIosIcon>
-                    </Grid>
-                    <p className={classes.label}>First Name</p>
-                    <input className={classes.input}></input>
-                    <p className={classes.label}>Last Name</p>{" "}
-                    <input className={classes.input}></input>
-                    <p className={classes.label}>Nick Name</p>{" "}
-                    <input className={classes.input}></input>
-                    <p className={classes.label}>Phone</p>{" "}
-                    <input className={classes.input}></input>
-                    <p className={classes.label}>Email</p>{" "}
-                    <input className={classes.input}></input>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="0">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              General{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="0">
+                          <Card.Body>
+                            <p className={classes.label}>First Name</p>
+                            <input className={classes.input}></input>
+                            <p className={classes.label}>Last Name</p>{" "}
+                            <input className={classes.input}></input>
+                            <p className={classes.label}>Nick Name</p>{" "}
+                            <input className={classes.input}></input>
+                            <p className={classes.label}>Phone</p>{" "}
+                            <input className={classes.input}></input>
+                            <p className={classes.label}>Email</p>{" "}
+                            <input className={classes.input}></input>
+                          </Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="1">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              Details{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="1">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="2">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              Coaches{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="2">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="3">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              Family Relationships{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="3">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="4">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              Opponents{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="4">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="5">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>
+                              External Profiles{" "}
+                              <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span>
+                            </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="5">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="7">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>Tags </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="7">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                      <Card>
+                        <Accordion.Toggle as={Card.Header} eventKey="8">
+                          <Grid container direction="row" alignItems="center">
+                            <p className={classes.accordionP}>Actions </p>{" "}
+                            <ArrowForwardIosIcon
+                              style={{ fontSize: 15, marginLeft: 20 }}
+                            ></ArrowForwardIosIcon>
+                          </Grid>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="8">
+                          <Card.Body></Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                    </Accordion>
                   </Grid>
                 </Grid>
                 <Grid item md={6} sm={6}>
@@ -1193,14 +1511,25 @@ function Home() {
                     >
                       <div class="dropdownUserProfile">
                         <IconTextField
-                          width={250}
+                          width={320}
                           text={
-                            <p style={{ color: "black", margin: 0 }}>
-                              Charlse Rice
-                              <span style={{ color: "gray", marginLeft: 10 }}>
-                                @CharlseRice
-                              </span>
-                            </p>
+                            <Grid container direction="row" alignItems="center">
+                              <img
+                                src={AvatarImg}
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                  borderRadius: 25,
+                                  marginRight: 5,
+                                }}
+                              ></img>
+                              <p style={{ color: "black", margin: 0 }}>
+                                Charlse Rice
+                                <span style={{ color: "gray", marginLeft: 10 }}>
+                                  @CharlseRice
+                                </span>
+                              </p>
+                            </Grid>
                           }
                           icon={
                             <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
@@ -1282,6 +1611,28 @@ function Home() {
                             >
                               {item.message}
                             </p>
+                            <p
+                              style={{
+                                width: "90%",
+                                textAlign: item.left ? "left" : "right",
+                                fontSize: 10,
+                                color: "#9ca4ab",
+                              }}
+                            >
+                              {item.underText}
+                            </p>
+                            {item.date && (
+                              <p
+                                style={{
+                                  width: "95%",
+                                  textAlign: "center",
+                                  fontSize: 13,
+                                  color: "#9ca4ab",
+                                }}
+                              >
+                                {item.date}
+                              </p>
+                            )}
                           </Grid>
                         );
                       })}
@@ -1355,7 +1706,9 @@ function Home() {
                 </Grid>
                 <Grid item md={3} sm={3}>
                   <Grid container direction="row" style={{}}>
-                    <div
+                    <Grid
+                      container
+                      direction="row"
                       style={{
                         borderBottom: "2px solid #f8f8f8",
                         width: "100%",
@@ -1368,11 +1721,13 @@ function Home() {
                           margin: 0,
                           marginLeft: 10,
                           fontWeight: 600,
+                          width: "75%",
                         }}
                       >
                         Message Stats
                       </p>
-                    </div>
+                      <Autorenew></Autorenew>
+                    </Grid>
                     {loggedInUserStats != null ? (
                       <DoughnutChart data={loggedInUserStats} />
                     ) : (
@@ -1393,7 +1748,13 @@ function Home() {
                             >
                               <ComputerIcon></ComputerIcon>
                               <p className={classes.sideText}>DM’s</p>
-                              <p style={{ color: "#1070ca" }}>
+                              <p
+                                style={{
+                                  color: "#1070ca",
+                                  fontSize: 28,
+                                  fontWeight: 700,
+                                }}
+                              >
                                 {loggedInUserStats ? loggedInUserStats.dms : 0}
                               </p>
                             </Grid>
@@ -1406,7 +1767,13 @@ function Home() {
                             >
                               <PhoneAndroidIcon></PhoneAndroidIcon>
                               <p className={classes.sideText}>Personal Text</p>
-                              <p style={{ color: "#ec4c47" }}>
+                              <p
+                                style={{
+                                  color: "#ec4c47",
+                                  fontSize: 28,
+                                  fontWeight: 700,
+                                }}
+                              >
                                 {loggedInUserStats ? loggedInUserStats.pts : 0}
                               </p>
                             </Grid>
@@ -1419,13 +1786,75 @@ function Home() {
                             >
                               <PhoneAndroidIcon></PhoneAndroidIcon>
                               <p className={classes.sideText}>RS Text</p>
-                              <p style={{ color: "#f7d154" }}>
+                              <p
+                                style={{
+                                  color: "#f7d154",
+                                  fontSize: 28,
+                                  fontWeight: 700,
+                                }}
+                              >
                                 {loggedInUserStats ? loggedInUserStats.rst : 0}
                               </p>
                             </Grid>
                           </Grid>
                         </Grid>
                       </div>
+                      <Grid container direction="row" alignItems="center">
+                        <Grid md={6} xs={6}>
+                          <div className="contactProfileDropDown">
+                            <DropdownButton
+                              drop={"right"}
+                              id="dropdown-basic-button"
+                              title={currency}
+                            >
+                              {currencies.map((option) => (
+                                <Dropdown.Item
+                                  style={{
+                                    background:
+                                      currency === option.label
+                                        ? "#348ef7"
+                                        : "white",
+                                    color:
+                                      currency === option.label
+                                        ? "white"
+                                        : "black",
+                                  }}
+                                  onClick={(e) => {
+                                    if (option.label === "This Quarter") {
+                                      myQuarterlyStats();
+                                    } else if (option.label === "This Year") {
+                                      myYearlyStats();
+                                    } else if (
+                                      option.label === "Last Quarter"
+                                    ) {
+                                      myLastQuarterStats();
+                                    } else if (option.label === "Last Year") {
+                                      myLastYearStats();
+                                    } else if (option.label === "Last Month") {
+                                      myLastMonthStats();
+                                    } else if (
+                                      option.label === "Last 30 Days"
+                                    ) {
+                                      myLast30DaysStats();
+                                    } else {
+                                      myMonthlyStats();
+                                    }
+                                    setCurrency(option.label);
+                                  }}
+                                >
+                                  {" "}
+                                  {option.label}
+                                </Dropdown.Item>
+                              ))}
+                            </DropdownButton>
+                          </div>
+                        </Grid>
+                        <Grid md={6} xs={6}>
+                          <p style={{ fontSize: 11 }}>
+                            Last Communication : 3 hrs ago
+                          </p>
+                        </Grid>
+                      </Grid>
                     </Grid>
                     <Grid
                       container
@@ -1443,17 +1872,18 @@ function Home() {
                           margin: 0,
                           marginLeft: 10,
                           fontWeight: 600,
-                          width: "100%",
+                          width: "75%",
                         }}
                       >
                         Sent Media
                       </p>
+                      <Autorenew></Autorenew>
                     </Grid>
                     <Grid
                       container
                       style={{
                         width: "100%",
-                        height: 100,
+                        height: 120,
                         padding: 8,
                       }}
                       alignItems="center"
@@ -1482,7 +1912,17 @@ function Home() {
                         ></img>
                       </Grid>
                     </Grid>
-
+                    <p
+                      style={{
+                        color: "#3871DA",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
+                      View More
+                    </p>
                     <Grid
                       container
                       style={{
@@ -1500,17 +1940,18 @@ function Home() {
                           margin: 0,
                           marginLeft: 10,
                           fontWeight: 600,
-                          width: "100%",
+                          width: "75%",
                         }}
                       >
                         Associated Media
                       </p>
+                      <Autorenew></Autorenew>
                     </Grid>
                     <Grid
                       container
                       style={{
                         width: "100%",
-                        height: 50,
+                        height: 120,
                         padding: 8,
                       }}
                       alignItems="center"
@@ -1539,6 +1980,17 @@ function Home() {
                         ></img>
                       </Grid>
                     </Grid>
+                    <p
+                      style={{
+                        color: "#3871DA",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
+                      View More
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>

@@ -13,7 +13,8 @@ export default function FilterField(props) {
         background: props.background || "white",
         height: 40,
         borderRadius: 4,
-        marginLeft: 10,
+        marginLeft: props.marginLeft || 10,
+        marginTop: props.marginTop || 0,
         cursor: "pointer",
       }}
       onClick={() => {

@@ -243,3 +243,7 @@
 .dropdownUserProfile:hover .dropdown-user-profile {
   display: block;
 }
+
+.contactProfileDropDown .dropdown-toggle {
+  border: none !important;
+}
