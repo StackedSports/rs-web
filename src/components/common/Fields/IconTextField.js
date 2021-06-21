@@ -13,7 +13,7 @@ export default function FilterField(props) {
         background: props.background || "white",
         height: 40,
         borderRadius: 4,
-        marginLeft: props.marginLeft || 10,
+        marginLeft: props.marginLeft != null ? props.marginLeft : 16,
         marginTop: props.marginTop || 0,
         cursor: "pointer",
       }}
