@@ -1282,7 +1282,7 @@ function Home() {
                         style={{
                           border: "1px solid #d2d2d2",
                           borderRadius: 4,
-                          marginTop: 10,
+                          marginTop: 16,
                         }}
                       >
                         <Grid item md={4} xs={4}>
@@ -1366,7 +1366,7 @@ function Home() {
               height: "100%",
               background: "white",
               borderRadius: 5,
-              padding: 10,
+              padding: 16,
               paddingLeft: 30,
               paddingRight: 30,
             }}
@@ -1375,7 +1375,6 @@ function Home() {
               <Grid item md={4} sm={4}>
                 <span
                   style={{
-                    padding: 5,
                     fontWeight: "bold",
                     // marginLeft: 20,
                     fontSize: 20,
@@ -1452,7 +1451,7 @@ function Home() {
               style={{
                 width: "100%",
                 border: "1px solid #f8f8f8",
-                marginTop: 10,
+                marginTop: 16,
               }}
             ></div>
             {showFiltersRow === true ? renderFilters() : <div></div>}
