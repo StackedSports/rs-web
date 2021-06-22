@@ -247,3 +247,18 @@
 .contactProfileDropDown .dropdown-toggle {
   border: none !important;
 }
+
+.accordion > .card:not(:last-of-type) {
+  border-radius: 0px !important;
+  border: 3px solid transparent !important;
+}
+
+.accordion > .card > .card-header {
+  border-radius: 0px !important;
+  border: 3px solid transparent !important;
+}
+
+.card {
+  border: 3px solid transparent !important;
+  height: 56px !important;
+}

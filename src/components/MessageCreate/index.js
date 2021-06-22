@@ -1510,31 +1510,16 @@ function Home() {
                               // borderBottom: "1px solid #d2d2d2",
                             }}
                           >
-                            <Grid
-                              container
-                              direction="row"
-                              style={{
-                                border: "1px solid #d2d2d2",
-                                padding: 8,
-                                paddingLeft: 16,
-                                width: "80%",
-                              }}
-                            >
-                              <input
-                                style={{ width: "75%", border: "none" }}
-                                placeholder="Delivery Details"
-                              ></input>
-                              <Grid
-                                container
-                                direction="row"
-                                justify="flex-end"
-                                style={{ width: "25%" }}
-                              >
+                            <IconTextField
+                              text="Delivery Details"
+                              width={180}
+                              onClick={() => {}}
+                              icon={
                                 <Search
                                   style={{ color: "#0091ff", marginRight: 8 }}
                                 ></Search>
-                              </Grid>
-                            </Grid>
+                              }
+                            ></IconTextField>
                           </Grid>
                         </div>
                         {/* </Grid> */}
@@ -2960,7 +2945,7 @@ const useStyles = makeStyles({
   },
   messageDetailsHeading: {
     fontSize: 13,
-    marginBottom: 0,
+    marginBottom: 4,
     color: "#676767",
   },
   mdMargin: {

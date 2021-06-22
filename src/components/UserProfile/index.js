@@ -153,17 +153,18 @@ const useStyles = makeStyles((theme) => ({
     color: "black",
     margin: 0,
     fontWeight: 600,
-    fontSize: 12,
+    fontSize: 16,
     width: "85%",
+    textTransform: "uppercase",
     [theme.breakpoints.up("xl")]: {
       fontSize: 18,
     },
   },
   accordionGray: {
     color: "gray",
-    marginLeft: 30,
+    marginLeft: 16,
     fontWeight: 500,
-    fontSize: 12,
+    fontSize: 14,
   },
 }));
 
@@ -1334,6 +1335,7 @@ function Home() {
                           margin: 0,
                           fontWeight: 600,
                           marginLeft: 20,
+                          textTransform: "uppercase",
                         }}
                       >
                         Notes
@@ -1415,9 +1417,9 @@ function Home() {
                           <Grid container direction="row" alignItems="center">
                             <p className={classes.accordionP}>
                               Family Relationships{" "}
-                              <span className={classes.accordionGray}>
+                              {/* <span className={classes.accordionGray}>
                                 3/6 complete
-                              </span>
+                              </span> */}
                             </p>{" "}
                             <ArrowForwardIosIcon
                               style={{ fontSize: 15, marginLeft: 20 }}
@@ -1486,9 +1488,6 @@ function Home() {
                             ></ArrowForwardIosIcon>
                           </Grid>
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="8">
-                          <Card.Body></Card.Body>
-                        </Accordion.Collapse>
                       </Card>
                     </Accordion>
                   </Grid>
