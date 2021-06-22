@@ -10,6 +10,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 // import DoughnutChart from "../charts/Doughnut";
+import { Picker } from "emoji-mart";
 import InputEmoji from "react-input-emoji";
 import DoughnutChart from "../charts/DoughnutChartCenterText";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -166,9 +167,25 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     fontSize: 14,
   },
+  dropdownHidden: {
+    display: "none",
+    position: "absolute",
+    backgroundColor: "white",
+    minWidth: 230,
+    boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
+    border: "1px solid #d5d5d5",
+    borderRadius: 4,
+    // padding: 5,
+    marginLeft: -140,
+    zIndex: 1,
+    maxHeight: "60vh",
+    overflowY: "scroll",
+    overflowX: "hidden",
+    zIndex: 200000000,
+  },
 }));
 
-function Home() {
+function ContactProfile() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
@@ -199,6 +216,7 @@ function Home() {
   const [currency, setCurrency] = React.useState("This Month");
   const [contacts, setContacts] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
+  const [messageText, setMessageText] = useState("");
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
   const [allGradYears, setAllGraderYears] = useState(null);
@@ -208,6 +226,7 @@ function Home() {
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
@@ -1644,11 +1663,11 @@ function Home() {
                     >
                       <Grid
                         item
-                        md={11}
-                        sm={11}
-                        lg={11}
-                        xl={11}
-                        sm={11}
+                        md={10}
+                        sm={10}
+                        lg={10}
+                        xl={10}
+                        sm={10}
                         xs={10}
                       >
                         <Grid style={{ background: "white", borderRadius: 5 }}>
@@ -1658,21 +1677,22 @@ function Home() {
                   src={URL.createObjectURL(image)}
                 ></img>
               )} */}
-
-                          <InputEmoji
+                          <input
                             style={{
                               width: "90%",
                               borderRadius: 5,
-                              marginTop: 5,
+                              height: 40,
+                              border: "none",
                             }}
-                            cleanOnEnter
-                            placeholder="Type message to send"
-                            // onEnter={handleOnEnter}
-                            borderColor={"white"}
-                          ></InputEmoji>
+                            placeholder="Type Message to send"
+                            onChange={(e) => {
+                              setMessageText(e.target.value);
+                            }}
+                            value={messageText}
+                          ></input>
                         </Grid>
                       </Grid>
-                      <Grid item md={1} sm={1} lg={1} xl={1} sm={1} xs={1}>
+                      <Grid item md={2} sm={2} lg={2} xl={2} sm={2} xs={2}>
                         <Grid
                           container
                           direction="row"
@@ -1686,6 +1706,40 @@ function Home() {
                             }}
                             style={{ fontSize: 30 }}
                           ></CameraAltIcon>{" "}
+                          <div
+                            onClick={() => {
+                              setDisplayEmojiSelect(true);
+                            }}
+                            style={{
+                              fontSize: 25,
+                              marginLeft: 20,
+                              cursor: "pointer",
+                            }}
+                          >
+                            😀
+                          </div>{" "}
+                          <div class="dropdown" style={{ marginLeft: 20 }}>
+                            <div
+                              // class="dropdown-content"
+                              className={classes.dropdownHidden}
+                              style={{
+                                marginLeft: -50,
+                                marginTop: -30,
+                                display: displayEmojiSelect ? "block" : "none",
+                              }}
+                              onMouseLeave={() => {
+                                setDisplayEmojiSelect(false);
+                              }}
+                            >
+                              <Picker
+                                set="apple"
+                                onSelect={(e) => {
+                                  console.log("This si ", e.native);
+                                  setMessageText(messageText + e.native);
+                                }}
+                              />
+                            </div>
+                          </div>
                         </Grid>
                       </Grid>
                       {/* <input
@@ -2108,4 +2162,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ContactProfile;

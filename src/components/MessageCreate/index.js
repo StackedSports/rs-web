@@ -57,12 +57,13 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function Home() {
+function MessageCreate() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  const [selectedMessages, setSelectedMessages] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
@@ -115,31 +116,28 @@ function Home() {
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
-  const makeMediaSelected = (index) => {
+  const makeMessageSelected = (index) => {
     var alreadySelected = false;
-    selectedMedia.map((item) => {
-      if (index.hashid === item.hashid) {
+    selectedMessages.map((item) => {
+      if (index.id === item.id) {
         alreadySelected = true;
       }
     });
     if (alreadySelected) {
       var temp = [];
-      selectedMedia.map((item) => {
-        if (index.hashid != item.hashid) {
+      selectedMessages.map((item) => {
+        if (index.id != item.id) {
           temp.push(item);
         }
       });
-      setSelectedCheckboxes(temp);
-      setSelectedMedia(temp);
+      setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = selectedMedia;
       temp.push(index);
-      setSelectedMedia(temp);
+      setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     }
-    localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
-    // console.log("This is selected media", selectedMedia);
   };
 
   const handleClick = () => {
@@ -168,6 +166,30 @@ function Home() {
     }
 
     return null;
+  };
+
+  const makeCheckBoxSelected = (index) => {
+    if (selectedCheckBoxes.indexOf(index) > -1) {
+      var temp = [];
+      selectedCheckBoxes.map((item) => {
+        if (index != item) {
+          temp.push(item);
+        }
+      });
+      console.log("This is temp", temp);
+      // console.log("This is index", index);
+      // var other = temp.splice(index, 1);
+      // console.log("This is other", other);
+      // var newArray = temp;
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedCheckBoxes;
+      temp.push(index);
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    }
+    // console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
 
   const placeholderContainer = (m) => {
@@ -1190,6 +1212,13 @@ function Home() {
             {" "}
             <Grid container direction="row">
               <Grid item md={4} sm={4}>
+                <FormatAlignLeftIcon
+                  onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                  }}
+                  style={{ cursor: "pointer", fontSize: 18 }}
+                ></FormatAlignLeftIcon>
+
                 <span
                   style={{
                     padding: 16,
@@ -1212,12 +1241,23 @@ function Home() {
                   ></IconTextField>
                   <IconTextField
                     text="Filter"
+                    textColor={
+                      selectedMessages.length === 0 ? "black" : "white"
+                    }
+                    background={
+                      selectedMessages.length === 0 ? "transparent" : "#3871DA"
+                    }
                     width={120}
                     onClick={() => {
                       setShowFiltersRow(!showFiltersRow);
                     }}
                     icon={
-                      <FaSlidersH style={{ color: "#3871DA" }}></FaSlidersH>
+                      <FaSlidersH
+                        style={{
+                          color:
+                            selectedMessages.length === 0 ? "#3871DA" : "white",
+                        }}
+                      ></FaSlidersH>
                     }
                   ></IconTextField>
                 </Grid>
@@ -1293,7 +1333,17 @@ function Home() {
                           }}
                         >
                           <Grid container direction="row" justify="center">
-                            <Checkbox color={"primary"}></Checkbox>
+                            <Checkbox
+                              color={"primary"}
+                              checked={
+                                selectedMessages.indexOf(
+                                  selectedPlaceholder.id
+                                ) > -1
+                              }
+                              onChange={() => {
+                                makeMessageSelected(selectedPlaceholder.id);
+                              }}
+                            ></Checkbox>
                           </Grid>
                         </div>
                         <Grid
@@ -2408,6 +2458,7 @@ function Home() {
                         <div class="dropdown">
                           <textarea
                             type="text"
+                            id={"textArea"}
                             style={{
                               border: "none",
                               height: 120,
@@ -2521,8 +2572,19 @@ function Home() {
                                 container
                                 alignItems="center"
                                 className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  setMessageText(messageText + type.title);
+                                onClick={(e) => {
+                                  var newVal = "";
+                                  for (var i = 0; i < messageText.length; i++) {
+                                    newVal = newVal + messageText[i];
+                                    if (
+                                      i ===
+                                      document.getElementById("textArea")
+                                        .selectionStart
+                                    ) {
+                                      newVal = newVal + type.title;
+                                    }
+                                  }
+                                  setMessageText(newVal);
                                 }}
                               >
                                 <p
@@ -2562,8 +2624,19 @@ function Home() {
                                 container
                                 alignItems="center"
                                 className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  setMessageText(messageText + type.title);
+                                onClick={(e) => {
+                                  var newVal = "";
+                                  for (var i = 0; i < messageText.length; i++) {
+                                    newVal = newVal + messageText[i];
+                                    if (
+                                      i ===
+                                      document.getElementById("textArea")
+                                        .selectionStart
+                                    ) {
+                                      newVal = newVal + type.title;
+                                    }
+                                  }
+                                  setMessageText(newVal);
                                 }}
                               >
                                 <p
@@ -2650,8 +2723,19 @@ function Home() {
                                 container
                                 alignItems="center"
                                 className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  setMessageText(messageText + type.title);
+                                onClick={(e) => {
+                                  var newVal = "";
+                                  for (var i = 0; i < messageText.length; i++) {
+                                    newVal = newVal + messageText[i];
+                                    if (
+                                      i ===
+                                      document.getElementById("textArea")
+                                        .selectionStart
+                                    ) {
+                                      newVal = newVal + type.title;
+                                    }
+                                  }
+                                  setMessageText(newVal);
                                 }}
                               >
                                 <p
@@ -2698,9 +2782,23 @@ function Home() {
                         >
                           <Picker
                             set="apple"
+                            // onSelect={(e) => {
+                            //   console.log("This si ", e.native);
+                            //   setMessageText(messageText + e.native);
+                            // }}
                             onSelect={(e) => {
-                              console.log("This si ", e.native);
-                              setMessageText(messageText + e.native);
+                              var newVal = "";
+                              for (var i = 0; i < messageText.length; i++) {
+                                newVal = newVal + messageText[i];
+                                if (
+                                  i ===
+                                  document.getElementById("textArea")
+                                    .selectionStart
+                                ) {
+                                  newVal = newVal + e.native;
+                                }
+                              }
+                              setMessageText(newVal);
                             }}
                           />
                         </div>
@@ -2786,7 +2884,7 @@ function Home() {
                           <Checkbox
                             color="primary"
                             onChange={() => {
-                              // makeCheckBoxSelected(item.id);
+                              // makeMessageSelected(item.id);
                             }}
                             style={{ marginTop: 1, marginBottom: 1 }}
                           ></Checkbox>
@@ -2954,4 +3052,4 @@ const useStyles = makeStyles({
   },
 });
 
-export default Home;
+export default MessageCreate;
