@@ -7,6 +7,11 @@ export default function IconButton(props) {
       container
       direction="row"
       alignItems="center"
+      onClick={() => {
+        if (props.onClick) {
+          props.onClick();
+        }
+      }}
       style={{
         background: "#3871DA",
         width: props.width || 130,

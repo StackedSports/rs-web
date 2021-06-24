@@ -14,7 +14,7 @@ import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import { ArrowDropDown, Check, Search, Send } from "@material-ui/icons";
+import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
@@ -85,6 +85,10 @@ function MessageCreate() {
   const [messageType, setMessageType] = useState(null);
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
+  const [messagePreview, setMessagePreview] = useState(null);
+  const [messageStatus, setMessageStatus] = useState("Drafts");
+  const [messageCreated, setMessageCreated] = useState(false);
+
   const [messageReceiver, setMessageReceiver] = useState([]);
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
@@ -176,7 +180,7 @@ function MessageCreate() {
           temp.push(item);
         }
       });
-      console.log("This is temp", temp);
+      // console.log("This is temp", temp);
       // console.log("This is index", index);
       // var other = temp.splice(index, 1);
       // console.log("This is other", other);
@@ -193,7 +197,7 @@ function MessageCreate() {
   };
 
   const placeholderContainer = (m) => {
-    console.log("THis is media placeholderContainer ", m);
+    // console.log("THis is media placeholderContainer ", m);
     return (
       <div
         style={{
@@ -269,7 +273,7 @@ function MessageCreate() {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all placeholder", res.data);
+          // console.log("These are all placeholder", res.data);
           setPlaceHolders(res.data);
         }
       },
@@ -284,7 +288,7 @@ function MessageCreate() {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all team contacts", res.data);
+          // console.log("These are all team contacts", res.data);
 
           var temp = [];
           temp.push(JSON.parse(localStorage.getItem("user")));
@@ -313,7 +317,7 @@ function MessageCreate() {
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
-    console.log("This is the date", page);
+    // console.log("This is the date", page);
     // || "2020-12-13"
     getAllContacts(page).then(
       (res) => {
@@ -326,11 +330,11 @@ function MessageCreate() {
             setContacts(temp);
             setCopyContacts(temp);
             setuseLessState(uselessState + 1);
-            console.log("These are all new contacts", temp);
+            // console.log("These are all new contacts", temp);
             // document.getElementById("infinit").scrollTop = 0;
             setFetching(false);
           } else {
-            console.log("These are all contacts", res.data);
+            // console.log("These are all contacts", res.data);
             setContacts(res.data);
             setCopyContacts(res.data);
             if (document.getElementById("infinit")) {
@@ -355,7 +359,7 @@ function MessageCreate() {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          console.log("These are all media", res.data);
+          // console.log("These are all media", res.data);
           setMedia(res.data);
         }
       },
@@ -371,7 +375,7 @@ function MessageCreate() {
         console.log("THis is all boards", res);
         var gradYears = [];
         if (res.statusText === "OK") {
-          console.log("These are all boards", res.data);
+          // console.log("These are all boards", res.data);
           setAllBoards(res.data);
         }
       },
@@ -821,6 +825,663 @@ function MessageCreate() {
     );
   };
 
+  const MessageDetailsCard = (props) => {
+    return (
+      <Grid
+        container
+        direction="row"
+        style={{
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginTop: 16,
+          height: "auto",
+        }}
+      >
+        {/* <Grid item md={4} xs={4}> */}
+        <div
+          style={{
+            borderRight: "1px solid #d2d2d2",
+            width: "5%",
+          }}
+        >
+          <Grid container direction="row" justify="center">
+            {props.hideCheckBox === null && (
+              <Checkbox
+                color={"primary"}
+                checked={
+                  selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
+                }
+                onChange={() => {
+                  makeMessageSelected(props.selectedPlaceholder.id);
+                }}
+              ></Checkbox>
+            )}
+          </Grid>
+        </div>
+        <Grid
+          container
+          direction="row"
+          style={{
+            width: props.hideStats ? "90%" : "70%",
+            padding: 16,
+          }}
+        >
+          {placeholderContainer(props.selectedPlaceholder)}
+          {/* </Grid> */}
+          {/* <Grid item md={8} xs={8}> */}
+          <div
+            style={{
+              marginLeft: 16,
+              width: "50%",
+            }}
+          >
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                marginBottom: 0,
+              }}
+            >
+              {props.selectedPlaceholder.name}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Message Status:
+              {props.messageStatus === "Drafts" ? (
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  Drafts
+                </span>
+              ) : props.messageStatus === "Scheduled" ? (
+                <span className={classes.mdMargin} style={{ color: "#54a300" }}>
+                  Scheduled
+                </span>
+              ) : (
+                <span className={classes.mdMargin} style={{ color: "#8bb14c" }}>
+                  Sent
+                </span>
+              )}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Send As:
+              <strong className={classes.mdMargin}>SMS/MMS TEXT</strong>{" "}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Sender:
+              <strong className={classes.mdMargin}>Jake Smith</strong>{" "}
+              (651.999.9999)
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Recepient:
+              <strong className={classes.mdMargin}>
+                Jake Smith Ohio Group
+              </strong>{" "}
+              (256 participants)
+            </p>
+            {props.messageStatus === "Scheduled" ? (
+              <p class className={classes.messageDetailsHeading}>
+                Start Sending at:
+                <strong className={classes.mdMargin}>
+                  June 15, 2021 15:00
+                </strong>{" "}
+                <span
+                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                  onClick={() => {
+                    setMessageStatus("Drafts");
+                    setMessageCreated(false);
+                  }}
+                >
+                  (Unschedule & more to drafts)
+                </span>
+              </p>
+            ) : (
+              <p class className={classes.messageDetailsHeading}>
+                Start Sending at:
+                <strong className={classes.mdMargin}>
+                  June 15, 2021 15:00
+                </strong>{" "}
+              </p>
+            )}
+
+            <Grid
+              container
+              direction="row"
+              className={classes.messageDetailsHeading}
+            >
+              Tags:
+              <div
+                style={{
+                  border: "1px solid #0091ff",
+                  color: "#0091ff",
+                  padding: 4,
+                  fontSize: 10,
+                  borderRadius: 4,
+                  marginLeft: 16,
+                }}
+              >
+                OV WEEKENDS
+              </div>
+              <div
+                style={{
+                  border: "1px solid #0091ff",
+                  color: "#0091ff",
+                  padding: 4,
+                  fontSize: 10,
+                  borderRadius: 4,
+                  marginLeft: 16,
+                }}
+              >
+                OV WEEKENDS
+              </div>
+            </Grid>
+            <p class className={classes.messageDetailsHeading}>
+              Message Text:
+            </p>
+            <p
+              class
+              className={classes.messageDetailsHeading}
+              style={{ color: "black", fontWeight: 500 }}
+            >
+              Hy first_name - Register online now to reserve your sport in
+              paradise http://www.manydiazfootballcampuse.manucampus.com
+            </p>
+          </div>
+          <p class className={classes.messageDetailsHeading}>
+            Queued by Ben Graves on 20 march 2021 at 2:21 pm
+          </p>
+        </Grid>
+        {props.hideStats === null && (
+          <div
+            style={{
+              borderLeft: "1px solid #d2d2d2",
+              width: "25%",
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "15%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Message Stats
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "60%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Delivery Rate (286/300)
+              </p>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                }}
+              >
+                Response Rate (286/300)
+              </p>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Opt out Rate (286/300)
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "25%",
+                // borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <IconTextField
+                text="Delivery Details"
+                width={180}
+                onClick={() => {}}
+                icon={
+                  <Search style={{ color: "#0091ff", marginRight: 8 }}></Search>
+                }
+              ></IconTextField>
+            </Grid>
+          </div>
+        )}
+      </Grid>
+    );
+  };
+
+  const MessageDetails = () => {
+    return (
+      <div
+        style={{
+          width: showSideFilters === true ? "85%" : "100%",
+          height: "100%",
+          background: "white",
+          borderRadius: 5,
+          padding: 16,
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {" "}
+        <Grid container direction="row">
+          <Grid item md={4} sm={4}>
+            <FormatAlignLeftIcon
+              onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+              }}
+              style={{ cursor: "pointer", fontSize: 18 }}
+            ></FormatAlignLeftIcon>
+
+            <span
+              style={{
+                padding: 16,
+                fontWeight: "bold",
+                // marginLeft: 20,
+                fontSize: 20,
+              }}
+            >
+              Messages
+            </span>
+          </Grid>
+          <Grid item md={8} sm={8}>
+            <Grid container direction="row" justify="flex-end">
+              <IconTextField
+                // width={180}
+                width={100}
+                text="Action"
+                textColor="gray"
+                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+              ></IconTextField>
+              <IconTextField
+                text="Filter"
+                textColor={selectedMessages.length === 0 ? "black" : "white"}
+                background={
+                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
+                }
+                width={120}
+                onClick={() => {
+                  setShowFiltersRow(!showFiltersRow);
+                }}
+                icon={
+                  <FaSlidersH
+                    style={{
+                      color:
+                        selectedMessages.length === 0 ? "#3871DA" : "white",
+                    }}
+                  ></FaSlidersH>
+                }
+              ></IconTextField>
+            </Grid>
+          </Grid>
+          <Grid container direction="row">
+            {filter.length != 0 &&
+              filter.map((fil, index) => {
+                return (
+                  <div
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    className={classes.tags}
+                  >
+                    <Grid
+                      style={{ height: 40 }}
+                      container
+                      direction="row"
+                      alignItems="center"
+                    >
+                      {fil}
+                      <ClearIcon
+                        onClick={() => {
+                          removeDataFromFilter(index);
+                        }}
+                        style={{
+                          color: "red",
+                          fontSize: 17,
+                          cursor: "pointer",
+                        }}
+                      ></ClearIcon>{" "}
+                    </Grid>
+                  </div>
+                );
+              })}
+          </Grid>
+
+          <div
+            style={{
+              width: "100%",
+              border: "1px solid #f8f8f8",
+              marginTop: 10,
+            }}
+          ></div>
+          {showFiltersRow === true ? renderFilters() : <div></div>}
+          <div
+            style={{
+              width: "100%",
+              maxHeight: 330,
+              //  minWidth: 1110
+            }}
+            className="fullHeightCreateMessageSide"
+          >
+            {placeholders &&
+              placeholders.map((selectedPlaceholder) => {
+                return (
+                  <MessageDetailsCard
+                    selectedPlaceholder={selectedPlaceholder}
+                  ></MessageDetailsCard>
+                );
+              })}
+          </div>
+        </Grid>
+      </div>
+    );
+  };
+
+  const MessagePreview = () => {
+    return (
+      <div
+        style={{
+          width: showSideFilters === true ? "85%" : "100%",
+          height: "100%",
+          background: "white",
+          borderRadius: 5,
+          padding: 16,
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {" "}
+        <Grid container direction="row">
+          <Grid item md={4} sm={4}>
+            <FormatAlignLeftIcon
+              onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+              }}
+              style={{ cursor: "pointer", fontSize: 18 }}
+            ></FormatAlignLeftIcon>
+
+            <span
+              style={{
+                padding: 16,
+                fontWeight: "bold",
+                // marginLeft: 20,
+                fontSize: 20,
+              }}
+            >
+              Message Preview
+            </span>
+          </Grid>
+          <Grid item md={8} sm={8}>
+            <Grid container direction="row" justify="flex-end">
+              <IconTextField
+                // width={180}
+                width={100}
+                text="Action"
+                textColor="gray"
+                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+              ></IconTextField>
+              <IconButton
+                text="Schedule"
+                textColor="white"
+                width={130}
+                onClick={() => {
+                  setMessageStatus("Scheduled");
+                  setMessageCreated(true);
+                }}
+                icon={<FaCalendar style={{ color: "white" }}></FaCalendar>}
+              ></IconButton>
+              {/* <IconTextField
+                text="Filter"
+                textColor={selectedMessages.length === 0 ? "black" : "white"}
+                background={
+                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
+                }
+                width={120}
+                onClick={() => {
+                  setShowFiltersRow(!showFiltersRow);
+                }}
+                icon={
+                  <FaSlidersH
+                    style={{
+                      color:
+                        selectedMessages.length === 0 ? "#3871DA" : "white",
+                    }}
+                  ></FaSlidersH>
+                }
+              ></IconTextField> */}
+            </Grid>
+          </Grid>
+          <Grid container direction="row">
+            {filter.length != 0 &&
+              filter.map((fil, index) => {
+                return (
+                  <div
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    className={classes.tags}
+                  >
+                    <Grid
+                      style={{ height: 40 }}
+                      container
+                      direction="row"
+                      alignItems="center"
+                    >
+                      {fil}
+                      <ClearIcon
+                        onClick={() => {
+                          removeDataFromFilter(index);
+                        }}
+                        style={{
+                          color: "red",
+                          fontSize: 17,
+                          cursor: "pointer",
+                        }}
+                      ></ClearIcon>{" "}
+                    </Grid>
+                  </div>
+                );
+              })}
+          </Grid>
+
+          <div
+            style={{
+              width: "100%",
+              border: "1px solid #f8f8f8",
+              marginTop: 10,
+            }}
+          ></div>
+          {showFiltersRow === true ? renderFilters() : <div></div>}
+          <div
+            style={{
+              width: "100%",
+              maxHeight: 330,
+              //  minWidth: 1110
+            }}
+            className="fullHeightCreateMessageSide"
+          >
+            {placeholders && (
+              <MessageDetailsCard
+                hideCheckBox
+                hideStats
+                selectedPlaceholder={placeholders[0]}
+                messageStatus={messageStatus}
+              ></MessageDetailsCard>
+            )}
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                background: "#f5f6f9",
+                width: "100%",
+                minWidth: 1110,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox color="primary"></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>Full Name</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Board/List</span>
+              </Grid>
+
+              <Grid item md={2} xs={2}>
+                <span
+                  className={classes.tableHeading}
+                  style={{ marginLeft: 40 }}
+                >
+                  Phone Number
+                </span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>First Name</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>Delivered at</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>Message Status</span>
+              </Grid>
+            </Grid>
+
+            {[1, 2, 3, 4, 5, 6].map((item, index) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{
+                    border: "1px solid #d8d8d8",
+                    borderBottom: "none",
+                    borderRadius: 4,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                    minWidth: 1110,
+                  }}
+                >
+                  <Grid item md={1} xs={1}>
+                    <Checkbox
+                      color="primary"
+                      onChange={() => {
+                        makeCheckBoxSelected(item.id);
+                      }}
+                      style={{ marginTop: 1, marginBottom: 1 }}
+                      onMouseLeave={() => {
+                        setHoveredIndex(null);
+                      }}
+                    ></Checkbox>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>David Buttler</span>
+                  </Grid>
+                  <Grid item md={1} xs={1}>
+                    <span className={classes.tableFields}>Midwest List</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span
+                      className={classes.tableFields}
+                      style={{ marginLeft: 40 }}
+                    >
+                      {formatPhoneNumber(5555555555)}
+                    </span>
+                  </Grid>
+
+                  <Grid item md={1} xs={1}>
+                    <span className={classes.tableFields}>David</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>-</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    {messageStatus === "Drafts" ? (
+                      <span className={classes.tableFields}>
+                        <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info>{" "}
+                        Drafts{" "}
+                      </span>
+                    ) : (
+                      <span className={classes.tableFields}>
+                        <FaCalendar
+                          style={{ color: "#0292ff", fontSize: 16 }}
+                        ></FaCalendar>{" "}
+                        Scheduled{" "}
+                      </span>
+                    )}
+                  </Grid>
+                </Grid>
+              );
+            })}
+          </div>
+        </Grid>
+      </div>
+    );
+  };
+
   if (localStorage.getItem("user")) {
   } else {
     window.location.href = "/";
@@ -1118,6 +1779,23 @@ function MessageCreate() {
           {selectedCheckBoxes.length + " "} contacts have been tagged!
         </Alert>
       </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={messageCreated}
+        autoHideDuration={2000}
+        onClose={() => {
+          setMessageCreated(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setMessageCreated(false);
+          }}
+          severity="success"
+        >
+          Message Created Sucessfully !
+        </Alert>
+      </Snackbar>
 
       <Grid container direction="row">
         {showSideFilters === true && (
@@ -1198,387 +1876,9 @@ function MessageCreate() {
             makeMediaSelected={makeMediaSelected}
           ></MediaComponnet>
         ) : messageDetails ? (
-          <div
-            style={{
-              width: showSideFilters === true ? "85%" : "100%",
-              height: "100%",
-              background: "white",
-              borderRadius: 5,
-              padding: 16,
-              paddingLeft: 30,
-              paddingRight: 30,
-            }}
-          >
-            {" "}
-            <Grid container direction="row">
-              <Grid item md={4} sm={4}>
-                <FormatAlignLeftIcon
-                  onClick={(e) => {
-                    setshowSideFilters(!showSideFilters);
-                  }}
-                  style={{ cursor: "pointer", fontSize: 18 }}
-                ></FormatAlignLeftIcon>
-
-                <span
-                  style={{
-                    padding: 16,
-                    fontWeight: "bold",
-                    // marginLeft: 20,
-                    fontSize: 20,
-                  }}
-                >
-                  Messages
-                </span>
-              </Grid>
-              <Grid item md={8} sm={8}>
-                <Grid container direction="row" justify="flex-end">
-                  <IconTextField
-                    // width={180}
-                    width={100}
-                    text="Action"
-                    textColor="gray"
-                    icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
-                  ></IconTextField>
-                  <IconTextField
-                    text="Filter"
-                    textColor={
-                      selectedMessages.length === 0 ? "black" : "white"
-                    }
-                    background={
-                      selectedMessages.length === 0 ? "transparent" : "#3871DA"
-                    }
-                    width={120}
-                    onClick={() => {
-                      setShowFiltersRow(!showFiltersRow);
-                    }}
-                    icon={
-                      <FaSlidersH
-                        style={{
-                          color:
-                            selectedMessages.length === 0 ? "#3871DA" : "white",
-                        }}
-                      ></FaSlidersH>
-                    }
-                  ></IconTextField>
-                </Grid>
-              </Grid>
-              <Grid container direction="row">
-                {filter.length != 0 &&
-                  filter.map((fil, index) => {
-                    return (
-                      <div
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justify="center"
-                        className={classes.tags}
-                      >
-                        <Grid
-                          style={{ height: 40 }}
-                          container
-                          direction="row"
-                          alignItems="center"
-                        >
-                          {fil}
-                          <ClearIcon
-                            onClick={() => {
-                              removeDataFromFilter(index);
-                            }}
-                            style={{
-                              color: "red",
-                              fontSize: 17,
-                              cursor: "pointer",
-                            }}
-                          ></ClearIcon>{" "}
-                        </Grid>
-                      </div>
-                    );
-                  })}
-              </Grid>
-
-              <div
-                style={{
-                  width: "100%",
-                  border: "1px solid #f8f8f8",
-                  marginTop: 10,
-                }}
-              ></div>
-              {showFiltersRow === true ? renderFilters() : <div></div>}
-              <div
-                style={{
-                  width: "100%",
-                  maxHeight: 330,
-                  //  minWidth: 1110
-                }}
-                className="fullHeightCreateMessageSide"
-              >
-                {placeholders &&
-                  placeholders.map((selectedPlaceholder) => {
-                    return (
-                      <Grid
-                        container
-                        direction="row"
-                        style={{
-                          border: "1px solid #d2d2d2",
-                          borderRadius: 4,
-                          marginTop: 16,
-                          height: "auto",
-                        }}
-                      >
-                        {/* <Grid item md={4} xs={4}> */}
-                        <div
-                          style={{
-                            borderRight: "1px solid #d2d2d2",
-                            width: "5%",
-                          }}
-                        >
-                          <Grid container direction="row" justify="center">
-                            <Checkbox
-                              color={"primary"}
-                              checked={
-                                selectedMessages.indexOf(
-                                  selectedPlaceholder.id
-                                ) > -1
-                              }
-                              onChange={() => {
-                                makeMessageSelected(selectedPlaceholder.id);
-                              }}
-                            ></Checkbox>
-                          </Grid>
-                        </div>
-                        <Grid
-                          container
-                          direction="row"
-                          style={{
-                            width: "70%",
-                            padding: 16,
-                          }}
-                        >
-                          {placeholderContainer(selectedPlaceholder)}
-                          {/* </Grid> */}
-                          {/* <Grid item md={8} xs={8}> */}
-                          <div
-                            style={{
-                              marginLeft: 16,
-                              width: "50%",
-                            }}
-                          >
-                            <p
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                marginBottom: 0,
-                              }}
-                            >
-                              {selectedPlaceholder.name}
-                            </p>
-                            <p class className={classes.messageDetailsHeading}>
-                              Message Status:
-                              <span
-                                className={classes.mdMargin}
-                                style={{ color: "#8bb14c" }}
-                              >
-                                Sent
-                              </span>
-                            </p>
-                            <p class className={classes.messageDetailsHeading}>
-                              Send As:
-                              <strong className={classes.mdMargin}>
-                                SMS/MMS TEXT
-                              </strong>{" "}
-                            </p>
-                            <p class className={classes.messageDetailsHeading}>
-                              Sender:
-                              <strong className={classes.mdMargin}>
-                                Jake Smith
-                              </strong>{" "}
-                              (651.999.9999)
-                            </p>
-                            <p class className={classes.messageDetailsHeading}>
-                              Recepient:
-                              <strong className={classes.mdMargin}>
-                                Jake Smith Ohio Group
-                              </strong>{" "}
-                              (256 participants)
-                            </p>
-                            <p class className={classes.messageDetailsHeading}>
-                              Start Sending at:
-                              <strong className={classes.mdMargin}>
-                                June 15, 2021 15:00
-                              </strong>{" "}
-                              (256 participants)
-                            </p>
-                            <Grid
-                              container
-                              direction="row"
-                              className={classes.messageDetailsHeading}
-                            >
-                              Tags:
-                              <div
-                                style={{
-                                  border: "1px solid #0091ff",
-                                  color: "#0091ff",
-                                  padding: 4,
-                                  fontSize: 10,
-                                  borderRadius: 4,
-                                  marginLeft: 16,
-                                }}
-                              >
-                                OV WEEKENDS
-                              </div>
-                              <div
-                                style={{
-                                  border: "1px solid #0091ff",
-                                  color: "#0091ff",
-                                  padding: 4,
-                                  fontSize: 10,
-                                  borderRadius: 4,
-                                  marginLeft: 16,
-                                }}
-                              >
-                                OV WEEKENDS
-                              </div>
-                            </Grid>
-                            <p class className={classes.messageDetailsHeading}>
-                              Message Text:
-                            </p>
-                            <p
-                              class
-                              className={classes.messageDetailsHeading}
-                              style={{ color: "black", fontWeight: 500 }}
-                            >
-                              Hy first_name - Register online now to reserve
-                              your sport in paradise
-                              http://www.manydiazfootballcampuse.manucampus.com
-                            </p>
-                          </div>
-                        </Grid>
-                        <div
-                          style={{
-                            borderLeft: "1px solid #d2d2d2",
-                            width: "25%",
-                          }}
-                        >
-                          <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            style={{
-                              height: "15%",
-                              borderBottom: "1px solid #d2d2d2",
-                            }}
-                          >
-                            <p
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 18,
-                                margin: 0,
-                                height: 30,
-                              }}
-                            >
-                              Message Stats
-                            </p>
-                          </Grid>
-                          <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            style={{
-                              height: "60%",
-                              borderBottom: "1px solid #d2d2d2",
-                            }}
-                          >
-                            <p
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 16,
-                                margin: 0,
-                                width: "100%",
-                                textAlign: "center",
-                              }}
-                            >
-                              95%
-                            </p>
-                            <p
-                              style={{
-                                fontSize: 12,
-                                margin: 0,
-                                height: 30,
-                              }}
-                            >
-                              Delivery Rate (286/300)
-                            </p>
-                            <p
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 16,
-                                margin: 0,
-                                width: "100%",
-                                textAlign: "center",
-                              }}
-                            >
-                              95%
-                            </p>
-                            <p
-                              style={{
-                                fontSize: 12,
-                                margin: 0,
-                              }}
-                            >
-                              Response Rate (286/300)
-                            </p>
-                            <p
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 16,
-                                margin: 0,
-                                width: "100%",
-                                textAlign: "center",
-                              }}
-                            >
-                              95%
-                            </p>
-                            <p
-                              style={{
-                                fontSize: 12,
-                                margin: 0,
-                                height: 30,
-                              }}
-                            >
-                              Opt out Rate (286/300)
-                            </p>
-                          </Grid>
-                          <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            style={{
-                              height: "25%",
-                              // borderBottom: "1px solid #d2d2d2",
-                            }}
-                          >
-                            <IconTextField
-                              text="Delivery Details"
-                              width={180}
-                              onClick={() => {}}
-                              icon={
-                                <Search
-                                  style={{ color: "#0091ff", marginRight: 8 }}
-                                ></Search>
-                              }
-                            ></IconTextField>
-                          </Grid>
-                        </div>
-                        {/* </Grid> */}
-                      </Grid>
-                    );
-                  })}
-              </div>
-            </Grid>
-          </div>
+          <MessageDetails></MessageDetails>
+        ) : messagePreview ? (
+          <MessagePreview></MessagePreview>
         ) : (
           <div
             style={{
@@ -1628,6 +1928,9 @@ function MessageCreate() {
                     text="Preview and Send"
                     textColor="white"
                     width={200}
+                    onClick={() => {
+                      setMessagePreview(true);
+                    }}
                     icon={<Send style={{ color: "white" }}></Send>}
                   ></IconButton>
                 </Grid>
