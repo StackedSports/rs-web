@@ -1223,12 +1223,14 @@ function MessageCreate() {
               maxHeight: 330,
               //  minWidth: 1110
             }}
-            className="fullHeightCreateMessageSide"
+            className="fullHeightCreateMessageDetails"
           >
             {placeholders &&
               placeholders.map((selectedPlaceholder) => {
                 return (
                   <MessageDetailsCard
+                    hideCheckBox={null}
+                    hideStats={null}
                     selectedPlaceholder={selectedPlaceholder}
                   ></MessageDetailsCard>
                 );
@@ -2821,7 +2823,7 @@ function MessageCreate() {
                           className={classes.dropdownHidden}
                           style={{
                             marginLeft: 180,
-                            marginTop: -40,
+                            marginTop: -200,
                             maxHeight: 200,
                             display: displayTextPlaceholders ? "block" : "none",
                           }}
@@ -2991,7 +2993,7 @@ function MessageCreate() {
                           className={classes.dropdownHidden}
                           style={{
                             marginLeft: 180,
-                            marginTop: -40,
+                            marginTop: -200,
                             display: displaySnippets ? "block" : "none",
                           }}
                           onMouseLeave={() => {
@@ -3075,8 +3077,8 @@ function MessageCreate() {
                           // class="dropdown-content"
                           className={classes.dropdownHidden}
                           style={{
-                            marginLeft: 100,
-                            marginTop: -40,
+                            marginLeft: 50,
+                            marginTop: -450,
                             display: displayEmojiSelect ? "block" : "none",
                           }}
                           onMouseLeave={() => {

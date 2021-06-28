@@ -183,6 +183,9 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     zIndex: 200000000,
   },
+  accordionGridHeight: {
+    height: 56,
+  },
 }));
 
 function ContactProfile() {
@@ -1367,7 +1370,12 @@ function ContactProfile() {
                     >
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="0">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               General{" "}
                               <span className={classes.accordionGray}>
@@ -1396,7 +1404,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="1">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               Details{" "}
                               <span className={classes.accordionGray}>
@@ -1415,7 +1428,12 @@ function ContactProfile() {
 
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="2">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               Coaches{" "}
                               <span className={classes.accordionGray}>
@@ -1433,7 +1451,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="3">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               Family Relationships{" "}
                               {/* <span className={classes.accordionGray}>
@@ -1451,7 +1474,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="4">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               Opponents{" "}
                               <span className={classes.accordionGray}>
@@ -1469,7 +1497,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="5">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>
                               External Profiles{" "}
                               <span className={classes.accordionGray}>
@@ -1487,7 +1520,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="7">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>Tags </p>{" "}
                             <ArrowForwardIosIcon
                               style={{ fontSize: 15, marginLeft: 20 }}
@@ -1500,7 +1538,12 @@ function ContactProfile() {
                       </Card>
                       <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="8">
-                          <Grid container direction="row" alignItems="center">
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.accordionGridHeight}
+                          >
                             <p className={classes.accordionP}>Actions </p>{" "}
                             <ArrowForwardIosIcon
                               style={{ fontSize: 15, marginLeft: 20 }}
@@ -1677,19 +1720,20 @@ function ContactProfile() {
                   src={URL.createObjectURL(image)}
                 ></img>
               )} */}
-                          <input
+                          <textarea
                             style={{
                               width: "90%",
                               borderRadius: 5,
-                              height: 40,
+                              height: 100,
                               border: "none",
+                              resize: "none",
                             }}
                             placeholder="Type Message to send"
                             onChange={(e) => {
                               setMessageText(e.target.value);
                             }}
                             value={messageText}
-                          ></input>
+                          ></textarea>
                         </Grid>
                       </Grid>
                       <Grid item md={2} sm={2} lg={2} xl={2} sm={2} xs={2}>
@@ -1724,7 +1768,7 @@ function ContactProfile() {
                               className={classes.dropdownHidden}
                               style={{
                                 marginLeft: -50,
-                                marginTop: -30,
+                                marginTop: -450,
                                 display: displayEmojiSelect ? "block" : "none",
                               }}
                               onMouseLeave={() => {
@@ -1762,6 +1806,7 @@ function ContactProfile() {
                     <Grid
                       container
                       direction="row"
+                      justify="space-between"
                       style={{
                         borderBottom: "2px solid #f8f8f8",
                         width: "100%",
@@ -1772,14 +1817,14 @@ function ContactProfile() {
                         style={{
                           color: "black",
                           margin: 0,
-                          marginLeft: 10,
+                          marginLeft: 16,
                           fontWeight: 600,
                           width: "75%",
                         }}
                       >
                         Message Stats
                       </p>
-                      <Autorenew></Autorenew>
+                      <Autorenew style={{ marginRight: 16 }}></Autorenew>
                     </Grid>
                     {loggedInUserStats != null ? (
                       <DoughnutChart data={loggedInUserStats} />
@@ -1918,19 +1963,20 @@ function ContactProfile() {
                         height: 50,
                       }}
                       alignItems="center"
+                      justify="space-between"
                     >
                       <p
                         style={{
                           color: "black",
                           margin: 0,
-                          marginLeft: 10,
+                          marginLeft: 16,
                           fontWeight: 600,
                           width: "75%",
                         }}
                       >
                         Sent Media
                       </p>
-                      <Autorenew></Autorenew>
+                      <Autorenew style={{ marginRight: 16 }}></Autorenew>
                     </Grid>
                     <Grid
                       container
@@ -1985,20 +2031,21 @@ function ContactProfile() {
                         width: "100%",
                         height: 50,
                       }}
+                      justify="space-between"
                       alignItems="center"
                     >
                       <p
                         style={{
                           color: "black",
                           margin: 0,
-                          marginLeft: 10,
+                          marginLeft: 16,
                           fontWeight: 600,
                           width: "75%",
                         }}
                       >
                         Associated Media
                       </p>
-                      <Autorenew></Autorenew>
+                      <Autorenew style={{ marginRight: 16 }}></Autorenew>
                     </Grid>
                     <Grid
                       container

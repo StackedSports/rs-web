@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     width: 50,
     fontSize: 20,
     fontWeight: 600,
-    marginLeft: 20,
+    marginLeft: 16,
   },
   buttonActivePm: {
     background: "white",
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     width: 50,
     fontSize: 20,
     fontWeight: 600,
-    marginLeft: 20,
+    marginLeft: 16,
   },
   buttonPm: {
     background: "#006edc",
@@ -64,7 +64,7 @@ export default function DateTimePicker(props) {
   // console.log("New data", new Date().getHours());
   var currentTime = "";
   if (new Date().getHours() < 12) {
-    currentTime = new Date().getHours() + " : 0" + new Date().getMinutes();
+    currentTime = new Date().getHours() + new Date().getMinutes();
   } else {
     currentTime = new Date().getHours() + " : " + new Date().getMinutes();
   }
@@ -126,8 +126,11 @@ export default function DateTimePicker(props) {
             style={{
               color: timeType === "pm" ? "#006edc" : "white",
               fontWeight: 600,
-              fontSize: 20,
-              padding: 12,
+              fontSize: 16,
+              padding: 28,
+              paddingLeft: 32,
+              textTransform: "capitalize",
+              margin: 0,
             }}
           >
             Select Date and Time
@@ -139,8 +142,11 @@ export default function DateTimePicker(props) {
             style={{
               color: timeType === "pm" ? "#006edc" : "white",
               fontWeight: 600,
-              fontSize: 20,
-              padding: 12,
+              fontSize: 16,
+              padding: 28,
+              paddingLeft: 32,
+              textTransform: "capitalize",
+              margin: 0,
             }}
           >
             You have selected {moment(value).format("dddd MMMM , DD gggg")}
@@ -160,6 +166,7 @@ export default function DateTimePicker(props) {
               onChange={(e) => {
                 onChange(e);
                 props.onDateChange(e);
+                props.onTimeChange(currentTime);
               }}
               value={value}
             />
@@ -289,15 +296,24 @@ export default function DateTimePicker(props) {
                     ? classes.buttonActivePm
                     : classes.buttonActive
                 }
-                style={{ width: 100, height: 45, marginRight: 12 }}
+                style={{
+                  width: "max-content",
+                  height: 45,
+                  padding: 0,
+                  marginRight: 12,
+                  paddingLeft: 16,
+                }}
                 onClick={() => {
                   props.onClose();
                 }}
               >
-                save
-                <CalendarTodayIcon
-                  style={{ marginLeft: 5, fontSize: 18 }}
-                ></CalendarTodayIcon>
+                <Grid container style={{ height: 45 }} alignItems="center">
+                  <p style={{ margin: 0, marginLeft: 16 }}>Save</p>
+
+                  <CalendarTodayIcon
+                    style={{ marginLeft: 16, fontSize: 18, marginRight: 16 }}
+                  ></CalendarTodayIcon>
+                </Grid>
               </button>
             </Grid>
           </Grid>

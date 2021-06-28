@@ -149,6 +149,13 @@
   overflow-x: hidden;
 }
 
+.fullHeightCreateMessageDetails {
+  min-height: calc(100vh - 200px);
+  /* max-height: calc(100vh - 285px); */
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .uselessClass {
   min-height: 20px;
 }
@@ -223,7 +230,7 @@
   display: none;
   position: absolute;
   background-color: white;
-  min-width: 250px;
+  min-width: 320px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border: 1px solid #d5d5d5;
   border-radius: 4px;
@@ -232,6 +239,7 @@
   max-height: 150px;
   overflow-y: scroll;
   overflow-x: hidden;
+  margin-left: 15px;
   /* animation: rotateDropdown 0.3s; */
   /* color: white; */
 }
@@ -260,5 +268,5 @@
 
 .card {
   border: 3px solid transparent !important;
-  height: 56px !important;
+  /* height: 56px !important; */
 }
