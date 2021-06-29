@@ -11,7 +11,7 @@ export default function Dashboard() {
   };
   return (
     <>
-      <Sidebar contacts={true} />
+      <Sidebar messageCreate={true} />
       <MessageCreate contacts={true} />
     </>
   );

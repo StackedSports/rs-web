@@ -13,6 +13,7 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -67,6 +68,7 @@ function MessageCreate() {
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
+  const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displaySnippets, setDisplaySnippets] = useState(false);
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
@@ -119,6 +121,33 @@ function MessageCreate() {
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  const makeMediaSelected = (index) => {
+    var alreadySelected = false;
+    selectedMedia.map((item) => {
+      if (index.hashid === item.hashid) {
+        alreadySelected = true;
+      }
+    });
+    if (alreadySelected) {
+      var temp = [];
+      selectedMedia.map((item) => {
+        if (index.hashid != item.hashid) {
+          temp.push(item);
+        }
+      });
+      setSelectedCheckboxes(temp);
+      setSelectedMedia(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedMedia;
+      temp.push(index);
+      setSelectedMedia(temp);
+      setuseLessState(uselessState + 1);
+    }
+    localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
+    // console.log("This is selected media", selectedMedia);
+  };
 
   const makeMessageSelected = (index) => {
     var alreadySelected = false;
@@ -825,6 +854,197 @@ function MessageCreate() {
     );
   };
 
+  const renderMessageFilters = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        spacing={1}
+        style={{
+          marginTop: 25,
+          borderBottom: "1px solid #f8f8f8",
+          paddingBottom: 20,
+        }}
+      >
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={statusFilter || "Type"}
+          drop={"down"}
+          placeholder="Type"
+          style={filtesSpacingStyle}
+        >
+          {allStatuses &&
+            allStatuses.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    statusFilter === option.label ? "#348ef7" : "white",
+                  color: statusFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (statusFilter === option.label) {
+                    setStatusFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "status");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={stateFilter || "Sender"}
+          drop={"down"}
+          placeholder="Sender"
+          style={filtesSpacingStyle}
+        >
+          <div>
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "90%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                }}
+                placeholder="Search States"
+                value={stateSearch}
+                onChange={(e) => {
+                  setStateSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
+
+            {teamContacts.map((option) => {
+              var name = option.first_name + " " + option.last_name;
+              if (stateSearch != "") {
+                if (
+                  name.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
+                ) {
+                  if (option.twitter_profile) {
+                    return (
+                      <Dropdown.Item
+                        style={{
+                          background:
+                            stateFilter === option ? "#348ef7" : "white",
+                          color: stateFilter === option ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          addDataToFilter(option, "State");
+                        }}
+                      >
+                        {name}
+                      </Dropdown.Item>
+                    );
+                  }
+                }
+              } else {
+                return (
+                  <Dropdown.Item
+                    style={{
+                      background: stateFilter === option ? "#348ef7" : "white",
+                      color: stateFilter === option ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      addDataToFilter(option, "State");
+                    }}
+                  >
+                    {name}
+                  </Dropdown.Item>
+                );
+              }
+            })}
+          </div>
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={gradeYearFilter || "Tags"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {allGradYears &&
+            allGradYears.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    gradeYearFilter === option.label ? "#348ef7" : "white",
+                  color: gradeYearFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (rankFilter === option.label) {
+                    setGradeYearFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "gradeYear");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={timeZoneFilter || "Status"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background:
+                  timeZoneFilter === option.label ? "#348ef7" : "white",
+                color: timeZoneFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setTimeZoneFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <Grid
+          container
+          direction={"row"}
+          alignItems="center"
+          justify="space-between"
+          style={{
+            border: "1px solid #dadada",
+            width: "max-content",
+            borderRadius: 4,
+            height: 40,
+          }}
+        >
+          <ArrowBackwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowBackwardIosIcon>
+          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+          <p
+            style={{
+              fontWeight: "bold",
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 4,
+            }}
+          >
+            6/1/21-6-30-21
+          </p>
+          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+          <ArrowForwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowForwardIosIcon>
+        </Grid>
+      </Grid>
+    );
+  };
+
   const MessageDetailsCard = (props) => {
     return (
       <Grid
@@ -1162,7 +1382,7 @@ function MessageCreate() {
                 }
                 width={120}
                 onClick={() => {
-                  setShowFiltersRow(!showFiltersRow);
+                  setShowMessageFiltersRow(!showMessageFiltersRow);
                 }}
                 icon={
                   <FaSlidersH
@@ -1217,6 +1437,12 @@ function MessageCreate() {
             }}
           ></div>
           {showFiltersRow === true ? renderFilters() : <div></div>}
+          {showMessageFiltersRow === true ? (
+            renderMessageFilters()
+          ) : (
+            <div></div>
+          )}
+
           <div
             style={{
               width: "100%",
@@ -1922,7 +2148,7 @@ function MessageCreate() {
                     textColor="#3871DA"
                     width={180}
                     onClick={() => {
-                      // setShowFiltersRow(!showFiltersRow);
+                      setShowMessageFiltersRow(!showMessageFiltersRow);
                     }}
                     icon={<Check style={{ color: "#3871DA" }}></Check>}
                   ></IconTextField>

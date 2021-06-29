@@ -1300,7 +1300,9 @@ const Sidebar = (props) => {
           </LeftSectionNav>
         </NavResponsive>
         <Nav>
-          {props.contacts === true || props.media == true ? (
+          {props.contacts === true ||
+          props.media == true ||
+          props.messageCreate == true ? (
             <LogoContainer style={{ width: 60 }}>
               <NavLogo src={DashboardLogo} style={{ width: 50 }} />
             </LogoContainer>
@@ -1311,6 +1313,19 @@ const Sidebar = (props) => {
           )}
           {props.contacts === true ? (
             <Button onClick={setAddContact}>+ Add Contact</Button>
+          ) : (
+            <div></div>
+          )}
+
+          {props.messageCreate === true ? (
+            <Button
+              onClick={() => {
+                window.location.reload();
+                localStorage.removeItem("selectedMedia");
+              }}
+            >
+              + New Message
+            </Button>
           ) : (
             <div></div>
           )}
@@ -1382,11 +1397,16 @@ const Sidebar = (props) => {
         </Nav>
         <SidebarNav
           sidebar={sidebar}
-          style={{ width: props.contacts || props.media ? 60 : 250 }}
+          style={{
+            width:
+              props.contacts || props.media || props.messageCreate ? 60 : 250,
+          }}
         >
           <Grid container direction="column">
             <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
-              {props.contacts === true || props.media === true ? (
+              {props.contacts === true ||
+              props.media === true ||
+              props.messageCreate === true ? (
                 <div></div>
               ) : (
                 <Button onClick={openModal}>+ New</Button>
@@ -1395,7 +1415,9 @@ const Sidebar = (props) => {
               {SidebarData.map((item, index) => {
                 return (
                   <SubMenu
-                    contacts={props.contacts || props.media}
+                    contacts={
+                      props.contacts || props.media || props.messageCreate
+                    }
                     item={item}
                     key={index}
                   />
