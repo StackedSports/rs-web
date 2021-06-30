@@ -1596,7 +1596,7 @@ function ContactProfile() {
                             <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
                           }
                         ></IconTextField>
-                        <div class="dropdown-user-profile">
+                        <div class="dropdown-contact-profile">
                           <p style={{ color: "black", margin: 12 }}>
                             Displayed Recruite Data
                           </p>

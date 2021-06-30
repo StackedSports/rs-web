@@ -226,7 +226,7 @@
   display: block;
 }
 
-.dropdown-user-profile {
+.dropdown-contact-profile {
   display: none;
   position: absolute;
   background-color: white;
@@ -248,7 +248,7 @@
 }
 
 /* Show the dropdown menu on hover */
-.dropdownUserProfile:hover .dropdown-user-profile {
+.dropdownUserProfile:hover .dropdown-contact-profile {
   display: block;
 }
 

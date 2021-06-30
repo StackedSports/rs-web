@@ -1302,7 +1302,8 @@ const Sidebar = (props) => {
         <Nav>
           {props.contacts === true ||
           props.media == true ||
-          props.messageCreate == true ? (
+          props.messageCreate === true ||
+          props.TweetCreate === true ? (
             <LogoContainer style={{ width: 60 }}>
               <NavLogo src={DashboardLogo} style={{ width: 50 }} />
             </LogoContainer>
@@ -1325,6 +1326,18 @@ const Sidebar = (props) => {
               }}
             >
               + New Message
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          {props.TweetCreate === true ? (
+            <Button
+              onClick={() => {
+                window.location.reload();
+                localStorage.removeItem("selectedMedia");
+              }}
+            >
+              + New Post
             </Button>
           ) : (
             <div></div>
@@ -1399,14 +1412,20 @@ const Sidebar = (props) => {
           sidebar={sidebar}
           style={{
             width:
-              props.contacts || props.media || props.messageCreate ? 60 : 250,
+              props.contacts ||
+              props.media ||
+              props.messageCreate ||
+              props.TweetCreate
+                ? 60
+                : 250,
           }}
         >
           <Grid container direction="column">
             <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
               {props.contacts === true ||
               props.media === true ||
-              props.messageCreate === true ? (
+              props.messageCreate === true ||
+              props.TweetCreate === true ? (
                 <div></div>
               ) : (
                 <Button onClick={openModal}>+ New</Button>
@@ -1416,7 +1435,10 @@ const Sidebar = (props) => {
                 return (
                   <SubMenu
                     contacts={
-                      props.contacts || props.media || props.messageCreate
+                      props.contacts ||
+                      props.media ||
+                      props.messageCreate ||
+                      props.TweetCreate
                     }
                     item={item}
                     key={index}
@@ -1453,7 +1475,10 @@ const Sidebar = (props) => {
                   </Grid>
                 </Grid>
                 <Grid item md={8} xs={8} lg={8}>
-                  {props.contacts === true || props.media === true ? (
+                  {props.contacts === true ||
+                  props.media === true ||
+                  props.messageCreate === true ||
+                  props.TweetCreate === true ? (
                     <div></div>
                   ) : (
                     <Grid
