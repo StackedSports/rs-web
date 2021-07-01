@@ -1589,7 +1589,7 @@ function MessageCreate() {
               maxHeight: 330,
               //  minWidth: 1110
             }}
-            className="fullHeightCreateMessageSide"
+            className="fullHeightCreateMessagePreview"
           >
             {placeholders && (
               <MessageDetailsCard
@@ -2332,6 +2332,7 @@ function MessageCreate() {
                         height: 70,
                         paddingTop: 16,
                       }}
+                      className="hoverHighlight"
                       onMouseEnter={() => {
                         setDisplayCreateMessage(false);
                         setDisplayMessageSenders(false);
@@ -2485,6 +2486,7 @@ function MessageCreate() {
                         marginTop: 16,
                         paddingTop: 16,
                       }}
+                      className="hoverHighlight"
                     >
                       {/* <Grid
                         item
@@ -2710,6 +2712,7 @@ function MessageCreate() {
                         padding: 16,
                         paddingLeft: 0,
                       }}
+                      className="hoverHighlight"
                       onMouseEnter={() => {
                         setDisplayCreateMessage(false);
                         setDisplayMessageSenders(false);
@@ -2855,6 +2858,7 @@ function MessageCreate() {
                         marginTop: 16,
                         paddingTop: 16,
                       }}
+                      className="hoverHighlight"
                     >
                       {/* <Grid item md={2} xs={2}> */}
                       <p style={{ margin: 0, marginLeft: 16, width: 140 }}>
@@ -2919,6 +2923,7 @@ function MessageCreate() {
                         paddingTop: 16,
                         paddingBottom: 16,
                       }}
+                      className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
@@ -2975,6 +2980,7 @@ function MessageCreate() {
                         marginTop: 16,
                         paddingTop: 16,
                       }}
+                      className="hoverHighlight focusHighlight"
                       onMouseEnter={() => {
                         setDisplaySnippets(false);
                         setDisplayTextPlaceholders(false);
@@ -3105,17 +3111,28 @@ function MessageCreate() {
                                 className={classes.messagetypeGrid}
                                 onClick={(e) => {
                                   var newVal = "";
-                                  for (var i = 0; i < messageText.length; i++) {
-                                    newVal = newVal + messageText[i];
-                                    if (
-                                      i ===
-                                      document.getElementById("textArea")
-                                        .selectionStart
+                                  if (
+                                    document.getElementById("textArea")
+                                      .selectionStart === messageText.length
+                                  ) {
+                                    setMessageText(messageText + type.title);
+                                  } else {
+                                    for (
+                                      var i = 0;
+                                      i < messageText.length;
+                                      i++
                                     ) {
-                                      newVal = newVal + type.title;
+                                      newVal = newVal + messageText[i];
+                                      if (
+                                        i ===
+                                        document.getElementById("textArea")
+                                          .selectionStart
+                                      ) {
+                                        newVal = newVal + type.title;
+                                      }
                                     }
+                                    setMessageText(newVal);
                                   }
-                                  setMessageText(newVal);
                                 }}
                               >
                                 <p
@@ -3157,15 +3174,27 @@ function MessageCreate() {
                                 className={classes.messagetypeGrid}
                                 onClick={(e) => {
                                   var newVal = "";
-                                  for (var i = 0; i < messageText.length; i++) {
-                                    newVal = newVal + messageText[i];
-                                    if (
-                                      i ===
-                                      document.getElementById("textArea")
-                                        .selectionStart
+                                  if (
+                                    document.getElementById("textArea")
+                                      .selectionStart === messageText.length
+                                  ) {
+                                    setMessageText(messageText + type.title);
+                                  } else {
+                                    for (
+                                      var i = 0;
+                                      i < messageText.length;
+                                      i++
                                     ) {
-                                      newVal = newVal + type.title;
+                                      newVal = newVal + messageText[i];
+                                      if (
+                                        i ===
+                                        document.getElementById("textArea")
+                                          .selectionStart
+                                      ) {
+                                        newVal = newVal + type.title;
+                                      }
                                     }
+                                    setMessageText(newVal);
                                   }
                                   setMessageText(newVal);
                                 }}
@@ -3256,17 +3285,28 @@ function MessageCreate() {
                                 className={classes.messagetypeGrid}
                                 onClick={(e) => {
                                   var newVal = "";
-                                  for (var i = 0; i < messageText.length; i++) {
-                                    newVal = newVal + messageText[i];
-                                    if (
-                                      i ===
-                                      document.getElementById("textArea")
-                                        .selectionStart
+                                  if (
+                                    document.getElementById("textArea")
+                                      .selectionStart === messageText.length
+                                  ) {
+                                    setMessageText(messageText + type.title);
+                                  } else {
+                                    for (
+                                      var i = 0;
+                                      i < messageText.length;
+                                      i++
                                     ) {
-                                      newVal = newVal + type.title;
+                                      newVal = newVal + messageText[i];
+                                      if (
+                                        i ===
+                                        document.getElementById("textArea")
+                                          .selectionStart
+                                      ) {
+                                        newVal = newVal + type.title;
+                                      }
                                     }
+                                    setMessageText(newVal);
                                   }
-                                  setMessageText(newVal);
                                 }}
                               >
                                 <p
@@ -3319,17 +3359,24 @@ function MessageCreate() {
                             // }}
                             onSelect={(e) => {
                               var newVal = "";
-                              for (var i = 0; i < messageText.length; i++) {
-                                newVal = newVal + messageText[i];
-                                if (
-                                  i ===
-                                  document.getElementById("textArea")
-                                    .selectionStart
-                                ) {
-                                  newVal = newVal + e.native;
+                              if (
+                                document.getElementById("textArea")
+                                  .selectionStart === messageText.length
+                              ) {
+                                setMessageText(messageText + e.native);
+                              } else {
+                                for (var i = 0; i < messageText.length; i++) {
+                                  newVal = newVal + messageText[i];
+                                  if (
+                                    i ===
+                                    document.getElementById("textArea")
+                                      .selectionStart
+                                  ) {
+                                    newVal = newVal + e.native;
+                                  }
                                 }
+                                setMessageText(newVal);
                               }
-                              setMessageText(newVal);
                             }}
                           />
                         </div>

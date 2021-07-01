@@ -58,15 +58,33 @@ const useStyles = makeStyles({
 export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
   const [rangeValue, setRangeValue] = useState(null);
-  const [timeType, setTimeType] = useState("am");
+  var [timeType, setTimeType] = useState("am");
   const [slots, setSlots] = useState([]);
   const classes = useStyles();
   // console.log("New data", new Date().getHours());
   var currentTime = "";
   if (new Date().getHours() < 12) {
-    currentTime = new Date().getHours() + new Date().getMinutes();
+    var hours = new Date().getHours();
+    var minutes = new Date().getMinutes();
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    currentTime = hours + ":" + minutes;
+    timeType = "am";
   } else {
-    currentTime = new Date().getHours() + " : " + new Date().getMinutes();
+    var hours = new Date().getHours() - 12;
+    var minutes = new Date().getMinutes();
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    timeType = "pm";
+    currentTime = hours + ":" + minutes;
   }
 
   // function valuetext(value) {
@@ -129,7 +147,7 @@ export default function DateTimePicker(props) {
               fontSize: 16,
               padding: 28,
               paddingLeft: 32,
-              textTransform: "capitalize",
+              textTransform: "uppercase",
               margin: 0,
             }}
           >
@@ -145,7 +163,7 @@ export default function DateTimePicker(props) {
               fontSize: 16,
               padding: 28,
               paddingLeft: 32,
-              textTransform: "capitalize",
+              textTransform: "uppercase",
               margin: 0,
             }}
           >
@@ -288,7 +306,7 @@ export default function DateTimePicker(props) {
                   props.onClose();
                 }}
               >
-                cancel
+                Cancel
               </button>
               <button
                 className={
