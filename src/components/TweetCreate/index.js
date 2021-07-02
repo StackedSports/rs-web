@@ -3219,6 +3219,7 @@ const useStyles = makeStyles({
     fontWeight: 600,
     borderRadius: 4,
     // marginLeft: 16,
+    marginRight: 16,
     paddingLeft: 16,
     paddingRight: 16,
   },
