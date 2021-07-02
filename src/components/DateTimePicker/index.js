@@ -325,8 +325,14 @@ export default function DateTimePicker(props) {
                   props.onClose();
                 }}
               >
-                <Grid container style={{ height: 45 }} alignItems="center">
-                  <p style={{ margin: 0, marginLeft: 16 }}>Save</p>
+                <Grid
+                  container
+                  direction="row"
+                  style={{ height: 45 }}
+                  alignItems="center"
+                  justify="space-between"
+                >
+                  <p style={{ margin: 0 }}>Save</p>
 
                   <CalendarTodayIcon
                     style={{ marginLeft: 16, fontSize: 18, marginRight: 16 }}

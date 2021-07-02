@@ -930,8 +930,8 @@ function MessageCreate() {
                       <Dropdown.Item
                         style={{
                           background:
-                            stateFilter === option ? "#348ef7" : "white",
-                          color: stateFilter === option ? "white" : "black",
+                            stateFilter === name ? "#348ef7" : "white",
+                          color: stateFilter === name ? "white" : "black",
                         }}
                         onClick={() => {
                           addDataToFilter(option, "State");
@@ -946,11 +946,11 @@ function MessageCreate() {
                 return (
                   <Dropdown.Item
                     style={{
-                      background: stateFilter === option ? "#348ef7" : "white",
-                      color: stateFilter === option ? "white" : "black",
+                      background: stateFilter === name ? "#348ef7" : "white",
+                      color: stateFilter === name ? "white" : "black",
                     }}
                     onClick={() => {
-                      addDataToFilter(option, "State");
+                      addDataToFilter(name, "State");
                     }}
                   >
                     {name}
@@ -1376,10 +1376,8 @@ function MessageCreate() {
               ></IconTextField>
               <IconTextField
                 text="Filter"
-                textColor={selectedMessages.length === 0 ? "black" : "white"}
-                background={
-                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
-                }
+                textColor={filter.length === 0 ? "black" : "white"}
+                background={filter.length === 0 ? "transparent" : "#3871DA"}
                 width={120}
                 onClick={() => {
                   setShowMessageFiltersRow(!showMessageFiltersRow);
@@ -1387,8 +1385,7 @@ function MessageCreate() {
                 icon={
                   <FaSlidersH
                     style={{
-                      color:
-                        selectedMessages.length === 0 ? "#3871DA" : "white",
+                      color: filter.length === 0 ? "#3871DA" : "white",
                     }}
                   ></FaSlidersH>
                 }

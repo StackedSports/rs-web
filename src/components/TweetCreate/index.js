@@ -25,6 +25,7 @@ import {
   Info,
   Twitter,
   FavoriteBorder,
+  EditOutlined,
 } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -47,6 +48,7 @@ import {
   FaSlidersH,
   FaBars,
   FaTh,
+  FaEdit,
 } from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
 
@@ -909,7 +911,7 @@ function MessageCreate() {
 
         <DropdownButton
           id="dropdown-basic-button"
-          title={stateFilter || "Sender"}
+          title={stateFilter || "Account"}
           drop={"down"}
           placeholder="Sender"
           style={filtesSpacingStyle}
@@ -942,11 +944,11 @@ function MessageCreate() {
                       <Dropdown.Item
                         style={{
                           background:
-                            stateFilter === option ? "#348ef7" : "white",
-                          color: stateFilter === option ? "white" : "black",
+                            stateFilter === name ? "#348ef7" : "white",
+                          color: stateFilter === name ? "white" : "black",
                         }}
                         onClick={() => {
-                          addDataToFilter(option, "State");
+                          addDataToFilter(name, "State");
                         }}
                       >
                         {name}
@@ -958,11 +960,11 @@ function MessageCreate() {
                 return (
                   <Dropdown.Item
                     style={{
-                      background: stateFilter === option ? "#348ef7" : "white",
-                      color: stateFilter === option ? "white" : "black",
+                      background: stateFilter === name ? "#348ef7" : "white",
+                      color: stateFilter === name ? "white" : "black",
                     }}
                     onClick={() => {
-                      addDataToFilter(option, "State");
+                      addDataToFilter(name, "State");
                     }}
                   >
                     {name}
@@ -1133,24 +1135,16 @@ function MessageCreate() {
               )}
             </p>
             <p class className={classes.messageDetailsHeading}>
-              Send As:
-              <strong className={classes.mdMargin}>SMS/MMS TEXT</strong>{" "}
+              Published On:
+              <strong className={classes.mdMargin}>Twitter</strong>{" "}
             </p>
             <p class className={classes.messageDetailsHeading}>
-              Sender:
-              <strong className={classes.mdMargin}>Jake Smith</strong>{" "}
-              (651.999.9999)
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Recepient:
-              <strong className={classes.mdMargin}>
-                Jake Smith Ohio Group
-              </strong>{" "}
-              (256 participants)
+              Published to :
+              <strong className={classes.mdMargin}>@JakeSmith</strong>{" "}
             </p>
             {props.messageStatus === "Scheduled" ? (
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
+                Published Time:
                 <strong className={classes.mdMargin}>
                   June 15, 2021 15:00
                 </strong>{" "}
@@ -1166,7 +1160,7 @@ function MessageCreate() {
               </p>
             ) : (
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
+                Published Time:
                 <strong className={classes.mdMargin}>
                   June 15, 2021 15:00
                 </strong>{" "}
@@ -1205,7 +1199,7 @@ function MessageCreate() {
               </div>
             </Grid>
             <p class className={classes.messageDetailsHeading}>
-              Message Text:
+              Post Text:
             </p>
             <p
               class
@@ -1245,7 +1239,7 @@ function MessageCreate() {
                   height: 30,
                 }}
               >
-                Message Stats
+                Post Stats
               </p>
             </Grid>
             <Grid
@@ -1276,7 +1270,7 @@ function MessageCreate() {
                   height: 30,
                 }}
               >
-                Delivery Rate (286/300)
+                Contact Engagement (286/300)
               </p>
               <p
                 style={{
@@ -1287,7 +1281,7 @@ function MessageCreate() {
                   textAlign: "center",
                 }}
               >
-                95%
+                64
               </p>
               <p
                 style={{
@@ -1295,7 +1289,7 @@ function MessageCreate() {
                   margin: 0,
                 }}
               >
-                Response Rate (286/300)
+                Favorite From Contacts (286/300)
               </p>
               <p
                 style={{
@@ -1306,7 +1300,7 @@ function MessageCreate() {
                   textAlign: "center",
                 }}
               >
-                95%
+                17
               </p>
               <p
                 style={{
@@ -1315,7 +1309,7 @@ function MessageCreate() {
                   height: 30,
                 }}
               >
-                Opt out Rate (286/300)
+                Retweets front Contacts (286/300)
               </p>
             </Grid>
             <Grid
@@ -1450,7 +1444,7 @@ function MessageCreate() {
                 fontSize: 20,
               }}
             >
-              Messages
+              Published Content
             </span>
           </Grid>
           <Grid item md={8} sm={8}>
@@ -1464,10 +1458,8 @@ function MessageCreate() {
               ></IconTextField>
               <IconTextField
                 text="Filter"
-                textColor={selectedMessages.length === 0 ? "black" : "white"}
-                background={
-                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
-                }
+                textColor={filter.length === 0 ? "black" : "white"}
+                background={filter.length === 0 ? "transparent" : "#3871DA"}
                 width={120}
                 onClick={() => {
                   setShowMessageFiltersRow(!showMessageFiltersRow);
@@ -1475,8 +1467,7 @@ function MessageCreate() {
                 icon={
                   <FaSlidersH
                     style={{
-                      color:
-                        selectedMessages.length === 0 ? "#3871DA" : "white",
+                      color: filter.length === 0 ? "#3871DA" : "white",
                     }}
                   ></FaSlidersH>
                 }
@@ -1540,14 +1531,16 @@ function MessageCreate() {
             className="fullHeightCreateMessageDetails"
           >
             {placeholders &&
-              placeholders.map((selectedPlaceholder) => {
-                return (
-                  <MessageDetailsCard
-                    hideCheckBox={null}
-                    hideStats={null}
-                    selectedPlaceholder={selectedPlaceholder}
-                  ></MessageDetailsCard>
-                );
+              placeholders.map((selectedPlaceholder, index) => {
+                if (index === 0) {
+                  return (
+                    <MessageDetailsCard
+                      hideCheckBox={null}
+                      hideStats={null}
+                      selectedPlaceholder={selectedPlaceholder}
+                    ></MessageDetailsCard>
+                  );
+                }
               })}
           </div>
         </Grid>
@@ -1594,19 +1587,28 @@ function MessageCreate() {
               <IconTextField
                 // width={180}
                 width={100}
-                text="Action"
+                text="Edit"
                 textColor="gray"
-                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                icon={<FaEdit style={{ color: "#3871DA" }}></FaEdit>}
+              ></IconTextField>
+              <IconTextField
+                text="Save and Close"
+                textColor="#3871DA"
+                width={180}
+                onClick={() => {
+                  // setShowMessageFiltersRow(!showMessageFiltersRow);
+                }}
+                icon={<Check style={{ color: "#3871DA" }}></Check>}
               ></IconTextField>
               <IconButton
-                text="Schedule"
+                text="Schedule  Post"
                 textColor="white"
-                width={130}
+                width={180}
                 onClick={() => {
                   setMessageStatus("Scheduled");
                   setMessageCreated(true);
                 }}
-                icon={<FaCalendar style={{ color: "white" }}></FaCalendar>}
+                icon={<Send style={{ color: "white" }}></Send>}
               ></IconButton>
             </Grid>
           </Grid>
@@ -2680,7 +2682,7 @@ function MessageCreate() {
                       </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center">
-                      <div class="dropdown" style={{ marginLeft: 0 }}>
+                      {/* <div class="dropdown" style={{ marginLeft: 0 }}>
                         <IconTextField
                           width={170}
                           marginTop={16}
@@ -2877,7 +2879,7 @@ function MessageCreate() {
                             );
                           })}
                         </div>
-                      </div>
+                      </div> */}
 
                       <div class="dropdown" style={{ marginLeft: 20 }}>
                         <IconTextField
@@ -3214,7 +3216,7 @@ const useStyles = makeStyles({
     width: "max-content",
     fontWeight: 600,
     borderRadius: 4,
-    marginLeft: 16,
+    // marginLeft: 16,
     paddingLeft: 16,
     paddingRight: 16,
   },
