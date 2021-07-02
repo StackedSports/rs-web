@@ -152,21 +152,21 @@ function MessageCreate() {
   const makeMessageSelected = (index) => {
     var alreadySelected = false;
     selectedMessages.map((item) => {
-      if (index.id === item.id) {
+      if (index === item) {
         alreadySelected = true;
       }
     });
     if (alreadySelected) {
       var temp = [];
       selectedMessages.map((item) => {
-        if (index.id != item.id) {
+        if (index != item) {
           temp.push(item);
         }
       });
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     } else {
-      var temp = selectedMedia;
+      var temp = selectedMessages;
       temp.push(index);
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);

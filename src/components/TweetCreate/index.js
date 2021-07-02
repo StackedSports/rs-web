@@ -165,21 +165,22 @@ function MessageCreate() {
   const makeMessageSelected = (index) => {
     var alreadySelected = false;
     selectedMessages.map((item) => {
-      if (index.id === item.id) {
+      if (index === item) {
         alreadySelected = true;
       }
     });
     if (alreadySelected) {
       var temp = [];
       selectedMessages.map((item) => {
-        if (index.id != item.id) {
+        if (index.name != item.name) {
           temp.push(item);
         }
       });
+
       setSelectedMessages(temp);
-      setuseLessState(uselessState + 1);
+      // setuseLessState(uselessState + 1);
     } else {
-      var temp = selectedMedia;
+      var temp = selectedMessages;
       temp.push(index);
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
@@ -1083,10 +1084,11 @@ function MessageCreate() {
               <Checkbox
                 color={"primary"}
                 checked={
-                  selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
+                  selectedMessages.indexOf(props.selectedPlaceholder.name) > -1
                 }
                 onChange={() => {
-                  makeMessageSelected(props.selectedPlaceholder.id);
+                  console.log("THis is selected", props.selectedPlaceholder);
+                  makeMessageSelected(props.selectedPlaceholder.name);
                 }}
               ></Checkbox>
             )}
@@ -1323,7 +1325,7 @@ function MessageCreate() {
               }}
             >
               <IconTextField
-                text="Delivery Details"
+                text="View On Twitter"
                 width={180}
                 onClick={() => {}}
                 icon={
@@ -1532,7 +1534,7 @@ function MessageCreate() {
           >
             {placeholders &&
               placeholders.map((selectedPlaceholder, index) => {
-                if (index === 0) {
+                if (index < 5) {
                   return (
                     <MessageDetailsCard
                       hideCheckBox={null}
