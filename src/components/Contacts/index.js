@@ -1023,7 +1023,15 @@ function Home() {
                   onClick={() => {
                     setShowFiltersRow(!showFiltersRow);
                   }}
-                  icon={<FaSlidersH style={{ color: "#3871DA" }}></FaSlidersH>}
+                  textColor={filter.length === 0 ? "black" : "white"}
+                  background={filter.length === 0 ? "transparent" : "#3871DA"}
+                  icon={
+                    <FaSlidersH
+                      style={{
+                        color: filter.length === 0 ? "#3871DA" : "white",
+                      }}
+                    ></FaSlidersH>
+                  }
                 ></IconTextField>
               </Grid>
             </Grid>

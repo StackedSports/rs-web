@@ -119,6 +119,7 @@ function MessageCreate() {
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
+  var [scrollPosition, setScrollPosition] = React.useState(0);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
@@ -171,6 +172,14 @@ function MessageCreate() {
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     }
+
+    setTimeout(() => {
+      console.log("Now we will scroll here", scrollPosition);
+      var scroll = document.getElementById("messageDetailScrollPublished");
+      if (scroll) {
+        scroll.scrollTop = scrollPosition;
+      }
+    }, 50);
   };
 
   const handleClick = () => {
@@ -1447,6 +1456,16 @@ function MessageCreate() {
               //  minWidth: 1110
             }}
             className="fullHeightCreateMessageDetails"
+            id={"messageDetailScrollPublished"}
+            onScroll={() => {
+              var scroll = document.getElementById(
+                "messageDetailScrollPublished"
+              );
+              if (scroll) {
+                scrollPosition = scroll.scrollTop;
+                console.log("THis is scroll", scrollPosition);
+              }
+            }}
           >
             {placeholders &&
               placeholders.map((selectedPlaceholder) => {

@@ -1241,7 +1241,15 @@ function MediaComponent(props) {
               onClick={() => {
                 setShowFiltersRow(!showFiltersRow);
               }}
-              icon={<FaSlidersH style={{ color: "#3871DA" }}></FaSlidersH>}
+              textColor={props.filter.length === 0 ? "black" : "white"}
+              background={props.filter.length === 0 ? "transparent" : "#3871DA"}
+              icon={
+                <FaSlidersH
+                  style={{
+                    color: props.filter.length === 0 ? "#3871DA" : "white",
+                  }}
+                ></FaSlidersH>
+              }
             ></IconTextField>
           </Grid>
         </Grid>

@@ -134,6 +134,9 @@ function MessageCreate() {
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  var [scrollPosition, setScrollPosition] = React.useState(0);
+
+  console.log("This is scroll position", scrollPosition);
 
   const makeMediaSelected = (index) => {
     var alreadySelected = false;
@@ -163,6 +166,7 @@ function MessageCreate() {
   };
 
   const makeMessageSelected = (index) => {
+    console.log("This is  scroll width now", scrollPosition);
     var alreadySelected = false;
     selectedMessages.map((item) => {
       if (index === item) {
@@ -185,6 +189,13 @@ function MessageCreate() {
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     }
+    setTimeout(() => {
+      console.log("Now we will scroll here", scrollPosition);
+      var scroll = document.getElementById("messageDetailScrollPublished");
+      if (scroll) {
+        scroll.scrollTop = scrollPosition;
+      }
+    }, 50);
   };
 
   const handleClick = () => {
@@ -1085,6 +1096,8 @@ function MessageCreate() {
                 color={"primary"}
                 checked={
                   selectedMessages.indexOf(props.selectedPlaceholder.name) > -1
+                    ? true
+                    : false
                 }
                 onChange={() => {
                   console.log("THis is selected", props.selectedPlaceholder);
@@ -1531,12 +1544,23 @@ function MessageCreate() {
               //  minWidth: 1110
             }}
             className="fullHeightCreateMessageDetails"
+            id={"messageDetailScrollPublished"}
+            onScroll={() => {
+              var scroll = document.getElementById(
+                "messageDetailScrollPublished"
+              );
+              if (scroll) {
+                scrollPosition = scroll.scrollTop;
+                console.log("THis is scroll", scrollPosition);
+              }
+            }}
           >
             {placeholders &&
               placeholders.map((selectedPlaceholder, index) => {
                 if (index < 5) {
                   return (
                     <MessageDetailsCard
+                      id={"messageDetailScrollPublished"}
                       hideCheckBox={null}
                       hideStats={null}
                       selectedPlaceholder={selectedPlaceholder}
