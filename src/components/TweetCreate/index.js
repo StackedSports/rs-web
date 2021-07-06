@@ -1473,8 +1473,10 @@ function MessageCreate() {
               ></IconTextField>
               <IconTextField
                 text="Filter"
-                textColor={filter.length === 0 ? "black" : "white"}
-                background={filter.length === 0 ? "transparent" : "#3871DA"}
+                textColor={showMessageFiltersRow === false ? "black" : "white"}
+                background={
+                  showMessageFiltersRow === false ? "transparent" : "#3871DA"
+                }
                 width={120}
                 onClick={() => {
                   setShowMessageFiltersRow(!showMessageFiltersRow);
@@ -1482,7 +1484,8 @@ function MessageCreate() {
                 icon={
                   <FaSlidersH
                     style={{
-                      color: filter.length === 0 ? "#3871DA" : "white",
+                      color:
+                        showMessageFiltersRow === false ? "#3871DA" : "white",
                     }}
                   ></FaSlidersH>
                 }

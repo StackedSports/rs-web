@@ -1241,12 +1241,13 @@ function MediaComponent(props) {
               onClick={() => {
                 setShowFiltersRow(!showFiltersRow);
               }}
-              textColor={props.filter.length === 0 ? "black" : "white"}
-              background={props.filter.length === 0 ? "transparent" : "#3871DA"}
+              // showMessageFiltersRow === false
+              textColor={showFiltersRow === false ? "black" : "white"}
+              background={showFiltersRow === false ? "transparent" : "#3871DA"}
               icon={
                 <FaSlidersH
                   style={{
-                    color: props.filter.length === 0 ? "#3871DA" : "white",
+                    color: showFiltersRow === false ? "#3871DA" : "white",
                   }}
                 ></FaSlidersH>
               }
