@@ -48,7 +48,8 @@ import {
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-// import { DateRange } from "react-date-range";
+import { Calendar, DateRange, DateRangePicker } from "react-date-range";
+import { addDays } from "date-fns";
 
 function MessageCreate() {
   const classes = useStyles();
@@ -82,7 +83,7 @@ function MessageCreate() {
   const [messagePreview, setMessagePreview] = useState(null);
   const [messageStatus, setMessageStatus] = useState("Drafts");
   const [messageCreated, setMessageCreated] = useState(false);
-  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+
 
   const [messageReceiver, setMessageReceiver] = useState([]);
 
@@ -113,8 +114,91 @@ function MessageCreate() {
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
   var [scrollPosition, setScrollPosition] = React.useState(0);
-
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  
+  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
+
+  const CalendarFilter = () => {
+    return (
+      <div class="dropdown">
+        <Grid
+          container
+          direction={"row"}
+          alignItems="center"
+          justify="space-between"
+          style={{
+            border: "1px solid #dadada",
+            width: "max-content",
+            borderRadius: 4,
+            height: 40,
+            color: displayRangeCalendar === false ? "black" : "white",
+            background:
+              displayRangeCalendar === false ? "transparent" : "#3871DA",
+          }}
+          onClick={() => {
+            setDisplayRageCalendar(true);
+          }}
+        >
+          <ArrowBackwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowBackwardIosIcon>
+          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+          <p
+            style={{
+              fontWeight: "bold",
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 4,
+            }}
+          >
+            {new moment(state[0].startDate).format("DD-MM-YYYY") +
+              " - " +
+              new moment(state[0].endDate).format("YYYY-MM-DD")}
+          </p>
+          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+          <ArrowForwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowForwardIosIcon>
+        </Grid>
+
+        <div
+          // class="dropdown-content"
+          className={classes.dropdownHidden}
+          style={{
+            marginLeft: 0,
+            marginTop: 0,
+            display: displayRangeCalendar ? "block" : "none",
+          }}
+          onMouseLeave={() => {
+            setDisplayRageCalendar(false);
+          }}
+        >
+          <Grid style={{}}>
+            {/* <DateRange
+          minDate={addDays(new Date(), -30)}
+          maxDate={addDays(new Date(), 30)}
+        ></DateRange> */}
+            <DateRangePicker
+              onChange={(item) => setState([item.selection])}
+              months={1}
+              minDate={addDays(new Date(), -30)}
+              maxDate={addDays(new Date(), 30)}
+              direction="horizontal"
+              // scroll={{ enabled: true }}
+              ranges={state}
+            />
+          </Grid>
+        </div>
+      </div>
+    );
+  };
 
   const makeMediaSelected = (index) => {
     var alreadySelected = false;
@@ -974,57 +1058,7 @@ function MessageCreate() {
             </Dropdown.Item>
           ))}
         </DropdownButton>
-        <div class="dropdown">
-          <Grid
-            container
-            direction={"row"}
-            alignItems="center"
-            justify="space-between"
-            style={{
-              border: "1px solid #dadada",
-              width: "max-content",
-              borderRadius: 4,
-              height: 40,
-            }}
-            onClick={() => {
-              setDisplayRageCalendar(true);
-            }}
-          >
-            <ArrowBackwardIosIcon
-              style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-            ></ArrowBackwardIosIcon>
-            <div style={{ border: "1px solid #dadada", height: 38 }}></div>
-            <p
-              style={{
-                fontWeight: "bold",
-                margin: 0,
-                marginLeft: 4,
-                marginRight: 4,
-              }}
-            >
-              6/1/21-6-30-21
-            </p>
-            <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
-            <ArrowForwardIosIcon
-              style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-            ></ArrowForwardIosIcon>
-          </Grid>
-
-          <div
-            // class="dropdown-content"
-            className={classes.dropdownHidden}
-            style={{
-              marginLeft: 180,
-              marginTop: -40,
-              display: displayRangeCalendar ? "block" : "none",
-            }}
-            onMouseLeave={() => {
-              setDisplayRageCalendar(false);
-            }}
-          >
-            <div style={{}}>{/* <DateRange></DateRange> */}</div>
-          </div>
-        </div>
+        <CalendarFilter></CalendarFilter>
       </Grid>
     );
   };

@@ -67,6 +67,9 @@ import {
   getPlaceholder,
 } from "../../ApiHelper";
 import { TiUserOutline } from "react-icons/ti";
+import { DateRangePicker } from "react-date-range";
+import { addDays } from "date-fns";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -135,6 +138,90 @@ function MessageCreate() {
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   var [scrollPosition, setScrollPosition] = React.useState(0);
+
+  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
+
+  const CalendarFilter = () => {
+    return (
+      <div class="dropdown">
+        <Grid
+          container
+          direction={"row"}
+          alignItems="center"
+          justify="space-between"
+          style={{
+            border: "1px solid #dadada",
+            width: "max-content",
+            borderRadius: 4,
+            height: 40,
+            color: displayRangeCalendar === false ? "black" : "white",
+            background:
+              displayRangeCalendar === false ? "transparent" : "#3871DA",
+          }}
+          onClick={() => {
+            setDisplayRageCalendar(true);
+          }}
+        >
+          <ArrowBackwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowBackwardIosIcon>
+          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+          <p
+            style={{
+              fontWeight: "bold",
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 4,
+            }}
+          >
+            {new moment(state[0].startDate).format("DD-MM-YYYY") +
+              " - " +
+              new moment(state[0].endDate).format("YYYY-MM-DD")}
+          </p>
+          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+          <ArrowForwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowForwardIosIcon>
+        </Grid>
+
+        <div
+          // class="dropdown-content"
+          className={classes.dropdownHidden}
+          style={{
+            marginLeft: 0,
+            marginTop: 0,
+            display: displayRangeCalendar ? "block" : "none",
+          }}
+          onMouseLeave={() => {
+            setDisplayRageCalendar(false);
+          }}
+        >
+          <Grid style={{}}>
+            {/* <DateRange
+          minDate={addDays(new Date(), -30)}
+          maxDate={addDays(new Date(), 30)}
+        ></DateRange> */}
+            <DateRangePicker
+              onChange={(item) => setState([item.selection])}
+              months={1}
+              minDate={addDays(new Date(), -30)}
+              maxDate={addDays(new Date(), 30)}
+              direction="horizontal"
+              // scroll={{ enabled: true }}
+              ranges={state}
+            />
+          </Grid>
+        </div>
+      </div>
+    );
+  };
 
   console.log("This is scroll position", scrollPosition);
 
@@ -1005,37 +1092,7 @@ function MessageCreate() {
             </Dropdown.Item>
           ))}
         </DropdownButton>
-        <Grid
-          container
-          direction={"row"}
-          alignItems="center"
-          justify="space-between"
-          style={{
-            border: "1px solid #dadada",
-            width: "max-content",
-            borderRadius: 4,
-            height: 40,
-          }}
-        >
-          <ArrowBackwardIosIcon
-            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-          ></ArrowBackwardIosIcon>
-          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
-          <p
-            style={{
-              fontWeight: "bold",
-              margin: 0,
-              marginLeft: 4,
-              marginRight: 4,
-            }}
-          >
-            6/1/21-6-30-21
-          </p>
-          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
-          <ArrowForwardIosIcon
-            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-          ></ArrowForwardIosIcon>
-        </Grid>
+        <CalendarFilter></CalendarFilter>
       </Grid>
     );
   };
