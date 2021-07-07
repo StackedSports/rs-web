@@ -167,22 +167,15 @@ function MessageCreate() {
 
   const makeMessageSelected = (index) => {
     console.log("This is  scroll width now", scrollPosition);
-    var alreadySelected = false;
-    selectedMessages.map((item) => {
-      if (index === item) {
-        alreadySelected = true;
-      }
-    });
-    if (alreadySelected) {
+    if (selectedMessages.indexOf(index) > -1) {
       var temp = [];
       selectedMessages.map((item) => {
-        if (index.name != item.name) {
+        if (index != item) {
           temp.push(item);
         }
       });
-
       setSelectedMessages(temp);
-      // setuseLessState(uselessState + 1);
+      setuseLessState(uselessState + 1);
     } else {
       var temp = selectedMessages;
       temp.push(index);
@@ -209,46 +202,30 @@ function MessageCreate() {
 
     setOpenSnackBar(false);
   };
-  let formatPhoneNumber = (str) => {
-    //Filter only numbers from the input
-    let cleaned = ("" + str).replace(/\D/g, "");
 
-    //Check if the input is of correct
-    let match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-
-    if (match) {
-      //Remove the matched extension code
-      //Change this to format for any country code.
-      let intlCode = match[1] ? "+1 " : "";
-      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
-    }
-
-    return null;
-  };
-
-  const makeCheckBoxSelected = (index) => {
-    if (selectedCheckBoxes.indexOf(index) > -1) {
-      var temp = [];
-      selectedCheckBoxes.map((item) => {
-        if (index != item) {
-          temp.push(item);
-        }
-      });
-      // console.log("This is temp", temp);
-      // console.log("This is index", index);
-      // var other = temp.splice(index, 1);
-      // console.log("This is other", other);
-      // var newArray = temp;
-      setSelectedCheckboxes(temp);
-      setuseLessState(uselessState + 1);
-    } else {
-      var temp = selectedCheckBoxes;
-      temp.push(index);
-      setSelectedCheckboxes(temp);
-      setuseLessState(uselessState + 1);
-    }
-    // console.log("THis is selected Checkbox", selectedCheckBoxes);
-  };
+  // const makeCheckBoxSelected = (index) => {
+  //   if (selectedCheckBoxes.indexOf(index) > -1) {
+  //     var temp = [];
+  //     selectedCheckBoxes.map((item) => {
+  //       if (index != item) {
+  //         temp.push(item);
+  //       }
+  //     });
+  //     // console.log("This is temp", temp);
+  //     // console.log("This is index", index);
+  //     // var other = temp.splice(index, 1);
+  //     // console.log("This is other", other);
+  //     // var newArray = temp;
+  //     setSelectedCheckboxes(temp);
+  //     setuseLessState(uselessState + 1);
+  //   } else {
+  //     var temp = selectedCheckBoxes;
+  //     temp.push(index);
+  //     setSelectedCheckboxes(temp);
+  //     setuseLessState(uselessState + 1);
+  //   }
+  //   // console.log("THis is selected Checkbox", selectedCheckBoxes);
+  // };
 
   const placeholderContainer = (m) => {
     // console.log("THis is media placeholderContainer ", m);
@@ -360,9 +337,6 @@ function MessageCreate() {
         }
       },
       (error) => {
-        // getMyContacts(1);
-        document.getElementById("infinit").scrollTop = 0;
-        setPage(1);
         console.log("this is error all contacts", error);
       }
     );
@@ -391,17 +365,12 @@ function MessageCreate() {
             // console.log("These are all contacts", res.data);
             setContacts(res.data);
             setCopyContacts(res.data);
-            if (document.getElementById("infinit")) {
-              document.getElementById("infinit").scrollTop = 0;
-            }
-
             setFetching(false);
           }
         }
       },
       (error) => {
         // getMyContacts(1);
-        document.getElementById("infinit").scrollTop = 0;
         setPage(1);
         console.log("this is error all contacts", error);
       }
@@ -1762,7 +1731,7 @@ function MessageCreate() {
         setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
       }
       getMyPlaceholders();
-      getMyContacts();
+      // getMyContacts();
       getMyMedia();
       getMyTeamContacts();
       // getAllGradeYears();
@@ -1777,83 +1746,6 @@ function MessageCreate() {
       window.location.href = "/";
     }
   }, []);
-
-  // console.log("This is filter bar", filter, filterType);
-
-  const isSelectedCheckbox = (index) => {
-    console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
-  };
-
-  const checkFilters = (item) => {
-    // console.log("These are tags for all", item.tags);
-    var isValid = false;
-    if (filter.length != 0) {
-      filter.map((filt, index) => {
-        if (filterType[index] === "status") {
-          if (item.status != null && item.status.status === filt) {
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "ranks") {
-          if (item.rank != null && item.rank.rank === filt) {
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "gradeYear") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-            console.log(
-              "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
-              filt
-            );
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "Tag") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-            console.log(
-              "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
-              filt
-            );
-            isValid = true;
-            return;
-          }
-        }
-      });
-    } else {
-      isValid = true;
-    }
-    return isValid;
-  };
-
-  function handleScroll() {
-    var agreement = document.getElementById("infinit");
-    var visibleHeight = agreement.clientHeight;
-    var scrollableHeight = agreement.scrollHeight;
-    var position = agreement.scrollTop;
-    // console.log(
-    //   "This is poistion",
-    //   position,
-    //   "This is scrollable",
-    //   scrollableHeight,
-    //   "This is visible height",
-    //   visibleHeight
-    // );
-    if (position + visibleHeight == scrollableHeight) {
-      // alert("We are in the endgaem now");
-      if (!fetching) {
-        getMyContacts(page + 1);
-        setPage(page + 1);
-      }
-      // agreement.scrollTop = 0;
-    }
-  }
-
-  // console.log("THis is great message type", messageType);
 
   const renderMessageReceiver = (messageType) => {
     return messageType.map((item) => {
@@ -2310,11 +2202,8 @@ function MessageCreate() {
                       maxHeight: 330,
                       //  minWidth: 1110
                     }}
-                    className="fullHeightCreateMessage"
-                    id="infinit"
-                    onScroll={() => {
-                      handleScroll();
-                    }}
+                    className="fullHeightCreateMessage hideScrollBar"
+                    // id="infinit"
                   >
                     <Grid
                       container

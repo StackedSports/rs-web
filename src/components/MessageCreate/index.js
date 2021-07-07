@@ -151,13 +151,13 @@ function MessageCreate() {
   };
 
   const makeMessageSelected = (index) => {
-    var alreadySelected = false;
-    selectedMessages.map((item) => {
-      if (index === item) {
-        alreadySelected = true;
-      }
-    });
-    if (alreadySelected) {
+    // var alreadySelected = false;
+    // selectedMessages.map((item) => {
+    //   if (index === item) {
+    //     alreadySelected = true;
+    //   }
+    // });
+    if (selectedMessages.indexOf(index) > -1) {
       var temp = [];
       selectedMessages.map((item) => {
         if (index != item) {
@@ -172,14 +172,16 @@ function MessageCreate() {
       setSelectedMessages(temp);
       setuseLessState(uselessState + 1);
     }
-
+    var scroll = document.getElementById("messageDetailScrollPublished");
+    scroll.style.overflow = "hidden";
+    console.log("Now we will scroll here", scroll.style);
     setTimeout(() => {
-      console.log("Now we will scroll here", scrollPosition);
       var scroll = document.getElementById("messageDetailScrollPublished");
+      console.log("Now we will scroll here", scroll.style);
       if (scroll) {
         scroll.scrollTop = scrollPosition;
       }
-    }, 50);
+    }, 1);
   };
 
   const handleClick = () => {
@@ -345,7 +347,7 @@ function MessageCreate() {
       },
       (error) => {
         // getMyContacts(1);
-        document.getElementById("infinit").scrollTop = 0;
+        // document.getElementById("infinit").scrollTop = 0;
         setPage(1);
         console.log("this is error all contacts", error);
       }
@@ -375,17 +377,12 @@ function MessageCreate() {
             // console.log("These are all contacts", res.data);
             setContacts(res.data);
             setCopyContacts(res.data);
-            if (document.getElementById("infinit")) {
-              document.getElementById("infinit").scrollTop = 0;
-            }
 
             setFetching(false);
           }
         }
       },
       (error) => {
-        // getMyContacts(1);
-        document.getElementById("infinit").scrollTop = 0;
         setPage(1);
         console.log("this is error all contacts", error);
       }
@@ -1080,7 +1077,7 @@ function MessageCreate() {
                 checked={
                   selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
                 }
-                onChange={() => {
+                onChange={(e) => {
                   makeMessageSelected(props.selectedPlaceholder.id);
                 }}
               ></Checkbox>
@@ -1458,7 +1455,7 @@ function MessageCreate() {
               maxHeight: 330,
               //  minWidth: 1110
             }}
-            className="fullHeightCreateMessageDetails"
+            className="fullHeightCreateMessageDetails hideScrollBar"
             id={"messageDetailScrollPublished"}
             onScroll={() => {
               var scroll = document.getElementById(
@@ -1466,19 +1463,21 @@ function MessageCreate() {
               );
               if (scroll) {
                 scrollPosition = scroll.scrollTop;
-                console.log("THis is scroll", scrollPosition);
+                // console.log("THis is scroll", scrollPosition);
               }
             }}
           >
             {placeholders &&
-              placeholders.map((selectedPlaceholder) => {
-                return (
-                  <MessageDetailsCard
-                    hideCheckBox={null}
-                    hideStats={null}
-                    selectedPlaceholder={selectedPlaceholder}
-                  ></MessageDetailsCard>
-                );
+              placeholders.map((selectedPlaceholder, index) => {
+                if (index < 5) {
+                  return (
+                    <MessageDetailsCard
+                      hideCheckBox={null}
+                      hideStats={null}
+                      selectedPlaceholder={selectedPlaceholder}
+                    ></MessageDetailsCard>
+                  );
+                }
               })}
           </div>
         </Grid>
@@ -1791,96 +1790,14 @@ function MessageCreate() {
         setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
       }
       getMyPlaceholders();
-      getMyContacts();
+      // getMyContacts();
       getMyMedia();
       getMyTeamContacts();
-      // getAllGradeYears();
-      // getAllRanks();
-      // getAllStatuses();
-      // getAllTags();
       getAllBoards();
-      // getAllPositions();
-      // getColumns();
-      // setupPage();
     } else {
       window.location.href = "/";
     }
   }, []);
-
-  // console.log("This is filter bar", filter, filterType);
-
-  const isSelectedCheckbox = (index) => {
-    console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
-  };
-
-  const checkFilters = (item) => {
-    // console.log("These are tags for all", item.tags);
-    var isValid = false;
-    if (filter.length != 0) {
-      filter.map((filt, index) => {
-        if (filterType[index] === "status") {
-          if (item.status != null && item.status.status === filt) {
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "ranks") {
-          if (item.rank != null && item.rank.rank === filt) {
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "gradeYear") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-            console.log(
-              "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
-              filt
-            );
-            isValid = true;
-            return;
-          }
-        }
-        if (filterType[index] === "Tag") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-            console.log(
-              "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
-              filt
-            );
-            isValid = true;
-            return;
-          }
-        }
-      });
-    } else {
-      isValid = true;
-    }
-    return isValid;
-  };
-
-  function handleScroll() {
-    var agreement = document.getElementById("infinit");
-    var visibleHeight = agreement.clientHeight;
-    var scrollableHeight = agreement.scrollHeight;
-    var position = agreement.scrollTop;
-    // console.log(
-    //   "This is poistion",
-    //   position,
-    //   "This is scrollable",
-    //   scrollableHeight,
-    //   "This is visible height",
-    //   visibleHeight
-    // );
-    if (position + visibleHeight == scrollableHeight) {
-      // alert("We are in the endgaem now");
-      if (!fetching) {
-        getMyContacts(page + 1);
-        setPage(page + 1);
-      }
-      // agreement.scrollTop = 0;
-    }
-  }
 
   // console.log("THis is great message type", messageType);
 
@@ -2332,11 +2249,7 @@ function MessageCreate() {
                       maxHeight: 330,
                       //  minWidth: 1110
                     }}
-                    className="fullHeightCreateMessage"
-                    id="infinit"
-                    onScroll={() => {
-                      handleScroll();
-                    }}
+                    className="fullHeightCreateMessage hideScrollBar"
                   >
                     <Grid
                       container
