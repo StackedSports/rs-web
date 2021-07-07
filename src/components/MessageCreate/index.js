@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import {
-  makeStyles,
-  Grid,
-  Checkbox,
-  Snackbar,
-  CircularProgress,
-  Badge,
-} from "@material-ui/core";
+import { makeStyles, Grid, Checkbox, Snackbar, Badge } from "@material-ui/core";
 import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import InputEmoji from "react-input-emoji";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import {
@@ -57,6 +48,7 @@ import {
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+// import { DateRange } from "react-date-range";
 
 function MessageCreate() {
   const classes = useStyles();
@@ -90,6 +82,7 @@ function MessageCreate() {
   const [messagePreview, setMessagePreview] = useState(null);
   const [messageStatus, setMessageStatus] = useState("Drafts");
   const [messageCreated, setMessageCreated] = useState(false);
+  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
 
   const [messageReceiver, setMessageReceiver] = useState([]);
 
@@ -170,14 +163,14 @@ function MessageCreate() {
       var temp = selectedMessages;
       temp.push(index);
       setSelectedMessages(temp);
-      setuseLessState(uselessState + 1);
+      // setuseLessState(uselessState + 1);
     }
-    var scroll = document.getElementById("messageDetailScrollPublished");
-    scroll.style.overflow = "hidden";
-    console.log("Now we will scroll here", scroll.style);
+    // var scroll = document.getElementById("messageDetailScrollPublished");
+    // scroll.style.overflow = "hidden";
+    // console.log("Now we will scroll here", scroll.style);
     setTimeout(() => {
       var scroll = document.getElementById("messageDetailScrollPublished");
-      console.log("Now we will scroll here", scroll.style);
+      // console.log("Now we will scroll here", scroll.style);
       if (scroll) {
         scroll.scrollTop = scrollPosition;
       }
@@ -354,41 +347,6 @@ function MessageCreate() {
     );
   };
 
-  const getMyContacts = (page) => {
-    // setLoading(true);
-    setFetching(true);
-    // console.log("This is the date", page);
-    // || "2020-12-13"
-    getAllContacts(page).then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          if (page > 1) {
-            var temp = contacts;
-            temp = temp.concat(res.data);
-            // temp.push(res.data);
-            setContacts(temp);
-            setCopyContacts(temp);
-            setuseLessState(uselessState + 1);
-            // console.log("These are all new contacts", temp);
-            // document.getElementById("infinit").scrollTop = 0;
-            setFetching(false);
-          } else {
-            // console.log("These are all contacts", res.data);
-            setContacts(res.data);
-            setCopyContacts(res.data);
-
-            setFetching(false);
-          }
-        }
-      },
-      (error) => {
-        setPage(1);
-        console.log("this is error all contacts", error);
-      }
-    );
-  };
-
   const getMyMedia = () => {
     getMedia().then(
       (res) => {
@@ -407,7 +365,7 @@ function MessageCreate() {
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
-        console.log("THis is all boards", res);
+        // console.log("THis is all boards", res);
         var gradYears = [];
         if (res.statusText === "OK") {
           // console.log("These are all boards", res.data);
@@ -1016,37 +974,57 @@ function MessageCreate() {
             </Dropdown.Item>
           ))}
         </DropdownButton>
-        <Grid
-          container
-          direction={"row"}
-          alignItems="center"
-          justify="space-between"
-          style={{
-            border: "1px solid #dadada",
-            width: "max-content",
-            borderRadius: 4,
-            height: 40,
-          }}
-        >
-          <ArrowBackwardIosIcon
-            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-          ></ArrowBackwardIosIcon>
-          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
-          <p
+        <div class="dropdown">
+          <Grid
+            container
+            direction={"row"}
+            alignItems="center"
+            justify="space-between"
             style={{
-              fontWeight: "bold",
-              margin: 0,
-              marginLeft: 4,
-              marginRight: 4,
+              border: "1px solid #dadada",
+              width: "max-content",
+              borderRadius: 4,
+              height: 40,
+            }}
+            onClick={() => {
+              setDisplayRageCalendar(true);
             }}
           >
-            6/1/21-6-30-21
-          </p>
-          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
-          <ArrowForwardIosIcon
-            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
-          ></ArrowForwardIosIcon>
-        </Grid>
+            <ArrowBackwardIosIcon
+              style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+            ></ArrowBackwardIosIcon>
+            <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+            <p
+              style={{
+                fontWeight: "bold",
+                margin: 0,
+                marginLeft: 4,
+                marginRight: 4,
+              }}
+            >
+              6/1/21-6-30-21
+            </p>
+            <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+            <ArrowForwardIosIcon
+              style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+            ></ArrowForwardIosIcon>
+          </Grid>
+
+          <div
+            // class="dropdown-content"
+            className={classes.dropdownHidden}
+            style={{
+              marginLeft: 180,
+              marginTop: -40,
+              display: displayRangeCalendar ? "block" : "none",
+            }}
+            onMouseLeave={() => {
+              setDisplayRageCalendar(false);
+            }}
+          >
+            <div style={{}}>{/* <DateRange></DateRange> */}</div>
+          </div>
+        </div>
       </Grid>
     );
   };
@@ -1762,13 +1740,13 @@ function MessageCreate() {
         }
       });
       setMessageReceiver(temp);
-      console.log("This is temp", temp);
+      // console.log("This is temp", temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = messageReceiver;
       temp.push(value);
       setMessageReceiver(temp);
-      console.log("This is temp", temp);
+      // console.log("This is temp", temp);
       setuseLessState(uselessState + 1);
     }
   };

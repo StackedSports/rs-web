@@ -311,7 +311,7 @@ const Sidebar = (props) => {
         // console.log("THis is all tags", res);
         var TAGS = [];
         if (res.statusText === "OK") {
-          console.log("These are all tags", res.data);
+          // console.log("These are all tags", res.data);
           setAllTags(res.data);
         }
       },
