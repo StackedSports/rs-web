@@ -789,10 +789,6 @@ function Home() {
         }
       });
       console.log("This is temp", temp);
-      // console.log("This is index", index);
-      // var other = temp.splice(index, 1);
-      // console.log("This is other", other);
-      // var newArray = temp;
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     } else {

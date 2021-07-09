@@ -6,6 +6,7 @@ import Chart from "./chart";
 import styled from "styled-components";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import UserAccountSettings from "../UserAccountSettings/UserAccountSettings";
 import { Link } from "react-router-dom";
 import {
   DashboardContainer,
@@ -400,7 +401,7 @@ function Home() {
 
   console.log("This is filter bar", filterBar);
   return (
-    <DashboardContainer>
+    <DashboardContainer style={{ maxWidth: "100vw" }}>
       <FilterModal
         messageType={messageType}
         setMessageType={onMessageTypeChange}
@@ -412,44 +413,47 @@ function Home() {
         setFilterOpen={setFilterOpen}
         monthlyStats={monthlyStats}
       />
-      <Grid container style={{ margin: 0, padding: 0 }}>
-        <Grid item xs={12} lg={8}>
-          <Title>
-            <Titleheading>{`Welcome back ${
-              user.first_name + " " + user.last_name
-            }!`}</Titleheading>
-            <Titleparagrapg>
-              You have 15 unread messages in your RS Text Chat feed.{" "}
-              <span style={{ color: "#3871DA" }}>
-                <u>View Now</u>
-              </span>
-            </Titleparagrapg>
-          </Title>
-          <TableSection>
-            <Grid container style={{ margin: 0, padding: 0 }} direction>
-              <Grid item xs={12} lg={6}>
-                <TableHeaderCol1Heading>Team Queue</TableHeaderCol1Heading>
-                <TableHeaderCol2P>
-                  You have{" "}
-                  <span style={{ color: "#3871DA" }}>
-                    {selectedDateQueue ? selectedDateQueue.length : 0} items
-                  </span>{" "}
-                  in your queue
-                </TableHeaderCol2P>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <TableHeaderRight>
-                  <DateField>
-                    <DatePicker
-                      onChange={(e) => {
-                        var dt = new moment(e).format("YYYY-MM-DD");
-                        console.log("This is it", dt);
-                        getTaskQueueByDate(dt);
-                        onChange(e);
-                      }}
-                      value={value}
-                    />
-                    {/* <input
+      {true ? (
+        <UserAccountSettings></UserAccountSettings>
+      ) : (
+        <Grid container style={{ margin: 0, padding: 0 }}>
+          <Grid item xs={12} lg={8}>
+            <Title>
+              <Titleheading>{`Welcome back ${
+                user.first_name + " " + user.last_name
+              }!`}</Titleheading>
+              <Titleparagrapg>
+                You have 15 unread messages in your RS Text Chat feed.{" "}
+                <span style={{ color: "#3871DA" }}>
+                  <u>View Now</u>
+                </span>
+              </Titleparagrapg>
+            </Title>
+            <TableSection>
+              <Grid container style={{ margin: 0, padding: 0 }} direction>
+                <Grid item xs={12} lg={6}>
+                  <TableHeaderCol1Heading>Team Queue</TableHeaderCol1Heading>
+                  <TableHeaderCol2P>
+                    You have{" "}
+                    <span style={{ color: "#3871DA" }}>
+                      {selectedDateQueue ? selectedDateQueue.length : 0} items
+                    </span>{" "}
+                    in your queue
+                  </TableHeaderCol2P>
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <TableHeaderRight>
+                    <DateField>
+                      <DatePicker
+                        onChange={(e) => {
+                          var dt = new moment(e).format("YYYY-MM-DD");
+                          console.log("This is it", dt);
+                          getTaskQueueByDate(dt);
+                          onChange(e);
+                        }}
+                        value={value}
+                      />
+                      {/* <input
                       type="date"
                       onChange={(e) => {
                         // setQueueDate(e.target.value);
@@ -461,385 +465,396 @@ function Home() {
                       className="dateTextField"
                       // style={{ zIndex: 0, border: "none" }}
                     /> */}
-                  </DateField>
-                  <FilterField
-                    onClick={() => setFilterOpen(true)}
-                    filterOpen={filterOpen}
+                    </DateField>
+                    <FilterField
+                      onClick={() => setFilterOpen(true)}
+                      filterOpen={filterOpen}
+                    >
+                      <FilterText filterOpen={filterOpen}>Filter</FilterText>
+                      <FilterIcon filterOpen={filterOpen} />
+                    </FilterField>
+                  </TableHeaderRight>
+                </Grid>
+              </Grid>
+              <Table
+                messageType={messageType}
+                messageStatus={messageStatus}
+                messageSender={messageSender}
+                selectedDateQueue={selectedDateQueue}
+              />
+              {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  style={{ marginTop: -100 }}
+                >
+                  <p
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      color: "#74777c",
+                      fontWeight: "bold",
+                      margin: 0,
+                      fontSize: 12,
+                    }}
                   >
-                    <FilterText filterOpen={filterOpen}>Filter</FilterText>
-                    <FilterIcon filterOpen={filterOpen} />
-                  </FilterField>
-                </TableHeaderRight>
+                    Your task queue is clear!
+                  </p>
+                  <p
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      color: "#74777c",
+                      fontWeight: "bold",
+                      margin: 0,
+                      fontSize: 12,
+                    }}
+                  >
+                    Consistent messaging is key
+                  </p>
+                  <p
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      color: "#74777c",
+                      fontWeight: "bold",
+                      margin: 0,
+                      fontSize: 12,
+                    }}
+                  >
+                    to building an engaging audience!
+                  </p>
+
+                  <Button>+ New</Button>
+                </Grid>
+              ) : (
+                <div></div>
+              )}
+              {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
+                <div></div>
+              ) : (
+                <TableFooter style={{ borderTop: "1px solid #dadada" }}>
+                  <TableFooterText style={{ marginTop: 12 }}>
+                    View More{" "}
+                    {selectedDateQueue && selectedDateQueue.length != 0
+                      ? `(${selectedDateQueue.length})`
+                      : ""}
+                  </TableFooterText>
+                </TableFooter>
+              )}
+            </TableSection>
+
+            <ChartSection>
+              <Grid container style={{ margin: 0, padding: 0 }}>
+                <Grid item xs={12} lg={6}>
+                  <ChartDiv>
+                    <ChartTop>
+                      <MM>
+                        <MMH>{currency} Messages</MMH>
+                        <MonthField>
+                          <DropdownButton
+                            id="dropdown-basic-button"
+                            title={currency}
+                            drop={"right"}
+                          >
+                            {currencies.map((option) => (
+                              <Dropdown.Item
+                                style={{
+                                  background:
+                                    currency === option.label
+                                      ? "#348ef7"
+                                      : "white",
+                                  color:
+                                    currency === option.label
+                                      ? "white"
+                                      : "black",
+                                }}
+                                onClick={(e) => {
+                                  if (option.label === "This Quarter") {
+                                    setDoughnutChatData(quarterlyStats);
+                                  } else if (option.label === "This Year") {
+                                    setDoughnutChatData(yearlyStats);
+                                  } else if (option.label === "Last Quarter") {
+                                    setDoughnutChatData(lastQuarterStats);
+                                  } else if (option.label === "Last Year") {
+                                    setDoughnutChatData(lastYearStats);
+                                  } else if (option.label === "Last Month") {
+                                    setDoughnutChatData(lastMonthStats);
+                                  } else if (option.label === "Last 30 Days") {
+                                    setDoughnutChatData(last30Stats);
+                                  } else {
+                                    setDoughnutChatData(monthlyStats);
+                                  }
+                                  setCurrency(option.label);
+                                }}
+                              >
+                                {option.label}
+                              </Dropdown.Item>
+                            ))}
+                          </DropdownButton>
+                        </MonthField>
+                      </MM>
+                      <Count>
+                        {doughnutChartData
+                          ? doughnutChartData.total_messages
+                          : 0}
+                      </Count>
+                    </ChartTop>
+                    <ChartDivS>
+                      {/* <Chart monthlyStats={monthlyStats} /> */}
+                      {doughnutChartData != null ? (
+                        <DoughnutChart
+                          monthlyStats={doughnutChartData}
+                          // className="chart"
+                          // data={[1, 2, 3, 4, 5, 6, 7]}
+                          // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+                        />
+                      ) : (
+                        <Grid container direction="row" justify="center">
+                          <div
+                            class="spinner-border text-primary"
+                            role="status"
+                          >
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </Grid>
+                      )}
+                    </ChartDivS>
+
+                    <ChartFooter>
+                      <ChartFooterButton>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            color: "#8BB14C",
+                          }}
+                        />
+                        <ChartFooterContent>Personal Texts</ChartFooterContent>
+                      </ChartFooterButton>
+                      <ChartFooterButton2>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            color: "#4f81bc",
+                            height: "12px",
+                          }}
+                        />
+                        <ChartFooterContent>Total DM's</ChartFooterContent>
+                      </ChartFooterButton2>
+                      <ChartFooterButton3>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            color: "#c0504e",
+
+                            marginLeft: "3px",
+                          }}
+                        />
+                        <ChartFooterContent>RS Text</ChartFooterContent>
+                      </ChartFooterButton3>
+                    </ChartFooter>
+                  </ChartDiv>
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <ChartDiv2>
+                    <ChartTop>
+                      <MM>
+                        <MMH>{filterBar} Messages</MMH>
+                        <MonthField>
+                          <DropdownButton
+                            id="dropdown-basic-button"
+                            title={filterBar}
+                            drop={"right"}
+                          >
+                            {currencies.map((option) => (
+                              <Dropdown.Item
+                                style={{
+                                  background:
+                                    filterBar === option.label
+                                      ? "#348ef7"
+                                      : "white",
+                                  color:
+                                    filterBar === option.label
+                                      ? "white"
+                                      : "black",
+                                }}
+                                onClick={(e) => {
+                                  if (option.label === "This Quarter") {
+                                    setBarchartData(quarterlyStats);
+                                  } else if (option.label === "This Year") {
+                                    setBarchartData(yearlyStats);
+                                  } else if (option.label === "Last Quarter") {
+                                    setBarchartData(lastQuarterStats);
+                                  } else if (option.label === "Last Year") {
+                                    setBarchartData(lastYearStats);
+                                  } else if (option.label === "Last Month") {
+                                    setBarchartData(lastMonthStats);
+                                  } else if (option.label === "Last 30 Days") {
+                                    setBarchartData(last30Stats);
+                                  } else {
+                                    setBarchartData(monthlyStats);
+                                  }
+                                  setFilterBar(option.label);
+                                }}
+                              >
+                                {" "}
+                                {option.label}
+                              </Dropdown.Item>
+                            ))}
+                          </DropdownButton>
+                        </MonthField>
+                      </MM>
+                      <Count>
+                        {barChartData ? barChartData.total_messages : 0}
+                      </Count>
+                    </ChartTop>
+
+                    <div>
+                      {barChartData != null ? (
+                        <Barchart monthlyStats={barChartData} />
+                      ) : (
+                        <Grid container direction="row" justify="center">
+                          <div
+                            class="spinner-border text-primary"
+                            role="status"
+                          >
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </Grid>
+                      )}
+                    </div>
+
+                    <ChartFooter>
+                      <ChartFooterButton>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            color: "#0091FF",
+                          }}
+                        />
+                        <ChartFooterContent>Twitter DM’s</ChartFooterContent>
+                      </ChartFooterButton>
+                      <ChartFooterButton2>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            color: "#8BB14C",
+                          }}
+                        />
+                        <ChartFooterContent>Personal Text</ChartFooterContent>
+                      </ChartFooterButton2>
+                      <ChartFooterButton3>
+                        <FiberManualRecordIcon
+                          style={{
+                            width: "12px",
+                            height: "12px",
+                            color: "#373D4A",
+                            marginLeft: "3px",
+                          }}
+                        />
+                        <ChartFooterContent>RS Text</ChartFooterContent>
+                      </ChartFooterButton3>
+                    </ChartFooter>
+                  </ChartDiv2>
+                </Grid>
               </Grid>
-            </Grid>
-            <Table
-              messageType={messageType}
-              messageStatus={messageStatus}
-              messageSender={messageSender}
-              selectedDateQueue={selectedDateQueue}
+            </ChartSection>
+          </Grid>
+          <Grid item xs={12} lg={4}>
+            <HomeRight
+              user={user && user}
+              loggedInUserStats={loggedInUserStats}
+              monthlyStats={homeRightStats && homeRightStats}
+              onFilterChange={(filter) => {
+                if (filter === "This Quarter") {
+                  quarterlyStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+
+                  setHomeRightStats(quarterlyStats);
+                } else if (filter === "This Year") {
+                  yearlyStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(yearlyStats);
+                } else if (filter === "Last Quarter") {
+                  lastQuarterStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(lastQuarterStats);
+                } else if (filter === "Last Year") {
+                  lastYearStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(lastYearStats);
+                } else if (filter === "Last Month") {
+                  lastMonthStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(lastMonthStats);
+                } else if (filter === "Last 30 Days") {
+                  last30Stats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(last30Stats);
+                } else {
+                  monthlyStats.users.map((user, index) => {
+                    var name =
+                      JSON.parse(localStorage.getItem("user")).first_name +
+                      " " +
+                      JSON.parse(localStorage.getItem("user")).last_name;
+                    if (name === user.table.name) {
+                      setLoggedInUserStats(user.table);
+                    }
+                  });
+                  setHomeRightStats(monthlyStats);
+                }
+              }}
             />
-            {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                style={{ marginTop: -100 }}
-              >
-                <p
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    color: "#74777c",
-                    fontWeight: "bold",
-                    margin: 0,
-                    fontSize: 12,
-                  }}
-                >
-                  Your task queue is clear!
-                </p>
-                <p
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    color: "#74777c",
-                    fontWeight: "bold",
-                    margin: 0,
-                    fontSize: 12,
-                  }}
-                >
-                  Consistent messaging is key
-                </p>
-                <p
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    color: "#74777c",
-                    fontWeight: "bold",
-                    margin: 0,
-                    fontSize: 12,
-                  }}
-                >
-                  to building an engaging audience!
-                </p>
-
-                <Button>+ New</Button>
-              </Grid>
-            ) : (
-              <div></div>
-            )}
-            {selectedDateQueue == null || selectedDateQueue.length === 0 ? (
-              <div></div>
-            ) : (
-              <TableFooter style={{ borderTop: "1px solid #dadada" }}>
-                <TableFooterText style={{ marginTop: 12 }}>
-                  View More{" "}
-                  {selectedDateQueue && selectedDateQueue.length != 0
-                    ? `(${selectedDateQueue.length})`
-                    : ""}
-                </TableFooterText>
-              </TableFooter>
-            )}
-          </TableSection>
-
-          <ChartSection>
-            <Grid container style={{ margin: 0, padding: 0 }}>
-              <Grid item xs={12} lg={6}>
-                <ChartDiv>
-                  <ChartTop>
-                    <MM>
-                      <MMH>{currency} Messages</MMH>
-                      <MonthField>
-                        <DropdownButton
-                          id="dropdown-basic-button"
-                          title={currency}
-                          drop={"right"}
-                        >
-                          {currencies.map((option) => (
-                            <Dropdown.Item
-                              style={{
-                                background:
-                                  currency === option.label
-                                    ? "#348ef7"
-                                    : "white",
-                                color:
-                                  currency === option.label ? "white" : "black",
-                              }}
-                              onClick={(e) => {
-                                if (option.label === "This Quarter") {
-                                  setDoughnutChatData(quarterlyStats);
-                                } else if (option.label === "This Year") {
-                                  setDoughnutChatData(yearlyStats);
-                                } else if (option.label === "Last Quarter") {
-                                  setDoughnutChatData(lastQuarterStats);
-                                } else if (option.label === "Last Year") {
-                                  setDoughnutChatData(lastYearStats);
-                                } else if (option.label === "Last Month") {
-                                  setDoughnutChatData(lastMonthStats);
-                                } else if (option.label === "Last 30 Days") {
-                                  setDoughnutChatData(last30Stats);
-                                } else {
-                                  setDoughnutChatData(monthlyStats);
-                                }
-                                setCurrency(option.label);
-                              }}
-                            >
-                              {option.label}
-                            </Dropdown.Item>
-                          ))}
-                        </DropdownButton>
-                      </MonthField>
-                    </MM>
-                    <Count>
-                      {doughnutChartData ? doughnutChartData.total_messages : 0}
-                    </Count>
-                  </ChartTop>
-                  <ChartDivS>
-                    {/* <Chart monthlyStats={monthlyStats} /> */}
-                    {doughnutChartData != null ? (
-                      <DoughnutChart
-                        monthlyStats={doughnutChartData}
-                        // className="chart"
-                        // data={[1, 2, 3, 4, 5, 6, 7]}
-                        // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
-                      />
-                    ) : (
-                      <Grid container direction="row" justify="center">
-                        <div class="spinner-border text-primary" role="status">
-                          <span class="sr-only">Loading...</span>
-                        </div>
-                      </Grid>
-                    )}
-                  </ChartDivS>
-
-                  <ChartFooter>
-                    <ChartFooterButton>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          color: "#8BB14C",
-                        }}
-                      />
-                      <ChartFooterContent>Personal Texts</ChartFooterContent>
-                    </ChartFooterButton>
-                    <ChartFooterButton2>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          color: "#4f81bc",
-                          height: "12px",
-                        }}
-                      />
-                      <ChartFooterContent>Total DM's</ChartFooterContent>
-                    </ChartFooterButton2>
-                    <ChartFooterButton3>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          color: "#c0504e",
-
-                          marginLeft: "3px",
-                        }}
-                      />
-                      <ChartFooterContent>RS Text</ChartFooterContent>
-                    </ChartFooterButton3>
-                  </ChartFooter>
-                </ChartDiv>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <ChartDiv2>
-                  <ChartTop>
-                    <MM>
-                      <MMH>{filterBar} Messages</MMH>
-                      <MonthField>
-                        <DropdownButton
-                          id="dropdown-basic-button"
-                          title={filterBar}
-                          drop={"right"}
-                        >
-                          {currencies.map((option) => (
-                            <Dropdown.Item
-                              style={{
-                                background:
-                                  filterBar === option.label
-                                    ? "#348ef7"
-                                    : "white",
-                                color:
-                                  filterBar === option.label
-                                    ? "white"
-                                    : "black",
-                              }}
-                              onClick={(e) => {
-                                if (option.label === "This Quarter") {
-                                  setBarchartData(quarterlyStats);
-                                } else if (option.label === "This Year") {
-                                  setBarchartData(yearlyStats);
-                                } else if (option.label === "Last Quarter") {
-                                  setBarchartData(lastQuarterStats);
-                                } else if (option.label === "Last Year") {
-                                  setBarchartData(lastYearStats);
-                                } else if (option.label === "Last Month") {
-                                  setBarchartData(lastMonthStats);
-                                } else if (option.label === "Last 30 Days") {
-                                  setBarchartData(last30Stats);
-                                } else {
-                                  setBarchartData(monthlyStats);
-                                }
-                                setFilterBar(option.label);
-                              }}
-                            >
-                              {" "}
-                              {option.label}
-                            </Dropdown.Item>
-                          ))}
-                        </DropdownButton>
-                      </MonthField>
-                    </MM>
-                    <Count>
-                      {barChartData ? barChartData.total_messages : 0}
-                    </Count>
-                  </ChartTop>
-
-                  <div>
-                    {barChartData != null ? (
-                      <Barchart monthlyStats={barChartData} />
-                    ) : (
-                      <Grid container direction="row" justify="center">
-                        <div class="spinner-border text-primary" role="status">
-                          <span class="sr-only">Loading...</span>
-                        </div>
-                      </Grid>
-                    )}
-                  </div>
-
-                  <ChartFooter>
-                    <ChartFooterButton>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          color: "#0091FF",
-                        }}
-                      />
-                      <ChartFooterContent>Twitter DM’s</ChartFooterContent>
-                    </ChartFooterButton>
-                    <ChartFooterButton2>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          color: "#8BB14C",
-                        }}
-                      />
-                      <ChartFooterContent>Personal Text</ChartFooterContent>
-                    </ChartFooterButton2>
-                    <ChartFooterButton3>
-                      <FiberManualRecordIcon
-                        style={{
-                          width: "12px",
-                          height: "12px",
-                          color: "#373D4A",
-                          marginLeft: "3px",
-                        }}
-                      />
-                      <ChartFooterContent>RS Text</ChartFooterContent>
-                    </ChartFooterButton3>
-                  </ChartFooter>
-                </ChartDiv2>
-              </Grid>
-            </Grid>
-          </ChartSection>
+          </Grid>
         </Grid>
-        <Grid item xs={12} lg={4}>
-          <HomeRight
-            user={user && user}
-            loggedInUserStats={loggedInUserStats}
-            monthlyStats={homeRightStats && homeRightStats}
-            onFilterChange={(filter) => {
-              if (filter === "This Quarter") {
-                quarterlyStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-
-                setHomeRightStats(quarterlyStats);
-              } else if (filter === "This Year") {
-                yearlyStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(yearlyStats);
-              } else if (filter === "Last Quarter") {
-                lastQuarterStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(lastQuarterStats);
-              } else if (filter === "Last Year") {
-                lastYearStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(lastYearStats);
-              } else if (filter === "Last Month") {
-                lastMonthStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(lastMonthStats);
-              } else if (filter === "Last 30 Days") {
-                last30Stats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(last30Stats);
-              } else {
-                monthlyStats.users.map((user, index) => {
-                  var name =
-                    JSON.parse(localStorage.getItem("user")).first_name +
-                    " " +
-                    JSON.parse(localStorage.getItem("user")).last_name;
-                  if (name === user.table.name) {
-                    setLoggedInUserStats(user.table);
-                  }
-                });
-                setHomeRightStats(monthlyStats);
-              }
-            }}
-          />
-        </Grid>
-      </Grid>
+      )}
     </DashboardContainer>
   );
 }

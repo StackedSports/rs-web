@@ -48,7 +48,7 @@ import {
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-import { Calendar, DateRange, DateRangePicker } from "react-date-range";
+import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
 function MessageCreate() {
@@ -58,9 +58,10 @@ function MessageCreate() {
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [selectedMessages, setSelectedMessages] = useState([]);
+  const [selectedDrafts, setSelectedDrafts] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
-  const [showFiltersRow, setShowFiltersRow] = useState(false);
+  // const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displaySnippets, setDisplaySnippets] = useState(false);
@@ -83,7 +84,6 @@ function MessageCreate() {
   const [messagePreview, setMessagePreview] = useState(null);
   const [messageStatus, setMessageStatus] = useState("Drafts");
   const [messageCreated, setMessageCreated] = useState(false);
-
 
   const [messageReceiver, setMessageReceiver] = useState([]);
 
@@ -115,7 +115,7 @@ function MessageCreate() {
   const [page, setPage] = useState(1);
   var [scrollPosition, setScrollPosition] = React.useState(0);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-  
+
   const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
   const [state, setState] = useState([
     {
@@ -158,9 +158,9 @@ function MessageCreate() {
               marginRight: 4,
             }}
           >
-            {new moment(state[0].startDate).format("DD-MM-YYYY") +
+            {new moment(state[0].startDate).format("MM-DD-YYYY") +
               " - " +
-              new moment(state[0].endDate).format("YYYY-MM-DD")}
+              new moment(state[0].endDate).format("MM-DD-YYYY")}
           </p>
           <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
           <ArrowForwardIosIcon
@@ -228,12 +228,6 @@ function MessageCreate() {
   };
 
   const makeMessageSelected = (index) => {
-    // var alreadySelected = false;
-    // selectedMessages.map((item) => {
-    //   if (index === item) {
-    //     alreadySelected = true;
-    //   }
-    // });
     if (selectedMessages.indexOf(index) > -1) {
       var temp = [];
       selectedMessages.map((item) => {
@@ -247,7 +241,7 @@ function MessageCreate() {
       var temp = selectedMessages;
       temp.push(index);
       setSelectedMessages(temp);
-      // setuseLessState(uselessState + 1);
+      setuseLessState(uselessState + 1);
     }
     // var scroll = document.getElementById("messageDetailScrollPublished");
     // scroll.style.overflow = "hidden";
@@ -289,6 +283,25 @@ function MessageCreate() {
     return null;
   };
 
+  const makeDraftSelected = (index) => {
+    if (selectedDrafts.indexOf(index) > -1) {
+      var temp = [];
+      selectedDrafts.map((item) => {
+        if (index != item) {
+          temp.push(item);
+        }
+      });
+      setSelectedDrafts(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedDrafts;
+      temp.push(index);
+      setSelectedDrafts(temp);
+      setuseLessState(uselessState + 1);
+    }
+    // console.log("THis is selected Checkbox", selectedCheckBoxes);
+  };
+
   const makeCheckBoxSelected = (index) => {
     if (selectedCheckBoxes.indexOf(index) > -1) {
       var temp = [];
@@ -297,11 +310,6 @@ function MessageCreate() {
           temp.push(item);
         }
       });
-      // console.log("This is temp", temp);
-      // console.log("This is index", index);
-      // var other = temp.splice(index, 1);
-      // console.log("This is other", other);
-      // var newArray = temp;
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     } else {
@@ -646,259 +654,6 @@ function MessageCreate() {
           </Grid>
         </div>
       </Badge>
-    );
-  };
-
-  const renderFilters = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        spacing={1}
-        style={{
-          marginTop: 25,
-          borderBottom: "1px solid #f8f8f8",
-          paddingBottom: 20,
-        }}
-      >
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={statusFilter || "Status"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {allStatuses &&
-            allStatuses.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background:
-                    statusFilter === option.label ? "#348ef7" : "white",
-                  color: statusFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (statusFilter === option.label) {
-                    setStatusFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "status");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={rankFilter || "Rank"}
-          drop={"down"}
-          style={filtesSpacingStyle}
-        >
-          {allRanks &&
-            allRanks.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background: rankFilter === option.label ? "#348ef7" : "white",
-                  color: rankFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setRankFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "ranks");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={gradeYearFilter || "Grade Year"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {allGradYears &&
-            allGradYears.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background:
-                    gradeYearFilter === option.label ? "#348ef7" : "white",
-                  color: gradeYearFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setGradeYearFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "gradeYear");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={timeZoneFilter || "Time Zone"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {statuses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background:
-                  timeZoneFilter === option.label ? "#348ef7" : "white",
-                color: timeZoneFilter === option.label ? "white" : "black",
-              }}
-              onClick={() => {
-                setTimeZoneFilter(option.label);
-              }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={stateFilter || "State"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          <div>
-            <Grid container direction="row" justify="center">
-              <input
-                type="text"
-                style={{
-                  width: "90%",
-                  border: "1px solid #ebebeb",
-                  borderRadius: 4,
-                }}
-                placeholder="Search States"
-                value={stateSearch}
-                onChange={(e) => {
-                  setStateSearch(e.target.value);
-                }}
-              ></input>
-            </Grid>
-
-            {states.map((option) => {
-              if (stateSearch != "") {
-                if (
-                  option.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
-                ) {
-                  return (
-                    <Dropdown.Item
-                      style={{
-                        background:
-                          stateFilter === option ? "#348ef7" : "white",
-                        color: stateFilter === option ? "white" : "black",
-                      }}
-                      onClick={() => {
-                        addDataToFilter(option, "State");
-                      }}
-                    >
-                      {option}
-                    </Dropdown.Item>
-                  );
-                }
-              } else {
-                return (
-                  <Dropdown.Item
-                    style={{
-                      background: stateFilter === option ? "#348ef7" : "white",
-                      color: stateFilter === option ? "white" : "black",
-                    }}
-                    onClick={() => {
-                      addDataToFilter(option, "State");
-                    }}
-                  >
-                    {option}
-                  </Dropdown.Item>
-                );
-              }
-            })}
-          </div>
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={positionFilter || "Position"}
-          drop={"down"}
-          style={filtesSpacingStyle}
-        >
-          {positions &&
-            positions.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background:
-                    positionFilter === option.label ? "#348ef7" : "white",
-                  color: positionFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  addDataToFilter(option, "Position");
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={coachFilter || "Coach"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {statuses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background: coachFilter === option.label ? "#348ef7" : "white",
-                color: coachFilter === option.label ? "white" : "black",
-              }}
-              onClick={() => {
-                setCoachFilter(option.label);
-              }}
-            >
-              {option.label}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={tagFilter || "Tag"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {allTags &&
-            allTags.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background: tagFilter === option.label ? "#348ef7" : "white",
-                  color: tagFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setTagFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "Tag");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-      </Grid>
     );
   };
 
@@ -1389,8 +1144,18 @@ function MessageCreate() {
                 // width={180}
                 width={100}
                 text="Action"
-                textColor="gray"
-                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                background={
+                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
+                }
+                textColor={selectedMessages.length === 0 ? "black" : "white"}
+                icon={
+                  <FaMagic
+                    style={{
+                      color:
+                        selectedMessages.length === 0 ? "#3871DA" : "white",
+                    }}
+                  ></FaMagic>
+                }
               ></IconTextField>
               <IconTextField
                 text="Filter"
@@ -1454,7 +1219,6 @@ function MessageCreate() {
               marginTop: 10,
             }}
           ></div>
-          {showFiltersRow === true ? renderFilters() : <div></div>}
           {showMessageFiltersRow === true ? (
             renderMessageFilters()
           ) : (
@@ -1534,11 +1298,19 @@ function MessageCreate() {
           <Grid item md={8} sm={8}>
             <Grid container direction="row" justify="flex-end">
               <IconTextField
-                // width={180}
                 width={100}
                 text="Action"
-                textColor="gray"
-                icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                background={
+                  selectedDrafts.length === 0 ? "transparent" : "#3871DA"
+                }
+                textColor={selectedDrafts.length === 0 ? "black" : "white"}
+                icon={
+                  <FaMagic
+                    style={{
+                      color: selectedDrafts.length === 0 ? "#3871DA" : "white",
+                    }}
+                  ></FaMagic>
+                }
               ></IconTextField>
               <IconButton
                 text="Schedule"
@@ -1612,7 +1384,6 @@ function MessageCreate() {
               marginTop: 10,
             }}
           ></div>
-          {showFiltersRow === true ? renderFilters() : <div></div>}
           <div
             style={{
               width: "100%",
@@ -1640,10 +1411,28 @@ function MessageCreate() {
               }}
             >
               <Grid item md={1} xs={1}>
-                <Checkbox color="primary"></Checkbox>
+                <Checkbox
+                  color="primary"
+                  checked={selectedDrafts.length === 6}
+                  onChange={() => {
+                    var array = [1, 2, 3, 4, 5, 6];
+                    var temp = [];
+                    if (selectedDrafts.length === array.length) {
+                      setSelectedDrafts([]);
+                    } else {
+                      array.map((item) => {
+                        temp.push(item);
+                      });
+                      setSelectedDrafts(temp);
+                    }
+                  }}
+                ></Checkbox>
               </Grid>
               <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>Full Name</span>
+                <Grid container direction="row">
+                  <span className={classes.tableHeading}>Full Name</span>
+                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+                </Grid>
               </Grid>
               <Grid item md={1} xs={1}>
                 <span className={classes.tableHeading}>Board/List</span>
@@ -1664,7 +1453,10 @@ function MessageCreate() {
                 <span className={classes.tableHeading}>Delivered at</span>
               </Grid>
               <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>Message Status</span>
+                <Grid container direction="row">
+                  <span className={classes.tableHeading}>Message Status</span>
+                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+                </Grid>
               </Grid>
             </Grid>
 
@@ -1687,8 +1479,9 @@ function MessageCreate() {
                     <Checkbox
                       color="primary"
                       onChange={() => {
-                        makeCheckBoxSelected(item.id);
+                        makeDraftSelected(item);
                       }}
+                      checked={selectedDrafts.indexOf(item) > -1 ? true : false}
                       style={{ marginTop: 1, marginBottom: 1 }}
                       onMouseLeave={() => {
                         setHoveredIndex(null);
@@ -2153,7 +1946,6 @@ function MessageCreate() {
                 marginTop: 16,
               }}
             ></div>
-            {showFiltersRow === true ? renderFilters() : <div></div>}
             <Grid container direction="row" alignItems="center"></Grid>
             <div style={{ width: "100%", overflowX: "hide", marginTop: 16 }}>
               <Grid container direction="row">
@@ -2827,7 +2619,9 @@ function MessageCreate() {
                               }}
                             >
                               {time
-                                ? moment(date).format("MM-DD-YYYY") + " " + time
+                                ? moment(date).format(" MM-DD-YYYY") +
+                                  " " +
+                                  time
                                 : "ASAP"}
                             </p>
                           }
@@ -3406,7 +3200,7 @@ function MessageCreate() {
                           <Checkbox
                             color="primary"
                             onChange={() => {
-                              // makeMessageSelected(item.id);
+                              makeMessageSelected(item.id);
                             }}
                             style={{ marginTop: 1, marginBottom: 1 }}
                           ></Checkbox>

@@ -181,9 +181,9 @@ function MessageCreate() {
               marginRight: 4,
             }}
           >
-            {new moment(state[0].startDate).format("DD-MM-YYYY") +
+            {new moment(state[0].startDate).format("MM-DD-YYYY") +
               " - " +
-              new moment(state[0].endDate).format("YYYY-MM-DD")}
+              new moment(state[0].endDate).format("MM-DD-YYYY")}
           </p>
           <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
           <ArrowForwardIosIcon
@@ -2526,7 +2526,9 @@ function MessageCreate() {
                               }}
                             >
                               {time
-                                ? moment(date).format("MM-DD-YYYY") + " " + time
+                                ? moment(date).format(" MM-DD-YYYY") +
+                                  " " +
+                                  time
                                 : "ASAP"}
                             </p>
                           }
