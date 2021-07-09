@@ -163,6 +163,7 @@ function Home() {
   const [lastQuarterStats, setLastQuarterStates] = useState(null);
   const [lastYearStats, setLastYearStates] = useState(null);
   const [loggedInUserStats, setLoggedInUserStats] = useState(null);
+  const [showSetting, setShowSetting] = useState(false);
   const [value, onChange] = useState(new Date());
 
   const onMessageTypeChange = (type) => {
@@ -413,8 +414,11 @@ function Home() {
         setFilterOpen={setFilterOpen}
         monthlyStats={monthlyStats}
       />
-      {true ? (
-        <UserAccountSettings></UserAccountSettings>
+      {showSetting ? (
+        <UserAccountSettings
+          showSetting={showSetting}
+          setShowSetting={setShowSetting}
+        ></UserAccountSettings>
       ) : (
         <Grid container style={{ margin: 0, padding: 0 }}>
           <Grid item xs={12} lg={8}>
@@ -768,6 +772,8 @@ function Home() {
           <Grid item xs={12} lg={4}>
             <HomeRight
               user={user && user}
+              showSetting={showSetting}
+              setShowSetting={setShowSetting}
               loggedInUserStats={loggedInUserStats}
               monthlyStats={homeRightStats && homeRightStats}
               onFilterChange={(filter) => {

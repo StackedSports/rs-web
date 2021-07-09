@@ -105,6 +105,9 @@ function HomeRight(props) {
         <Num>{props.loggedInUserStats ? props.loggedInUserStats.rank : 1}.</Num>
         <AvatartInfo>
           <Avatar
+            onClick={() => {
+              props.setShowSetting(!props.showSetting);
+            }}
             src={
               JSON.parse(localStorage.getItem("user")).twitter_profile
                 .profile_image || AvatarImg

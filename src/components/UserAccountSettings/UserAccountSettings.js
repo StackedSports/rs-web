@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   grayText: { margin: 0, color: "#9ca4ab", width: "600%", marginLeft: 16 },
 }));
-export default function UserAccountSettings() {
+export default function UserAccountSettings(props) {
   const classes = useStyles();
   const [image, setImage] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -220,6 +220,9 @@ export default function UserAccountSettings() {
           <Grid item md={6} sm={6}>
             <Grid container direction="row" justify="flex-end">
               <HollowWhiteButton
+                onClick={() => {
+                  props.setShowSetting(false);
+                }}
                 width={120}
                 text="Save Settings"
                 textColor="white"
