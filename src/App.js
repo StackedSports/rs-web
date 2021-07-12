@@ -7,6 +7,7 @@ import Media from "./Pages/Media";
 import MessageCreate from "./Pages/MessageCreate";
 import UserProfile from "./Pages/UserProfile";
 import TweetCreate from "./Pages/TweetCreate";
+import TeamSettings from "./Pages/TeamSettings";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -27,6 +28,7 @@ function App() {
 
           <Route path="/contact-profile" exact component={UserProfile} />
           <Route path="/message-create" exact component={MessageCreate} />
+          <Route path="/team-settings" exact component={TeamSettings} />
         </Switch>
       </Router>
     </div>

@@ -86,7 +86,7 @@ export const SidebarData = [
   },
   {
     title: "Settings",
-    path: "/",
+    path: "/team-settings",
     icon: (
       <IoIosSettings
         style={{ height: "24px", width: "24px", opacity: 0.9 }}

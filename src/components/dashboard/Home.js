@@ -138,7 +138,7 @@ const useStyles = makeStyles({
     fontFamily: "ProximaNovaSemibold",
   },
 });
-function Home() {
+function Home(props) {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [currency, setCurrency] = useState("This Month");
@@ -414,10 +414,10 @@ function Home() {
         setFilterOpen={setFilterOpen}
         monthlyStats={monthlyStats}
       />
-      {showSetting ? (
+      {props.showSetting ? (
         <UserAccountSettings
-          showSetting={showSetting}
-          setShowSetting={setShowSetting}
+          showSetting={props.showSetting}
+          setShowSetting={props.setShowSetting}
         ></UserAccountSettings>
       ) : (
         <Grid container style={{ margin: 0, padding: 0 }}>
@@ -772,8 +772,8 @@ function Home() {
           <Grid item xs={12} lg={4}>
             <HomeRight
               user={user && user}
-              showSetting={showSetting}
-              setShowSetting={setShowSetting}
+              showSetting={props.showSetting}
+              setShowSetting={props.setShowSetting}
               loggedInUserStats={loggedInUserStats}
               monthlyStats={homeRightStats && homeRightStats}
               onFilterChange={(filter) => {

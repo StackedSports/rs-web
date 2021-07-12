@@ -1462,6 +1462,11 @@ const Sidebar = (props) => {
 
                   height: "90%",
                 }}
+                onClick={() => {
+                  if (props.setShowSetting) {
+                    props.setShowSetting(!props.showSetting);
+                  }
+                }}
               >
                 <Grid item md={4} xs={4} lg={4}>
                   <Grid container direction="row" justify="center">
