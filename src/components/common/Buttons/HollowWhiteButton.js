@@ -11,6 +11,8 @@ export default function FilterField(props) {
         border: "1px solid #d8d8d8",
         width: props.width || 130,
         background: props.background || "white",
+        marginBottom: props.marginBottom || 0,
+        marginTop: props.marginTop || 0,
         height: 40,
         borderRadius: 4,
         marginLeft: 10,

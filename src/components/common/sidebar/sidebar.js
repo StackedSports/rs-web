@@ -331,7 +331,7 @@ const Sidebar = (props) => {
   }, []);
 
   const addDataToFilter = (value, type) => {
-    console.log("This is the value", index);
+    console.log("This is the value", value);
     if (filter.includes(value)) {
       var temp = [];
       filter.map((item) => {
@@ -654,6 +654,7 @@ const Sidebar = (props) => {
                             color: "red",
                             fontSize: 17,
                             cursor: "pointer",
+                            marginLeft: 8,
                           }}
                         ></ClearIcon>{" "}
                       </Grid>
@@ -784,6 +785,7 @@ const Sidebar = (props) => {
                             color: "red",
                             fontSize: 17,
                             cursor: "pointer",
+                            marginLeft: 8,
                           }}
                         ></ClearIcon>{" "}
                       </Grid>
@@ -819,6 +821,7 @@ const Sidebar = (props) => {
                         width: "90%",
                         border: "1px solid #ebebeb",
                         borderRadius: 4,
+                        marginTop: 8,
                       }}
                       placeholder="Search Tags"
                       value={searchTags}
@@ -940,6 +943,7 @@ const Sidebar = (props) => {
                             color: "red",
                             fontSize: 17,
                             cursor: "pointer",
+                            marginLeft: 8,
                           }}
                         ></ClearIcon>{" "}
                       </Grid>
@@ -1203,6 +1207,7 @@ const Sidebar = (props) => {
                                 color: "red",
                                 fontSize: 17,
                                 cursor: "pointer",
+                                marginLeft: 8,
                               }}
                             ></ClearIcon>{" "}
                           </Grid>

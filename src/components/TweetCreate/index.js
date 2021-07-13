@@ -1544,6 +1544,7 @@ function MessageCreate() {
                           color: "red",
                           fontSize: 17,
                           cursor: "pointer",
+                          marginLeft: 8,
                         }}
                       ></ClearIcon>{" "}
                     </Grid>
@@ -1693,6 +1694,7 @@ function MessageCreate() {
                           color: "red",
                           fontSize: 17,
                           cursor: "pointer",
+                          marginLeft: 8,
                         }}
                       ></ClearIcon>{" "}
                     </Grid>
@@ -1831,6 +1833,7 @@ function MessageCreate() {
                 color: "red",
                 fontSize: 17,
                 cursor: "pointer",
+                marginLeft: 8,
               }}
             ></ClearIcon>{" "}
           </Grid>
@@ -1883,6 +1886,7 @@ function MessageCreate() {
               color: "red",
               fontSize: 17,
               cursor: "pointer",
+              marginLeft: 8,
             }}
           ></ClearIcon>{" "}
         </Grid>
@@ -1917,6 +1921,7 @@ function MessageCreate() {
               color: "red",
               fontSize: 17,
               cursor: "pointer",
+              marginLeft: 8,
             }}
           ></ClearIcon>{" "}
         </Grid>
@@ -2136,6 +2141,7 @@ function MessageCreate() {
                             color: "red",
                             fontSize: 17,
                             cursor: "pointer",
+                            marginLeft: 8,
                           }}
                         ></ClearIcon>{" "}
                       </Grid>

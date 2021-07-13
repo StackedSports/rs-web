@@ -195,7 +195,12 @@ export default function UserAccountSettings(props) {
         <Grid
           container
           alignItems="center"
-          style={{ cursor: "pointer", fontSize: 22, fontWeight: 600 }}
+          style={{
+            cursor: "pointer",
+            fontSize: 22,
+            fontWeight: 600,
+            marginTop: 16,
+          }}
           onClick={() => {
             setActiveTab("Team");
           }}
@@ -738,6 +743,7 @@ export default function UserAccountSettings(props) {
             background: "white",
             borderRadius: 4,
             padding: 16,
+            paddingTop: 32,
             height: "calc( 100vh - 110px )",
             overflowY: "scroll",
             width: "100%",
@@ -799,6 +805,7 @@ export default function UserAccountSettings(props) {
                       }
                     }}
                     width={120}
+                    marginTop={-16}
                     text="Save Settings"
                     textColor="white"
                     background="#3871DA"
@@ -810,6 +817,7 @@ export default function UserAccountSettings(props) {
                     // width={180}
                     width={100}
                     text="Action"
+                    marginTop={-16}
                     textColor="gray"
                     icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
                   ></IconTextField>
@@ -820,6 +828,7 @@ export default function UserAccountSettings(props) {
                       }
                     }}
                     width={140}
+                    marginTop={-16}
                     text="+ Add Member"
                     textColor="white"
                     background="#3871DA"

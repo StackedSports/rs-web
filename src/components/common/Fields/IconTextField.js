@@ -15,6 +15,7 @@ export default function FilterField(props) {
         borderRadius: 4,
         marginLeft: props.marginLeft != null ? props.marginLeft : 16,
         marginTop: props.marginTop || 0,
+        marginBottom: props.marginBottom || 0,
         cursor: "pointer",
       }}
       onClick={() => {
