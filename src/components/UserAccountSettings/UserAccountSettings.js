@@ -6,6 +6,7 @@ import Avatar from "../../images/avatar.jpeg";
 import { formatPhoneNumber } from "../Functions";
 import IconTextField from "../common/Fields/IconTextField";
 import { Twitter, Videocam } from "@material-ui/icons";
+import Notifications from "./Notifications";
 const useStyles = makeStyles((theme) => ({
   tab: {
     margin: 0,
@@ -504,7 +505,7 @@ export default function UserAccountSettings(props) {
               </Grid>
             </Grid>
           </Grid>
-        ) : (
+        ) : activeTab === "Account" ? (
           <Grid>
             <Grid
               container
@@ -632,6 +633,8 @@ export default function UserAccountSettings(props) {
               </Grid>
             </Grid>
           </Grid>
+        ) : (
+          <Notifications></Notifications>
         )}
       </div>
     </div>

@@ -268,7 +268,10 @@ function Home() {
             console.log("These are all contacts", res.data);
             setContacts(res.data);
             setCopyContacts(res.data);
-            document.getElementById("infinit").scrollTop = 0;
+            if (document.getElementById("infinit")) {
+              document.getElementById("infinit").scrollTop = 0;
+            }
+
             setFetching(false);
           }
         }
