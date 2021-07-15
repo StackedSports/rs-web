@@ -22,6 +22,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={Signup} />
           <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/dashboard/:user" exact component={Dashboard} />
           <Route path="/contacts" exact component={Contacts} />
           <Route path="/media" exact component={Media} />
           <Route path="/tweet-create" exact component={TweetCreate} />
@@ -29,6 +30,7 @@ function App() {
           <Route path="/contact-profile" exact component={UserProfile} />
           <Route path="/message-create" exact component={MessageCreate} />
           <Route path="/team-settings" exact component={TeamSettings} />
+          <Route path="/team-settings/:userID" exact component={TeamSettings} />
         </Switch>
       </Router>
     </div>

@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../common/sidebar/sidebar";
 import Home from "./Home";
+import { withRouter } from "react-router";
 import { Modal } from "./model";
-export default function Dashboard() {
-  const [showModal, setShowModal] = useState(true);
-  const [showSetting, setShowSetting] = useState(false);
+function Dashboard(props) {
+  console.log("THis props.", props.match.params);
 
+  var userProfile;
+
+  const [showModal, setShowModal] = useState(true);
+  var [showSetting, setShowSetting] = useState(false);
+  if (props.match.params.user) {
+    showSetting = props.match.params.user ? true : false;
+  }
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
@@ -16,3 +23,4 @@ export default function Dashboard() {
     </>
   );
 }
+export default withRouter(Dashboard);

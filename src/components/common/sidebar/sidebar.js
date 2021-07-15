@@ -458,6 +458,7 @@ const Sidebar = (props) => {
   console.log("This is props contacts", props.contacts);
   return (
     <>
+      <Link id="userSettings" to="/dashboard/user-settings"></Link>
       <Modal open={showModal} setShowModal={setShowModal} />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -1468,9 +1469,8 @@ const Sidebar = (props) => {
                   height: "90%",
                 }}
                 onClick={() => {
-                  if (props.setShowSetting) {
-                    props.setShowSetting(!props.showSetting);
-                  }
+                  // window.location.href="/dashboard/user-settings"
+                  document.getElementById("userSettings").click();
                 }}
               >
                 <Grid item md={4} xs={4} lg={4}>

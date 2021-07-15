@@ -21,6 +21,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FaMagic } from "react-icons/fa";
+import { withRouter } from "react-router";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,8 +36,19 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   grayText: { margin: 0, color: "#9ca4ab", width: "600%", marginLeft: 16 },
+  contactsRow: {
+    border: "1px solid #d8d8d8",
+    borderBottom: "none",
+    borderRadius: 4,
+    paddingTop: 4,
+    paddingBottom: 4,
+    minWidth: 1410,
+    "&:hover": {
+      background: "#ebebeb",
+    },
+  },
 }));
-export default function UserAccountSettings(props) {
+function TeamSettings(props) {
   const classes = useStyles();
   const [image, setImage] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -47,9 +59,17 @@ export default function UserAccountSettings(props) {
   const [selectAll, setSelectAll] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  var contactData = null;
 
-  const [activeTab, setActiveTab] = useState("General");
-
+  var [activeTab, setActiveTab] = useState("General");
+  if (props.match.params.userID) {
+    activeTab = props.match.params.userID ? "Profile" : "General";
+    console.log(
+      "This is the contact data",
+      JSON.parse(localStorage.getItem("CONTACT_DATA"))
+    );
+    contactData = JSON.parse(localStorage.getItem("CONTACT_DATA"));
+  }
   useEffect(() => {
     if (localStorage.getItem("user")) {
       getMyContacts();
@@ -229,7 +249,9 @@ export default function UserAccountSettings(props) {
                   marginLeft: 16,
                 }}
               >
-                John Smith
+                {contactData
+                  ? contactData.first_name + " " + contactData.last_name
+                  : "John Smith"}
               </p>
               <p className={classes.grayText}>Jhonsmith21@gmail.com</p>
               <p className={classes.grayText}>616-555-5555</p>
@@ -246,6 +268,16 @@ export default function UserAccountSettings(props) {
                       borderRadius: 20,
                       marginRight: 16,
                     }}
+                  ></img>
+                ) : contactData && contactData.twitter_profile ? (
+                  <img
+                    style={{
+                      width: 120,
+                      height: 120,
+                      borderRadius: 60,
+                      marginRight: 16,
+                    }}
+                    src={contactData.twitter_profile.profile_image}
                   ></img>
                 ) : (
                   <img
@@ -342,7 +374,9 @@ export default function UserAccountSettings(props) {
                   marginLeft: 16,
                 }}
               >
-                1 (615) - 555 - 5555
+                {contactData && contactData.phone
+                  ? formatPhoneNumber(contactData.phone)
+                  : "   1 (615) - 555 - 5555"}
               </p>
               <p
                 style={{
@@ -610,7 +644,11 @@ export default function UserAccountSettings(props) {
                         <LockIcon />
                       </InputAdornment>
                     }
-                    value={"@jhonsmith12"}
+                    value={
+                      contactData && contactData.twitter_profile
+                        ? "@" + contactData.twitter_profile.screen_name
+                        : "@jhonsmith12"
+                    }
                     labelWidth={"95%"}
                     style={{
                       width: "95%",
@@ -1280,14 +1318,7 @@ export default function UserAccountSettings(props) {
                         container
                         direction="row"
                         alignItems="center"
-                        style={{
-                          border: "1px solid #d8d8d8",
-                          borderBottom: "none",
-                          borderRadius: 4,
-                          paddingTop: 4,
-                          paddingBottom: 4,
-                          minWidth: 1410,
-                        }}
+                        className={classes.contactsRow}
                       >
                         <Grid item md={1} xs={1}>
                           {hoveredIndex === index ? (
@@ -1421,3 +1452,4 @@ export default function UserAccountSettings(props) {
     </DarkContainer>
   );
 }
+export default withRouter(TeamSettings);

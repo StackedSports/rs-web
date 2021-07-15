@@ -98,6 +98,17 @@ const useStyles = makeStyles({
   icons: {
     color: "#d8d8d8",
   },
+  contactsRow: {
+    border: "1px solid #d8d8d8",
+    borderBottom: "none",
+    borderRadius: 4,
+    paddingTop: 4,
+    paddingBottom: 4,
+    minWidth: 1110,
+    "&:hover": {
+      background: "#ebebeb",
+    },
+  },
 });
 
 function Home() {
@@ -1225,6 +1236,8 @@ function Home() {
               alignItems="center"
               style={{
                 background: "#f5f6f9",
+                borderTopLeftRadius: 4,
+                borderTopRightRadius: 4,
                 width: "100%",
                 minWidth: 1110,
               }}
@@ -1301,13 +1314,14 @@ function Home() {
                         container
                         direction="row"
                         alignItems="center"
-                        style={{
-                          border: "1px solid #d8d8d8",
-                          borderBottom: "none",
-                          borderRadius: 4,
-                          paddingTop: 4,
-                          paddingBottom: 4,
-                          minWidth: 1110,
+                        className={classes.contactsRow}
+                        onClick={() => {
+                          localStorage.setItem(
+                            "CONTACT_DATA",
+                            JSON.stringify(item)
+                          );
+
+                          window.location.href = "team-settings/" + item.id;
                         }}
                       >
                         <Grid item md={1} xs={1}>
