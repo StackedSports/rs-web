@@ -1321,7 +1321,7 @@ function Home() {
                             JSON.stringify(item)
                           );
 
-                          window.location.href = "team-settings/" + item.id;
+                          window.location.href = "/contact-profile";
                         }}
                       >
                         <Grid item md={1} xs={1}>

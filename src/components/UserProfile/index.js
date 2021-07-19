@@ -1318,12 +1318,13 @@ function ContactProfile() {
 
             <div
               style={{ width: "100%", minWidth: 1110 }}
-              className="fullHeightMessagesOuterDiv "
+              className="fullHeightMessagesOuterDiv hideScrollBar"
               id="infinit"
             >
               <Grid container direction="row">
                 <Grid item md={3} sm={3}>
-                  <Grid
+                  <div className="hideScrollBar" style={{maxHeight:'calc( 100vh - 160px )', overflow:'scroll'}}>
+                          <Grid
                     container
                     direction="row"
                     style={
@@ -1554,7 +1555,9 @@ function ContactProfile() {
                       </Card>
                     </Accordion>
                   </Grid>
-                </Grid>
+         
+                  </div>
+                   </Grid>
                 <Grid item md={6} sm={6}>
                   <Grid
                     container
@@ -1648,7 +1651,7 @@ function ContactProfile() {
                     <div
                       style={{
                         width: "100%",
-                        maxHeight: 440,
+                        maxHeight: 380,
                         // background: "red",
                         paddingInline: 10,
                         marginTop: 8,
@@ -1725,7 +1728,7 @@ function ContactProfile() {
                             style={{
                               width: "90%",
                               borderRadius: 5,
-                              height: 100,
+                              height: 50,
                               border: "none",
                               resize: "none",
                             }}
@@ -1803,7 +1806,8 @@ function ContactProfile() {
                   </Grid>
                 </Grid>
                 <Grid item md={3} sm={3}>
-                  <Grid container direction="row" style={{}}>
+                <div className="hideScrollBar" style={{maxHeight:'calc( 100vh - 160px )', overflow:'scroll'}}>
+                    <Grid container direction="row" style={{}}>
                     <Grid
                       container
                       direction="row"
@@ -2093,6 +2097,8 @@ function ContactProfile() {
                       View More
                     </p>
                   </Grid>
+                
+                </div>
                 </Grid>
               </Grid>
             </div>
