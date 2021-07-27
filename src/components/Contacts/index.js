@@ -1316,12 +1316,16 @@ function Home() {
                         alignItems="center"
                         className={classes.contactsRow}
                         onClick={() => {
-                          localStorage.setItem(
-                            "CONTACT_DATA",
-                            JSON.stringify(item)
-                          );
-
-                          window.location.href = "/contact-profile";
+                          if(hoveredIndex===null)
+                          {
+                            localStorage.setItem(
+                              "CONTACT_DATA",
+                              JSON.stringify(item)
+                            );
+  
+                            window.location.href = "/contact-profile";
+                          }
+               
                         }}
                       >
                         <Grid item md={1} xs={1}>
