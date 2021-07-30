@@ -8,7 +8,7 @@ export default function FilterField(props) {
       direction="row"
       alignItems="center"
       style={{
-        border: "1px solid #d8d8d8",
+        border: props.border||"1px solid #d8d8d8",
         width: props.width || "max-content",
         background: props.background || "white",
         height: 40,
@@ -18,6 +18,7 @@ export default function FilterField(props) {
         marginBottom: props.marginBottom || 0,
         cursor: "pointer",
       }}
+      id={props.id}
       onClick={() => {
         if (props.onClick) {
           props.onClick();
@@ -53,12 +54,14 @@ export default function FilterField(props) {
         sm={props.icon || props.iconStart ? 8 : 12}
       >
         <p
+        id={props.id}
           style={{
-            paddingLeft: props.iconStart ? 0 : 12,
+            paddingLeft: props.iconStart ? 0 :props.textPadding|| 12,
             fontWeight: "bold",
             color: props.textColor || "black",
-            width: "max-content",
+            width: props.textWidth||"max-content",
             margin: 0,
+            textAlign:props.textAlign,
             marginRight: 10,
           }}
         >

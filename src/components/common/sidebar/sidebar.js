@@ -23,9 +23,16 @@ import {
   makeStyles,
   withStyles,
   Slider,
+  Backdrop,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import {
+  NoteAdd,
+  Description,
+  Backup,
+  LocalOfferOutlined,
+} from "@material-ui/icons";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { InputGroup, FormControl } from "react-bootstrap";
@@ -231,8 +238,8 @@ const useStyles = makeStyles({
     width: "max-content",
     fontWeight: 600,
     borderRadius: 4,
-    paddingLeft: 12,
-    paddingRight: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
     margin: 8,
   },
   dropdownHidden: {
@@ -268,12 +275,46 @@ const useStyles = makeStyles({
     },
   },
   tableP: { margin: 0, marginLeft: 12, fontSize: 16, fontWeight: 600 },
+  uploadCSVSpan: { color: "#989482", marginLeft: 8, marginRight: 16 },
+  uploadCSVGrid: {
+    height: 30,
+    width: 30,
+    borderRadius: 50,
+    border: "1px solid #989482",
+    color: "#989482",
+  },
+  CSVDetails: {
+    color: "#62614e",
+    width: "70%",
+    textAlign: "justify",
+    fontWeight: 600,
+    fontSize: 13,
+    marginTop: 10,
+  },
+  uploadCSVGridActive: {
+    height: 30,
+    width: 30,
+    borderRadius: 50,
+    border: "1px solid #3871da",
+    background: "#3871da",
+    color: "white",
+  },
+
+  uploadCSVGridDone: {
+    height: 30,
+    width: 30,
+    borderRadius: 50,
+    border: "1px solid #3871da",
+    background: "#006644",
+    color: "white",
+  },
 });
 
 const Sidebar = (props) => {
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [addContact, setAddContact] = useState(false);
+  const [addCsv, setAddCsv] = useState(false);
   const [addMedia, setAddMedia] = useState(false);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [filter, setFilter] = useState([]);
@@ -289,6 +330,7 @@ const Sidebar = (props) => {
   const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState([]);
   var [displayAssociate, setDisplayAssociate] = useState(null);
   const [dropFiles, setDropFiles] = useState([]);
+  const [activeTabCSV, setActiveTabCSV] = useState(1);
 
   const [searchTags, setSearchTags] = useState("");
   const classes = useStyles();
@@ -302,6 +344,155 @@ const Sidebar = (props) => {
         }
       },
       (error) => {}
+    );
+  };
+
+  const TagsDropDown = () => {
+    return (
+      <div class="dropdownMedia">
+        <div
+          className={classes.dropdownHidden}
+          style={{
+            display: displayTags ? "block" : "none",
+          }}
+        >
+          <Grid container direction="row" justify="center">
+            <input
+              type="text"
+              style={{
+                width: "90%",
+                border: "1px solid #ebebeb",
+                borderRadius: 4,
+                marginTop: 8,
+              }}
+              id="searchtags"
+              placeholder="Search Tags"
+              value={searchTags}
+              onChange={(e) => {
+                setSearchTags(e.target.value);
+                setDisplayTags(true);
+              }}
+              onClick={(e) => {
+                setDisplayTags(true);
+              }}
+            ></input>
+          </Grid>
+          {allTags &&
+            allTags.map((item, index) => {
+              // console.log("This is item", item);
+              if (searchTags != "") {
+                if (
+                  item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Grid
+                      container
+                      alignItems="center"
+                      style={{
+                        height: 50,
+                        marginLeft: 0,
+
+                        cursor: "pointer",
+                      }}
+                      className={classes.hoverGrid}
+                      onClick={() => {
+                        addTagToFilter(item.name);
+                      }}
+                      // className={classes.sendAsP}
+                    >
+                      <p
+                        style={{
+                          margin: 0,
+                          fontWeight: 600,
+                          marginLeft: 12,
+                        }}
+                      >
+                        {item.name}
+                      </p>
+                    </Grid>
+                  );
+                }
+              } else {
+                return (
+                  <Grid
+                    container
+                    alignItems="center"
+                    style={{
+                      height: 50,
+                      marginLeft: 0,
+                      marginTop: 0,
+                      cursor: "pointer",
+                    }}
+                    className={classes.hoverGrid}
+                    onClick={() => {
+                      addTagToFilter(item.name);
+                    }}
+                    // className={classes.sendAsP}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        fontWeight: 600,
+                        marginLeft: 12,
+                      }}
+                    >
+                      {item.name}
+                    </p>
+                  </Grid>
+                );
+              }
+            })}
+        </div>{" "}
+      </div>
+    );
+  };
+
+  const FileDropZone = (props) => {
+    return (
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justify="center"
+        style={{
+          height: "max-content",
+          background: "#fafcfd",
+          marginTop: 16,
+          marginBottom: 16,
+          borderRadius: 4,
+          border: "1px dotted gray",
+          padding: 16,
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          // alert("This is alert");
+          console.log("This is great");
+        }}
+        onDrop={drop}
+      >
+        <img src={Upload}></img>
+        <p
+          style={{
+            width: "100%",
+            textAlign: "center",
+            color: "#a2acc1",
+            margin: 0,
+          }}
+        >
+          Upload Your Document
+        </p>
+        <p
+          style={{
+            width: "100%",
+            textAlign: "center",
+            color: "#a2acc1",
+            margin: 0,
+          }}
+        >
+          Drag and Drop or <span style={{ color: "#6aa8f4" }}>Browse</span> your
+          file here
+        </p>
+      </Grid>
     );
   };
 
@@ -444,7 +635,7 @@ const Sidebar = (props) => {
 
     setOpenSnackBar(false);
   };
-
+  console.log("THis is display tags", displayTags);
   const openModal = () => {
     setShowModal(true);
   };
@@ -471,6 +662,418 @@ const Sidebar = (props) => {
           <span style={{ textDecoration: "underline" }}>view profile</span>
         </Alert>
       </Snackbar>
+      <Dialog
+        maxWidth={"lg"}
+        width={"lg"}
+        open={addCsv}
+        onClose={() => {
+          setAddCsv(false);
+        }}
+        onClick={(e) => {
+          console.log("THis is id", e.target);
+          if (e.target.id != "tagButton") {
+            setDisplayTags(false);
+          }
+        }}
+        PaperProps={{
+          style: {
+            borderRadius: 10,
+          },
+        }}
+      >
+        <Grid container style={{ padding: 16 }}>
+          <Grid container direction="row" style={{ width: 850 }}>
+            <NoteAdd style={{ color: "#3871da" }}></NoteAdd>
+            <p style={{ width: "90%", fontWeight: 700, marginLeft: 8 }}>
+              Import Contacts
+            </p>
+          </Grid>
+          <Grid container direction="row" justify="center">
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="center"
+              className={
+                activeTabCSV === 1
+                  ? classes.uploadCSVGridActive
+                  : activeTabCSV > 1
+                  ? classes.uploadCSVGridDone
+                  : classes.uploadCSVGrid
+              }
+            >
+              1
+            </Grid>{" "}
+            <span className={classes.uploadCSVSpan}>Upload Csv</span>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="center"
+              className={
+                activeTabCSV === 2
+                  ? classes.uploadCSVGridActive
+                  : activeTabCSV > 2
+                  ? classes.uploadCSVGridDone
+                  : classes.uploadCSVGrid
+              }
+            >
+              2
+            </Grid>{" "}
+            <span className={classes.uploadCSVSpan}>Tag</span>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="center"
+              className={
+                activeTabCSV === 3
+                  ? classes.uploadCSVGridDone
+                  : classes.uploadCSVGrid
+              }
+            >
+              3
+            </Grid>{" "}
+            <span className={classes.uploadCSVSpan}>Imports</span>
+          </Grid>
+          <Grid container style={{ minHeight: 400 }}>
+            {activeTabCSV === 1 && (
+              <Grid container>
+                <Grid container direction="row" justify="center">
+                  <p className={classes.CSVDetails}>
+                    Importing a csv allows you to add and update people stored
+                    in Stacked Messenger. If a users phone number or Twitter
+                    handle in CSV matches an existing contact in Stacked
+                    Messenger , they will be updated with the mapped values.
+                    Otherwise new a contact will be created. A contact must have
+                    either Phone Number or Twitter handle in order to be created
+                  </p>
+                  <div style={{ width: "100%" }}></div>
+                  <IconTextField
+                    width={270}
+                    onClick={() => {}}
+                    border="none"
+                    text="Download Import Template"
+                    textColor={"white"}
+                    background={"#3871da"}
+                    icon={
+                      <Description style={{ color: "white" }}></Description>
+                    }
+                  ></IconTextField>
+                </Grid>
+
+                {dropFiles.length > 0 ? (
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                  >
+                    <Grid
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      style={{
+                        height: "200px",
+                        width: "70%",
+                        background: "#fafcfd",
+                        marginTop: 16,
+                        marginBottom: 16,
+                        borderRadius: 4,
+                        border: "1px dotted gray",
+                        padding: 16,
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: "black",
+                          fontWeight: 600,
+                          width: "100%",
+                          textAlign: "center",
+                        }}
+                      >
+                        {dropFiles[0].name}
+                      </p>
+                      <p
+                        style={{
+                          color: "gray",
+                          textDecoration: "underline",
+                          fontWeight: 600,
+                          width: "100%",
+                          textAlign: "center",
+                        }}
+                      >
+                        Remove
+                      </p>
+                      <div style={{ width: "100%" }}></div>
+                      <IconTextField
+                        width={120}
+                        onClick={() => {
+                          setActiveTabCSV(2);
+                        }}
+                        border="none"
+                        text="Upload"
+                        textColor={"white"}
+                        background={"#3871da"}
+                        icon={<Backup style={{ color: "white" }}></Backup>}
+                      ></IconTextField>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <FileDropZone></FileDropZone>
+                )}
+              </Grid>
+            )}
+            {activeTabCSV == 2 && (
+              <Grid container>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  style={{ height: "max-content" }}
+                >
+                  {" "}
+                  <p className={classes.CSVDetails}>
+                    Tags let you set a group of people together. For example
+                    they are great for highlighting vip contacts or potential
+                    propspects or customers. For more information about tags{" "}
+                    <span style={{ textDecoration: "underline" }}>
+                      Visit our docs about tags
+                    </span>{" "}
+                  </p>
+                  <p className={classes.CSVDetails}>
+                    Each import gets a unique tag to help you find the users you
+                    have created and updated. You can also add more tags to
+                  </p>
+                  <Grid container direction="row" style={{ width: "70%" }}>
+                    {tagFilter.length != 0 &&
+                      tagFilter.map((fil, index) => {
+                        return (
+                          <div
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justify="center"
+                            className={classes.tags}
+                            style={{ marginLeft: 0, marginRight: 16 }}
+                          >
+                            <Grid
+                              style={{ height: 50 }}
+                              container
+                              direction="row"
+                              alignItems="center"
+                            >
+                              {fil}
+                              <ClearIcon
+                                onClick={() => {
+                                  addTagToFilter(fil);
+                                }}
+                                style={{
+                                  color: "red",
+                                  fontSize: 17,
+                                  cursor: "pointer",
+                                  marginLeft: 8,
+                                }}
+                              ></ClearIcon>{" "}
+                            </Grid>
+                          </div>
+                        );
+                      })}
+                    <div style={{ width: "100%", marginTop: 16 }}></div>
+                    <IconTextField
+                      width={130}
+                      onClick={() => {
+                        setDisplayTags(true);
+                      }}
+                      id="tagButton"
+                      text="Add Tag"
+                      textColor="white"
+                      background="#3871DA"
+                      marginLeft={"0px"}
+                      icon={
+                        <LocalOfferOutlined
+                          id="tagButton"
+                          style={{ color: "white" }}
+                        ></LocalOfferOutlined>
+                      }
+                    ></IconTextField>
+                    <TagsDropDown></TagsDropDown>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+            {activeTabCSV === 3 && (
+              <Grid container>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  style={{ height: "max-content" }}
+                >
+                  <Grid container direction="row" style={{ width: "70%" }}>
+                    <p
+                      style={{
+                        fontWeight: 600,
+                        color: "#10244c",
+                        width: "100%",
+                      }}
+                    >
+                      Import Complete
+                    </p>
+                    <Grid item md={2}>
+                      <p
+                        style={{
+                          fontWeight: 600,
+                          color: "#10244c",
+                          width: "100%",
+                        }}
+                      >
+                        250
+                      </p>
+                      <p
+                        className={classes.CSVDetails}
+                        style={{ width: "100%" }}
+                      >
+                        Contacts Created
+                      </p>
+                    </Grid>
+                    <Grid item md={2}>
+                      <p
+                        style={{
+                          fontWeight: 600,
+                          color: "#10244c",
+                          width: "100%",
+                        }}
+                      >
+                        250
+                      </p>
+                      <p
+                        className={classes.CSVDetails}
+                        style={{ width: "100%" }}
+                      >
+                        Contacts Updated
+                      </p>
+                    </Grid>
+                    <Grid item md={2}>
+                      <p
+                        style={{
+                          fontWeight: 600,
+                          color: "#10244c",
+                          width: "100%",
+                        }}
+                      >
+                        250
+                      </p>
+                      <p
+                        className={classes.CSVDetails}
+                        style={{ width: "100%" }}
+                      >
+                        Errors
+                      </p>
+                      <p
+                        style={{
+                          color: "blue",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                      >
+                        View Errors
+                      </p>
+                    </Grid>
+                    <p className={classes.CSVDetails} style={{ width: "100%" }}>
+                      Each import gets a unique tag to help you find the users
+                      you have created and updated. You can also add more tags
+                      to
+                    </p>
+                    {tagFilter.length != 0 &&
+                      tagFilter.map((fil, index) => {
+                        return (
+                          <div
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justify="center"
+                            className={classes.tags}
+                            style={{ marginLeft: 0, marginRight: 16 }}
+                          >
+                            <Grid
+                              style={{ height: 50 }}
+                              container
+                              direction="row"
+                              alignItems="center"
+                            >
+                              {fil}
+                              <LocalOfferOutlined
+                                style={{
+                                  color: "blue",
+                                  fontSize: 25,
+                                  cursor: "pointer",
+                                  marginLeft: 8,
+                                }}
+                              ></LocalOfferOutlined>{" "}
+                            </Grid>
+                          </div>
+                        );
+                      })}
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify={activeTabCSV === 3?"flex-end" :"space-between"}
+          style={{ marginBottom: 16, paddingRight: 16 }}
+        >
+          {activeTabCSV !== 3 && (
+            <IconTextField
+              width={150}
+              onClick={() => {
+                setAddCsv(false);
+              }}
+              text="Cancel"
+              textColor={"#3871da"}
+              textAlign="center"
+              textWidth="100%"
+              textPadding="0px"
+              // border
+              // background={"#3871da"}
+            ></IconTextField>
+          )}
+
+          {activeTabCSV === 2 && (
+            <IconTextField
+              width={180}
+              onClick={() => {
+                setActiveTabCSV(3);
+              }}
+              border="none"
+              text="Import Contacts"
+              textColor={"white"}
+              background={"#3871da"}
+              icon={
+                <PermIdentityIcon style={{ color: "white" }}></PermIdentityIcon>
+              }
+            ></IconTextField>
+          )}
+          {activeTabCSV === 3 && (
+            <IconTextField
+              width={150}
+              onClick={() => {
+                setAddCsv(false);
+              }}
+              text="Close"
+              textColor={"#3871da"}
+              textAlign="center"
+              textWidth="100%"
+              textPadding="0px"
+            ></IconTextField>
+          )}
+        </Grid>
+      </Dialog>
 
       <Dialog
         maxWidth={"md"}
@@ -554,7 +1157,23 @@ const Sidebar = (props) => {
               />
             </InputGroup>
           </Grid>
-          <Grid item md={5} xs={5}></Grid>
+          <Grid item md={5} xs={5}>
+            <IconTextField
+              width={150}
+              onClick={() => {
+                setAddContact(false);
+                setAddCsv(true);
+              }}
+              text="Import CSV"
+              marginLeft="0px"
+              textColor={"white"}
+              textAlign="center"
+              textWidth="100%"
+              textPadding="0px"
+              // border
+              background={"#3871da"}
+            ></IconTextField>
+          </Grid>
           <Grid item md={7} xs={7}>
             <Grid container direction="row" justify="flex-end">
               <IconTextField
@@ -564,6 +1183,9 @@ const Sidebar = (props) => {
                 }}
                 text="Cancel"
                 textColor={"#3871da"}
+                textAlign="center"
+                textWidth="100%"
+                textPadding="0px"
                 // border
                 // background={"#3871da"}
               ></IconTextField>
@@ -600,7 +1222,7 @@ const Sidebar = (props) => {
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
-          if (e.target.id != "tags") {
+          if (e.target.id != "tags" && e.target.id != "searchtags") {
             setDisplayTags(false);
           }
           if (e.target.id != "placeholder") {
@@ -824,10 +1446,15 @@ const Sidebar = (props) => {
                         borderRadius: 4,
                         marginTop: 8,
                       }}
+                      id="searchtags"
                       placeholder="Search Tags"
                       value={searchTags}
                       onChange={(e) => {
                         setSearchTags(e.target.value);
+                        setDisplayTags(true);
+                      }}
+                      onClick={(e) => {
+                        setDisplayTags(true);
                       }}
                     ></input>
                   </Grid>
@@ -1007,50 +1634,7 @@ const Sidebar = (props) => {
             </Grid>
           </Grid>
           {dropFiles.length < 1 ? (
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              justify="center"
-              style={{
-                height: "max-content",
-                background: "#fafcfd",
-                marginTop: 16,
-                marginBottom: 16,
-                borderRadius: 4,
-                border: "1px dotted gray",
-                padding: 16,
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                // alert("This is alert");
-                console.log("This is great");
-              }}
-              onDrop={drop}
-            >
-              <img src={Upload}></img>
-              <p
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  color: "#a2acc1",
-                  margin: 0,
-                }}
-              >
-                Upload Your Document
-              </p>
-              <p
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  color: "#a2acc1",
-                  margin: 0,
-                }}
-              >
-                Drag and Drop or{" "}
-                <span style={{ color: "#6aa8f4" }}>Browse</span> your file here
-              </p>
-            </Grid>
+            <FileDropZone></FileDropZone>
           ) : (
             <div
               style={{
@@ -1245,6 +1829,7 @@ const Sidebar = (props) => {
               })}
             </div>
           )}
+
           <Grid item md={5} xs={5}></Grid>
           <Grid item md={7} xs={7}>
             <Grid container direction="row" justify="flex-end">
