@@ -427,6 +427,7 @@ const Sidebar = (props) => {
                     onClick={() => {
                       addTagToFilter(item.name);
                     }}
+                    id="searchtags"
                     // className={classes.sendAsP}
                   >
                     <p
@@ -670,8 +671,8 @@ const Sidebar = (props) => {
           setAddCsv(false);
         }}
         onClick={(e) => {
-          console.log("THis is id", e.target);
-          if (e.target.id != "tagButton") {
+          console.log("THis is id", e.target.id);
+          if (e.target.id != "tagButton" && e.target.id!="searchtags") {
             setDisplayTags(false);
           }
         }}
