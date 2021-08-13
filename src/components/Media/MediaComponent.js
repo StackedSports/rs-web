@@ -783,7 +783,7 @@ function MediaComponent(props) {
                       makeCheckBoxSelected(m.hashid);
                     }}
                     style={{
-                      // color: "#4d83e0",
+                      color: "white",
                       cursor: "pointer",
                       zIndex: 500,
                       position: "relative",

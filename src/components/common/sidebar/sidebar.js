@@ -1236,7 +1236,7 @@ const Sidebar = (props) => {
           }
         }}
       >
-        <Grid container direction="row" style={{ width: 800, padding: 20 }}>
+        <Grid container direction="row" style={{ maxWidth: 1300, padding: 20 }}>
           <InsertDriveFileIcon
             style={{ color: "#3871da" }}
           ></InsertDriveFileIcon>
@@ -1837,9 +1837,11 @@ const Sidebar = (props) => {
               <IconTextField
                 width={150}
                 onClick={() => {
-                  setAddContact(false);
+                  setAddMedia(false);
                 }}
-                text="Create Profile"
+                textAlign="center"
+                textWidth="100%"
+                text="Cancel"
                 textColor={"#3871da"}
                 // border
                 // background={"#3871da"}
@@ -1847,7 +1849,7 @@ const Sidebar = (props) => {
               <IconTextField
                 width={120}
                 onClick={() => {
-                  setAddContact(false);
+                  setAddMedia(false);
                   setOpenSnackBar(true);
                 }}
                 text="Upload"
