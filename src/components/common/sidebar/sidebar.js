@@ -822,7 +822,12 @@ const Sidebar = (props) => {
                     </Grid>
                   </Grid>
                 ) : (
-                  <FileDropZone></FileDropZone>
+                  <Grid container direction="row" justify="center">
+                    <div style={{width:"70%"}}>
+                    <FileDropZone></FileDropZone>
+                    </div>
+                  </Grid>
+     
                 )}
               </Grid>
             )}

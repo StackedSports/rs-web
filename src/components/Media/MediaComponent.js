@@ -945,7 +945,7 @@ function MediaComponent(props) {
                       makeCheckBoxSelected(m.media_preview);
                     }}
                     style={{
-                      // color: "#979797",
+                      color: "white",
                       cursor: "pointer",
                       zIndex: 500,
                       position: "relative",
