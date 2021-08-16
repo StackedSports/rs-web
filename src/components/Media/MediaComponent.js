@@ -97,7 +97,7 @@ const useStyles = makeStyles({
     borderRadius: 4,
     // padding: 5,
     marginLeft: -240,
-    zIndex: 1,
+    zIndex: 415,
     // maxHeight: "60vh",
     // overflowY: "scroll",
     overflowX: "hidden",
@@ -750,6 +750,7 @@ function MediaComponent(props) {
           onMouseEnter={() => {
             if (m.urls) {
               setMediaHover(m.urls.medium);
+              setDisplayAction(false);
             }
           }}
           onMouseLeave={() => {
@@ -908,6 +909,7 @@ function MediaComponent(props) {
         }}
         onMouseEnter={() => {
           setPlaceholderHover(m.media_preview);
+          setDisplayAction(false);
         }}
         onMouseLeave={() => {
           setPlaceholderHover(null);
@@ -1129,19 +1131,22 @@ function MediaComponent(props) {
                 <Link id={"toMessage"} to="/message-create"></Link>
                 <IconTextField
                   width={100}
-                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
+                  textColor={     displayAction ?  "white":"#3871DA" }
                   // background={displayAction ? "#3871da" : "white"}
                   background={"white"}
+                  background={
+                    displayAction ? "#3871DA":"transparent"
+                  }
                   text="Action"
                   icon={
                     <FaMagic
                       style={{
                         color:
-                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
+                        displayAction ?  "white":"#3871DA" 
                       }}
                     ></FaMagic>
                   }
-                  onMouseEnter={() => {
+                  onClick={() => {
                     setDisplayAction(true);
                   }}
                 ></IconTextField>
@@ -1694,6 +1699,7 @@ function MediaComponent(props) {
         // title={"POST"}
         maxWidth="sm"
         open={showTagsDialog}
+        
         message={
           <div>
             <p
@@ -1701,7 +1707,7 @@ function MediaComponent(props) {
                 fontSize: 22,
                 color: "black",
                 marginTop: 0,
-                marginBottom: 0,
+                marginBottom: 16,
                 fontWeight: "bold",
                 textAlign: "center",
                 marginTop: -25,
@@ -1717,6 +1723,7 @@ function MediaComponent(props) {
                   border: "1px solid #ebebeb",
                   borderRadius: 4,
                   height: 40,
+                  paddingLeft:4
                 }}
                 placeholder="Search Tag Name"
                 value={tagSearch}
@@ -1766,7 +1773,7 @@ function MediaComponent(props) {
               <HollowWhiteButton
                 width={100}
                 onClick={() => {
-                  setShowTagsDialog(true);
+                  setShowTagsDialog(false);
                 }}
                 text="Cancel"
                 textColor="#3871DA"

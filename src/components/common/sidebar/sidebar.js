@@ -482,6 +482,16 @@ const Sidebar = (props) => {
         >
           Upload Your Document
         </p>
+        <input
+          type="file"
+          name="image"
+          id={"browse"}
+          className="form-control"
+          multiple
+          style={{ display: "none" }}
+          // value={post.image.name}
+          onChange={handleFileChange}
+        />
         <p
           style={{
             width: "100%",
@@ -490,8 +500,16 @@ const Sidebar = (props) => {
             margin: 0,
           }}
         >
-          Drag and Drop or <span style={{ color: "#6aa8f4" }}>Browse</span> your
-          file here
+          Drag and Drop or{" "}
+          <span
+            style={{ color: "#6aa8f4", cursor: "pointer" }}
+            onClick={() => {
+              document.getElementById("browse").click();
+            }}
+          >
+            Browse
+          </span>{" "}
+          your file here
         </p>
       </Grid>
     );
@@ -566,6 +584,17 @@ const Sidebar = (props) => {
     var tempFiles = [];
     for (var i = 0; i < ev.dataTransfer.files.length; i++) {
       tempFiles.push(ev.dataTransfer.files[i]);
+    }
+    console.log("These aree files ", tempFiles);
+    var temp = dropFiles;
+    var temp2 = temp.concat(tempFiles);
+    setDropFiles(temp2);
+  };
+
+  const handleFileChange = (e) => {
+    var tempFiles = [];
+    for (var i = 0; i < e.target.files.length; i++) {
+      tempFiles.push(e.target.files[i]);
     }
     console.log("These aree files ", tempFiles);
     var temp = dropFiles;
@@ -672,7 +701,7 @@ const Sidebar = (props) => {
         }}
         onClick={(e) => {
           console.log("THis is id", e.target.id);
-          if (e.target.id != "tagButton" && e.target.id!="searchtags") {
+          if (e.target.id != "tagButton" && e.target.id != "searchtags") {
             setDisplayTags(false);
           }
         }}
@@ -823,11 +852,10 @@ const Sidebar = (props) => {
                   </Grid>
                 ) : (
                   <Grid container direction="row" justify="center">
-                    <div style={{width:"70%"}}>
-                    <FileDropZone></FileDropZone>
+                    <div style={{ width: "70%" }}>
+                      <FileDropZone></FileDropZone>
                     </div>
                   </Grid>
-     
                 )}
               </Grid>
             )}
@@ -1031,7 +1059,7 @@ const Sidebar = (props) => {
         <Grid
           container
           direction="row"
-          justify={activeTabCSV === 3?"flex-end" :"space-between"}
+          justify={activeTabCSV === 3 ? "flex-end" : "space-between"}
           style={{ marginBottom: 16, paddingRight: 16 }}
         >
           {activeTabCSV !== 3 && (
@@ -1825,9 +1853,20 @@ const Sidebar = (props) => {
                             color: "#b5bccd",
                           }}
                         >
-                          100%
+                          0%
                         </p>
-                        <DeleteForeverIcon></DeleteForeverIcon>
+                        <DeleteForeverIcon
+                          onClick={() => {
+                            var tempDF = [];
+                            dropFiles.map((df) => {
+                              if (df.name != item.name) {
+                                tempDF.push(df);
+                              }
+                            });
+                            setDropFiles(tempDF);
+                            associateContactToMedia(associatedPeople[index], index);
+                          }}
+                        ></DeleteForeverIcon>
                       </Grid>
                     </Grid>
                   </Grid>
