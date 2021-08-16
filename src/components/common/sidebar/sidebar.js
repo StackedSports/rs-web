@@ -482,16 +482,7 @@ const Sidebar = (props) => {
         >
           Upload Your Document
         </p>
-        <input
-          type="file"
-          name="image"
-          id={"browse"}
-          className="form-control"
-          multiple
-          style={{ display: "none" }}
-          // value={post.image.name}
-          onChange={handleFileChange}
-        />
+       
         <p
           style={{
             width: "100%",
@@ -680,6 +671,16 @@ const Sidebar = (props) => {
   return (
     <>
       <Link id="userSettings" to="/dashboard/user-settings"></Link>
+      <input
+          type="file"
+          name="image"
+          id={"browse"}
+          className="form-control"
+          multiple
+          style={{ display: "none" }}
+          // value={post.image.name}
+          onChange={handleFileChange}
+        />
       <Modal open={showModal} setShowModal={setShowModal} />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -1864,7 +1865,10 @@ const Sidebar = (props) => {
                               }
                             });
                             setDropFiles(tempDF);
-                            associateContactToMedia(associatedPeople[index], index);
+                            associateContactToMedia(
+                              associatedPeople[index],
+                              index
+                            );
                           }}
                         ></DeleteForeverIcon>
                       </Grid>
@@ -1872,6 +1876,16 @@ const Sidebar = (props) => {
                   </Grid>
                 );
               })}
+              <div style={{ width: "100%", textAlign: "right" }}>
+                <span
+                  style={{ color: "#6aa8f4", cursor: "pointer" }}
+                  onClick={() => {
+                    document.getElementById("browse").click();
+                  }}
+                >
+                  Browse More Files
+                </span>
+              </div>
             </div>
           )}
 
