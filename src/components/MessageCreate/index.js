@@ -1826,6 +1826,7 @@ function MessageCreate() {
                         className={classes.sideSubFilter}
                         onClick={() => {
                           addDataToFilter(item, "Board");
+                          setMessageDetails(true);
                         }}
                       >
                         {item}

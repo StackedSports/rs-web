@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
   label: {
     margin: 0,
     color: "gray",
-    marginLeft: 20,
+    marginLeft: 5,
     fontWeight: 500,
     width: "100%",
   },
@@ -115,8 +115,8 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     borderBottom: "1px solid #d8d8d8",
     height: 40,
-    marginLeft: 20,
-    width: "80%",
+    marginLeft: 5,
+    width: "95%",
     "&:active": {
       border: "none",
     },
