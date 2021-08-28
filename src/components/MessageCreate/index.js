@@ -1492,7 +1492,7 @@ function MessageCreate() {
               onClick={(e) => {
                 setMessageDetails(!messageDetails);
                 setMessageStatus("Drafts")
-
+                setIsMesasgeStatusClick(false)
                 setMessagePreview(null)
                 console.log("ASd")
                 setMessageSelected([])
