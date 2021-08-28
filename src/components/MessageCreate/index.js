@@ -7,6 +7,7 @@ import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -30,7 +31,7 @@ import {
   FaTh,
 } from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
-
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 
@@ -53,6 +54,9 @@ import { addDays } from "date-fns";
 
 function MessageCreate() {
   const classes = useStyles();
+  const [messageSelected, setMessageSelected] = useState([]);
+  const [isMesasgeStatusClick, setIsMesasgeStatusClick] = useState(false);
+
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
@@ -408,6 +412,83 @@ function MessageCreate() {
     );
   };
 
+  const showActionButton=()=>{
+    return (
+      
+        <IconTextField
+          // width={180}
+          width={100}
+          text="Action"
+          background={
+            selectedMessages.length === 0 ? "transparent" : "#3871DA"
+          }
+          textColor={selectedMessages.length === 0 ? "black" : "white"}
+          icon={
+            <FaMagic
+              style={{
+                color:
+                  selectedMessages.length === 0 ? "#3871DA" : "white",
+              }}
+            ></FaMagic>
+          }
+        ></IconTextField>
+    
+        
+  
+    )
+  }
+  const showFilterButton=()=>{
+    
+    return (
+<IconTextField
+          text="Filter"
+          textColor={showMessageFiltersRow === false ? "black" : "white"}
+          background={
+            showMessageFiltersRow === false ? "transparent" : "#3871DA"
+          }
+          width={120}
+          onClick={() => {
+            setShowMessageFiltersRow(!showMessageFiltersRow);
+          }}
+          icon={
+            <FaSlidersH
+              style={{
+                color:
+                  showMessageFiltersRow === false ? "#3871DA" : "white",
+              }}
+            ></FaSlidersH>
+          }
+        ></IconTextField>
+    
+    )
+
+  }
+  const showScheduleButton=()=>{
+    
+    return (
+<IconTextField
+          text="Schedule"
+          textColor={showMessageFiltersRow === false ? "white" : "white"}
+          background={
+            showMessageFiltersRow === false ? "rgb(196, 213, 244)" : "#3871DA"
+          }
+          width={120}
+          // onClick={() => {
+          //   setShowMessageFiltersRow(!showMessageFiltersRow);
+          // }}
+          icon={
+            <CalendarTodayIcon
+              style={{
+                color:
+                  showMessageFiltersRow === false ? "white" : "white",
+              }}
+            ></CalendarTodayIcon>
+          }
+        ></IconTextField>
+    
+    )
+
+  }
   const getMyTeamContacts = () => {
     getTeamContacts().then(
       (res) => {
@@ -818,6 +899,284 @@ function MessageCreate() {
     );
   };
 
+  const renderMessageDetails=()=>{
+    return (
+      <div
+        style={{
+          width: showSideFilters === true ? "85%" : "100%",
+          height: "100%",
+          background: "white",
+          borderRadius: 5,
+          padding: 16,
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {" "}
+        <Grid container direction="row">
+          <Grid item md={4} sm={4}>
+            <FormatAlignLeftIcon
+              onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+              }}
+              style={{ cursor: "pointer", fontSize: 18 }}
+            ></FormatAlignLeftIcon>
+
+            <span
+              style={{
+                padding: 16,
+                fontWeight: "bold",
+                // marginLeft: 20,
+                fontSize: 20,
+              }}
+            >
+              Messages Details
+            </span>
+          </Grid>
+        
+          <Grid item md={8} sm={8}>
+      <Grid container direction="row" justify="flex-end">
+
+           {showActionButton() }
+           {/* {showFilterButton() } */}
+           </Grid>
+
+          </Grid>
+        
+          <Grid container direction="row">
+            {filter.length != 0 &&
+              filter.map((fil, index) => {
+                return (
+                  <div
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    className={classes.tags}
+                  >
+                    <Grid
+                      style={{ height: 40 }}
+                      container
+                      direction="row"
+                      alignItems="center"
+                    >
+                      {fil}
+                      <ClearIcon
+                        onClick={() => {
+                          removeDataFromFilter(index);
+                        }}
+                        style={{
+                          color: "red",
+                          fontSize: 17,
+                          cursor: "pointer",
+                          marginLeft: 8,
+                        }}
+                      ></ClearIcon>{" "}
+                    </Grid>
+                  </div>
+                );
+              })}
+          </Grid>
+
+          <div
+            style={{
+              width: "100%",
+              border: "1px solid #f8f8f8",
+              marginTop: 10,
+            }}
+          ></div>
+          {showMessageFiltersRow === true ? (
+            renderMessageFilters()
+          ) : (
+            <div></div>
+          )}
+
+          <div
+            style={{
+              width: "100%",
+              maxHeight: 330,
+              //  minWidth: 1110
+            }}
+            className="fullHeightCreateMessageDetails hideScrollBar"
+            id={"messageDetailScrollPublished"}
+            onScroll={() => {
+              var scroll = document.getElementById(
+                "messageDetailScrollPublished"
+              );
+              if (scroll) {
+                scrollPosition = scroll.scrollTop;
+                // console.log("THis is scroll", scrollPosition);
+              }
+            }}
+          >
+            {placeholders &&
+              placeholders.map((selectedPlaceholder, index) => {
+                if (index < 1) {
+                  return (
+                    <MessageDetailsCard
+                      hideCheckBox={null}
+                      hideStats={null}
+                      selectedPlaceholder={selectedPlaceholder}
+                    ></MessageDetailsCard>
+                  );
+                }
+              })}
+          </div>
+        </Grid>
+      </div>
+    );
+  }
+  const messageStatusTable=()=>
+    <>
+       
+       <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                background: "#f5f6f9",
+                width: "100%",
+                minWidth: 1110,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  color="primary"
+                  checked={selectedDrafts.length === 6}
+                  onChange={() => {
+                    var array = [1, 2, 3, 4, 5, 6];
+                    var temp = [];
+                    if (selectedDrafts.length === array.length) {
+                      setSelectedDrafts([]);
+                    } else {
+                      array.map((item) => {
+                        temp.push(item);
+                      });
+                      setSelectedDrafts(temp);
+                    }
+                  }}
+                ></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <Grid container direction="row">
+                  <span className={classes.tableHeading}>Full Name</span>
+                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+                </Grid>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>Board/List</span>
+              </Grid>
+
+              <Grid item md={2} xs={2}>
+                <span
+                  className={classes.tableHeading}
+                  style={{ marginLeft: 40 }}
+                >
+                  Phone Number
+                </span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>First Name</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>Delivered at</span>
+              </Grid>
+              <Grid item md={2} xs={2}
+              onClick={()=>{
+                setIsMesasgeStatusClick(true)
+                setMessageStatus("error")
+              }}
+              >
+                <Grid container direction="row">
+                  <span className={classes.tableHeading}>Message Status</span>
+                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {[1, 2, 3, 4, 5, 6].map((item, index) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{
+                    border: "1px solid #d8d8d8",
+                    borderBottom: "none",
+                    borderRadius: 4,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                    minWidth: 1110,
+                  }}
+                >
+                  <Grid item md={1} xs={1}>
+                    <Checkbox
+                      color="primary"
+                      onChange={() => {
+                        makeDraftSelected(item);
+                      }}
+                      checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                      style={{ marginTop: 1, marginBottom: 1 }}
+                      onMouseLeave={() => {
+                        setHoveredIndex(null);
+                      }}
+                    ></Checkbox>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>David Buttler</span>
+                  </Grid>
+                  <Grid item md={1} xs={1}>
+                    <span className={classes.tableFields}>Midwest List</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span
+                      className={classes.tableFields}
+                      style={{ marginLeft: 40 }}
+                    >
+                      {formatPhoneNumber(5555555555)}
+                    </span>
+                  </Grid>
+
+                  <Grid item md={1} xs={1}>
+                    <span className={classes.tableFields}>David</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>
+                      {
+                      isMesasgeStatusClick ?  "-" :
+                      "6/12/21 2:20pm"}
+                    </span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+
+                    {messageStatus === "Drafts" ? (
+                      <span className={classes.tableFields}>
+                        <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info>{" "}
+                        Drafts{" "}
+                      </span>
+                    ) : 
+                    messageStatus==="error" ? 
+                    (
+                      <span className={classes.tableFields}>
+                        <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info>{" "}
+                        ERROR{" "}
+                      </span>
+                    )
+                    :
+                    (
+                      <span className={classes.tableFields}>
+                        <FaCalendar
+                          style={{ color: "#0292ff", fontSize: 16 }}
+                        ></FaCalendar>{" "}
+                        Scheduled{" "}
+                      </span>
+                    )}
+                  </Grid>
+                </Grid>
+              );
+            })}
+    </>
+  
   const MessageDetailsCard = (props) => {
     return (
       <Grid
@@ -1088,19 +1447,120 @@ function MessageCreate() {
                 height: "25%",
                 // borderBottom: "1px solid #d2d2d2",
               }}
+              onClick={() => {
+                setMessageDetails(null)
+                setMessagePreview(null)
+                console.log("ASd")
+                setMessageSelected([{}])
+              }}
+             
             >
               <IconTextField
+              background={messageSelected.length && "rgb(58, 114, 217)"}
                 text="Delivery Details"
+                textColor={messageSelected.length && "white"}
                 width={180}
-                onClick={() => {}}
                 icon={
-                  <Search style={{ color: "#0091ff", marginRight: 8 }}></Search>
+                  <Search style={{ color: messageSelected.length ?"white": "#0091ff", marginRight: 8 }}></Search>
                 }
               ></IconTextField>
             </Grid>
           </div>
         )}
       </Grid>
+    );
+  };
+
+  
+  const RenderSelectedMessage = () => {
+    return (
+      <div
+        style={{
+          width: showSideFilters === true ? "85%" : "100%",
+          height: "100%",
+          background: "white",
+          borderRadius: 5,
+          padding: 16,
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {" "}
+        <Grid container direction="row">
+          <Grid item md={4} sm={4}>
+            <KeyboardArrowLeftIcon
+              onClick={(e) => {
+                setMessageDetails(!messageDetails);
+                setMessageStatus("Drafts")
+
+                setMessagePreview(null)
+                console.log("ASd")
+                setMessageSelected([])
+              }}
+              style={{ cursor: "pointer", fontSize: 30,fontWeight: "bold"}}
+            ></KeyboardArrowLeftIcon>
+
+            <span
+              style={{
+                padding: 16,
+                fontWeight: "bold",
+                // marginLeft: 20,
+                fontSize: 20,
+              }}
+            >
+              Message Details
+            </span>
+          </Grid>
+        
+          <Grid item md={8} sm={8}>
+      <Grid container direction="row" justify="flex-end">
+
+           {showActionButton() }
+           {showScheduleButton() }
+           </Grid>
+
+          </Grid>
+       
+
+         
+          <div
+            style={{
+              width: "100%",
+              maxHeight: 330,
+              //  minWidth: 1110
+            }}
+            className="hideScrollBar"
+            id={"messageDetailScrollPublished"}
+            onScroll={() => {
+              var scroll = document.getElementById(
+                "messageDetailScrollPublished"
+              );
+              if (scroll) {
+                scrollPosition = scroll.scrollTop;
+                // console.log("THis is scroll", scrollPosition);
+              }
+            }}
+          >
+            {placeholders &&
+              placeholders.map((selectedPlaceholder, index) => {
+                if (index < 1) {
+                  return (
+                    <MessageDetailsCard
+                      hideCheckBox={false}
+                      hideStats={null}
+                      selectedPlaceholder={selectedPlaceholder}
+                    ></MessageDetailsCard>
+                  );
+                }
+              })}
+          </div>
+          <div style={{marginTop:10}}>
+
+
+        {messageStatusTable()}
+          </div>
+        </Grid>
+      </div>
     );
   };
 
@@ -1138,46 +1598,16 @@ function MessageCreate() {
               Messages
             </span>
           </Grid>
+        
           <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              <IconTextField
-                // width={180}
-                width={100}
-                text="Action"
-                background={
-                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
-                }
-                textColor={selectedMessages.length === 0 ? "black" : "white"}
-                icon={
-                  <FaMagic
-                    style={{
-                      color:
-                        selectedMessages.length === 0 ? "#3871DA" : "white",
-                    }}
-                  ></FaMagic>
-                }
-              ></IconTextField>
-              <IconTextField
-                text="Filter"
-                textColor={showMessageFiltersRow === false ? "black" : "white"}
-                background={
-                  showMessageFiltersRow === false ? "transparent" : "#3871DA"
-                }
-                width={120}
-                onClick={() => {
-                  setShowMessageFiltersRow(!showMessageFiltersRow);
-                }}
-                icon={
-                  <FaSlidersH
-                    style={{
-                      color:
-                        showMessageFiltersRow === false ? "#3871DA" : "white",
-                    }}
-                  ></FaSlidersH>
-                }
-              ></IconTextField>
-            </Grid>
+      <Grid container direction="row" justify="flex-end">
+
+           {showActionButton() }
+           {showFilterButton() }
+           </Grid>
+
           </Grid>
+        
           <Grid container direction="row">
             {filter.length != 0 &&
               filter.map((fil, index) => {
@@ -1297,52 +1727,13 @@ function MessageCreate() {
             </span>
           </Grid>
           <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              <IconTextField
-                width={100}
-                text="Action"
-                background={
-                  selectedDrafts.length === 0 ? "transparent" : "#3871DA"
-                }
-                textColor={selectedDrafts.length === 0 ? "black" : "white"}
-                icon={
-                  <FaMagic
-                    style={{
-                      color: selectedDrafts.length === 0 ? "#3871DA" : "white",
-                    }}
-                  ></FaMagic>
-                }
-              ></IconTextField>
-              <IconButton
-                text="Schedule"
-                textColor="white"
-                width={130}
-                onClick={() => {
-                  setMessageStatus("Scheduled");
-                  setMessageCreated(true);
-                }}
-                icon={<FaCalendar style={{ color: "white" }}></FaCalendar>}
-              ></IconButton>
-              {/* <IconTextField
-                text="Filter"
-                textColor={selectedMessages.length === 0 ? "black" : "white"}
-                background={
-                  selectedMessages.length === 0 ? "transparent" : "#3871DA"
-                }
-                width={120}
-                onClick={() => {
-                  setShowFiltersRow(!showFiltersRow);
-                }}
-                icon={
-                  <FaSlidersH
-                    style={{
-                      color:
-                        selectedMessages.length === 0 ? "#3871DA" : "white",
-                    }}
-                  ></FaSlidersH>
-                }
-              ></IconTextField> */}
-            </Grid>
+          <Grid container direction="row" justify="flex-end">
+
+           {showActionButton() }
+           {showFilterButton() }
+           </Grid>
+
+
           </Grid>
           <Grid container direction="row">
             {filter.length != 0 &&
@@ -1402,133 +1793,7 @@ function MessageCreate() {
                 messageStatus={messageStatus}
               ></MessageDetailsCard>
             )}
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              style={{
-                background: "#f5f6f9",
-                width: "100%",
-                minWidth: 1110,
-              }}
-            >
-              <Grid item md={1} xs={1}>
-                <Checkbox
-                  color="primary"
-                  checked={selectedDrafts.length === 6}
-                  onChange={() => {
-                    var array = [1, 2, 3, 4, 5, 6];
-                    var temp = [];
-                    if (selectedDrafts.length === array.length) {
-                      setSelectedDrafts([]);
-                    } else {
-                      array.map((item) => {
-                        temp.push(item);
-                      });
-                      setSelectedDrafts(temp);
-                    }
-                  }}
-                ></Checkbox>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <Grid container direction="row">
-                  <span className={classes.tableHeading}>Full Name</span>
-                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
-                </Grid>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>Board/List</span>
-              </Grid>
-
-              <Grid item md={2} xs={2}>
-                <span
-                  className={classes.tableHeading}
-                  style={{ marginLeft: 40 }}
-                >
-                  Phone Number
-                </span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>First Name</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>Delivered at</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <Grid container direction="row">
-                  <span className={classes.tableHeading}>Message Status</span>
-                  <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            {[1, 2, 3, 4, 5, 6].map((item, index) => {
-              return (
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  style={{
-                    border: "1px solid #d8d8d8",
-                    borderBottom: "none",
-                    borderRadius: 4,
-                    paddingTop: 4,
-                    paddingBottom: 4,
-                    minWidth: 1110,
-                  }}
-                >
-                  <Grid item md={1} xs={1}>
-                    <Checkbox
-                      color="primary"
-                      onChange={() => {
-                        makeDraftSelected(item);
-                      }}
-                      checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                      style={{ marginTop: 1, marginBottom: 1 }}
-                      onMouseLeave={() => {
-                        setHoveredIndex(null);
-                      }}
-                    ></Checkbox>
-                  </Grid>
-                  <Grid item md={2} xs={2}>
-                    <span className={classes.tableFields}>David Buttler</span>
-                  </Grid>
-                  <Grid item md={1} xs={1}>
-                    <span className={classes.tableFields}>Midwest List</span>
-                  </Grid>
-                  <Grid item md={2} xs={2}>
-                    <span
-                      className={classes.tableFields}
-                      style={{ marginLeft: 40 }}
-                    >
-                      {formatPhoneNumber(5555555555)}
-                    </span>
-                  </Grid>
-
-                  <Grid item md={1} xs={1}>
-                    <span className={classes.tableFields}>David</span>
-                  </Grid>
-                  <Grid item md={2} xs={2}>
-                    <span className={classes.tableFields}>-</span>
-                  </Grid>
-                  <Grid item md={2} xs={2}>
-                    {messageStatus === "Drafts" ? (
-                      <span className={classes.tableFields}>
-                        <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info>{" "}
-                        Drafts{" "}
-                      </span>
-                    ) : (
-                      <span className={classes.tableFields}>
-                        <FaCalendar
-                          style={{ color: "#0292ff", fontSize: 16 }}
-                        ></FaCalendar>{" "}
-                        Scheduled{" "}
-                      </span>
-                    )}
-                  </Grid>
-                </Grid>
-              );
-            })}
+          {messageStatusTable()}
           </div>
         </Grid>
       </div>
@@ -1730,6 +1995,12 @@ function MessageCreate() {
       </div>
     );
   };
+console.log("messageDetails",messageDetails)
+console.log("messagePreview",messagePreview)
+console.log("messageSelected",messageSelected)
+console.log("addMedia",addMedia)
+
+
 
   return (
     <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
@@ -1851,10 +2122,12 @@ function MessageCreate() {
             makeMediaSelected={makeMediaSelected}
           ></MediaComponnet>
         ) : messageDetails ? (
-          <MessageDetails></MessageDetails>
+          <MessageDetails/>
         ) : messagePreview ? (
-          <MessagePreview></MessagePreview>
-        ) : (
+          <MessagePreview/>
+        ) : messageSelected.length ?
+        (<RenderSelectedMessage/>)
+        : (
           <div
             style={{
               width: showSideFilters === true ? "85%" : "100%",
