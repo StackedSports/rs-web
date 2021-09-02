@@ -54,11 +54,10 @@ import { addDays } from "date-fns";
 
 function MessageCreate() {
   const classes = useStyles();
-  const [messageSelected, setMessageSelected] = useState([]);
-  const [isMesasgeStatusClick, setIsMesasgeStatusClick] = useState(false);
-
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
+  const [isMesasgeStatusClick, setIsMesasgeStatusClick] = useState(false);
+  const [messageSelected, setMessageSelected] = useState([]);
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [selectedMessages, setSelectedMessages] = useState([]);
@@ -1427,8 +1426,9 @@ function MessageCreate() {
               <IconTextField
                 background={messageSelected.length && "rgb(58, 114, 217)"}
                 text="Delivery Details"
-                textColor={messageSelected.length && "white"}
                 width={180}
+                textColor={messageSelected.length && "white"}
+                onClick={() => {}}
                 icon={
                   <Search
                     style={{
@@ -1467,7 +1467,6 @@ function MessageCreate() {
                 setMessageStatus("Drafts");
                 setIsMesasgeStatusClick(false);
                 setMessagePreview(null);
-                console.log("ASd");
                 setMessageSelected([]);
               }}
               style={{ cursor: "pointer", fontSize: 30, fontWeight: "bold" }}
@@ -1955,11 +1954,6 @@ function MessageCreate() {
       </div>
     );
   };
-  console.log("messageDetails", messageDetails);
-  console.log("messagePreview", messagePreview);
-  console.log("messageSelected", messageSelected);
-  console.log("addMedia", addMedia);
-
   return (
     <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
       <TimePicker
@@ -2054,9 +2048,13 @@ function MessageCreate() {
                       <p
                         className={classes.sideSubFilter}
                         onClick={() => {
+                          setMessageDetails(!messageDetails);
+                          setMessageStatus("Drafts");
+                          setIsMesasgeStatusClick(false);
+                          setMessagePreview(null);
                           setMessageSelected([]);
+
                           addDataToFilter(item, "Board");
-                          setMessageDetails(true);
                         }}
                       >
                         {item}
