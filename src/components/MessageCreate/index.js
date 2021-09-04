@@ -1015,7 +1015,6 @@ function MessageCreate() {
         style={{
           background: "#f5f6f9",
           width: "100%",
-          minWidth: 1110,
         }}
       >
         <Grid item md={1} xs={1}>
@@ -1350,7 +1349,7 @@ function MessageCreate() {
               <p
                 style={{
                   fontWeight: "bold",
-                  fontSize: 16,
+                  fontSize: 26,
                   margin: 0,
                   width: "100%",
                   textAlign: "center",
@@ -1370,7 +1369,7 @@ function MessageCreate() {
               <p
                 style={{
                   fontWeight: "bold",
-                  fontSize: 16,
+                  fontSize: 26,
                   margin: 0,
                   width: "100%",
                   textAlign: "center",
@@ -1389,7 +1388,7 @@ function MessageCreate() {
               <p
                 style={{
                   fontWeight: "bold",
-                  fontSize: 16,
+                  fontSize: 26,
                   margin: 0,
                   width: "100%",
                   textAlign: "center",
@@ -1417,10 +1416,21 @@ function MessageCreate() {
                 // borderBottom: "1px solid #d2d2d2",
               }}
               onClick={() => {
-                setMessageDetails(null);
-                setMessagePreview(null);
-                console.log("ASd");
-                setMessageSelected([{}]);
+                if (messageSelected.length > 0) {
+                  console.log("SAdasd", messageSelected);
+                  setMessageDetails(!messageDetails);
+
+                  setIsMesasgeStatusClick(false);
+                  setMessageStatus("Drafts");
+
+                  console.log("ASd");
+                  setMessageSelected([]);
+                } else {
+                  setMessageDetails(null);
+                  setMessagePreview(null);
+                  console.log("ASd");
+                  setMessageSelected([{}]);
+                }
               }}
             >
               <IconTextField
@@ -1522,7 +1532,9 @@ function MessageCreate() {
                 }
               })}
           </div>
-          <div style={{ marginTop: 10 }}>{messageStatusTable()}</div>
+          <div style={{ marginTop: 10, width: "100%" }}>
+            {messageStatusTable()}
+          </div>
         </Grid>
       </div>
     );
