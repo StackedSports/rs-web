@@ -1015,6 +1015,7 @@ function MessageCreate() {
         style={{
           background: "#f5f6f9",
           width: "100%",
+          minWidth:1025
         }}
       >
         <Grid item md={1} xs={1}>
@@ -1050,7 +1051,7 @@ function MessageCreate() {
             Phone Number
           </span>
         </Grid>
-        <Grid item md={1} xs={1}>
+        <Grid item md={2} xs={2}>
           <span className={classes.tableHeading}>First Name</span>
         </Grid>
         <Grid item md={2} xs={2}>
@@ -1084,7 +1085,7 @@ function MessageCreate() {
               borderRadius: 4,
               paddingTop: 4,
               paddingBottom: 4,
-              minWidth: 1110,
+              minWidth: 1025,
             }}
           >
             <Grid item md={1} xs={1}>
@@ -1112,7 +1113,7 @@ function MessageCreate() {
               </span>
             </Grid>
 
-            <Grid item md={1} xs={1}>
+            <Grid item md={2} xs={2}>
               <span className={classes.tableFields}>David</span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -1532,7 +1533,7 @@ function MessageCreate() {
                 }
               })}
           </div>
-          <div style={{ marginTop: 10, width: "100%" }}>
+          <div style={{ marginTop: 10, width: "100%" ,minHeight:"calc(100vh - 520px )" }}>
             {messageStatusTable()}
           </div>
         </Grid>
