@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     border: "none",
     color: "white",
     borderRadius: 4,
-    width: 50,
+    width: 1000,
     fontSize: 20,
     fontWeight: 600,
     marginLeft: 16,
@@ -130,20 +130,22 @@ export default function DateTimePicker(props) {
         style: {
           borderRadius: 10,
           padding: 0,
-          background: timeType === "pm" ? "#006edc" : "white",
+          background: timeType === "pm" ? "white" : "white",
         },
       }}
     >
       <Grid
         container
-        style={{ background: timeType === "am" ? "#006edc" : "white" }}
+        style={{
+          background: timeType === "am" ? "black" : "rgba(37, 110, 220)",
+        }}
       >
-        <Grid item md={6} xs={6}>
+        <Grid item md={5} xs={5}>
           {" "}
           <p
             style={{
-              color: timeType === "pm" ? "#006edc" : "white",
-              fontWeight: 600,
+              color: timeType === "pm" ? "white" : "white",
+              fontWeight: 700,
               fontSize: 16,
               padding: 28,
               paddingLeft: 32,
@@ -154,20 +156,31 @@ export default function DateTimePicker(props) {
             Select Date and Time
           </p>
         </Grid>
-        <Grid item md={6} xs={6}>
+        <Grid item md={7} xs={7}>
           {" "}
           <p
             style={{
-              color: timeType === "pm" ? "#006edc" : "white",
-              fontWeight: 600,
+              color: timeType === "pm" ? "white" : "white",
               fontSize: 16,
               padding: 28,
               paddingLeft: 32,
-              textTransform: "uppercase",
               margin: 0,
+              textAlign: "end",
             }}
           >
-            You have selected {moment(value).format("dddd MMMM , DD gggg")}
+            You have selected{" "}
+            <span
+              style={{
+                color: timeType === "pm" ? "white" : "white",
+                fontSize: 16,
+                textAlign: "end",
+                fontWeight: "bold",
+              }}
+            >
+              {rangeValue != null ? timeSlots[rangeValue] : currentTime}
+              {rangeValue ? timeType : ""}{" "}
+              {" on " + moment(value).format("dddd MMMM , DD gggg")}
+            </span>
           </p>
         </Grid>
       </Grid>
@@ -201,7 +214,7 @@ export default function DateTimePicker(props) {
             <Slider
               style={{
                 width: "90%",
-                color: timeType === "am" ? "#006edc" : "white",
+                color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
               }}
               // defaultValue={29}
               // aria-labelledby="input-slider"
@@ -228,7 +241,9 @@ export default function DateTimePicker(props) {
               }}
             >
               <RemoveIcon
-                style={{ color: timeType === "am" ? "#006edc" : "white" }}
+                style={{
+                  color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
+                }}
               ></RemoveIcon>
             </IconButton>
 
@@ -238,7 +253,8 @@ export default function DateTimePicker(props) {
                 fontSize: 26,
                 width: 130,
                 paddingLeft: 5,
-                color: timeType === "am" ? "black" : "white",
+                color: timeType === "am" ? "black" : "rgba(37, 110, 220)",
+                fontWeight: "bold",
               }}
             >
               {rangeValue != null ? timeSlots[rangeValue] : currentTime}
@@ -249,23 +265,23 @@ export default function DateTimePicker(props) {
                 if (rangeValue < 134) {
                   console.log("This is value");
                   setRangeValue(rangeValue + 1);
-                  props.onTimeChange(
-                    timeSlots[rangeValue + 1] + " " + timeType
-                  );
+                  props.onTimeChange(timeSlots[rangeValue + 1] + "" + timeType);
                 } else {
                   setRangeValue(0);
                   if (timeType === "am") {
                     setTimeType("pm");
-                    props.onTimeChange(timeSlots[0] + " " + "pm");
+                    props.onTimeChange(timeSlots[0] + "" + "pm");
                   } else {
                     setTimeType("am");
-                    props.onTimeChange(timeSlots[0] + " " + "am");
+                    props.onTimeChange(timeSlots[0] + "" + "am");
                   }
                 }
               }}
             >
               <AddIcon
-                style={{ color: timeType === "am" ? "#006edc" : "white" }}
+                style={{
+                  color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
+                }}
               ></AddIcon>
             </IconButton>
 
@@ -275,7 +291,7 @@ export default function DateTimePicker(props) {
               }
               onClick={() => {
                 setTimeType("am");
-                props.onTimeChange(timeSlots[rangeValue] + " " + "am");
+                props.onTimeChange(timeSlots[rangeValue] + "" + "am");
               }}
             >
               am
@@ -286,7 +302,7 @@ export default function DateTimePicker(props) {
               }
               onClick={() => {
                 setTimeType("pm");
-                props.onTimeChange(timeSlots[rangeValue] + " " + "pm");
+                props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
               }}
             >
               pm

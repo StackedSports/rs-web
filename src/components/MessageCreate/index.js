@@ -1015,7 +1015,7 @@ function MessageCreate() {
         style={{
           background: "#f5f6f9",
           width: "100%",
-          minWidth:1025
+          minWidth: 1025,
         }}
       >
         <Grid item md={1} xs={1}>
@@ -1533,7 +1533,13 @@ function MessageCreate() {
                 }
               })}
           </div>
-          <div style={{ marginTop: 10, width: "100%" ,minHeight:"calc(100vh - 520px )" }}>
+          <div
+            style={{
+              marginTop: 10,
+              width: "100%",
+              minHeight: "calc(100vh - 520px )",
+            }}
+          >
             {messageStatusTable()}
           </div>
         </Grid>
@@ -2863,6 +2869,7 @@ function MessageCreate() {
                               style={{
                                 margin: 0,
                                 marginLeft: time ? -20 : 0,
+                                fontWeight: 600,
                                 color: displayMessageReceivers
                                   ? "white"
                                   : "black",
@@ -2870,7 +2877,7 @@ function MessageCreate() {
                             >
                               {time
                                 ? moment(date).format(" MM-DD-YYYY") +
-                                  " " +
+                                  " at " +
                                   time
                                 : "ASAP"}
                             </p>
