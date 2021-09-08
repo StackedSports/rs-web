@@ -12,6 +12,8 @@ import Calendar from "react-calendar";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
 import "./calendar.css";
+import "./slider.css";
+
 import { timeSlots } from "./Data";
 const useStyles = makeStyles({
   buttonActive: {
@@ -19,7 +21,7 @@ const useStyles = makeStyles({
     border: "none",
     color: "white",
     borderRadius: 4,
-    width: 1000,
+    width: 80,
     fontSize: 20,
     fontWeight: 600,
     marginLeft: 16,
@@ -39,7 +41,8 @@ const useStyles = makeStyles({
     border: "none",
     color: "white",
     fontSize: 20,
-    width: 50,
+    width: 60,
+    height: 40,
     fontWeight: 600,
     marginLeft: 20,
     borderRadius: 4,
@@ -100,7 +103,23 @@ export default function DateTimePicker(props) {
     setRangeValue(newValue);
     props.onTimeChange(timeSlots[newValue] + " " + timeType);
   };
-
+  const usedTimeView = () => {
+    return (
+      <Grid item md={4}>
+        <div
+          style={{
+            border: "1px solid rgba(37, 110, 220)",
+            padding: "7px 0px",
+            borderRadius: 8,
+            textAlign: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          6:04am
+        </div>
+      </Grid>
+    );
+  };
   // function valuetext(value) {
   //   return `${value}°C`;
   // }
@@ -128,7 +147,7 @@ export default function DateTimePicker(props) {
       scroll={"body"}
       PaperProps={{
         style: {
-          borderRadius: 10,
+          borderRadius: 4,
           padding: 0,
           background: timeType === "pm" ? "white" : "white",
         },
@@ -153,7 +172,7 @@ export default function DateTimePicker(props) {
               margin: 0,
             }}
           >
-            Select Date and Time
+            Select Date & Time
           </p>
         </Grid>
         <Grid item md={7} xs={7}>
@@ -209,11 +228,17 @@ export default function DateTimePicker(props) {
             direction="row"
             justify="center"
             alignItems="flex-end"
-            style={{ marginTop: 25, height: 150, fontWeight: 700 }}
+            style={{
+              marginTop: 60,
+              fontWeight: 700,
+            }}
           >
             <Slider
               style={{
                 width: "90%",
+                borderLeft: "4px solid rgba(37, 110, 220)",
+                borderRight: "4px solid rgba(37, 110, 220)",
+
                 color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
               }}
               // defaultValue={29}
@@ -228,8 +253,8 @@ export default function DateTimePicker(props) {
               // valueLabelDisplay="auto"
             />
           </Grid>
-          <div style={{ width: "100%" }}></div>
-          <Grid container direction="row" justify="center">
+          <div style={{ marginTop: 40 }}></div>
+          <Grid container direction="row">
             <IconButton
               onClick={() => {
                 if (rangeValue > 0) {
@@ -250,16 +275,22 @@ export default function DateTimePicker(props) {
             <div
               style={{
                 borderBottom: "3px solid #006edc",
-                fontSize: 26,
-                width: 130,
-                paddingLeft: 5,
+                fontSize: 24,
+                marginLeft: 10,
+                marginRight: 10,
+                width: "auto",
                 color: timeType === "am" ? "black" : "rgba(37, 110, 220)",
-                fontWeight: "bold",
+                fontWeight: 500,
               }}
             >
               {rangeValue != null ? timeSlots[rangeValue] : currentTime}
-              {rangeValue ? timeType : ""}
+
+              <span style={{ marginLeft: 1 }}>
+                {" "}
+                {rangeValue ? timeType : ""}{" "}
+              </span>
             </div>
+
             <IconButton
               onClick={() => {
                 if (rangeValue < 134) {
@@ -285,39 +316,79 @@ export default function DateTimePicker(props) {
               ></AddIcon>
             </IconButton>
 
-            <button
-              className={
-                timeType === "am" ? classes.buttonActive : classes.buttonPm
-              }
-              onClick={() => {
-                setTimeType("am");
-                props.onTimeChange(timeSlots[rangeValue] + "" + "am");
-              }}
-            >
-              am
-            </button>
-            <button
-              className={
-                timeType === "pm" ? classes.buttonActivePm : classes.button
-              }
-              onClick={() => {
-                setTimeType("pm");
-                props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
-              }}
-            >
-              pm
-            </button>
+            <div style={{ marginLeft: 15, position: "relative", top: 7 }}>
+              <button
+                className={
+                  timeType === "am" ? classes.buttonActive : classes.buttonPm
+                }
+                onClick={() => {
+                  setTimeType("am");
+                  props.onTimeChange(timeSlots[rangeValue] + "" + "am");
+                }}
+              >
+                AM
+              </button>
+              <button
+                className={
+                  timeType === "pm" ? classes.buttonActivePm : classes.button
+                }
+                onClick={() => {
+                  setTimeType("pm");
+                  props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
+                }}
+              >
+                PM
+              </button>
+            </div>
           </Grid>
+          <div
+            style={{
+              borderTop: "1px solid rgb(223, 223, 223)",
+              marginLeft: 18,
+              marginRight: 18,
+              fontSize: 18,
+              marginTop: 50,
+              paddingTop: 15,
+              color: "rgb(37, 110, 220)",
+              fontWeight: "bold",
+            }}
+          >
+            Last used times:
+            <Grid
+              container
+              direction="row"
+              spacing={3}
+              style={{ marginTop: 1 }}
+            >
+              {usedTimeView()}
+              {usedTimeView()}
+              {usedTimeView()}
+              {usedTimeView()}
+              {usedTimeView()}
+              {usedTimeView()}
+            </Grid>
+          </div>
         </Grid>
+        <div
+          style={{
+            margin: "20px 0",
+            height: 2,
+            backgroundColor: "rgb(223, 223, 223)",
+            width: "100%",
+          }}
+        ></div>
+
         <Grid container direction="row" style={{ marginBottom: 20 }}>
           <Grid item md={6}></Grid>
           <Grid item md={6}>
             <Grid container direction="row" justify="flex-end">
               <button
-                className={
-                  timeType === "pm" ? classes.buttonActive : classes.button
-                }
-                style={{ width: 100, height: 45 }}
+                className={classes.button}
+                style={{
+                  width: 100,
+                  height: 45,
+                  border: "1px solid rgb(238, 238, 238)",
+                }}
                 onClick={() => {
                   props.onClose();
                 }}
@@ -325,17 +396,13 @@ export default function DateTimePicker(props) {
                 Cancel
               </button>
               <button
-                className={
-                  timeType === "pm"
-                    ? classes.buttonActivePm
-                    : classes.buttonActive
-                }
+                className={classes.buttonActive}
                 style={{
                   width: "max-content",
                   height: 45,
                   padding: 0,
                   marginRight: 12,
-                  paddingLeft: 16,
+                  paddingLeft: 10,
                 }}
                 onClick={() => {
                   props.onClose();
@@ -351,7 +418,7 @@ export default function DateTimePicker(props) {
                   <p style={{ margin: 0 }}>Save</p>
 
                   <CalendarTodayIcon
-                    style={{ marginLeft: 16, fontSize: 18, marginRight: 16 }}
+                    style={{ marginLeft: 28, fontSize: 18, marginRight: 9 }}
                   ></CalendarTodayIcon>
                 </Grid>
               </button>

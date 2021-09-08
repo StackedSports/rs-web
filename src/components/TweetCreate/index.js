@@ -2525,6 +2525,8 @@ function MessageCreate() {
                             <p
                               style={{
                                 margin: 0,
+                                fontWeight: 600,
+
                                 marginLeft: time ? -20 : 0,
                                 color: displayMessageReceivers
                                   ? "white"
@@ -2533,7 +2535,7 @@ function MessageCreate() {
                             >
                               {time
                                 ? moment(date).format(" MM-DD-YYYY") +
-                                  " " +
+                                  " at " +
                                   time
                                 : "ASAP"}
                             </p>
