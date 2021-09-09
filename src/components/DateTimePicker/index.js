@@ -107,7 +107,14 @@ export default function DateTimePicker(props) {
     return (
       <Grid item md={4}>
         <div
+          onClick={() => {
+            setTimeType("am");
+            setRangeValue(71);
+
+            props.onTimeChange("6:15" + "" + "am");
+          }}
           style={{
+            cursor: "pointer",
             border: "1px solid rgba(37, 110, 220)",
             padding: "7px 0px",
             borderRadius: 8,
@@ -115,7 +122,7 @@ export default function DateTimePicker(props) {
             verticalAlign: "middle",
           }}
         >
-          6:04am
+          6:15pm
         </div>
       </Grid>
     );
