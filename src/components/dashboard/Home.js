@@ -8,6 +8,8 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import UserAccountSettings from "../UserAccountSettings/UserAccountSettings";
 import { Link } from "react-router-dom";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 import {
   DashboardContainer,
   Title,
@@ -449,6 +451,17 @@ function Home(props) {
                   <TableHeaderRight>
                     <DateField>
                       <DatePicker
+                        clearIcon={null}
+                        calendarIcon={
+                          <ExpandMoreIcon
+                            style={{
+                              color: "black",
+                              marginLeft: 5,
+                              fontSize: 25,
+                              fontWeight: "bold",
+                            }}
+                          ></ExpandMoreIcon>
+                        }
                         onChange={(e) => {
                           var dt = new moment(e).format("YYYY-MM-DD");
                           console.log("This is it", dt);

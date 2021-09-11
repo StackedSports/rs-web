@@ -17,7 +17,11 @@ const SidebarLink = styled(Link)`
   padding-left: 1rem;
 
   &:hover {
-    background: linear-gradient(90deg, #dddddd 10%, rgba(74, 144, 226, 0) 100%);
+    background: linear-gradient(
+      90deg,
+      #dddddd 10%,
+      rgba(226, 232, 239, 0) 100%
+    );
     border-left: 4px solid #a4a4a4;
     cursor: pointer;
   }

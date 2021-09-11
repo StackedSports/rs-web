@@ -27,6 +27,7 @@ import {
   ListBottom,
   ListBottomText,
 } from "./homeElementsRight";
+import { Grid } from "@material-ui/core";
 import Ex1 from "../../images/p1.jpg";
 import Start from "../../images/star.svg";
 import AvatarImg from "../../images/avatar.png";
@@ -121,26 +122,49 @@ function HomeRight(props) {
       </PersonContainer>
 
       <InfoSection>
-        <InfoBox>
-          <InfoSubBox style={{ paddingLeft: "21px" }}>
-            <InfoP>DM’s</InfoP>
-            <InfoH>
-              {props.loggedInUserStats ? props.loggedInUserStats.dms : 0}
-            </InfoH>
-          </InfoSubBox>
-          <InfoSubBox>
+        <Grid container direction="row">
+          <Grid item xs={12} lg={3}>
+            <div>
+              <InfoP>DM’s</InfoP>
+            </div>
+            <div style={{ marginTop: -10 }}>
+              <InfoH>
+                {props.loggedInUserStats ? props.loggedInUserStats.dms : 0}
+              </InfoH>
+            </div>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            lg={5}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              borderLeft: "1px solid rgb(237, 238, 242)",
+              borderRight: "1px solid rgb(237, 238, 242)",
+            }}
+          >
             <InfoP>Personal Text</InfoP>
-            <InfoH>
-              {props.loggedInUserStats ? props.loggedInUserStats.pts : 0}
-            </InfoH>
-          </InfoSubBox>
-          <InfoSubBox style={{ paddingRight: "21px" }}>
-            <InfoP>RS Text</InfoP>
-            <InfoH>
-              {props.loggedInUserStats ? props.loggedInUserStats.rst : 0}
-            </InfoH>
-          </InfoSubBox>
-        </InfoBox>
+            <div style={{ marginTop: -10 }}>
+              <InfoH>
+                {props.loggedInUserStats ? props.loggedInUserStats.pts : 0}
+              </InfoH>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} lg={4}>
+            <InfoSubBox style={{}}>
+              <InfoP>RS Text</InfoP>
+              <div style={{ marginTop: -10 }}>
+                <InfoH>
+                  {props.loggedInUserStats ? props.loggedInUserStats.rst : 0}
+                </InfoH>
+              </div>
+            </InfoSubBox>
+          </Grid>
+        </Grid>
       </InfoSection>
 
       <StackSecion>

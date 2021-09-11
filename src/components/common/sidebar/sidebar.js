@@ -39,7 +39,7 @@ import { InputGroup, FormControl } from "react-bootstrap";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconTextField from "../../common/Fields/IconTextField";
 import { getTags, getTeamContacts } from "../../../ApiHelper";
-
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 const Nav = styled.div`
   height: 70px;
   display: flex;
@@ -482,7 +482,7 @@ const Sidebar = (props) => {
         >
           Upload Your Document
         </p>
-       
+
         <p
           style={{
             width: "100%",
@@ -672,15 +672,15 @@ const Sidebar = (props) => {
     <>
       <Link id="userSettings" to="/dashboard/user-settings"></Link>
       <input
-          type="file"
-          name="image"
-          id={"browse"}
-          className="form-control"
-          multiple
-          style={{ display: "none" }}
-          // value={post.image.name}
-          onChange={handleFileChange}
-        />
+        type="file"
+        name="image"
+        id={"browse"}
+        className="form-control"
+        multiple
+        style={{ display: "none" }}
+        // value={post.image.name}
+        onChange={handleFileChange}
+      />
       <Modal open={showModal} setShowModal={setShowModal} />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -1925,7 +1925,7 @@ const Sidebar = (props) => {
       <IconContext.Provider value={{ color: "#fff" }}>
         <NavResponsive>
           <IoIosMenu
-            style={{ color: "#222222", margin: "2rem" }}
+            style={{ color: "rgb(113, 115, 118)", margin: "2rem" }}
             size={30}
             onClick={showSidebar}
           />
@@ -1942,7 +1942,7 @@ const Sidebar = (props) => {
             />
             <BiChat
               style={{
-                color: "#222222",
+                color: "rgb(113, 115, 118)",
                 marginRight: "15px",
                 marginLeft: "15px",
                 height: "24px",
@@ -2020,13 +2020,13 @@ const Sidebar = (props) => {
             <div
               style={{
                 height: "70px",
-                width: "2px",
-                background: "#d8d8d8",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
               }}
             ></div>
             <BiBell
               style={{
-                color: "#222222",
+                color: "rgb(113, 115, 118)",
                 marginRight: "15px",
                 marginLeft: "15px",
                 height: "24.2px",
@@ -2037,13 +2037,13 @@ const Sidebar = (props) => {
             <div
               style={{
                 height: "70px",
-                width: "2px",
-                background: "#d8d8d8",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
               }}
             ></div>
             <BiChat
               style={{
-                color: "#222222",
+                color: "rgb(113, 115, 118)",
                 marginRight: "15px",
                 marginLeft: "15px",
                 height: "24px",
@@ -2053,8 +2053,8 @@ const Sidebar = (props) => {
             <div
               style={{
                 height: "70px",
-                width: "2px",
-                background: "#d8d8d8",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
               }}
             ></div>
             <Logoimage src={Logo}></Logoimage>
@@ -2101,6 +2101,7 @@ const Sidebar = (props) => {
             <div
               style={{
                 height: "100%",
+                width: "100%",
                 position: "absolute",
               }}
             >
@@ -2109,8 +2110,8 @@ const Sidebar = (props) => {
                 direction="row"
                 alignItems="flex-end"
                 style={{
-                  padding: 20,
                   paddingTop: 0,
+                  paddingBottom: 20,
 
                   height: "90%",
                 }}
@@ -2122,7 +2123,7 @@ const Sidebar = (props) => {
                 <Grid item md={4} xs={4} lg={4}>
                   <Grid container direction="row" justify="center">
                     <img
-                      style={{ width: 40, height: 40, borderRadius: 20 }}
+                      style={{ width: 35, height: 35, borderRadius: 17 }}
                       src={
                         JSON.parse(localStorage.getItem("user")).twitter_profile
                           .profile_image
@@ -2137,17 +2138,21 @@ const Sidebar = (props) => {
                   props.TweetCreate === true ? (
                     <div></div>
                   ) : (
-                    <Grid
-                      container
-                      direction="row"
-                      alignItems="center"
-                      style={{ height: "100%" }}
-                    >
-                      <p style={{ margin: 0, fontWeight: "bold" }}>
+                    <Grid container direction="row">
+                      <span style={{ marginTop: -30, fontWeight: "bold" }}>
                         {JSON.parse(localStorage.getItem("user")).first_name +
                           " " +
                           JSON.parse(localStorage.getItem("user")).last_name}
-                      </p>
+                      </span>
+                      <span style={{ marginTop: -30 }}>
+                        <ExpandMoreIcon
+                          style={{
+                            color: "black",
+                            marginLeft: 5,
+                            fontSize: 30,
+                          }}
+                        ></ExpandMoreIcon>
+                      </span>
                     </Grid>
                   )}
                 </Grid>

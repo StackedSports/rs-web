@@ -17,8 +17,12 @@ export const SidebarData = [
     path: "/dashboard",
     icon: (
       <BiHome
-        style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        style={{
+          height: "24px",
+          width: "24px",
+          opacity: 0.9,
+        }}
+        color="rgb(113, 115, 118)"
       />
     ),
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -30,7 +34,7 @@ export const SidebarData = [
     icon: (
       <BsPerson
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -42,7 +46,7 @@ export const SidebarData = [
     icon: (
       <BiCommentAdd
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
   },
@@ -52,7 +56,7 @@ export const SidebarData = [
     icon: (
       <TiImageOutline
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
   },
@@ -63,7 +67,7 @@ export const SidebarData = [
     icon: (
       <TiSocialTwitter
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
 
@@ -80,7 +84,7 @@ export const SidebarData = [
           width: "24px",
           opacity: 0.9,
         }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
   },
@@ -90,7 +94,7 @@ export const SidebarData = [
     icon: (
       <IoIosSettings
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
-        color="#222222"
+        color="rgb(113, 115, 118)"
       />
     ),
   },

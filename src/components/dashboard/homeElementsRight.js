@@ -48,7 +48,7 @@ export const AvatarButton = styled.button`
   height: 40px;
   width: 155px;
   border-radius: 4px;
-  background-color: #3871da;
+  background-color: rgba(29, 161, 242);
   color: #ffffff;
   font-size: 14px;
   font-weight: bold;
@@ -65,6 +65,9 @@ export const InfoSection = styled.div`
   background: white;
   border-radius: 5px;
   margin-top: 20px;
+  padding-top: 7px;
+  padding-left: 20px;
+  padding-right: 10px;
 `;
 
 export const InfoBox = styled.div`
@@ -73,13 +76,18 @@ export const InfoBox = styled.div`
   align-items: center;
 `;
 
-export const InfoSubBox = styled.div``;
+export const InfoSubBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 export const InfoP = styled.p`
   opacity: 0.7;
   color: #222222;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: bold;
   letter-spacing: 0;
   line-height: 14px;
   margin-top: 7px;
@@ -90,7 +98,6 @@ export const InfoH = styled.h1`
   font-size: 28px;
   font-weight: 600;
   letter-spacing: 0;
-  line-height: 34px;
   margin: 0;
   padding: 0;
 `;
