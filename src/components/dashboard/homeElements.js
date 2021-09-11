@@ -109,10 +109,9 @@ export const DateField = styled.div`
   border-style: solid;
   border-color: #d8d8d8;
   display: flex;
-  // padding: 5px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  // width: 140px;
+
+  padding-left: 8px;
+  padding-right: 0px;
   height: 40px;
   border-radius: 5px;
   margin: 1rem;
@@ -267,6 +266,7 @@ export const ChartFooterContent = styled.div`
   font-weight: 600;
   letter-spacing: 0;
   line-height: 14px;
+  font-weight: bold;
 `;
 
 export const ChartFooterButton2 = styled.div`

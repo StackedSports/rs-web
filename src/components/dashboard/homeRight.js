@@ -172,9 +172,9 @@ function HomeRight(props) {
           <MMH>The StackUp</MMH>
           <MonthField>
             <DropdownButton
-              drop={"right"}
+              drop={"down"}
               id="dropdown-basic-button"
-              title={currency}
+              title={<b>{currency}</b>}
             >
               {currencies.map((option) => (
                 <Dropdown.Item

@@ -9,7 +9,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import UserAccountSettings from "../UserAccountSettings/UserAccountSettings";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
+import DateRangeIcon from "@material-ui/icons/DateRange";
 import {
   DashboardContainer,
   Title,
@@ -450,13 +450,19 @@ function Home(props) {
                 <Grid item xs={12} lg={6}>
                   <TableHeaderRight>
                     <DateField>
+                      <DateRangeIcon
+                        style={{
+                          marginRight: 3,
+                          fontSize: 18,
+                          color: "rgb(74, 123, 224)",
+                        }}
+                      />
                       <DatePicker
                         clearIcon={null}
                         calendarIcon={
                           <ExpandMoreIcon
                             style={{
                               color: "black",
-                              marginLeft: 5,
                               fontSize: 25,
                               fontWeight: "bold",
                             }}
@@ -572,8 +578,8 @@ function Home(props) {
                         <MonthField>
                           <DropdownButton
                             id="dropdown-basic-button"
-                            title={currency}
-                            drop={"right"}
+                            title={<b>{currency}</b>}
+                            drop={"down"}
                           >
                             {currencies.map((option) => (
                               <Dropdown.Item
@@ -640,32 +646,34 @@ function Home(props) {
                     </ChartDivS>
 
                     <ChartFooter>
+                      <ChartFooterButton2>
+                        <FiberManualRecordIcon
+                          style={{
+                            color: "#4f81bc",
+                            width: "18px",
+                            height: "18px",
+                          }}
+                        />
+                        <ChartFooterContent>Twitter DM's</ChartFooterContent>
+                      </ChartFooterButton2>
+
                       <ChartFooterButton>
                         <FiberManualRecordIcon
                           style={{
-                            width: "12px",
-                            height: "12px",
+                            width: "18px",
+                            height: "18px",
                             color: "#8BB14C",
                           }}
                         />
                         <ChartFooterContent>Personal Texts</ChartFooterContent>
                       </ChartFooterButton>
-                      <ChartFooterButton2>
-                        <FiberManualRecordIcon
-                          style={{
-                            width: "12px",
-                            color: "#4f81bc",
-                            height: "12px",
-                          }}
-                        />
-                        <ChartFooterContent>Total DM's</ChartFooterContent>
-                      </ChartFooterButton2>
+
                       <ChartFooterButton3>
                         <FiberManualRecordIcon
                           style={{
-                            width: "12px",
-                            height: "12px",
-                            color: "#c0504e",
+                            width: "18px",
+                            height: "18px",
+                            color: "black",
 
                             marginLeft: "3px",
                           }}
@@ -680,55 +688,57 @@ function Home(props) {
                     <ChartTop>
                       <MM>
                         <MMH>{filterBar} Messages</MMH>
-                        <MonthField>
-                          <DropdownButton
-                            id="dropdown-basic-button"
-                            title={filterBar}
-                            drop={"right"}
-                          >
-                            {currencies.map((option) => (
-                              <Dropdown.Item
-                                style={{
-                                  background:
-                                    filterBar === option.label
-                                      ? "#348ef7"
-                                      : "white",
-                                  color:
-                                    filterBar === option.label
-                                      ? "white"
-                                      : "black",
-                                }}
-                                onClick={(e) => {
-                                  if (option.label === "This Quarter") {
-                                    setBarchartData(quarterlyStats);
-                                  } else if (option.label === "This Year") {
-                                    setBarchartData(yearlyStats);
-                                  } else if (option.label === "Last Quarter") {
-                                    setBarchartData(lastQuarterStats);
-                                  } else if (option.label === "Last Year") {
-                                    setBarchartData(lastYearStats);
-                                  } else if (option.label === "Last Month") {
-                                    setBarchartData(lastMonthStats);
-                                  } else if (option.label === "Last 30 Days") {
-                                    setBarchartData(last30Stats);
-                                  } else {
-                                    setBarchartData(monthlyStats);
-                                  }
-                                  setFilterBar(option.label);
-                                }}
-                              >
-                                {" "}
-                                {option.label}
-                              </Dropdown.Item>
-                            ))}
-                          </DropdownButton>
-                        </MonthField>
                       </MM>
                       <Count>
                         {barChartData ? barChartData.total_messages : 0}
                       </Count>
                     </ChartTop>
 
+                    <div style={{ float: "right", marginRight: 15 }}>
+                      <MonthField>
+                        <DropdownButton
+                          id="dropdown-basic-button"
+                          title={<b>{filterBar}</b>}
+                          drop={"down"}
+                        >
+                          {currencies.map((option) => (
+                            <Dropdown.Item
+                              style={{
+                                background:
+                                  filterBar === option.label
+                                    ? "#348ef7"
+                                    : "white",
+                                color:
+                                  filterBar === option.label
+                                    ? "white"
+                                    : "black",
+                              }}
+                              onClick={(e) => {
+                                if (option.label === "This Quarter") {
+                                  setBarchartData(quarterlyStats);
+                                } else if (option.label === "This Year") {
+                                  setBarchartData(yearlyStats);
+                                } else if (option.label === "Last Quarter") {
+                                  setBarchartData(lastQuarterStats);
+                                } else if (option.label === "Last Year") {
+                                  setBarchartData(lastYearStats);
+                                } else if (option.label === "Last Month") {
+                                  setBarchartData(lastMonthStats);
+                                } else if (option.label === "Last 30 Days") {
+                                  setBarchartData(last30Stats);
+                                } else {
+                                  setBarchartData(monthlyStats);
+                                }
+                                setFilterBar(option.label);
+                              }}
+                            >
+                              {" "}
+                              {option.label}
+                            </Dropdown.Item>
+                          ))}
+                        </DropdownButton>
+                      </MonthField>
+                    </div>
                     <div>
                       {barChartData != null ? (
                         <Barchart monthlyStats={barChartData} />
@@ -748,8 +758,8 @@ function Home(props) {
                       <ChartFooterButton>
                         <FiberManualRecordIcon
                           style={{
-                            width: "12px",
-                            height: "12px",
+                            width: "18px",
+                            height: "18px",
                             color: "#0091FF",
                           }}
                         />
@@ -758,8 +768,8 @@ function Home(props) {
                       <ChartFooterButton2>
                         <FiberManualRecordIcon
                           style={{
-                            width: "12px",
-                            height: "12px",
+                            width: "18px",
+                            height: "18px",
                             color: "#8BB14C",
                           }}
                         />
@@ -768,8 +778,8 @@ function Home(props) {
                       <ChartFooterButton3>
                         <FiberManualRecordIcon
                           style={{
-                            width: "12px",
-                            height: "12px",
+                            width: "18px",
+                            height: "18px",
                             color: "#373D4A",
                             marginLeft: "3px",
                           }}
