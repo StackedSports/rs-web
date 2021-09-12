@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
-
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -220,6 +220,51 @@ function MediaComponent(props) {
     );
   };
 
+  const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <div
+      style={{ fontSize: 17 }}
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        // onClick(e);
+      }}
+    >
+      {children}
+      <KeyboardArrowDownIcon style={{ marginLeft: 15, fontSize: 30 }} />
+    </div>
+  ));
+
+  // forwardRef again here!
+  // Dropdown needs access to the DOM of the Menu to measure it
+  const CustomMenu = React.forwardRef(
+    ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+      const [value, setValue] = useState("");
+
+      return (
+        <div
+          ref={ref}
+          style={style}
+          className={className}
+          aria-labelledby={labeledBy}
+        >
+          <FormControl
+            autoFocus
+            className="mx-3 my-2 w-auto"
+            placeholder="Type to filter..."
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
+          <ul className="list-unstyled">
+            {React.Children.toArray(children).filter(
+              (child) =>
+                !value || child.props.children.toLowerCase().startsWith(value)
+            )}
+          </ul>
+        </div>
+      );
+    }
+  );
+
   const getMyMedia = () => {
     getMedia().then(
       (res) => {
@@ -247,6 +292,64 @@ function MediaComponent(props) {
       (error) => {
         console.log("this is error all media", error);
       }
+    );
+  };
+
+  const ContainerIconText = (props) => {
+    return (
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        style={{
+          border: props.border || "1px solid #d8d8d8",
+          width: props.width || "max-content",
+          background: props.background || "white",
+          height: 40,
+          borderRadius: 4,
+          marginLeft: props.marginLeft != null ? props.marginLeft : 16,
+          marginTop: props.marginTop || 0,
+          marginBottom: props.marginBottom || 0,
+          cursor: "pointer",
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
+        onClick={() => {
+          if (props.onClick) {
+            props.onClick();
+          }
+        }}
+        onMouseEnter={() => {
+          if (props.onMouseEnter) {
+            props.onMouseEnter();
+          }
+        }}
+        onMouseLeave={() => {
+          if (props.onMouseLeave) {
+            props.onMouseLeave();
+          }
+        }}
+      >
+        <Grid item md={12} sm={12} direction="row">
+          <div style={{ display: "flex" }}>
+            {props.icon && <span> {props.icon}</span>}
+            <span
+              id={props.id}
+              style={{
+                fontWeight: "bold",
+                color: props.textColor || "black",
+                overflowText: "ellipsis",
+                marginLeft: 10,
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              }}
+            >
+              {props.text}
+            </span>
+          </div>
+        </Grid>
+      </Grid>
     );
   };
 
@@ -1077,7 +1180,7 @@ function MediaComponent(props) {
                   props.setAddMedia(false);
                 }
               }}
-              style={{ cursor: "pointer", fontSize: 18 }}
+              style={{ cursor: "pointer", fontSize: 25 }}
             ></FormatAlignLeftIcon>
           )}
           {props.message ? (
@@ -1101,6 +1204,7 @@ function MediaComponent(props) {
               style={{
                 padding: 5,
                 fontWeight: "bold",
+                fontSize: 20,
                 marginLeft: 20,
                 cursor: "pointer",
               }}
@@ -1108,7 +1212,7 @@ function MediaComponent(props) {
                 setSelectedPlaceHolder(null);
               }}
             >
-              Media
+              <b>Media</b>
             </span>
           )}
         </Grid>
@@ -1131,18 +1235,15 @@ function MediaComponent(props) {
                 <Link id={"toMessage"} to="/message-create"></Link>
                 <IconTextField
                   width={100}
-                  textColor={     displayAction ?  "white":"#3871DA" }
+                  textColor={displayAction ? "white" : "#3871DA"}
                   // background={displayAction ? "#3871da" : "white"}
                   background={"white"}
-                  background={
-                    displayAction ? "#3871DA":"transparent"
-                  }
+                  background={displayAction ? "#3871DA" : "transparent"}
                   text="Action"
                   icon={
                     <FaMagic
                       style={{
-                        color:
-                        displayAction ?  "white":"#3871DA" 
+                        color: displayAction ? "white" : "#3871DA",
                       }}
                     ></FaMagic>
                   }
@@ -1312,7 +1413,30 @@ function MediaComponent(props) {
           //   handleScroll();
           // }}
         >
-          <p>Quick Access</p>
+          <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
+            <Grid md={6}>
+              <p>Quick Access</p>
+            </Grid>
+            <Grid md={6} direction="row" justify="flex-end">
+              <div style={{ textAlign: "end" }}>
+                <Dropdown>
+                  <Dropdown.Toggle
+                    as={CustomToggle}
+                    id="dropdown-custom-components"
+                  >
+                    Last Modified
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu
+                  // as={CustomMenu}
+                  >
+                    <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </Grid>
+          </Grid>
+
           {selectedPlaceholder === null || props.message ? (
             <Grid container>
               {media != null ? (
@@ -1379,7 +1503,7 @@ function MediaComponent(props) {
                     {viewMoreQuickAccess == true &&
                     quickAccessEndIndex >= media.length
                       ? ""
-                      : "View More"}
+                      : "Load More"}
                   </span>
                 </Grid>
               </div>
@@ -1428,6 +1552,7 @@ function MediaComponent(props) {
                 height: 30,
                 borderRadius: 4,
                 marginRight: 30,
+                marginBottom: 10,
               }}
             >
               <Grid
@@ -1448,7 +1573,29 @@ function MediaComponent(props) {
               </Grid>
             </div>
           </Grid>
-          <p>Placeholders</p>
+          <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
+            <Grid md={6}>
+              <p>Placeholders</p>
+            </Grid>
+            <Grid md={6} direction="row" justify="flex-end">
+              <div style={{ textAlign: "end" }}>
+                <Dropdown>
+                  <Dropdown.Toggle
+                    as={CustomToggle}
+                    id="dropdown-custom-components"
+                  >
+                    Last Modified
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu
+                  // as={CustomMenu}
+                  >
+                    <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </Grid>
+          </Grid>
           {showlistView === true && props.message === null ? (
             <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
               <Grid
@@ -1656,13 +1803,43 @@ function MediaComponent(props) {
                     {viewMorePlaceholder == true &&
                     placeholderEndIndex >= placeholders.length
                       ? ""
-                      : "View More"}
+                      : "Load More"}
                   </span>
                 </Grid>
               </div>
             </Grid>
           )}
-          {props.message ? <div></div> : <p>Tagged Media</p>}
+          {props.message ? (
+            <div></div>
+          ) : (
+            <Grid
+              direction="row"
+              container
+              style={{ padding: "0 25px 0 10px" }}
+            >
+              <Grid md={6}>
+                <p>Tagged Media</p>
+              </Grid>
+              <Grid md={6} direction="row" justify="flex-end">
+                <div style={{ textAlign: "end" }}>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      as={CustomToggle}
+                      id="dropdown-custom-components"
+                    >
+                      Last Modified
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu
+                    // as={CustomMenu}
+                    >
+                      <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              </Grid>
+            </Grid>
+          )}
           {props.message ? (
             <div></div>
           ) : (
@@ -1671,21 +1848,22 @@ function MediaComponent(props) {
                 taggedMedia.map((tag, index) => {
                   if (index < 7) {
                     return (
-                      <IconTextField
-                        // width={100}
+                      <ContainerIconText
+                        width={200}
                         onClick={() => {
                           setShowTagsDialog(false);
                           setOpenSnackBar(true);
                         }}
                         text={tag.name}
-                        textColor="#3871DA"
+                        textColor="black"
                         background="white"
+                        marginBottom={15}
                         icon={
                           <LocalOfferOutlinedIcon
                             style={{ color: "#3871DA" }}
                           ></LocalOfferOutlinedIcon>
                         }
-                      ></IconTextField>
+                      />
                     );
                   }
                 })}
@@ -1699,7 +1877,6 @@ function MediaComponent(props) {
         // title={"POST"}
         maxWidth="sm"
         open={showTagsDialog}
-        
         message={
           <div>
             <p
@@ -1723,7 +1900,7 @@ function MediaComponent(props) {
                   border: "1px solid #ebebeb",
                   borderRadius: 4,
                   height: 40,
-                  paddingLeft:4
+                  paddingLeft: 4,
                 }}
                 placeholder="Search Tag Name"
                 value={tagSearch}

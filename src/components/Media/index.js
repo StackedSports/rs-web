@@ -9,6 +9,8 @@ import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
@@ -60,6 +62,7 @@ const useStyles = makeStyles({
   sideSubFilter: {
     padding: 5,
     fontWeight: 500,
+    color: "rgb(137, 138, 140)",
     fontSize: 13,
     paddingBottom: 0,
     marginBottom: 0,
@@ -808,7 +811,8 @@ function Media() {
           <p
             style={{
               fontWeight: "bold",
-              fontSize: 12,
+              fontSize: 17,
+              marginLeft: 17,
               margin: 0,
               marginLeft: 10,
               fontSize: 15,
@@ -967,7 +971,8 @@ function Media() {
           <p
             style={{
               fontWeight: "bold",
-              fontSize: 12,
+              fontSize: 17,
+              marginLeft: 17,
               margin: 0,
               marginLeft: 10,
               fontSize: 15,
@@ -1055,7 +1060,7 @@ function Media() {
                 fontWeight: "bold",
                 fontSize: 20,
                 paddingBottom: 0,
-                marginBottom: 0,
+                marginBottom: 20,
                 cursor: "pointer",
               }}
               onClick={() => {
@@ -1066,12 +1071,13 @@ function Media() {
             </p>
             <p className={classes.sideFilter}>
               My Media{" "}
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
+              <KeyboardArrowDownIcon
+                style={{ fontSize: 26, marginLeft: 20 }}
+              ></KeyboardArrowDownIcon>
             </p>
             {myMediaContacts &&
               myMediaContacts.map((item) => {
+                console.log("asdsd", item);
                 return (
                   <p
                     className={classes.sideSubFilter}
@@ -1082,7 +1088,7 @@ function Media() {
                       );
                     }}
                   >
-                    {item.first_name + " " + item.last_name}
+                    {item.first_name + " " + item.last_name} {"(0)"}
                   </p>
                 );
               })}
@@ -1094,7 +1100,7 @@ function Media() {
             >
               Recent
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
             <p
@@ -1105,7 +1111,7 @@ function Media() {
             >
               Images
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
             <p
@@ -1116,7 +1122,7 @@ function Media() {
             >
               Videos
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
             <p
@@ -1127,7 +1133,7 @@ function Media() {
             >
               Gifs
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
             {showBoardFilters === true && <div></div>}
@@ -1135,13 +1141,13 @@ function Media() {
             <p className={classes.sideFilter}>
               Personalized Media
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
             <p className={classes.sideFilter}>
               Placeholders
               <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 17, marginLeft: 17 }}
               ></ArrowForwardIosIcon>
             </p>
           </div>

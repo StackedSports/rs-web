@@ -252,7 +252,7 @@ function ContactProfile() {
     },
     {
       value: "5",
-      label: "Last ",
+      label: "Last Month",
     },
     {
       value: "6",
