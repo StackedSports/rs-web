@@ -7,7 +7,7 @@
 .calendar .react-calendar {
   width: 350px;
   max-width: 100%;
-  background: white;
+  background: white important;
   border: none !important;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.125em;
@@ -78,7 +78,7 @@
 
 .calendar .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-  background: #006edc;
+  background: #006edc !important;
 }
 
 .calendarPm .react-calendar__tile:enabled:hover,
