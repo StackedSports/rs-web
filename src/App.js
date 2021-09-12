@@ -3,6 +3,8 @@ import "./App.css";
 import Signup from "./components/signup";
 import Dashboard from "./components/dashboard/index";
 import Contacts from "./Pages/Contacts";
+import Chat from "./Pages/Chat";
+
 import Media from "./Pages/Media";
 import MessageCreate from "./Pages/MessageCreate";
 import UserProfile from "./Pages/UserProfile";
@@ -24,6 +26,8 @@ function App() {
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/dashboard/:user" exact component={Dashboard} />
           <Route path="/contacts" exact component={Contacts} />
+          <Route path="/chat" exact component={Chat} />
+
           <Route path="/media" exact component={Media} />
           <Route path="/tweet-create" exact component={TweetCreate} />
 

@@ -1,0 +1,7 @@
+.searchInput:focus {
+  outline: none;
+}
+.searchInput::placeholder {
+  color: rgb(165, 165, 170);
+  padding-left: 7px;
+}

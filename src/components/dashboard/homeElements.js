@@ -145,6 +145,10 @@ export const FilterIcon = styled(FaSlidersH)`
   color: ${({ filterOpen }) => (filterOpen ? "white" : "#222222")};
 `;
 
+export const FilterIconBlue = styled(FaSlidersH)`
+  color: ${({ filterOpen }) => "rgb(80, 130, 221)"};
+`;
+
 export const FilterText = styled.p`
   font-size: 14px;
   margin: 0px;

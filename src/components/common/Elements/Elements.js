@@ -1,5 +1,15 @@
 import styled from "styled-components";
 import { FaSlidersH } from "react-icons/fa";
+
+export const ChatContainer = styled.div`
+  background: white;
+  height: 100vh;
+  width: 100%;
+  margin-top: 101px;
+  margin-left: 100px;
+  border: 6px solid rgb(233, 234, 239);
+`;
+
 export const DarkContainer = styled.div`
   margin-left: 270px;
   background: rgb(233, 234, 239);

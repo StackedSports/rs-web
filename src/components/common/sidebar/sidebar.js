@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { SidebarData } from "./sidebarData";
 import SubMenu from "./subMenu";
 import { IconContext } from "react-icons/lib";
@@ -311,6 +311,7 @@ const useStyles = makeStyles({
 });
 
 const Sidebar = (props) => {
+  let history = useHistory();
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [addContact, setAddContact] = useState(false);
@@ -1954,6 +1955,7 @@ const Sidebar = (props) => {
         <Nav>
           {props.contacts === true ||
           props.media == true ||
+          props.chat == true ||
           props.messageCreate === true ||
           props.TweetCreate === true ? (
             <LogoContainer style={{ width: 60 }}>
@@ -1978,6 +1980,17 @@ const Sidebar = (props) => {
               }}
             >
               + New Message
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          {props.chat === true ? (
+            <Button
+              style={{ width: 160, textAlign: "center", height: 50 }}
+              onClick={() => {}}
+            >
+              <span style={{ fontSize: 30 }}>+</span>
+              <span style={{ marginLeft: 16 }}>New Message</span>
             </Button>
           ) : (
             <div></div>
@@ -2042,7 +2055,11 @@ const Sidebar = (props) => {
               }}
             ></div>
             <BiChat
+              onClick={() => {
+                history.push(`/chat`);
+              }}
               style={{
+                cursor: "pointer",
                 color: "rgb(113, 115, 118)",
                 marginRight: "15px",
                 marginLeft: "15px",
@@ -2065,6 +2082,7 @@ const Sidebar = (props) => {
           style={{
             width:
               props.contacts ||
+              props.chat ||
               props.media ||
               props.messageCreate ||
               props.TweetCreate
@@ -2075,6 +2093,7 @@ const Sidebar = (props) => {
           <Grid container direction="column">
             <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
               {props.contacts === true ||
+              props.chat === true ||
               props.media === true ||
               props.messageCreate === true ||
               props.TweetCreate === true ? (
@@ -2093,6 +2112,7 @@ const Sidebar = (props) => {
                     <SubMenu
                       contacts={
                         props.contacts ||
+                        props.chat === true ||
                         props.media ||
                         props.messageCreate ||
                         props.TweetCreate
@@ -2106,66 +2126,70 @@ const Sidebar = (props) => {
                 );
               })}
             </SidebarWrap>
-            <div
-              style={{
-                height: "100%",
-                width: "100%",
-                position: "absolute",
-              }}
-            >
-              <Grid
-                container
-                direction="row"
-                alignItems="flex-end"
-                style={{
-                  paddingTop: 0,
-                  paddingBottom: 20,
 
-                  height: "90%",
-                }}
-                onClick={() => {
-                  // window.location.href="/dashboard/user-settings"
-                  document.getElementById("userSettings").click();
+            {props.chat === false && (
+              <div
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  position: "absolute",
                 }}
               >
-                <Grid item md={4} xs={4} lg={4}>
-                  <Grid container direction="row" justify="center">
-                    <img
-                      style={{ width: 35, height: 35, borderRadius: 17 }}
-                      src={
-                        JSON.parse(localStorage.getItem("user")).twitter_profile
-                          .profile_image
-                      }
-                    ></img>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="flex-end"
+                  style={{
+                    paddingTop: 0,
+                    paddingBottom: 20,
+
+                    height: "90%",
+                  }}
+                  onClick={() => {
+                    // window.location.href="/dashboard/user-settings"
+                    document.getElementById("userSettings").click();
+                  }}
+                >
+                  <Grid item md={4} xs={4} lg={4}>
+                    <Grid container direction="row" justify="center">
+                      <img
+                        style={{ width: 35, height: 35, borderRadius: 17 }}
+                        src={
+                          JSON.parse(localStorage.getItem("user"))
+                            .twitter_profile.profile_image
+                        }
+                      ></img>
+                    </Grid>
+                  </Grid>
+                  <Grid item md={8} xs={8} lg={8}>
+                    {props.contacts === true ||
+                    props.media === true ||
+                    props.chat === true ||
+                    props.messageCreate === true ||
+                    props.TweetCreate === true ? (
+                      <div></div>
+                    ) : (
+                      <Grid container direction="row">
+                        <span style={{ marginTop: -30, fontWeight: "bold" }}>
+                          {JSON.parse(localStorage.getItem("user")).first_name +
+                            " " +
+                            JSON.parse(localStorage.getItem("user")).last_name}
+                        </span>
+                        <span style={{ marginTop: -30 }}>
+                          <ExpandMoreIcon
+                            style={{
+                              color: "black",
+                              marginLeft: 5,
+                              fontSize: 30,
+                            }}
+                          ></ExpandMoreIcon>
+                        </span>
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
-                <Grid item md={8} xs={8} lg={8}>
-                  {props.contacts === true ||
-                  props.media === true ||
-                  props.messageCreate === true ||
-                  props.TweetCreate === true ? (
-                    <div></div>
-                  ) : (
-                    <Grid container direction="row">
-                      <span style={{ marginTop: -30, fontWeight: "bold" }}>
-                        {JSON.parse(localStorage.getItem("user")).first_name +
-                          " " +
-                          JSON.parse(localStorage.getItem("user")).last_name}
-                      </span>
-                      <span style={{ marginTop: -30 }}>
-                        <ExpandMoreIcon
-                          style={{
-                            color: "black",
-                            marginLeft: 5,
-                            fontSize: 30,
-                          }}
-                        ></ExpandMoreIcon>
-                      </span>
-                    </Grid>
-                  )}
-                </Grid>
-              </Grid>
-            </div>
+              </div>
+            )}
           </Grid>
         </SidebarNav>
       </IconContext.Provider>
