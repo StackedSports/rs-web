@@ -92,7 +92,7 @@ export default function DateTimePicker(props) {
     tempType = "pm";
     currentTime = hours + ":" + minutes;
   }
-  const [timeType, setTimeType] = useState("pm");
+  const [timeType, setTimeType] = useState(tempType);
 
   // function valuetext(value) {
   //   console.log("THis is vlaue", value);
