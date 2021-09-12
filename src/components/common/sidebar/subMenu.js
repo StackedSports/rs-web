@@ -15,7 +15,6 @@ const SidebarLink = styled(Link)`
   font-size: 16px;
   font-family: ProximaNovaSemibold;
   padding-left: 1rem;
-
   &:hover {
     background: linear-gradient(
       90deg,
@@ -59,14 +58,29 @@ const LabelContainer = styled.div`
 
 const ImgIcon = styled.img``;
 
-const SubMenu = ({ item, contacts }) => {
+const SubMenu = ({ item, contacts, index, selectedTab }) => {
+  console.log("keykey", index, selectedTab);
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
   // console.log("THis is path", item.path);
   return (
     <>
-      <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
+      <div
+        style={{
+          borderLeft: "4px solid #a4a4a4",
+          cursor: "pointer",
+        }}
+      ></div>
+      <SidebarLink
+        style={{
+          background:
+            index === selectedTab &&
+            "linear-gradient(90deg,#dddddd 10%,rgba(226, 232, 239, 0) 100%)",
+        }}
+        to={item.path}
+        onClick={item.subNav && showSubnav}
+      >
         <LabelContainer>
           {item.icon}
           {contacts == null && <SidebarLabel>{item.title}</SidebarLabel>}

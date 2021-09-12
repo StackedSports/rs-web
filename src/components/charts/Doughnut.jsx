@@ -7,7 +7,7 @@ export default class Doughnut extends React.Component {
     this.myChart = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["RS Text", "Personal texts", "Total DM's"],
+        labels: ["RS Text", "Twitter Dm", "Personal Text"],
         datasets: [
           {
             data: [
@@ -20,8 +20,8 @@ export default class Doughnut extends React.Component {
             lineTension: 0,
             fill: false,
             backgroundColor: "#19a5d3",
-            backgroundColor: ["#c0504e", "#8bb14c", "#4f81bc"],
-            hoverBackgroundColor: "#26a69a",
+            backgroundColor: ["black", "rgb(0, 145, 255)", "rgb(139, 177, 76)"],
+            hoverBackgroundColor: ["black", "rgb(0, 145, 255)", "rgb(139, 177, 76)"],
           },
 
           // {

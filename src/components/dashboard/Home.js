@@ -700,6 +700,7 @@ function Home(props) {
                           id="dropdown-basic-button"
                           title={<b>{filterBar}</b>}
                           drop={"down"}
+                          style={{ width: 222 }}
                         >
                           {currencies.map((option) => (
                             <Dropdown.Item

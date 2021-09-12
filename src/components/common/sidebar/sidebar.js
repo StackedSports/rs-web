@@ -331,7 +331,7 @@ const Sidebar = (props) => {
   var [displayAssociate, setDisplayAssociate] = useState(null);
   const [dropFiles, setDropFiles] = useState([]);
   const [activeTabCSV, setActiveTabCSV] = useState(1);
-
+  const [selectedTab, setSelectedTab] = useState(0);
   const [searchTags, setSearchTags] = useState("");
   const classes = useStyles();
 
@@ -2085,16 +2085,24 @@ const Sidebar = (props) => {
 
               {SidebarData.map((item, index) => {
                 return (
-                  <SubMenu
-                    contacts={
-                      props.contacts ||
-                      props.media ||
-                      props.messageCreate ||
-                      props.TweetCreate
-                    }
-                    item={item}
-                    key={index}
-                  />
+                  <div
+                    onClick={() => {
+                      setSelectedTab(() => index);
+                    }}
+                  >
+                    <SubMenu
+                      contacts={
+                        props.contacts ||
+                        props.media ||
+                        props.messageCreate ||
+                        props.TweetCreate
+                      }
+                      selectedTab={selectedTab}
+                      item={item}
+                      key={index}
+                      index={index}
+                    />
+                  </div>
                 );
               })}
             </SidebarWrap>
