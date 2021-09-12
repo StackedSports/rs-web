@@ -343,7 +343,7 @@ export default function DateTimePicker(props) {
                   console.log("time change am");
 
                   setTimeType("am");
-                  // props.onTimeChange(timeSlots[rangeValue] + "" + "am");
+                  props.onTimeChange(timeSlots[rangeValue] + "" + "am");
                 }}
               >
                 AM
@@ -355,7 +355,7 @@ export default function DateTimePicker(props) {
                 onClick={() => {
                   console.log("time change pm");
                   setTimeType("pm");
-                  // props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
+                  props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
                 }}
               >
                 PM
