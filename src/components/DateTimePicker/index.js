@@ -46,11 +46,14 @@ const useStyles = makeStyles({
     fontWeight: 600,
     marginLeft: 20,
     borderRadius: 4,
+    cursor: "pointer",
   },
   button: {
     background: "white",
     border: "none",
     color: "#006edc",
+    cursor: "pointer",
+
     fontSize: 20,
     width: 50,
     fontWeight: 600,
@@ -61,11 +64,11 @@ const useStyles = makeStyles({
 export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
   const [rangeValue, setRangeValue] = useState(null);
-  var [timeType, setTimeType] = useState("am");
   const [slots, setSlots] = useState([]);
   const classes = useStyles();
   // console.log("New data", new Date().getHours());
   var currentTime = "";
+  let tempType = "pm";
   if (new Date().getHours() < 12) {
     var hours = new Date().getHours();
     var minutes = new Date().getMinutes();
@@ -76,7 +79,7 @@ export default function DateTimePicker(props) {
       minutes = "0" + minutes;
     }
     currentTime = hours + ":" + minutes;
-    timeType = "am";
+    tempType = "am";
   } else {
     var hours = new Date().getHours() - 12;
     var minutes = new Date().getMinutes();
@@ -86,9 +89,10 @@ export default function DateTimePicker(props) {
     if (minutes < 10) {
       minutes = "0" + minutes;
     }
-    timeType = "pm";
+    tempType = "pm";
     currentTime = hours + ":" + minutes;
   }
+  const [timeType, setTimeType] = useState("pm");
 
   // function valuetext(value) {
   //   console.log("THis is vlaue", value);
@@ -246,7 +250,7 @@ export default function DateTimePicker(props) {
                 borderLeft: "4px solid rgba(37, 110, 220)",
                 borderRight: "4px solid rgba(37, 110, 220)",
 
-                color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
+                color: "rgba(37, 110, 220)",
               }}
               // defaultValue={29}
               // aria-labelledby="input-slider"
@@ -274,7 +278,7 @@ export default function DateTimePicker(props) {
             >
               <RemoveIcon
                 style={{
-                  color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
+                  color: "rgba(37, 110, 220)",
                 }}
               ></RemoveIcon>
             </IconButton>
@@ -286,7 +290,7 @@ export default function DateTimePicker(props) {
                 marginLeft: 10,
                 marginRight: 10,
                 width: "auto",
-                color: timeType === "am" ? "black" : "rgba(37, 110, 220)",
+                color: "rgba(37, 110, 220)",
                 fontWeight: 500,
               }}
             >
@@ -318,30 +322,40 @@ export default function DateTimePicker(props) {
             >
               <AddIcon
                 style={{
-                  color: timeType === "am" ? "#006edc" : "rgba(37, 110, 220)",
+                  color: "rgba(37, 110, 220)",
                 }}
               ></AddIcon>
             </IconButton>
 
-            <div style={{ marginLeft: 15, position: "relative", top: 7 }}>
+            <div
+              style={{
+                cursor: "pointer",
+                marginLeft: 15,
+                position: "relative",
+                top: 7,
+              }}
+            >
               <button
                 className={
-                  timeType === "am" ? classes.buttonActive : classes.buttonPm
+                  timeType === "am" ? classes.buttonPm : classes.button
                 }
                 onClick={() => {
+                  console.log("time change am");
+
                   setTimeType("am");
-                  props.onTimeChange(timeSlots[rangeValue] + "" + "am");
+                  // props.onTimeChange(timeSlots[rangeValue] + "" + "am");
                 }}
               >
                 AM
               </button>
               <button
                 className={
-                  timeType === "pm" ? classes.buttonActivePm : classes.button
+                  timeType === "pm" ? classes.buttonPm : classes.button
                 }
                 onClick={() => {
+                  console.log("time change pm");
                   setTimeType("pm");
-                  props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
+                  // props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
                 }}
               >
                 PM
