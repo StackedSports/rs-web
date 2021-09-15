@@ -326,41 +326,6 @@ export default function DateTimePicker(props) {
                 }}
               ></AddIcon>
             </IconButton>
-
-            <div
-              style={{
-                cursor: "pointer",
-                marginLeft: 15,
-                position: "relative",
-                top: 7,
-              }}
-            >
-              <button
-                className={
-                  timeType === "am" ? classes.buttonPm : classes.button
-                }
-                onClick={() => {
-                  console.log("time change am");
-
-                  setTimeType("am");
-                  props.onTimeChange(timeSlots[rangeValue] + "" + "am");
-                }}
-              >
-                AM
-              </button>
-              <button
-                className={
-                  timeType === "pm" ? classes.buttonPm : classes.button
-                }
-                onClick={() => {
-                  console.log("time change pm");
-                  setTimeType("pm");
-                  props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
-                }}
-              >
-                PM
-              </button>
-            </div>
           </Grid>
           <div
             style={{

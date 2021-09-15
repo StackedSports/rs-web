@@ -1115,7 +1115,28 @@ function MediaComponent(props) {
           ) : m.media_preview.indexOf(".png") > -1 ||
             m.media_preview.indexOf(".jpg") > -1 ||
             m.media_preview.indexOf(".jpeg") > -1 ? (
-            <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
+            <>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <FaImage
+                  style={{
+                    marginLeft: 4,
+
+                    color: "#3871da",
+                    fontSize: 15,
+                    display: "block",
+                  }}
+                ></FaImage>
+
+                <FaImage
+                  style={{
+                    marginTop: -12,
+                    color: "#3871da",
+                    fontSize: 15,
+                    display: "block",
+                  }}
+                ></FaImage>
+              </div>
+            </>
           ) : m.media_preview.indexOf(".mp4") > -1 ? (
             <FaVideo></FaVideo>
           ) : (
