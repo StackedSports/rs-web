@@ -28,6 +28,7 @@
     "react-facebook-photo-grid": "^1.0.5",
     "react-icons": "^4.1.0",
     "react-input-emoji": "^4.0.4",
+    "react-input-range": "^1.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-spring": "^8.0.27",

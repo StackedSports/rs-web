@@ -1975,16 +1975,18 @@ function MessageCreate() {
   };
   return (
     <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
-      <TimePicker
-        open={showTimePicker}
-        onClose={() => setShowTimePicker(false)}
-        onTimeChange={(time) => {
-          setTime(time);
-        }}
-        onDateChange={(time) => {
-          setDate(time);
-        }}
-      ></TimePicker>
+      {showTimePicker && (
+        <TimePicker
+          open={showTimePicker}
+          onClose={() => setShowTimePicker(false)}
+          onTimeChange={(time) => {
+            setTime(time);
+          }}
+          onDateChange={(time) => {
+            setDate(time);
+          }}
+        ></TimePicker>
+      )}
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}

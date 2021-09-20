@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   Grid,
@@ -65,57 +65,55 @@ export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
   const [rangeValue, setRangeValue] = useState(null);
   const [slots, setSlots] = useState([]);
+  const [hoursTime, setHoursTime] = useState("00");
+  const [minutesTime, setMinutesTime] = useState("00");
+  const minuteTimeRef = useRef(null);
   const classes = useStyles();
   // console.log("New data", new Date().getHours());
   var currentTime = "";
-  let tempType = "pm";
-  if (new Date().getHours() < 12) {
-    var hours = new Date().getHours();
-    var minutes = new Date().getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    currentTime = hours + ":" + minutes;
-    tempType = "am";
-  } else {
-    var hours = new Date().getHours() - 12;
-    var minutes = new Date().getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    tempType = "pm";
-    currentTime = hours + ":" + minutes;
-  }
-  const [timeType, setTimeType] = useState(tempType);
 
-  // function valuetext(value) {
-  //   console.log("THis is vlaue", value);
-  //   console.log("slots", timeSlots[value]);
-  //   // console.log("THis is vlaue title", time[value].title);
-  //   // // return `${time[value].title}`;
-  //   // setRangeValue(value);
-  //   // return `${value}s`;
-  // }
+  useEffect(() => {
+    if (new Date().getHours() < 12) {
+      var hours = new Date().getHours();
+      var minutes = new Date().getMinutes();
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      currentTime = hours + ":" + minutes;
+    } else {
+      var hours = new Date().getHours();
+      var minutes = new Date().getMinutes();
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      currentTime = hours + ":" + minutes;
+    }
+  }, []);
 
   const handleChange = (event, newValue) => {
     setRangeValue(newValue);
-    props.onTimeChange(timeSlots[newValue] + " " + timeType);
+    let split = timeSlots[newValue].split(":");
+    setHoursTime(split[0]);
+    setMinutesTime(split[1]);
+
+    props.onTimeChange(timeSlots[newValue]);
   };
   const usedTimeView = () => {
     return (
       <Grid item md={4}>
         <div
           onClick={() => {
-            setTimeType("am");
-            setRangeValue(71);
-
-            props.onTimeChange("6:15" + "" + "am");
+            let index = timeSlots.indexOf("06:15");
+            setRangeValue(index);
+            setMinutesTime("15");
+            setHoursTime("06");
+            props.onTimeChange("6:15");
           }}
           style={{
             border: "1px solid rgba(37, 110, 220)",
@@ -131,22 +129,7 @@ export default function DateTimePicker(props) {
       </Grid>
     );
   };
-  // function valuetext(value) {
-  //   return `${value}°C`;
-  // }
 
-  // const printTimeslots = () => {
-  //   var slots = [];
-  //   for (var i = 1; i < 12; i++) {
-  //     for (var j = 1; j < 12; j++) {
-  //       console.log("THis is value", i + " : " + j * 5);
-  //       slots.push(i + " : " + j * 5);
-  //     }
-  //   }
-  //
-  // };
-  // printTimeslots();
-  // console.log("THis is slots", timeSlots.length);
   return (
     <Dialog
       open={props.open}
@@ -160,7 +143,7 @@ export default function DateTimePicker(props) {
         style: {
           borderRadius: 4,
           padding: 0,
-          background: timeType === "pm" ? "white" : "white",
+          background: "white",
         },
       }}
     >
@@ -174,7 +157,7 @@ export default function DateTimePicker(props) {
           {" "}
           <p
             style={{
-              color: timeType === "pm" ? "white" : "white",
+              color: "white",
               fontWeight: 700,
               fontSize: 16,
               padding: 28,
@@ -190,7 +173,7 @@ export default function DateTimePicker(props) {
           {" "}
           <p
             style={{
-              color: timeType === "pm" ? "white" : "white",
+              color: "white",
               fontSize: 16,
               padding: 28,
               paddingLeft: 32,
@@ -201,14 +184,13 @@ export default function DateTimePicker(props) {
             You have selected{" "}
             <span
               style={{
-                color: timeType === "pm" ? "white" : "white",
+                color: "white",
                 fontSize: 16,
                 textAlign: "end",
                 fontWeight: "bold",
               }}
             >
-              {rangeValue != null ? timeSlots[rangeValue] : currentTime}
-              {rangeValue ? timeType : ""}{" "}
+              {rangeValue != null ? timeSlots[rangeValue] : "00:00"}
               {" on " + moment(value).format("dddd MMMM , DD gggg")}
             </span>
           </p>
@@ -220,14 +202,17 @@ export default function DateTimePicker(props) {
             container
             direction="row"
             justify="center"
-            className={timeType === "pm" ? "calendarPm" : "calendar"}
+            className={
+              "calendarPm"
+              // "calendar"
+            }
             style={{ marginTop: 25 }}
           >
             <Calendar
               onChange={(e) => {
                 onChange(e);
                 props.onDateChange(e);
-                props.onTimeChange(currentTime);
+                // props.onTimeChange(currentTime);
               }}
               value={value}
             />
@@ -260,7 +245,7 @@ export default function DateTimePicker(props) {
               value={typeof rangeValue === "number" ? rangeValue : 0}
               onChange={handleChange}
               min={0}
-              max={134}
+              max={1439}
               // valueLabelDisplay="auto"
             />
           </Grid>
@@ -269,10 +254,12 @@ export default function DateTimePicker(props) {
             <IconButton
               onClick={() => {
                 if (rangeValue > 0) {
+                  let split = timeSlots[rangeValue - 1].split(":");
+                  setHoursTime(split[0]);
+                  setMinutesTime(split[1]);
+
                   setRangeValue(rangeValue - 1);
-                  props.onTimeChange(
-                    timeSlots[rangeValue - 1] + " " + timeType
-                  );
+                  props.onTimeChange(timeSlots[rangeValue - 1]);
                 }
               }}
             >
@@ -289,34 +276,104 @@ export default function DateTimePicker(props) {
                 fontSize: 24,
                 marginLeft: 10,
                 marginRight: 10,
-                width: "auto",
+                width: "70px",
                 color: "rgba(37, 110, 220)",
                 fontWeight: 500,
               }}
             >
-              {rangeValue != null ? timeSlots[rangeValue] : currentTime}
+              <input
+                // maxLength={2}
+                value={hoursTime}
+                style={{
+                  color: "rgba(37, 110, 220)",
+                  outline: "none",
+                  border: "none",
+                  width: 30,
+                }}
+                onChange={(e) => {
+                  if (
+                    e.target.value &&
+                    e.target.value >= 0 &&
+                    e.target.value < 24 &&
+                    e.target.value.length < 3
+                  ) {
+                    if (e.target.value.length === 2) {
+                      let minutes =
+                        minutesTime && minutesTime.length === 2
+                          ? minutesTime
+                          : "00";
+                      let time = e.target.value + ":" + minutes;
 
-              <span style={{ marginLeft: 1 }}>
-                {" "}
-                {rangeValue ? timeType : ""}{" "}
-              </span>
+                      let index = timeSlots.indexOf(time);
+
+                      setRangeValue(index);
+                      props.onTimeChange(time);
+                    }
+                    setHoursTime(e.target.value);
+                    if (e.target.value.length === 2) {
+                      minuteTimeRef.current.focus();
+                    }
+                  } else {
+                    if (hoursTime.length == 1) {
+                      setHoursTime("");
+                    }
+                  }
+                }}
+              />
+              :
+              <input
+                min={0}
+                max={60}
+                maxLength={2}
+                ref={minuteTimeRef}
+                onChange={(e) => {
+                  if (
+                    e.target.value &&
+                    e.target.value >= 0 &&
+                    e.target.value < 60 &&
+                    e.target.value.length < 3
+                  ) {
+                    if (e.target.value.length === 2) {
+                      let hours =
+                        hoursTime && hoursTime.length === 2 ? hoursTime : "00";
+                      let time = hours + ":" + e.target.value;
+
+                      let index = timeSlots.indexOf(time);
+
+                      setRangeValue(index);
+                      props.onTimeChange(time);
+                    }
+                    setMinutesTime(e.target.value);
+                  } else {
+                    if (minutesTime.length == 1) {
+                      setMinutesTime("");
+                    }
+                  }
+                }}
+                value={minutesTime}
+                style={{
+                  color: "rgba(37, 110, 220)",
+                  width: 30,
+
+                  outline: "none",
+                  border: "none",
+                }}
+              />
             </div>
 
             <IconButton
               onClick={() => {
-                if (rangeValue < 134) {
+                if (rangeValue < 1439) {
                   console.log("This is value");
+                  let split = timeSlots[rangeValue + 1].split(":");
+                  setHoursTime(split[0]);
+                  setMinutesTime(split[1]);
+
                   setRangeValue(rangeValue + 1);
-                  props.onTimeChange(timeSlots[rangeValue + 1] + "" + timeType);
+                  props.onTimeChange(timeSlots[rangeValue + 1]);
                 } else {
                   setRangeValue(0);
-                  if (timeType === "am") {
-                    setTimeType("pm");
-                    props.onTimeChange(timeSlots[0] + "" + "pm");
-                  } else {
-                    setTimeType("am");
-                    props.onTimeChange(timeSlots[0] + "" + "am");
-                  }
+                  props.onTimeChange(timeSlots[0]);
                 }
               }}
             >
