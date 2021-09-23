@@ -64,17 +64,19 @@ const useStyles = makeStyles({
 export default function DateTimePicker(props) {
   const [value, onChange] = useState(new Date());
   const [rangeValue, setRangeValue] = useState(null);
-  const [slots, setSlots] = useState([]);
-  const [hoursTime, setHoursTime] = useState("00");
+  const [hoursTime, setHoursTime] = useState("12");
   const [minutesTime, setMinutesTime] = useState("00");
+  const [timeType, setTimeType] = useState("pm");
+
   const minuteTimeRef = useRef(null);
   const classes = useStyles();
   // console.log("New data", new Date().getHours());
   var currentTime = "";
 
   useEffect(() => {
-    if (new Date().getHours() < 12) {
-      var hours = new Date().getHours();
+    let getHour = new Date().getHours();
+    if (getHour < 12) {
+      var hours = getHour == 0 ? 12 : getHour;
       var minutes = new Date().getMinutes();
       if (hours < 10) {
         hours = "0" + hours;
@@ -82,9 +84,18 @@ export default function DateTimePicker(props) {
       if (minutes < 10) {
         minutes = "0" + minutes;
       }
+
       currentTime = hours + ":" + minutes;
+      setHoursTime(hours);
+      setMinutesTime(minutes);
+      let index = timeSlots.indexOf(currentTime);
+
+      setRangeValue(index);
+      setTimeType("am");
     } else {
-      var hours = new Date().getHours();
+      var hours = getHour - 12;
+      hours = hours == 0 ? 12 : hours;
+
       var minutes = new Date().getMinutes();
       if (hours < 10) {
         hours = "0" + hours;
@@ -93,6 +104,16 @@ export default function DateTimePicker(props) {
         minutes = "0" + minutes;
       }
       currentTime = hours + ":" + minutes;
+
+      setHoursTime(hours);
+      setTimeType("pm");
+      console.log(currentTime, "maharaj");
+
+      let index = timeSlots.indexOf(currentTime);
+
+      setRangeValue(index);
+
+      setMinutesTime(minutes);
     }
   }, []);
 
@@ -102,7 +123,7 @@ export default function DateTimePicker(props) {
     setHoursTime(split[0]);
     setMinutesTime(split[1]);
 
-    props.onTimeChange(timeSlots[newValue]);
+    props.onTimeChange(timeSlots[newValue] + " " + timeType);
   };
   const usedTimeView = () => {
     return (
@@ -113,7 +134,7 @@ export default function DateTimePicker(props) {
             setRangeValue(index);
             setMinutesTime("15");
             setHoursTime("06");
-            props.onTimeChange("6:15");
+            props.onTimeChange("6:15" + " " + "am");
           }}
           style={{
             border: "1px solid rgba(37, 110, 220)",
@@ -245,7 +266,7 @@ export default function DateTimePicker(props) {
               value={typeof rangeValue === "number" ? rangeValue : 0}
               onChange={handleChange}
               min={0}
-              max={1439}
+              max={719}
               // valueLabelDisplay="auto"
             />
           </Grid>
@@ -259,7 +280,9 @@ export default function DateTimePicker(props) {
                   setMinutesTime(split[1]);
 
                   setRangeValue(rangeValue - 1);
-                  props.onTimeChange(timeSlots[rangeValue - 1]);
+                  props.onTimeChange(
+                    timeSlots[rangeValue - 1] + " " + timeType
+                  );
                 }
               }}
             >
@@ -276,7 +299,7 @@ export default function DateTimePicker(props) {
                 fontSize: 24,
                 marginLeft: 10,
                 marginRight: 10,
-                width: "70px",
+                width: "80px",
                 color: "rgba(37, 110, 220)",
                 fontWeight: 500,
               }}
@@ -288,29 +311,25 @@ export default function DateTimePicker(props) {
                   color: "rgba(37, 110, 220)",
                   outline: "none",
                   border: "none",
-                  width: 30,
+                  width: 35,
                 }}
                 onChange={(e) => {
-                  if (
-                    e.target.value &&
-                    e.target.value >= 0 &&
-                    e.target.value < 24 &&
-                    e.target.value.length < 3
-                  ) {
-                    if (e.target.value.length === 2) {
+                  let value = e.target.value === "00" ? "12" : e.target.value;
+                  if (value && value >= 0 && value < 13 && value.length < 3) {
+                    if (value.length === 2) {
                       let minutes =
                         minutesTime && minutesTime.length === 2
                           ? minutesTime
                           : "00";
-                      let time = e.target.value + ":" + minutes;
+                      let time = value + ":" + minutes;
 
                       let index = timeSlots.indexOf(time);
 
                       setRangeValue(index);
-                      props.onTimeChange(time);
+                      props.onTimeChange(time + " " + timeType);
                     }
-                    setHoursTime(e.target.value);
-                    if (e.target.value.length === 2) {
+                    setHoursTime(value);
+                    if (value.length === 2) {
                       minuteTimeRef.current.focus();
                     }
                   } else {
@@ -341,7 +360,7 @@ export default function DateTimePicker(props) {
                       let index = timeSlots.indexOf(time);
 
                       setRangeValue(index);
-                      props.onTimeChange(time);
+                      props.onTimeChange(time + " " + timeType);
                     }
                     setMinutesTime(e.target.value);
                   } else {
@@ -353,7 +372,7 @@ export default function DateTimePicker(props) {
                 value={minutesTime}
                 style={{
                   color: "rgba(37, 110, 220)",
-                  width: 30,
+                  width: 35,
 
                   outline: "none",
                   border: "none",
@@ -363,17 +382,19 @@ export default function DateTimePicker(props) {
 
             <IconButton
               onClick={() => {
-                if (rangeValue < 1439) {
+                if (rangeValue < 719) {
                   console.log("This is value");
                   let split = timeSlots[rangeValue + 1].split(":");
                   setHoursTime(split[0]);
                   setMinutesTime(split[1]);
 
                   setRangeValue(rangeValue + 1);
-                  props.onTimeChange(timeSlots[rangeValue + 1]);
+                  props.onTimeChange(
+                    timeSlots[rangeValue + 1] + " " + timeType
+                  );
                 } else {
-                  setRangeValue(0);
-                  props.onTimeChange(timeSlots[0]);
+                  // setRangeValue(0);
+                  // props.onTimeChange(timeSlots[0]);
                 }
               }}
             >
@@ -383,6 +404,41 @@ export default function DateTimePicker(props) {
                 }}
               ></AddIcon>
             </IconButton>
+
+            <div
+              style={{
+                cursor: "pointer",
+                marginLeft: 15,
+                position: "relative",
+                top: 7,
+              }}
+            >
+              <button
+                className={
+                  timeType === "am" ? classes.buttonPm : classes.button
+                }
+                onClick={() => {
+                  console.log("time change am");
+
+                  setTimeType("am");
+                  // props.onTimeChange(timeSlots[rangeValue] + "" + "am");
+                }}
+              >
+                AM
+              </button>
+              <button
+                className={
+                  timeType === "pm" ? classes.buttonPm : classes.button
+                }
+                onClick={() => {
+                  console.log("time change pm");
+                  setTimeType("pm");
+                  // props.onTimeChange(timeSlots[rangeValue] + "" + "pm");
+                }}
+              >
+                PM
+              </button>
+            </div>
           </Grid>
           <div
             style={{
@@ -457,6 +513,11 @@ export default function DateTimePicker(props) {
                   style={{ height: 45 }}
                   alignItems="center"
                   justify="space-between"
+                  onClick={() => {
+                    props.onTimeChange(
+                      hoursTime + ":" + minutesTime + " " + timeType
+                    );
+                  }}
                 >
                   <p style={{ margin: 0 }}>Save</p>
 
