@@ -212,6 +212,7 @@ export default function DateTimePicker(props) {
               }}
             >
               {rangeValue != null ? timeSlots[rangeValue] : "00:00"}
+              {" " + timeType + " "}
               {" on " + moment(value).format("dddd MMMM , DD gggg")}
             </span>
           </p>
