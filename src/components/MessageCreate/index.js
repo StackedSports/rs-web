@@ -7,6 +7,8 @@ import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
+import GifIcon from "@material-ui/icons/Gif";
+
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -119,6 +121,52 @@ function MessageCreate() {
   var [scrollPosition, setScrollPosition] = React.useState(0);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
+  const [tableData, setTableData] = React.useState([
+    {
+      name: "David Buttler",
+      boardList: "Midwest List",
+      phoneNumber: "1111111111",
+      firstName: "David",
+      date: "2017-11-23T07:26:00.497Z",
+    },
+    {
+      name: "Alvi Alian",
+      boardList: "Broad List",
+      phoneNumber: "2222222222",
+      firstName: "Bob",
+      date: "2018-11-23T07:26:00.497Z",
+    },
+    {
+      name: "David Buttler",
+      boardList: "Midwest List",
+      phoneNumber: "1111111111",
+      firstName: "David",
+      date: "2017-11-23T07:26:00.497Z",
+    },
+    {
+      name: "Alvi Alian",
+      boardList: "Broad List",
+      phoneNumber: "2222222222",
+      firstName: "Bob",
+      date: "2018-11-23T07:26:00.497Z",
+    },
+    {
+      name: "David Buttler",
+      boardList: "Midwest List",
+      phoneNumber: "1111111111",
+      firstName: "David",
+      date: "2017-11-23T07:26:00.497Z",
+    },
+  ]);
+
+  useEffect(
+    (data) => {
+      console.log(data);
+      setTableData(tableData);
+      // action on update of movies
+    },
+    [tableData]
+  );
   const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
   const [state, setState] = useState([
     {
@@ -294,11 +342,14 @@ function MessageCreate() {
           temp.push(item);
         }
       });
+      console.log(temp);
+
       setSelectedDrafts(temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = selectedDrafts;
       temp.push(index);
+      console.log(temp);
       setSelectedDrafts(temp);
       setuseLessState(uselessState + 1);
     }
@@ -413,20 +464,37 @@ function MessageCreate() {
 
   const showActionButton = () => {
     return (
-      <IconTextField
-        // width={180}
-        width={100}
-        text="Action"
-        background={selectedMessages.length === 0 ? "transparent" : "#3871DA"}
-        textColor={selectedMessages.length === 0 ? "black" : "white"}
-        icon={
-          <FaMagic
-            style={{
-              color: selectedMessages.length === 0 ? "#3871DA" : "white",
-            }}
-          ></FaMagic>
-        }
-      ></IconTextField>
+      <>
+        <div class="dropdown">
+          <IconTextField
+            // width={180}
+            width={100}
+            text="Action"
+            background={selectedDrafts.length == 0 ? "transparent" : "#3871DA"}
+            textColor={selectedDrafts.length === 0 ? "black" : "white"}
+            icon={
+              <FaMagic
+                style={{
+                  color: selectedDrafts.length === 0 ? "#3871DA" : "white",
+                }}
+              ></FaMagic>
+            }
+          ></IconTextField>
+          {!!selectedDrafts.length && (
+            <div class="dropdown-content">
+              <div style={{ textAlign: "end", cursor: "pointer" }}>
+                <p style={{ color: "rgb(117, 117, 117)", margin: 12 }}>Tag</p>
+                <p style={{ color: "rgb(117, 117, 117)", margin: 12 }}>
+                  Create New Message
+                </p>
+                <p style={{ color: "rgb(161, 161, 161)", margin: 12 }}>
+                  Archeive
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </>
     );
   };
   const showFilterButton = () => {
@@ -1015,6 +1083,7 @@ function MessageCreate() {
         style={{
           background: "#f5f6f9",
           width: "100%",
+          cursor: "pointer",
           minWidth: 1025,
         }}
       >
@@ -1037,24 +1106,93 @@ function MessageCreate() {
           ></Checkbox>
         </Grid>
         <Grid item md={2} xs={2}>
-          <Grid container direction="row">
+          <Grid
+            container
+            direction="row"
+            onClick={() => {
+              let data = tableData.sort((a, b) =>
+                a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+              );
+              console.log(data);
+              setTableData(() => [...data]);
+              console.log("asda");
+            }}
+          >
             <span className={classes.tableHeading}>Full Name</span>
-            <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+            {/* <pan style={{ transform: "rotate(180deg)" }}>
+              {" "}
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
+            </span> */}
           </Grid>
         </Grid>
-        <Grid item md={1} xs={1}>
+        <Grid
+          item
+          md={1}
+          xs={1}
+          onClick={() => {
+            let data = tableData.sort((a, b) =>
+              a.boardList > b.boardList ? 1 : b.boardList > a.boardList ? -1 : 0
+            );
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+        >
           <span className={classes.tableHeading}>Board/List</span>
         </Grid>
 
-        <Grid item md={2} xs={2}>
+        <Grid
+          item
+          md={2}
+          xs={2}
+          onClick={() => {
+            let data = tableData.sort((a, b) =>
+              a.phoneNumber > b.phoneNumber
+                ? 1
+                : b.phoneNumber > a.phoneNumber
+                ? -1
+                : 0
+            );
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+        >
           <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
             Phone Number
           </span>
         </Grid>
-        <Grid item md={2} xs={2}>
+        <Grid
+          onClick={() => {
+            let data = tableData.sort((a, b) =>
+              a.firstName > b.firstName ? 1 : b.firstName > a.firstName ? -1 : 0
+            );
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+          item
+          md={2}
+          xs={2}
+        >
           <span className={classes.tableHeading}>First Name</span>
         </Grid>
-        <Grid item md={2} xs={2}>
+        <Grid
+          item
+          md={2}
+          xs={2}
+          onClick={() => {
+            const data = tableData.sort((first, second) => {
+              return (
+                new Date(first.date).getTime() - new Date(second.date).getTime()
+              );
+            });
+
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+        >
           <span className={classes.tableHeading}>Delivered at</span>
         </Grid>
         <Grid
@@ -1073,7 +1211,7 @@ function MessageCreate() {
         </Grid>
       </Grid>
 
-      {[1, 2, 3, 4, 5, 6].map((item, index) => {
+      {tableData.map((item, index) => {
         return (
           <Grid
             container
@@ -1102,23 +1240,25 @@ function MessageCreate() {
               ></Checkbox>
             </Grid>
             <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>David Buttler</span>
+              <span className={classes.tableFields}>{item.name}</span>
             </Grid>
             <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>Midwest List</span>
+              <span className={classes.tableFields}>{item.boardList}</span>
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableFields} style={{ marginLeft: 40 }}>
-                {formatPhoneNumber(5555555555)}
+                {formatPhoneNumber(item.phoneNumber)}
               </span>
             </Grid>
 
             <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>David</span>
+              <span className={classes.tableFields}>{item.firstName}</span>
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableFields}>
-                {isMesasgeStatusClick ? "-" : "6/12/21 2:20pm"}
+                {isMesasgeStatusClick
+                  ? "-"
+                  : moment(item.date).format("DD/MM/YY hh:mm:a")}
               </span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -2870,7 +3010,7 @@ function MessageCreate() {
                             <p
                               style={{
                                 margin: 0,
-                                marginLeft: time ? -20 : 0,
+                                marginLeft: time ? -28 : 0,
                                 color: displayMessageReceivers
                                   ? "white"
                                   : "black",

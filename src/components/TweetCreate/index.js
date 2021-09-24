@@ -2525,7 +2525,7 @@ function MessageCreate() {
                             <p
                               style={{
                                 margin: 0,
-                                marginLeft: time ? -20 : 0,
+                                marginLeft: time ? -28 : 0,
                                 color: displayMessageReceivers
                                   ? "white"
                                   : "black",

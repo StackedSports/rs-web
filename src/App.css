@@ -176,10 +176,10 @@
   border: 1px solid #d5d5d5;
   border-radius: 4px;
   padding: 5px;
-  margin-left: -140px;
+  margin-left: -134px;
   z-index: 1;
   max-height: 60vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   /* animation: rotateDropdown 0.3s; */
   /* color: white; */
