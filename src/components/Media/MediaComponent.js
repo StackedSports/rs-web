@@ -1022,7 +1022,7 @@ function MediaComponent(props) {
           container
           direction="row"
           justify="center"
-          style={{ background: "#f6f6f6" }}
+          style={{ background: "#f6f6f6", height: 180 }}
         >
           {placeholderHover === m.media_preview ||
           selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
@@ -1032,8 +1032,7 @@ function MediaComponent(props) {
                 height: 190,
                 background: "rgba(0,0,0,0.6)",
                 marginBottom: -190,
-                position: "relative",
-                zIndex: 100,
+                width: 270,
               }}
             >
               <Grid container direction="row">
@@ -1098,16 +1097,59 @@ function MediaComponent(props) {
           ) : (
             <div></div>
           )}
+          <div>
+            <div
+              style={{
+                display: "flex",
+                width: 270,
+                marginleft: 10,
+                marginRight: 10,
+              }}
+            >
+              <img
+                style={{
+                  marginTop: 10,
+                  height: 170,
+                  width: 75,
+                  objectFit: "cover",
+                  zIndex: 4,
+                  opacity: 0.9,
+                  marginLeft: 20,
+                }}
+                src={m.media_preview}
+              ></img>
+              <img
+                style={{
+                  marginTop: 10,
+                  height: 170,
+                  width: 150,
+                  marginLeft: -20,
+                  objectFit: "cover",
+                  zIndex: 10,
+                }}
+                src={m.media_preview}
+              ></img>
+              <img
+                style={{
+                  marginTop: 10,
+                  height: 170,
+                  zIndex: 4,
+                  opacity: 0.9,
 
-          <img
-            style={{ width: "80%", height: 190, objectFit: "contain" }}
-            src={m.media_preview}
-          ></img>
+                  marginLeft: -30,
+                  width: 75,
+
+                  objectFit: "cover",
+                }}
+                src={m.media_preview}
+              ></img>
+            </div>
+          </div>
         </Grid>
         <Grid
           container
           direction="row"
-          style={{ height: 30, marginLeft: 12, marginTop: 2 }}
+          style={{ height: 30, marginLeft: 12, marginTop: 10 }}
           alignItems="center"
         >
           {m.media_preview.indexOf(".gif") > -1 ? (
@@ -1129,6 +1171,7 @@ function MediaComponent(props) {
 
                 <FaImage
                   style={{
+                    zIndex: 100,
                     marginTop: -12,
                     color: "#3871da",
                     fontSize: 15,
