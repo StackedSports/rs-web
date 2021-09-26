@@ -5,10 +5,17 @@ export const ChatContainer = styled.div`
   background: white;
   width: 100%;
   margin-top: 70px;
-  margin-left: 60px;
   border-radius: 10px;
   border-left: 6px solid rgb(233, 234, 239);
+
   border-top: 6px solid rgb(233, 234, 239);
+`;
+export const MessageStat = styled.div`
+  background: white;
+  width: 100%;
+  margin-top: 77px;
+
+  border-left: 1px solid rgb(117, 117, 117);
 `;
 
 export const DarkContainer = styled.div`
