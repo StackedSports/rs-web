@@ -484,7 +484,13 @@ function MessageCreate() {
             <div class="dropdown-content">
               <div style={{ textAlign: "end", cursor: "pointer" }}>
                 <p style={{ color: "rgb(117, 117, 117)", margin: 12 }}>Tag</p>
-                <p style={{ color: "rgb(117, 117, 117)", margin: 12 }}>
+                <p
+                  onClick={() => {
+                    window.location.reload();
+                    localStorage.removeItem("selectedMedia");
+                  }}
+                  style={{ color: "rgb(117, 117, 117)", margin: 12 }}
+                >
                   Create New Message
                 </p>
                 <p style={{ color: "rgb(161, 161, 161)", margin: 12 }}>

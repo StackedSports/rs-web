@@ -47,10 +47,12 @@ import HomeRight from "./homeRight";
 // import Barchart from "./barChart";
 import FilterModal from "./filterModal";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import Barchart from "../charts/BarChart";
+// import Barchart from "../charts/BarChart";
 import DoughnutChart from "../charts/Doughnut";
 import DatePicker from "react-date-picker";
 import moment from "moment";
+import PieChart from "../charts/pieChart";
+import BarChart from "../charts/barChart";
 
 import {
   getTaskQueueForDay,
@@ -570,7 +572,7 @@ function Home(props) {
 
             <ChartSection>
               <Grid container style={{ margin: 0, padding: 0 }}>
-                <Grid item xs={12} lg={6}>
+                <Grid item xs={12} lg={5}>
                   <ChartDiv>
                     <ChartTop>
                       <MM>
@@ -627,12 +629,9 @@ function Home(props) {
                     <ChartDivS>
                       {/* <Chart monthlyStats={monthlyStats} /> */}
                       {doughnutChartData != null ? (
-                        <DoughnutChart
-                          monthlyStats={doughnutChartData}
-                          // className="chart"
-                          // data={[1, 2, 3, 4, 5, 6, 7]}
-                          // labels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
-                        />
+                        <>
+                          <PieChart monthlyStats={doughnutChartData} />
+                        </>
                       ) : (
                         <Grid container direction="row" justify="center">
                           <div
@@ -683,7 +682,7 @@ function Home(props) {
                     </ChartFooter>
                   </ChartDiv>
                 </Grid>
-                <Grid item xs={12} lg={6}>
+                <Grid item xs={12} lg={7}>
                   <ChartDiv2>
                     <ChartTop>
                       <MM>
@@ -742,7 +741,7 @@ function Home(props) {
                     </div>
                     <div>
                       {barChartData != null ? (
-                        <Barchart monthlyStats={barChartData} />
+                        <BarChart monthlyStats={barChartData} />
                       ) : (
                         <Grid container direction="row" justify="center">
                           <div
