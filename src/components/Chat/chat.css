@@ -5,3 +5,9 @@
   color: rgb(165, 165, 170);
   padding-left: 7px;
 }
+.chatTextArea::placeholder {
+  padding-left: 15px;
+  padding-top: 10px;
+  font-size: 15px;
+  color: rgb(178, 178, 178);
+}

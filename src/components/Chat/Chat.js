@@ -8,6 +8,8 @@ import {
   Snackbar,
   CircularProgress,
 } from "@material-ui/core";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import Avatar from "../../images/avatar.jpeg";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
@@ -16,17 +18,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArcheiveModal from "./components/archeiveModal";
-import { FaMarker, FaSlidersH } from "react-icons/fa";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import TabletAndroidIcon from "@material-ui/icons/TabletAndroid";
 import { FilterIconBlue } from "../dashboard/homeElements";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-import SendIcon from "@material-ui/icons/Send";
-import RowingIcon from "@material-ui/icons/Rowing";
 import CachedIcon from "@material-ui/icons/Cached";
-import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
-import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
-import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
+
+import AutoFixHighIcon from "@material-ui/icons/Audiotrack";
 import AvatarImg from "../../images/avatar.png";
 import ClearIcon from "@material-ui/icons/Clear";
 import Media from "../../images/media.jpg";
@@ -64,7 +61,67 @@ import {
   getAllColumns,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
+
+const messages = [
+  {
+    message: "Hy there i am using Recruite Suite",
+    left: true,
+    underText: "6:25pm",
+  },
+  {
+    message:
+      "Hy there i am using Recruite Suite, there i am using Recruite Suite",
+    left: false,
+    underText: "Sent by Chris Highland at 8:25pm",
+  },
+  {
+    message: "Hy there i am using Recruite Suite",
+    left: true,
+    underText: "6:25pm",
+    date: "Wed Mar 17",
+  },
+  {
+    message:
+      "Hy there i am using Recruite Suite, there i am using Recruite Suite",
+    left: true,
+    underText: "6:25pm",
+  },
+  {
+    message:
+      "Hy there i am using RecruitHy there i am using RecruitHy there i am using Recruite Suite, there i am using Recruite Suite",
+    left: false,
+    underText: "Sent by Chris Highland at 8:25pm",
+  },
+  {
+    message: "Hy there i am using Recruite Suite",
+    left: true,
+    underText: "6:25pm",
+  },
+  {
+    message:
+      "Hy there i am using Recruite Suite, there i am using Recruite Suite",
+    left: true,
+    underText: "6:25pm",
+  },
+];
+
 const useStyles = makeStyles({
+  dropdownHidden: {
+    display: "none",
+    position: "absolute",
+    backgroundColor: "white",
+    minWidth: 230,
+    boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
+    border: "1px solid #d5d5d5",
+    borderRadius: 4,
+    // padding: 5,
+    marginLeft: -140,
+    zIndex: 1,
+    maxHeight: "60vh",
+    overflowY: "scroll",
+    overflowX: "hidden",
+    zIndex: 200000000,
+  },
   tableHeading: {
     fontWeight: 700,
     fontSize: 15,
@@ -112,7 +169,33 @@ const useStyles = makeStyles({
   icons: {
     color: "#d8d8d8",
   },
+  messagBox: {
+    margin: 0,
+    padding: 8,
+    background: "#f1f0f0",
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 16,
+
+    fontWeight: 500,
+    fontSize: 13,
+    marginBottom: 5,
+  },
+  messagBoxBlue: {
+    margin: 0,
+    padding: 8,
+    background: "#3871da",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderBottomLeftRadius: 16,
+
+    fontWeight: 500,
+    fontSize: 13,
+    color: "white",
+    marginBottom: 5,
+  },
 });
+
 const Home = () => {
   const classes = useStyles();
 
@@ -398,6 +481,262 @@ const Home = () => {
                 })}
               </div>
             </ChatContainer>
+          </Grid>
+
+          <Grid lg={4}>
+            <MessageStat>
+              <div
+                style={{
+                  position: "sticky",
+                }}
+              >
+                <Grid
+                  style={{
+                    height: 70,
+                    display: "flex",
+                    alignItems: "center",
+                    background: "rgb(56, 113, 218)",
+                    width: "100%",
+                    padding: "0px 30px",
+                  }}
+                >
+                  <Grid lg={8}>
+                    <img
+                      src={Avatar}
+                      style={{
+                        borderRadius: 30,
+                        width: 45,
+                        height: 45,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontWeight: 500,
+                        marginLeft: 15,
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        color: "rgba(255,255,255,0.9)",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      Luke Burkea
+                    </span>
+                    <span
+                      style={{
+                        margin: 0,
+                        marginLeft: 10,
+
+                        fontSize: 14,
+                        color: "rgba(255,255,255,0.7)",
+                      }}
+                    >
+                      @charles
+                    </span>
+                  </Grid>
+                  <Grid lg={4}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <ClearIcon
+                        style={{
+                          margin: 0,
+                          fontWeight: "bold",
+                          color: "white",
+                          fontSize: 25,
+                        }}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <div
+                  style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 20 }}
+                >
+                  <div class="dropdown" style={{ marginLeft: 20 }}>
+                    <div
+                      onClick={() => {
+                        // setDisplayEmojiSelect(true);
+                      }}
+                      style={{
+                        fontSize: 15,
+                        marginLeft: 20,
+                        marginTop: 16,
+                        position: "absolute",
+                        right: 20,
+                        cursor: "pointer",
+                      }}
+                    >
+                      😀
+                    </div>{" "}
+                    <div
+                      // class="dropdown-content"
+                      className={classes.dropdownHidden}
+                      style={{
+                        marginLeft: 50,
+                        marginTop: -450,
+                        // display: displayEmojiSelect ? "block" : "none",
+                      }}
+                      onMouseLeave={() => {
+                        // setDisplayEmojiSelect(false);
+                      }}
+                    >
+                      <Picker
+                        set="apple"
+                        // onSelect={(e) => {
+                        //   console.log("This si ", e.native);
+                        //   setMessageText(messageText + e.native);
+                        // }}
+                        // onSelect={(e) => {
+                        //   var newVal = "";
+                        //   if (
+                        //     document.getElementById("textArea")
+                        //       .selectionStart === messageText.length
+                        //   ) {
+                        //     setMessageText(messageText + e.native);
+                        //   } else {
+                        //     for (var i = 0; i < messageText.length; i++) {
+                        //       newVal = newVal + messageText[i];
+                        //       if (
+                        //         i ===
+                        //         document.getElementById("textArea")
+                        //           .selectionStart
+                        //       ) {
+                        //         newVal = newVal + e.native;
+                        //       }
+                        //     }
+                        //     setMessageText(newVal);
+                        //   }
+                        // }}
+                      />
+                    </div>
+                  </div>
+
+                  <textarea
+                    type="text"
+                    className="chatTextArea"
+                    style={{
+                      border: "1px solid rgb(202, 202, 202)",
+                      height: 110,
+                      // width: "fit-content",
+                      width: "100%",
+                      borderRadius: 6,
+                      resize: "none",
+                      outline: "none",
+                    }}
+                    value={""}
+                    onChange={(e) => {}}
+                    placeholder="Type message to send..."
+                  ></textarea>
+                </div>
+                <div
+                  style={{
+                    color: "rgb(190, 190, 190)",
+                    margin: 0,
+                    fontSize: 12,
+                    padding: 0,
+                    paddingLeft: 30,
+                  }}
+                >
+                  <i> Luke is typing...</i>
+                </div>
+                <Grid
+                  style={{
+                    display: "flex",
+                    padding: "0px 30px",
+                    paddingBottom: 20,
+                    borderBottom: "1px solid rgb(204, 204, 204)",
+                  }}
+                >
+                  <Grid lg={8}></Grid>
+
+                  <Grid lg={8}>
+                    <div
+                      style={{
+                        width: 100,
+                        borderRadius: 5,
+                        padding: "1px 0px",
+                        textAlign: "center",
+                        float: "right",
+                        verticalAlign: "middle",
+                        backgroundColor: "rgb(56, 113, 218)",
+                        color: "white",
+                      }}
+                    >
+                      Send
+                    </div>
+                  </Grid>
+                </Grid>
+              </div>
+
+              <div style={{ height: "89vh", padding: "0px 30px" }}>
+                <div
+                  style={{
+                    float: "right",
+                    color: "rgb(179, 179, 179)",
+                    marginTop: 10,
+                  }}
+                >
+                  Action
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    maxHeight: 380,
+                    // background: "red",
+                    paddingInline: 10,
+                    marginTop: 8,
+                    borderBottom: "2px solid #f8f8f8",
+                  }}
+                  className="fullHeightMessages hideScrollBar"
+                  id="infinit"
+                >
+                  {messages.map((item) => {
+                    return (
+                      <Grid
+                        container
+                        direction="row"
+                        justify={item.left ? "flex-start" : "flex-end"}
+                      >
+                        <p
+                          className={
+                            item.left
+                              ? classes.messagBox
+                              : classes.messagBoxBlue
+                          }
+                        >
+                          {item.message}
+                        </p>
+                        <p
+                          style={{
+                            width: "90%",
+                            textAlign: item.left ? "left" : "right",
+                            fontSize: 10,
+                            color: "#9ca4ab",
+                          }}
+                        >
+                          {item.underText}
+                        </p>
+                        {item.date && (
+                          <p
+                            style={{
+                              width: "95%",
+                              textAlign: "center",
+                              fontSize: 13,
+                              color: "#9ca4ab",
+                            }}
+                          >
+                            {item.date}
+                          </p>
+                        )}
+                      </Grid>
+                    );
+                  })}
+                </div>
+              </div>
+            </MessageStat>
           </Grid>
 
           <Grid lg={3}>
