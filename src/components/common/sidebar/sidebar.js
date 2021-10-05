@@ -8,6 +8,7 @@ import DashboardLogo from "../../../images/dashboardLogo.png";
 import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
 import Logo from "../../../images/logoRight.png";
+import SelectSearch from "react-select-search";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
@@ -40,17 +41,43 @@ import ClearIcon from "@material-ui/icons/Clear";
 import IconTextField from "../../common/Fields/IconTextField";
 import { getTags, getTeamContacts } from "../../../ApiHelper";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
+const options = [
+  {
+    type: "group",
+    name: "Contact",
+    items: [{ name: "03053888102", value: "es" }],
+  },
+  {
+    type: "group",
+    name: "Media Team",
+    items: [{ name: "Ben Team", value: "es" }],
+  },
+  {
+    type: "group",
+    name: "Users",
+    items: [{ name: "John", value: "es" }],
+  },
+  {
+    type: "Setting",
+    name: "Setting",
+    items: [{ name: "user Name", value: "es" }],
+  },
+  {
+    type: "group",
+    name: "Chats",
+    items: [{ name: "This is", value: "es" }],
+  },
+];
 const Nav = styled.div`
   height: 70px;
   display: flex;
   background: white;
   justify-content: flex-start;
   align-items: center;
-  position: fixed;
-  left: 0;
-  right: 0;
+  position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 11;
   @media screen and (max-width: 1000px) {
     display: none;
   }
@@ -2014,6 +2041,16 @@ const Sidebar = (props) => {
             <div></div>
           )}
 
+          <div style={{ marginLeft: 25 }}>
+            <SelectSearch
+              search
+              // closeOnSelect={false}
+              options={options}
+              placeholder="Search for contact,media,team users,setting and chats"
+            />
+          </div>
+
+          {/* 
           <FormInputWrap>
             <FiSearch
               style={{
@@ -2028,7 +2065,7 @@ const Sidebar = (props) => {
               type="email"
               placeholder="Search for contacts by name, phone number, Twitter Handle or School"
             ></FormInput>
-          </FormInputWrap>
+          </FormInputWrap> */}
           <LeftSectionNav>
             <div
               style={{

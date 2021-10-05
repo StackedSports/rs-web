@@ -8,7 +8,7 @@ import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import GifIcon from "@material-ui/icons/Gif";
-
+import PhotoIcon from "@material-ui/icons/Photo";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -3468,6 +3468,7 @@ function MessageCreate() {
                       </div>
                       {/* <div className="partialOveride" style={{ width: 20 }}> */}
                       {/* </div> */}
+
                       <div class="dropdown" style={{ marginLeft: 20 }}>
                         <div
                           onClick={() => {
