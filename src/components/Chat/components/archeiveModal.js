@@ -29,7 +29,7 @@ export default function ModalArcheive(props) {
 
   return (
     <Modal
-      open={false}
+      open={props.archieveChat}
       // onClose={handleClose}
       // BackdropComponent={Backdrop}
       //   BackdropProps={{
@@ -61,6 +61,9 @@ export default function ModalArcheive(props) {
           }}
         >
           <div
+            onClick={() => {
+              props.setArchieveChat(false);
+            }}
             style={{
               width: 100,
               textAlign: "center",

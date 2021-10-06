@@ -203,6 +203,8 @@ const Home = () => {
   const [messageText, setMessageText] = useState("");
 
   const [openChats, setOpenChats] = useState([]);
+  const [archieveChat, setArchieveChat] = useState(false);
+
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
 
   const UserCard = (props) => {
@@ -238,11 +240,13 @@ const Home = () => {
         </div>
 
         <div
+          className="chatCard"
           style={{
             display: "flex",
             width: "100%",
             flexDirection: "column",
             marginLeft: 15,
+            marginTop: 114,
           }}
         >
           <Grid direction="row" style={{ display: "flex" }}>
@@ -295,33 +299,27 @@ const Home = () => {
               </div>
             </Grid>
 
-            {!!isExistInOpenChat.length && (
-              <Grid md={4}>
-                <div
-                  onClick={() => {
-                    let tempOpenChats = openChats;
-                    let temp = tempOpenChats.filter(
-                      (val) => val.selectedIndex !== props.index
-                    );
-
-                    setOpenChats(() => [...temp]);
-                  }}
+            <Grid md={4} className="displayCancel">
+              <div
+                style={{
+                  margin: 0,
+                  cursor: "pointer",
+                  textAlign: "end",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setArchieveChat(true);
+                }}
+              >
+                <ClearIcon
                   style={{
                     margin: 0,
-                    cursor: "pointer",
-                    textAlign: "end",
+                    fontSize: 17,
+                    color: "black",
                   }}
-                >
-                  <ClearIcon
-                    style={{
-                      margin: 0,
-                      fontSize: 17,
-                      color: "white",
-                    }}
-                  />
-                </div>
-              </Grid>
-            )}
+                />
+              </div>
+            </Grid>
           </Grid>
 
           <div
@@ -803,13 +801,15 @@ const Home = () => {
                 height: 110,
                 // width: "fit-content",
                 width: "100%",
+                marginTop: 4,
+                marginLeft: 4,
                 borderRadius: 6,
                 resize: "none",
                 outline: "none",
               }}
               id="textArea"
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
+              // value={messageText}
+              // onChange={(e) => setMessageText(e.target.value)}
               placeholder="Type message to send..."
             ></textarea>
           </div>
@@ -875,6 +875,7 @@ const Home = () => {
             padding: "0px 0px",
           }}
         >
+          {/*       
           <div
             style={{
               float: "left",
@@ -905,6 +906,7 @@ const Home = () => {
           >
             Action
           </div>
+       */}
           <div
             style={{
               width: "100%",
@@ -934,7 +936,7 @@ const Home = () => {
                   >
                     {item.message}
                   </p>
-                  {item.left === false && <span>darsha</span>}
+                  {/* {item.left === false && <span>darsha</span>} */}
                   <p
                     style={{
                       width: "90%",
@@ -967,7 +969,12 @@ const Home = () => {
   };
   return (
     <>
-      <ArcheiveModal />
+      <ArcheiveModal
+        setArchieveChat={() => {
+          setArchieveChat(false);
+        }}
+        archieveChat={archieveChat}
+      />
 
       <div
         style={{
@@ -1086,6 +1093,7 @@ const Home = () => {
                     style={{
                       border: "none",
                       width: "100%",
+
                       background: "rgb(237, 238, 242)",
                     }}
                     placeholder="Search"

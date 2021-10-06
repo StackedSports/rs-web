@@ -1,3 +1,9 @@
+.displayCancel {
+  display: none;
+}
+.chatCard:hover .displayCancel {
+  display: inline-block;
+}
 .searchInput:focus {
   outline: none;
 }

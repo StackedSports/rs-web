@@ -14,13 +14,14 @@ export const MessageStat = styled.div`
   background: white;
   width: 400px;
   height: calc(100vh - 70px);
+  margin-top: 6px;
   border-left: 1px solid rgb(117, 117, 117);
 `;
 
 export const DarkContainer = styled.div`
   margin-left: 270px;
   background: rgb(233, 234, 239);
-  margin-top: 70px;
+  // margin-top: 70px;
   height: 100%;
   @media screen and (max-width: 1000px) {
     margin-left: 0px;
