@@ -246,7 +246,6 @@ const Home = () => {
             width: "100%",
             flexDirection: "column",
             marginLeft: 15,
-            marginTop: 114,
           }}
         >
           <Grid direction="row" style={{ display: "flex" }}>

@@ -9,6 +9,7 @@ import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
 import Logo from "../../../images/logoRight.png";
 import SelectSearch from "react-select-search";
+import SearchIcon from "@material-ui/icons/Search";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
@@ -2042,8 +2043,18 @@ const Sidebar = (props) => {
           )}
 
           <div style={{ marginLeft: 25 }}>
+            <SearchIcon
+              style={{
+                position: "absolute",
+                top: 23,
+                zIndex: 100,
+                marginLeft: 10,
+                color: "rgb(136, 136, 141)",
+              }}
+            />
             <SelectSearch
               search
+              style={{ backgroundColor: "red", color: "red" }}
               // closeOnSelect={false}
               options={options}
               placeholder="Search for contact,media,team users,setting and chats"

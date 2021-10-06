@@ -3,7 +3,7 @@ import { FaSlidersH } from "react-icons/fa";
 export const DashboardContainer = styled.div`
   margin-left: 270px;
   background: rgb(233, 234, 239);
-  margin-top: 70px;
+
   height: 100%;
   @media screen and (max-width: 1000px) {
     margin-left: 0px;
