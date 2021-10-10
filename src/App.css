@@ -1,11 +1,14 @@
 .select-search__input {
   background-color: rgb(243, 244, 248) !important;
   box-shadow: none !important;
-  width: 420px !important;
+  width: 410px !important;
+}
+.select-search__input:hover {
+  outline: none !important;
+  border: none !important;
 }
 .select-search__input::placeholder {
   color: rgb(172, 171, 173) !important;
-  padding-left: 23px !important;
 }
 .select-search__value::after {
   display: none !important;

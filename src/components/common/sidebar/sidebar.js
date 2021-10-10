@@ -2042,16 +2042,21 @@ const Sidebar = (props) => {
             <div></div>
           )}
 
-          <div style={{ marginLeft: 25 }}>
-            <SearchIcon
+          <div style={{ marginLeft: 25, display: "flex" }}>
+            <div
               style={{
-                position: "absolute",
-                top: 23,
-                zIndex: 100,
-                marginLeft: 10,
-                color: "rgb(136, 136, 141)",
+                height: 36,
+                backgroundColor: "rgb(243, 244, 248)",
               }}
-            />
+            >
+              <SearchIcon
+                style={{
+                  marginLeft: 10,
+                  marginTop: 8,
+                  color: "rgb(136, 136, 141)",
+                }}
+              />
+            </div>
             <SelectSearch
               search
               style={{ backgroundColor: "red", color: "red" }}
