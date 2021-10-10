@@ -24,7 +24,7 @@ import TabletAndroidIcon from "@material-ui/icons/TabletAndroid";
 import { FilterIconBlue } from "../dashboard/homeElements";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import CachedIcon from "@material-ui/icons/Cached";
-
+import TextArea from "./textarea";
 import AutoFixHighIcon from "@material-ui/icons/Audiotrack";
 import AvatarImg from "../../images/avatar.png";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -356,7 +356,8 @@ const Home = () => {
                 display: "flex",
                 alignItems: "center",
                 width: "100%",
-                borderBottom: "3px solid rgb(233, 234, 239)",
+                borderBottom: "1.8px solid rgb(204, 204, 204)",
+
                 padding: "0px 30px",
               }}
             >
@@ -572,7 +573,8 @@ const Home = () => {
               display: "flex",
               alignItems: "center",
               width: "100%",
-              borderBottom: "3px solid rgb(233, 234, 239)",
+              borderBottom: "1.8px solid rgb(204, 204, 204)",
+
               padding: "0px 30px",
             }}
           >
@@ -632,7 +634,8 @@ const Home = () => {
             style={{
               marginLeft: "25px",
               marginRight: "25px",
-              borderBottom: "3px solid rgb(233, 234, 239)",
+              borderBottom: "1.8px solid rgb(204, 204, 204)",
+
               paddingBottom: 20,
             }}
           ></div>
@@ -656,7 +659,8 @@ const Home = () => {
             style={{
               height: 70,
               display: "flex",
-              borderRight: "1px solid rgb(117, 117, 117)",
+              borderRight: "1.8px solid rgb(204, 204, 204)",
+
               alignItems: "center",
               background: "rgb(56, 113, 218)",
               padding: "0px 30px",
@@ -796,7 +800,6 @@ const Home = () => {
               type="text"
               className="chatTextArea"
               style={{
-                border: "1px solid rgb(202, 202, 202)",
                 height: 110,
                 // width: "fit-content",
                 width: "100%",
@@ -806,9 +809,17 @@ const Home = () => {
                 resize: "none",
                 outline: "none",
               }}
+              key={data.arrayIndex}
               id="textArea"
-              // value={messageText}
-              // onChange={(e) => setMessageText(e.target.value)}
+              value={data.message}
+              onChange={(e) => {
+                let temp = openChats;
+                console.log("Sd", temp);
+
+                temp[data.arrayIndex].message = e.target.value;
+                console.log("Sd", temp);
+                setOpenChats(() => [...temp]);
+              }}
               placeholder="Type message to send..."
             ></textarea>
           </div>
@@ -828,7 +839,7 @@ const Home = () => {
               padding: "0px 30px",
               paddingBottom: 20,
               display: "flex",
-              borderBottom: "1px solid rgb(204, 204, 204)",
+              borderBottom: "1.8px solid rgb(204, 204, 204)",
             }}
           >
             <PhotoIcon
@@ -1028,7 +1039,7 @@ const Home = () => {
                   height: 70,
                   display: "flex",
                   alignItems: "center",
-                  borderBottom: "3px solid rgb(233, 234, 239)",
+                  borderBottom: "1.8px solid rgb(204, 204, 204)",
                 }}
               >
                 <div style={{ paddingLeft: 30 }}>
@@ -1137,6 +1148,7 @@ const Home = () => {
                         mediaVisibile: false,
                         id: index,
                         selectedIndex: index,
+                        message: "",
                       });
                       console.log("sadsad", tempOpenChats);
                       openChats.filter(
@@ -1156,10 +1168,17 @@ const Home = () => {
             className={"scrollbar-hidden"}
             style={{ display: "flex", overflowX: "scroll" }}
           >
-            {openChats.map((val) => (
+            {openChats.map((val, index) => (
               <>
-                <Chat data={val}></Chat>
-                {val.mediaVisibile && <MessageStats data={val} />}
+                <TextArea
+                  setOpenChats={(temp) => {
+                    setOpenChats(() => [...temp]);
+                  }}
+                  openChats={openChats}
+                  data={{ ...val, arrayIndex: index }}
+                />
+                {/* <Chat data={{ ...val, arrayIndex: index }}></Chat> */}
+                {/* {val.mediaVisibile && <MessageStats data={val} />} */}
               </>
             ))}
           </div>
