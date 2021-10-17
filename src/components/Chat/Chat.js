@@ -75,6 +75,7 @@ const messages = [
       "Hy there i am using Recruite Suite, there i am using Recruite Suite",
     left: false,
     underText: "Sent by Chris Highland at 8:25pm",
+    withMessage: require("../../images/avatar.jpeg"),
   },
   {
     message: "Hy there i am using Recruite Suite",
@@ -207,6 +208,8 @@ const Home = () => {
 
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
 
+  const [chatBar, setChatBar] = useState(false);
+
   const UserCard = (props) => {
     console.log("propsprops", props);
     let isExistInOpenChat = openChats.filter(
@@ -298,7 +301,10 @@ const Home = () => {
               </div>
             </Grid>
 
-            <Grid md={4} className="displayCancel">
+            <Grid
+              md={4}
+              // className="displayCancel"
+            >
               <div
                 style={{
                   margin: 0,
@@ -307,14 +313,15 @@ const Home = () => {
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setArchieveChat(true);
+                  // setArchieveChat(true);
                 }}
               >
                 <ClearIcon
                   style={{
                     margin: 0,
                     fontSize: 17,
-                    color: "black",
+                    color: "white",
+                    // color: "black",
                   }}
                 />
               </div>
@@ -1021,10 +1028,29 @@ const Home = () => {
                 style={{ fontSize: 26, marginLeft: 20 }}
               ></KeyboardArrowDownIcon>
             </p>
-            <p className={classes.sideSubFilter}>@bG121 </p>
-            <p className={classes.sideSubFilterGrey}>6162.222.2 </p>
+            <p
+              onClick={() => {
+                setChatBar(true);
+              }}
+              className={classes.sideSubFilter}
+            >
+              @bG121{" "}
+            </p>
+            <p
+              onClick={() => {
+                setChatBar(true);
+              }}
+              className={classes.sideSubFilterGrey}
+            >
+              6162.222.2{" "}
+            </p>
 
-            <p className={classes.sideFilter}>
+            <p
+              onClick={() => {
+                setChatBar(true);
+              }}
+              className={classes.sideFilter}
+            >
               Chris hiland{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 15, marginLeft: 20 }}
@@ -1032,138 +1058,150 @@ const Home = () => {
             </p>
           </div>
 
-          <ChatContainer>
-            <div style={{ width: 400 }}>
-              <div
-                style={{
-                  height: 70,
-                  display: "flex",
-                  alignItems: "center",
-                  borderBottom: "1.8px solid rgb(204, 204, 204)",
-                }}
-              >
-                <div style={{ paddingLeft: 30 }}>
-                  <FormatAlignLeftIcon style={{}}></FormatAlignLeftIcon>
-
-                  <span
-                    style={{
-                      fontSize: 20,
-                      marginLeft: 23,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Ben Graves
-                  </span>
-
-                  <span
-                    style={{
-                      fontSize: 15,
-                      marginLeft: 10,
-                      color: "rgb(163, 163, 163)",
-                      marginTop: 5,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    @ BG615
-                  </span>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  height: 66,
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "0px 15px",
-                  width: "100%",
-                  marginTop: 25,
-                  borderBottom: "1.8px solid rgb(204, 204, 204)",
-                }}
-              >
+          {chatBar && (
+            <ChatContainer>
+              <div style={{ width: 400 }}>
                 <div
                   style={{
-                    height: 40,
-                    width: "100%",
+                    width: 395,
 
-                    backgroundColor: "rgb(237, 238, 242)",
-                    borderRadius: "35px",
+                    height: 70,
                     display: "flex",
+                    alignItems: "center",
+                    borderBottom: "1.8px solid rgb(204, 204, 204)",
                   }}
                 >
-                  <SearchIcon
-                    style={{
-                      marginTop: 7,
-                      marginLeft: 15,
-                      fontSize: 28,
-                      color: "rgb(142, 142, 147)",
-                    }}
-                  />
-                  <input
-                    className="searchInput"
-                    style={{
-                      border: "none",
-                      width: "100%",
+                  <div style={{ paddingLeft: 30 }}>
+                    <FormatAlignLeftIcon
+                      onClick={() => {
+                        setMessageText("");
+                        setChatBar(false);
+                        setOpenChats([]);
+                        setArchieveChat(false);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    ></FormatAlignLeftIcon>
 
-                      background: "rgb(237, 238, 242)",
-                    }}
-                    placeholder="Search"
-                  />
-                  <FilterIconBlue
-                    style={{
-                      marginTop: 13,
-                      marginRight: 20,
-                    }}
-                  />
+                    <span
+                      style={{
+                        fontSize: 20,
+                        marginLeft: 23,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Ben Graves
+                    </span>
+
+                    <span
+                      style={{
+                        fontSize: 15,
+                        marginLeft: 10,
+                        color: "rgb(163, 163, 163)",
+                        marginTop: 5,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      @ BG615
+                    </span>
+                  </div>
                 </div>
+
                 <div
                   style={{
-                    fontWeight: 500,
-                    float: "right",
-                    marginRight: 5,
-                    textAlign: "end",
-                    fontSize: 14,
-                    color: "rgb(91, 91, 91)",
+                    height: 66,
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "0px 15px",
+                    width: 395,
+
+                    marginTop: 25,
+                    borderBottom: "1.8px solid rgb(204, 204, 204)",
                   }}
                 >
-                  Show Unread
-                </div>
-              </div>
-            </div>
-
-            <div
-              className={"scrollbar-hidden"}
-              style={{
-                height: "calc(100vh - 240px)",
-                overflow: "scroll",
-                overflowX: "hidden",
-                msOverflowStyle: "none",
-              }}
-            >
-              {[1, 2, 4, 5, 1, 2, 4, 5].map((val, index) => {
-                return (
                   <div
-                    onClick={() => {
-                      let tempOpenChats = [];
-                      tempOpenChats.push({
-                        mediaVisibile: false,
-                        id: index,
-                        selectedIndex: index,
-                        message: "",
-                      });
-                      console.log("sadsad", tempOpenChats);
-                      openChats.filter(
-                        (values) => values.selectedIndex == index
-                      ).length === 0 &&
-                        setOpenChats((old) => [...old, ...tempOpenChats]);
+                    style={{
+                      height: 40,
+                      backgroundColor: "rgb(237, 238, 242)",
+                      borderRadius: "35px",
+                      display: "flex",
                     }}
                   >
-                    <UserCard val={val} index={index} />
-                  </div>
-                );
-              })}
-            </div>
-          </ChatContainer>
+                    <SearchIcon
+                      style={{
+                        marginTop: 7,
+                        marginLeft: 15,
+                        fontSize: 28,
+                        color: "rgb(142, 142, 147)",
+                      }}
+                    />
+                    <input
+                      className="searchInput"
+                      style={{
+                        border: "none",
+                        width: "100%",
 
+                        background: "rgb(237, 238, 242)",
+                      }}
+                      placeholder="Search"
+                    />
+                    <FilterIconBlue
+                      style={{
+                        marginTop: 13,
+                        marginRight: 20,
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 500,
+                      float: "right",
+                      marginRight: 5,
+                      textAlign: "end",
+                      fontSize: 14,
+                      color: "rgb(91, 91, 91)",
+                    }}
+                  >
+                    Show Unread
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={"scrollbar-hidden"}
+                style={{
+                  height: "calc(100vh - 240px)",
+                  overflow: "scroll",
+                  overflowX: "hidden",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {[1, 2, 4, 5, 1, 2, 4, 5].map((val, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        let tempOpenChats = [];
+                        tempOpenChats.push({
+                          mediaVisibile: false,
+                          id: index,
+                          selectedIndex: index,
+                          message: "",
+                        });
+                        console.log("sadsad", tempOpenChats);
+                        openChats.filter(
+                          (values) => values.selectedIndex == index
+                        ).length === 0 &&
+                          setOpenChats((old) => [...old, ...tempOpenChats]);
+                      }}
+                    >
+                      <UserCard val={val} index={index} />
+                    </div>
+                  );
+                })}
+              </div>
+            </ChatContainer>
+          )}
           <div
             className={"scrollbar-hidden"}
             style={{ display: "flex", overflowX: "scroll" }}

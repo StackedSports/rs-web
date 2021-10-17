@@ -7,6 +7,7 @@ import {
 import Avatar from "../../images/avatar.jpeg";
 import PhotoIcon from "@material-ui/icons/Photo";
 import CheckIcon from "@material-ui/icons/Done";
+
 import ClearIcon from "@material-ui/icons/Clear";
 import { Picker } from "emoji-mart";
 import {
@@ -18,7 +19,8 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import "emoji-mart/css/emoji-mart.css";
-
+import { FiScissors } from "react-icons/fi";
+import { FaMagic } from "react-icons/fa";
 import "./chat.css";
 
 const messages = [
@@ -34,6 +36,7 @@ const messages = [
     underText: "Sent by Chris Highland at 8:25pm",
   },
   {
+    image: true,
     message: "Hy there i am using Recruite Suite",
     left: true,
     underText: "6:25pm",
@@ -370,6 +373,43 @@ const Chat = ({ data, setOpenChats, openChats }) => {
               color: "rgb(118, 118, 118)",
             }}
           />
+          <div
+            style={{
+              height: 18,
+              width: 1,
+              marginLeft: 10,
+              marginRight: 10,
+              marginTop: 3,
+              backgroundColor: "rgb(233, 233, 233)",
+            }}
+          ></div>
+          <FaMagic
+            style={{
+              color: "rgb(118, 118, 118)",
+              marginTop: 2,
+              fontSize: 17,
+            }}
+          />
+          <div
+            style={{
+              height: 18,
+              width: 1,
+              marginLeft: 10,
+              marginRight: 10,
+              marginTop: 3,
+              backgroundColor: "rgb(233, 233, 233)",
+            }}
+          ></div>
+          <FiScissors
+            style={{
+              marginTop: 2,
+
+              color: "rgb(118, 118, 118)",
+              fontWeight: "bold",
+              fontSize: 19,
+            }}
+          />
+
           {/* <div
                 style={{
                   height: 17,
@@ -588,8 +628,6 @@ const Chat = ({ data, setOpenChats, openChats }) => {
                   </div>
                 )}
                 <Grid
-                  container
-                  direction="row"
                   style={{
                     padding: "0px 5px",
                   }}
@@ -602,6 +640,23 @@ const Chat = ({ data, setOpenChats, openChats }) => {
                   >
                     {item.message}
                   </p>
+                  {item.image && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: item.left ? "flex-start" : "flex-end",
+                      }}
+                    >
+                      <img
+                        style={{
+                          width: 150,
+                          height: 150,
+                        }}
+                        src={Avatar}
+                      ></img>
+                    </div>
+                  )}
                   {/* {item.left === false && <span>darsha</span>} */}
                   <p
                     style={{
@@ -613,6 +668,7 @@ const Chat = ({ data, setOpenChats, openChats }) => {
                   >
                     {item.underText}
                   </p>
+
                   {item.date && (
                     <p
                       style={{
