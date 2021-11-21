@@ -48,12 +48,13 @@ import {
   getTeamContacts,
   getPlaceholder,
 } from "../../ApiHelper";
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+
 import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 function MessageCreate() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
@@ -3606,7 +3607,7 @@ function MessageCreate() {
                           <Checkbox
                             color="primary"
                             onChange={() => {
-                              makeMessageSelected(item.id);
+                              makeMessageSelected(tags.id);
                             }}
                             style={{ marginTop: 1, marginBottom: 1 }}
                           ></Checkbox>

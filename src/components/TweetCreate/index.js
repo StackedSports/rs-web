@@ -27,6 +27,7 @@ import {
   FavoriteBorder,
   EditOutlined,
 } from "@material-ui/icons";
+import GifIcon from "@material-ui/icons/Gif";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
@@ -74,7 +75,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function MessageCreate() {
+function TweetCreate() {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
@@ -3282,4 +3283,4 @@ const useStyles = makeStyles({
   },
 });
 
-export default MessageCreate;
+export default TweetCreate;

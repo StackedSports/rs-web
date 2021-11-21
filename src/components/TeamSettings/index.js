@@ -735,7 +735,7 @@ function TeamSettings(props) {
             setuseLessState(uselessState + 1);
             console.log("These are all new contacts", temp);
             // document.getElementById("infinit").scrollTop = 0;
-            setFetching(false);
+            // setFetching(false);
           } else {
             console.log("These are all contacts", res.data);
             setContacts(res.data);
@@ -748,7 +748,7 @@ function TeamSettings(props) {
       (error) => {
         // getMyContacts(1);
         document.getElementById("infinit").scrollTop = 0;
-        setPage(1);
+        // setPage(1);
         console.log("this is error all contacts", error);
       }
     );

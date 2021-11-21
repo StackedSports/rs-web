@@ -156,7 +156,7 @@ function Media() {
         if (res.statusText === "OK") {
           console.log("These are all contacts", res.data);
           setContacts(res.data);
-          setCopyContacts(res.data);
+          // setCopyContacts(res.data);
           document.getElementById("infinit").scrollTop = 0;
           setFetching(false);
         }
