@@ -23,6 +23,7 @@ import ArcheiveModal from "./components/archeiveModal";
 import TabletAndroidIcon from "@material-ui/icons/TabletAndroid";
 import { FilterIconBlue } from "../dashboard/homeElements";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
+import AmimatedBurger from '../../images/animated_burger.gif';
 import CachedIcon from "@material-ui/icons/Cached";
 import TextArea from "./textarea";
 import AutoFixHighIcon from "@material-ui/icons/Audiotrack";
@@ -1072,17 +1073,18 @@ const Home = () => {
                   }}
                 >
                   <div style={{ paddingLeft: 30 }}>
-                    <FormatAlignLeftIcon
-                      onClick={() => {
+                  <img src={AmimatedBurger}        onClick={() => {
                         setMessageText("");
                         setChatBar(false);
                         setOpenChats([]);
                         setArchieveChat(false);
                       }}
                       style={{
-                        cursor: "pointer",
-                      }}
-                    ></FormatAlignLeftIcon>
+                        cursor: "pointer",width:40
+                      }}></img>
+                    {/* <FormatAlignLeftIcon
+              
+                    ></FormatAlignLeftIcon> */}
 
                     <span
                       style={{

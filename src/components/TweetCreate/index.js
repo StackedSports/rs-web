@@ -28,6 +28,7 @@ import {
   EditOutlined,
 } from "@material-ui/icons";
 import GifIcon from "@material-ui/icons/Gif";
+import AmimatedBurger from '../../images/animated_burger.gif';
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
@@ -1471,12 +1472,11 @@ function TweetCreate() {
         {" "}
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
-            <FormatAlignLeftIcon
-              onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-              }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon>
+
+          <img src={AmimatedBurger} onClick={(e) => {
+              setshowSideFilters(!showSideFilters);
+            }}
+              style={{ cursor: "pointer", width: 40 }}></img>
 
             <span
               style={{
@@ -1621,12 +1621,12 @@ function TweetCreate() {
         {" "}
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
-            <FormatAlignLeftIcon
-              onClick={(e) => {
+ 
+
+<img src={AmimatedBurger}      onClick={(e) => {
                 setshowSideFilters(!showSideFilters);
               }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon>
+              style={{ cursor: "pointer", width: 40 }}></img>
 
             <span
               style={{

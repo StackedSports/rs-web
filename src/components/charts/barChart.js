@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+
 const data = [
   {
     name: "Jan",
@@ -89,10 +90,28 @@ const data = [
 
 export default class Example extends PureComponent {
   static demoUrl = "https://codesandbox.io/s/stacked-bar-chart-s47i2";
+  constructor(props) {
+    super(props);
+    this.state = { windowWidth: window.innerWidth };
+  }
+
+  handleResize = (e) => {
+  this.setState({ windowWidth: window.innerWidth });
+ };
+
+ componentDidMount() {
+  window.addEventListener("resize", this.handleResize);
+ }
+
+ componentWillUnMount() {
+  window.addEventListener("resize", this.handleResize);
+ } 
   render() {
-    console.log(this.props, "jai mata di");
+    const { windowWidth } = this.state; 
+    console.log(this.props, "Allah o Akbar",windowWidth);
+
     return (
-      <ResponsiveContainer width={550} height={250}>
+      <ResponsiveContainer height={250}>
         <BarChart
           width={550}
           height={250}

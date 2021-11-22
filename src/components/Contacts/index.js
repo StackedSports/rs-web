@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import AmimatedBurger from '../../images/animated_burger.gif';
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
@@ -998,12 +999,13 @@ function Home() {
         >
           <Grid container direction="row">
             <Grid item md={6} sm={6}>
-              <FormatAlignLeftIcon
-                onClick={(e) => {
+            <img src={AmimatedBurger}         onClick={(e) => {
                   setshowSideFilters(!showSideFilters);
                 }}
-                style={{ cursor: "pointer", fontSize: 18 }}
-              ></FormatAlignLeftIcon>
+                style={{ cursor: "pointer", width:40}}></img>
+              {/* <FormatAlignLeftIcon
+               
+              ></FormatAlignLeftIcon> */}
 
               <span
                 style={{

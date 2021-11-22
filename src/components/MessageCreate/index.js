@@ -10,8 +10,9 @@ import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import GifIcon from "@material-ui/icons/Gif";
 import PhotoIcon from "@material-ui/icons/Photo";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import { ArrowDropDown, Check, Search, Send, Info } from "@material-ui/icons";
+import { ArrowDropDown, Check, CheckCircle, Search, Send, Info, Favorite } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
+import AmimatedBurger from '../../images/animated_burger.gif';
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
@@ -92,6 +93,7 @@ function MessageCreate() {
   const [messageCreated, setMessageCreated] = useState(false);
 
   const [messageReceiver, setMessageReceiver] = useState([]);
+  const [selectedMessageTypes, setSelectedMessageTypes] = useState([]);
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [stateSearch, setStateSearch] = useState("");
@@ -730,14 +732,14 @@ function MessageCreate() {
             direction="row"
             justify="center"
             style={{ background: "#f6f6f6" }}
-            // onMouseEnter={() => {
-            //   if (m.urls) {
-            //     setMediaHover(m.urls.medium);
-            //   }
-            // }}
-            // onMouseLeave={() => {
-            //   setMediaHover(null);
-            // }}
+          // onMouseEnter={() => {
+          //   if (m.urls) {
+          //     setMediaHover(m.urls.medium);
+          //   }
+          // }}
+          // onMouseLeave={() => {
+          //   setMediaHover(null);
+          // }}
           >
             <img
               style={{ width: "80%", height: 190, objectFit: "contain" }}
@@ -972,12 +974,17 @@ function MessageCreate() {
         {" "}
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
-            <FormatAlignLeftIcon
+            {/* <FormatAlignLeftIcon
               onClick={(e) => {
                 setshowSideFilters(!showSideFilters);
               }}
               style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon>
+            ></FormatAlignLeftIcon> */}
+
+            <img src={AmimatedBurger} onClick={(e) => {
+              setshowSideFilters(!showSideFilters);
+            }}
+              style={{ cursor: "pointer", width: 40 }}></img>
 
             <span
               style={{
@@ -1157,8 +1164,8 @@ function MessageCreate() {
               a.phoneNumber > b.phoneNumber
                 ? 1
                 : b.phoneNumber > a.phoneNumber
-                ? -1
-                : 0
+                  ? -1
+                  : 0
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1586,7 +1593,7 @@ function MessageCreate() {
                 text="Delivery Details"
                 width={180}
                 textColor={messageSelected.length && "white"}
-                onClick={() => {}}
+                onClick={() => { }}
                 icon={
                   <Search
                     style={{
@@ -1710,12 +1717,12 @@ function MessageCreate() {
         {" "}
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
-            <FormatAlignLeftIcon
-              onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-              }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon>
+
+
+            <img src={AmimatedBurger} onClick={(e) => {
+              setshowSideFilters(!showSideFilters);
+            }}
+              style={{ cursor: "pointer", width: 40 }}></img>
 
             <span
               style={{
@@ -1836,12 +1843,11 @@ function MessageCreate() {
         {" "}
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
-            <FormatAlignLeftIcon
-              onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-              }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></FormatAlignLeftIcon>
+
+            <img src={AmimatedBurger} onClick={(e) => {
+              setshowSideFilters(!showSideFilters);
+            }}
+              style={{ cursor: "pointer", width: 40 }}></img>
 
             <span
               style={{
@@ -2559,6 +2565,29 @@ function MessageCreate() {
                             >
                               Set Message Type
                             </p>
+                            <Grid container alignItems="center" className={classes.messagetypeGrid}  >
+
+                              <Favorite className={classes.messageTypeIcon}
+                              style={{fontSize:16}}
+                       
+                              ></Favorite>
+                              <p
+                                style={{
+                                  // color: "black",
+                                  // padding: 16,
+                                  marginLeft: 16,
+                                  width: "65%",
+                                  // background: "#3871da",
+                                  // color: "white",
+                                  fontWeight: 600,
+                                  marginBottom: -4,
+                                }}
+                              >
+
+                                Set Preffered Channel
+                              </p> <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+
                             {[
                               {
                                 title: "Twitter DM",
@@ -2600,10 +2629,12 @@ function MessageCreate() {
                                       margin: 0,
                                       fontWeight: 600,
                                       marginLeft: 16,
+                                      width: "65%"
                                     }}
                                   >
                                     {type.title}
                                   </p>
+                                  <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
                                 </Grid>
                               );
                             })}
@@ -2772,65 +2803,65 @@ function MessageCreate() {
                               //   },
                               // ]
                               teamContacts &&
-                                teamContacts.map((type) => {
-                                  return (
-                                    <Grid
-                                      container
-                                      alignItems="center"
-                                      // style={{
-                                      //   height: 50,
-                                      //   marginLeft: 0,
-                                      //   marginTop: -12,
-                                      //   cursor: "pointer",
-                                      // }}
-                                      className={classes.sendAsP}
-                                      onClick={() => {
-                                        setMessageSender(type);
+                              teamContacts.map((type) => {
+                                return (
+                                  <Grid
+                                    container
+                                    alignItems="center"
+                                    // style={{
+                                    //   height: 50,
+                                    //   marginLeft: 0,
+                                    //   marginTop: -12,
+                                    //   cursor: "pointer",
+                                    // }}
+                                    className={classes.sendAsP}
+                                    onClick={() => {
+                                      setMessageSender(type);
+                                    }}
+                                  >
+                                    <img
+                                      style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 20,
+                                        marginLeft: 16,
                                       }}
-                                    >
-                                      <img
+                                      src={
+                                        type.twitter_profile &&
+                                        type.twitter_profile.profile_image
+                                      }
+                                    ></img>
+                                    {JSON.parse(localStorage.getItem("user"))
+                                      .id === type.id ? (
+                                      <p
                                         style={{
-                                          width: 30,
-                                          height: 30,
-                                          borderRadius: 20,
+                                          margin: 0,
+                                          fontWeight: 600,
+                                          marginLeft: 8,
+                                        }}
+                                      >
+                                        {type.twitter_profile &&
+                                          "You @" +
+                                          type.twitter_profile.screen_name +
+                                          ""}
+                                      </p>
+                                    ) : (
+                                      <p
+                                        style={{
+                                          margin: 0,
+                                          fontWeight: 600,
                                           marginLeft: 16,
                                         }}
-                                        src={
-                                          type.twitter_profile &&
-                                          type.twitter_profile.profile_image
-                                        }
-                                      ></img>
-                                      {JSON.parse(localStorage.getItem("user"))
-                                        .id === type.id ? (
-                                        <p
-                                          style={{
-                                            margin: 0,
-                                            fontWeight: 600,
-                                            marginLeft: 8,
-                                          }}
-                                        >
-                                          {type.twitter_profile &&
-                                            "You @" +
-                                              type.twitter_profile.screen_name +
-                                              ""}
-                                        </p>
-                                      ) : (
-                                        <p
-                                          style={{
-                                            margin: 0,
-                                            fontWeight: 600,
-                                            marginLeft: 16,
-                                          }}
-                                        >
-                                          {type.twitter_profile &&
-                                            " @" +
-                                              type.twitter_profile.screen_name +
-                                              " "}
-                                        </p>
-                                      )}
-                                    </Grid>
-                                  );
-                                })
+                                      >
+                                        {type.twitter_profile &&
+                                          " @" +
+                                          type.twitter_profile.screen_name +
+                                          " "}
+                                      </p>
+                                    )}
+                                  </Grid>
+                                );
+                              })
                             }
                           </div>
                         </div>
@@ -3026,8 +3057,8 @@ function MessageCreate() {
                             >
                               {time
                                 ? moment(date).format(" MM/DD/YYYY") +
-                                  " at " +
-                                  time
+                                " at " +
+                                time
                                 : "ASAP"}
                             </p>
                           }
@@ -3705,7 +3736,7 @@ const useStyles = makeStyles({
     display: "none",
     position: "absolute",
     backgroundColor: "white",
-    minWidth: 230,
+    minWidth: 270,
     boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
     border: "1px solid #d5d5d5",
     borderRadius: 4,
@@ -3736,6 +3767,7 @@ const useStyles = makeStyles({
   messagetypeGrid: {
     height: 50,
     marginLeft: 0,
+    borderBottom:"2px solid #d8d8d8",
     // marginTop: -12,
     cursor: "pointer",
     color: "#3871da",

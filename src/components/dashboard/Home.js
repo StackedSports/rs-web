@@ -572,7 +572,7 @@ function Home(props) {
 
             <ChartSection>
               <Grid container style={{ margin: 0, padding: 0 }}>
-                <Grid item xs={12} lg={5}>
+                <Grid item xs={12} lg={6}>
                   <ChartDiv>
                     <ChartTop>
                       <MM>
@@ -682,7 +682,7 @@ function Home(props) {
                     </ChartFooter>
                   </ChartDiv>
                 </Grid>
-                <Grid item xs={12} lg={7}>
+                <Grid item xs={12} lg={6}>
                   <ChartDiv2>
                     <ChartTop>
                       <MM>

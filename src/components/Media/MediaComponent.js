@@ -12,6 +12,8 @@ import {
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import AmimatedBurger from '../../images/animated_burger.gif';
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -1238,14 +1240,15 @@ function MediaComponent(props) {
               style={{ cursor: "pointer", fontSize: 18 }}
             ></ArrowBackIos>
           ) : (
-            <FormatAlignLeftIcon
-              onClick={(e) => {
-                if (props.setAddMedia) {
-                  props.setAddMedia(false);
-                }
-              }}
-              style={{ cursor: "pointer", fontSize: 25 }}
-            ></FormatAlignLeftIcon>
+            <img src={AmimatedBurger} style={{cursor:"pointer",width:40}}></img>
+            // <FormatAlignLeftIcon
+            //   onClick={(e) => {
+            //     if (props.setAddMedia) {
+            //       props.setAddMedia(false);
+            //     }
+            //   }}
+            //   style={{ cursor: "pointer", fontSize: 25 }}
+            // ></FormatAlignLeftIcon>
           )}
           {props.message ? (
             <span

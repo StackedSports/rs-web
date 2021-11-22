@@ -14,6 +14,7 @@ import { Picker } from "emoji-mart";
 import InputEmoji from "react-input-emoji";
 import DoughnutChart from "../charts/DoughnutChartCenterText";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
+import AmimatedBurger from '../../images/animated_burger.gif';
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import MyMedia from "../../images/media.jpg";
@@ -1342,16 +1343,12 @@ function ContactProfile() {
                       <div
                         style={{ height: 50, width: "100%", paddingInline: 10 }}
                       >
-                        <FormatAlignLeftIcon
-                          onClick={(e) => {
-                            setshowSideFilters(!showSideFilters);
-                          }}
-                          style={{
-                            cursor: "pointer",
-                            fontSize: 25,
-                            color: "gray",
-                          }}
-                        ></FormatAlignLeftIcon>
+
+                        <img src={AmimatedBurger} onClick={(e) => {
+                          setshowSideFilters(!showSideFilters);
+                        }}
+                          style={{ cursor: "pointer", width: 40 }}></img>
+
                       </div>
                       <Grid
                         container
