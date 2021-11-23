@@ -364,17 +364,7 @@ const Sidebar = (props) => {
   const [searchTags, setSearchTags] = useState("");
   const classes = useStyles();
 
-  const getMyTeamContacts = () => {
-    getTeamContacts().then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          setTeamContacts(res.data);
-        }
-      },
-      (error) => {}
-    );
-  };
+
 
   const TagsDropDown = () => {
     return (
@@ -534,7 +524,17 @@ const Sidebar = (props) => {
       </Grid>
     );
   };
-
+  const getMyTeamContacts = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          setTeamContacts(res.data);
+        }
+      },
+      (error) => {}
+    );
+  };
   const getAllTags = () => {
     getTags().then(
       (res) => {

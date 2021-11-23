@@ -13,6 +13,9 @@ import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import AmimatedBurger from '../../images/animated_burger.gif';
+import {
+  Search,
+} from "@material-ui/icons";
 
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 
@@ -36,11 +39,10 @@ import {
   getMediaTag,
   getPlaceholder,
   getMediaUsers,
+  getTeamContacts,
+  getTags
 } from "../../ApiHelper";
 import { MoreHoriz } from "@material-ui/icons";
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -104,6 +106,26 @@ const useStyles = makeStyles({
     // overflowY: "scroll",
     overflowX: "hidden",
   },
+  mediaStatsRightHeading: {
+    fontWeight: "bold",
+    fontSize: 16,
+    margin: 0,
+    width: "100%",
+    textAlign: "center",
+  },
+  mediaStatsRightState: {
+    fontSize: 18,
+    margin: 0,
+    height: 30,
+    fontSize: 20,
+    fontWeight: 'bold',
+    width:'100%',
+    textAlign:'center'
+  },
+  mediaStatsGrid: {
+    borderBottom: "1px solid #d2d2d2",
+    paddingTop: 16, paddingBottom: 16
+  }
 });
 
 const PrettoSlider = withStyles({
@@ -155,7 +177,8 @@ function MediaComponent(props) {
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
-
+  const [showMediaStats, setShowMediaStats] = useState(false);
+  const [teamContacts, setTeamContacts] = useState(null);
   const [showBoardFilters, setshowBoardFilters] = useState(false);
   const [viewMorePlaceholder, setViewMorePlaceholder] = useState(false);
   const [viewMoreQuickAccess, setViewMoreQuickAccess] = useState(false);
@@ -166,7 +189,7 @@ function MediaComponent(props) {
   const [mediaHover, setMediaHover] = useState(null);
   const [lightboxPicture, setLightboxPicture] = useState(null);
   const [lightboxVideo, setLightboxVideo] = useState(null);
-
+  const [searchTags, setSearchTags] = useState("");
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
@@ -181,6 +204,12 @@ function MediaComponent(props) {
   const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
   const [taggedMedia, setTaggedMedia] = useState(null);
   const [displayAction, setDisplayAction] = useState(null);
+  const [displayOwner, setDisplayOwner] = useState(null);
+  const [displayTags, setDisplayTags] = useState(null);
+  const [tagFilter, setTagFilter] = useState([]);
+  const [placeholderFilter, setPlaceholderFilter] = useState([]);
+
+  const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
 
   const [allTags, setAllTags] = useState(null);
   const [page, setPage] = useState(1);
@@ -198,6 +227,35 @@ function MediaComponent(props) {
     setOpenSnackBar(false);
   };
   // console.log("These are selected checkboxes", selectedCheckBoxes);
+
+  const getMyTeamContacts = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          setTeamContacts(res.data);
+        }
+      },
+      (error) => { }
+    );
+  };
+  const getAllTags = () => {
+    getTags().then(
+      (res) => {
+        // console.log("THis is all tags", res);
+        var TAGS = [];
+        if (res.statusText === "OK") {
+          // console.log("These are all tags", res.data);
+          setAllTags(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all tags", error);
+      }
+    );
+  };
+
+
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -236,36 +294,6 @@ function MediaComponent(props) {
     </div>
   ));
 
-  // forwardRef again here!
-  // Dropdown needs access to the DOM of the Menu to measure it
-  // const CustomMenu = React.forwardRef(
-  //   ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-  //     const [value, setValue] = useState("");
-
-  //     return (
-  //       <div
-  //         ref={ref}
-  //         style={style}
-  //         className={className}
-  //         aria-labelledby={labeledBy}
-  //       >
-  //         <FormControl
-  //           autoFocus
-  //           className="mx-3 my-2 w-auto"
-  //           placeholder="Type to filter..."
-  //           onChange={(e) => setValue(e.target.value)}
-  //           value={value}
-  //         />
-  //         <ul className="list-unstyled">
-  //           {React.Children.toArray(children).filter(
-  //             (child) =>
-  //               !value || child.props.children.toLowerCase().startsWith(value)
-  //           )}
-  //         </ul>
-  //       </div>
-  //     );
-  //   }
-  // );
 
   const getMyMedia = () => {
     getMedia().then(
@@ -742,14 +770,8 @@ function MediaComponent(props) {
       getMyPlaceholders();
       getTaggedMedia();
       getMyMediaContacts();
-      // getAllGradeYears();
-      // getAllRanks();
-      // getAllStatuses();
+      getMyTeamContacts();
       // getAllTags();
-      // getAllBoards();
-      // getAllPositions();
-      // getColumns();
-      // setupPage();
     } else {
       window.location.href = "/";
     }
@@ -830,14 +852,866 @@ function MediaComponent(props) {
     }
   }
 
+
+  const MediaDetailsCard = (props) => {
+    return (
+      <Grid
+        container
+        direction="row"
+        style={{
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginTop: 16,
+          height: "auto",
+        }}
+      >
+        {/* <Grid item md={4} xs={4}> */}
+        <div
+          style={{
+            borderRight: "1px solid #d2d2d2",
+            width: "5%",
+          }}
+        >
+          {/* <Grid container direction="row" justify="center">
+            {props.hideCheckBox === null && (
+              <Checkbox
+                color={"primary"}
+                checked={
+                  selectedMessages.indexOf(props.selectedPlaceholder.name) > -1
+                    ? true
+                    : false
+                }
+                onChange={() => {
+                  console.log("THis is selected", props.selectedPlaceholder);
+                  makeMessageSelected(props.selectedPlaceholder.name);
+                }}
+              ></Checkbox>
+            )}
+          </Grid> */}
+        </div>
+        <Grid
+          container
+          direction="row"
+          style={{
+            width: props.hideStats ? "90%" : "70%",
+            padding: 16,
+          }}
+        >
+          {mediaContainer(props.selectedPlaceholder)}
+          {/* </Grid> */}
+          {/* <Grid item md={8} xs={8}> */}
+          <div
+            style={{
+              marginLeft: 16,
+              width: "50%",
+            }}
+          >
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                marginBottom: 0,
+              }}
+            >
+              {props.selectedPlaceholder.name}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Message Status:
+              {props.messageStatus === "Drafts" ? (
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  Drafts
+                </span>
+              ) : props.messageStatus === "Scheduled" ? (
+                <span className={classes.mdMargin} style={{ color: "#54a300" }}>
+                  Scheduled
+                </span>
+              ) : (
+                <span className={classes.mdMargin} style={{ color: "#8bb14c" }}>
+                  Published
+                </span>
+              )}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Published On:
+              <strong className={classes.mdMargin}>Twitter</strong>{" "}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Published to :
+              <strong className={classes.mdMargin}>@JakeSmith</strong>{" "}
+            </p>
+            {props.messageStatus === "Scheduled" ? (
+              <p class className={classes.messageDetailsHeading}>
+                Published Time:
+                <strong className={classes.mdMargin}>
+                  June 15, 2021 15:00
+                </strong>{" "}
+                <span
+                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                  onClick={() => {
+                    setMessageStatus("Drafts");
+                    setMessageCreated(false);
+                  }}
+                >
+                  (Unschedule & more to drafts)
+                </span>
+              </p>
+            ) : (
+              <p class className={classes.messageDetailsHeading}>
+                Published Time:
+                <strong className={classes.mdMargin}>
+                  June 15, 2021 15:00
+                </strong>{" "}
+              </p>
+            )}
+
+            <Grid
+              container
+              direction="row"
+              className={classes.messageDetailsHeading}
+            >
+              Tags:
+              <div
+                style={{
+                  border: "1px solid #0091ff",
+                  color: "#0091ff",
+                  padding: 4,
+                  fontSize: 10,
+                  borderRadius: 4,
+                  marginLeft: 16,
+                }}
+              >
+                OV WEEKENDS
+              </div>
+              <div
+                style={{
+                  border: "1px solid #0091ff",
+                  color: "#0091ff",
+                  padding: 4,
+                  fontSize: 10,
+                  borderRadius: 4,
+                  marginLeft: 16,
+                }}
+              >
+                OV WEEKENDS
+              </div>
+            </Grid>
+          
+
+          </div>
+          <Grid container direction="row">
+              <Grid item md={12} xs={12}>
+                <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+                  Owner
+                </p>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+                >
+                  {filter.length != 0 &&
+                    filter.map((fil, index) => {
+                      return (
+                        <div
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          className={classes.tags}
+                        >
+                          <Grid
+                            style={{ height: 50 }}
+                            container
+                            direction="row"
+                            alignItems="center"
+                          >
+                            {fil}
+                            <ClearIcon
+                              onClick={() => {
+                                addDataToFilter(fil);
+                              }}
+                              style={{
+                                color: "red",
+                                fontSize: 17,
+                                cursor: "pointer",
+                                marginLeft: 8,
+                              }}
+                            ></ClearIcon>{" "}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                  <div class="dropdownMedia">
+                    <input
+                      type="text"
+                      style={{
+                        height: 60,
+                        flex: "auto",
+                        border: "none",
+                        padding: 16,
+                      }}
+                      id="owner"
+                      onClick={(e) => {
+                        console.log("This is ", e.target.id);
+                        setDisplayOwner(true);
+                      }}
+                      placeholder="+ Add Owner"
+                    ></input>
+                    <div
+                      className={classes.dropdownHidden}
+                      style={{
+                        display: displayOwner ? "block" : "none",
+                      }}
+                    >
+                      {teamContacts &&
+                        teamContacts.map((type, index) => {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                                height: 60,
+                                marginLeft: 0,
+                                marginTop: -12,
+                                cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                              onClick={() => {
+                                if (type.twitter_profile) {
+                                  addDataToFilter(type.twitter_profile.screen_name);
+                                }
+                              }}
+                            // className={classes.sendAsP}
+                            >
+                              <img
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                  borderRadius: 20,
+                                  marginLeft: 12,
+                                }}
+                                src={
+                                  type.twitter_profile &&
+                                  type.twitter_profile.profile_image
+                                }
+                              ></img>
+
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                              >
+                                {type.twitter_profile &&
+                                  type.twitter_profile.screen_name + " "}
+                              </p>
+                            </Grid>
+                          );
+                        })}
+                    </div>{" "}
+                  </div>
+                </Grid>
+              </Grid>
+
+              <Grid item md={12} xs={12}>
+                <p
+                  style={{
+                    color: "#b5bccd",
+                    fontSize: 17,
+                    fontWeight: 500,
+                    marginTop: 16,
+                  }}
+                >
+                  Tags
+                </p>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+                >
+                  {tagFilter.length != 0 &&
+                    tagFilter.map((fil, index) => {
+                      return (
+                        <div
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          className={classes.tags}
+                        >
+                          <Grid
+                            style={{ height: 50 }}
+                            container
+                            direction="row"
+                            alignItems="center"
+                          >
+                            {fil}
+                            <ClearIcon
+                              onClick={() => {
+                                addTagToFilter(fil);
+                              }}
+                              style={{
+                                color: "red",
+                                fontSize: 17,
+                                cursor: "pointer",
+                                marginLeft: 8,
+                              }}
+                            ></ClearIcon>{" "}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                  <div class="dropdownMedia">
+                    <input
+                      type="text"
+                      style={{
+                        height: 60,
+                        flex: "auto",
+                        border: "none",
+                        padding: 16,
+                      }}
+                      id="tags"
+                      onClick={(e) => {
+                        console.log("This is ", e.target.id);
+                        setDisplayTags(true);
+                      }}
+                      placeholder="+ Add Tag"
+                    ></input>
+                    <div
+                      className={classes.dropdownHidden}
+                      style={{
+                        display: displayTags ? "block" : "none",
+                      }}
+                    >
+                      <Grid container direction="row" justify="center">
+                        <input
+                          type="text"
+                          style={{
+                            width: "90%",
+                            border: "1px solid #ebebeb",
+                            borderRadius: 4,
+                            marginTop: 8,
+                          }}
+                          id="searchtags"
+                          placeholder="Search Tags"
+                          value={searchTags}
+                          onChange={(e) => {
+                            setSearchTags(e.target.value);
+                            setDisplayTags(true);
+                          }}
+                          onClick={(e) => {
+                            setDisplayTags(true);
+                          }}
+                        ></input>
+                      </Grid>
+                      {allTags &&
+                        allTags.map((item, index) => {
+                          // console.log("This is item", item);
+                          if (searchTags != "") {
+                            if (
+                              item.name
+                                .toLowerCase()
+                                .indexOf(searchTags.toLowerCase()) > -1
+                            ) {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: 50,
+                                    marginLeft: 0,
+
+                                    cursor: "pointer",
+                                  }}
+                                  className={classes.hoverGrid}
+                                  onClick={() => {
+                                    addTagToFilter(item.name);
+                                  }}
+                                // className={classes.sendAsP}
+                                >
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 12,
+                                    }}
+                                  >
+                                    {item.name}
+                                  </p>
+                                </Grid>
+                              );
+                            }
+                          } else {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                style={{
+                                  height: 50,
+                                  marginLeft: 0,
+                                  marginTop: 0,
+                                  cursor: "pointer",
+                                }}
+                                className={classes.hoverGrid}
+                                onClick={() => {
+                                  addTagToFilter(item.name);
+                                }}
+                              // className={classes.sendAsP}
+                              >
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 12,
+                                  }}
+                                >
+                                  {item.name}
+                                </p>
+                              </Grid>
+                            );
+                          }
+                        })}
+                    </div>{" "}
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" spacing={1}>
+              <Grid item md={6} xs={6}>
+                <p
+                  style={{
+                    color: "#b5bccd",
+                    fontSize: 17,
+                    fontWeight: 500,
+                    marginTop: 16,
+                  }}
+                >
+                  Associate to placeholder
+                </p>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+                >
+                  {placeholderFilter.length != 0 &&
+                    placeholderFilter.map((fil, index) => {
+                      return (
+                        <div
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          className={classes.tags}
+                        >
+                          <Grid
+                            style={{ height: 50 }}
+                            container
+                            direction="row"
+                            alignItems="center"
+                          >
+                            {fil}
+                            <ClearIcon
+                              onClick={() => {
+                                addPlaceholderToFilter(fil);
+                              }}
+                              style={{
+                                color: "red",
+                                fontSize: 17,
+                                cursor: "pointer",
+                                marginLeft: 8,
+                              }}
+                            ></ClearIcon>{" "}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                  <div class="dropdownMedia">
+                    <input
+                      type="text"
+                      style={{
+                        height: 60,
+                        flex: "auto",
+                        border: "none",
+                        padding: 16,
+                      }}
+                      id="placeholder"
+                      onClick={(e) => {
+                        setDisplayPlaceholder(true);
+                      }}
+                      placeholder="+ Add Media placeholder or personalized graphics"
+                    ></input>
+                    <div
+                      className={classes.dropdownHidden}
+                      style={{
+                        display: displayPlaceholder ? "block" : "none",
+                      }}
+                    >
+                      {allTags &&
+                        allTags.map((type, index) => {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                                height: 50,
+                                marginLeft: 0,
+                                marginTop: -12,
+                                cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                            // onClick={() => {
+                            //   addPlaceholderToFilter(type.name);
+                            // }}
+                            // className={classes.sendAsP}
+                            >
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                              >
+                                {type.name}
+                              </p>
+                            </Grid>
+                          );
+                        })}
+                    </div>{" "}
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <p
+                  style={{
+                    color: "#b5bccd",
+                    fontSize: 17,
+                    fontWeight: 500,
+                    marginTop: 16,
+                  }}
+                >
+                  Associate to Contact
+                </p>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+                >
+                  {placeholderFilter.length != 0 &&
+                    placeholderFilter.map((fil, index) => {
+                      return (
+                        <div
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="center"
+                          className={classes.tags}
+                        >
+                          <Grid
+                            style={{ height: 50 }}
+                            container
+                            direction="row"
+                            alignItems="center"
+                          >
+                            {fil}
+                            <ClearIcon
+                              onClick={() => {
+                                addPlaceholderToFilter(fil);
+                              }}
+                              style={{
+                                color: "red",
+                                fontSize: 17,
+                                cursor: "pointer",
+                                marginLeft: 8,
+                              }}
+                            ></ClearIcon>{" "}
+                          </Grid>
+                        </div>
+                      );
+                    })}
+                  <div class="dropdownMedia">
+                    <input
+                      type="text"
+                      style={{
+                        height: 60,
+                        flex: "auto",
+                        border: "none",
+                        padding: 16,
+                      }}
+                      id="placeholder"
+                      onClick={(e) => {
+                        setDisplayPlaceholder(true);
+                      }}
+                      placeholder="+ Add Media placeholder or personalized graphics"
+                    ></input>
+                    <div
+                      className={classes.dropdownHidden}
+                      style={{
+                        display: displayPlaceholder ? "block" : "none",
+                      }}
+                    >
+                      {allTags &&
+                        allTags.map((type, index) => {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                                height: 50,
+                                marginLeft: 0,
+                                marginTop: -12,
+                                cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                            // onClick={() => {
+                            //   addPlaceholderToFilter(type.name);
+                            // }}
+                            // className={classes.sendAsP}
+                            >
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                              >
+                                {type.name}
+                              </p>
+                            </Grid>
+                          );
+                        })}
+                    </div>{" "}
+                  </div>
+                </Grid>
+              </Grid>
+              </Grid>
+              
+            </Grid>
+        </Grid>
+        {props.hideStats === null && (
+          <div
+            style={{
+              borderLeft: "1px solid #d2d2d2",
+              width: "25%",
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "10%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Media Stats
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              className={classes.mediaStatsGrid}
+            >
+              <p
+                className={classes.mediaStatsRightHeading}
+              >
+                Media Sent In:
+              </p>
+              <p
+                className={classes.mediaStatsRightState}
+              >
+                0 Messages
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              className={classes.mediaStatsGrid}
+            >
+              <p
+                className={classes.mediaStatsRightHeading}
+              >
+                Media Published In:
+              </p>
+              <p
+                className={classes.mediaStatsRightState}
+              >
+                0 Tweets
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                // height: "15%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Message Stats
+              </p>
+              <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                // height: "60%",
+              }}
+            >
+              <p
+            className={classes.mediaStatsRightState}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Contact Engagement (286/300)
+              </p>
+              <p
+                 className={classes.mediaStatsRightState}
+              >
+                64
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                }}
+              >
+                Favorite From Contacts (286/300)
+              </p>
+              <p
+             className={classes.mediaStatsRightState}
+              >
+                17
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Retweets front Contacts (286/300)
+              </p>
+            </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                // height: "15%",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Post Stats
+              </p>
+              <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                // height: "60%",
+              }}
+            >
+              <p
+            className={classes.mediaStatsRightState}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Contact Engagement (286/300)
+              </p>
+              <p
+                 className={classes.mediaStatsRightState}
+              >
+                64
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                }}
+              >
+                Favorite From Contacts (286/300)
+              </p>
+              <p
+             className={classes.mediaStatsRightState}
+              >
+                17
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Retweets front Contacts (286/300)
+              </p>
+            </Grid>
+            </Grid>
+          </div>
+        )}
+      </Grid>
+    );
+  };
+
   const mediaContainer = (m) => {
-    // console.log("THis is container ", m);
+    console.log("THis is container ", m);
     return (
       <div
         style={{
           width: 270,
           height: 250,
           marginLeft: 10,
+          // background: 'red',
           // border: "1px solid #d2d2d2",
           border:
             selectedCheckBoxes.indexOf(m.hashid) > -1
@@ -846,6 +1720,7 @@ function MediaComponent(props) {
           borderRadius: 4,
           marginBottom: 10,
         }}
+
       >
         <Grid
           container
@@ -863,7 +1738,7 @@ function MediaComponent(props) {
           }}
         >
           {(m.urls && mediaHover === m.urls.medium) ||
-          selectedCheckBoxes.indexOf(m.hashid) > -1 ? (
+            selectedCheckBoxes.indexOf(m.hashid) > -1 ? (
             <div
               style={{
                 width: "100%",
@@ -949,6 +1824,13 @@ function MediaComponent(props) {
           ></img>
         </Grid>
         <Grid
+          onClick={
+            (e) => {
+              // console.log("This is the target", e.target)
+              setShowMediaStats(true)
+              setSelectedPlaceHolder(m);
+            }
+          }
           container
           direction="row"
           style={{ height: 30, marginLeft: 12, marginTop: 2 }}
@@ -1027,7 +1909,7 @@ function MediaComponent(props) {
           style={{ background: "#f6f6f6", height: 180 }}
         >
           {placeholderHover === m.media_preview ||
-          selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
+            selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
             <div
               style={{
                 width: "100%",
@@ -1240,7 +2122,7 @@ function MediaComponent(props) {
               style={{ cursor: "pointer", fontSize: 18 }}
             ></ArrowBackIos>
           ) : (
-            <img src={AmimatedBurger} style={{cursor:"pointer",width:40}}></img>
+            <img src={AmimatedBurger} style={{ cursor: "pointer", width: 40 }}></img>
             // <FormatAlignLeftIcon
             //   onClick={(e) => {
             //     if (props.setAddMedia) {
@@ -1472,471 +2354,479 @@ function MediaComponent(props) {
       ></div>
       {showFiltersRow === true ? renderFilters() : <div></div>}
       <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
-        <div
-          style={{ width: "100%", maxHeight: 460, minWidth: 1110 }}
-          className="fullHeightMedia"
-          id="infinit"
-          // onScroll={() => {
-          //   handleScroll();
-          // }}
-        >
-          <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
-            <Grid md={6}>
-              <p>Quick Access</p>
-            </Grid>
-            <Grid md={6} direction="row" justify="flex-end">
-              <div style={{ textAlign: "end" }}>
-                <Dropdown>
-                  <Dropdown.Toggle
-                    as={CustomToggle}
-                    id="dropdown-custom-components"
-                  >
-                    Last Modified
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu
-                  // as={CustomMenu}
-                  >
-                    <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-            </Grid>
-          </Grid>
-
-          {selectedPlaceholder === null || props.message ? (
-            <Grid container>
-              {media != null ? (
-                media.map((m, index) => {
-                  if (viewMoreQuickAccess) {
-                    if (
-                      // index >= quickAccessStartIndex &&
-                      index < quickAccessEndIndex
-                    ) {
-                      return mediaContainer(m);
-                    }
-                  } else {
-                    if (index < 4) {
-                      return mediaContainer(m);
-                    }
-                  }
-                })
-              ) : (
-                <Grid container direction="row" justify="center">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                </Grid>
-              )}
-              <div style={{ width: "100%" }}>
-                <Grid container direction="row" justify="center">
-                  <span
-                    style={{
-                      color: "#3871DA",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                      marginRight: 10,
-                    }}
-                    onClick={() => {
-                      if (quickAccessEndIndex >= 20) {
-                        setViewMoreQuickAccess(true);
-                        setQuickAccessEndIndex(quickAccessEndIndex - 15);
-                      } else if (quickAccessEndIndex >= 4) {
-                        setViewMoreQuickAccess(false);
-                        setQuickAccessEndIndex(quickAccessEndIndex - 4);
-                      }
-                    }}
-                  >
-                    {viewMoreQuickAccess == true ? "View Less" : ""}
-                  </span>
-                  <span
-                    style={{
-                      color: "#3871DA",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      if (quickAccessEndIndex >= media.length) {
-                        setViewMoreQuickAccess(false);
-                        setQuickAccessStartIndex(0);
-                        setQuickAccessEndIndex(15);
-                      } else {
-                        setViewMoreQuickAccess(true);
-                        setQuickAccessStartIndex(quickAccessEndIndex);
-                        setQuickAccessEndIndex(quickAccessEndIndex + 15);
-                      }
-                    }}
-                  >
-                    {viewMoreQuickAccess == true &&
-                    quickAccessEndIndex >= media.length
-                      ? ""
-                      : "Load More"}
-                  </span>
-                </Grid>
-              </div>
-            </Grid>
-          ) : (
-            <Grid container direction="row">
-              <Grid item md={3} xs={3}>
-                {placeholderContainer(selectedPlaceholder)}
-              </Grid>
-              <Grid item md={9} xs={9}>
-                <p style={{ fontWeight: "bold", fontSize: 20 }}>
-                  {selectedPlaceholder.name}
-                </p>
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  FileType: image/jpeg
-                </p>
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  Uploaded On:{" "}
-                  {new moment(selectedPlaceholder.created_at).format(
-                    "YYYY-MM-DD"
-                  )}
-                </p>{" "}
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  Uploaded By: Tim Glover
-                </p>
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  File Size : 40.5 kb
-                </p>
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  Dimensions : 160 x 200
-                </p>
-                <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
-                  Last Sent :{" "}
-                  {new moment(selectedPlaceholder.created_at).format(
-                    "YYYY-MM-DD"
-                  )}
-                </p>
-              </Grid>
-            </Grid>
-          )}
-          <Grid container direction="row" justify="flex-end">
+        {
+          showMediaStats ? <MediaDetailsCard
+            id={"messageDetailScrollPublished"}
+            hideCheckBox={null}
+            hideStats={null}
+            selectedPlaceholder={selectedPlaceholder}></MediaDetailsCard> :
             <div
-              style={{
-                border: "1px solid #d2d2d2",
-                width: 30,
-                height: 30,
-                borderRadius: 4,
-                marginRight: 30,
-                marginBottom: 10,
-              }}
+              style={{ width: "100%", maxHeight: 460, minWidth: 1110 }}
+              className="fullHeightMedia"
+              id="infinit"
+            // onScroll={() => {
+            //   handleScroll();
+            // }}
             >
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                style={{ height: 30, cursor: "pointer" }}
-                onClick={() => {
-                  setShowlistView(!showlistView);
-                }}
-              >
-                {showlistView === true ? (
-                  <FaTh style={{ color: "#3871DA" }}></FaTh>
-                ) : (
-                  <FaBars style={{ color: "#3871DA" }}></FaBars>
-                )}
-              </Grid>
-            </div>
-          </Grid>
-          <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
-            <Grid md={6}>
-              <p>Placeholders</p>
-            </Grid>
-            <Grid md={6} direction="row" justify="flex-end">
-              <div style={{ textAlign: "end" }}>
-                <Dropdown>
-                  <Dropdown.Toggle
-                    as={CustomToggle}
-                    id="dropdown-custom-components"
-                  >
-                    Last Modified
-                  </Dropdown.Toggle>
+              <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
+                <Grid md={6}>
+                  <p>Quick Access</p>
+                </Grid>
+                <Grid md={6} direction="row" justify="flex-end">
+                  <div style={{ textAlign: "end" }}>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        as={CustomToggle}
+                        id="dropdown-custom-components"
+                      >
+                        Last Modified
+                      </Dropdown.Toggle>
 
-                  <Dropdown.Menu
-                  // as={CustomMenu}
-                  >
-                    <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-            </Grid>
-          </Grid>
-          {showlistView === true && props.message === null ? (
-            <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{
-                  background: "#f5f6f9",
-                  width: "100%",
-                  minWidth: 1110,
-                }}
-              >
-                <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
-                  <span className={classes.tableHeading}>Name</span>
-                </Grid>
-                <Grid item md={1} xs={1}>
-                  <span className={classes.tableHeading}>File</span>
-                </Grid>
-                <Grid item md={1} xs={1}>
-                  <span className={classes.tableHeading}>File Sent</span>
-                </Grid>
-                <Grid item md={2} xs={2}>
-                  <span
-                    className={classes.tableHeading}
-                    style={{ marginLeft: 40 }}
-                  >
-                    Associated To
-                  </span>
-                </Grid>
-                <Grid item md={2} xs={2}>
-                  <span className={classes.tableHeading}>Owner</span>
-                </Grid>
-                <Grid item md={2} xs={2}>
-                  <span className={classes.tableHeading}>Last Modified</span>
-                </Grid>
-              </Grid>
-
-              <div
-                style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
-                className="fullHeightContacts"
-                id="infinit"
-                onScroll={() => {
-                  handleScroll();
-                }}
-              >
-                {placeholders &&
-                  placeholders.map((item, index) => {
-                    if (index < 4) {
-                      return (
-                        <Grid
-                          onClick={() => {
-                            setSelectedPlaceHolder(item);
-                          }}
-                          container
-                          direction="row"
-                          alignItems="center"
-                          style={{
-                            border: "1px solid #d8d8d8",
-                            borderBottom: "none",
-                            borderRadius: 4,
-                            paddingTop: 4,
-                            paddingBottom: 4,
-                            minWidth: 1110,
-                          }}
-                        >
-                          <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
-                            {item.media_preview.indexOf(".gif") > -1 ? (
-                              <GifIcon></GifIcon>
-                            ) : item.media_preview.indexOf(".png") > -1 ||
-                              item.media_preview.indexOf(".jpg") > -1 ||
-                              item.media_preview.indexOf(".jpeg") > -1 ? (
-                              <FaImage
-                                style={{ color: "#3871da", fontSize: 20 }}
-                              ></FaImage>
-                            ) : item.media_preview.indexOf(".mp4") > -1 ? (
-                              <FaVideo></FaVideo>
-                            ) : (
-                              <FaFilePdf
-                                style={{ color: "#3871da", fontSize: 20 }}
-                              ></FaFilePdf>
-                            )}
-                            <span
-                              className={classes.tableFields}
-                              style={{ marginLeft: 5 }}
-                            >
-                              {item.name}
-                            </span>
-                          </Grid>
-                          <Grid item md={1} xs={1}>
-                            <img
-                              style={{ width: 30, height: 30 }}
-                              src={item.media_preview}
-                            ></img>
-                          </Grid>
-                          <Grid item md={1} xs={1}>
-                            <span className={classes.tableFields}>
-                              {item.twitter_profile &&
-                              item.twitter_profile.screen_name
-                                ? "@" + item.twitter_profile.screen_name
-                                : ""}
-                            </span>
-                          </Grid>
-                          <Grid item md={2} xs={2}>
-                            <span
-                              className={classes.tableFields}
-                              style={{ marginLeft: 40 }}
-                            >
-                              {/* {formatPhoneNumber(item.phone)} */}
-                            </span>
-                          </Grid>
-                          <Grid item md={2} xs={2}>
-                            <span className={classes.tableFields}>
-                              {item.state}
-                            </span>
-                          </Grid>
-                          <Grid item md={2} xs={2}>
-                            <span className={classes.tableFields}>
-                              {moment(item.created_at).format("MMMM Do YYYY")}
-                            </span>
-                          </Grid>
-                          <Grid item md={2} xs={2}>
-                            <span className={classes.tableFields}>
-                              {item.high_school}
-                            </span>
-                          </Grid>
-                          <Grid item md={1} xs={1}>
-                            <span className={classes.tableFields}>
-                              {item.status &&
-                                new moment(item.status.created_at).fromNow()}
-                            </span>
-                          </Grid>
-                          <Grid item md={1} xs={1}>
-                            <span className={classes.tableFields}>
-                              {" "}
-                              {item.status && item.status.status}
-                            </span>
-                          </Grid>
-                        </Grid>
-                      );
-                    }
-                  })}
-              </div>
-            </div>
-          ) : (
-            <Grid container>
-              {placeholders ? (
-                placeholders.map((m, index) => {
-                  if (viewMorePlaceholder) {
-                    if (index < placeholderEndIndex) {
-                      return placeholderContainer(m);
-                    }
-                  } else {
-                    if (index < 4) {
-                      return placeholderContainer(m);
-                    }
-                  }
-                })
-              ) : (
-                <Grid container direction="row" justify="center">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
+                      <Dropdown.Menu
+                      // as={CustomMenu}
+                      >
+                        <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </div>
                 </Grid>
-              )}
-              <div style={{ width: "100%" }}>
-                <Grid container direction="row" justify="center">
-                  <span
-                    style={{
-                      color: "#3871DA",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                      marginRight: 10,
-                    }}
-                    onClick={() => {
-                      if (placeholderEndIndex >= 20) {
-                        setViewMorePlaceholder(true);
-                        setPlaceholderEndIndex(placeholderEndIndex - 15);
-                      } else if (placeholderEndIndex >= 4) {
-                        setViewMorePlaceholder(false);
-                        setPlaceholderEndIndex(placeholderEndIndex - 4);
-                      }
-                    }}
-                  >
-                    {viewMorePlaceholder == true ? "View Less" : ""}
-                  </span>
-                  <span
-                    style={{
-                      color: "#3871DA",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      // setViewMorePlaceholder(!viewMorePlaceholder);
-                      if (placeholderEndIndex >= placeholders.length) {
-                        setViewMorePlaceholder(false);
-                        setPlaceholderStartIndex(0);
-                        setPlaceholderEndIndex(15);
-                      } else {
-                        setViewMorePlaceholder(true);
-                        setPlaceholderStartIndex(placeholderEndIndex);
-                        setPlaceholderEndIndex(placeholderEndIndex + 15);
-                      }
-                    }}
-                  >
-                    {viewMorePlaceholder == true &&
-                    placeholderEndIndex >= placeholders.length
-                      ? ""
-                      : "Load More"}
-                  </span>
-                </Grid>
-              </div>
-            </Grid>
-          )}
-          {props.message ? (
-            <div></div>
-          ) : (
-            <Grid
-              direction="row"
-              container
-              style={{ padding: "0 25px 0 10px" }}
-            >
-              <Grid md={6}>
-                <p>Tagged Media</p>
               </Grid>
-              <Grid md={6} direction="row" justify="flex-end">
-                <div style={{ textAlign: "end" }}>
-                  <Dropdown>
-                    <Dropdown.Toggle
-                      as={CustomToggle}
-                      id="dropdown-custom-components"
-                    >
-                      Last Modified
-                    </Dropdown.Toggle>
 
-                    <Dropdown.Menu
-                    // as={CustomMenu}
-                    >
-                      <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+              {selectedPlaceholder === null || props.message ? (
+                <Grid container>
+                  {media != null ? (
+                    media.map((m, index) => {
+                      if (viewMoreQuickAccess) {
+                        if (
+                          // index >= quickAccessStartIndex &&
+                          index < quickAccessEndIndex
+                        ) {
+                          return mediaContainer(m);
+                        }
+                      } else {
+                        if (index < 4) {
+                          return mediaContainer(m);
+                        }
+                      }
+                    })
+                  ) : (
+                    <Grid container direction="row" justify="center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </Grid>
+                  )}
+                  <div style={{ width: "100%" }}>
+                    <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          marginRight: 10,
+                        }}
+                        onClick={() => {
+                          if (quickAccessEndIndex >= 20) {
+                            setViewMoreQuickAccess(true);
+                            setQuickAccessEndIndex(quickAccessEndIndex - 15);
+                          } else if (quickAccessEndIndex >= 4) {
+                            setViewMoreQuickAccess(false);
+                            setQuickAccessEndIndex(quickAccessEndIndex - 4);
+                          }
+                        }}
+                      >
+                        {viewMoreQuickAccess == true ? "View Less" : ""}
+                      </span>
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          if (quickAccessEndIndex >= media.length) {
+                            setViewMoreQuickAccess(false);
+                            setQuickAccessStartIndex(0);
+                            setQuickAccessEndIndex(15);
+                          } else {
+                            setViewMoreQuickAccess(true);
+                            setQuickAccessStartIndex(quickAccessEndIndex);
+                            setQuickAccessEndIndex(quickAccessEndIndex + 15);
+                          }
+                        }}
+                      >
+                        {viewMoreQuickAccess == true &&
+                          quickAccessEndIndex >= media.length
+                          ? ""
+                          : "Load More"}
+                      </span>
+                    </Grid>
+                  </div>
+                </Grid>
+              ) : (
+                <Grid container direction="row">
+                  <Grid item md={3} xs={3}>
+                    {placeholderContainer(selectedPlaceholder)}
+                  </Grid>
+                  <Grid item md={9} xs={9}>
+                    <p style={{ fontWeight: "bold", fontSize: 20 }}>
+                      {selectedPlaceholder.name}
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      FileType: image/jpeg
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Uploaded On:{" "}
+                      {new moment(selectedPlaceholder.created_at).format(
+                        "YYYY-MM-DD"
+                      )}
+                    </p>{" "}
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Uploaded By: Tim Glover
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      File Size : 40.5 kb
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Dimensions : 160 x 200
+                    </p>
+                    <p style={{ fontWeight: 500, fontSize: 20, margin: 0 }}>
+                      Last Sent :{" "}
+                      {new moment(selectedPlaceholder.created_at).format(
+                        "YYYY-MM-DD"
+                      )}
+                    </p>
+                  </Grid>
+                </Grid>
+              )}
+              <Grid container direction="row" justify="flex-end">
+                <div
+                  style={{
+                    border: "1px solid #d2d2d2",
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: 30,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                    style={{ height: 30, cursor: "pointer" }}
+                    onClick={() => {
+                      setShowlistView(!showlistView);
+                    }}
+                  >
+                    {showlistView === true ? (
+                      <FaTh style={{ color: "#3871DA" }}></FaTh>
+                    ) : (
+                      <FaBars style={{ color: "#3871DA" }}></FaBars>
+                    )}
+                  </Grid>
                 </div>
               </Grid>
-            </Grid>
-          )}
-          {props.message ? (
-            <div></div>
-          ) : (
-            <Grid container>
-              {taggedMedia &&
-                taggedMedia.map((tag, index) => {
-                  if (index < 7) {
-                    return (
-                      <ContainerIconText
-                        width={200}
-                        onClick={() => {
-                          setShowTagsDialog(false);
-                          setOpenSnackBar(true);
-                        }}
-                        text={tag.name}
-                        textColor="black"
-                        background="white"
-                        marginBottom={15}
-                        icon={
-                          <LocalOfferOutlinedIcon
-                            style={{ color: "#3871DA" }}
-                          ></LocalOfferOutlinedIcon>
+              <Grid direction="row" container style={{ padding: "0 25px 0 10px" }}>
+                <Grid md={6}>
+                  <p>Placeholders</p>
+                </Grid>
+                <Grid md={6} direction="row" justify="flex-end">
+                  <div style={{ textAlign: "end" }}>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        as={CustomToggle}
+                        id="dropdown-custom-components"
+                      >
+                        Last Modified
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu
+                      // as={CustomMenu}
+                      >
+                        <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </Grid>
+              </Grid>
+              {showlistView === true && props.message === null ? (
+                <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      background: "#f5f6f9",
+                      width: "100%",
+                      minWidth: 1110,
+                    }}
+                  >
+                    <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
+                      <span className={classes.tableHeading}>Name</span>
+                    </Grid>
+                    <Grid item md={1} xs={1}>
+                      <span className={classes.tableHeading}>File</span>
+                    </Grid>
+                    <Grid item md={1} xs={1}>
+                      <span className={classes.tableHeading}>File Sent</span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span
+                        className={classes.tableHeading}
+                        style={{ marginLeft: 40 }}
+                      >
+                        Associated To
+                      </span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableHeading}>Owner</span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableHeading}>Last Modified</span>
+                    </Grid>
+                  </Grid>
+
+                  <div
+                    style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
+                    className="fullHeightContacts"
+                    id="infinit"
+                    onScroll={() => {
+                      handleScroll();
+                    }}
+                  >
+                    {placeholders &&
+                      placeholders.map((item, index) => {
+                        if (index < 4) {
+                          return (
+                            <Grid
+                              onClick={() => {
+                                setSelectedPlaceHolder(item);
+                              }}
+                              container
+                              direction="row"
+                              alignItems="center"
+                              style={{
+                                border: "1px solid #d8d8d8",
+                                borderBottom: "none",
+                                borderRadius: 4,
+                                paddingTop: 4,
+                                paddingBottom: 4,
+                                minWidth: 1110,
+                              }}
+                            >
+                              <Grid item md={3} xs={3} style={{ marginLeft: 12 }}>
+                                {item.media_preview.indexOf(".gif") > -1 ? (
+                                  <GifIcon></GifIcon>
+                                ) : item.media_preview.indexOf(".png") > -1 ||
+                                  item.media_preview.indexOf(".jpg") > -1 ||
+                                  item.media_preview.indexOf(".jpeg") > -1 ? (
+                                  <FaImage
+                                    style={{ color: "#3871da", fontSize: 20 }}
+                                  ></FaImage>
+                                ) : item.media_preview.indexOf(".mp4") > -1 ? (
+                                  <FaVideo></FaVideo>
+                                ) : (
+                                  <FaFilePdf
+                                    style={{ color: "#3871da", fontSize: 20 }}
+                                  ></FaFilePdf>
+                                )}
+                                <span
+                                  className={classes.tableFields}
+                                  style={{ marginLeft: 5 }}
+                                >
+                                  {item.name}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <img
+                                  style={{ width: 30, height: 30 }}
+                                  src={item.media_preview}
+                                ></img>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {item.twitter_profile &&
+                                    item.twitter_profile.screen_name
+                                    ? "@" + item.twitter_profile.screen_name
+                                    : ""}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span
+                                  className={classes.tableFields}
+                                  style={{ marginLeft: 40 }}
+                                >
+                                  {/* {formatPhoneNumber(item.phone)} */}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {item.state}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {moment(item.created_at).format("MMMM Do YYYY")}
+                                </span>
+                              </Grid>
+                              <Grid item md={2} xs={2}>
+                                <span className={classes.tableFields}>
+                                  {item.high_school}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {item.status &&
+                                    new moment(item.status.created_at).fromNow()}
+                                </span>
+                              </Grid>
+                              <Grid item md={1} xs={1}>
+                                <span className={classes.tableFields}>
+                                  {" "}
+                                  {item.status && item.status.status}
+                                </span>
+                              </Grid>
+                            </Grid>
+                          );
                         }
-                      />
-                    );
-                  }
-                })}
-            </Grid>
-          )}
-        </div>
+                      })}
+                  </div>
+                </div>
+              ) : (
+                <Grid container>
+                  {placeholders ? (
+                    placeholders.map((m, index) => {
+                      if (viewMorePlaceholder) {
+                        if (index < placeholderEndIndex) {
+                          return placeholderContainer(m);
+                        }
+                      } else {
+                        if (index < 4) {
+                          return placeholderContainer(m);
+                        }
+                      }
+                    })
+                  ) : (
+                    <Grid container direction="row" justify="center">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </Grid>
+                  )}
+                  <div style={{ width: "100%" }}>
+                    <Grid container direction="row" justify="center">
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          marginRight: 10,
+                        }}
+                        onClick={() => {
+                          if (placeholderEndIndex >= 20) {
+                            setViewMorePlaceholder(true);
+                            setPlaceholderEndIndex(placeholderEndIndex - 15);
+                          } else if (placeholderEndIndex >= 4) {
+                            setViewMorePlaceholder(false);
+                            setPlaceholderEndIndex(placeholderEndIndex - 4);
+                          }
+                        }}
+                      >
+                        {viewMorePlaceholder == true ? "View Less" : ""}
+                      </span>
+                      <span
+                        style={{
+                          color: "#3871DA",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          // setViewMorePlaceholder(!viewMorePlaceholder);
+                          if (placeholderEndIndex >= placeholders.length) {
+                            setViewMorePlaceholder(false);
+                            setPlaceholderStartIndex(0);
+                            setPlaceholderEndIndex(15);
+                          } else {
+                            setViewMorePlaceholder(true);
+                            setPlaceholderStartIndex(placeholderEndIndex);
+                            setPlaceholderEndIndex(placeholderEndIndex + 15);
+                          }
+                        }}
+                      >
+                        {viewMorePlaceholder == true &&
+                          placeholderEndIndex >= placeholders.length
+                          ? ""
+                          : "Load More"}
+                      </span>
+                    </Grid>
+                  </div>
+                </Grid>
+              )}
+              {props.message ? (
+                <div></div>
+              ) : (
+                <Grid
+                  direction="row"
+                  container
+                  style={{ padding: "0 25px 0 10px" }}
+                >
+                  <Grid md={6}>
+                    <p>Tagged Media</p>
+                  </Grid>
+                  <Grid md={6} direction="row" justify="flex-end">
+                    <div style={{ textAlign: "end" }}>
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          as={CustomToggle}
+                          id="dropdown-custom-components"
+                        >
+                          Last Modified
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu
+                        // as={CustomMenu}
+                        >
+                          <Dropdown.Item eventKey="1">Last Modified</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </Grid>
+                </Grid>
+              )}
+              {props.message ? (
+                <div></div>
+              ) : (
+                <Grid container>
+                  {taggedMedia &&
+                    taggedMedia.map((tag, index) => {
+                      if (index < 7) {
+                        return (
+                          <ContainerIconText
+                            width={200}
+                            onClick={() => {
+                              setShowTagsDialog(false);
+                              setOpenSnackBar(true);
+                            }}
+                            text={tag.name}
+                            textColor="black"
+                            background="white"
+                            marginBottom={15}
+                            icon={
+                              <LocalOfferOutlinedIcon
+                                style={{ color: "#3871DA" }}
+                              ></LocalOfferOutlinedIcon>
+                            }
+                          />
+                        );
+                      }
+                    })}
+                </Grid>
+              )}
+            </div>
+        }
+
       </div>
       <Grid container direction="row" alignItems="center"></Grid>
 
