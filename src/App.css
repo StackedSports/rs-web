@@ -512,3 +512,7 @@ select-search {
 .focusHighlight:focus {
   border: 1px solid #3871da !important;
 }
+
+.MuiCheckbox-colorPrimary.Mui-checked {
+  color: #3871DA !important;
+}
