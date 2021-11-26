@@ -19,7 +19,8 @@ import Contents from './Content/Content'
 export default function TwitterStream() {
 
     return (
-        <Box sx={{flexGrow: 1}} style={{marginLeft: 20, marginRight: 20}}>
+       
+        <Box sx={{flexGrow: 1}} >
             <Header/>
             <Grid container direction="row">
                 <MainMenu/>
@@ -44,6 +45,6 @@ export default function TwitterStream() {
             </Grid>
         </Box>
 
-
+        
     );
 }

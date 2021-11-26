@@ -8,7 +8,7 @@ export default function Details() {
         <Grid container direction="row">
             <Typography
                 style={{
-                    fontSize: '18px',
+                    fontSize: '12px',
                     marginLeft: '20px',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'

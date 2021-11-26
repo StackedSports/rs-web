@@ -14,9 +14,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function MenuNewMessage(){
     return(
-        <Box sx={{bgcolor: '#edeef2', width: 250, height: '100vh'}}>
-            <p style={{color: 'black', fontSize: '21px', fontWeight: 'bold', textAlign: 'center'}}>New
-                Message</p>
+        <Box sx={{bgcolor: '#edeef2', width: 200, height: '100vh'}}>
+            <p style={{color: 'black', fontSize: '17px', fontWeight: 'bold', textAlign: 'center', marginTop:'7px'}}>
+                New Message</p>
             <nav aria-label="main mailbox folders">
                 <List style={{border: 'none'}}>
                     <Accordion elevation={0} style={{
@@ -30,7 +30,7 @@ export default function MenuNewMessage(){
                             expandIcon={<ExpandMoreIcon/>}
                             aria-controls="panel1a-content"
                         >
-                            <Typography style={{fontWeight: 'bold', fontSize: '18px'}}>Drafts</Typography>
+                            <Typography style={{fontWeight: 'bold', fontSize: '15px'}}>Drafts</Typography>
                         </AccordionSummary>
                         <AccordionDetails style={{
                             background: 'transparent',
@@ -38,7 +38,7 @@ export default function MenuNewMessage(){
                             borderRadius: '0px',
                             marginLeft: 10
                         }}>
-                            <Typography style={{fontSize: '15px', color: '#8b8b8d'}}>Ben Grave</Typography>
+                            <Typography style={{fontSize: '12px', color: '#8b8b8d'}}>Ben Grave</Typography>
 
                         </AccordionDetails>
                     </Accordion>
@@ -54,7 +54,7 @@ export default function MenuNewMessage(){
                             expandIcon={<ExpandMoreIcon/>}
                             aria-controls="panel1a-content"
                         >
-                            <Typography style={{fontWeight: 'bold', fontSize: '18px'}}>My Streams</Typography>
+                            <Typography style={{fontWeight: 'bold', fontSize: '15px'}}>My Streams</Typography>
                         </AccordionSummary>
                         <AccordionDetails style={{
                             background: 'transparent',
@@ -62,7 +62,7 @@ export default function MenuNewMessage(){
                             borderRadius: '0px',
                             marginLeft: 10
                         }}>
-                            <Typography style={{fontSize: '15px', color: '#8b8b8d'}}>
+                            <Typography style={{fontSize: '12px', color: '#8b8b8d'}}>
                                 Tickets Needed
                                 <br/><br/>Seats,Tickets,Private Box
                                 <br/><br/>Commits Mentioned
@@ -82,7 +82,7 @@ export default function MenuNewMessage(){
                             expandIcon={<ExpandMoreIcon/>}
                             aria-controls="panel1a-content"
                         >
-                            <Typography style={{fontWeight: 'bold', fontSize: '18px'}}>Team Streams</Typography>
+                            <Typography style={{fontWeight: 'bold', fontSize: '15px'}}>Team Streams</Typography>
                         </AccordionSummary>
                         <AccordionDetails style={{
                             background: 'transparent',
@@ -90,7 +90,7 @@ export default function MenuNewMessage(){
                             borderRadius: '0px',
                             marginLeft: 10
                         }}>
-                            <Typography style={{fontSize: '15px', color: '#8b8b8d'}}>
+                            <Typography style={{fontSize: '12px', color: '#8b8b8d'}}>
                                 Seats,Tickets,Private Box
                                 <br/><br/>
                                 Tweeted our media

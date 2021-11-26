@@ -87,7 +87,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#c3c7c5s',
-        fontSize: '22px'
+        fontSize: '18px'
     },
 }));
 
@@ -156,7 +156,7 @@ export default function Header() {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                <IconButton size="medium" aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="error">
                         <MailIcon/>
                     </Badge>
@@ -165,7 +165,7 @@ export default function Header() {
             </MenuItem>
             <MenuItem>
                 <IconButton
-                    size="large"
+                    size="medium"
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
@@ -177,7 +177,7 @@ export default function Header() {
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
-                    size="large"
+                    size="medium"
                     aria-label="account of current user"
                     aria-controls="primary-search-account-menu"
                     aria-haspopup="true"
@@ -195,24 +195,23 @@ export default function Header() {
         <AppBar position="static" style={{backgroundColor: 'white', padding: '0px'}}>
             <Toolbar>
                 <IconButton
-                    size="large"
+                    size="medium"
                     edge="start"
                     color="inherit"
                     aria-label="open drawer"
                     sx={{mr: 2}}
                 >
-                    <StarBorderPurple500Icon sx={{fontSize: 50}} style={{fill: '#c3c7c5'}}/>
+                    <StarBorderPurple500Icon sx={{fontSize: 30}} style={{fill: '#c3c7c5'}}/>
                 </IconButton>
                 <Divider orientation="vertical" flexItem/>
-                <Button
+                <Button size='medium'
                     style={{
                         marginLeft: 20,
-                        borderRadius: 5,
+                       
                         padding: 10,
                         color: 'white',
                         background: '#3871da',
-                        width: 200,
-                        height: 60
+                        
                     }}
                     variant="outlined"
                     startIcon={<AddIcon/>}>
@@ -229,7 +228,7 @@ export default function Header() {
                 </Typography>
                 <Search>
                     <SearchIconWrapper>
-                        <SearchIcon fontSize="large" style={{fill: '#c3c7c5'}}/>
+                        <SearchIcon fontSize="medium" style={{fill: '#c3c7c5'}}/>
                     </SearchIconWrapper>
                     <StyledInputBase
                         placeholder="Search…"
@@ -239,29 +238,29 @@ export default function Header() {
                 <Box sx={{flexGrow: 2}}></Box>
                 <Divider orientation="vertical" flexItem/>
                 <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-                    <IconButton size="large"
+                    <IconButton size="medium"
                                 color="inherit"
-                                style={{justifyContent: 'center', paddingLeft: 50, paddingRight: 50}}>
+                                style={{justifyContent: 'center', paddingLeft: 40, paddingRight: 50}}>
                         <Badge badgeContent={1} color="error">
-                            <MailIcon sx={{fontSize: 40}} style={{fill: '#c3c7c5'}}/>
+                            <MailIcon sx={{fontSize: 20}} style={{fill: '#c3c7c5'}}/>
                         </Badge>
                     </IconButton>
                 </Box>
                 <Divider orientation="vertical" flexItem/>
                 <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                     <IconButton
-                        size="large"
+                        size="medium"
                         style={{justifyContent: 'center', paddingLeft: 50, paddingRight: 50}}
                         color="inherit">
                         <Badge badgeContent={1} color="error">
-                            <NotificationsIcon sx={{fontSize: 40}} style={{fill: '#c3c7c5'}}/>
+                            <NotificationsIcon sx={{fontSize: 20}} style={{fill: '#c3c7c5'}}/>
                         </Badge>
                     </IconButton>
                 </Box>
                 <Divider orientation="vertical" flexItem/>
                 <Box sx={{display: {xs: 'flex', md: 'none'}}}>
                     <IconButton
-                        size="large"
+                        size="medium"
                         aria-label="show more"
                         aria-controls={mobileMenuId}
                         aria-haspopup="true"

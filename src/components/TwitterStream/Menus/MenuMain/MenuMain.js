@@ -22,13 +22,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 export default function MainMenu(){
 
     return(
-        <Box sx={{bgcolor: 'background.paper', width: 100, height: '100vh'}}>
+        <Box sx={{bgcolor: 'background.paper', width: 76, height: '100vh'}}>
             <nav aria-label="main mailbox folders">
                 <List>
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <HomeIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <HomeIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>
@@ -36,7 +36,7 @@ export default function MainMenu(){
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <PersonIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <PersonIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>
@@ -44,7 +44,7 @@ export default function MainMenu(){
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <AddCommentIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <AddCommentIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>
@@ -52,7 +52,7 @@ export default function MainMenu(){
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <InsertPhotoIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <InsertPhotoIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>
@@ -60,16 +60,7 @@ export default function MainMenu(){
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <TwitterIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
-                            </ListItemIcon>
-                        </ListItemButton>
-                    </ListItem>
-
-
-                    <ListItem>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <SignalCellularAltIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <TwitterIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>
@@ -78,7 +69,16 @@ export default function MainMenu(){
                     <ListItem>
                         <ListItemButton>
                             <ListItemIcon>
-                                <SettingsIcon sx={{fontSize: 35, marginTop: 5}} style={{fill: '#000'}}/>
+                                <SignalCellularAltIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </ListItem>
+
+
+                    <ListItem>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <SettingsIcon sx={{fontSize: 25, marginTop: 3}} style={{fill: '#000'}}/>
                             </ListItemIcon>
                         </ListItemButton>
                     </ListItem>

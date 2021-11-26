@@ -10,14 +10,14 @@ export default function ProfileInfo() {
             <Typography
                 style={{
                     fontWeight: 'bold',
-                    fontSize: '21px',
+                    fontSize: '16px',
                     marginLeft: '20px'
                 }}>
                 Jack Forrester</Typography>
 
             <Typography style={{
                 fontWeight: 'bold',
-                fontSize: '18px',
+                fontSize: '16px',
                 marginLeft: '10px',
                 color: '#c2c9d0'
             }}>
@@ -25,7 +25,7 @@ export default function ProfileInfo() {
 
             <Typography style={{
                 fontWeight: 'bold',
-                fontSize: '18px',
+                fontSize: '16px',
                 marginLeft: '10px',
                 color: '#c2c9d0'
             }}>

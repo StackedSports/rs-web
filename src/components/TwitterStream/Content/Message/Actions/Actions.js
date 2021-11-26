@@ -13,50 +13,50 @@ export default function Actions(){
     return(
         <Grid container direction="row" justifyContent="space-between">
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="show more"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <ChatBubbleOutlineIcon sx={{fontSize: 40}}
+                <ChatBubbleOutlineIcon sx={{fontSize: 20}}
                                        style={{fill: '#c2c9d0'}}/>
             </IconButton>
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="show more"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <ReplayIcon sx={{fontSize: 40}}
+                <ReplayIcon sx={{fontSize: 20}}
                             style={{fill: '#c2c9d0'}}/>
             </IconButton>
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="show more"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <FavoriteBorderIcon sx={{fontSize: 40}}
+                <FavoriteBorderIcon sx={{fontSize: 20}}
                                     style={{fill: '#c2c9d0'}}/>
             </IconButton>
 
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="show more"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <ArrowUpwardIcon sx={{fontSize: 40}}
+                <ArrowUpwardIcon sx={{fontSize: 20}}
                                  style={{fill: '#c2c9d0'}}/>
             </IconButton>
 
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="show more"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <BarChartIcon sx={{fontSize: 40}}
+                <BarChartIcon sx={{fontSize: 20}}
                               style={{fill: '#c2c9d0'}}/>
             </IconButton>
         </Grid>

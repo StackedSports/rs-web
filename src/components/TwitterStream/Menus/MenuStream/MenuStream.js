@@ -18,15 +18,15 @@ export default function MenuStream() {
               style={{marginLeft: '20px', marginTop: '20px', padding: 10}}>
 
             <IconButton
-                size="large"
+                size="medium"
                 aria-label="account of current user"
                 aria-controls="primary-search-account-menu"
                 aria-haspopup="true"
                 color="inherit"
             >
-                <MenuOpenIcon sx={{fontSize: 40}} style={{fill: '#000'}}/>
+                <MenuOpenIcon sx={{fontSize: 27}} style={{fill: '#000'}}/>
             </IconButton>
-            <Typography style={{fontWeight: 'bold', fontSize: '21px', marginLeft: '20px'}}>Twitter
+            <Typography style={{fontWeight: 'bold', fontSize: '15px', marginLeft: '20px'}}>Twitter
                 Stream</Typography>
             <Box sx={{flexGrow: 0.9}}>
             </Box>
@@ -36,13 +36,13 @@ export default function MenuStream() {
                     style={{
                         borderRadius: 5,
                         padding: 10,
-                        fontSize: '18px',
+                        fontSize: '13px',
                         fontWeight: 'bold',
                         color: 'black',
                         background: 'white',
                     }}
                     variant="outlined"
-                    endIcon={<AutoFixHighIcon sx={{fontSize: 40}} style={{fill: '#3871da'}}/>}>
+                    endIcon={<AutoFixHighIcon sx={{fontSize: 25}} style={{fill: '#3871da'}}/>}>
                     Action</Button>
 
                 <Button
@@ -50,7 +50,7 @@ export default function MenuStream() {
                         borderRadius: 5,
                         padding: 10,
                         marginLeft: 10,
-                        fontSize: '18px',
+                        fontSize: '13px',
                         fontWeight: 'bold',
                         color: 'black',
                         background: 'white',
