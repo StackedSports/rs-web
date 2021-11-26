@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import TwitterStream from'./components/TwitterStream/TwitterStream'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/message-create" exact component={MessageCreate} />
           <Route path="/team-settings" exact component={TeamSettings} />
           <Route path="/team-settings/:userID" exact component={TeamSettings} />
+          <Route path="/twitter-stream" exact component={TwitterStream}/>
         </Switch>
       </Router>
     </div>

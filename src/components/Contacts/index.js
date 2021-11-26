@@ -110,6 +110,12 @@ const useStyles = makeStyles({
       background: "#ebebeb",
     },
   },
+  contactsColumnCheckbox :{
+    // "&:after": {
+      color:'#3871DA'
+    // },
+ 
+  }
 });
 
 function Home() {
@@ -1186,7 +1192,7 @@ function Home() {
                   ></IconTextField>
                   <div class="dropdown-content">
                     <p style={{ color: "black", margin: 12 }}>
-                      Displayed Recruite Data
+                      Display Contact Data
                     </p>
                     {allColumns &&
                       allColumns.map((item) => {
@@ -1212,7 +1218,7 @@ function Home() {
                                 {item.Heading}
                               </p>
                             )}
-                            <Checkbox color="primary"></Checkbox>
+                            <Checkbox  color="primary" ></Checkbox>
                             {/* {item.icon} */}
                             {/* <i
                               class="fa fa-user-circle"
@@ -1220,7 +1226,7 @@ function Home() {
                             ></i> */}
                             <i
                               class={item.fa_classes}
-                              style={{ color: "#dadada", marginRight: 10 }}
+                              style={{ color: "black", marginRight: 10 }}
                             ></i>
                             <p style={{ margin: 0 }}>{item.name}</p>
                           </Grid>

@@ -91,6 +91,8 @@ function MessageCreate() {
   const [messagePreview, setMessagePreview] = useState(null);
   const [messageStatus, setMessageStatus] = useState("Drafts");
   const [messageCreated, setMessageCreated] = useState(false);
+  const [fromAreaCoach, setFromAreaCoach] = useState(false);
+  const [fromPositionCoach, setFromPositinCoach] = useState(false);
 
   const [messageReceiver, setMessageReceiver] = useState([]);
   const [selectedMessageTypes, setSelectedMessageTypes] = useState([]);
@@ -2042,53 +2044,122 @@ function MessageCreate() {
 
   const renderMessageSenderTag = (sender) => {
     return (
-      <div
-        container
-        direction="row"
-        alignItems="center"
-        justify="center"
-        className={classes.tags}
-        style={{ paddingLeft: 0 }}
-      >
-        <Grid
-          style={{ height: 40 }}
+      <Grid container direction="row" style={{ width: '80%' }}>
+        {
+          fromAreaCoach && <div
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            className={classes.tags}
+            style={{ paddingLeft: 0 }}
+          >
+            <Grid
+              style={{ height: 40 }}
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 600,
+                    marginLeft: 16,
+                  }}
+                >
+                  From Area Coach
+                </p>
+              </p>
+              <ClearIcon
+                onClick={() => {
+                  setFromAreaCoach(false)
+                }}
+                className={classes.tagCross}
+              ></ClearIcon>{" "}
+            </Grid>
+          </div>
+        }
+
+        {
+          fromPositionCoach && <div
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            className={classes.tags}
+            style={{ paddingLeft: 0 }}
+          >
+            <Grid
+              style={{ height: 40 }}
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 600,
+                    marginLeft: 16,
+                  }}
+                >
+                  From Position Coach
+                </p>
+              </p>
+              <ClearIcon
+                onClick={() => {
+                  setFromPositinCoach(false)
+                }}
+                className={classes.tagCross}
+              ></ClearIcon>{" "}
+            </Grid>
+          </div>
+        }
+        <div
           container
           direction="row"
           alignItems="center"
+          justify="center"
+          className={classes.tags}
+          style={{ paddingLeft: 0 }}
         >
-          <img
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 20,
-              marginLeft: 16,
-            }}
-            src={sender.twitter_profile && sender.twitter_profile.profile_image}
-          ></img>
-          <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-            <p
+          <Grid
+            style={{ height: 40 }}
+            container
+            direction="row"
+            alignItems="center"
+          >
+            <img
               style={{
-                margin: 0,
-                fontWeight: 600,
+                width: 30,
+                height: 30,
+                borderRadius: 20,
                 marginLeft: 16,
               }}
-            >
-              {sender.twitter_profile && sender.twitter_profile.screen_name}
+              src={sender.twitter_profile && sender.twitter_profile.profile_image}
+            ></img>
+            <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: 600,
+                  marginLeft: 16,
+                }}
+              >
+                {sender.twitter_profile && sender.twitter_profile.screen_name}
+              </p>
             </p>
-          </p>
-          <ClearIcon
-            onClick={() => {
-              setMessageSender(null);
-            }}
-            style={{
-              color: "red",
-              fontSize: 17,
-              cursor: "pointer",
-              marginLeft: 8,
-            }}
-          ></ClearIcon>{" "}
-        </Grid>
-      </div>
+            <ClearIcon
+              onClick={() => {
+                setMessageSender(null);
+              }}
+              className={classes.tagCross}
+            ></ClearIcon>{" "}
+          </Grid>
+        </div>
+      </Grid>
+
     );
   };
   const renderMessageTypeTag = (messageType) => {
@@ -2568,8 +2639,8 @@ function MessageCreate() {
                             <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
-                              style={{fontSize:16}}
-                       
+                                style={{ fontSize: 16 }}
+
                               ></Favorite>
                               <p
                                 style={{
@@ -2736,31 +2807,49 @@ function MessageCreate() {
                             >
                               Send on the behalf of
                             </p>
+                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                              <p
+                                onClick={
+                                  () => {
+                                    setFromPositinCoach(false)
+                                    setFromAreaCoach(true)
+                                  }
+                                }
+                                style={{ width: '80%', margin: 0 }}
+                              >
+                                Area Recruiting Coach
 
-                            <p
-                              // style={{
-                              //   color: "black",
-                              //   padding: 16,
-                              //   marginBottom: 0,
-                              //   fontWeight: 600,
+                              </p>
+                              {
+                                fromAreaCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              }
 
-                              // }}
-                              className={classes.sendAsP}
-                            >
-                              Area Recruiting Coach
-                            </p>
+                            </Grid>
+
                             <div
                               style={{
                                 width: "100%",
                                 border: "1px solid #d8d8d8",
                               }}
                             ></div>
-                            <p
-                              // style={}
-                              className={classes.sendAsP}
-                            >
-                              Position Coach
-                            </p>
+                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                              <p
+                                style={{ width: '80%', margin: 0 }}
+
+                                onClick={
+                                  () => {
+                                    setFromPositinCoach(true)
+                                    setFromAreaCoach(false)
+                                  }
+                                }
+                              >
+                                Position Coach
+                              </p>
+                              {
+                                fromPositionCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              }
+                            </Grid>
+
                             <div
                               style={{
                                 width: "100%",
@@ -2779,29 +2868,6 @@ function MessageCreate() {
                               not have a coach assigned
                             </p>
                             {
-                              // [
-                              //   {
-                              //     title:
-                              //       "You (@" +
-                              //       JSON.parse(localStorage.getItem("user"))
-                              //         .twitter_profile.screen_name +
-                              //       ")",
-                              //     icon: (
-                              //       <img
-                              //         style={{
-                              //           width: 30,
-                              //           height: 30,
-                              //           borderRadius: 20,
-                              //           marginLeft: 16,
-                              //         }}
-                              //         src={
-                              //           JSON.parse(localStorage.getItem("user"))
-                              //             .twitter_profile.profile_image
-                              //         }
-                              //       ></img>
-                              //     ),
-                              //   },
-                              // ]
                               teamContacts &&
                               teamContacts.map((type) => {
                                 return (
@@ -3729,6 +3795,12 @@ const useStyles = makeStyles({
     paddingLeft: 16,
     paddingRight: 16,
   },
+  tagCross: {
+    color: "red",
+    fontSize: 17,
+    cursor: "pointer",
+    marginLeft: 8,
+  },
   icons: {
     color: "#d8d8d8",
   },
@@ -3767,7 +3839,7 @@ const useStyles = makeStyles({
   messagetypeGrid: {
     height: 50,
     marginLeft: 0,
-    borderBottom:"2px solid #d8d8d8",
+    borderBottom: "2px solid #d8d8d8",
     // marginTop: -12,
     cursor: "pointer",
     color: "#3871da",
@@ -3788,6 +3860,7 @@ const useStyles = makeStyles({
     marginTop: 0,
     marginBottom: 0,
     fontWeight: 600,
+    cursor: 'pointer',
     "&:hover": {
       background: "#3871da",
       color: "white",
