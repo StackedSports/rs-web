@@ -1,50 +1,37 @@
-import * as React from 'react';
 
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid'
-
-
-
-import Header from './Header/Header';
-import MainMenu from './Menus/MenuMain/MenuMain';
+import React, { useState, useEffect } from "react";
 import MenuNewMessage from './Menus/MenuNewMessage/MenuNewMessage'
-import MenuStream from './Menus/MenuStream/MenuStream'
-import Contents from './Content/Content'
+import { Grid } from "@material-ui/core";
+import "emoji-mart/css/emoji-mart.css";
 
+import Sidebar from "../common/sidebar/sidebar";
+import { Divider } from "@material-ui/core";
+import Content from "./Content/Content";
+export default function TwitterStream(props) {
+    var userProfile;
 
-
-
-
-export default function TwitterStream() {
+  const [showModal, setShowModal] = useState(true);
+  var [showSetting, setShowSetting] = useState(false);
+  if (props.match.params.user) {
+    showSetting = props.match.params.user ? true : false;
+  }
+  const openModal = () => {
+    setShowModal((prev) => !prev);
+  };
+;
+  const [allTags, setAllTags] = useState(null);
 
     return (
+       <div>
+           <Grid direction='row'>
+       <Sidebar messageCreate={true} TwitterStream={true} />
+       <Divider orientation='vertical' variant='fullWidth'/>
+       <MenuNewMessage/>
        
-        <Box sx={{flexGrow: 1}} >
-            <Header/>
-            <Grid container direction="row">
-                <MainMenu/>
-                <MenuNewMessage/>
-                <Box sx={{flexGrow: 1, background: "white"}}>
-                    <MenuStream/>
-                    <Divider style={{marginLeft: '20px'}}/>
-                    <Grid container spacing={2} alignItems="center" justifyContent="center">
-                        <Grid xs={2}>
-                        </Grid>
-                        <Grid xs={6}>
-                            <Box sx={{flexGrow: 1, marginTop: '15px'}}>
-                                <Grid container direction="column" alignItems="center" justifyContent="center">
-                                    <Contents/>
-                                </Grid>
-                            </Box>
-                        </Grid>
-                        <Grid xs={2}>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Grid>
-        </Box>
+           
+       <Divider orientation='vertical' variant='fullWidth'/>
+       </Grid>
+       </div>
 
-        
     );
 }

@@ -5,6 +5,8 @@ import { SidebarData } from "./sidebarData";
 import SubMenu from "./subMenu";
 import { IconContext } from "react-icons/lib";
 import DashboardLogo from "../../../images/dashboardLogo.png";
+import StarLogo from "../../../images/twitterStream.png";
+
 import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
 import Logo from "../../../images/logoRight.png";
@@ -1987,11 +1989,11 @@ const Sidebar = (props) => {
           props.messageCreate === true ||
           props.TweetCreate === true ? (
             <LogoContainer style={{ width: 60 }}>
-              <NavLogo src={DashboardLogo} style={{ width: 50 }} />
+              <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50 }} />
             </LogoContainer>
           ) : (
             <LogoContainer>
-              <NavLogo src={DashboardLogo} />
+              <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} />
             </LogoContainer>
           )}
           {props.contacts === true ? (
@@ -2127,8 +2129,8 @@ const Sidebar = (props) => {
                 background: "rgb(113, 115, 118,0.1)",
               }}
             ></div>
-            <Logoimage src={Logo}></Logoimage>
-          </LeftSectionNav>
+      {props.TwitterStream?"":      <Logoimage src={Logo}></Logoimage>
+   }   </LeftSectionNav>
         </Nav>
         <SidebarNav
           sidebar={sidebar}

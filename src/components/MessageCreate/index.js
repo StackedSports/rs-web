@@ -3879,5 +3879,5 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
-
+export {useStyles};
 export default MessageCreate;
