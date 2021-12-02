@@ -8,7 +8,7 @@ import Sidebar from "../common/sidebar/sidebar";
 import { Divider } from "@material-ui/core";
 import Content from "./Content/Content";
 import { getTwitterStream } from "../../ApiHelper";
-
+import MenuStream from "./Menus/MenuStream/MenuStream";
 
 
 export default function TwitterStream(props) {
@@ -21,11 +21,11 @@ export default function TwitterStream(props) {
        <div>
            <Grid direction='row'>
        <Sidebar messageCreate={true} TwitterStream={true} />
-       <Divider/>
-       <MenuNewMessage/>
+       <Divider />
+       <MenuNewMessage MenuStream={true}/>
        
            
-       <Divider orientation='vertical' variant='fullWidth'/>
+    
        </Grid>
        </div>
 

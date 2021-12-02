@@ -24,7 +24,7 @@ export default function Content() {
                 <CardContent>
                     <Grid container direction="row">
                         <ProfileAvatar/>
-                        <Box style={{width: '85%'}}>
+                        <Box style={{width: '90%'}}>
                             <Grid container direction="column">
                                 <Box>
                                     <Grid container direction="row">
@@ -87,10 +87,10 @@ export default function Content() {
                         </Box>
                         
                     </Grid>
-                    <Divider orientation='vertical' flexitem/>
+                   
                     {/*Reply*/}
                     <Grid container direction="row" style={{marginTop: '20px'}}>
-
+                   
                         <ProfileAvatar/>
                         
                         <Box style={{width: '90%'}}>

@@ -30,7 +30,7 @@ function MenuNewMessage() {
     const [allTags, setAllTags] = useState(null);
     return (
         <div>
-            <DarkContainer contacts style={{ padding: 1, marginLeft: 60 }}>
+            <DarkContainer contacts style={{ padding: 2, marginLeft: 60 }}>
       
           
       <Grid container direction="row">
@@ -76,7 +76,7 @@ function MenuNewMessage() {
              </Grid>
              <Divider orientation="vertical" style={{margin:1}} variant="middle" flexItem />
              
-             <Grid xs={6} >
+             <Grid xs={6} style={{}}>
                <Content/>
                </Grid>
                <Grid xs={3}>
