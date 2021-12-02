@@ -14,6 +14,8 @@ export const registerUser = (email, password) => {
     },
   });
 
+
+
   return axios({
     method: "post",
     url: URL + "users",
@@ -502,6 +504,90 @@ export const getMediaUsers = () => {
       URL + `team/members?only_active=true&has_twitter=true&has_rs_text=true`,
     headers: {
       Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+//Create message API
+export const createMessage = (body) => {
+
+  const data=JSON.stringify(body);
+
+
+  return axios({
+    method: "post",
+    url: URL + "messages",
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+    data: data,
+  });
+};
+
+export const getMessages = () => {
+  return axios({
+    method: "get",
+    url: URL + `messages?include_all=false`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getMostRecentSendTimes = () => {
+  return axios({
+    method: "get",
+    url: URL + `messages/most_recent_send_times?timezone=US/Central`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getMessageInbox = () => {
+  return axios({
+    method: "get",
+    url: URL + `messages/inbox`,
+    headers: {
+      Accept: "application/json; version=1",
+      "Content-Type": "application/json",
+      Authorization:
+        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+      Cookie:
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    },
+  });
+};
+
+export const getMessage = () => {
+  return axios({
+    method: "get",
+    url: URL + `messages?include_all=false`,
+    headers: {
+      Accept: "application/json; version=3",
       "Content-Type": "application/json",
       Authorization:
         "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",

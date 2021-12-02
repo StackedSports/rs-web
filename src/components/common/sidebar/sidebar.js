@@ -49,27 +49,32 @@ const options = [
   {
     type: "group",
     name: "Contact",
-    items: [{ name: "03053888102", value: "es" }],
+    items: [{ name: "03053888102", value: "03053888102" }],
   },
   {
     type: "group",
     name: "Media Team",
-    items: [{ name: "Ben Team", value: "es" }],
+    items: [{ name: "Ben Team", value: "Ben Team" }],
   },
   {
     type: "group",
     name: "Users",
-    items: [{ name: "John", value: "es" }],
+    items: [{ name: "John", value: "John" }],
   },
   {
-    type: "Setting",
-    name: "Setting",
-    items: [{ name: "user Name", value: "es" }],
+    type: "group",
+    name: "Settings",
+    items: [{ name: "User Name", value: "user" }],
   },
   {
     type: "group",
     name: "Chats",
-    items: [{ name: "This is", value: "es" }],
+    items: [{ name: "This is", value: "This is" }],
+  },
+  {
+    type: "group",
+    name: "Clear Search",
+    items: [{ name: "", value: "" }],
   },
 ];
 const Nav = styled.div`
@@ -364,6 +369,7 @@ const Sidebar = (props) => {
   const [activeTabCSV, setActiveTabCSV] = useState(1);
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchTags, setSearchTags] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const classes = useStyles();
 
 
@@ -2063,6 +2069,14 @@ const Sidebar = (props) => {
               search
               style={{ backgroundColor: "red", color: "red" }}
               // closeOnSelect={false}
+              value={searchValue}
+              autoComplete
+              onChange={
+                (e)=>{
+                  console.log("This is the great",e)
+                  setSearchValue(e)
+                }
+              }
               options={options}
               placeholder="Search for contact,media,team users,setting and chats"
             />

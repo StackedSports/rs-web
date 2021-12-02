@@ -48,6 +48,8 @@ import {
   getMedia,
   getTeamContacts,
   getPlaceholder,
+  getMessage,
+  createMessage
 } from "../../ApiHelper";
 
 import { DateRangePicker } from "react-date-range";
@@ -56,7 +58,35 @@ import { addDays } from "date-fns";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-function MessageCreate() {
+function MessageCreate(props) {
+//api
+//var userProfile;
+
+  const [showModal, setShowModal] = useState(true);
+  var [showSetting, setShowSetting] = useState(false);
+  //const [allTags, setAllTags] = useState(null);
+  
+  
+
+  useEffect(async () => {
+    
+    console.log("component did mount");
+const fetchItems = async ()=>{
+try{
+    const result=await getMessage();
+    console.log('data = ', result.data)
+} 
+catch(e){
+    console.log('data = ',e); 
+}
+}
+fetchItems();
+
+  }, []);
+
+
+
+
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
@@ -452,19 +482,31 @@ function MessageCreate() {
       </div>
     );
   };
-  const getMyPlaceholders = () => {
-    getPlaceholder().then(
+  const getMyPlaceholders = async () => {
+
+    try{
+      const data =await getPlaceholder();
+      if (data.statusText === "OK") {
+        // console.log("These are all placeholder", res.data);
+        setPlaceHolders(data.data);
+        console.log('placeholder data = ',data.data);
+    }
+  }catch(error){
+      console.log("this is error all media", error);
+    }
+    /*getPlaceholder().then(
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           // console.log("These are all placeholder", res.data);
           setPlaceHolders(res.data);
+          console.log('data = ',res.data)
         }
       },
       (error) => {
         console.log("this is error all media", error);
       }
-    );
+    );*/
   };
 
   const showActionButton = () => {
@@ -2197,6 +2239,37 @@ function MessageCreate() {
       </div>
     );
   };
+
+  const handleSendMessage=async ()=>{
+    //setMessagePreview(true);
+    const selectedMediaIds=selectedMedia.map((media)=>media.id);
+    const contactsId=messageSender.id;
+    const data={
+      "platform":messageType,
+     "media_placeholder_id":selectedMediaIds,
+      "filter_ids":messageReceiver,
+      "send_at":date,
+      "body":messageText,
+      'contact_ids':contactsId,
+     'user_id':JSON.parse(localStorage.getItem("user")).id,
+    }
+
+
+    console.log('data = ',data)
+
+
+    try{
+      const response = await createMessage(data);
+      console.log('create message = ',response);
+    }catch(e){
+      console.log('create message = ',e)
+    }
+    
+  //  postMessage(data)
+    
+ }
+
+
   return (
     <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
       {showTimePicker && (
@@ -2379,7 +2452,7 @@ function MessageCreate() {
                     textColor="white"
                     width={200}
                     onClick={() => {
-                      setMessagePreview(true);
+                      handleSendMessage();
                     }}
                     icon={<Send style={{ color: "white" }}></Send>}
                   ></IconButton>
