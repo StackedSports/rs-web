@@ -21,7 +21,7 @@ export default function TwitterStream(props) {
        <div>
            <Grid direction='row'>
        <Sidebar messageCreate={true} TwitterStream={true} />
-       <Divider orientation='vertical' variant='fullWidth'/>
+       <Divider/>
        <MenuNewMessage/>
        
            

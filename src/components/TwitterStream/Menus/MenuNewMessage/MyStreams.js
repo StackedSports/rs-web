@@ -1,16 +1,19 @@
 import React, { useState  } from "react";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useStyles } from '../../../MessageCreate';
+import { Grid } from "@material-ui/core";
 function MyStreams() {
+
     const classes = useStyles();
     const [showBoardFilters, setshowBoardFilters] = useState(true);
     return (
-        <div>
-             <p className={classes.sideFilter}>
-              Drafts{" "}
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
+        <Grid direction='column' spacing={20}>
+          
+             <p className={classes.sideTwitterFilter}>
+              Drafts{""}
+              <KeyboardArrowDownIcon
+                style={{ fontSize: 25 , marginLeft:'20px'}}
+              ></KeyboardArrowDownIcon>
               <div>
                 {["Ben Graves"].map((item) => {
                   return (
@@ -27,16 +30,16 @@ function MyStreams() {
               </div>
             </p>
             <p
-              className={classes.sideFilter}
+              className={classes.sideTwitterFilter}
               onClick={() => {
                 // setshowBoardFilters(!showBoardFilters);
                 setMessageDetails(!messageDetails);
               }}
             >
               My Streams
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
+              <KeyboardArrowDownIcon
+                style={{ fontSize: 25 , marginLeft:'20px'}}
+              ></KeyboardArrowDownIcon>
             </p>
             {showBoardFilters === true && (
               <div>
@@ -63,16 +66,16 @@ function MyStreams() {
               </div>
             )}
               <p  
-                 className={classes.sideFilter}
+                 className={classes.sideTwitterFilter}
               onClick={() => {
                 // setshowBoardFilters(!showBoardFilters);
                 setMessageDetails(!messageDetails);
               }}
             >
               Team Streams
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
+              <KeyboardArrowDownIcon
+                style={{ fontSize: 25, marginLeft:'20px'}}
+              ></KeyboardArrowDownIcon>
             </p>
             {showBoardFilters === true && (
               <div>
@@ -98,7 +101,7 @@ function MyStreams() {
                 )}
               </div>
             )}
-        </div>
+        </Grid>
     )
 }
 

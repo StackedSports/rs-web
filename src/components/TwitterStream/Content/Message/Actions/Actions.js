@@ -4,9 +4,9 @@ import Grid from "@mui/material/Grid/Grid";
 
 
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ReplayIcon from '@mui/icons-material/Replay';
+import RepeatOutlinedIcon from '@mui/icons-material/RepeatOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function Actions(){
@@ -27,7 +27,7 @@ export default function Actions(){
                 aria-haspopup="true"
                 color="inherit"
             >
-                <ReplayIcon sx={{fontSize: 20}}
+                <RepeatOutlinedIcon sx={{fontSize: 20}}
                             style={{fill: '#c2c9d0'}}/>
             </IconButton>
             <IconButton
@@ -46,7 +46,7 @@ export default function Actions(){
                 aria-haspopup="true"
                 color="inherit"
             >
-                <ArrowUpwardIcon sx={{fontSize: 20}}
+                <IosShareOutlinedIcon sx={{fontSize: 20}}
                                  style={{fill: '#c2c9d0'}}/>
             </IconButton>
 

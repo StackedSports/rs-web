@@ -3847,6 +3847,16 @@ const useStyles = makeStyles({
     fontSize: 15,
     paddingBottom: 0,
     marginBottom: 0,
+  
+    cursor: "pointer",
+  },
+  sideTwitterFilter: {
+    padding: 5,
+    fontWeight: 600,
+    fontSize: 15,
+    paddingBottom: 0,
+    marginBottom: 0,
+    marginTop:20,
     cursor: "pointer",
   },
   sideSubFilter: {

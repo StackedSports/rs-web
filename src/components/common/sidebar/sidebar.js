@@ -5,8 +5,7 @@ import { SidebarData } from "./sidebarData";
 import SubMenu from "./subMenu";
 import { IconContext } from "react-icons/lib";
 import DashboardLogo from "../../../images/dashboardLogo.png";
-import StarLogo from "../../../images/twitterStream.png";
-
+import StarLogo from "../../../images/star.PNG";
 import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
 import Logo from "../../../images/logoRight.png";
@@ -2143,7 +2142,8 @@ const Sidebar = (props) => {
                 background: "rgb(113, 115, 118,0.1)",
               }}
             ></div>
-      {props.TwitterStream?"":      <Logoimage src={Logo}></Logoimage>
+      {props.TwitterStream?  <Logoimage src={Logo }style={{visibility:'hidden'}}/>
+      :      <Logoimage src={Logo}></Logoimage>
    }   </LeftSectionNav>
         </Nav>
         <SidebarNav
@@ -2265,5 +2265,5 @@ const Sidebar = (props) => {
     </>
   );
 };
-
+export {LogoContainer}
 export default Sidebar;

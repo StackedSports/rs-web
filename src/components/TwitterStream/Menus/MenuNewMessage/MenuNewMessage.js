@@ -6,11 +6,13 @@ import { makeStyles, Grid, Checkbox, Snackbar, Badge } from "@material-ui/core";
 import "emoji-mart/css/emoji-mart.css";
 
 import { DarkContainer } from "../../../common/Elements/Elements";
-
+import { Divider } from "@material-ui/core";
 import MyStreams from "./MyStreams";
 import Content from "../../Content/Content";
 import MenuStream from "../MenuStream/MenuStream";
-
+import Button from "@mui/material/Button/Button";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import FilterContent from "../../Content/Message/Filter/Search/FilterContent";
 //import useStyles from'../../../MessageCreate/index'
 function MenuNewMessage() {
     const [showSideFilters, setshowSideFilters] = useState(true);
@@ -28,7 +30,7 @@ function MenuNewMessage() {
     const [allTags, setAllTags] = useState(null);
     return (
         <div>
-            <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
+            <DarkContainer contacts style={{ padding: 1, marginLeft: 60 }}>
       
           
       <Grid container direction="row">
@@ -42,30 +44,42 @@ function MenuNewMessage() {
                 fontWeight: "bold",
                 fontSize: 20,
                 paddingBottom: 0,
+                marginTop:'15px',
+                marginLeft:'10px',
                 marginBottom: 0,
               }}
             >
               Create Message
             </p>
            <MyStreams/>
+         
           
           </div>
         )}
         </Grid>
-        <Grid  xs={10} style={{backgroundColor:'white'}} >
-          <Grid direction='column'>
+        <Grid  xs={10} style={{backgroundColor:'white',marginBottom:'20px'}} >
+          <Grid direction='column' >
             <Grid xs={12}>
               
-        <MenuStream/>
+        <MenuStream />
+        
        </Grid>
+       <Divider style={{marginLeft: '30px'}}/>
+      
+
        <Grid xs={12}>
          <Grid container direction='row'>
-           <Grid xs={2}>
+          
+           <Grid xs={3}>
+            <FilterContent/>
+            
              </Grid>
-             <Grid xs={8}>
-             <Content/>
+             <Divider orientation="vertical" style={{margin:1}} variant="middle" flexItem />
+             
+             <Grid xs={6} >
+               <Content/>
                </Grid>
-               <Grid xs={2}>
+               <Grid xs={3}>
                  </Grid>
       
        </Grid>

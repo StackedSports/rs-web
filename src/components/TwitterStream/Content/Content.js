@@ -12,6 +12,8 @@ import ProfileInfo from '../Content/Message/ProfileInfo/ProfileInfo'
 import MessageSetting from '../Content/Message/Setting/MessageSetting'
 import MessageDetails from '../Content/Message/Details/Details'
 import MessageActions from '../Content/Message/Actions/Actions'
+import ProfileMedia from './Message/ProfileInfo/ProfileMedia';
+import { Divider } from '@material-ui/core';
 
 
 export default function Content() {
@@ -22,7 +24,7 @@ export default function Content() {
                 <CardContent>
                     <Grid container direction="row">
                         <ProfileAvatar/>
-                        <Box style={{width: '90%'}}>
+                        <Box style={{width: '85%'}}>
                             <Grid container direction="column">
                                 <Box>
                                     <Grid container direction="row">
@@ -36,6 +38,11 @@ export default function Content() {
                                 </Box>
                                 <Box>
                                     <MessageDetails/>
+                                    
+                                   
+                                </Box>
+                              <Box>
+                                    <ProfileMedia />
                                 </Box>
                             </Grid>
                             <Box sx={{flexGrow: 1}}/>
@@ -54,6 +61,7 @@ export default function Content() {
                 <CardContent>
                     <Grid container direction="row">
                         <ProfileAvatar/>
+                        
                         <Box style={{width: '90%'}}>
                             <Grid container direction="column">
                                 <Box>
@@ -68,18 +76,23 @@ export default function Content() {
                                 </Box>
                                 <Box>
                                     <MessageDetails/>
+                                    <ProfileMedia/>
                                 </Box>
+                             
                             </Grid>
                             <Box sx={{flexGrow: 1}}/>
                             <Box style={{marginTop: '10px'}}>
                                 <MessageActions/>
                             </Box>
                         </Box>
+                        
                     </Grid>
+                    <Divider orientation='vertical' flexitem/>
                     {/*Reply*/}
                     <Grid container direction="row" style={{marginTop: '20px'}}>
 
                         <ProfileAvatar/>
+                        
                         <Box style={{width: '90%'}}>
                             <Grid container direction="column">
                                 <Box>
@@ -88,12 +101,15 @@ export default function Content() {
                                         <Box sx={{flexGrow: 1}}></Box>
                                     </Grid>
                                 </Box>
-
+                                <Box>
+                                    <MessageDetails/>
+                                </Box>
+                               
 
                                 <Box>
                                     <MessageDetails/>
                                 </Box>
-
+                               
                             </Grid>
 
 

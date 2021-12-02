@@ -4,13 +4,13 @@ import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import Grid from "@mui/material/Grid/Grid";
 
-
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { Divider } from "@material-ui/core";
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import TuneIcon from '@mui/icons-material/Tune';
 import AccountCircle from "@mui/material/SvgIcon/SvgIcon";
 import IconButton from "@mui/material/IconButton/IconButton";
-
+import ClearIcon from '@mui/icons-material/Clear';
 
 export default function MenuStream() {
     return (
@@ -24,10 +24,25 @@ export default function MenuStream() {
                 aria-haspopup="true"
                 color="inherit"
             >
-                <MenuOpenIcon sx={{fontSize: 27}} style={{fill: '#000'}}/>
+                <FormatAlignLeftIcon sx={{fontSize: 27}} style={{fill: '#000'}}/>
             </IconButton>
             <Typography style={{fontWeight: 'bold', fontSize: '15px', marginLeft: '20px'}}>Twitter
                 Stream</Typography>
+                <Divider orientation="vertical" variant="middle" flexItem />
+                <Typography marginLeft='10px' variant='subtitle1' fontWeight='bold'> Filter :  </Typography>
+                <Button
+                    style={{
+                        borderRadius: 5,
+                        marginLeft:'20px',
+                        fontSize: '13px',
+                        fontWeight: 'bold',
+                        color: 'black',
+                        background: 'white',
+                    }}
+                    size='medium'
+                    variant="outlined"
+                    endIcon={<ClearIcon sx={{fontSize: 25}} style={{fill: 'red'}}/>}>
+                    Action</Button>
             <Box sx={{flexGrow: 0.9}}>
             </Box>
 
@@ -56,7 +71,7 @@ export default function MenuStream() {
                         background: 'white',
                     }}
                     variant="outlined"
-                    endIcon={<FilterListIcon sx={{fontSize: 40}} style={{fill: '#3871da'}}/>}>
+                    endIcon={<TuneIcon sx={{fontSize: 40}} style={{fill: '#3871da'}}/>}>
                     Filter</Button>
             </Box>
         </Grid>
