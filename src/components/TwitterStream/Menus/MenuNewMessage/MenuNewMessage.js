@@ -30,7 +30,7 @@ function MenuNewMessage() {
     const [allTags, setAllTags] = useState(null);
     return (
         <div>
-            <DarkContainer contacts style={{ padding: 2, marginLeft: 60 }}>
+            <DarkContainer contacts style={{ padding: 1, marginLeft: 60 }}>
       
           
       <Grid container direction="row">

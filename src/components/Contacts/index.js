@@ -11,6 +11,12 @@ import {
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AmimatedBurger from '../../images/animated_burger.gif';
+import DrawerAnimation from '../../images/drawer_animation.gif';
+import BackAnimation from '../../images/back_animation.gif';
+import BackIcon from '../../images/back.png';
+import DrawerIcon from '../../images/drawer_contact.png';
+
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
@@ -157,6 +163,9 @@ function Home() {
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
+  const [showDrawer, setShowDrawer] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(true);
+
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
@@ -519,6 +528,23 @@ function Home() {
     "Wisconsin",
     "Wyoming",
   ];
+
+
+
+  useEffect(() => {
+    setShowDrawer(false);
+    setShowAnimation(true);
+    handleAnimation();
+
+  }, []);
+
+  const handleAnimation=()=>{
+    //setShowDrawer(true);
+    setTimeout(()=>{
+      setShowAnimation(false);
+    },500)
+  }
+
 
   const filtesSpacingStyle = {
     marginRight: 5,
@@ -1005,10 +1031,25 @@ function Home() {
         >
           <Grid container direction="row">
             <Grid item md={6} sm={6}>
-            <img src={AmimatedBurger}         onClick={(e) => {
-                  setshowSideFilters(!showSideFilters);
-                }}
-                style={{ cursor: "pointer", width:40}}></img>
+            {
+              showDrawer?
+              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(false);
+                setShowAnimation(true);
+                handleAnimation();
+              }}
+              style={{ cursor: "pointer", width:40}}></img>
+              :
+              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(true);
+                setShowAnimation(true);
+                handleAnimation();
+
+              }}
+              style={{ cursor: "pointer", width:40}}></img>            }
+            
               {/* <FormatAlignLeftIcon
                
               ></FormatAlignLeftIcon> */}
