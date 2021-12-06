@@ -92,11 +92,11 @@ function MenuNewMessage() {
              </Grid>
        <Divider style={{marginLeft: '30px'}}/>
       
-
+                <div style={{height:'61vh',overflow:'scroll',position:'relative'}}>
        <Grid xs={12} >
-         <Grid container direction='row' style={{height:'61vh',overflow:'scroll',position:'relative'}}>
+         <Grid container direction='row' >
 
-           <Grid xs={3}  >
+           <Grid xs={3} style={{height:'90vh',position:'sticky',top:0}}  >
             <FilterContent />
             
              </Grid>
@@ -112,6 +112,7 @@ function MenuNewMessage() {
       
        </Grid>
               </Grid>
+              </div>
        </Grid>
      
              
