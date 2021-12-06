@@ -54,7 +54,10 @@ import {
 
 import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
-
+import DrawerAnimation from '../../images/drawer_animation.gif';
+import BackAnimation from '../../images/back_animation.gif';
+import BackIcon from '../../images/back.png';
+import DrawerIcon from '../../images/drawer_contact.png';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -84,6 +87,19 @@ fetchItems();
 
   }, []);
 
+  useEffect(() => {
+    setShowDrawer(false);
+    setShowAnimation(true);
+    handleAnimation();
+
+  }, []);
+
+  const handleAnimation=()=>{
+    //setShowDrawer(true);
+    setTimeout(()=>{
+      setShowAnimation(false);
+    },500)
+  }
 
 
 
@@ -155,7 +171,8 @@ fetchItems();
   const [page, setPage] = useState(1);
   var [scrollPosition, setScrollPosition] = React.useState(0);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-
+  const [showDrawer, setShowDrawer] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(true);
   const [tableData, setTableData] = React.useState([
     {
       name: "David Buttler",
@@ -2324,6 +2341,15 @@ fetchItems();
                 marginBottom: 0,
               }}
             >
+
+
+            
+              {/* <FormatAlignLeftIcon
+               
+              ></FormatAlignLeftIcon> */}
+
+             
+
               Create Message
             </p>
             <p className={classes.sideFilter}>
@@ -2416,13 +2442,33 @@ fetchItems();
           >
             <Grid container direction="row">
               <Grid item md={4} sm={4}>
-                <span
+                
+                  {
+              showDrawer?
+              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(false);
+                setShowAnimation(true);
+                handleAnimation();
+              }}
+              style={{ cursor: "pointer", width:40}}></img>
+              :
+              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(true);
+                setShowAnimation(true);
+                handleAnimation();
+
+              }}
+              style={{ cursor: "pointer", width:40}}></img>            }
+              <span
                   style={{
                     fontWeight: "bold",
                     // marginLeft: 20,
                     fontSize: 20,
                   }}
                 >
+
                   Create Message
                 </span>
               </Grid>
@@ -3858,6 +3904,7 @@ const useStyles = makeStyles({
     marginBottom: 0,
     marginTop:20,
     cursor: "pointer",
+    marginLeft:'10px'
   },
   sideSubFilter: {
     padding: 5,

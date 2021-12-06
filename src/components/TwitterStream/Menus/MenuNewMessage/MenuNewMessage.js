@@ -13,6 +13,7 @@ import MenuStream from "../MenuStream/MenuStream";
 import Button from "@mui/material/Button/Button";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import FilterContent from "../../Content/Message/Filter/Search/FilterContent";
+import MenuNewStream from "../MenuStream/MenuNewStream";
 //import useStyles from'../../../MessageCreate/index'
 function MenuNewMessage() {
     const [showSideFilters, setshowSideFilters] = useState(true);
@@ -28,16 +29,36 @@ function MenuNewMessage() {
     const [ setOpenSnackBar] = React.useState(false);
     const [tagSearch, setTagSearch] = useState("")
     const [allTags, setAllTags] = useState(null);
+    function disableScroll() {
+      window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
+      window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+      window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+      window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+    }
+    const border ={
+      position: 'absolute',
+      left: '50%',
+      width: '2px',
+      height: '100%',
+      background: 'grey',
+      right: '-9px'
+  }
+
+
+  const handleSideFilters=()=>{
+    setshowSideFilters(!showSideFilters)
+  }
+
     return (
         <div>
             <DarkContainer contacts style={{ padding: 1, marginLeft: 60 }}>
       
           
       <Grid container direction="row">
-        <Grid xs={2}>
-        {showSideFilters === true && (
+        <Grid xs={showSideFilters?2:0} style={{display:showSideFilters?'block':'none'}}>
+        
             
-          <div>
+          <div style={{position:'sticky'}}>
             <p
               style={{
                 // padding: 5,
@@ -47,36 +68,43 @@ function MenuNewMessage() {
                 marginTop:'15px',
                 marginLeft:'10px',
                 marginBottom: 0,
+                
               }}
             >
               Create Message
+        
             </p>
            <MyStreams/>
-         
-          
           </div>
-        )}
         </Grid>
-        <Grid  xs={10} style={{backgroundColor:'white',marginBottom:'20px'}} >
+        <Grid  xs={showSideFilters?10:12} style={{backgroundColor:'white',marginBottom:'20px'}} >
           <Grid direction='column' >
             <Grid xs={12}>
               
-        <MenuStream />
+        <MenuStream handleSideFilters={handleSideFilters}/>
         
        </Grid>
        <Divider style={{marginLeft: '30px'}}/>
+       <Grid xs={12}  >
+              
+              <MenuNewStream/>
+              
+             </Grid>
+       <Divider style={{marginLeft: '30px'}}/>
       
 
-       <Grid xs={12}>
-         <Grid container direction='row'>
-          
-           <Grid xs={3}>
-            <FilterContent/>
+       <Grid xs={12} >
+         <Grid container direction='row' style={{height:'61vh',overflow:'scroll',position:'relative'}}>
+
+           <Grid xs={3}  >
+            <FilterContent />
             
              </Grid>
-             <Divider orientation="vertical" style={{margin:1}} variant="middle" flexItem />
              
-             <Grid xs={6} style={{}}>
+             <span border/>
+            
+             
+             <Grid xs={6} >
                <Content/>
                </Grid>
                <Grid xs={3}>

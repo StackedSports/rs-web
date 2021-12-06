@@ -13,6 +13,12 @@ import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import AmimatedBurger from '../../images/animated_burger.gif';
+
+import DrawerAnimation from '../../images/drawer_animation.gif';
+import BackAnimation from '../../images/back_animation.gif';
+import BackIcon from '../../images/back.png';
+import DrawerIcon from '../../images/drawer_contact.png';
+
 import {
   Search,
 } from "@material-ui/icons";
@@ -215,6 +221,10 @@ function MediaComponent(props) {
   const [page, setPage] = useState(1);
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  
+  const [showDrawer, setShowDrawer] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(true);
+
   const handleClick = () => {
     setOpenSnackBar(true);
   };
@@ -223,6 +233,8 @@ function MediaComponent(props) {
     if (reason === "clickaway") {
       return;
     }
+
+  
 
     setOpenSnackBar(false);
   };
@@ -850,6 +862,20 @@ function MediaComponent(props) {
       }
       // agreement.scrollTop = 0;
     }
+  }
+
+  useEffect(() => {
+    setShowDrawer(false);
+    setShowAnimation(true);
+    handleAnimation();
+
+  }, []);
+
+  const handleAnimation=()=>{
+    //setShowDrawer(true);
+    setTimeout(()=>{
+      setShowAnimation(false);
+    },500)
   }
 
 
@@ -2112,58 +2138,37 @@ function MediaComponent(props) {
     >
       <Grid container direction="row">
         <Grid item md={6} sm={6}>
-          {props.message ? (
-            <ArrowBackIos
-              onClick={(e) => {
-                if (props.setshowSideFilters) {
-                  props.setshowSideFilters(!props.showSideFilters);
-                }
+           
+        {
+              showDrawer?
+              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(false);
+                setShowAnimation(true);
+                props.handleMediaDrawer(true);
+                handleAnimation();
               }}
-              style={{ cursor: "pointer", fontSize: 18 }}
-            ></ArrowBackIos>
-          ) : (
-            <img src={AmimatedBurger} style={{ cursor: "pointer", width: 40 }}></img>
-            // <FormatAlignLeftIcon
-            //   onClick={(e) => {
-            //     if (props.setAddMedia) {
-            //       props.setAddMedia(false);
-            //     }
-            //   }}
-            //   style={{ cursor: "pointer", fontSize: 25 }}
-            // ></FormatAlignLeftIcon>
-          )}
-          {props.message ? (
-            <span
-              style={{
-                padding: 5,
-                fontWeight: "bold",
-                marginLeft: 20,
-                cursor: "pointer",
+              style={{ cursor: "pointer", width:40}}></img>
+              :
+              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
+                setshowSideFilters(!showSideFilters);
+                setShowDrawer(true);
+                setShowAnimation(true);
+                handleAnimation();
+                props.handleMediaDrawer(false);
+
               }}
-              onClick={(e) => {
-                if (props.setAddMedia) {
-                  props.setAddMedia(false);
-                }
-              }}
-            >
-              Exit Media Library
-            </span>
-          ) : (
-            <span
-              style={{
-                padding: 5,
-                fontWeight: "bold",
-                fontSize: 20,
-                marginLeft: 20,
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setSelectedPlaceHolder(null);
-              }}
-            >
-              <b>Media</b>
-            </span>
-          )}
+              style={{ cursor: "pointer", width:40}}></img>            }
+              <span
+                  style={{
+                    fontWeight: "bold",
+                    // marginLeft: 20,
+                    fontSize: 20,
+                  }}
+                >
+
+                  Media
+                </span>
         </Grid>
         <Grid item md={6} sm={6}>
           <Grid container direction="row" justify="flex-end">

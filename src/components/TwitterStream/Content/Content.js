@@ -91,10 +91,12 @@ export default function Content() {
                     {/*Reply*/}
                     <Grid container direction="row" style={{marginTop: '20px'}}>
                    
+
                         <ProfileAvatar/>
-                        
+                       
                         <Box style={{width: '90%'}}>
                             <Grid container direction="column">
+                                
                                 <Box>
                                     <Grid container direction="row">
                                         <ProfileInfo/>
@@ -111,15 +113,14 @@ export default function Content() {
                                 </Box>
                                
                             </Grid>
-
-
+                           
                         </Box>
                     </Grid>
                 </CardContent>
                 <CardActions>
                 </CardActions>
             </Card>
-
+            
 
             <Card variant="outlined" style={{padding: 10, width: '100%'}}>
                 <CardContent>

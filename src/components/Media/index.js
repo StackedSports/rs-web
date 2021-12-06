@@ -840,6 +840,12 @@ function Media() {
     );
   };
 
+
+  const handleMediaDrawer=(showDrawer)=>{
+    setshowSideFilters(showDrawer); 
+       
+  }
+
   const placeholderContainer = (m) => {
     console.log("THis is media placeholderContainer ", m);
     return (
@@ -1159,6 +1165,7 @@ function Media() {
           filter={filter}
           addDataToFilter={addDataToFilter}
           makeMediaSelected={makeMediaSelected}
+          handleMediaDrawer={handleMediaDrawer}
         ></MediaComponnet>
       </Grid>
       <DialogBox

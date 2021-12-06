@@ -7,13 +7,14 @@ function MyStreams() {
     const classes = useStyles();
     const [showBoardFilters, setshowBoardFilters] = useState(true);
     return (
-        <Grid direction='column' spacing={20}>
+        <Grid direction='column'>
           
              <p className={classes.sideTwitterFilter}>
-              Drafts{""}
+              Drafts
               <KeyboardArrowDownIcon
                 style={{ fontSize: 25 , marginLeft:'20px'}}
               ></KeyboardArrowDownIcon>
+               </p>
               <div>
                 {["Ben Graves"].map((item) => {
                   return (
@@ -28,7 +29,7 @@ function MyStreams() {
                   );
                 })}
               </div>
-            </p>
+           
             <p
               className={classes.sideTwitterFilter}
               onClick={() => {

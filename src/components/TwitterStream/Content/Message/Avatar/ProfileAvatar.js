@@ -9,7 +9,7 @@ export default function ProfileAvatar() {
         <Box>
             <Avatar
             src={AvatarImg}>JF</Avatar>
-             <Divider orientation='vertical' variant='middle' flexitem/>
+             
         </Box>
     )
 }

@@ -3,22 +3,58 @@ import   MedLogo  from'../../../../../images/media.jpg'
 import { Grid, Typography } from '@material-ui/core'
 import { Logoimage } from '../../../../signup/signupElements'
 import { Paper } from '@material-ui/core'
+import { Avatar } from '@material-ui/core'
+import { Box } from '@mui/system'
+import { Card } from '@material-ui/core'
+import ProfileAvatar from '../Avatar/ProfileAvatar'
+import ProfileInfo from './ProfileInfo'
+import MessageDetails from '../Details/Details'
+import { CardContent } from '@material-ui/core'
+import AvatarImg from "../../../../../images/avatar.jpeg";
+
 function ProfileMedia() {
+
+
+
     return (
-        <Grid direction='row' style={{marginTop:'10px'}}  >
-            <Grid items>
-            <Paper style={{marginTop:'10px',height:'30%'}}>
-                <Typography variant='subtitle1' style={{fontWeight:'bold', marginLeft:'30px'}}>
-                    Southeast Conference
-                    </Typography>
-                    <Typography variant='body2' style={{marginLeft:'20px',marginTop:'10px'}}>
-                        The 2022 football championship is coming soon and the tickets will be available 
-                        in market.
-                        </Typography>
+        <Grid direction='row' style={{width:'100%',height:'100%',marginTop:'10px'}}  >
             
-               <Logoimage src={MedLogo} style={{width:'80%',marginTop:'20px'}}></Logoimage>
-        </Paper>
-        </Grid>
+            
+            <Card variant="outlined" style={{ width: '100%'}}>
+                <CardContent>
+                    <Grid container direction="row">
+                        <Avatar src ={AvatarImg} style={{width:28,height:28}}/>
+                        <Box style={{width: '90%'}}>
+                            <Grid container direction="column">
+                                <Box>
+                                    <Grid container direction="row">
+
+                                       <Typography variant='subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>
+                                           Geography
+                                       </Typography>
+                                        </Grid>
+                                        </Box>
+                                        <Box>
+                                    <Typography  style={{fontSize: '12px',
+                                           marginTop:'10px',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'}}>
+                                               It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                                               </Typography>
+                         
+                                    <Logoimage src={MedLogo} style={{width:'25vw',height:'25vh',marginTop:'15px',margin:0}}></Logoimage>
+                                   
+                                </Box>
+                                </Grid>
+                                </Box>
+                                </Grid>
+                                </CardContent>
+                                </Card>
+             
+            
+               
+    
+       
         </Grid>
     )
 }

@@ -11,12 +11,18 @@ import TuneIcon from '@mui/icons-material/Tune';
 import AccountCircle from "@mui/material/SvgIcon/SvgIcon";
 import IconButton from "@mui/material/IconButton/IconButton";
 import ClearIcon from '@mui/icons-material/Clear';
+import { useState } from 'react';
+import { useStyles } from '../../../MessageCreate';
+export default function MenuStream(props) {
 
-export default function MenuStream() {
+    const [showSideFilters, setshowSideFilters] = useState(true);
+    const [showMyStreams,setshowMyStreams] = useState(false);
+ 
     return (
+       <div >
         <Grid container direction="row" alignItems="center"
               style={{marginLeft: '20px', marginTop: '20px', padding: 10}}>
-
+                   
             <IconButton
                 size="medium"
                 aria-label="account of current user"
@@ -24,12 +30,17 @@ export default function MenuStream() {
                 aria-haspopup="true"
                 color="inherit"
             >
-                <FormatAlignLeftIcon sx={{fontSize: 27}} style={{fill: '#000'}}/>
+                <FormatAlignLeftIcon sx={{fontSize: 27}} style={{fill: '#000'}} onClick={(e) => {
+                          props.handleSideFilters();
+                        }}/>
+
+              
             </IconButton>
             <Typography style={{fontWeight: 'bold', fontSize: '15px', marginLeft: '20px'}}>Twitter
                 Stream</Typography>
                 <Divider orientation="vertical" variant="middle" flexItem />
-                <Typography marginLeft='10px' variant='subtitle1' fontWeight='bold'> Filter :  </Typography>
+                <Typography marginLeft='10px' variant='subtitle1' fontWeight='bold'> Filter : 
+                 </Typography>
                 <Button
                     style={{
                         borderRadius: 5,
@@ -74,6 +85,8 @@ export default function MenuStream() {
                     endIcon={<TuneIcon sx={{fontSize: 40}} style={{fill: '#3871da'}}/>}>
                     Filter</Button>
             </Box>
+           
         </Grid>
+        </div>
     );
 }
