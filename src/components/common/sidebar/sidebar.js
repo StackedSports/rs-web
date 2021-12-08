@@ -2008,6 +2008,7 @@ const Sidebar = (props) => {
           )}
 
           {props.messageCreate === true ? (
+            
             <Button
               onClick={() => {
                 window.location.reload();
@@ -2019,6 +2020,7 @@ const Sidebar = (props) => {
           ) : (
             <div></div>
           )}
+          
           {props.chat === true ? (
             <Button
               style={{ width: 160, textAlign: "center", height: 50 }}

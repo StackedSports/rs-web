@@ -17,6 +17,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import TwitterStream from'./components/TwitterStream/TwitterStream'
+import  MediaC from "./components/MediaComponent/Media";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/team-settings" exact component={TeamSettings} />
           <Route path="/team-settings/:userID" exact component={TeamSettings} />
           <Route path="/twitter-stream" exact component={TwitterStream}/>
+          <Route path="/Media-component" exact component={MediaC}/>
         </Switch>
       </Router>
     </div>

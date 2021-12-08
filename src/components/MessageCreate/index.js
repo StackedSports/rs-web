@@ -2466,6 +2466,8 @@ fetchItems();
                     fontWeight: "bold",
                     // marginLeft: 20,
                     fontSize: 20,
+
+                    padding:'16px'
                   }}
                 >
 
@@ -3903,6 +3905,16 @@ const useStyles = makeStyles({
     paddingBottom: 0,
     marginBottom: 0,
     marginTop:20,
+    cursor: "pointer",
+    marginLeft:'10px'
+  },
+  sideMediaFilter: {
+    padding: 5,
+    fontWeight: 600,
+    fontSize: 13,
+    paddingBottom: 0,
+    marginBottom: 0,
+    marginTop:5,
     cursor: "pointer",
     marginLeft:'10px'
   },

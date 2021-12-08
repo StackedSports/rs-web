@@ -229,6 +229,7 @@ export const PlaceholderContainer = ({
               margin: 0,
               fontSize: 13,
               color: "#5a5a5a",
+              cursor:'pointer'
             }}
           >
             Uploaded at :{" "}

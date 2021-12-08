@@ -77,7 +77,7 @@ function MenuNewMessage() {
            <MyStreams/>
           </div>
         </Grid>
-        <Grid  xs={showSideFilters?10:12} style={{backgroundColor:'white',marginBottom:'20px'}} >
+        <Grid  xs={showSideFilters?10:12} style={{backgroundColor:'white'}} >
           <Grid direction='column' >
             <Grid xs={12}>
               
@@ -92,7 +92,7 @@ function MenuNewMessage() {
              </Grid>
        <Divider style={{marginLeft: '30px'}}/>
       
-                <div style={{height:'61vh',overflow:'scroll',position:'relative'}}>
+                <div style={{height:'61vh',overflow:'scroll',position:'relative',overflowX:'hidden'}}>
        <Grid xs={12} >
          <Grid container direction='row' >
 

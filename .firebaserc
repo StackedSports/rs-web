@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "recruite-suite"
-  }
+    "default": "recruite-suite",
+    "twitter": "twitterstream-e3ca2"
+  },
+  "targets": {}
 }

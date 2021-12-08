@@ -174,13 +174,9 @@ export const MediaContainer = ({
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
-        <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
+        <Grid container direction="row" style={{}}>
           <p
-            style={{
-              margin: 0,
-              fontSize: 13,
-              color: "#5a5a5a",
-            }}
+            
           >
             Uploaded at : {new moment(media.created_at).format("YYYY-MM-DD")} by
             Coach Graves

@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { useStyles } from '../../../MessageCreate';
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 export default function MenuStream(props) {
 
     const [showSideFilters, setshowSideFilters] = useState(true);
@@ -20,7 +21,70 @@ export default function MenuStream(props) {
  
     return (
        <div >
+            {props.mediaDashboard === true ? (
+
+<div>
+<Grid container direction="row" alignItems="center"
+         
+         style={{marginLeft: '20px', marginTop: '20px', padding: 10}}>
+              
+       <IconButton
+           size="medium"
+           aria-label="account of current user"
+           aria-controls="primary-search-account-menu"
+           aria-haspopup="true"
+           color="inherit"
+       >
+           <FormatAlignLeftIcon sx={{fontSize: 27}} style={{fill: '#000'}} onClick={(e) => {
+                     props.handleSideFilters();
+                   }}/>
+
+         
+       </IconButton>
+       <Typography style={{fontWeight: 'bold', fontSize: '15px', marginLeft: '20px'}}>
+           Media
+           </Typography>
+           
+           
+       <Box sx={{flexGrow: 0.9}}>
+       </Box>
+
+       <Box>
+           <Button
+               style={{
+                   borderRadius: 5,
+                   padding: 10,
+                   fontSize: '13px',
+                   fontWeight: 'bold',
+                   color: 'black',
+                   background: 'white',
+               }}
+               variant="outlined"
+               endIcon={<AutoFixHighIcon sx={{fontSize: 25}} style={{fill: '#3871da'}}/>}>
+               Action</Button>
+
+           <Button
+               style={{
+                   borderRadius: 5,
+                   padding: 10,
+                   marginLeft: 10,
+                   fontSize: '13px',
+                   fontWeight: 'bold',
+                   color: 'black',
+                   background: 'white',
+               }}
+               variant="outlined"
+               endIcon={<LocalOfferOutlinedIcon sx={{fontSize: 40}} style={{fill: '#3871da'}}/>}>
+               Tag</Button>
+       </Box>
+      
+   </Grid>
+
+</div>
+):(
+         
         <Grid container direction="row" alignItems="center"
+         
               style={{marginLeft: '20px', marginTop: '20px', padding: 10}}>
                    
             <IconButton
@@ -87,6 +151,7 @@ export default function MenuStream(props) {
             </Box>
            
         </Grid>
+)}
         </div>
     );
 }

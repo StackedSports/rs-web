@@ -13,7 +13,7 @@ import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import AmimatedBurger from '../../images/animated_burger.gif';
-
+import FormatAlignLeftOutlinedIcon from '@mui/icons-material/FormatAlignLeftOutlined';
 import DrawerAnimation from '../../images/drawer_animation.gif';
 import BackAnimation from '../../images/back_animation.gif';
 import BackIcon from '../../images/back.png';
@@ -34,7 +34,7 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 import GifIcon from "@material-ui/icons/Gif";
 import DialogBox from "../common/Dialogs";
-
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
@@ -1878,6 +1878,7 @@ function MediaComponent(props) {
               margin: 0,
               marginLeft: 10,
               fontSize: 15,
+              cursor:'pointer'
             }}
           >
             {m.file_name.length > 17
@@ -1892,6 +1893,7 @@ function MediaComponent(props) {
               margin: 0,
               fontSize: 13,
               color: "#5a5a5a",
+              cursor:'default'
             }}
           >
             Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
@@ -2140,7 +2142,7 @@ function MediaComponent(props) {
         <Grid item md={6} sm={6}>
            
         {
-              showDrawer?
+         !showMediaStats?(showDrawer?
               <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
                 setshowSideFilters(!showSideFilters);
                 setShowDrawer(false);
@@ -2158,17 +2160,41 @@ function MediaComponent(props) {
                 props.handleMediaDrawer(false);
 
               }}
-              style={{ cursor: "pointer", width:40}}></img>            }
-              <span
+              style={{ cursor: "pointer", width:40}}></img>           
+              ):<FormatAlignLeftOutlinedIcon/>
+              
+              }
+
+{showMediaStats?<span>
+  <ArrowBackIosNewOutlinedIcon style={{fontSize:'15px',fill:'#595959',marginLeft:'20px',cursor:'pointer'}} 
+ onClick={
+  (e) => {
+    // console.log("This is the target", e.target)
+    setShowMediaStats(false);
+    placeholderContainer();
+  
+  }}
+    
+  />
+              </span>:null}
+
+
+            {showMediaStats?  <span
                   style={{
                     fontWeight: "bold",
                     // marginLeft: 20,
-                    fontSize: 20,
+                    fontSize: 18,
+                    padding:'5px',
+                    marginTop:'3px'
                   }}
-                >
-
-                  Media
-                </span>
+                > Back</span>:<span
+                style={{
+                  fontWeight: "bold",
+                  // marginLeft: 20,
+                  fontSize: 20,
+                  padding:'16px'
+                }}
+              > Media</span>}
         </Grid>
         <Grid item md={6} sm={6}>
           <Grid container direction="row" justify="flex-end">
@@ -2295,23 +2321,7 @@ function MediaComponent(props) {
               ></IconTextField>
             )}
 
-            <IconTextField
-              text="Filter"
-              width={120}
-              onClick={() => {
-                setShowFiltersRow(!showFiltersRow);
-              }}
-              // showMessageFiltersRow === false
-              textColor={showFiltersRow === false ? "black" : "white"}
-              background={showFiltersRow === false ? "transparent" : "#3871DA"}
-              icon={
-                <FaSlidersH
-                  style={{
-                    color: showFiltersRow === false ? "#3871DA" : "white",
-                  }}
-                ></FaSlidersH>
-              }
-            ></IconTextField>
+          
           </Grid>
         </Grid>
       </Grid>

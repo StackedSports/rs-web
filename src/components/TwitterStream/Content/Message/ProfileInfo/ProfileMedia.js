@@ -29,7 +29,8 @@ function ProfileMedia() {
                                 <Box>
                                     <Grid container direction="row">
 
-                                       <Typography variant='subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>
+                                       <Typography variant='subtitle2' 
+                                       style={{fontWeight:'bold',marginLeft:'10px'}}>
                                            Geography
                                        </Typography>
                                         </Grid>
@@ -37,12 +38,15 @@ function ProfileMedia() {
                                         <Box>
                                     <Typography  style={{fontSize: '12px',
                                            marginTop:'10px',
+                                         
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis'}}>
                                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
                                                </Typography>
+                                               <div style={{padding:'8px'}}>
+                                                   </div>
                          
-                                    <Logoimage src={MedLogo} style={{width:'25vw',height:'25vh',marginTop:'15px',margin:0}}></Logoimage>
+                                    <Logoimage src={MedLogo} style={{width:'26vw',height:'25vh',margin:0,marginTop:0}}></Logoimage>
                                    
                                 </Box>
                                 </Grid>
