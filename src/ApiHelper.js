@@ -542,10 +542,10 @@ export const getMessages = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
-      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+        "StackedSportsAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+      "X-Auth-Token": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmhlbmRlcnNvbkBzdGFja2Vkc3BvcnRzLmNvbSIsImV4cCI6MTY0MDAxMTUwN30.vokiYw0OZMPWeSiRAOGDaDwZ8PWDL057YJn7AFS1RT0",
       Cookie:
-        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be0280ec4-d74-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
   });
 };

@@ -63,7 +63,8 @@ import {
     getPlaceholder,
     getMediaUsers,
     getTeamContacts,
-    getTags
+    getTags,
+    getMessages
 } from "../../ApiHelper";
 import {MoreHoriz} from "@material-ui/icons";
 import SelectedContactItem from "./Media/Details/selected-contact";
@@ -767,7 +768,7 @@ function MediaComponent(props) {
     };
 
 
-    useEffect(() => {
+    useEffect(async () => {
         if (localStorage.getItem("user")) {
             // getMyContacts();
             getMyMedia();
@@ -775,6 +776,13 @@ function MediaComponent(props) {
             getTaggedMedia();
             getMyMediaContacts();
             getMyTeamContacts();
+            try{
+                const response = await getMessages();
+                console.log('getMessages = ',response);
+            }catch (e) {
+                console.log('getMessages = ',e)
+            }
+            console.log('')
             // getAllTags();
         } else {
             window.location.href = "/";
