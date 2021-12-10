@@ -1988,7 +1988,7 @@ function TweetCreate() {
             >
               Create Post
             </p>
-            <p className={classes.sideFilter}>
+            <p className={props.sideFilterClass}>
               Drafts{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
@@ -2009,7 +2009,7 @@ function TweetCreate() {
               </div>
             </p>
             <p
-              className={classes.sideFilter}
+              className={props.sideFilterClass}
               onClick={() => {
                 // setshowBoardFilters(!showBoardFilters);
                 setMessageDetails(!messageDetails);

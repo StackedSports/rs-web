@@ -974,14 +974,14 @@ function Home() {
             >
               Contacts
             </p>
-            <p className={classes.sideFilter}>
+            <p className={props.sideFilterClass}>
               All Contacts{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
             </p>
             <p
-              className={classes.sideFilter}
+              className={props.sideFilterClass}
               onClick={() => {
                 setshowBoardFilters(!showBoardFilters);
               }}
@@ -1009,7 +1009,7 @@ function Home() {
               </div>
             )}
 
-            <p className={classes.sideFilter}>
+            <p className={props.sideFilterClass}>
               All Contacts{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}

@@ -1023,7 +1023,7 @@ const Home = () => {
               Inboxes
             </p>
 
-            <p className={classes.sideFilter}>
+            <p className={props.sideFilterClass}>
               My Media{" "}
               <KeyboardArrowDownIcon
                 style={{ fontSize: 26, marginLeft: 20 }}
@@ -1050,7 +1050,7 @@ const Home = () => {
               onClick={() => {
                 setChatBar(true);
               }}
-              className={classes.sideFilter}
+              className={props.sideFilterClass}
             >
               Chris hiland{" "}
               <ArrowForwardIosIcon

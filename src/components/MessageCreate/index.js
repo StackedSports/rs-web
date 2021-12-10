@@ -2352,7 +2352,7 @@ fetchItems();
 
               Create Message
             </p>
-            <p className={classes.sideFilter}>
+            <p className={props.sideFilterClass}>
               Drafts{" "}
               <ArrowForwardIosIcon
                 style={{ fontSize: 12 }}
@@ -2373,7 +2373,7 @@ fetchItems();
               </div>
             </p>
             <p
-              className={classes.sideFilter}
+              className={props.sideFilterClass}
               onClick={() => {
                 // setshowBoardFilters(!showBoardFilters);
                 setMessageDetails(!messageDetails);
