@@ -10,6 +10,7 @@ import React, {Fragment} from "react";
 const Media = (props) => {
 
     const media = props.media;
+    console.log('media = ',props)
     return (
         <Fragment>
             <ItemMainHeader title={"Quick Access"} dropdown_item_title={"Last Modified"}

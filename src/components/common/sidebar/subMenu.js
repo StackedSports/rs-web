@@ -64,6 +64,7 @@ const SubMenu = ({ item, contacts, index, selectedTab }) => {
 
   const showSubnav = () => setSubnav(!subnav);
   // console.log("THis is path", item.path);
+    console.log('sidebar = ',item, contacts, index, selectedTab);
   return (
     <>
       <div

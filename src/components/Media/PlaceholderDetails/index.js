@@ -6,6 +6,9 @@ import React from "react";
 
 const PlaceholderDetails=(props)=>{
     const selectedPlaceholder=props.item;
+
+
+    console.log('props placeholder = ',props);
     return(
         <Grid container direction="row">
             <Grid item md={3} xs={3}>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from "react";
+import React, {useState, useEffect, useReducer, Fragment} from "react";
 import MuiAlert from "@material-ui/lab/Alert";
 import {Link} from "react-router-dom";
 import {
@@ -230,7 +230,6 @@ function MediaComponent(props) {
     const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
     const [taggedMedia, setTaggedMedia] = useState(null);
     const [displayAction, setDisplayAction] = useState(null);
-    const [displayOwner, setDisplayOwner] = useState(null);
     const [displayTags, setDisplayTags] = useState(null);
     const [tagFilter, setTagFilter] = useState([]);
     const [placeholderFilter, setPlaceholderFilter] = useState([]);
@@ -244,6 +243,26 @@ function MediaComponent(props) {
 
     const [showDrawer, setShowDrawer] = useState(true);
     const [showAnimation, setShowAnimation] = useState(true);
+
+    const [selectedTeamContacts, setSelectedTeamContacts] = useState([]);
+
+    const [selectedTags, setSelectedTags] = useState([]);
+
+
+    const [selectedMediaPlaceholders, setSelectedMediaPlaceholders] = useState([]);
+
+    const [selectedAssociatePlaceholders, setSelectedAssociatePlaceholders] = useState([]);
+
+
+    const [showBackButton, setShowBackButton] = useState(false);
+
+
+    const [displaySearchContainers, setDisplaySearchContainers] = useState({
+        displayOwner: false,
+        selectedTagContainer: false,
+        selectedPlaceholderContainer: false,
+        selectedAssociatePlaceholderContainer: false
+    });
 
 
     const dropDownButtonItemsList = [
@@ -286,6 +305,11 @@ function MediaComponent(props) {
 
     const handleShowMediaStats = (stats) => {
         setShowMediaStats(stats);
+    }
+
+
+    const handleSetShowBackButton=(back)=>{
+        setShowBackButton(back);
     }
 
 
@@ -717,24 +741,33 @@ function MediaComponent(props) {
 
 
     const addDataToFilter = (value, type) => {
-        if (props.filter.includes(value)) {
-            var temp = [];
-            props.filter.map((item) => {
-                if (item != value) {
-                    temp.push(item);
-                }
-            });
-            setFilter(temp);
-            setuseLessState(uselessState + 1);
-        } else {
-            var temp = props.filter;
-            var tempType = filterType;
-            temp.push(value);
-            tempType.push(type);
-            setFilterType(tempType);
-            setFilter(temp);
-            setuseLessState(uselessState + 1);
+
+
+        if (type === 'SELECTED_TEAM_CONTACTS') {
+
+            const index = selectedTeamContacts.findIndex((contact) => contact.username === value.username);
+
+            if (index === -1) {
+                const tempSelectedTeamContacts = [...selectedTeamContacts, value];
+                setSelectedTeamContacts(tempSelectedTeamContacts);
+            }
+
+            console.log(selectedTeamContacts);
+
+        } else if (type === 'SELECTED_TAGS') {
+            const tempSelectedTags = [...selectedTags, value];
+            setSelectedTags(tempSelectedTags);
+
+        } else if (type === 'SELECTED_PLACEHOLDERS') {
+            const tempSelectedPlaceholders = [...selectedMediaPlaceholders, value];
+            setSelectedMediaPlaceholders(tempSelectedPlaceholders);
+
+        } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
+            const tempSelectedAssociatePlaceholders = [...selectedAssociatePlaceholders, value];
+            setSelectedAssociatePlaceholders(tempSelectedAssociatePlaceholders);
+
         }
+
     };
 
     const makeCheckBoxSelected = (index) => {
@@ -756,15 +789,16 @@ function MediaComponent(props) {
         }
     };
 
-    const removeDataFromFilter = (index) => {
-        var temp = props.filter;
-        var tempType = filterType;
-        temp.splice(index, 1);
-        tempType.splice(index, 1);
-        var newArray = temp;
-        setFilter(newArray);
-        setFilterType(tempType);
-        setuseLessState(uselessState + 1);
+    const removeDataFromFilter = (value, type) => {
+        if (type === 'SELECTED_TEAM_CONTACTS') {
+            setSelectedTeamContacts(selectedTeamContacts.filter((contact) => contact.username !== value.username));
+        } else if (type === 'SELECTED_TAGS') {
+            setSelectedTags(selectedTags.filter((tag) => tag.username !== value.username));
+        } else if (type === 'SELECTED_PLACEHOLDERS') {
+            setSelectedMediaPlaceholders(selectedMediaPlaceholders.filter((placeholder) => placeholder.username !== value.username));
+        } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
+            setSelectedAssociatePlaceholders(selectedAssociatePlaceholders.filter((placeholder) => placeholder.username !== value.username));
+        }
     };
 
 
@@ -776,11 +810,13 @@ function MediaComponent(props) {
             getTaggedMedia();
             getMyMediaContacts();
             getMyTeamContacts();
-            try{
-                const response = await getMessages();
-                console.log('getMessages = ',response);
-            }catch (e) {
-                console.log('getMessages = ',e)
+            try {
+                const response = await getMessages()
+
+                ;
+                console.log('getMessages = ', response);
+            } catch (e) {
+                console.log('getMessages = ', e)
             }
             console.log('')
             // getAllTags();
@@ -878,10 +914,6 @@ function MediaComponent(props) {
     }
 
 
-    const handleSetDisplayOwner = (owner) => {
-        setDisplayOwner(owner);
-    }
-
     const handleSetDisplayTags = (tags) => {
         setDisplayTags(tags);
     }
@@ -919,6 +951,9 @@ function MediaComponent(props) {
 
     const handleSetLightboxVideo = (lightbox) => {
         setLightboxVideo(lightbox)
+    }
+    const handleSetLightboxPicture = (lightbox) => {
+        setLightboxPicture(lightbox)
     }
 
     const handleShowSideFilters = (sideFilters) => {
@@ -966,6 +1001,78 @@ function MediaComponent(props) {
         setPlaceholderStartIndex(access);
     }
 
+
+    const handleSetDisplayOwner = (owner) => {
+        if (owner) {
+            setDisplaySearchContainers(
+                {
+                    displayOwner: true, selectedTagContainer: false,
+                    selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
+                }
+            );
+        }else{
+
+            setDisplaySearchContainers({...displaySearchContainers,displayOwner: false}
+            );
+        }
+    }
+
+    const handleSetSelectedTagContainer = (container) => {
+        if (container) {
+            setDisplaySearchContainers(
+                {
+                    displayOwner: false, selectedTagContainer: true,
+                    selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
+                }
+            );
+        }else{
+
+            setDisplaySearchContainers({...displaySearchContainers,selectedTagContainer: false}
+            );
+        }
+    }
+
+
+    const handleSetSelectedMediaPlaceholders = (placeholder) => {
+        if (placeholder) {
+            setDisplaySearchContainers(
+                {
+                    displayOwner: false, selectedTagContainer: false,
+                    selectedPlaceholderContainer: true, selectedAssociatePlaceholderContainer: false
+                }
+            );
+        }else{
+            setDisplaySearchContainers({...displaySearchContainers,selectedPlaceholderContainer: false}
+            );
+        }
+    }
+
+    const handleSetSelectedAssociatePlaceholder = (placeholder) => {
+        if (placeholder) {
+            setDisplaySearchContainers(
+                {
+                    displayOwner: false, selectedTagContainer: false,
+                    selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: true
+                }
+            );
+        }else{
+            setDisplaySearchContainers({...displaySearchContainers,selectedAssociatePlaceholderContainer: false}
+            );
+        }
+    }
+
+
+    const closeAllMediaDetailsDialogs = () => {
+            setDisplaySearchContainers(
+                {
+                    displayOwner: false, selectedTagContainer: false,
+                    selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
+                }
+            );
+
+    }
+
+
     return (
         <div
             style={{
@@ -976,6 +1083,9 @@ function MediaComponent(props) {
                 padding: 10,
                 paddingLeft: 30,
                 paddingRight: 30,
+            }}
+            onClick={(e)=>{
+                closeAllMediaDetailsDialogs();
             }}
         >
             <Header
@@ -990,6 +1100,10 @@ function MediaComponent(props) {
                 showSideFilters={showSideFilters}
                 showMediaStats={showMediaStats}
                 dropDownButtonItemsList={dropDownButtonItemsList}
+                showDrawer={showDrawer}
+                setShowBackButton={handleSetShowBackButton}
+                showBackButton={showBackButton}
+
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
@@ -1026,7 +1140,6 @@ function MediaComponent(props) {
                             setDisplayTags={handleSetDisplayTags}
                             setDisplayPlaceholder={handleSetDisplayPlaceholder}
                             displayPlaceholder={displayPlaceholder}
-                            displayOwner={displayOwner}
                             displayTags={displayTags}
                             addDataToFilter={addDataToFilter}
                             id={"messageDetailScrollPublished"}
@@ -1034,6 +1147,17 @@ function MediaComponent(props) {
                             hideStats={null}
                             selectedPlaceholder={selectedPlaceholder}
                             removeDataFromFilter={removeDataFromFilter}
+                            selectedTeamContacts={selectedTeamContacts}
+                            showHover={false}
+                            setSelectedTagContainer={handleSetSelectedTagContainer}
+                            selectedTags={selectedTags}
+                            taggedMedia={taggedMedia}
+                            setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
+                            selectedMediaPlaceholders={selectedMediaPlaceholders}
+                            placeholders={placeholders}
+                            setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
+                            selectedAssociatePlaceholders={selectedAssociatePlaceholders}
+                            displaySearchContainers={displaySearchContainers}
                         />
                         :
                         <div
@@ -1070,6 +1194,11 @@ function MediaComponent(props) {
                                             makeCheckBoxSelected={makeCheckBoxSelected}
                                             setShowMediaStats={handleShowMediaStats}
                                             setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                            showHover={true}
+                                            setShowBackButton={handleSetShowBackButton}
+                                            showBackButton={showBackButton}
+                                            setLightboxVideo={handleSetLightboxVideo}
+                                            setLightboxPicture={handleSetLightboxPicture}
                                         />
                                     )
                                     : (
@@ -1087,6 +1216,8 @@ function MediaComponent(props) {
                                             makeCheckBoxSelected={makeCheckBoxSelected}
                                             setShowMediaStats={handleShowMediaStats}
                                             setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                            showHover={false}
+
                                         />
 
                                     )}
@@ -1119,6 +1250,14 @@ function MediaComponent(props) {
                                 makeCheckBoxSelected={makeCheckBoxSelected}
                                 setShowMediaStats={handleShowMediaStats}
                                 setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                showlistView={showlistView}
+                                message={props.message}
+                                showHover={true}
+                                setShowBackButton={handleSetShowBackButton}
+                                showBackButton={showBackButton}
+                                setLightboxVideo={handleSetLightboxVideo}
+                                setLightboxPicture={handleSetLightboxPicture}
+
                             />
 
 
@@ -1146,11 +1285,11 @@ function MediaComponent(props) {
                 setOpenSnackBar={handleOpenSnackBar}
             />
             {lightboxPicture && (
-                <LightboxDialog lightboxVideo={lightboxPicture} setLightboxVideo={handleSetLightboxVideo}/>
+                <LightboxDialog url={lightboxPicture} isVideo={false} closeModal={handleSetLightboxPicture}/>
             )}
 
             {lightboxVideo && (
-                <LightboxDialog lightboxVideo={lightboxVideo} setLightboxVideo={handleSetLightboxVideo}/>
+                <LightboxDialog url={lightboxVideo} isVideo={true} closeModal={handleSetLightboxVideo}/>
             )}
         </div>
     );

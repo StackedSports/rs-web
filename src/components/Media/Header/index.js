@@ -14,12 +14,13 @@ import React from "react";
 
 
 const Header=(props)=>{
+    console.log('header = ',props);
     return(
         <Grid container direction="row">
             <Grid item md={6} sm={6}>
 
                 {
-                    !props.showMediaStats ? (props.showDrawer ?
+                    !props.showBackButton ? (props.showDrawer ?
                             <img src={props.showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
                                 props.setshowSideFilters(!props.showSideFilters);
                                 props.setShowDrawer(false);
@@ -42,21 +43,21 @@ const Header=(props)=>{
 
                 }
 
-                {props.showMediaStats ? <span>
+                {props.showBackButton ? <span>
   <ArrowBackIosNewOutlinedIcon style={{fontSize: '15px', fill: '#595959', marginLeft: '20px', cursor: 'pointer'}}
                                onClick={
                                    (e) => {
 
-                                       props.setShowMediaStats(false);
+                                       props.setShowBackButton(false);
                                        props.setSelectedPlaceHolder(null);
-
+                                       props.setShowMediaStats(false);
                                    }}
 
   />
               </span> : null}
 
 
-                {props.showMediaStats ? <span
+                {props.showBackButton ? <span
                     style={{
                         fontWeight: "bold",
                         // marginLeft: 20,

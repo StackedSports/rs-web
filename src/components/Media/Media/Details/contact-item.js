@@ -1,5 +1,6 @@
 import {Grid, makeStyles} from "@material-ui/core";
 import React from "react";
+import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 
 
 const useStyles = makeStyles({
@@ -79,7 +80,7 @@ const useStyles = makeStyles({
 });
 
 
-const ContactItem=(props)=>{
+const DropDownItem = (props) => {
 
     const classes = useStyles();
 
@@ -95,25 +96,27 @@ const ContactItem=(props)=>{
             }}
             className={classes.hoverGrid}
             onClick={() => {
-                if (props.type.twitter_profile) {
-                    props.addDataToFilter(props.type.twitter_profile.screen_name);
-                }
+                props.setDisplay(false);
+                props.addDataToFilter({username: props.username, url: props.url}, props.type);
             }}
             // className={classes.sendAsP}
         >
-            <img
-                style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 20,
-                    marginLeft: 12,
-                }}
-                src={
-                    props.type.twitter_profile &&
-                    props.type.twitter_profile.profile_image
-                }
-            ></img>
-
+            {props.type !== "SELECTED_TAGS" ? <img
+                    style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 20,
+                        marginLeft: 12,
+                    }}
+                    src={
+                        props.url
+                    }
+                ></img>
+                :
+                <LocalOfferOutlinedIcon
+                    style={{color: "#3871DA"}}
+                ></LocalOfferOutlinedIcon>
+            }
             <p
                 style={{
                     margin: 0,
@@ -121,11 +124,10 @@ const ContactItem=(props)=>{
                     marginLeft: 12,
                 }}
             >
-                {props.type.twitter_profile &&
-                props.type.twitter_profile.screen_name + " "}
+                {props.username || " "}
             </p>
         </Grid>
     )
 }
 
-export default ContactItem;
+export default DropDownItem;

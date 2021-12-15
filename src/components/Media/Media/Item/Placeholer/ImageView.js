@@ -8,12 +8,13 @@ const ImageView = (props) => {
                 width: 270,
                 marginleft: 10,
                 marginRight: 10,
+                alignItems:'end',
             }}
         >
             <img
                 style={{
                     marginTop: 10,
-                    height: 170,
+                    height: 120,
                     width: 75,
                     objectFit: "cover",
                     zIndex: 4,
@@ -36,13 +37,12 @@ const ImageView = (props) => {
             <img
                 style={{
                     marginTop: 10,
-                    height: 170,
+                    height: 120,
                     zIndex: 4,
                     opacity: 0.9,
 
                     marginLeft: -30,
                     width: 75,
-
                     objectFit: "cover",
                 }}
                 src={props.url}

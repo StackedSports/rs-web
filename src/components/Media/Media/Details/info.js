@@ -82,6 +82,7 @@ const ItemInfo = (props) => {
 
     const classes = useStyles();
 
+    console.log('info = ',props);
     return (
         <div
             style={{

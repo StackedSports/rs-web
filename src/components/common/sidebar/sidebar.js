@@ -1958,132 +1958,132 @@ const Sidebar = (props) => {
         </Grid>
       </Dialog>
 
-      <IconContext.Provider value={{ color: "#fff" }}>
-        <NavResponsive>
-          <IoIosMenu
-            style={{ color: "rgb(113, 115, 118)", margin: "2rem" }}
-            size={30}
-            onClick={showSidebar}
-          />
+        <IconContext.Provider value={{ color: "#fff" }}>
+            <NavResponsive>
+                <IoIosMenu
+                    style={{ color: "rgb(113, 115, 118)", margin: "2rem" }}
+                    size={30}
+                    onClick={showSidebar}
+                />
 
-          <LeftSectionNav>
-            <BiBell
-              style={{
-                color: "#999898",
-                marginRight: "15px",
-                marginLeft: "15px",
-                height: "24.2px",
-                width: "21.2px",
-              }}
-            />
-            <BiChat
-              style={{
-                color: "rgb(113, 115, 118)",
-                marginRight: "15px",
-                marginLeft: "15px",
-                height: "24px",
-                width: "25px",
-              }}
-            />
-          </LeftSectionNav>
-        </NavResponsive>
-        <Nav>
-          {props.contacts === true ||
-          props.media == true ||
-          props.chat == true ||
-          props.messageCreate === true ||
-          props.TweetCreate === true ? (
-            <LogoContainer style={{ width: 60 }}>
-              <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50 }} />
-            </LogoContainer>
-          ) : (
-            <LogoContainer>
-              <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} />
-            </LogoContainer>
-          )}
-          {props.contacts === true ? (
-            <Button onClick={setAddContact}>+ Add Contact</Button>
-          ) : (
-            <div></div>
-          )}
+                <LeftSectionNav>
+                    <BiBell
+                        style={{
+                            color: "#999898",
+                            marginRight: "15px",
+                            marginLeft: "15px",
+                            height: "24.2px",
+                            width: "21.2px",
+                        }}
+                    />
+                    <BiChat
+                        style={{
+                            color: "rgb(113, 115, 118)",
+                            marginRight: "15px",
+                            marginLeft: "15px",
+                            height: "24px",
+                            width: "25px",
+                        }}
+                    />
+                </LeftSectionNav>
+            </NavResponsive>
+            <Nav>
+                {props.contacts === true ||
+                props.media == true ||
+                props.chat == true ||
+                props.messageCreate === true ||
+                props.TweetCreate === true ? (
+                    <LogoContainer style={{ width: 60 }}>
+                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50 }} />
+                    </LogoContainer>
+                ) : (
+                    <LogoContainer>
+                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} />
+                    </LogoContainer>
+                )}
+                {props.contacts === true ? (
+                    <Button onClick={setAddContact}>+ Add Contact</Button>
+                ) : (
+                    <div></div>
+                )}
 
-          {props.messageCreate === true ? (
-            
-            <Button
-              onClick={() => {
-                window.location.reload();
-                localStorage.removeItem("selectedMedia");
-              }}
-            >
-              + New Message
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          
-          {props.chat === true ? (
-            <Button
-              style={{ width: 160, textAlign: "center", height: 50 }}
-              onClick={() => {}}
-            >
-              <span style={{ fontSize: 30 }}>+</span>
-              <span style={{ marginLeft: 16 }}>New Message</span>
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          {props.TweetCreate === true ? (
-            <Button
-              onClick={() => {
-                window.location.reload();
-                localStorage.removeItem("selectedMedia");
-              }}
-            >
-              + New Post
-            </Button>
-          ) : (
-            <div></div>
-          )}
+                {props.messageCreate === true ? (
 
-          {props.media === true ? (
-            <Button onClick={setAddMedia}>+ Add Media</Button>
-          ) : (
-            <div></div>
-          )}
+                    <Button
+                        onClick={() => {
+                            window.location.reload();
+                            localStorage.removeItem("selectedMedia");
+                        }}
+                    >
+                        + New Message
+                    </Button>
+                ) : (
+                    <div></div>
+                )}
 
-          <div style={{ marginLeft: 25, display: "flex" }}>
-            <div
-              style={{
-                height: 36,
-                backgroundColor: "rgb(243, 244, 248)",
-              }}
-            >
-              <SearchIcon
-                style={{
-                  marginLeft: 10,
-                  marginTop: 8,
-                  color: "rgb(136, 136, 141)",
-                }}
-              />
-            </div>
-            <SelectSearch
-              search
-              style={{ backgroundColor: "red", color: "red" }}
-              // closeOnSelect={false}
-              value={searchValue}
-              autoComplete
-              onChange={
-                (e)=>{
-                  console.log("This is the great",e)
-                  setSearchValue(e)
-                }
-              }
-              options={options}
-              placeholder="Search for contact,media,team users,setting and chats"
-            />
-          </div>
+                {props.chat === true ? (
+                    <Button
+                        style={{ width: 160, textAlign: "center", height: 50 }}
+                        onClick={() => {}}
+                    >
+                        <span style={{ fontSize: 30 }}>+</span>
+                        <span style={{ marginLeft: 16 }}>New Message</span>
+                    </Button>
+                ) : (
+                    <div></div>
+                )}
+                {props.TweetCreate === true ? (
+                    <Button
+                        onClick={() => {
+                            window.location.reload();
+                            localStorage.removeItem("selectedMedia");
+                        }}
+                    >
+                        + New Post
+                    </Button>
+                ) : (
+                    <div></div>
+                )}
 
-          {/* 
+                {props.media === true ? (
+                    <Button onClick={setAddMedia}>+ Add Media</Button>
+                ) : (
+                    <div></div>
+                )}
+
+                <div style={{ marginLeft: 25, display: "flex" }}>
+                    <div
+                        style={{
+                            height: 36,
+                            backgroundColor: "rgb(243, 244, 248)",
+                        }}
+                    >
+                        <SearchIcon
+                            style={{
+                                marginLeft: 10,
+                                marginTop: 8,
+                                color: "rgb(136, 136, 141)",
+                            }}
+                        />
+                    </div>
+                    <SelectSearch
+                        search
+                        style={{ backgroundColor: "red", color: "red" }}
+                        // closeOnSelect={false}
+                        value={searchValue}
+                        autoComplete
+                        onChange={
+                            (e)=>{
+                                console.log("This is the great",e)
+                                setSearchValue(e)
+                            }
+                        }
+                        options={options}
+                        placeholder="Search for contact,media,team users,setting and chats"
+                    />
+                </div>
+
+                {/*
           <FormInputWrap>
             <FiSearch
               style={{
@@ -2099,171 +2099,171 @@ const Sidebar = (props) => {
               placeholder="Search for contacts by name, phone number, Twitter Handle or School"
             ></FormInput>
           </FormInputWrap> */}
-          <LeftSectionNav>
-            <div
-              style={{
-                height: "70px",
-                width: "1.5px",
-                background: "rgb(113, 115, 118,0.1)",
-              }}
-            ></div>
-            <BiBell
-              style={{
-                color: "rgb(113, 115, 118)",
-                marginRight: "15px",
-                marginLeft: "15px",
-                height: "24.2px",
-                width: "21.2px",
-                boxSizing: "border-box",
-              }}
-            />
-            <div
-              style={{
-                height: "70px",
-                width: "1.5px",
-                background: "rgb(113, 115, 118,0.1)",
-              }}
-            ></div>
-            <BiChat
-              onClick={() => {
-                history.push(`/chat`);
-              }}
-              style={{
-                cursor: "pointer",
-                color: "rgb(113, 115, 118)",
-                marginRight: "15px",
-                marginLeft: "15px",
-                height: "24px",
-                width: "25px",
-              }}
-            />
-            <div
-              style={{
-                height: "70px",
-                width: "1.5px",
-                background: "rgb(113, 115, 118,0.1)",
-              }}
-            ></div>
-      {props.TwitterStream?  <Logoimage src={Logo }style={{visibility:'hidden'}}/>
-      :      <Logoimage src={Logo}></Logoimage>
-   }   </LeftSectionNav>
-        </Nav>
-        <SidebarNav
-          sidebar={sidebar}
-          style={{
-            width:
-              props.contacts ||
-              props.chat ||
-              props.media ||
-              props.messageCreate ||
-              props.TweetCreate
-                ? 60
-                : 250,
-          }}
-        >
-          <Grid container direction="column">
-            <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
-              {props.contacts === true ||
-              props.chat === true ||
-              props.media === true ||
-              props.messageCreate === true ||
-              props.TweetCreate === true ? (
-                <div></div>
-              ) : (
-                <Button onClick={openModal}>+ New</Button>
-              )}
-
-              {SidebarData.map((item, index) => {
-                return (
-                  <div
-                    onClick={() => {
-                      setSelectedTab(() => index);
-                    }}
-                  >
-                    <SubMenu
-                      contacts={
+                <LeftSectionNav>
+                    <div
+                        style={{
+                            height: "70px",
+                            width: "1.5px",
+                            background: "rgb(113, 115, 118,0.1)",
+                        }}
+                    ></div>
+                    <BiBell
+                        style={{
+                            color: "rgb(113, 115, 118)",
+                            marginRight: "15px",
+                            marginLeft: "15px",
+                            height: "24.2px",
+                            width: "21.2px",
+                            boxSizing: "border-box",
+                        }}
+                    />
+                    <div
+                        style={{
+                            height: "70px",
+                            width: "1.5px",
+                            background: "rgb(113, 115, 118,0.1)",
+                        }}
+                    ></div>
+                    <BiChat
+                        onClick={() => {
+                            history.push(`/chat`);
+                        }}
+                        style={{
+                            cursor: "pointer",
+                            color: "rgb(113, 115, 118)",
+                            marginRight: "15px",
+                            marginLeft: "15px",
+                            height: "24px",
+                            width: "25px",
+                        }}
+                    />
+                    <div
+                        style={{
+                            height: "70px",
+                            width: "1.5px",
+                            background: "rgb(113, 115, 118,0.1)",
+                        }}
+                    ></div>
+                    {props.TwitterStream?  <Logoimage src={Logo }style={{visibility:'hidden'}}/>
+                        :      <Logoimage src={Logo}></Logoimage>
+                    }   </LeftSectionNav>
+            </Nav>
+            <SidebarNav
+                sidebar={sidebar}
+                style={{
+                    width:
                         props.contacts ||
-                        props.chat === true ||
+                        props.chat ||
                         props.media ||
                         props.messageCreate ||
                         props.TweetCreate
-                      }
-                      selectedTab={selectedTab}
-                      item={item}
-                      key={index}
-                      index={index}
-                    />
-                  </div>
-                );
-              })}
-            </SidebarWrap>
-
-            {props.chat === false && (
-              <div
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  position: "absolute",
+                            ? 60
+                            : 250,
                 }}
-              >
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="flex-end"
-                  style={{
-                    paddingTop: 0,
-                    paddingBottom: 20,
+            >
+                <Grid container direction="column">
+                    <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
+                        {props.contacts === true ||
+                        props.chat === true ||
+                        props.media === true ||
+                        props.messageCreate === true ||
+                        props.TweetCreate === true ? (
+                            <div></div>
+                        ) : (
+                            <Button onClick={openModal}>+ New</Button>
+                        )}
 
-                    height: "90%",
-                  }}
-                  onClick={() => {
-                    // window.location.href="/dashboard/user-settings"
-                    document.getElementById("userSettings").click();
-                  }}
-                >
-                  <Grid item md={4} xs={4} lg={4}>
-                    <Grid container direction="row" justify="center">
-                      <img
-                        style={{ width: 35, height: 35, borderRadius: 17 }}
-                        src={
-                          JSON.parse(localStorage.getItem("user"))
-                            .twitter_profile.profile_image
-                        }
-                      ></img>
-                    </Grid>
-                  </Grid>
-                  <Grid item md={8} xs={8} lg={8}>
-                    {props.contacts === true ||
-                    props.media === true ||
-                    props.chat === true ||
-                    props.messageCreate === true ||
-                    props.TweetCreate === true ? (
-                      <div></div>
-                    ) : (
-                      <Grid container direction="row">
+                        {SidebarData.map((item, index) => {
+                            return (
+                                <div
+                                    onClick={() => {
+                                        setSelectedTab(() => index);
+                                    }}
+                                >
+                                    <SubMenu
+                                        contacts={
+                                            props.contacts ||
+                                            props.chat === true ||
+                                            props.media ||
+                                            props.messageCreate ||
+                                            props.TweetCreate
+                                        }
+                                        selectedTab={selectedTab}
+                                        item={item}
+                                        key={index}
+                                        index={index}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </SidebarWrap>
+
+                    {props.chat === false && (
+                        <div
+                            style={{
+                                height: "100%",
+                                width: "100%",
+                                position: "absolute",
+                            }}
+                        >
+                            <Grid
+                                container
+                                direction="row"
+                                alignItems="flex-end"
+                                style={{
+                                    paddingTop: 0,
+                                    paddingBottom: 20,
+
+                                    height: "90%",
+                                }}
+                                onClick={() => {
+                                    // window.location.href="/dashboard/user-settings"
+                                    document.getElementById("userSettings").click();
+                                }}
+                            >
+                                <Grid item md={4} xs={4} lg={4}>
+                                    <Grid container direction="row" justify="center">
+                                        <img
+                                            style={{ width: 35, height: 35, borderRadius: 17 }}
+                                            src={
+                                                JSON.parse(localStorage.getItem("user"))
+                                                    .twitter_profile.profile_image
+                                            }
+                                        ></img>
+                                    </Grid>
+                                </Grid>
+                                <Grid item md={8} xs={8} lg={8}>
+                                    {props.contacts === true ||
+                                    props.media === true ||
+                                    props.chat === true ||
+                                    props.messageCreate === true ||
+                                    props.TweetCreate === true ? (
+                                        <div></div>
+                                    ) : (
+                                        <Grid container direction="row">
                         <span style={{ marginTop: -30, fontWeight: "bold" }}>
                           {JSON.parse(localStorage.getItem("user")).first_name +
-                            " " +
-                            JSON.parse(localStorage.getItem("user")).last_name}
+                          " " +
+                          JSON.parse(localStorage.getItem("user")).last_name}
                         </span>
-                        <span style={{ marginTop: -30 }}>
+                                            <span style={{ marginTop: -30 }}>
                           <ExpandMoreIcon
-                            style={{
-                              color: "black",
-                              marginLeft: 5,
-                              fontSize: 30,
-                            }}
+                              style={{
+                                  color: "black",
+                                  marginLeft: 5,
+                                  fontSize: 30,
+                              }}
                           ></ExpandMoreIcon>
                         </span>
-                      </Grid>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                            </Grid>
+                        </div>
                     )}
-                  </Grid>
                 </Grid>
-              </div>
-            )}
-          </Grid>
-        </SidebarNav>
-      </IconContext.Provider>
+            </SidebarNav>
+        </IconContext.Provider>
     </>
   );
 };

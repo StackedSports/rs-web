@@ -7,12 +7,17 @@ const LightboxDialog=(props)=>{
         <Dialog
             open={true}
             onClose={() => {
-                setLightboxVideo(null);
+                props.closeModal(null);
             }}
         >
-            <video width="400" height="400" loop autoPlay controls>
-                <source src={props.lightboxVideo} type="video/mp4"></source>
-            </video>
+            {
+             props.isVideo?
+                 <video width="400" height="400" loop autoPlay controls>
+                     <source src={props.url} type="video/mp4"></source>
+                 </video>
+                 :
+                 <img  src={props.url}/>
+            }
         </Dialog>
     )
 }

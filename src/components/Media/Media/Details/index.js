@@ -4,11 +4,9 @@ import ClearIcon from "@material-ui/icons/Clear";
 import React from "react";
 
 
-
 import MediaInfo from './info';
 import SelectedContactItem from './selected-contact';
-import ContactItem from './contact-item';
-
+import DropDownItem from './contact-item';
 
 
 const useStyles = makeStyles({
@@ -88,14 +86,22 @@ const useStyles = makeStyles({
 });
 
 
-
 const MediaDetails = (props) => {
 
     const classes = useStyles();
 
 
-    const filter=props.filter,
-        teamContacts=props.teamContacts;
+    const filter = props.filter,
+        selectedTeamContacts = props.selectedTeamContacts,
+        teamContacts = props.teamContacts,
+        selectedTags = props.selectedTags,
+        taggedMedia = props.taggedMedia,
+        selectedMediaPlaceholders = props.selectedMediaPlaceholders,
+        placeholders = props.placeholders,
+        selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
+
+
+    console.log('displayOwner =  ', props.displaySearchContainers)
 
     return (
         <Grid
@@ -105,6 +111,7 @@ const MediaDetails = (props) => {
                 border: "1px solid #d2d2d2",
                 borderRadius: 4,
                 marginTop: 16,
+                position:'relative',
                 height: "auto",
             }}
         >
@@ -139,6 +146,8 @@ const MediaDetails = (props) => {
                     makeCheckBoxSelected={props.makeCheckBoxSelected}
                     setShowMediaStats={props.setShowMediaStats}
                     setSelectedPlaceHolder={props.setSelectedPlaceHolder}
+                    setShowBackButton={props.setShowBackButton}
+
                 />}
                 {/*Item details*/}
                 {<MediaInfo selectedPlaceholder={props.selectedPlaceholder} messageStatus={props.messageStatus}/>}
@@ -153,10 +162,14 @@ const MediaDetails = (props) => {
                             alignItems="center"
                             style={{border: "1px solid #b5bccd", borderRadius: 4}}
                         >
-                            {filter.length != 0 &&
-                            filter.map((fil, index) => {
+                            {(selectedTeamContacts).length != 0 &&
+                            selectedTeamContacts.map((teamContact, index) => {
                                 return (
-                                    <SelectedContactItem fil={fil} index={index} removeDataFromFilter={props.removeDataFromFilter} />
+                                    <SelectedContactItem
+                                        item={teamContact}
+                                        type={"SELECTED_TEAM_CONTACTS"}
+                                        index={index}
+                                        removeDataFromFilter={props.removeDataFromFilter}/>
                                 );
                             })}
                             <div class="dropdownMedia">
@@ -166,25 +179,109 @@ const MediaDetails = (props) => {
                                         height: 60,
                                         flex: "auto",
                                         border: "none",
-                                        padding: 16,
+                                        padding: 16
                                     }}
                                     id="owner"
                                     onClick={(e) => {
                                         console.log("This is ", e.target.id);
                                         props.setDisplayOwner(true);
+                                        e.stopPropagation();
                                     }}
                                     placeholder="+ Add Owner"
                                 ></input>
                                 <div
                                     className={classes.dropdownHidden}
                                     style={{
-                                        display: props.displayOwner ? "block" : "none",
+                                        display: props.displaySearchContainers.displayOwner ? "block" : "none",
+                                        height: '35%',
+                                        position:'absolute',
+                                        left:'40vw',
+                                        overflowX:'hidden',
+                                        overflowY: 'scroll'
                                     }}
                                 >
                                     {teamContacts &&
                                     teamContacts.map((type, index) => {
                                         return (
-                                            <ContactItem addDataToFilter={props.addDataToFilter} type={type}/>
+                                            type && type.twitter_profile && type.twitter_profile.screen_name &&
+                                            <DropDownItem
+                                                addDataToFilter={props.addDataToFilter}
+                                                username={type.twitter_profile.screen_name}
+                                                url={type.twitter_profile.profile_image}
+                                                setDisplay={props.setDisplayOwner}
+                                                type={"SELECTED_TEAM_CONTACTS"}/>
+                                        );
+                                    })}
+                                </div>
+                                <div
+                                    className={classes.dropdownHidden}
+                                    style={{
+                                        display: props.displaySearchContainers.selectedTagContainer ? "block" : "none",
+                                        height: '35%',
+                                        position:'absolute',
+                                        left:'40vw',
+                                        overflowX:'hidden',
+                                        overflowY: 'scroll'
+                                    }}
+                                >
+                                    {taggedMedia &&
+                                    taggedMedia.map((tag, index) => {
+                                        return (
+                                            tag && tag.name &&
+                                            <DropDownItem
+                                                addDataToFilter={props.addDataToFilter}
+                                                username={tag.name}
+                                                url={''}
+                                                setDisplay={props.setSelectedTagContainer}
+                                                type={"SELECTED_TAGS"}/>
+                                        );
+                                    })}
+                                </div>
+                                <div
+                                    className={classes.dropdownHidden}
+                                    style={{
+                                        display: props.displaySearchContainers.selectedPlaceholderContainer ? "block" : "none",
+                                        height: '35%',
+                                        position:'absolute',
+                                        left:'40vw',
+                                        overflowX:'hidden',
+                                        overflowY: 'scroll'
+                                    }}
+                                >
+                                    {placeholders &&
+                                    placeholders.map((placeholder, index) => {
+                                        return (
+                                            placeholder && placeholder.name &&
+                                            <DropDownItem
+                                                addDataToFilter={props.addDataToFilter}
+                                                username={placeholder.name}
+                                                url={placeholder.media_preview}
+                                                setDisplay={props.setSelectedMediaPlaceholders}
+                                                type={"SELECTED_PLACEHOLDERS"}/>
+                                        );
+                                    })}
+                                </div>
+                                <div
+                                    className={classes.dropdownHidden}
+                                    style={{
+                                        display: props.displaySearchContainers.selectedAssociatePlaceholderContainer ? "block" : "none",
+                                        height: '35%',
+                                        position:'absolute',
+                                        left:'40vw',
+                                        overflowX:'hidden',
+                                        overflowY: 'scroll'
+                                    }}
+                                >
+                                    {placeholders &&
+                                    placeholders.map((placeholder, index) => {
+                                        return (
+                                            placeholder && placeholder.name &&
+                                            <DropDownItem
+                                                addDataToFilter={props.addDataToFilter}
+                                                username={placeholder.name}
+                                                url={placeholder.media_preview}
+                                                setDisplay={props.setSelectedAssociatePlaceholderContainer}
+                                                type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
                                         );
                                     })}
                                 </div>
@@ -210,6 +307,16 @@ const MediaDetails = (props) => {
                             alignItems="center"
                             style={{border: "1px solid #b5bccd", borderRadius: 4}}
                         >
+                            {(selectedTags).length != 0 &&
+                            selectedTags.map((tag, index) => {
+                                return (
+                                    <SelectedContactItem
+                                        item={tag}
+                                        type={"SELECTED_TAGS"}
+                                        index={index}
+                                        removeDataFromFilter={props.removeDataFromFilter}/>
+                                );
+                            })}
                             <div class="dropdownMedia">
                                 <input
                                     type="text"
@@ -222,7 +329,9 @@ const MediaDetails = (props) => {
                                     id="tags"
                                     onClick={(e) => {
                                         console.log("This is ", e.target.id);
-                                        props.setDisplayTags(true);
+                                        props.setSelectedTagContainer(true);
+                                        e.stopPropagation();
+
                                     }}
                                     placeholder="+ Add Tag"
                                 ></input>
@@ -248,6 +357,16 @@ const MediaDetails = (props) => {
                                 alignItems="center"
                                 style={{border: "1px solid #b5bccd", borderRadius: 4}}
                             >
+                                {(selectedMediaPlaceholders).length != 0 &&
+                                selectedMediaPlaceholders.map((teamContact, index) => {
+                                    return (
+                                        <SelectedContactItem
+                                            item={teamContact}
+                                            type={"SELECTED_PLACEHOLDERS"}
+                                            index={index}
+                                            removeDataFromFilter={props.removeDataFromFilter}/>
+                                    );
+                                })}
                                 <div class="dropdownMedia">
                                     <input
                                         type="text"
@@ -259,17 +378,14 @@ const MediaDetails = (props) => {
                                         }}
                                         id="placeholder"
                                         onClick={(e) => {
-                                            props.setDisplayPlaceholder(false);
+                                            props.setSelectedMediaPlaceholders(true);
+                                            e.stopPropagation();
+
                                         }}
                                         placeholder="+ Add Media placeholder or personalized graphics"
                                     ></input>
-                                    <div
-                                        className={classes.dropdownHidden}
-                                        style={{
-                                            display: props.displayPlaceholder ? "block" : "none",
-                                        }}
-                                    >
-                                    </div>
+
+
                                     {" "}
                                 </div>
                             </Grid>
@@ -291,6 +407,16 @@ const MediaDetails = (props) => {
                                 alignItems="center"
                                 style={{border: "1px solid #b5bccd", borderRadius: 4}}
                             >
+                                {(selectedAssociatePlaceholders).length != 0 &&
+                                selectedAssociatePlaceholders.map((placeholder, index) => {
+                                    return (
+                                        <SelectedContactItem
+                                            item={placeholder}
+                                            type={"SELECTED_ASSOCIATE_PLACEHOLDER"}
+                                            index={index}
+                                            removeDataFromFilter={props.removeDataFromFilter}/>
+                                    );
+                                })}
                                 <div class="dropdownMedia">
                                     <input
                                         type="text"
@@ -302,17 +428,11 @@ const MediaDetails = (props) => {
                                         }}
                                         id="placeholder"
                                         onClick={(e) => {
-                                            props.setDisplayPlaceholder(false);
+                                            props.setSelectedAssociatePlaceholderContainer(true);
+                                            e.stopPropagation();
                                         }}
-                                        placeholder="+ Add Media placeholder or personalized graphics"
+                                        placeholder="+ Associate to Contact"
                                     ></input>
-                                    <div
-                                        className={classes.dropdownHidden}
-                                        style={{
-                                            display: props.displayPlaceholder ? "block" : "none",
-                                        }}
-                                    >
-                                    </div>
                                     {" "}
                                 </div>
                             </Grid>

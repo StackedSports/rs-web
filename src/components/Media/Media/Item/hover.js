@@ -3,8 +3,12 @@ import {MoreHoriz} from "@material-ui/icons";
 import React from "react";
 
 
+import {isImage, isVideo} from '../../../../utils/FileUtils';
+
+
 const HoverItem = (props) => {
     const m = props.item;
+    console.log('hover  = ', m);
     return (
         <div
             style={{
@@ -15,7 +19,7 @@ const HoverItem = (props) => {
                 position: "relative",
                 zIndex: 100,
                 border:
-                    props.selectedCheckBoxes.indexOf(m.media_preview) > -1
+                    props.selectedCheckBoxes.indexOf(props.isPlaceHolder ? m.id : m.hashid) > -1
                         ? "3px solid #4d83e0"
                         : "1px solid #d2d2d2"
             }}
@@ -25,14 +29,18 @@ const HoverItem = (props) => {
                     <Checkbox
                         color="primary"
                         checked={
-                            props.selectedCheckBoxes.indexOf(m.hashid) > -1 ? true : false
+                            props.selectedCheckBoxes.indexOf(props.isPlaceHolder ? m.id : m.hashid) > -1 ? true : false
                         }
                         onClick={(e) => {
-                            e.preventDefault();
-                            if (props.makeMediaSelected) {
-                                props.makeMediaSelected(m);
+                            console.log('make selected  = ', m)
+
+                            if (props.isPlaceHolder) {
+                                props.makeCheckBoxSelected(m.id);
+                            } else {
+                                props.makeCheckBoxSelected(m.hashid);
                             }
-                            props.makeCheckBoxSelected(m.hashid);
+                            e.stopPropagation();
+
                         }}
                         style={{
                             color: "white",
@@ -57,36 +65,43 @@ const HoverItem = (props) => {
                 </Grid>
             </Grid>
             {
-                !props.isPlaceHolder &&
                 <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justify="center"
-                style={{height: 100}}
-            >
-                <button
-                    style={{
-                        border: "1px solid white",
-                        background: "transparent",
-                        borderRadius: 4,
-                        color: "white",
-                        fontWeight: 600,
-                        height: 35,
-                    }}
-                    onClick={() => {
-                        if (props.m.file_type.indexOf("video") > -1) {
-                            if (m.urls) {
-                                setLightboxVideo(m.urls.large);
-                            }
-                        } else if (props.m.urls) {
-                            setLightboxPicture(m.urls.medium);
-                        }
-                    }}
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    style={{height: 100}}
                 >
-                    View Media
-                </button>
-            </Grid>
+                    <button
+                        style={{
+                            border: "1px solid white",
+                            background: "transparent",
+                            borderRadius: 4,
+                            color: "white",
+                            fontWeight: 600,
+                            height: 35,
+                        }}
+                        onClick={(e) => {
+                            console.log('hover click = ',props);
+                            if (props.isPlaceHolder) {
+                                if (isVideo(m.media_preview)) {
+                                    props.setLightboxVideo(m.media_preview);
+                                } else  {
+                                    props.setLightboxPicture(m.media_preview);
+                                }
+                            } else {
+                                if (m.file_type.indexOf("video") > -1) {
+                                    props.setLightboxVideo(m.urls.large);
+                                } else {
+                                    props.setLightboxPicture(m.urls.medium);
+                                }
+                            }
+                            e.stopPropagation();
+                        }}
+                    >
+                        View Media
+                    </button>
+                </Grid>
             }
         </div>
     )

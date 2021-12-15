@@ -100,10 +100,10 @@ const SelectedContactItem=(props)=>{
                 direction="row"
                 alignItems="center"
             >
-                {props.fil}
+                {props.item.username}
                 <ClearIcon
                     onClick={() => {
-                        props.removeDataFromFilter(props.index);
+                        props.removeDataFromFilter(props.item,props.type);
                     }}
                     style={{
                         color: "red",

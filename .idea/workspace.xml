@@ -4,8 +4,20 @@
     <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ApiHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ApiHelper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Header/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/hover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/hover.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/common/sidebar/sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/sidebar/sidebar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/common/sidebar/subMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/sidebar/subMenu.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,34 +29,52 @@
     <session id="-147405535">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.15" value="1" />
-          <entry key="project.opened" value="4" />
+          <entry key="project.open.time.64" value="1" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="js" value="38" />
+          <entry key="PNG" value="1" />
+          <entry key="gif" value="3" />
+          <entry key="jpeg" value="1" />
+          <entry key="jpg" value="1" />
+          <entry key="js" value="90" />
+          <entry key="json" value="1" />
           <entry key="jsx" value="3" />
+          <entry key="png" value="4" />
+          <entry key="ts" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="Image" value="10" />
+          <entry key="JSON" value="1" />
           <entry key="JSX Harmony" value="3" />
-          <entry key="JavaScript" value="38" />
+          <entry key="JavaScript" value="90" />
+          <entry key="TypeScript" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="8030" />
+          <entry key="js" value="12959" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="8030" />
+          <entry key="JavaScript" value="12959" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="TypeScriptServerServiceImpl" value="1" />
         </counts>
       </usages-collector>
     </session>
@@ -54,22 +84,70 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="779" column="52" selection-start-line="779" selection-start-column="52" selection-end-line="779" selection-end-column="52" />
-              <folding>
-                <element signature="e#0#59#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="189">
+              <caret line="1122" column="33" lean-forward="true" selection-start-line="1122" selection-start-column="33" selection-end-line="1122" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="547" column="172" selection-start-line="547" selection-start-column="140" selection-end-line="547" selection-end-column="172" />
+            <state relative-caret-position="221">
+              <caret line="272" selection-start-line="272" selection-end-line="272" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#0#51#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-10">
+              <caret line="123" selection-start-line="123" selection-end-line="123" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="27" column="49" lean-forward="true" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/utils/FileUtils.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/hover.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="219">
+              <caret line="82" column="26" lean-forward="true" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -86,39 +164,41 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>MediaDetails</find>
-      <find>messagetypeGrid</find>
-      <find>displayAction</find>
-      <find>return</find>
-      <find>GifIcon</find>
-      <find>FaImage</find>
-      <find>ItemMainHeader</find>
-      <find>Dropdown</find>
-      <find>CustomToggle</find>
-      <find>ContainerIconText</find>
-      <find>handleS</find>
-      <find>showTagsDialog</find>
+      <find>SubMenu</find>
+      <find>contacts</find>
+      <find>setDisplayOwner</find>
+      <find>getMediaUsers</find>
+      <find>selectedTagContainer</find>
+      <find>selectedPlaceholder</find>
+      <find>selectedMediaplacehoders</find>
+      <find>handleSetSelectedAssociatePlaceholder</find>
+      <find>MediaIte</find>
+      <find>handleSetDisplayOwner</find>
+      <find>selectedMediaplaceholders</find>
+      <find>MediaItemDe</find>
+      <find>displayOwner</find>
+      <find>showlistView</find>
+      <find>onClick</find>
+      <find>PlaceholderDetails</find>
+      <find>MediaInfo</find>
+      <find>Placeholder</find>
       <find>handle</find>
-      <find>renderFilters</find>
-      <find>setShowAnimation</find>
-      <find>handleMediaDrawer</find>
-      <find>FormatAlignLeftOutlinedIcon</find>
+      <find>MediaItem</find>
       <find>setShowMediaStats</find>
-      <find>ArrowBackIosNewOutlinedIcon</find>
-      <find>LocalOfferOutlinedIcon</find>
-      <find>setQuickAccessEndIndex</find>
-      <find>FaMagic</find>
-      <find>setMedia</find>
-      <find>handleMediaHover</find>
-      <find>FaTh</find>
-      <find>handleSelectedPlaceHolder</find>
-      <find>item</find>
-      <find>viewMorePlaceholder</find>
-      <find>placeholderEndIndex</find>
-      <find>useEffect</find>
+      <find>showMediaStats</find>
+      <find>setShowBackButton</find>
+      <find>makeMediaSelected</find>
+      <find>HoverItem</find>
+      <find>isVideo</find>
+      <find>handleSetLightboxVideo</find>
+      <find>MediaItemDetails</find>
+      <find>isVide</find>
+      <find>handlePlaceholderClick</find>
     </findStrings>
     <replaceStrings>
       <replace>props.sideFilterClass</replace>
+      <replace>selectedMediaplaceholders</replace>
+      <replace>selectedMediaPlaceholders</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -130,42 +210,46 @@
         <option value="$PROJECT_DIR$/src/components/Media/SideBar/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Sidebar/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/hover.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/seleted-contact.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButtons/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButtons/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButton/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButton/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/header.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Header.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/item-container.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Tags/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/TagSearchModal/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Header.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/SelectedItem.js" />
         <option value="$PROJECT_DIR$/src/components/Media/SelectedItem/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/SelectedItems/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/MediaDetails/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListIButton.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
         <option value="$PROJECT_DIR$/src/ApiHelper.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Tags/item.js" />
+        <option value="$PROJECT_DIR$/src/components/Contacts/index.js" />
+        <option value="$PROJECT_DIR$/src/components/common/sidebar/sidebar.js" />
+        <option value="$PROJECT_DIR$/src/components/common/sidebar/subMenu.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js" />
+        <option value="$PROJECT_DIR$/src/utils/FileUtils.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/hover.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
       </list>
     </option>
   </component>
@@ -195,7 +279,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -214,18 +297,35 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Header" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1639143600695" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1639562778340" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -258,18 +358,21 @@
       <workItem from="1638958578337" duration="18924000" />
       <workItem from="1639053491230" duration="19572000" />
       <workItem from="1639130554483" duration="13027000" />
-      <workItem from="1639146744509" duration="828000" />
+      <workItem from="1639146744509" duration="2825000" />
+      <workItem from="1639380398918" duration="23538000" />
+      <workItem from="1639483480422" duration="504000" />
+      <workItem from="1639511572880" duration="11890000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52351000" />
+    <option name="totallyTimeSpent" value="90280000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="830" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23489933" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24496645" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -277,24 +380,25 @@
       <window_info id="UI Designer" order="5" />
       <window_info id="Learn" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2965616" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="TypeScript" order="0" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="bottom" id="Run" order="3" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.2965616" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="2" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="4" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info anchor="right" id="Ant Build" order="6" weight="0.24966443" />
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Maven Projects" order="8" />
     </layout>
@@ -310,87 +414,38 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js</url>
-          <line>144</line>
+          <line>145</line>
           <option name="timeStamp" value="103" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js</url>
-          <line>87</line>
+          <line>88</line>
           <option name="timeStamp" value="134" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js</url>
-          <line>88</line>
+          <line>89</line>
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js</url>
-          <line>148</line>
+          <line>149</line>
           <option name="timeStamp" value="208" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js</url>
+          <line>57</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="209" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/common/Elements/Elements.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="27" column="2" selection-start-line="20" selection-end-line="27" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-icons/fa/index.esm.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="3980" column="16" selection-start-line="3980" selection-start-column="16" selection-end-line="3980" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16320">
-          <caret line="995" column="32" selection-start-line="995" selection-start-column="32" selection-end-line="995" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/hover.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="59" column="36" selection-start-line="59" selection-start-column="36" selection-end-line="59" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Sidebar/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2431">
-          <caret line="146" column="44" selection-start-line="146" selection-start-column="44" selection-end-line="146" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/MediaContainer.jsx">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/PlaceholderContainer.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/MessageCreate/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67116">
-          <caret line="4007" column="21" selection-start-line="4007" selection-start-column="21" selection-end-line="4007" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/item.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -398,41 +453,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="4" selection-start-line="4" selection-end-line="78" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaDetails.jsx">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="83" column="13" selection-start-line="83" selection-end-line="84" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="158" column="129" selection-start-line="158" selection-start-column="129" selection-end-line="158" selection-end-column="129" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="49">
-          <caret line="6" selection-start-line="6" selection-end-line="80" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -458,20 +485,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header.js" />
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/item-container.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-357">
@@ -489,112 +502,246 @@
     <entry file="file://$PROJECT_DIR$/src/components/Media/Header.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItem.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaDetails/index.js" />
+    <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="406">
+          <caret line="865" column="22" selection-start-line="865" selection-start-column="22" selection-end-line="865" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-393">
+          <caret line="10" column="33" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es5.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="1202" column="11" selection-start-line="1202" selection-start-column="11" selection-end-line="1202" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/animated_burger.gif">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/avatar.jpeg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/avatar.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/hamburger_icon.gif">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/twitterStream.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/drawer.gif">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/logoRight.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/p1.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/Upload.PNG">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/images/start.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Contacts/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/common/sidebar/subMenu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="66" column="33" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/common/sidebar/sidebar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="2146" column="40" selection-start-line="2146" selection-start-column="21" selection-end-line="2146" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@material-ui/core/SvgIcon/SvgIcon.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="56" column="20" selection-start-line="56" selection-end-line="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="-2">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8466">
+          <caret line="499" column="13" selection-start-line="499" selection-start-column="13" selection-end-line="499" selection-end-column="13" />
           <folding>
-            <element signature="e#0#45#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/index.js">
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/selected-contact.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="53" column="62" selection-start-line="53" selection-start-column="62" selection-end-line="53" selection-end-column="62" />
+        <state relative-caret-position="1751">
+          <caret line="105" column="50" selection-start-line="105" selection-start-column="30" selection-end-line="105" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="11" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1649">
+          <caret line="99" column="37" selection-start-line="98" selection-start-column="22" selection-end-line="99" selection-end-column="37" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#51#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="39" column="37" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
+        <state relative-caret-position="-204">
           <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="84" column="33" selection-start-line="84" selection-start-column="33" selection-end-line="84" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="22" column="42" lean-forward="true" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Header/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="23" column="56" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="697">
+          <caret line="53" selection-start-line="53" selection-end-line="53" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
+          <caret line="10" column="46" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="26" column="51" selection-start-line="26" selection-start-column="51" selection-end-line="26" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MessageCreate/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-30">
+          <caret line="305" column="8" selection-start-line="305" selection-start-column="8" selection-end-line="305" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/FileUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/hover.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="82" column="26" lean-forward="true" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="27" column="49" lean-forward="true" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10">
+          <caret line="123" selection-start-line="123" selection-end-line="123" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="779" column="52" selection-start-line="779" selection-start-column="52" selection-end-line="779" selection-end-column="52" />
-          <folding>
-            <element signature="e#0#59#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="189">
+          <caret line="1122" column="33" lean-forward="true" selection-start-line="1122" selection-start-column="33" selection-end-line="1122" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="547" column="172" selection-start-line="547" selection-start-column="140" selection-end-line="547" selection-end-column="172" />
+        <state relative-caret-position="221">
+          <caret line="272" selection-start-line="272" selection-end-line="272" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#0#51#0" expanded="true" />
           </folding>
         </state>
       </provider>

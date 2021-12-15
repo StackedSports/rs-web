@@ -8,11 +8,16 @@ import React, {useState} from "react";
 import HoverItem from './hover';
 import PlaceHolderImageView from './Placeholer/ImageView'
 
+
+import {isImage, isVideo} from '../../../../utils/FileUtils';
+import Media from "../index";
+
 const MediaItem = (props) => {
     const m = props.item;
 
 
-    console.log(props)
+    console.log('m = ', props)
+
     return (
         <div
             style={{
@@ -32,7 +37,7 @@ const MediaItem = (props) => {
                 justify="center"
                 style={{background: "#f6f6f6"}}
 
-                onClick={(e) => props.handlePlaceholderClick(m)}
+
 
                 onMouseEnter={() => {
                     if (m.urls) {
@@ -50,27 +55,35 @@ const MediaItem = (props) => {
                 }}
             >
                 {
-                    props.isPlaceHolder ?
-                        (props.placeholderHover === m.media_preview) ||
-                        props.selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
-                            <HoverItem
-                                isPlaceHolder={props.isPlaceHolder}
-                                makeMediaSelected={props.makeMediaSelected}
-                                item={m}
-                                selectedCheckBoxes={props.selectedCheckBoxes}/>
-                        ) : (
-                            <div></div>
+                    (props.placeholderHover === m.media_preview) ||
+                    props.selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
+                            props.showHover ?
+                                <HoverItem
+                                    isPlaceHolder={props.isPlaceHolder}
+                                    makeMediaSelected={props.makeMediaSelected}
+                                    item={m}
+                                    makeCheckBoxSelected={props.makeCheckBoxSelected}
+                                    setLightboxVideo={props.setLightboxVideo}
+                                    setLightboxPicture={props.setLightboxPicture}
+                                    selectedCheckBoxes={props.selectedCheckBoxes}
+                                />
+                                : <div></div>
                         )
 
                         :
-
                         (m.urls && props.mediaHover === m.urls.medium) ||
-                        (props.selectedCheckBoxes).indexOf(m.hashid) > -1 ? (
-                            <HoverItem
-                                isPlaceHolder={props.isPlaceHolder}
-                                makeMediaSelected={props.makeMediaSelected}
-                                item={m}
-                                selectedCheckBoxes={props.selectedCheckBoxes}/>
+                        (props.selectedCheckBoxes).indexOf(props.isPlaceHolder ? m.id : m.hashid) > -1 ? (
+                            props.showHover ?
+                                <HoverItem
+                                    isPlaceHolder={props.isPlaceHolder}
+                                    makeMediaSelected={props.makeMediaSelected}
+                                    item={m}
+                                    makeCheckBoxSelected={props.makeCheckBoxSelected}
+                                    setLightboxVideo={props.setLightboxVideo}
+                                    setLightboxPicture={props.setLightboxPicture}
+                                    selectedCheckBoxes={props.selectedCheckBoxes}
+                                />
+                                : null
                         ) : (
                             <div></div>
                         )
@@ -88,8 +101,14 @@ const MediaItem = (props) => {
                 onClick={
                     (e) => {
                         // console.log("This is the target", e.target)
-                        props.setShowMediaStats(true)
-                        props.setSelectedPlaceHolder(m);
+                        if (props.isPlaceHolder) {
+                            props.setSelectedPlaceHolder(m);
+                            props.setShowMediaStats(false);
+                        } else {
+                            props.setShowMediaStats(true);
+                            props.setSelectedPlaceHolder(m);
+                        }
+                        props.setShowBackButton(true);
                     }
                 }
                 container
@@ -98,16 +117,29 @@ const MediaItem = (props) => {
                 alignItems="center"
             >
                 {
-                    props.isPlaceHolder ? <GifIcon></GifIcon>
-                        : m.file_type === "image/gif" ? (
+                    props.isPlaceHolder ?
+                        (
+                            isImage(m.media_preview) ? (
+                                <FaImage></FaImage>
+                            ) : isVideo(m.media_preview) > -1 ? (
+                                <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
+                            ) : (
+                                <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                            )
+
+                        )
+                        :
+                        (
+                            m.file_type === "image/gif") ? (
                             <GifIcon></GifIcon>
                         ) : m.file_type.indexOf("video") > -1 ? (
-                            <FaVideo style={{color: "#3871da", fontSize: 20}}></FaVideo>
+                            <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
                         ) : m.file_type.indexOf("image") > -1 ? (
                             <FaImage></FaImage>
                         ) : (
                             <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
-                        )}
+                        )
+                }
                 <p
                     style={{
                         fontWeight: "bold",
