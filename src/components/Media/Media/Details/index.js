@@ -195,7 +195,7 @@ const MediaDetails = (props) => {
                                         display: props.displaySearchContainers.displayOwner ? "block" : "none",
                                         height: '35vh',
                                         position: 'absolute',
-                                        left: 1,
+                                        left: '27%',
                                         top: '-26vh',
                                         overflowX: 'hidden',
                                         overflowY: 'scroll'
@@ -300,7 +300,7 @@ const MediaDetails = (props) => {
                                         height: '35vh',
                                         position: 'absolute',
                                         top: '-26vh',
-                                        left: 1,
+                                        left: '27%',
                                         overflowX: 'hidden',
                                         overflowY: 'scroll'
                                     }}
@@ -401,7 +401,7 @@ const MediaDetails = (props) => {
                                             height: '35vh',
                                             top: '-26vh',
                                             position: 'absolute',
-                                            left: 1,
+                                            left: '55%',
                                             overflowX: 'hidden',
                                             overflowY: 'scroll'
                                         }}
@@ -502,7 +502,7 @@ const MediaDetails = (props) => {
                                             display: props.displaySearchContainers.selectedAssociatePlaceholderContainer ? "block" : "none",
                                             height: '35vh',
                                             position: 'absolute',
-                                            left: 1,
+                                            left: '55%',
                                             top: '-26vh',
                                             overflowX: 'hidden',
                                             overflowY: 'scroll'

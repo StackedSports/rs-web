@@ -5,14 +5,13 @@ import {FaSlidersH, FaBars, FaTh} from "react-icons/fa";
 
 const PlaceholderListButton=(props)=>{
     return(
-        <Grid container direction="row" justify="flex-end">
+
             <div
                 style={{
                     border: "1px solid #d2d2d2",
-                    width: 30,
-                    height: 30,
+                    width: 40,
+                    height: 40,
                     borderRadius: 4,
-                    marginRight: 30,
                     marginBottom: 10,
                 }}
             >
@@ -21,19 +20,18 @@ const PlaceholderListButton=(props)=>{
                     direction="row"
                     justify="center"
                     alignItems="center"
-                    style={{height: 30, cursor: "pointer"}}
+                    style={{width:40,height: 40, cursor: "pointer"}}
                     onClick={() => {
-                        props.setShowlistView(props.displayListContainer.showMediaListView,!props.displayListContainer.showPlaceholderListView);
+                        props.setShowlistView(!props.displayListContainer.showMediaListView,!props.displayListContainer.showPlaceholderListView);
                     }}
                 >
-                    {props.showlistView === true ? (
-                        <FaTh style={{color: "#3871DA"}}></FaTh>
+                    {props.displayListContainer.showMediaListView === true ? (
+                        <FaTh style={{color: "#3871DA",}}></FaTh>
                     ) : (
                         <FaBars style={{color: "#3871DA"}}></FaBars>
                     )}
                 </Grid>
             </div>
-        </Grid>
     )
 }
 

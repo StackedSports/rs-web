@@ -11,6 +11,7 @@ import DropDownButton from "../DropDownButton";
 import {Link} from "react-router-dom";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import React from "react";
+import PlaceholderListButton from '../Placehoder/PlaceholderListButton';
 
 
 const Header=(props)=>{
@@ -77,6 +78,12 @@ const Header=(props)=>{
             <Grid item md={6} sm={6}>
                 <Grid container direction="row" justify="flex-end">
 
+
+
+                    <PlaceholderListButton
+                                setShowlistView={props.setShowlistView}
+                                displayListContainer={props.displayListContainer}
+                            />
                     {props.message ? (
                         <div></div>
                     ) : (

@@ -1049,7 +1049,6 @@ function MediaComponent(props) {
             showPlaceholderListView: showPlaceholderList,
             showMediaListView: showMediaList
         });
-        setShowBackButton(true);
 
     }
 
@@ -1186,7 +1185,9 @@ function MediaComponent(props) {
                 showDrawer={showDrawer}
                 setShowBackButton={handleSetShowBackButton}
                 showBackButton={showBackButton}
-                handleSetShowListView={handleSetShowListView}
+                setShowlistView={handleSetShowListView}
+                displayListContainer={displayListContainer}
+
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
