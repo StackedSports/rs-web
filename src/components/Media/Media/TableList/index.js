@@ -83,28 +83,25 @@ const useStyles = makeStyles({
 });
 
 
-const PlaceholderTableList=(props)=>{
+const PlaceholderTableList = (props) => {
     const classes = useStyles();
-    const placeholders=props.placeholders;
-    return(
-        <div style={{width: "100%", overflowX: "scroll", marginTop: 10}}>
+    const list = props.list;
+    return (
+        <div style={{width: "100%", overflowX: "scroll"}}>
             <ListHeader/>
 
             <div
-                style={{width: "100%", maxHeight: 330, minWidth: 1110}}
-                className="fullHeightContacts"
+                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:'30vh'}}
                 id="infinit"
                 onScroll={() => {
                     props.handleScroll();
                 }}
             >
-                {placeholders &&
-                placeholders.map((item, index) => {
-                    if (index < 4) {
-                        return (
-                            <PlaceholderItem item={item} setSelectedPlaceHolder={props.setSelectedPlaceHolder}/>
-                        );
-                    }
+                {list &&
+                list.map((item, index) => {
+                    return (
+                        <PlaceholderItem item={item} setSelectedPlaceHolder={props.setSelectedPlaceHolder}/>
+                    )
                 })}
             </div>
         </div>

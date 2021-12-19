@@ -100,7 +100,7 @@ const MediaDetails = (props) => {
         selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
 
-    console.log('setMyMediaContacts =  ', props.searchMediaDetailsContainer)
+    console.log('setMyMediaContacts =  ', props.selectedPlaceholder)
 
     return (
         <Grid

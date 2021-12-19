@@ -49,7 +49,7 @@ const Header=(props)=>{
                                    (e) => {
 
                                        props.setShowBackButton(false);
-                                       props.setSelectedPlaceHolder(null);
+                                       props.setSelectedPlaceHolder(null,false,true);
                                        props.setShowMediaStats(false);
                                    }}
 
@@ -93,6 +93,7 @@ const Header=(props)=>{
                             Icon={
                                 <FaMagic></FaMagic>
                             }
+                            handleSetShowListView={props.handleSetShowListView}
                             list={props.dropDownButtonItemsList}
                         />
 

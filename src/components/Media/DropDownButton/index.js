@@ -96,18 +96,20 @@ const DropDownButton = (props) => {
             {props.haveLink && props.Link}
             <IconTextField
                 width={100}
-                textColor={displayAction ? props.textColor : props.textColorSelected}
-                background={displayAction ? props.backgroundColor : props.backgroundColorSelected}
+                textColor={ props.textColor }
+                background={ props.backgroundColor}
                 text={props.text}
-                icon={React.cloneElement(props.Icon,{ style: {color: displayAction ? props.iconSelectedColor : props.iconColor }})}
+                icon={React.cloneElement(props.Icon,{ style: {color:  props.iconSelectedColor  }})}
                 onClick={() => {
-                    setDisplayAction(true);
+
+                    if(props.text==="Action"){
+                        props.handleSetShowListView(true,true);
+                    }
                 }}
             ></IconTextField>
             {
-                props.list &&
+                /*props.list &&
                 <div
-                    // class="dropdown-content"
                     className={classes.dropdownHidden}
                     style={{
                         marginLeft: -120,
@@ -123,7 +125,7 @@ const DropDownButton = (props) => {
                             <DropDownItem title={type.title} index={index}/>
                         );
                     })}
-                </div>
+                </div>*/
             }
         </div>
 

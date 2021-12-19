@@ -4,9 +4,18 @@
     <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/DropDownButton/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/DropDownButton/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Header/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,10 +43,11 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="PNG" value="1" />
+          <entry key="css" value="1" />
           <entry key="gif" value="3" />
           <entry key="jpeg" value="1" />
           <entry key="jpg" value="1" />
-          <entry key="js" value="92" />
+          <entry key="js" value="106" />
           <entry key="json" value="1" />
           <entry key="jsx" value="3" />
           <entry key="png" value="4" />
@@ -46,21 +56,22 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="CSS" value="1" />
           <entry key="Image" value="10" />
           <entry key="JSON" value="1" />
           <entry key="JSX Harmony" value="3" />
-          <entry key="JavaScript" value="92" />
+          <entry key="JavaScript" value="106" />
           <entry key="TypeScript" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="13857" />
+          <entry key="js" value="15248" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="13857" />
+          <entry key="JavaScript" value="15248" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -75,20 +86,84 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="270" column="25" selection-start-line="270" selection-start-column="8" selection-end-line="270" selection-end-column="25" />
+            <state relative-caret-position="215">
+              <caret line="1360" column="35" lean-forward="true" selection-start-line="1360" selection-start-column="35" selection-end-line="1360" selection-end-column="35" />
               <folding>
+                <element signature="e#0#71#0" expanded="true" />
                 <element signature="e#14303#27074#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="536" column="116" selection-start-line="536" selection-start-column="116" selection-end-line="536" selection-end-column="116" />
+            <state relative-caret-position="85">
+              <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="10" column="51" selection-start-line="10" selection-start-column="51" selection-end-line="10" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Header/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="697">
+              <caret line="53" selection-start-line="53" selection-end-line="53" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="102" column="32" selection-start-line="102" selection-start-column="32" selection-end-line="102" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-230">
+              <caret line="14" column="23" lean-forward="true" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="15" selection-start-line="15" selection-end-line="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="29" column="80" selection-start-line="27" selection-start-column="24" selection-end-line="29" selection-end-column="80" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="65">
+              <caret line="89" column="55" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="55" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -97,52 +172,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="118" column="24" selection-start-line="118" selection-start-column="24" selection-end-line="120" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-461">
-              <caret line="123" selection-start-line="123" selection-end-line="123" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils/FileUtils.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/hover.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1309">
-              <caret line="82" column="26" selection-start-line="82" selection-start-column="26" selection-end-line="82" selection-end-column="26" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="290">
+              <caret line="136" selection-start-line="136" selection-end-line="136" />
             </state>
           </provider>
         </entry>
@@ -158,17 +191,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getMediaUsers</find>
-      <find>selectedTagContainer</find>
-      <find>selectedPlaceholder</find>
-      <find>selectedMediaplacehoders</find>
-      <find>handleSetSelectedAssociatePlaceholder</find>
-      <find>MediaIte</find>
-      <find>handleSetDisplayOwner</find>
-      <find>selectedMediaplaceholders</find>
-      <find>MediaItemDe</find>
       <find>displayOwner</find>
-      <find>showlistView</find>
       <find>onClick</find>
       <find>PlaceholderDetails</find>
       <find>MediaInfo</find>
@@ -176,18 +199,28 @@
       <find>handle</find>
       <find>setShowMediaStats</find>
       <find>showMediaStats</find>
-      <find>setShowBackButton</find>
       <find>makeMediaSelected</find>
       <find>HoverItem</find>
       <find>isVideo</find>
       <find>handleSetLightboxVideo</find>
       <find>MediaItemDetails</find>
       <find>isVide</find>
-      <find>handlePlaceholderClick</find>
       <find>setMyMediaContacts</find>
       <find>MediaItem</find>
-      <find>dropdownHidden</find>
       <find>addDataToFilter</find>
+      <find>showlistView</find>
+      <find>displayListContainer</find>
+      <find>handleSelectedPlaceHolder</find>
+      <find>selectedPlaceholder</find>
+      <find>handleSe</find>
+      <find>dropdownHidden</find>
+      <find>handlePlaceholderClick</find>
+      <find>handleSetShowListView</find>
+      <find>fullHeightContacts</find>
+      <find>setShowBackButton</find>
+      <find>setSelectedPlaceHolder</find>
+      <find>setDisplayListContainer</find>
+      <find>CustomToggle</find>
     </findStrings>
     <replaceStrings>
       <replace>props.sideFilterClass</replace>
@@ -208,12 +241,9 @@
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButtons/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButtons/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/DropDownButton/item.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/DropDownButton/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/header.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Header.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/item-container.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/TagSearchModal/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Header.js" />
@@ -223,8 +253,6 @@
         <option value="$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/MediaDetails/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListIButton.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Tags/index.js" />
         <option value="$PROJECT_DIR$/src/ApiHelper.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Item/Placeholer/ImageView.js" />
@@ -237,13 +265,21 @@
         <option value="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Item/hover.js" />
         <option value="$PROJECT_DIR$/src/components/Media/LightboxDialog/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
+        <option value="$PROJECT_DIR$/src/App.css" />
+        <option value="$PROJECT_DIR$/src/components/Media/DropDownButton/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" />
       </list>
     </option>
   </component>
@@ -290,6 +326,30 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="TableList" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -301,13 +361,14 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1639900175048" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1639933374532" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\practice\twitter-stream\src\components\Media\Media\TableList" />
       <recent name="D:\practice\twitter-stream\src\components\Media" />
       <recent name="D:\practice\twitter-stream\src\components\Media\Media" />
     </key>
@@ -342,18 +403,18 @@
       <workItem from="1639483480422" duration="504000" />
       <workItem from="1639511572880" duration="13672000" />
       <workItem from="1639583471542" duration="213000" />
-      <workItem from="1639891452154" duration="7444000" />
+      <workItem from="1639891452154" duration="17564000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99719000" />
+    <option name="totallyTimeSpent" value="109839000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25167784" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25167784" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -371,7 +432,7 @@
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.31375358" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.25787964" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
@@ -418,6 +479,17 @@
           <line>57</line>
           <option name="timeStamp" value="209" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="210" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js</url>
+          <line>27</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="211" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
@@ -426,43 +498,8 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="4" column="19" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaDetails.jsx">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/header.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="122" column="26" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="474">
-          <caret line="112" column="35" selection-start-line="112" selection-start-column="15" selection-end-line="112" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/item-container.js">
@@ -475,13 +512,6 @@
     <entry file="file://$PROJECT_DIR$/src/components/Media/Header.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItem.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaDetails/index.js" />
-    <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -540,9 +570,6 @@
     <entry file="file://$PROJECT_DIR$/src/images/start.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Contacts/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/common/sidebar/subMenu.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
@@ -571,13 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8466">
@@ -599,45 +619,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="84" column="33" selection-start-line="84" selection-start-column="33" selection-end-line="84" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="22" column="42" lean-forward="true" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Header/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="53" selection-start-line="53" selection-end-line="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="10" column="46" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="26" column="51" selection-start-line="26" selection-start-column="51" selection-end-line="26" selection-end-column="51" />
         </state>
       </provider>
     </entry>
@@ -652,13 +637,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
         </state>
       </provider>
     </entry>
@@ -679,16 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-461">
-          <caret line="123" selection-start-line="123" selection-end-line="123" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
@@ -703,20 +671,132 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/header.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="270" column="25" selection-start-line="270" selection-start-column="8" selection-end-line="270" selection-end-column="25" />
+        <state relative-caret-position="-8">
+          <caret line="98" column="37" lean-forward="true" selection-start-line="98" selection-start-column="37" selection-end-line="98" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="25" column="45" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="108" column="74" selection-start-line="108" selection-start-column="74" selection-end-line="108" selection-end-column="74" />
           <folding>
-            <element signature="e#14303#27074#0" />
+            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="536" column="116" selection-start-line="536" selection-start-column="116" selection-end-line="536" selection-end-column="116" />
+        <state relative-caret-position="215">
+          <caret line="102" column="42" selection-start-line="102" selection-start-column="42" selection-end-line="102" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/SelectedItemsContainer/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Contacts/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1802">
+          <caret line="1347" column="25" selection-start-line="1347" selection-start-column="25" selection-end-line="1347" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="342" selection-start-line="340" selection-end-line="342" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/DropDownButton/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="102" column="32" selection-start-line="102" selection-start-column="32" selection-end-line="102" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="15" selection-start-line="15" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="136" selection-start-line="136" selection-end-line="136" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Header/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="53" selection-start-line="53" selection-end-line="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Placehoder/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="29" column="80" selection-start-line="27" selection-start-column="24" selection-end-line="29" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-230">
+          <caret line="14" column="23" lean-forward="true" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="1360" column="35" lean-forward="true" selection-start-line="1360" selection-start-column="35" selection-end-line="1360" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+            <element signature="e#14303#27074#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Tags/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Header/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="10" column="51" selection-start-line="10" selection-start-column="51" selection-end-line="10" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="65">
+          <caret line="89" column="55" selection-start-line="89" selection-start-column="55" selection-end-line="89" selection-end-column="55" />
           <folding>
             <element signature="e#0#51#0" expanded="true" />
           </folding>

@@ -8,7 +8,7 @@ const MainHeader = (props)=>{
 
 
     return(
-        <Grid direction="row" container style={{padding: "0 25px 0 10px"}}>
+        <Grid direction="row" container style={{marginTop:20}}>
             <Grid md={6}>
                 <p>{props.title}</p>
             </Grid>

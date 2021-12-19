@@ -23,7 +23,7 @@ const PlaceholderListButton=(props)=>{
                     alignItems="center"
                     style={{height: 30, cursor: "pointer"}}
                     onClick={() => {
-                        props.setShowlistView(!props.showlistView);
+                        props.setShowlistView(props.displayListContainer.showMediaListView,!props.displayListContainer.showPlaceholderListView);
                     }}
                 >
                     {props.showlistView === true ? (

@@ -102,12 +102,11 @@ const MediaItem = (props) => {
                     (e) => {
                         // console.log("This is the target", e.target)
                         if (props.isPlaceHolder) {
-                            props.setSelectedPlaceHolder(m);
                             props.setShowMediaStats(false);
                         } else {
                             props.setShowMediaStats(true);
-                            props.setSelectedPlaceHolder(m);
                         }
+                        props.setSelectedPlaceHolder(m,props.isPlaceHolder);
                         props.setShowBackButton(true);
                     }
                 }

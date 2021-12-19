@@ -103,15 +103,15 @@ const PlaceholderItem = (props) => {
             }}
         >
             <Grid item md={3} xs={3} style={{marginLeft: 12}}>
-                {item.media_preview.indexOf(".gif") > -1 ? (
+                {item.url.indexOf(".gif") > -1 ? (
                     <GifIcon></GifIcon>
-                ) : item.media_preview.indexOf(".png") > -1 ||
-                item.media_preview.indexOf(".jpg") > -1 ||
-                item.media_preview.indexOf(".jpeg") > -1 ? (
+                ) : item.url.indexOf(".png") > -1 ||
+                item.url.indexOf(".jpg") > -1 ||
+                item.url.indexOf(".jpeg") > -1 ? (
                     <FaImage
                         style={{color: "#3871da", fontSize: 20}}
                     ></FaImage>
-                ) : item.media_preview.indexOf(".mp4") > -1 ? (
+                ) : item.url.indexOf(".mp4") > -1 ? (
                     <FaVideo></FaVideo>
                 ) : (
                     <FaFilePdf
@@ -122,21 +122,18 @@ const PlaceholderItem = (props) => {
                     className={classes.tableFields}
                     style={{marginLeft: 5}}
                 >
-                                  {item.name}
+                                  {(item.name).length>15?(item.name.slice(0,15)+' ...'):item.name}
                                 </span>
             </Grid>
             <Grid item md={1} xs={1}>
                 <img
                     style={{width: 30, height: 30}}
-                    src={item.media_preview}
+                    src={item.url}
                 ></img>
             </Grid>
             <Grid item md={1} xs={1}>
                                 <span className={classes.tableFields}>
-                                  {item.twitter_profile &&
-                                  item.twitter_profile.screen_name
-                                      ? "@" + item.twitter_profile.screen_name
-                                      : ""}
+                                  {(item.name).length>15?(item.name.slice(0,15)+' ...'):item.name}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -149,7 +146,7 @@ const PlaceholderItem = (props) => {
             </Grid>
             <Grid item md={2} xs={2}>
                                 <span className={classes.tableFields}>
-                                  {item.state}
+                                  {/*item.state*/}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -159,19 +156,19 @@ const PlaceholderItem = (props) => {
             </Grid>
             <Grid item md={2} xs={2}>
                                 <span className={classes.tableFields}>
-                                  {item.high_school}
+                                  {/*item.high_school*/}
                                 </span>
             </Grid>
             <Grid item md={1} xs={1}>
                                 <span className={classes.tableFields}>
-                                  {item.status &&
-                                  new moment(item.status.created_at).fromNow()}
+                                  {/*item.status &&
+                                  new moment(item.status.created_at).fromNow()*/}
                                 </span>
             </Grid>
             <Grid item md={1} xs={1}>
                                 <span className={classes.tableFields}>
                                   {" "}
-                                    {item.status && item.status.status}
+                                    {/*item.status && item.status.status*/}
                                 </span>
             </Grid>
         </Grid>

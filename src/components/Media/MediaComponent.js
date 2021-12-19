@@ -54,7 +54,7 @@ import PlaceholderDetails from './PlaceholderDetails';
 import PlaceholderListButton from './Placehoder/PlaceholderListButton';
 import Tag from './Tags';
 
-import PlaceholderTableList from './Media/TableList/Placeholder';
+import PlaceholderTableList from './Media/TableList/index';
 import Placeholder from './Placehoder';
 import {
     getAllContacts,
@@ -221,13 +221,11 @@ function MediaComponent(props) {
     const [gradeYearFilter, setGradeYearFilter] = useState(null);
     const [timeZoneFilter, setTimeZoneFilter] = useState(null);
     const [stateFilter, setStateFilter] = useState(null);
-    const [showlistView, setShowlistView] = useState(false);
 
     const [contacts, setContacts] = useState(null);
     const [myMediaContacts, setMyMediaContacts] = useState(null);
     const [media, setMedia] = useState(null);
     const [placeholders, setPlaceHolders] = useState(null);
-    const [selectedPlaceholder, setSelectedPlaceHolder] = useState(null);
     const [taggedMedia, setTaggedMedia] = useState(null);
     const [displayAction, setDisplayAction] = useState(null);
     const [displayTags, setDisplayTags] = useState(null);
@@ -272,6 +270,14 @@ function MediaComponent(props) {
         associateSearch: ''
     });
 
+
+    const [displayListContainer, setDisplayListContainer] = useState({
+        showPlaceholderListView: false,
+        showMediaListView: false,
+        selectedPlaceholder: null
+    });
+
+
     const dropDownButtonItemsList = [
         {
             title: "Send In Message",
@@ -315,7 +321,7 @@ function MediaComponent(props) {
     }
 
 
-    const handleSetShowBackButton=(back)=>{
+    const handleSetShowBackButton = (back) => {
         setShowBackButton(back);
     }
 
@@ -765,7 +771,7 @@ function MediaComponent(props) {
 
             const index = selectedTags.findIndex((tag) => tag.username === value.username);
 
-            if(index===-1) {
+            if (index === -1) {
                 const tempSelectedTags = [...selectedTags, value];
                 setSelectedTags(tempSelectedTags);
             }
@@ -774,7 +780,7 @@ function MediaComponent(props) {
 
             const index = selectedMediaPlaceholders.findIndex((media) => media.username === value.username);
 
-            if(index===-1) {
+            if (index === -1) {
                 const tempSelectedPlaceholders = [...selectedMediaPlaceholders, value];
                 setSelectedMediaPlaceholders(tempSelectedPlaceholders);
             }
@@ -783,7 +789,7 @@ function MediaComponent(props) {
 
             const index = selectedAssociatePlaceholders.findIndex((associate) => associate.username === value.username);
 
-            if(index===-1) {
+            if (index === -1) {
                 const tempSelectedAssociatePlaceholders = [...selectedAssociatePlaceholders, value];
                 setSelectedAssociatePlaceholders(tempSelectedAssociatePlaceholders);
             }
@@ -792,19 +798,17 @@ function MediaComponent(props) {
     };
 
 
-    const onChangeMediaDetailsSearch=(type,value)=>{
+    const onChangeMediaDetailsSearch = (type, value) => {
         if (type === 'SELECTED_TEAM_CONTACTS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,ownerSearch: value});
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, ownerSearch: value});
         } else if (type === 'SELECTED_TAGS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,tagSearch: value});
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, tagSearch: value});
         } else if (type === 'SELECTED_PLACEHOLDERS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,placeholderSearch: value});
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, placeholderSearch: value});
         } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,associateSearch: value});
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, associateSearch: value});
         }
     }
-
-
 
 
     const makeCheckBoxSelected = (index) => {
@@ -960,13 +964,32 @@ function MediaComponent(props) {
     }
 
 
-    const handleSelectedPlaceHolder = (placeholder) => {
-        setSelectedPlaceHolder(placeholder);
+    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault) => {
+        if (isPlaceholder) {
+            setDisplayListContainer({
+                ...displayListContainer,
+                showPlaceholderListView: true,
+                selectedPlaceholder: placeholder
+            })
+
+        } else if (setToDefault) {
+            setDisplayListContainer({
+                showPlaceholderListView: false,
+                showMediaListView: false,
+                selectedPlaceholder: null
+            })
+        } else {
+            setDisplayListContainer({
+                ...displayListContainer,
+                showPlaceholderListView: false,
+                selectedPlaceholder: placeholder
+            })
+        }
     }
 
 
     const handlePlaceholderClick = (m) => {
-        setSelectedPlaceHolder(m);
+        setDisplayListContainer({...displayListContainer, selectedPlaceholder: m})
     }
 
     const handlePlaceholderHover = (hover) => {
@@ -1019,8 +1042,15 @@ function MediaComponent(props) {
         setQuickAccessStartIndex(access);
     }
 
-    const handleSetShowListView = (listView) => {
-        setShowlistView(listView)
+    const handleSetShowListView = (showMediaList, showPlaceholderList) => {
+
+        setDisplayListContainer({
+            selectedPlaceholder: null,
+            showPlaceholderListView: showPlaceholderList,
+            showMediaListView: showMediaList
+        });
+        setShowBackButton(true);
+
     }
 
 
@@ -1047,9 +1077,9 @@ function MediaComponent(props) {
                     selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
                 }
             );
-        }else{
+        } else {
 
-            setDisplaySearchContainers({...displaySearchContainers,displayOwner: false}
+            setDisplaySearchContainers({...displaySearchContainers, displayOwner: false}
             );
         }
     }
@@ -1062,9 +1092,9 @@ function MediaComponent(props) {
                     selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
                 }
             );
-        }else{
+        } else {
 
-            setDisplaySearchContainers({...displaySearchContainers,selectedTagContainer: false}
+            setDisplaySearchContainers({...displaySearchContainers, selectedTagContainer: false}
             );
         }
     }
@@ -1078,8 +1108,8 @@ function MediaComponent(props) {
                     selectedPlaceholderContainer: true, selectedAssociatePlaceholderContainer: false
                 }
             );
-        }else{
-            setDisplaySearchContainers({...displaySearchContainers,selectedPlaceholderContainer: false}
+        } else {
+            setDisplaySearchContainers({...displaySearchContainers, selectedPlaceholderContainer: false}
             );
         }
     }
@@ -1092,20 +1122,20 @@ function MediaComponent(props) {
                     selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: true
                 }
             );
-        }else{
-            setDisplaySearchContainers({...displaySearchContainers,selectedAssociatePlaceholderContainer: false}
+        } else {
+            setDisplaySearchContainers({...displaySearchContainers, selectedAssociatePlaceholderContainer: false}
             );
         }
     }
 
 
     const closeAllMediaDetailsDialogs = () => {
-            setDisplaySearchContainers(
-                {
-                    displayOwner: false, selectedTagContainer: false,
-                    selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
-                }
-            );
+        setDisplaySearchContainers(
+            {
+                displayOwner: false, selectedTagContainer: false,
+                selectedPlaceholderContainer: false, selectedAssociatePlaceholderContainer: false
+            }
+        );
 
         setSearchMediaDetailsContainer({
             ownerSearch: '',
@@ -1115,6 +1145,16 @@ function MediaComponent(props) {
         })
     }
 
+
+    let MediaList = null;
+
+    if (displayListContainer.showMediaListView) {
+        MediaList = media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
+            .map((item) => {
+                return {name: item.name, url: item.urls.thumb, date: item.created_at}
+            });
+
+    }
 
     return (
         <div
@@ -1127,7 +1167,7 @@ function MediaComponent(props) {
                 paddingLeft: 30,
                 paddingRight: 30,
             }}
-            onClick={(e)=>{
+            onClick={(e) => {
                 closeAllMediaDetailsDialogs();
             }}
         >
@@ -1146,7 +1186,7 @@ function MediaComponent(props) {
                 showDrawer={showDrawer}
                 setShowBackButton={handleSetShowBackButton}
                 showBackButton={showBackButton}
-
+                handleSetShowListView={handleSetShowListView}
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
@@ -1188,7 +1228,7 @@ function MediaComponent(props) {
                             id={"messageDetailScrollPublished"}
                             hideCheckBox={null}
                             hideStats={null}
-                            selectedPlaceholder={selectedPlaceholder}
+                            selectedPlaceholder={displayListContainer.selectedPlaceholder}
                             removeDataFromFilter={removeDataFromFilter}
                             selectedTeamContacts={selectedTeamContacts}
                             showHover={false}
@@ -1216,36 +1256,45 @@ function MediaComponent(props) {
                         >
 
                             {
-                                selectedPlaceholder === null || props.message ?
+                                displayListContainer.selectedPlaceholder === null || props.message ?
                                     (
-                                        <Media
-                                            CustomToggle={CustomToggle}
-                                            setViewMoreQuickAccess={handleViewMoreQuickAccess}
-                                            setQuickAccessEndIndex={handleQuickAccessEndIndex}
-                                            setQuickAccessStartIndex={handleQuickAccessStartIndex}
-                                            selectedPlaceholder={selectedPlaceholder}
-                                            message={props.message}
-                                            media={media}
-                                            viewMoreQuickAccess={viewMoreQuickAccess}
-                                            quickAccessEndIndex={quickAccessEndIndex}
-                                            handlePlaceholderClick={handlePlaceholderClick}
-                                            setPlacehoderHover={handlePlaceholderHover}
-                                            placeholderHover={placeholderHover}
-                                            isPlaceHolder={false}
-                                            selectedCheckBoxes={selectedCheckBoxes}
-                                            mediaHover={mediaHover}
-                                            makeMediaSelected={props.makeMediaSelected}
-                                            setMediaHover={handleMediaHover}
-                                            setDisplayAction={handleMediaDisplayAction}
-                                            makeCheckBoxSelected={makeCheckBoxSelected}
-                                            setShowMediaStats={handleShowMediaStats}
-                                            setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                            showHover={true}
-                                            setShowBackButton={handleSetShowBackButton}
-                                            showBackButton={showBackButton}
-                                            setLightboxVideo={handleSetLightboxVideo}
-                                            setLightboxPicture={handleSetLightboxPicture}
-                                        />
+                                        displayListContainer.showMediaListView ? (
+                                            <Fragment>
+                                                <ItemMainHeader title={"Media"} dropdown_item_title={"Last Modified"}
+                                                                CustomToggle={CustomToggle}/>
+                                                <PlaceholderTableList list={MediaList}
+                                                                      handleScroll={handleScroll}
+                                                                      setSelectedPlaceHolder={handleSelectedPlaceHolder}/>
+                                            </Fragment>
+                                            ) :
+                                            <Media
+                                                CustomToggle={CustomToggle}
+                                                setViewMoreQuickAccess={handleViewMoreQuickAccess}
+                                                setQuickAccessEndIndex={handleQuickAccessEndIndex}
+                                                setQuickAccessStartIndex={handleQuickAccessStartIndex}
+                                                selectedPlaceholder={displayListContainer.selectedPlaceholder}
+                                                message={props.message}
+                                                media={media}
+                                                viewMoreQuickAccess={viewMoreQuickAccess}
+                                                quickAccessEndIndex={quickAccessEndIndex}
+                                                handlePlaceholderClick={handlePlaceholderClick}
+                                                setPlacehoderHover={handlePlaceholderHover}
+                                                placeholderHover={placeholderHover}
+                                                isPlaceHolder={false}
+                                                selectedCheckBoxes={selectedCheckBoxes}
+                                                mediaHover={mediaHover}
+                                                makeMediaSelected={props.makeMediaSelected}
+                                                setMediaHover={handleMediaHover}
+                                                setDisplayAction={handleMediaDisplayAction}
+                                                makeCheckBoxSelected={makeCheckBoxSelected}
+                                                setShowMediaStats={handleShowMediaStats}
+                                                setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                                showHover={true}
+                                                setShowBackButton={handleSetShowBackButton}
+                                                showBackButton={showBackButton}
+                                                setLightboxVideo={handleSetLightboxVideo}
+                                                setLightboxPicture={handleSetLightboxPicture}
+                                            />
                                     )
                                     : (
                                         <PlaceholderDetails
@@ -1253,7 +1302,7 @@ function MediaComponent(props) {
                                             setPlacehoderHover={handlePlaceholderHover}
                                             placeholderHover={placeholderHover}
                                             isPlaceHolder={true}
-                                            item={selectedPlaceholder}
+                                            item={displayListContainer.selectedPlaceholder}
                                             selectedCheckBoxes={selectedCheckBoxes}
                                             mediaHover={mediaHover}
                                             makeMediaSelected={props.makeMediaSelected}
@@ -1268,10 +1317,10 @@ function MediaComponent(props) {
 
                                     )}
 
-                            <PlaceholderListButton
+                            {/*<PlaceholderListButton
                                 setShowlistView={handleSetShowListView}
-                                showlistView={showlistView}
-                            />
+                                displayListContainer={displayListContainer}
+                            />*/}
 
 
                             <Placeholder
@@ -1296,14 +1345,13 @@ function MediaComponent(props) {
                                 makeCheckBoxSelected={makeCheckBoxSelected}
                                 setShowMediaStats={handleShowMediaStats}
                                 setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                showlistView={showlistView}
+                                showlistView={displayListContainer.showPlaceholderListView}
                                 message={props.message}
                                 showHover={true}
                                 setShowBackButton={handleSetShowBackButton}
                                 showBackButton={showBackButton}
                                 setLightboxVideo={handleSetLightboxVideo}
                                 setLightboxPicture={handleSetLightboxPicture}
-
                             />
 
 

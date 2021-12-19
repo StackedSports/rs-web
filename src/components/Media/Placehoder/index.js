@@ -1,20 +1,31 @@
 import {Fragment} from "react";
 import ItemMainHeader from "../Media/Header";
-import PlaceholderTableList from "../Media/TableList/Placeholder";
+import PlaceholderTableList from "../Media/TableList/index";
 import {Grid} from "@material-ui/core";
 import MediaItem from "../Media/Item/item";
 import React from "react";
 
 
-const Placeholder=(props)=>{
-    const placeholders=props.placeholders;
-    return(
+const Placeholder = (props) => {
+    console.log('placeholders = ',props.placeholders)
+
+    let placeholders=null;
+    if(props.showlistView && props.placeholders){
+        placeholders=(props.placeholders).filter((item)=>item.name && item.media_preview)
+            .map((item)=>{ return {name:item.name,url:item.media_preview,date:item.created_at}});
+    }else{
+        placeholders=props.placeholders;
+    }
+    console.log('placeholders = ',placeholders)
+
+
+    return (
         <Fragment>
             <ItemMainHeader title={"Placeholders"} dropdown_item_title={"Last Modified"}
                             CustomToggle={props.CustomToggle}/>
             {props.showlistView === true && props.message === null ? (
                     <PlaceholderTableList
-                        placeholders={placeholders}
+                        list={placeholders}
                         handleScroll={props.handleScroll}
                         setSelectedPlaceHolder={props.handleSelectedPlaceHolder}/>
                 ) :
