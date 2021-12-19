@@ -265,6 +265,13 @@ function MediaComponent(props) {
     });
 
 
+    const [searchMediaDetailsContainer, setSearchMediaDetailsContainer] = useState({
+        ownerSearch: '',
+        tagSearch: '',
+        placeholderSearch: '',
+        associateSearch: ''
+    });
+
     const dropDownButtonItemsList = [
         {
             title: "Send In Message",
@@ -755,20 +762,50 @@ function MediaComponent(props) {
             console.log(selectedTeamContacts);
 
         } else if (type === 'SELECTED_TAGS') {
-            const tempSelectedTags = [...selectedTags, value];
-            setSelectedTags(tempSelectedTags);
+
+            const index = selectedTags.findIndex((tag) => tag.username === value.username);
+
+            if(index===-1) {
+                const tempSelectedTags = [...selectedTags, value];
+                setSelectedTags(tempSelectedTags);
+            }
 
         } else if (type === 'SELECTED_PLACEHOLDERS') {
-            const tempSelectedPlaceholders = [...selectedMediaPlaceholders, value];
-            setSelectedMediaPlaceholders(tempSelectedPlaceholders);
+
+            const index = selectedMediaPlaceholders.findIndex((media) => media.username === value.username);
+
+            if(index===-1) {
+                const tempSelectedPlaceholders = [...selectedMediaPlaceholders, value];
+                setSelectedMediaPlaceholders(tempSelectedPlaceholders);
+            }
 
         } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
-            const tempSelectedAssociatePlaceholders = [...selectedAssociatePlaceholders, value];
-            setSelectedAssociatePlaceholders(tempSelectedAssociatePlaceholders);
 
+            const index = selectedAssociatePlaceholders.findIndex((associate) => associate.username === value.username);
+
+            if(index===-1) {
+                const tempSelectedAssociatePlaceholders = [...selectedAssociatePlaceholders, value];
+                setSelectedAssociatePlaceholders(tempSelectedAssociatePlaceholders);
+            }
         }
 
     };
+
+
+    const onChangeMediaDetailsSearch=(type,value)=>{
+        if (type === 'SELECTED_TEAM_CONTACTS') {
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,ownerSearch: value});
+        } else if (type === 'SELECTED_TAGS') {
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,tagSearch: value});
+        } else if (type === 'SELECTED_PLACEHOLDERS') {
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,placeholderSearch: value});
+        } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
+            setSearchMediaDetailsContainer({...searchMediaDetailsContainer,associateSearch: value});
+        }
+    }
+
+
+
 
     const makeCheckBoxSelected = (index) => {
         if (selectedCheckBoxes.indexOf(index) > -1) {
@@ -1070,6 +1107,12 @@ function MediaComponent(props) {
                 }
             );
 
+        setSearchMediaDetailsContainer({
+            ownerSearch: '',
+            tagSearch: '',
+            placeholderSearch: '',
+            associateSearch: ''
+        })
     }
 
 
@@ -1152,12 +1195,15 @@ function MediaComponent(props) {
                             setSelectedTagContainer={handleSetSelectedTagContainer}
                             selectedTags={selectedTags}
                             taggedMedia={taggedMedia}
+                            myMediaContacts={myMediaContacts}
                             setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
                             selectedMediaPlaceholders={selectedMediaPlaceholders}
                             placeholders={placeholders}
                             setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
                             selectedAssociatePlaceholders={selectedAssociatePlaceholders}
                             displaySearchContainers={displaySearchContainers}
+                            onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
+                            searchMediaDetailsContainer={searchMediaDetailsContainer}
                         />
                         :
                         <div

@@ -114,7 +114,13 @@ const DropDownItem = (props) => {
                 ></img>
                 :
                 <LocalOfferOutlinedIcon
-                    style={{color: "#3871DA"}}
+                    style={{
+                        color: "#3871DA",
+                        width: 25,
+                        height: 25,
+                        borderRadius: 20,
+                        marginLeft: 12
+                    }}
                 ></LocalOfferOutlinedIcon>
             }
             <p

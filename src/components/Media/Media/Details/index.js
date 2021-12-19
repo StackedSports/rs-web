@@ -50,14 +50,12 @@ const useStyles = makeStyles({
     },
     dropdownHidden: {
         display: "none",
-        position: "absolute",
         backgroundColor: "white",
         minWidth: 230,
         boxShadow: "0px 8px 16px 0px rgba(0, 0, 0, 0.2)",
         border: "1px solid #d5d5d5",
         borderRadius: 4,
         // padding: 5,
-        marginLeft: -240,
         zIndex: 415,
         // maxHeight: "60vh",
         // overflowY: "scroll",
@@ -98,10 +96,11 @@ const MediaDetails = (props) => {
         taggedMedia = props.taggedMedia,
         selectedMediaPlaceholders = props.selectedMediaPlaceholders,
         placeholders = props.placeholders,
+        myMediaContacts = props.myMediaContacts,
         selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
 
-    console.log('displayOwner =  ', props.displaySearchContainers)
+    console.log('setMyMediaContacts =  ', props.searchMediaDetailsContainer)
 
     return (
         <Grid
@@ -111,7 +110,7 @@ const MediaDetails = (props) => {
                 border: "1px solid #d2d2d2",
                 borderRadius: 4,
                 marginTop: 16,
-                position:'relative',
+                position: 'relative',
                 height: "auto",
             }}
         >
@@ -172,7 +171,7 @@ const MediaDetails = (props) => {
                                         removeDataFromFilter={props.removeDataFromFilter}/>
                                 );
                             })}
-                            <div class="dropdownMedia">
+                            <div class="dropdownMedia" style={{position: 'relative'}}>
                                 <input
                                     type="text"
                                     style={{
@@ -189,102 +188,61 @@ const MediaDetails = (props) => {
                                     }}
                                     placeholder="+ Add Owner"
                                 ></input>
+
                                 <div
                                     className={classes.dropdownHidden}
                                     style={{
                                         display: props.displaySearchContainers.displayOwner ? "block" : "none",
-                                        height: '35%',
-                                        position:'absolute',
-                                        left:'40vw',
-                                        overflowX:'hidden',
+                                        height: '35vh',
+                                        position: 'absolute',
+                                        left: 1,
+                                        top: '-26vh',
+                                        overflowX: 'hidden',
                                         overflowY: 'scroll'
                                     }}
                                 >
+                                    <Grid container direction="row" justify="center">
+                                        <input
+                                            type="text"
+                                            style={{
+                                                width: "100%",
+                                                border: "1px solid #ebebeb",
+                                                borderRadius: 4,
+                                                height: 40,
+                                                paddingLeft: 4,
+                                            }}
+                                            onChange={(e) => {
+                                                props.onChangeMediaDetailsSearch("SELECTED_TEAM_CONTACTS", e.target.value);
+                                                e.stopPropagation();
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            placeholder="Search"
+                                            value={props.searchMediaDetailsContainer.ownerSearch}
+                                        ></input>
+                                    </Grid>
                                     {teamContacts &&
-                                    teamContacts.map((type, index) => {
-                                        return (
-                                            type && type.twitter_profile && type.twitter_profile.screen_name &&
-                                            <DropDownItem
-                                                addDataToFilter={props.addDataToFilter}
-                                                username={type.twitter_profile.screen_name}
-                                                url={type.twitter_profile.profile_image}
-                                                setDisplay={props.setDisplayOwner}
-                                                type={"SELECTED_TEAM_CONTACTS"}/>
-                                        );
-                                    })}
+                                    teamContacts
+                                        .filter((type) => ((type && type.twitter_profile && type.twitter_profile.screen_name &&
+                                                (type.twitter_profile.screen_name).toLowerCase()
+                                                    .includes((props.searchMediaDetailsContainer.ownerSearch).toLowerCase())) ||
+                                            props.searchMediaDetailsContainer.ownerSearch.length === 0
+                                        ))
+                                        .map((type, index) => {
+                                            return (
+                                                type && type.twitter_profile && type.twitter_profile.screen_name &&
+                                                <DropDownItem
+                                                    addDataToFilter={props.addDataToFilter}
+                                                    username={type.twitter_profile.screen_name}
+                                                    url={type.twitter_profile.profile_image}
+                                                    setDisplay={props.setDisplayOwner}
+                                                    type={"SELECTED_TEAM_CONTACTS"}/>
+                                            );
+                                        })}
                                 </div>
-                                <div
-                                    className={classes.dropdownHidden}
-                                    style={{
-                                        display: props.displaySearchContainers.selectedTagContainer ? "block" : "none",
-                                        height: '35%',
-                                        position:'absolute',
-                                        left:'40vw',
-                                        overflowX:'hidden',
-                                        overflowY: 'scroll'
-                                    }}
-                                >
-                                    {taggedMedia &&
-                                    taggedMedia.map((tag, index) => {
-                                        return (
-                                            tag && tag.name &&
-                                            <DropDownItem
-                                                addDataToFilter={props.addDataToFilter}
-                                                username={tag.name}
-                                                url={''}
-                                                setDisplay={props.setSelectedTagContainer}
-                                                type={"SELECTED_TAGS"}/>
-                                        );
-                                    })}
-                                </div>
-                                <div
-                                    className={classes.dropdownHidden}
-                                    style={{
-                                        display: props.displaySearchContainers.selectedPlaceholderContainer ? "block" : "none",
-                                        height: '35%',
-                                        position:'absolute',
-                                        left:'40vw',
-                                        overflowX:'hidden',
-                                        overflowY: 'scroll'
-                                    }}
-                                >
-                                    {placeholders &&
-                                    placeholders.map((placeholder, index) => {
-                                        return (
-                                            placeholder && placeholder.name &&
-                                            <DropDownItem
-                                                addDataToFilter={props.addDataToFilter}
-                                                username={placeholder.name}
-                                                url={placeholder.media_preview}
-                                                setDisplay={props.setSelectedMediaPlaceholders}
-                                                type={"SELECTED_PLACEHOLDERS"}/>
-                                        );
-                                    })}
-                                </div>
-                                <div
-                                    className={classes.dropdownHidden}
-                                    style={{
-                                        display: props.displaySearchContainers.selectedAssociatePlaceholderContainer ? "block" : "none",
-                                        height: '35%',
-                                        position:'absolute',
-                                        left:'40vw',
-                                        overflowX:'hidden',
-                                        overflowY: 'scroll'
-                                    }}
-                                >
-                                    {placeholders &&
-                                    placeholders.map((placeholder, index) => {
-                                        return (
-                                            placeholder && placeholder.name &&
-                                            <DropDownItem
-                                                addDataToFilter={props.addDataToFilter}
-                                                username={placeholder.name}
-                                                url={placeholder.media_preview}
-                                                setDisplay={props.setSelectedAssociatePlaceholderContainer}
-                                                type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
-                                        );
-                                    })}
-                                </div>
+
+
                                 {" "}
                             </div>
                         </Grid>
@@ -317,7 +275,7 @@ const MediaDetails = (props) => {
                                         removeDataFromFilter={props.removeDataFromFilter}/>
                                 );
                             })}
-                            <div class="dropdownMedia">
+                            <div class="dropdownMedia" style={{position: 'relative'}}>
                                 <input
                                     type="text"
                                     style={{
@@ -335,6 +293,58 @@ const MediaDetails = (props) => {
                                     }}
                                     placeholder="+ Add Tag"
                                 ></input>
+                                <div
+                                    className={classes.dropdownHidden}
+                                    style={{
+                                        display: props.displaySearchContainers.selectedTagContainer ? "block" : "none",
+                                        height: '35vh',
+                                        position: 'absolute',
+                                        top: '-26vh',
+                                        left: 1,
+                                        overflowX: 'hidden',
+                                        overflowY: 'scroll'
+                                    }}
+                                >
+                                    <Grid container direction="row" justify="center">
+                                        <input
+                                            type="text"
+                                            style={{
+                                                width: "100%",
+                                                border: "1px solid #ebebeb",
+                                                borderRadius: 4,
+                                                height: 40,
+                                                paddingLeft: 4,
+                                            }}
+                                            onChange={(e) => {
+                                                props.onChangeMediaDetailsSearch("SELECTED_TAGS", e.target.value);
+                                                e.stopPropagation();
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            placeholder="Search"
+                                            value={props.searchMediaDetailsContainer.tagSearch}
+                                        ></input>
+                                    </Grid>
+                                    {taggedMedia &&
+                                    taggedMedia
+                                        .filter((tag) => ((tag && tag.name &&
+                                                (tag.name).toLowerCase()
+                                                    .includes((props.searchMediaDetailsContainer.tagSearch).toLowerCase())) ||
+                                            props.searchMediaDetailsContainer.tagSearch.length === 0
+                                        ))
+                                        .map((tag, index) => {
+                                            return (
+                                                tag && tag.name &&
+                                                <DropDownItem
+                                                    addDataToFilter={props.addDataToFilter}
+                                                    username={tag.name}
+                                                    url={''}
+                                                    setDisplay={props.setSelectedTagContainer}
+                                                    type={"SELECTED_TAGS"}/>
+                                            );
+                                        })}
+                                </div>
                                 {" "}
                             </div>
                         </Grid>
@@ -367,7 +377,7 @@ const MediaDetails = (props) => {
                                             removeDataFromFilter={props.removeDataFromFilter}/>
                                     );
                                 })}
-                                <div class="dropdownMedia">
+                                <div class="dropdownMedia" style={{position: 'relative'}}>
                                     <input
                                         type="text"
                                         style={{
@@ -384,7 +394,59 @@ const MediaDetails = (props) => {
                                         }}
                                         placeholder="+ Add Media placeholder or personalized graphics"
                                     ></input>
-
+                                    <div
+                                        className={classes.dropdownHidden}
+                                        style={{
+                                            display: props.displaySearchContainers.selectedPlaceholderContainer ? "block" : "none",
+                                            height: '35vh',
+                                            top: '-26vh',
+                                            position: 'absolute',
+                                            left: 1,
+                                            overflowX: 'hidden',
+                                            overflowY: 'scroll'
+                                        }}
+                                    >
+                                        <Grid container direction="row" justify="center">
+                                            <input
+                                                type="text"
+                                                style={{
+                                                    width: "100%",
+                                                    border: "1px solid #ebebeb",
+                                                    borderRadius: 4,
+                                                    height: 40,
+                                                    paddingLeft: 4,
+                                                }}
+                                                onChange={(e) => {
+                                                    props.onChangeMediaDetailsSearch("SELECTED_PLACEHOLDERS", e.target.value);
+                                                    e.stopPropagation();
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                placeholder="Search"
+                                                value={props.searchMediaDetailsContainer.placeholderSearch}
+                                            ></input>
+                                        </Grid>
+                                        {placeholders &&
+                                        placeholders
+                                            .filter((placeholder) => ((
+                                                    placeholder && placeholder.name &&
+                                                    (placeholder.name).toLowerCase()
+                                                        .includes((props.searchMediaDetailsContainer.placeholderSearch).toLowerCase())) ||
+                                                props.searchMediaDetailsContainer.placeholderSearch.length === 0
+                                            ))
+                                            .map((placeholder, index) => {
+                                                return (
+                                                    placeholder && placeholder.name &&
+                                                    <DropDownItem
+                                                        addDataToFilter={props.addDataToFilter}
+                                                        username={placeholder.name}
+                                                        url={placeholder.media_preview}
+                                                        setDisplay={props.setSelectedMediaPlaceholders}
+                                                        type={"SELECTED_PLACEHOLDERS"}/>
+                                                );
+                                            })}
+                                    </div>
 
                                     {" "}
                                 </div>
@@ -417,7 +479,7 @@ const MediaDetails = (props) => {
                                             removeDataFromFilter={props.removeDataFromFilter}/>
                                     );
                                 })}
-                                <div class="dropdownMedia">
+                                <div class="dropdownMedia" style={{position: 'relative'}}>
                                     <input
                                         type="text"
                                         style={{
@@ -433,6 +495,60 @@ const MediaDetails = (props) => {
                                         }}
                                         placeholder="+ Associate to Contact"
                                     ></input>
+
+                                    <div
+                                        className={classes.dropdownHidden}
+                                        style={{
+                                            display: props.displaySearchContainers.selectedAssociatePlaceholderContainer ? "block" : "none",
+                                            height: '35vh',
+                                            position: 'absolute',
+                                            left: 1,
+                                            top: '-26vh',
+                                            overflowX: 'hidden',
+                                            overflowY: 'scroll'
+                                        }}
+                                    >
+                                        <Grid container direction="row" justify="center">
+                                            <input
+                                                type="text"
+                                                style={{
+                                                    width: "100%",
+                                                    border: "1px solid #ebebeb",
+                                                    borderRadius: 4,
+                                                    height: 40,
+                                                    paddingLeft: 4,
+                                                }}
+                                                onChange={(e) => {
+                                                    props.onChangeMediaDetailsSearch("SELECTED_ASSOCIATE_PLACEHOLDER", e.target.value);
+                                                    e.stopPropagation();
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                placeholder="Search"
+                                                value={props.searchMediaDetailsContainer.associateSearch}
+                                            ></input>
+                                        </Grid>
+                                        {myMediaContacts &&
+                                        myMediaContacts
+                                            .filter((contact) => ((
+                                                    contact.first_name && contact.last_name &&
+                                                    ((contact.first_name).toLowerCase()+' '+(contact.last_name).toLowerCase())
+                                                        .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
+                                                props.searchMediaDetailsContainer.associateSearch.length === 0
+                                            ))
+                                            .map((contact, index) => {
+                                            return (
+                                                contact.first_name && contact.last_name &&
+                                                <DropDownItem
+                                                    addDataToFilter={props.addDataToFilter}
+                                                    username={contact.first_name + ' ' + contact.last_name}
+                                                    url={contact.url}
+                                                    setDisplay={props.setSelectedAssociatePlaceholderContainer}
+                                                    type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
+                                            );
+                                        })}
+                                    </div>
                                     {" "}
                                 </div>
                             </Grid>
