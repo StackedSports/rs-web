@@ -964,7 +964,8 @@ function MediaComponent(props) {
     }
 
 
-    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault) => {
+    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault,isFromBackButton) => {
+        console.log('handleSelectedPlaceHolder = ',isFromBackButton,' ',displayListContainer)
         if (isPlaceholder) {
             setDisplayListContainer({
                 ...displayListContainer,
@@ -978,6 +979,13 @@ function MediaComponent(props) {
                 showMediaListView: false,
                 selectedPlaceholder: null
             })
+        }else if(isFromBackButton){
+            const placehodlerListView=displayListContainer.showMediaListView?true:false;
+            setDisplayListContainer({
+                ...displayListContainer,
+                showPlaceholderListView:placehodlerListView,
+                selectedPlaceholder: null
+            })
         } else {
             setDisplayListContainer({
                 ...displayListContainer,
@@ -988,7 +996,47 @@ function MediaComponent(props) {
     }
 
 
+
+    const handleSelectedPlaceHolderListView = (id, isPlaceholder) => {
+        console.log('handleSelectedPlaceHolderListView = ',id,'   ',isPlaceholder)
+        if (isPlaceholder) {
+            const index=placeholders.findIndex((item)=>item.id===id);
+
+            if(index!==-1){
+                setShowBackButton(true);
+                setShowMediaStats(false);
+                if(displayListContainer.showMediaListView){
+                    setDisplayListContainer({
+                        ...displayListContainer,
+                        selectedPlaceholder: placeholders[index]
+                    })
+                }else{
+                    setDisplayListContainer({
+                        showPlaceholderListView: true,
+                        showMediaListView: false,
+                        selectedPlaceholder: placeholders[index]
+                    })
+                }
+
+            }
+
+        }else {
+            const index=media.findIndex((item)=>item.id===id);
+
+            if(index!==-1){
+                setShowBackButton(true);
+                setShowMediaStats(true);
+                setDisplayListContainer({
+                    ...displayListContainer,
+                    selectedPlaceholder: media[index]
+                })
+            }
+        }
+    }
+
     const handlePlaceholderClick = (m) => {
+
+        console.log('handlePlaceholderClick = ',handlePlaceholderClick)
         setDisplayListContainer({...displayListContainer, selectedPlaceholder: m})
     }
 
@@ -1044,6 +1092,7 @@ function MediaComponent(props) {
 
     const handleSetShowListView = (showMediaList, showPlaceholderList) => {
 
+        console.log('handleSetShowListView = ',showMediaList, showPlaceholderList)
         setDisplayListContainer({
             selectedPlaceholder: null,
             showPlaceholderListView: showPlaceholderList,
@@ -1147,13 +1196,15 @@ function MediaComponent(props) {
 
     let MediaList = null;
 
-    if (displayListContainer.showMediaListView) {
+    if (displayListContainer.showMediaListView && media) {
         MediaList = media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
             .map((item) => {
-                return {name: item.name, url: item.urls.thumb, date: item.created_at}
+                return {name: item.name, url: item.urls.thumb, date: item.created_at,id:item.id}
             });
 
     }
+
+    console.log('handleSelectedPlaceHolder = ',displayListContainer)
 
     return (
         <div
@@ -1187,7 +1238,7 @@ function MediaComponent(props) {
                 showBackButton={showBackButton}
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
-
+                showListButton={displayListContainer.selectedPlaceholder?false:true}
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
@@ -1265,7 +1316,8 @@ function MediaComponent(props) {
                                                                 CustomToggle={CustomToggle}/>
                                                 <PlaceholderTableList list={MediaList}
                                                                       handleScroll={handleScroll}
-                                                                      setSelectedPlaceHolder={handleSelectedPlaceHolder}/>
+                                                                      isPlaceholder={false}
+                                                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
                                             </Fragment>
                                             ) :
                                             <Media
@@ -1346,6 +1398,7 @@ function MediaComponent(props) {
                                 makeCheckBoxSelected={makeCheckBoxSelected}
                                 setShowMediaStats={handleShowMediaStats}
                                 setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
                                 showlistView={displayListContainer.showPlaceholderListView}
                                 message={props.message}
                                 showHover={true}

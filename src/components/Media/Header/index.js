@@ -50,7 +50,7 @@ const Header=(props)=>{
                                    (e) => {
 
                                        props.setShowBackButton(false);
-                                       props.setSelectedPlaceHolder(null,false,true);
+                                       props.setSelectedPlaceHolder(null,false,false,true);
                                        props.setShowMediaStats(false);
                                    }}
 
@@ -80,10 +80,14 @@ const Header=(props)=>{
 
 
 
-                    <PlaceholderListButton
+                    {
+                        props.showListButton &&
+                        <PlaceholderListButton
                                 setShowlistView={props.setShowlistView}
                                 displayListContainer={props.displayListContainer}
                             />
+
+                    }
                     {props.message ? (
                         <div></div>
                     ) : (

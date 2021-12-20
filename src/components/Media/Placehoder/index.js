@@ -12,7 +12,7 @@ const Placeholder = (props) => {
     let placeholders=null;
     if(props.showlistView && props.placeholders){
         placeholders=(props.placeholders).filter((item)=>item.name && item.media_preview)
-            .map((item)=>{ return {name:item.name,url:item.media_preview,date:item.created_at}});
+            .map((item)=>{ return {name:item.name,url:item.media_preview,date:item.created_at,id:item.id}});
     }else{
         placeholders=props.placeholders;
     }
@@ -27,7 +27,8 @@ const Placeholder = (props) => {
                     <PlaceholderTableList
                         list={placeholders}
                         handleScroll={props.handleScroll}
-                        setSelectedPlaceHolder={props.handleSelectedPlaceHolder}/>
+                        isPlaceholder={true}
+                        setSelectedPlaceHolder={props.setSelectedPlaceHolderListView}/>
                 ) :
                 (
                     <Grid container>

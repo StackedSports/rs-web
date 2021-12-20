@@ -88,7 +88,7 @@ const PlaceholderItem = (props) => {
     return (
         <Grid
             onClick={() => {
-                props.setSelectedPlaceHolder(item);
+                props.setSelectedPlaceHolder(item.id,props.isPlaceholder);
             }}
             container
             direction="row"
