@@ -4,6 +4,7 @@ import PlaceholderTableList from "../Media/TableList/index";
 import {Grid} from "@material-ui/core";
 import MediaItem from "../Media/Item/item";
 import React from "react";
+import PlaceholderItem from "../Media/TableList/item";
 
 
 const Placeholder = (props) => {
@@ -28,6 +29,8 @@ const Placeholder = (props) => {
                         list={placeholders}
                         handleScroll={props.handleScroll}
                         isPlaceholder={true}
+                        setLightboxVideo={props.setLightboxVideo}
+                        setLightboxPicture={props.setLightboxPicture}
                         setSelectedPlaceHolder={props.setSelectedPlaceHolderListView}/>
                 ) :
                 (

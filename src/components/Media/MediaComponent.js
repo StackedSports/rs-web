@@ -845,7 +845,7 @@ function MediaComponent(props) {
 
     useEffect(async () => {
         if (localStorage.getItem("user")) {
-            // getMyContacts();
+            getMyContacts();
             getMyMedia();
             getMyPlaceholders();
             getTaggedMedia();
@@ -1204,7 +1204,7 @@ function MediaComponent(props) {
 
     }
 
-    console.log('handleSelectedPlaceHolder = ',displayListContainer)
+    console.log('handleSelectedPlaceHolder = ',media,'     contacts = ',contacts)
 
     return (
         <div
@@ -1296,6 +1296,8 @@ function MediaComponent(props) {
                             displaySearchContainers={displaySearchContainers}
                             onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
                             searchMediaDetailsContainer={searchMediaDetailsContainer}
+                            contacts={contacts}
+
                         />
                         :
                         <div
@@ -1317,6 +1319,8 @@ function MediaComponent(props) {
                                                 <PlaceholderTableList list={MediaList}
                                                                       handleScroll={handleScroll}
                                                                       isPlaceholder={false}
+                                                                      setLightboxPicture={handleSetLightboxPicture}
+                                                                      setLightboxVideo={handleSetLightboxVideo}
                                                                       setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
                                             </Fragment>
                                             ) :

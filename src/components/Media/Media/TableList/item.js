@@ -4,6 +4,7 @@ import React from "react";
 
 import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
+import {isImage, isVideo} from '../../../../utils/FileUtils';
 
 
 const useStyles = makeStyles({
@@ -125,7 +126,14 @@ const PlaceholderItem = (props) => {
                                   {(item.name).length>15?(item.name.slice(0,15)+' ...'):item.name}
                                 </span>
             </Grid>
-            <Grid item md={1} xs={1}>
+            <Grid item md={1} xs={1} onClick={(e)=>{
+                    if (isVideo(item.url)) {
+                        props.setLightboxVideo(item.url);
+                    } else  {
+                        props.setLightboxPicture(item.url);
+                    }
+                e.stopPropagation();
+            }}>
                 <img
                     style={{width: 30, height: 30}}
                     src={item.url}

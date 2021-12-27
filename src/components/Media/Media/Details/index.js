@@ -1,7 +1,7 @@
 import {Grid, makeStyles} from "@material-ui/core";
 import MediaItem from "../Item/item";
 import ClearIcon from "@material-ui/icons/Clear";
-import React from "react";
+import React, {Fragment} from "react";
 
 
 import MediaInfo from './info';
@@ -97,12 +97,14 @@ const MediaDetails = (props) => {
         selectedMediaPlaceholders = props.selectedMediaPlaceholders,
         placeholders = props.placeholders,
         myMediaContacts = props.myMediaContacts,
+        contacts=props.contacts,
         selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
 
-    console.log('setMyMediaContacts =  ', props.selectedPlaceholder)
+    console.log('setMyMediaContacts =  ', contacts)
 
     return (
+        <div style={{height:'67vh'}}>
         <Grid
             container
             direction="row"
@@ -111,7 +113,7 @@ const MediaDetails = (props) => {
                 borderRadius: 4,
                 marginTop: 16,
                 position: 'relative',
-                height: "auto",
+                overflowX:'hidden',
             }}
         >
             {/* <Grid item md={4} xs={4}> */}
@@ -201,7 +203,8 @@ const MediaDetails = (props) => {
                                         overflowY: 'scroll'
                                     }}
                                 >
-                                    <Grid container direction="row" justify="center">
+                                    <Fragment style={{position:'relative'}}>
+                                    <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
                                         <input
                                             type="text"
                                             style={{
@@ -240,6 +243,7 @@ const MediaDetails = (props) => {
                                                     type={"SELECTED_TEAM_CONTACTS"}/>
                                             );
                                         })}
+                                    </Fragment>
                                 </div>
 
 
@@ -305,7 +309,8 @@ const MediaDetails = (props) => {
                                         overflowY: 'scroll'
                                     }}
                                 >
-                                    <Grid container direction="row" justify="center">
+                                    <Fragment style={{position:'relative'}}>
+                                    <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
                                         <input
                                             type="text"
                                             style={{
@@ -344,6 +349,7 @@ const MediaDetails = (props) => {
                                                     type={"SELECTED_TAGS"}/>
                                             );
                                         })}
+                                    </Fragment>
                                 </div>
                                 {" "}
                             </div>
@@ -406,7 +412,8 @@ const MediaDetails = (props) => {
                                             overflowY: 'scroll'
                                         }}
                                     >
-                                        <Grid container direction="row" justify="center">
+                                        <Fragment style={{position:'relative'}}>
+                                        <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
                                             <input
                                                 type="text"
                                                 style={{
@@ -446,6 +453,7 @@ const MediaDetails = (props) => {
                                                         type={"SELECTED_PLACEHOLDERS"}/>
                                                 );
                                             })}
+                                        </Fragment>
                                     </div>
 
                                     {" "}
@@ -508,7 +516,8 @@ const MediaDetails = (props) => {
                                             overflowY: 'scroll'
                                         }}
                                     >
-                                        <Grid container direction="row" justify="center">
+                                        <Fragment style={{position:'relative'}}>
+                                        <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
                                             <input
                                                 type="text"
                                                 style={{
@@ -529,25 +538,26 @@ const MediaDetails = (props) => {
                                                 value={props.searchMediaDetailsContainer.associateSearch}
                                             ></input>
                                         </Grid>
-                                        {myMediaContacts &&
-                                        myMediaContacts
+                                        { contacts &&
+                                        contacts
                                             .filter((contact) => ((
-                                                    contact.first_name && contact.last_name &&
-                                                    ((contact.first_name).toLowerCase()+' '+(contact.last_name).toLowerCase())
+                                                    contact.twitter_profile && contact.twitter_profile.screen_name &&
+                                                    ((contact.twitter_profile.screen_name).toLowerCase())
                                                         .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
                                                 props.searchMediaDetailsContainer.associateSearch.length === 0
                                             ))
                                             .map((contact, index) => {
                                             return (
-                                                contact.first_name && contact.last_name &&
+                                                contact.twitter_profile && contact.twitter_profile.screen_name &&
                                                 <DropDownItem
                                                     addDataToFilter={props.addDataToFilter}
-                                                    username={contact.first_name + ' ' + contact.last_name}
-                                                    url={contact.url}
+                                                    username={contact.twitter_profile.screen_name}
+                                                    url={contact.twitter_profile.profile_image}
                                                     setDisplay={props.setSelectedAssociatePlaceholderContainer}
                                                     type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
                                             );
                                         })}
+                                        </Fragment>
                                     </div>
                                     {" "}
                                 </div>
@@ -767,6 +777,7 @@ const MediaDetails = (props) => {
                 </div>
             )}
         </Grid>
+        </div>
     );
 };
 

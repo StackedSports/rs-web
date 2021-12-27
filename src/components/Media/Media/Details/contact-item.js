@@ -130,7 +130,7 @@ const DropDownItem = (props) => {
                     marginLeft: 12,
                 }}
             >
-                {props.username || " "}
+                {(props.username).slice(0,15) || " "}
             </p>
         </Grid>
     )

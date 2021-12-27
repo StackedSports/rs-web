@@ -100,7 +100,13 @@ const PlaceholderTableList = (props) => {
                 {list &&
                 list.map((item, index) => {
                     return (
-                        <PlaceholderItem item={item} isPlaceholder={props.isPlaceholder} setSelectedPlaceHolder={props.setSelectedPlaceHolder}/>
+                        <PlaceholderItem
+                            item={item}
+
+                            isPlaceholder={props.isPlaceholder}
+                            setLightboxVideo={props.setLightboxVideo}
+                            setLightboxPicture={props.setLightboxPicture}
+                            setSelectedPlaceHolder={props.setSelectedPlaceHolder}/>
                     )
                 })}
             </div>
