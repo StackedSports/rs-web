@@ -87,9 +87,8 @@ const PlaceholderTableList = (props) => {
     const classes = useStyles();
     const list = props.list;
     return (
-        <div style={{width: "100%", overflowX: "scroll"}}>
+        <div style={{width: "100%", overflowY: 'scroll',overflowX: 'hidden'}}>
             <ListHeader/>
-
             <div
                 style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:'30vh'}}
                 id="infinit"
@@ -97,6 +96,7 @@ const PlaceholderTableList = (props) => {
                     props.handleScroll();
                 }}
             >
+
                 {list &&
                 list.map((item, index) => {
                     return (

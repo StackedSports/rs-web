@@ -1,7 +1,7 @@
 import {Fragment} from "react";
 import {Grid, makeStyles} from "@material-ui/core";
 import React from "react";
-
+import Checkbox from '@mui/material/Checkbox';
 
 
 const useStyles = makeStyles({
@@ -90,10 +90,12 @@ const ListHeader=()=>{
             style={{
                 background: "#f5f6f9",
                 width: "100%",
-                minWidth: 1110,
             }}
         >
-            <Grid item md={3} xs={3} style={{marginLeft: 12}}>
+            <Grid item md={0.5} xs={0.5}>
+                <span className={classes.tableHeading}>  <Checkbox /></span>
+            </Grid>
+            <Grid item md={3} xs={3} >
                 <span className={classes.tableHeading}>Name</span>
             </Grid>
             <Grid item md={1} xs={1}>
@@ -105,7 +107,6 @@ const ListHeader=()=>{
             <Grid item md={2} xs={2}>
                       <span
                           className={classes.tableHeading}
-                          style={{marginLeft: 40}}
                       >
                         Associated To
                       </span>

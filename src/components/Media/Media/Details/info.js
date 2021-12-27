@@ -99,54 +99,28 @@ const ItemInfo = (props) => {
             >
                 {props.selectedPlaceholder.name}
             </p>
-            <p className className={classes.messageDetailsHeading}>
-                Message Status:
-                {props.messageStatus === "Drafts" ? (
+            <p className className={classes.messageDetailsHeading} style={{marginTop:20}}>
+                File Type:
                     <span className={classes.mdMargin} style={{color: "#f0ad24"}}>
-                  Drafts
+                        {props.selectedPlaceholder.file_type}
                 </span>
-                ) : props.messageStatus === "Scheduled" ? (
-                    <span className={classes.mdMargin} style={{color: "#54a300"}}>
-                  Scheduled
-                </span>
-                ) : (
-                    <span className={classes.mdMargin} style={{color: "#8bb14c"}}>
-                  Published
-                </span>
-                )}
             </p>
             <p className className={classes.messageDetailsHeading}>
-                Published On:
-                <strong className={classes.mdMargin}>Twitter</strong>{" "}
+                Uploaded On:
+                <strong className={classes.mdMargin}>{(props.selectedPlaceholder.created_at).replace(/[^\d.-]/g,' ')}</strong>{" "}
             </p>
             <p className className={classes.messageDetailsHeading}>
-                Published to :
-                <strong className={classes.mdMargin}>@JakeSmith</strong>{" "}
+                Uploaded by :
+                <strong className={classes.mdMargin}>{props.selectedPlaceholder.owner}</strong>{" "}
             </p>
-            {props.messageStatus === "Scheduled" ? (
-                <p className className={classes.messageDetailsHeading}>
-                    Published Time:
-                    <strong className={classes.mdMargin}>
-                        June 15, 2021 15:00
-                    </strong>{" "}
-                    <span
-                        style={{textDecoration: "underline", cursor: "pointer"}}
-                        onClick={() => {
-                            setMessageStatus("Drafts");
-                            setMessageCreated(false);
-                        }}
-                    >
-                  (Unschedule & more to drafts)
-                </span>
-                </p>
-            ) : (
-                <p className className={classes.messageDetailsHeading}>
-                    Published Time:
-                    <strong className={classes.mdMargin}>
-                        June 15, 2021 15:00
-                    </strong>{" "}
-                </p>
-            )}
+            <p className className={classes.messageDetailsHeading}>
+                File Size :
+                <strong className={classes.mdMargin}>{(props.selectedPlaceholder.size)/1000+' kb'}</strong>{" "}
+            </p>
+            <p className className={classes.messageDetailsHeading}>
+                Dimension :
+                <strong className={classes.mdMargin}>{'Not provided'}</strong>{" "}
+            </p>
             <Grid
                 container
                 direction="row"

@@ -190,7 +190,7 @@ const MediaDetails = (props) => {
                                     }}
                                     placeholder="+ Add Owner"
                                 ></input>
-
+                                {selectedTeamContacts.length < 1 &&
                                 <div
                                     className={classes.dropdownHidden}
                                     style={{
@@ -203,52 +203,55 @@ const MediaDetails = (props) => {
                                         overflowY: 'scroll'
                                     }}
                                 >
-                                    <Fragment style={{position:'relative'}}>
-                                    <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
-                                        <input
-                                            type="text"
-                                            style={{
-                                                width: "100%",
-                                                border: "1px solid #ebebeb",
-                                                borderRadius: 4,
-                                                height: 40,
-                                                paddingLeft: 4,
-                                            }}
-                                            onChange={(e) => {
-                                                props.onChangeMediaDetailsSearch("SELECTED_TEAM_CONTACTS", e.target.value);
-                                                e.stopPropagation();
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}
-                                            placeholder="Search"
-                                            value={props.searchMediaDetailsContainer.ownerSearch}
-                                        ></input>
-                                    </Grid>
-                                    {teamContacts &&
-                                    teamContacts
-                                        .filter((type) => ((type && type.twitter_profile && type.twitter_profile.screen_name &&
-                                                (type.twitter_profile.screen_name).toLowerCase()
-                                                    .includes((props.searchMediaDetailsContainer.ownerSearch).toLowerCase())) ||
-                                            props.searchMediaDetailsContainer.ownerSearch.length === 0
-                                        ))
-                                        .map((type, index) => {
-                                            return (
-                                                type && type.twitter_profile && type.twitter_profile.screen_name &&
-                                                <DropDownItem
-                                                    addDataToFilter={props.addDataToFilter}
-                                                    username={type.twitter_profile.screen_name}
-                                                    url={type.twitter_profile.profile_image}
-                                                    setDisplay={props.setDisplayOwner}
-                                                    type={"SELECTED_TEAM_CONTACTS"}/>
-                                            );
-                                        })}
+                                    <Fragment style={{position: 'relative'}}>
+                                        <Grid container direction="row" justify="center"
+                                              style={{position: 'sticky', top: 0}}>
+                                            <input
+                                                type="text"
+                                                style={{
+                                                    width: "100%",
+                                                    border: "1px solid #ebebeb",
+                                                    borderRadius: 4,
+                                                    height: 40,
+                                                    paddingLeft: 4,
+                                                }}
+                                                onChange={(e) => {
+                                                    props.onChangeMediaDetailsSearch("SELECTED_TEAM_CONTACTS", e.target.value);
+                                                    e.stopPropagation();
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                                placeholder="Search"
+                                                value={props.searchMediaDetailsContainer.ownerSearch}
+                                            ></input>
+                                        </Grid>
+                                        {teamContacts &&
+                                        teamContacts
+                                            .filter((type) => ((type && type.twitter_profile && type.twitter_profile.screen_name &&
+                                                    (type.twitter_profile.screen_name).toLowerCase()
+                                                        .includes((props.searchMediaDetailsContainer.ownerSearch).toLowerCase())) ||
+                                                props.searchMediaDetailsContainer.ownerSearch.length === 0
+                                            ))
+                                            .map((type, index) => {
+                                                return (
+                                                    type && type.twitter_profile && type.twitter_profile.screen_name &&
+                                                    <DropDownItem
+                                                        addDataToFilter={props.addDataToFilter}
+                                                        username={type.twitter_profile.screen_name}
+                                                        url={type.twitter_profile.profile_image}
+                                                        setDisplay={props.setDisplayOwner}
+                                                        type={"SELECTED_TEAM_CONTACTS"}/>
+                                                );
+                                            })}
                                     </Fragment>
-                                </div>
+                                    }
+                                </div>}
 
 
                                 {" "}
                             </div>
+
                         </Grid>
                     </Grid>
 
@@ -400,62 +403,64 @@ const MediaDetails = (props) => {
                                         }}
                                         placeholder="+ Add Media placeholder or personalized graphics"
                                     ></input>
-                                    <div
-                                        className={classes.dropdownHidden}
-                                        style={{
-                                            display: props.displaySearchContainers.selectedPlaceholderContainer ? "block" : "none",
-                                            height: '35vh',
-                                            top: '-26vh',
-                                            position: 'absolute',
-                                            left: '55%',
-                                            overflowX: 'hidden',
-                                            overflowY: 'scroll'
-                                        }}
-                                    >
-                                        <Fragment style={{position:'relative'}}>
-                                        <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
-                                            <input
-                                                type="text"
-                                                style={{
-                                                    width: "100%",
-                                                    border: "1px solid #ebebeb",
-                                                    borderRadius: 4,
-                                                    height: 40,
-                                                    paddingLeft: 4,
-                                                }}
-                                                onChange={(e) => {
-                                                    props.onChangeMediaDetailsSearch("SELECTED_PLACEHOLDERS", e.target.value);
-                                                    e.stopPropagation();
-                                                }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                placeholder="Search"
-                                                value={props.searchMediaDetailsContainer.placeholderSearch}
-                                            ></input>
-                                        </Grid>
-                                        {placeholders &&
-                                        placeholders
-                                            .filter((placeholder) => ((
-                                                    placeholder && placeholder.name &&
-                                                    (placeholder.name).toLowerCase()
-                                                        .includes((props.searchMediaDetailsContainer.placeholderSearch).toLowerCase())) ||
-                                                props.searchMediaDetailsContainer.placeholderSearch.length === 0
-                                            ))
-                                            .map((placeholder, index) => {
-                                                return (
-                                                    placeholder && placeholder.name &&
-                                                    <DropDownItem
-                                                        addDataToFilter={props.addDataToFilter}
-                                                        username={placeholder.name}
-                                                        url={placeholder.media_preview}
-                                                        setDisplay={props.setSelectedMediaPlaceholders}
-                                                        type={"SELECTED_PLACEHOLDERS"}/>
-                                                );
-                                            })}
-                                        </Fragment>
-                                    </div>
-
+                                    {selectedMediaPlaceholders.length<1 &&
+                                        <div
+                                            className={classes.dropdownHidden}
+                                            style={{
+                                                display: props.displaySearchContainers.selectedPlaceholderContainer ? "block" : "none",
+                                                height: '35vh',
+                                                top: '-26vh',
+                                                position: 'absolute',
+                                                left: '55%',
+                                                overflowX: 'hidden',
+                                                overflowY: 'scroll'
+                                            }}
+                                        >
+                                            <Fragment style={{position: 'relative'}}>
+                                                <Grid container direction="row" justify="center"
+                                                      style={{position: 'sticky', top: 0}}>
+                                                    <input
+                                                        type="text"
+                                                        style={{
+                                                            width: "100%",
+                                                            border: "1px solid #ebebeb",
+                                                            borderRadius: 4,
+                                                            height: 40,
+                                                            paddingLeft: 4,
+                                                        }}
+                                                        onChange={(e) => {
+                                                            props.onChangeMediaDetailsSearch("SELECTED_PLACEHOLDERS", e.target.value);
+                                                            e.stopPropagation();
+                                                        }}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                        placeholder="Search"
+                                                        value={props.searchMediaDetailsContainer.placeholderSearch}
+                                                    ></input>
+                                                </Grid>
+                                                {placeholders &&
+                                                placeholders
+                                                    .filter((placeholder) => ((
+                                                            placeholder && placeholder.name &&
+                                                            (placeholder.name).toLowerCase()
+                                                                .includes((props.searchMediaDetailsContainer.placeholderSearch).toLowerCase())) ||
+                                                        props.searchMediaDetailsContainer.placeholderSearch.length === 0
+                                                    ))
+                                                    .map((placeholder, index) => {
+                                                        return (
+                                                            placeholder && placeholder.name &&
+                                                            <DropDownItem
+                                                                addDataToFilter={props.addDataToFilter}
+                                                                username={placeholder.name}
+                                                                url={placeholder.media_preview}
+                                                                setDisplay={props.setSelectedMediaPlaceholders}
+                                                                type={"SELECTED_PLACEHOLDERS"}/>
+                                                        );
+                                                    })}
+                                            </Fragment>
+                                        </div>
+                                    }
                                     {" "}
                                 </div>
                             </Grid>
@@ -503,6 +508,7 @@ const MediaDetails = (props) => {
                                         }}
                                         placeholder="+ Associate to Contact"
                                     ></input>
+                                    {selectedAssociatePlaceholders.length < 1 &&
 
                                     <div
                                         className={classes.dropdownHidden}
@@ -516,49 +522,51 @@ const MediaDetails = (props) => {
                                             overflowY: 'scroll'
                                         }}
                                     >
-                                        <Fragment style={{position:'relative'}}>
-                                        <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
-                                            <input
-                                                type="text"
-                                                style={{
-                                                    width: "100%",
-                                                    border: "1px solid #ebebeb",
-                                                    borderRadius: 4,
-                                                    height: 40,
-                                                    paddingLeft: 4,
-                                                }}
-                                                onChange={(e) => {
-                                                    props.onChangeMediaDetailsSearch("SELECTED_ASSOCIATE_PLACEHOLDER", e.target.value);
-                                                    e.stopPropagation();
-                                                }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                }}
-                                                placeholder="Search"
-                                                value={props.searchMediaDetailsContainer.associateSearch}
-                                            ></input>
-                                        </Grid>
-                                        { contacts &&
-                                        contacts
-                                            .filter((contact) => ((
-                                                    contact.twitter_profile && contact.twitter_profile.screen_name &&
-                                                    ((contact.twitter_profile.screen_name).toLowerCase())
-                                                        .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
-                                                props.searchMediaDetailsContainer.associateSearch.length === 0
-                                            ))
-                                            .map((contact, index) => {
-                                            return (
-                                                contact.twitter_profile && contact.twitter_profile.screen_name &&
-                                                <DropDownItem
-                                                    addDataToFilter={props.addDataToFilter}
-                                                    username={contact.twitter_profile.screen_name}
-                                                    url={contact.twitter_profile.profile_image}
-                                                    setDisplay={props.setSelectedAssociatePlaceholderContainer}
-                                                    type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
-                                            );
-                                        })}
+                                        <Fragment style={{position: 'relative'}}>
+                                            <Grid container direction="row" justify="center"
+                                                  style={{position: 'sticky', top: 0}}>
+                                                <input
+                                                    type="text"
+                                                    style={{
+                                                        width: "100%",
+                                                        border: "1px solid #ebebeb",
+                                                        borderRadius: 4,
+                                                        height: 40,
+                                                        paddingLeft: 4,
+                                                    }}
+                                                    onChange={(e) => {
+                                                        props.onChangeMediaDetailsSearch("SELECTED_ASSOCIATE_PLACEHOLDER", e.target.value);
+                                                        e.stopPropagation();
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                    }}
+                                                    placeholder="Search"
+                                                    value={props.searchMediaDetailsContainer.associateSearch}
+                                                ></input>
+                                            </Grid>
+                                            {contacts &&
+                                            contacts
+                                                .filter((contact) => ((
+                                                        contact.twitter_profile && contact.twitter_profile.screen_name &&
+                                                        ((contact.twitter_profile.screen_name).toLowerCase())
+                                                            .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
+                                                    props.searchMediaDetailsContainer.associateSearch.length === 0
+                                                ))
+                                                .map((contact, index) => {
+                                                    return (
+                                                        contact.twitter_profile && contact.twitter_profile.screen_name &&
+                                                        <DropDownItem
+                                                            addDataToFilter={props.addDataToFilter}
+                                                            username={contact.twitter_profile.screen_name}
+                                                            url={contact.twitter_profile.profile_image}
+                                                            setDisplay={props.setSelectedAssociatePlaceholderContainer}
+                                                            type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
+                                                    );
+                                                })}
                                         </Fragment>
                                     </div>
+                                    }
                                     {" "}
                                 </div>
                             </Grid>
