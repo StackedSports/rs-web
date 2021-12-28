@@ -80,7 +80,7 @@ const useStyles = makeStyles({
     }
 });
 
-const ListHeader=()=>{
+const ListHeader=(props)=>{
     const classes = useStyles();
     return(
         <Grid
@@ -93,7 +93,7 @@ const ListHeader=()=>{
             }}
         >
             <Grid item md={0.5} xs={0.5}>
-                <span className={classes.tableHeading}>  <Checkbox /></span>
+                 <span className={classes.tableHeading}>  { <Checkbox />}</span>
             </Grid>
             <Grid item md={3} xs={3} >
                 <span className={classes.tableHeading}>Name</span>

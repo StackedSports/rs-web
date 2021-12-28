@@ -81,7 +81,7 @@ const useStyles = makeStyles({
     mediaStatsGrid: {
         borderBottom: "1px solid #d2d2d2",
         paddingTop: 16, paddingBottom: 16
-    }
+    },
 });
 
 const PlaceholderItem = (props) => {
@@ -92,16 +92,27 @@ const PlaceholderItem = (props) => {
             onClick={() => {
                 props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
             }}
+            onMouseEnter={(e)=>{
+                props.handleHover(props.index,true);
+            }}
+            onMouseLeave={(e)=>{
+                props.handleHover(props.index,false);
+            }}
             container
             direction="row"
-            alignItems="right"
-            alignContent="center"
+            alignItems="center"
             style={{
-                background: "#f5f6f9",
-                padding:10
+                border: "1px solid #d8d8d8",
+                borderBottom: "none",
+                borderRadius: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                width: "100%",
+                padding:10,
+                backgroundColor:item.hover?'#f5f6f9':'white'
             }}
         >
-            <Grid item md={0.5} xs={0.5}>
+            <Grid item md={0.5} xs={0.5} style={{marginLeft: 0}}>
                 {item.url.indexOf(".gif") > -1 ? (
                     <GifIcon></GifIcon>
                 ) : item.url.indexOf(".png") > -1 ||
@@ -122,6 +133,7 @@ const PlaceholderItem = (props) => {
 
                 <span
                     className={classes.tableFields}
+                    style={{marginLeft: 5}}
                 >
                                   {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
                                 </span>
@@ -135,7 +147,7 @@ const PlaceholderItem = (props) => {
                 e.stopPropagation();
             }}>
                 <img
-                    style={{width: 30, height: 30}}
+                    style={{width: 30, height: 30,marginLeft:15}}
                     src={item.url}
                 ></img>
             </Grid>
@@ -145,12 +157,15 @@ const PlaceholderItem = (props) => {
                                   {(item.name).length > 15 ? (
                                       <CheckCircleIcon fontSize='small' style={{
                                           fill: '#006644',
+                                          marginTop: '5px',
+                                          marginLeft: 50
                                       }}/>) : ''}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
                                 <span
                                     className={classes.tableFields}
+                                    style={{marginLeft: 40}}
                                 >
                                   {/* {formatPhoneNumber(item.phone)} */}
                                 </span>
@@ -161,7 +176,9 @@ const PlaceholderItem = (props) => {
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                                <span className={classes.tableFields}>
+                                <span className={classes.tableFields}
+                                      style={{marginLeft: 40}}
+                                >
                                   {moment(item.created_at).format("MMMM Do YYYY")}
                                 </span>
             </Grid>

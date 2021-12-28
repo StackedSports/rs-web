@@ -548,17 +548,17 @@ const MediaDetails = (props) => {
                                             {contacts &&
                                             contacts
                                                 .filter((contact) => ((
-                                                        contact.twitter_profile && contact.twitter_profile.screen_name &&
-                                                        ((contact.twitter_profile.screen_name).toLowerCase())
+                                                        contact.first_name && contact.last_name &&
+                                                        ((contact.first_name+" "+contact.last_name).toLowerCase())
                                                             .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
                                                     props.searchMediaDetailsContainer.associateSearch.length === 0
                                                 ))
                                                 .map((contact, index) => {
                                                     return (
-                                                        contact.twitter_profile && contact.twitter_profile.screen_name &&
+                                                        contact.first_name && contact.last_name &&
                                                         <DropDownItem
                                                             addDataToFilter={props.addDataToFilter}
-                                                            username={contact.twitter_profile.screen_name}
+                                                            username={contact.first_name+" "+contact.last_name}
                                                             url={contact.twitter_profile.profile_image}
                                                             setDisplay={props.setSelectedAssociatePlaceholderContainer}
                                                             type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>

@@ -273,6 +273,7 @@ function MediaComponent(props) {
 
     const [displayListContainer, setDisplayListContainer] = useState({
         showPlaceholderListView: false,
+        showPlaceholderDetailsListView: false,
         showMediaListView: false,
         selectedPlaceholder: null
     });
@@ -319,6 +320,8 @@ function MediaComponent(props) {
     const handleShowMediaStats = (stats) => {
         setShowMediaStats(stats);
     }
+
+
 
 
     const handleSetShowBackButton = (back) => {
@@ -964,12 +967,13 @@ function MediaComponent(props) {
     }
 
 
-    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault,isFromBackButton) => {
-        console.log('handleSelectedPlaceHolder = ',isFromBackButton,' ',displayListContainer)
+    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault, isFromBackButton) => {
+        console.log('handleSelectedPlaceHolder = ', isFromBackButton, ' ', displayListContainer)
         if (isPlaceholder) {
             setDisplayListContainer({
                 ...displayListContainer,
                 showPlaceholderListView: true,
+                showPlaceholderDetailsListView: true,
                 selectedPlaceholder: placeholder
             })
 
@@ -979,11 +983,11 @@ function MediaComponent(props) {
                 showMediaListView: false,
                 selectedPlaceholder: null
             })
-        }else if(isFromBackButton){
-            const placehodlerListView=displayListContainer.showMediaListView?true:false;
+        } else if (isFromBackButton) {
+            const placehodlerListView = displayListContainer.showMediaListView ? true : false;
             setDisplayListContainer({
                 ...displayListContainer,
-                showPlaceholderListView:placehodlerListView,
+                showPlaceholderListView: placehodlerListView,
                 selectedPlaceholder: null
             })
         } else {
@@ -996,21 +1000,20 @@ function MediaComponent(props) {
     }
 
 
-
     const handleSelectedPlaceHolderListView = (id, isPlaceholder) => {
-        console.log('handleSelectedPlaceHolderListView = ',id,'   ',isPlaceholder)
+        console.log('handleSelectedPlaceHolderListView = ', id, '   ', isPlaceholder)
         if (isPlaceholder) {
-            const index=placeholders.findIndex((item)=>item.id===id);
+            const index = placeholders.findIndex((item) => item.id === id);
 
-            if(index!==-1){
+            if (index !== -1) {
                 setShowBackButton(true);
                 setShowMediaStats(false);
-                if(displayListContainer.showMediaListView){
+                if (displayListContainer.showMediaListView) {
                     setDisplayListContainer({
                         ...displayListContainer,
                         selectedPlaceholder: placeholders[index]
                     })
-                }else{
+                } else {
                     setDisplayListContainer({
                         showPlaceholderListView: true,
                         showMediaListView: false,
@@ -1020,10 +1023,10 @@ function MediaComponent(props) {
 
             }
 
-        }else {
-            const index=media.findIndex((item)=>item.id===id);
+        } else {
+            const index = media.findIndex((item) => item.id === id);
 
-            if(index!==-1){
+            if (index !== -1) {
                 setShowBackButton(true);
                 setShowMediaStats(true);
                 setDisplayListContainer({
@@ -1034,9 +1037,17 @@ function MediaComponent(props) {
         }
     }
 
+
+    const handleSetPlaceholderDetailsListView=(listView)=>{
+        setDisplayListContainer({
+            ...displayListContainer,
+            showPlaceholderDetailsListView: listView
+        })
+    }
+
     const handlePlaceholderClick = (m) => {
 
-        console.log('handlePlaceholderClick = ',handlePlaceholderClick)
+        console.log('handlePlaceholderClick = ', handlePlaceholderClick)
         setDisplayListContainer({...displayListContainer, selectedPlaceholder: m})
     }
 
@@ -1092,7 +1103,7 @@ function MediaComponent(props) {
 
     const handleSetShowListView = (showMediaList, showPlaceholderList) => {
 
-        console.log('handleSetShowListView = ',showMediaList, showPlaceholderList)
+        console.log('handleSetShowListView = ', showMediaList, showPlaceholderList)
         setDisplayListContainer({
             selectedPlaceholder: null,
             showPlaceholderListView: showPlaceholderList,
@@ -1196,15 +1207,15 @@ function MediaComponent(props) {
 
     let MediaList = null;
 
-    if (displayListContainer.showMediaListView && media) {
+    if ((displayListContainer.showMediaListView || displayListContainer.selectedPlaceholder) && media) {
         MediaList = media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
             .map((item) => {
-                return {name: item.name, url: item.urls.thumb, date: item.created_at,id:item.id}
+                return {name: item.name, url: item.urls.thumb, date: item.created_at, id: item.id}
             });
 
     }
 
-    console.log('handleSelectedPlaceHolder = ',media,'     contacts = ',contacts)
+    console.log('handleSelectedPlaceHolder = ', media, '     contacts = ', contacts)
 
     return (
         <div
@@ -1238,7 +1249,7 @@ function MediaComponent(props) {
                 showBackButton={showBackButton}
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
-                showListButton={displayListContainer.selectedPlaceholder?false:true}
+                showListButton={displayListContainer.selectedPlaceholder ? false : true}
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
@@ -1313,16 +1324,16 @@ function MediaComponent(props) {
                                 displayListContainer.selectedPlaceholder === null || props.message ?
                                     (
                                         displayListContainer.showMediaListView ? (
-                                            <Fragment>
-                                                <ItemMainHeader title={"Media"} dropdown_item_title={"Last Modified"}
-                                                                CustomToggle={CustomToggle}/>
-                                                <PlaceholderTableList list={MediaList}
-                                                                      handleScroll={handleScroll}
-                                                                      isPlaceholder={false}
-                                                                      setLightboxPicture={handleSetLightboxPicture}
-                                                                      setLightboxVideo={handleSetLightboxVideo}
-                                                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
-                                            </Fragment>
+                                                <Fragment>
+                                                    <ItemMainHeader title={"Media"} dropdown_item_title={"Last Modified"}
+                                                                    CustomToggle={CustomToggle}/>
+                                                    <PlaceholderTableList list={MediaList}
+                                                                          handleScroll={handleScroll}
+                                                                          isPlaceholder={false}
+                                                                          setLightboxPicture={handleSetLightboxPicture}
+                                                                          setLightboxVideo={handleSetLightboxVideo}
+                                                                          setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+                                                </Fragment>
                                             ) :
                                             <Media
                                                 CustomToggle={CustomToggle}
@@ -1379,43 +1390,95 @@ function MediaComponent(props) {
                                 displayListContainer={displayListContainer}
                             />*/}
 
+                            {
+                                displayListContainer.selectedPlaceholder === null ?
+                                    <Placeholder
+                                        CustomToggle={CustomToggle}
+                                        placeholders={placeholders}
+                                        handleScroll={handleScroll}
+                                        handleSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                        viewMorePlaceholder={viewMorePlaceholder}
+                                        placeholderEndIndex={placeholderEndIndex}
+                                        setViewMorePlaceholder={handleViewMorePlaceholder}
+                                        setPlaceholderEndIndex={handlePlaceholderEndIndex}
+                                        setPlaceholderStartIndex={handlePlaceholderStartIndex}
+                                        handlePlaceholderClick={handlePlaceholderClick}
+                                        setPlacehoderHover={handlePlaceholderHover}
+                                        placeholderHover={placeholderHover}
+                                        isPlaceHolder={true}
+                                        selectedCheckBoxes={selectedCheckBoxes}
+                                        mediaHover={mediaHover}
+                                        makeMediaSelected={props.makeMediaSelected}
+                                        setMediaHover={handleMediaHover}
+                                        setDisplayAction={handleMediaDisplayAction}
+                                        makeCheckBoxSelected={makeCheckBoxSelected}
+                                        setShowMediaStats={handleShowMediaStats}
+                                        setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                        setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
+                                        showlistView={displayListContainer.showPlaceholderListView}
+                                        message={props.message}
+                                        showHover={true}
+                                        setShowBackButton={handleSetShowBackButton}
+                                        showBackButton={showBackButton}
+                                        setLightboxVideo={handleSetLightboxVideo}
+                                        setLightboxPicture={handleSetLightboxPicture}
+                                    />
+                                    :
+                                    <Fragment style={{marginTop: 20}}>
+                                        <PlaceholderListButton
+                                            setShowlistView={handleSetPlaceholderDetailsListView}
+                                            displayListContainer={displayListContainer}
+                                            isPlaceholderDetails={true}
+                                        />
+                                        {
+                                            displayListContainer.showPlaceholderDetailsListView ?
+                                                <PlaceholderTableList list={MediaList}
+                                                                      handleScroll={handleScroll}
+                                                                      isPlaceholder={false}
+                                                                      isPlaceholderDetails={true}
+                                                                      setLightboxPicture={handleSetLightboxPicture}
+                                                                      setLightboxVideo={handleSetLightboxVideo}
+                                                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+                                                :
+                                                <Media
+                                                    CustomToggle={CustomToggle}
+                                                    setViewMoreQuickAccess={handleViewMoreQuickAccess}
+                                                    setQuickAccessEndIndex={handleQuickAccessEndIndex}
+                                                    setQuickAccessStartIndex={handleQuickAccessStartIndex}
+                                                    selectedPlaceholder={displayListContainer.selectedPlaceholder}
+                                                    message={props.message}
+                                                    media={media}
+                                                    viewMoreQuickAccess={viewMoreQuickAccess}
+                                                    quickAccessEndIndex={quickAccessEndIndex}
+                                                    handlePlaceholderClick={handlePlaceholderClick}
+                                                    setPlacehoderHover={handlePlaceholderHover}
+                                                    placeholderHover={placeholderHover}
+                                                    isPlaceHolder={false}
+                                                    selectedCheckBoxes={selectedCheckBoxes}
+                                                    mediaHover={mediaHover}
+                                                    makeMediaSelected={props.makeMediaSelected}
+                                                    setMediaHover={handleMediaHover}
+                                                    setDisplayAction={handleMediaDisplayAction}
+                                                    makeCheckBoxSelected={makeCheckBoxSelected}
+                                                    setShowMediaStats={handleShowMediaStats}
+                                                    setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                                    showHover={true}
+                                                    setShowBackButton={handleSetShowBackButton}
+                                                    showBackButton={showBackButton}
+                                                    setLightboxVideo={handleSetLightboxVideo}
+                                                    setLightboxPicture={handleSetLightboxPicture}
+                                                    isPlaceholderDetails={true}
 
-                            <Placeholder
-                                CustomToggle={CustomToggle}
-                                placeholders={placeholders}
-                                handleScroll={handleScroll}
-                                handleSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                viewMorePlaceholder={viewMorePlaceholder}
-                                placeholderEndIndex={placeholderEndIndex}
-                                setViewMorePlaceholder={handleViewMorePlaceholder}
-                                setPlaceholderEndIndex={handlePlaceholderEndIndex}
-                                setPlaceholderStartIndex={handlePlaceholderStartIndex}
-                                handlePlaceholderClick={handlePlaceholderClick}
-                                setPlacehoderHover={handlePlaceholderHover}
-                                placeholderHover={placeholderHover}
-                                isPlaceHolder={true}
-                                selectedCheckBoxes={selectedCheckBoxes}
-                                mediaHover={mediaHover}
-                                makeMediaSelected={props.makeMediaSelected}
-                                setMediaHover={handleMediaHover}
-                                setDisplayAction={handleMediaDisplayAction}
-                                makeCheckBoxSelected={makeCheckBoxSelected}
-                                setShowMediaStats={handleShowMediaStats}
-                                setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
-                                showlistView={displayListContainer.showPlaceholderListView}
-                                message={props.message}
-                                showHover={true}
-                                setShowBackButton={handleSetShowBackButton}
-                                showBackButton={showBackButton}
-                                setLightboxVideo={handleSetLightboxVideo}
-                                setLightboxPicture={handleSetLightboxPicture}
-                            />
+                                                />
+                                        }
+                                    </Fragment>
+                            }
 
 
                             {props.message ? (
                                 <div></div>
                             ) : (
+                                !displayListContainer.selectedPlaceholder &&
                                 <Tag
                                     taggedMedia={taggedMedia}
                                     CustomToggle={CustomToggle}
@@ -1428,14 +1491,16 @@ function MediaComponent(props) {
 
             </div>
             <Grid container direction="row" alignItems="center"></Grid>
-            <TagSearchModal
-                showTagsDialog={showTagsDialog}
-                tagSearch={tagSearch}
-                allTags={allTags}
-                setTagSearch={handleSetTagSearch}
-                setShowTagsDialog={handleShowTagsDialog}
-                setOpenSnackBar={handleOpenSnackBar}
-            />
+            {
+                <TagSearchModal
+                    showTagsDialog={showTagsDialog}
+                    tagSearch={tagSearch}
+                    allTags={allTags}
+                    setTagSearch={handleSetTagSearch}
+                    setShowTagsDialog={handleShowTagsDialog}
+                    setOpenSnackBar={handleOpenSnackBar}
+                />
+            }
             {lightboxPicture && (
                 <LightboxDialog url={lightboxPicture} isVideo={false} closeModal={handleSetLightboxPicture}/>
             )}

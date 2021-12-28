@@ -1,7 +1,7 @@
 import {Grid, makeStyles} from "@material-ui/core";
 import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import moment from "moment";
-import React from "react";
+import React, {useState,useEffect} from "react";
 import ListHeader from './header';
 import PlaceholderItem from './item';
 
@@ -85,10 +85,24 @@ const useStyles = makeStyles({
 
 const PlaceholderTableList = (props) => {
     const classes = useStyles();
-    const list = props.list;
+    const [itemsList, setItemList] = useState(props.list);
+    const [count, setCount] = useState(0);
+
+
+
+    const handleHover=(index,hover)=>{
+        itemsList[index].hover=hover;
+        setItemList(itemsList);
+        setCount(count+1);
+
+        console.log('item = ',index,'  ',itemsList[index]);
+
+    }
+    console.log('list1 = ',itemsList)
     return (
-        <div style={{width: "100%", overflowY: 'scroll',overflowX: 'hidden'}}>
-            <ListHeader/>
+
+        <div style={{width: "100%",marginTop:props.isPlaceholderDetails?10:0, overflowY: 'scroll',overflowX: 'hidden'}}>
+            <ListHeader isPlaceholderDetails={props.isPlaceholderDetails}/>
             <div
                 style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:'30vh'}}
                 id="infinit"
@@ -97,15 +111,17 @@ const PlaceholderTableList = (props) => {
                 }}
             >
 
-                {list &&
-                list.map((item, index) => {
+                {itemsList &&
+                itemsList.map((item, index) => {
                     return (
                         <PlaceholderItem
                             item={item}
-
+                            index={index}
+                            key={item.key}
                             isPlaceholder={props.isPlaceholder}
                             setLightboxVideo={props.setLightboxVideo}
                             setLightboxPicture={props.setLightboxPicture}
+                            handleHover={handleHover}
                             setSelectedPlaceHolder={props.setSelectedPlaceHolder}/>
                     )
                 })}

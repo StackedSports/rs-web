@@ -1060,7 +1060,7 @@ function Media() {
                 </Dialog>
             )}
 
-            <Grid container direction="row" style={{height:'84vh'}}>
+            <Grid container direction="row" style={{height:'80%'}}>
                 {showSideFilters === true && (
                     <SidebarComponent myMediaContacts={myMediaContacts}
                                       addDataToFilter={addDataToFilter}

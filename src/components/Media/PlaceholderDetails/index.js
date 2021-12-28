@@ -11,6 +11,11 @@ const PlaceholderDetails=(props)=>{
     console.log('props placeholder = ',props);
     return(
         <Grid container direction="row">
+            <Grid item xs={12}>
+                <p style={{ fontSize: 20,marginLeft:10}}>
+                    Placeholer
+                </p>
+            </Grid>
             <Grid item md={3} xs={3}>
                 {<MediaItem {...props}/>}
             </Grid>

@@ -13,10 +13,11 @@ const Media = (props) => {
     console.log('media = ',props)
     return (
         <Fragment>
-            <ItemMainHeader title={"Quick Access"} dropdown_item_title={"Last Modified"}
-                            CustomToggle={props.CustomToggle}/>
+            { !props.isPlaceholderDetails &&
+                <ItemMainHeader title={"Quick Access"} dropdown_item_title={"Last Modified"}
+                            CustomToggle={props.CustomToggle}/>}
 
-            {props.selectedPlaceholder === null || props.message ? (
+            {props.selectedPlaceholder === null || props.message || props.isPlaceholderDetails ? (
                 <Grid container>
                     {media != null ? (
                         media.map((m, index) => {
