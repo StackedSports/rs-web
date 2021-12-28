@@ -2,7 +2,7 @@ import {Fragment} from "react";
 import {Grid, makeStyles} from "@material-ui/core";
 import React from "react";
 import Checkbox from '@mui/material/Checkbox';
-
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 const useStyles = makeStyles({
     tableHeading: {
@@ -95,24 +95,29 @@ const ListHeader=(props)=>{
             <Grid item md={0.5} xs={0.5}>
                  <span className={classes.tableHeading}>  { <Checkbox />}</span>
             </Grid>
-            <Grid item md={3} xs={3} >
+            <Grid item md={2} xs={2} >
                 <span className={classes.tableHeading}>Name</span>
             </Grid>
             <Grid item md={1} xs={1}>
                 <span className={classes.tableHeading}>File</span>
             </Grid>
-            <Grid item md={1} xs={1}>
-                <span className={classes.tableHeading}>File Sent</span>
+            <Grid item md={2} xs={2}>
+                <span className={classes.tableHeading}>File Sent
+                <KeyboardArrowDownOutlinedIcon/>
+                </span>
             </Grid>
             <Grid item md={2} xs={2}>
                       <span
                           className={classes.tableHeading}
                       >
                         Associated To
+                        <KeyboardArrowDownOutlinedIcon/>
                       </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>Owner</span>
+                <span className={classes.tableHeading}>Owner
+                <KeyboardArrowDownOutlinedIcon/>
+                </span>
             </Grid>
             <Grid item md={2} xs={2}>
                 <span className={classes.tableHeading}>Last Modified</span>

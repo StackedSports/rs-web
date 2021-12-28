@@ -103,6 +103,7 @@ const PlaceholderTableList = (props) => {
 
         <div style={{width: "100%",marginTop:props.isPlaceholderDetails?10:0, overflowY: 'scroll',overflowX: 'hidden'}}>
             <ListHeader isPlaceholderDetails={props.isPlaceholderDetails}/>
+
             <div
                 style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:'30vh'}}
                 id="infinit"
@@ -111,9 +112,12 @@ const PlaceholderTableList = (props) => {
                 }}
             >
 
+
                 {itemsList &&
                 itemsList.map((item, index) => {
+
                     return (
+                    
                         <PlaceholderItem
                             item={item}
                             index={index}
