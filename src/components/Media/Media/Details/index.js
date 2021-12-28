@@ -102,7 +102,7 @@ const MediaDetails = (props) => {
 
 
     console.log('setMyMediaContacts =  ', contacts)
-
+   
     return (
         <div style={{height:'67vh'}}>
         <Grid
@@ -180,7 +180,7 @@ const MediaDetails = (props) => {
                                         height: 60,
                                         flex: "auto",
                                         border: "none",
-                                        padding: 16
+                                        padding: 16,
                                     }}
                                     id="owner"
                                     onClick={(e) => {
@@ -205,7 +205,7 @@ const MediaDetails = (props) => {
                                 >
                                     <Fragment style={{position: 'relative'}}>
                                         <Grid container direction="row" justify="center"
-                                              style={{position: 'sticky', top: 0}}>
+                                              style={{position: 'sticky', top: 0,padding:7}}>
                                             <input
                                                 type="text"
                                                 style={{
@@ -213,7 +213,8 @@ const MediaDetails = (props) => {
                                                     border: "1px solid #ebebeb",
                                                     borderRadius: 4,
                                                     height: 40,
-                                                    paddingLeft: 4,
+                                                    paddingLeft: 16,
+                                               
                                                 }}
                                                 onChange={(e) => {
                                                     props.onChangeMediaDetailsSearch("SELECTED_TEAM_CONTACTS", e.target.value);
@@ -245,7 +246,7 @@ const MediaDetails = (props) => {
                                                 );
                                             })}
                                     </Fragment>
-                                    }
+                                    
                                 </div>}
 
 
@@ -313,7 +314,7 @@ const MediaDetails = (props) => {
                                     }}
                                 >
                                     <Fragment style={{position:'relative'}}>
-                                    <Grid container direction="row" justify="center" style={{position:'sticky',top:0}}>
+                                    <Grid container direction="row" justify="center" style={{position:'sticky',top:0,padding:7}}>
                                         <input
                                             type="text"
                                             style={{
@@ -321,7 +322,7 @@ const MediaDetails = (props) => {
                                                 border: "1px solid #ebebeb",
                                                 borderRadius: 4,
                                                 height: 40,
-                                                paddingLeft: 4,
+                                                paddingLeft: 16,
                                             }}
                                             onChange={(e) => {
                                                 props.onChangeMediaDetailsSearch("SELECTED_TAGS", e.target.value);
@@ -418,7 +419,7 @@ const MediaDetails = (props) => {
                                         >
                                             <Fragment style={{position: 'relative'}}>
                                                 <Grid container direction="row" justify="center"
-                                                      style={{position: 'sticky', top: 0}}>
+                                                      style={{position: 'sticky', top: 0,padding:7}}>
                                                     <input
                                                         type="text"
                                                         style={{
@@ -426,7 +427,7 @@ const MediaDetails = (props) => {
                                                             border: "1px solid #ebebeb",
                                                             borderRadius: 4,
                                                             height: 40,
-                                                            paddingLeft: 4,
+                                                            paddingLeft: 16,
                                                         }}
                                                         onChange={(e) => {
                                                             props.onChangeMediaDetailsSearch("SELECTED_PLACEHOLDERS", e.target.value);
@@ -510,6 +511,7 @@ const MediaDetails = (props) => {
                                     ></input>
                                     {selectedAssociatePlaceholders.length < 1 &&
 
+                                    
                                     <div
                                         className={classes.dropdownHidden}
                                         style={{
@@ -520,11 +522,13 @@ const MediaDetails = (props) => {
                                             top: '-26vh',
                                             overflowX: 'hidden',
                                             overflowY: 'scroll'
+                                        
                                         }}
+                                        
                                     >
                                         <Fragment style={{position: 'relative'}}>
                                             <Grid container direction="row" justify="center"
-                                                  style={{position: 'sticky', top: 0}}>
+                                                  style={{position: 'sticky', top: 0,padding:7}}>
                                                 <input
                                                     type="text"
                                                     style={{
@@ -532,7 +536,7 @@ const MediaDetails = (props) => {
                                                         border: "1px solid #ebebeb",
                                                         borderRadius: 4,
                                                         height: 40,
-                                                        paddingLeft: 4,
+                                                        paddingLeft: 16,
                                                     }}
                                                     onChange={(e) => {
                                                         props.onChangeMediaDetailsSearch("SELECTED_ASSOCIATE_PLACEHOLDER", e.target.value);
@@ -558,7 +562,7 @@ const MediaDetails = (props) => {
                                                         contact.twitter_profile && contact.twitter_profile.screen_name &&
                                                         <DropDownItem
                                                             addDataToFilter={props.addDataToFilter}
-                                                            username={contact.twitter_profile.screen_name}
+                                                            username={contact.first_name+' '+contact.last_name}
                                                             url={contact.twitter_profile.profile_image}
                                                             setDisplay={props.setSelectedAssociatePlaceholderContainer}
                                                             type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>

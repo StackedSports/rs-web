@@ -101,7 +101,7 @@ const PlaceholderItem = (props) => {
                 padding:10
             }}
         >
-            <Grid item md={0.5} xs={0.5}>
+            <Grid item md={0.5} xs={0.5}style={{margin:0}}>
                 {item.url.indexOf(".gif") > -1 ? (
                     <GifIcon></GifIcon>
                 ) : item.url.indexOf(".png") > -1 ||
@@ -118,10 +118,11 @@ const PlaceholderItem = (props) => {
                     ></FaFilePdf>
                 )}
             </Grid>
-            <Grid item md={3} xs={3}>
+            <Grid item md={2} xs={2}>
 
                 <span
                     className={classes.tableFields}
+                    style={{marginLeft:10,cursor:'pointer'}}
                 >
                                   {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
                                 </span>
@@ -135,16 +136,16 @@ const PlaceholderItem = (props) => {
                 e.stopPropagation();
             }}>
                 <img
-                    style={{width: 30, height: 30}}
+                    style={{width: 30, height: 30,marginLeft:13,cursor:'pointer'}}
                     src={item.url}
                 ></img>
             </Grid>
 
-            <Grid item md={1} xs={1}>
+            <Grid item md={2} xs={2}>
                                 <span className={classes.tableFields}>
                                   {(item.name).length > 15 ? (
                                       <CheckCircleIcon fontSize='small' style={{
-                                          fill: '#006644',
+                                          fill: '#006644',marginLeft:35
                                       }}/>) : ''}
                                 </span>
             </Grid>

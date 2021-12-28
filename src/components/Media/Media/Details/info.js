@@ -95,36 +95,47 @@ const ItemInfo = (props) => {
                     fontWeight: "bold",
                     fontSize: 20,
                     marginBottom: 0,
+                 
+                    
+                    
                 }}
             >
-                {props.selectedPlaceholder.name}
+               {' '+props.selectedPlaceholder.name}
             </p>
-            <p className className={classes.messageDetailsHeading} style={{marginTop:20}}>
-                File Type:
-                    <span className={classes.mdMargin} style={{color: "#f0ad24"}}>
-                        {props.selectedPlaceholder.file_type}
+            <p style={{color: "#9a9a9a",margin:0}} >
+                File Type :
+                
+                    <span style={{color: "#9a9a9a"}}>
+                 {' '+props.selectedPlaceholder.file_type}
                 </span>
+            
             </p>
-            <p className className={classes.messageDetailsHeading}>
-                Uploaded On:
-                <strong className={classes.mdMargin}>{(props.selectedPlaceholder.created_at).replace(/[^\d.-]/g,' ')}</strong>{" "}
+           
+            <p style={{color: "#9a9a9a",margin:0}} >
+                Uploaded on :
+              {' '+props.selectedPlaceholder.created_at.replace(/[^\d.-]/g, ' ')}
             </p>
-            <p className className={classes.messageDetailsHeading}>
-                Uploaded by :
-                <strong className={classes.mdMargin}>{props.selectedPlaceholder.owner}</strong>{" "}
+          
+                <p style={{color: "#9a9a9a",margin:0}}>
+                        Uploaded by :
+                   
+                      {' '+props.selectedPlaceholder.owner}
+                 
+                </p>
+                <p style={{color: "#9a9a9a",margin:0}}  >
+                File Size:
+               {' '+(props.selectedPlaceholder.size)/1000+' kb'}
             </p>
-            <p className className={classes.messageDetailsHeading}>
-                File Size :
-                <strong className={classes.mdMargin}>{(props.selectedPlaceholder.size)/1000+' kb'}</strong>{" "}
-            </p>
-            <p className className={classes.messageDetailsHeading}>
-                Dimension :
-                <strong className={classes.mdMargin}>{'Not provided'}</strong>{" "}
-            </p>
+            
+               
+         
             <Grid
                 container
                 direction="row"
                 className={classes.messageDetailsHeading}
+                style={{color: "#9a9a9a"}}
+            
+
             >
                 Tags:
                 <div
@@ -134,7 +145,7 @@ const ItemInfo = (props) => {
                         padding: 4,
                         fontSize: 10,
                         borderRadius: 4,
-                        marginLeft: 16,
+                        marginLeft: 10,
                     }}
                 >
                     OV WEEKENDS
@@ -146,7 +157,7 @@ const ItemInfo = (props) => {
                         padding: 4,
                         fontSize: 10,
                         borderRadius: 4,
-                        marginLeft: 16,
+                        marginLeft: 10,
                     }}
                 >
                     OV WEEKENDS
