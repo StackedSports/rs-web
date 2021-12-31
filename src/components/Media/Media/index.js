@@ -22,6 +22,7 @@ const Media = (props) => {
                     {media != null ? (
                         media.map((m, index) => {
                             if (props.viewMoreQuickAccess) {
+                                console.log('props.quickAccessEndIndex')
                                 if (
                                     // index >= quickAccessStartIndex &&
                                     index < props.quickAccessEndIndex
@@ -70,7 +71,7 @@ const Media = (props) => {
                                 }}
                                 onClick={() => {
                                     if (props.quickAccessEndIndex >= media.length) {
-                                        props.setViewMoreQuickAccess(false);
+                                        props.setViewMoreQuickAccess(true);
                                         props.setQuickAccessStartIndex(0);
                                         props.setQuickAccessEndIndex(15);
                                     } else {

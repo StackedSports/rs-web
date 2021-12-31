@@ -38,7 +38,6 @@ const MediaItem = (props) => {
                 style={{background: "#f6f6f6"}}
 
 
-
                 onMouseEnter={() => {
                     if (m.urls) {
                         props.setMediaHover(m.urls.medium);
@@ -106,7 +105,7 @@ const MediaItem = (props) => {
                         } else {
                             props.setShowMediaStats(true);
                         }
-                        props.setSelectedPlaceHolder(m,props.isPlaceHolder);
+                        props.setSelectedPlaceHolder(m, props.isPlaceHolder);
                         props.setShowBackButton(true);
                     }
                 }
@@ -118,17 +117,19 @@ const MediaItem = (props) => {
                 {
                     props.isPlaceHolder ?
                         (
-                            isImage(m.media_preview) ? (
-                                <FaImage></FaImage>
-                            ) : isVideo(m.media_preview) > -1 ? (
-                                <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
-                            ) : (
+                            m.media_preview ? isImage(m.media_preview) ? (
+                                    <FaImage></FaImage>
+                                ) : isVideo(m.media_preview) > -1 ? (
+                                    <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
+                                ) : (
+                                    <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                                ) :
                                 <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
-                            )
+
 
                         )
                         :
-                        (
+                         (
                             m.file_type === "image/gif") ? (
                             <GifIcon></GifIcon>
                         ) : m.file_type.indexOf("video") > -1 ? (

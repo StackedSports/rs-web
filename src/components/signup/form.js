@@ -96,6 +96,7 @@ export default function Signin() {
       },
       (error) => {
         // console.log("this is error", error.JSON());
+          console.log('error = ',error);
         notifyUser("Something went wrong please try again");
         setLoading(false);
       }

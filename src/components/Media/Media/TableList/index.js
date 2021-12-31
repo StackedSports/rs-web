@@ -105,7 +105,7 @@ const PlaceholderTableList = (props) => {
             <ListHeader isPlaceholderDetails={props.isPlaceholderDetails}/>
 
             <div
-                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:'30vh'}}
+                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:props.isPlaceholderDetails?'55vh':'30vh'}}
                 id="infinit"
                 onScroll={() => {
                     props.handleScroll();
@@ -122,6 +122,7 @@ const PlaceholderTableList = (props) => {
                             item={item}
                             index={index}
                             key={item.key}
+                            isPlaceholderDetails={props.isPlaceholderDetails}
                             isPlaceholder={props.isPlaceholder}
                             setLightboxVideo={props.setLightboxVideo}
                             setLightboxPicture={props.setLightboxPicture}

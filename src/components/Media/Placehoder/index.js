@@ -12,12 +12,12 @@ const Placeholder = (props) => {
 
     let placeholders=null;
     if(props.showlistView && props.placeholders){
-        placeholders=(props.placeholders).filter((item)=>item.name && item.media_preview)
-            .map((item)=>{ return {name:item.name,url:item.media_preview,date:item.created_at,id:item.id}});
+        placeholders=(props.placeholders).filter((item)=>item.name)
+            .map((item)=>{ return {name:item.name,url:item.media_preview?item.media_preview:'',date:item.created_at,id:item.id}});
     }else{
         placeholders=props.placeholders;
     }
-    console.log('placeholders = ',placeholders)
+    console.log('placeholders = ',props.showlistView)
 
 
     return (

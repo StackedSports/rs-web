@@ -1,7 +1,8 @@
 import axios from "axios";
 import moment from "moment";
 
-const URL = "https://prod.recruitsuite.co/api/";
+//const URL = "https://prod.recruitsuite.co/api/";
+const URL = "https://api.recruitsuite.co/api/";
 
 export const registerUser = (email, password) => {
   var data = JSON.stringify({
@@ -23,7 +24,7 @@ export const registerUser = (email, password) => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
@@ -44,7 +45,7 @@ export const loginUser = (email, password) => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
@@ -60,7 +61,7 @@ export const getUserAccountInformation = () => {
     url: URL + "login",
     headers: {
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       Accept: "application/json; version=1",
       "X-Auth-Token":
         "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjc2fQ.y4IqaYFOmbhXxC2RL4rvqVVY3ePvmlcpUA2tzRXkatI",
@@ -78,7 +79,7 @@ export const getTaskQueue = () => {
     url: URL + "login",
     headers: {
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       Accept: "application/json; version=1",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
@@ -102,7 +103,7 @@ export const getTaskQueueForDay = (date) => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -123,7 +124,7 @@ export const getMonthlyStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -144,7 +145,7 @@ export const getThisQuarterStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -181,7 +182,7 @@ export const getLastQuarterStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -202,7 +203,7 @@ export const getThisYearStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -233,7 +234,7 @@ export const getLastYearStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -267,7 +268,7 @@ export const getLastMonthStats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -288,7 +289,7 @@ export const getLast30Stats = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -313,7 +314,7 @@ export const getAllContacts = (page) => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -329,7 +330,7 @@ export const getTeamContacts = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -345,7 +346,7 @@ export const getAllColumns = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -361,7 +362,7 @@ export const getTags = () => {
       Accept: "application/json; version=3",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -377,7 +378,7 @@ export const getRanks = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -393,7 +394,7 @@ export const getGradeYears = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -409,7 +410,7 @@ export const getStatuses = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -425,7 +426,7 @@ export const getPositions = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -441,7 +442,7 @@ export const getBoardFilters = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -454,10 +455,10 @@ export const getMedia = () => {
     method: "get",
     url: URL + `media`,
     headers: {
-      Accept: "application/json; version=3",
+      Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -470,10 +471,10 @@ export const getPlaceholder = () => {
     method: "get",
     url: URL + `media/placeholders`,
     headers: {
-      Accept: "application/json; version=3",
+      Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -482,17 +483,15 @@ export const getPlaceholder = () => {
 };
 
 export const getMediaTag = () => {
+  console.log('token = ',JSON.parse(localStorage.getItem("user")).token)
   return axios({
     method: "get",
     url: URL + `media/tags`,
     headers: {
-      Accept: "application/json; version=3",
+      Accept: "application/json; version=1",
       "Content-Type": "application/json",
-      Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+      Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
-      Cookie:
-        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
   });
 };
@@ -506,7 +505,7 @@ export const getMediaUsers = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -526,7 +525,7 @@ export const createMessage = (body) => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
@@ -542,7 +541,7 @@ export const getMessages = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmhlbmRlcnNvbkBzdGFja2Vkc3BvcnRzLmNvbSIsImV4cCI6MTY0MDAxMTUwN30.vokiYw0OZMPWeSiRAOGDaDwZ8PWDL057YJn7AFS1RT0",
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be0280ec4-d74-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -558,7 +557,7 @@ export const getMostRecentSendTimes = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -574,7 +573,7 @@ export const getMessageInbox = () => {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
@@ -590,10 +589,25 @@ export const getMessage = () => {
       Accept: "application/json; version=3",
       "Content-Type": "application/json",
       Authorization:
-        "StackedSportsAuthKey key=b41d1779-d6db-44be-97b4-ecf39e207364",
+        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
       "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
       Cookie:
         "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
     },
   });
 };
+
+
+export const getPlaceholderById=(placeholderId)=>{
+    return axios({
+        method: "get",
+        url: URL + `media/placeholder/`+placeholderId,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+        },
+    });
+}
