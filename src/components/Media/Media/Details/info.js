@@ -113,7 +113,7 @@ const ItemInfo = (props) => {
            
             <p style={{color: "#9a9a9a",margin:0}} >
                 Uploaded on :
-              {' '+props.selectedPlaceholder.created_at.replace(/[^\d.-]/g, ' ')}
+              {' '+(props.selectedPlaceholder.created_at && props.selectedPlaceholder.created_at.replace(/[^\d.-]/g, ' '))}
             </p>
           
                 <p style={{color: "#9a9a9a",margin:0}}>

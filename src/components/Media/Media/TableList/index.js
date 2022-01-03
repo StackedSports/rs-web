@@ -122,6 +122,7 @@ const PlaceholderTableList = (props) => {
                             item={item}
                             index={index}
                             key={item.key}
+                            setShowMediaStats={props.setShowMediaStats}
                             isPlaceholderDetails={props.isPlaceholderDetails}
                             isPlaceholder={props.isPlaceholder}
                             setLightboxVideo={props.setLightboxVideo}

@@ -90,7 +90,12 @@ const PlaceholderItem = (props) => {
     return (
         <Grid
             onClick={() => {
-                props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
+                if(props.isPlaceholderDetails){
+                    props.setShowMediaStats(true);
+                    props.setSelectedPlaceHolder(item, props.isPlaceholder);
+                }else{
+                    props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
+                }
             }}
             onMouseEnter={(e)=>{
                 props.handleHover(props.index,true);

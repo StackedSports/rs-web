@@ -101,7 +101,7 @@ const MediaDetails = (props) => {
         selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
 
-    console.log('setMyMediaContacts =  ', contacts)
+    console.log('setMyMediaContacts =  ', props.selectedPlaceholder)
    
     return (
         <div style={{height:'67vh'}}>

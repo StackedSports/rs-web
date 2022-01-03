@@ -129,8 +129,9 @@ const MediaItem = (props) => {
 
                         )
                         :
+                        m.file_type?
                          (
-                            m.file_type === "image/gif") ? (
+                             m.file_type === "image/gif") ? (
                             <GifIcon></GifIcon>
                         ) : m.file_type.indexOf("video") > -1 ? (
                             <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
@@ -138,7 +139,9 @@ const MediaItem = (props) => {
                             <FaImage></FaImage>
                         ) : (
                             <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
-                        )
+                        ):
+                            <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+
                 }
                 <p
                     style={{
