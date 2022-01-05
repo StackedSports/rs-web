@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ApiHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ApiHelper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,7 +19,7 @@
     <session id="-147405535">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="21" />
+          <entry key="project.closed" value="23" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.11" value="2" />
           <entry key="project.open.time.12" value="3" />
@@ -33,10 +32,11 @@
           <entry key="project.open.time.19" value="1" />
           <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.30" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.32" value="1" />
+          <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.64" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="23" />
+          <entry key="project.opened" value="25" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -47,7 +47,7 @@
           <entry key="gif" value="3" />
           <entry key="jpeg" value="1" />
           <entry key="jpg" value="1" />
-          <entry key="js" value="171" />
+          <entry key="js" value="178" />
           <entry key="json" value="1" />
           <entry key="jsx" value="3" />
           <entry key="png" value="4" />
@@ -60,19 +60,19 @@
           <entry key="Image" value="10" />
           <entry key="JSON" value="1" />
           <entry key="JSX Harmony" value="3" />
-          <entry key="JavaScript" value="171" />
+          <entry key="JavaScript" value="178" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="TypeScript" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="20663" />
+          <entry key="js" value="21351" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="20663" />
+          <entry key="JavaScript" value="21351" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -85,67 +85,22 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
+        <entry file="file://$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="1059" column="41" selection-start-line="1059" selection-start-column="41" selection-end-line="1059" selection-end-column="41" />
+            <state relative-caret-position="272">
+              <caret line="16" column="20" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
               <folding>
-                <element signature="e#0#71#0" expanded="true" />
+                <element signature="e#1#52#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
+        <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="135" column="23" lean-forward="true" selection-start-line="135" selection-start-column="23" selection-end-line="135" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="11" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="11" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="115" column="60" selection-start-line="115" selection-start-column="60" selection-end-line="115" selection-end-column="60" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="124" column="70" selection-start-line="124" selection-start-column="70" selection-end-line="124" selection-end-column="70" />
-              <folding>
-                <element signature="e#0#51#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="93" column="48" selection-start-line="93" selection-start-column="48" selection-end-line="93" selection-end-column="48" />
-              <folding>
-                <element signature="e#0#51#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="209">
+              <caret line="583" column="23" selection-start-line="583" selection-start-column="13" selection-end-line="583" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -161,8 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getC</find>
-      <find>getAllContacts</find>
       <find>getMyContacts</find>
       <find>MediaList</find>
       <find>tableHeading</find>
@@ -191,6 +144,8 @@
       <find>onClick</find>
       <find>handleSuggestionPlaceholder</find>
       <find>.length</find>
+      <find>descending</find>
+      <find>...</find>
     </findStrings>
     <replaceStrings>
       <replace>props.sideFilterClass</replace>
@@ -240,19 +195,20 @@
         <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/PlaceholderListButton.js" />
         <option value="$PROJECT_DIR$/src/components/Media/index.js" />
         <option value="$PROJECT_DIR$/src/components/signup/form.js" />
-        <option value="$PROJECT_DIR$/src/ApiHelper.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/info.js" />
         <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" />
+        <option value="$PROJECT_DIR$/src/ApiHelper.js" />
+        <option value="$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js" />
       </list>
     </option>
   </component>
@@ -281,7 +237,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -305,36 +260,28 @@
               <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="TwitterStream" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
               <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="Media" type="462c0819:PsiDirectoryNode" />
-              <item name="Media" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
-              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="Media" type="462c0819:PsiDirectoryNode" />
-              <item name="Media" type="462c0819:PsiDirectoryNode" />
-              <item name="Details" type="462c0819:PsiDirectoryNode" />
+              <item name="TwitterStream" type="462c0819:PsiDirectoryNode" />
+              <item name="Menus" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1641227816902" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1641227908551" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -390,18 +337,20 @@
       <workItem from="1640968907093" duration="41000" />
       <workItem from="1641141192150" duration="928000" />
       <workItem from="1641209872206" duration="241000" />
-      <workItem from="1641215707975" duration="7437000" />
+      <workItem from="1641215707975" duration="7565000" />
+      <workItem from="1641233625041" duration="416000" />
+      <workItem from="1641370122034" duration="1885000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="160562000" />
+    <option name="totallyTimeSpent" value="162991000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.30536914" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3147651" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -419,7 +368,7 @@
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.256447" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.26647565" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
@@ -551,20 +500,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/common/sidebar/sidebar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="2146" column="40" selection-start-line="2146" selection-start-column="21" selection-end-line="2146" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/@material-ui/core/SvgIcon/SvgIcon.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
@@ -670,13 +605,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/header.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="94" column="40" selection-start-line="94" selection-start-column="40" selection-end-line="94" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Header/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="213">
@@ -725,13 +653,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="461" column="9" selection-start-line="461" selection-start-column="9" selection-end-line="461" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -739,43 +660,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="124" column="70" selection-start-line="124" selection-start-column="70" selection-end-line="124" selection-end-column="70" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="93" column="48" selection-start-line="93" selection-start-column="48" selection-end-line="93" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="135" column="23" lean-forward="true" selection-start-line="135" selection-start-column="23" selection-end-line="135" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="115" column="60" selection-start-line="115" selection-start-column="60" selection-end-line="115" selection-end-column="60" />
+        <state relative-caret-position="2159">
+          <caret line="135" column="23" selection-start-line="135" selection-start-column="23" selection-end-line="135" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
+        <state relative-caret-position="51">
           <caret line="15" column="11" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="11" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
@@ -783,12 +677,70 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1938">
+          <caret line="115" column="60" selection-start-line="115" selection-start-column="60" selection-end-line="115" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="190" column="57" selection-start-line="190" selection-start-column="47" selection-end-line="190" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/header.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="121" column="81" selection-start-line="121" selection-start-column="81" selection-end-line="121" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="95" column="52" selection-start-line="95" selection-start-column="52" selection-end-line="95" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/common/sidebar/sidebar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2412">
+          <caret line="346" column="6" selection-start-line="346" selection-start-column="6" selection-end-line="346" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="1059" column="41" selection-start-line="1059" selection-start-column="41" selection-end-line="1059" selection-end-column="41" />
+        <state relative-caret-position="179">
+          <caret line="1367" column="58" lean-forward="true" selection-start-line="1367" selection-start-column="58" selection-end-line="1367" selection-end-column="58" />
           <folding>
             <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="583" column="23" selection-start-line="583" selection-start-column="13" selection-end-line="583" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="20" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
+          <folding>
+            <element signature="e#1#52#0" expanded="true" />
           </folding>
         </state>
       </provider>

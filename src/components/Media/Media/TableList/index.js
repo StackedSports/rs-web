@@ -87,6 +87,18 @@ const PlaceholderTableList = (props) => {
     const classes = useStyles();
     const [itemsList, setItemList] = useState(props.list);
     const [count, setCount] = useState(0);
+    const [sortingOrder,setSortingOrder] = useState({name:null,date:null});
+
+
+
+
+    const handleSortingOrder=(type)=>{
+        if(sortingOrder[type]===null || sortingOrder[type]==='descending'){
+            setSortingOrder({...sortingOrder,[type]:"ascending"})
+        }else if(sortingOrder[type]===null || sortingOrder[type]==='ascending'){
+            setSortingOrder({...sortingOrder,[type]:"descending"})
+        }
+    }
 
 
 
@@ -98,11 +110,28 @@ const PlaceholderTableList = (props) => {
         console.log('item = ',index,'  ',itemsList[index]);
 
     }
-    console.log('list1 = ',itemsList)
+
+    if(sortingOrder.name && sortingOrder.name==="ascending"){
+        itemsList.sort((a, b) => a.name.localeCompare(b.name))
+    }else  if(sortingOrder.name && sortingOrder.name==="descending"){
+        itemsList.sort((a, b) => b.name.localeCompare(a.name))
+    }
+
+    if(sortingOrder.date && sortingOrder.date==="ascending"){
+        itemsList.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+    }else  if(sortingOrder.date && sortingOrder.date==="descending"){
+        itemsList.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+
+    console.log('sorting order = ',sortingOrder)
+
     return (
 
         <div style={{width: "100%",marginTop:props.isPlaceholderDetails?10:0, overflowY: 'scroll',overflowX: 'hidden'}}>
-            <ListHeader isPlaceholderDetails={props.isPlaceholderDetails}/>
+            <ListHeader
+                handleSortingOrder={handleSortingOrder}
+                isPlaceholderDetails={props.isPlaceholderDetails}/>
 
             <div
                 style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:props.isPlaceholderDetails?'55vh':'30vh'}}

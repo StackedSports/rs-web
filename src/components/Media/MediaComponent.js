@@ -256,6 +256,8 @@ function MediaComponent(props) {
     const [showBackButton, setShowBackButton] = useState(false);
 
 
+
+
     const [displaySearchContainers, setDisplaySearchContainers] = useState({
         displayOwner: false,
         selectedTagContainer: false,
@@ -308,6 +310,8 @@ function MediaComponent(props) {
 
         setOpenSnackBar(false);
     };
+
+
 
 
     const handleMediaHover = (mediaHover) => {

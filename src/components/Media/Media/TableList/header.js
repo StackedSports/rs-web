@@ -95,7 +95,7 @@ const ListHeader=(props)=>{
             <Grid item md={0.5} xs={0.5}>
                  <span className={classes.tableHeading}>  { <Checkbox />}</span>
             </Grid>
-            <Grid item md={2} xs={2} >
+            <Grid item md={2} xs={2} onClick={(e)=>props.handleSortingOrder('name')}>
                 <span className={classes.tableHeading}>Name</span>
             </Grid>
             <Grid item md={1} xs={1}>
@@ -119,7 +119,7 @@ const ListHeader=(props)=>{
                 <KeyboardArrowDownOutlinedIcon/>
                 </span>
             </Grid>
-            <Grid item md={2} xs={2}>
+            <Grid item md={2} xs={2} onClick={(e)=>props.handleSortingOrder('date')}>
                 <span className={classes.tableHeading}>Last Modified</span>
             </Grid>
         </Grid>
