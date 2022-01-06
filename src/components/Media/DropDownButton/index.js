@@ -100,8 +100,8 @@ const DropDownButton = (props) => {
                 background={ props.backgroundColor}
                 text={props.text}
                 icon={React.cloneElement(props.Icon,{ style: {color:  props.iconSelectedColor  }})}
-                onClick={() => {
-
+                onClick={(e) => {
+                    props.onClick();
                 }}
             ></IconTextField>
             {

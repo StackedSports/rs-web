@@ -13,9 +13,15 @@ const Placeholder = (props) => {
     let placeholders=null;
     if(props.showlistView && props.placeholders){
         placeholders=(props.placeholders).filter((item)=>item.name)
-            .map((item)=>{ return {name:item.name,url:item.media_preview?item.media_preview:'',date:item.created_at,id:item.id}});
+            .map((item)=>{ return {name:item.name,url:item.media_preview?item.media_preview:'',date:item.created_at,id:item.id,
+                type:'placeholder'}});
     }else{
         placeholders=props.placeholders;
+        if(placeholders)
+        placeholders=placeholders.map((placeholder)=>{
+            placeholder.type="placeholder";
+            return placeholder;
+        })
     }
     console.log('placeholders = ',props.showlistView)
 

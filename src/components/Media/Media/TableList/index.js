@@ -124,7 +124,7 @@ const PlaceholderTableList = (props) => {
     }
 
 
-    console.log('sorting order = ',sortingOrder)
+    console.log('sorting order = ',itemsList)
 
     return (
 

@@ -176,12 +176,16 @@ const PlaceholderItem = (props) => {
                                     className={classes.tableFields}
                                     style={{marginLeft: 40}}
                                 >
-                                  {/* {formatPhoneNumber(item.phone)} */}
+                                  { item.team_contact_id ? team_contact_id:""}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                                <span className={classes.tableFields}>
-                                  {/*item.state*/}
+                                <span className={classes.tableFields}
+                                      style={{marginLeft: 40}}>
+                                  {item.owner && item.owner.first_name && ((item.owner.first_name+' '+item.owner.last_name).length>15?
+                                      (item.owner.first_name+' '+item.owner.last_name).slice(0,14):
+                                      (item.owner.first_name+' '+item.owner.last_name))
+                                  }
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
