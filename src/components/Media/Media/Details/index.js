@@ -101,7 +101,7 @@ const MediaDetails = (props) => {
         selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
 
-    console.log('setMyMediaContacts =  ', props.selectedPlaceholder)
+    console.log('setMyMediaContacts =  ', props.addDataToFilter)
    
     return (
         <div style={{height:'67vh'}}>
@@ -676,7 +676,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                95%
+                                0%
                             </p>
                             <p
                                 style={{
@@ -690,7 +690,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                64
+                                0
                             </p>
                             <p
                                 style={{
@@ -703,7 +703,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                17
+                                0
                             </p>
                             <p
                                 style={{
@@ -712,7 +712,7 @@ const MediaDetails = (props) => {
                                     height: 30,
                                 }}
                             >
-                                Retweets front Contacts (286/300)
+                                Retweets front Contacts (0/0)
                             </p>
                         </Grid>
                     </Grid>
@@ -747,7 +747,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                95%
+                                0%
                             </p>
                             <p
                                 style={{
@@ -756,12 +756,12 @@ const MediaDetails = (props) => {
                                     height: 30,
                                 }}
                             >
-                                Contact Engagement (286/300)
+                                Contact Engagement (0/0)
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                64
+                                0
                             </p>
                             <p
                                 style={{
@@ -769,12 +769,12 @@ const MediaDetails = (props) => {
                                     margin: 0,
                                 }}
                             >
-                                Favorite From Contacts (286/300)
+                                Favorite From Contacts (0/0)
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                17
+                                0
                             </p>
                             <p
                                 style={{
@@ -783,7 +783,7 @@ const MediaDetails = (props) => {
                                     height: 30,
                                 }}
                             >
-                                Retweets front Contacts (286/300)
+                                Retweets front Contacts (0/0)
                             </p>
                         </Grid>
                     </Grid>

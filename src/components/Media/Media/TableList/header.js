@@ -97,6 +97,7 @@ const ListHeader = (props) => {
             </Grid>
             <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('name')}>
                 <span className={classes.tableHeading}>Name</span>
+                <KeyboardArrowDownOutlinedIcon/>
             </Grid>
             <Grid item md={1} xs={1}>
                 <span className={classes.tableHeading}>File</span>
@@ -122,6 +123,7 @@ const ListHeader = (props) => {
             </Grid>
             <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('date')}>
                 <span className={classes.tableHeading}>Last Modified</span>
+                <KeyboardArrowDownOutlinedIcon/>
             </Grid>
         </Grid>
     )

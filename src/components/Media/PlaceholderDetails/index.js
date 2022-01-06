@@ -20,32 +20,33 @@ const PlaceholderDetails=(props)=>{
                 {<MediaItem {...props}/>}
             </Grid>
             <Grid item md={9} xs={9}>
-                <p style={{fontWeight: "bold", fontSize: 20}}>
+                <p style={{fontWeight: "bold", fontSize: 20,marginLeft:'25px'}}>
                     {selectedPlaceholder.name}
                 </p>
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
-                    FileType: image/jpeg
+                <p style={{margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
+                    FileType: 
+                    <span style={{color: "#9a9a9a"}}>
+                 {' '+selectedPlaceholder.media[0].file_type}
+                </span>
                 </p>
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
+                <p style={{ margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
                     Uploaded On:{" "}
-                    {new moment(selectedPlaceholder.created_at).format(
-                        "YYYY-MM-DD"
-                    )}
+                    {' '+(selectedPlaceholder.created_at && selectedPlaceholder.created_at.replace(/[^\d.:-]/g, ' '))}
+          
                 </p>{" "}
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
-                    Uploaded By: Tim Glover
+                <p style={{ margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
+                    Uploaded By:    {' '+selectedPlaceholder.media[0].owner.first_name+' '+selectedPlaceholder.media[0].owner.last_name}
+                 
                 </p>
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
-                    File Size : 40.5 kb
+                <p style={{ margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
+                    File Size :  {' '+(selectedPlaceholder.media[0].size)/1000+' kb'}
                 </p>
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
-                    Dimensions : 160 x 200
-                </p>
-                <p style={{fontWeight: 500, fontSize: 20, margin: 0}}>
-                    Last Sent :{" "}
-                    {new moment(selectedPlaceholder.created_at).format(
-                        "YYYY-MM-DD"
-                    )}
+                
+                
+                <p style={{ margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
+                Updated at :
+              {' '+(selectedPlaceholder.updated_at && selectedPlaceholder.updated_at.replace(/[^\d.:-]/g, ' '))}
+          
                 </p>
             </Grid>
         </Grid>
