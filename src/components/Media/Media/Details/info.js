@@ -118,7 +118,8 @@ const ItemInfo = (props) => {
             <p style={{color: "#9a9a9a", margin: 0}}>
                 Uploaded by :
 
-                {' ' + props.selectedPlaceholder.owner}
+                {props.selectedPlaceholder.owner && (props.selectedPlaceholder.owner.first_name+' '+
+                    props.selectedPlaceholder.owner.last_name)}
 
             </p>
             <p style={{color: "#9a9a9a", margin: 0}}>

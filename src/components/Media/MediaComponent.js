@@ -330,8 +330,8 @@ function MediaComponent(props) {
     }
 
 
-    const handleSetShowFilters=()=>{
-        console.log('handleSetShowFilters = ',filter);
+    const handleSetShowFilters = () => {
+        console.log('handleSetShowFilters = ', filter);
         setShowFilters(!showFilters);
     }
 
@@ -1265,7 +1265,7 @@ function MediaComponent(props) {
 
     console.log('render = ', displayListContainer.selectedPlaceholder)
 
-    if ((displayListContainer.showMediaListView || displayListContainer.selectedPlaceholder) && media) {
+    if ((displayListContainer.showMediaListView || props.filter.length>0 || displayListContainer.selectedPlaceholder) && media) {
         if (displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media) {
             MediaList = displayListContainer.selectedPlaceholder.media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
                 .map((item) => {
@@ -1300,7 +1300,7 @@ function MediaComponent(props) {
         <div
             style={{
                 width: props.showSideFilters === true ? "85%" : "100%",
-                height: "100%",
+                height: "90vh",
                 background: "white",
                 borderRadius: 5,
                 padding: 10,
@@ -1329,7 +1329,7 @@ function MediaComponent(props) {
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
                 history={props.history}
-                showFilter={props.filter && props.filter.length>0?true:false}
+                showFilter={props.filter && props.filter.length > 0 ? true : false}
                 setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
             />
@@ -1337,7 +1337,19 @@ function MediaComponent(props) {
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
 
             {showFilters && renderFilters()}
-
+            {props.filter.length > 0 &&
+            <Fragment>
+                <ItemMainHeader title={"Media"}
+                                dropdown_item_title={"Last Modified"}
+                                CustomToggle={CustomToggle}/>
+                <PlaceholderTableList list={MediaList}
+                                      handleScroll={handleScroll}
+                                      isPlaceholder={false}
+                                      setLightboxPicture={handleSetLightboxPicture}
+                                      setLightboxVideo={handleSetLightboxVideo}
+                                      showFullHeight={(props.filter).length>0?true:false}
+                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+            </Fragment>}
 
             <div
                 style={{
@@ -1347,6 +1359,7 @@ function MediaComponent(props) {
                 }}
             ></div>
             {showFiltersRow === true ? renderFilters() : <div></div>}
+            {props.filter.length <= 0 &&
             <div style={{width: "100%", overflowX: "scroll", marginTop: 10}}>
                 {
                     showMediaStats ?
@@ -1415,7 +1428,8 @@ function MediaComponent(props) {
                                     (
                                         displayListContainer.showMediaListView ? (
                                                 <Fragment>
-                                                    <ItemMainHeader title={"Media"} dropdown_item_title={"Last Modified"}
+                                                    <ItemMainHeader title={"Media"}
+                                                                    dropdown_item_title={"Last Modified"}
                                                                     CustomToggle={CustomToggle}/>
                                                     <PlaceholderTableList list={MediaList}
                                                                           handleScroll={handleScroll}
@@ -1581,15 +1595,17 @@ function MediaComponent(props) {
                 }
 
             </div>
+            }
             <Grid container direction="row" alignItems="center"></Grid>
             {
-                <TagSearchModal
-                    showTagsDialog={showTagsDialog}
-                    tagSearch={tagSearch}
-                    allTags={allTags}
-                    setTagSearch={handleSetTagSearch}
-                    setShowTagsDialog={handleShowTagsDialog}
-                    setOpenSnackBar={handleOpenSnackBar}
+                props.filter.length <= 0 &&
+                < TagSearchModal
+                showTagsDialog={showTagsDialog}
+                tagSearch={tagSearch}
+                allTags={allTags}
+                setTagSearch={handleSetTagSearch}
+                setShowTagsDialog={handleShowTagsDialog}
+                setOpenSnackBar={handleOpenSnackBar}
                 />
             }
             {lightboxPicture && (

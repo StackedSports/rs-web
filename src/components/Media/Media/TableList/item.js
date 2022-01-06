@@ -176,7 +176,7 @@ const PlaceholderItem = (props) => {
                                     className={classes.tableFields}
                                     style={{marginLeft: 40}}
                                 >
-                                  { item.team_contact_id ? team_contact_id:""}
+                                  { props.isPlaceholder?(item.media_placeholder_id):item.team_contact_id}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>

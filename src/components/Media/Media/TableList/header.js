@@ -80,9 +80,9 @@ const useStyles = makeStyles({
     }
 });
 
-const ListHeader=(props)=>{
+const ListHeader = (props) => {
     const classes = useStyles();
-    return(
+    return (
         <Grid
             container
             direction="row"
@@ -93,9 +93,9 @@ const ListHeader=(props)=>{
             }}
         >
             <Grid item md={0.5} xs={0.5}>
-                 <span className={classes.tableHeading}>  { <Checkbox />}</span>
+                <span className={classes.tableHeading}>  {<Checkbox/>}</span>
             </Grid>
-            <Grid item md={2} xs={2} onClick={(e)=>props.handleSortingOrder('name')}>
+            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('name')}>
                 <span className={classes.tableHeading}>Name</span>
             </Grid>
             <Grid item md={1} xs={1}>
@@ -110,16 +110,17 @@ const ListHeader=(props)=>{
                       <span
                           className={classes.tableHeading}
                       >
-                        Associated To
-                        <KeyboardArrowDownOutlinedIcon/>
+                          {props.isPlaceholder ? "File Count" : "Associated To"}
+                          <KeyboardArrowDownOutlinedIcon/>
                       </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>Owner
-                <KeyboardArrowDownOutlinedIcon/>
+                <span className={classes.tableHeading}>
+                    {props.isPlaceholder ? "Associated To" : "Owner"}
+                    <KeyboardArrowDownOutlinedIcon/>
                 </span>
             </Grid>
-            <Grid item md={2} xs={2} onClick={(e)=>props.handleSortingOrder('date')}>
+            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('date')}>
                 <span className={classes.tableHeading}>Last Modified</span>
             </Grid>
         </Grid>
