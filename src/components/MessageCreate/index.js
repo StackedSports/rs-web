@@ -62,28 +62,28 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 function MessageCreate(props) {
-//api
-//var userProfile;
+  //api
+  //var userProfile;
 
   const [showModal, setShowModal] = useState(true);
   var [showSetting, setShowSetting] = useState(false);
   //const [allTags, setAllTags] = useState(null);
-  
-  
+
+
 
   useEffect(async () => {
-    
+
     console.log("component did mount");
-const fetchItems = async ()=>{
-try{
-    const result = await getMessage();
-    console.log('data = ', result.data)
-} 
-catch(e){
-    console.log('data = ',e); 
-}
-}
-fetchItems();
+    const fetchItems = async () => {
+      try {
+        const result = await getMessage();
+        console.log('data = ', result.data)
+      }
+      catch (e) {
+        console.log('data = ', e);
+      }
+    }
+    fetchItems();
 
   }, []);
 
@@ -94,11 +94,11 @@ fetchItems();
 
   }, []);
 
-  const handleAnimation=()=>{
+  const handleAnimation = () => {
     //setShowDrawer(true);
-    setTimeout(()=>{
+    setTimeout(() => {
       setShowAnimation(false);
-    },500)
+    }, 500)
   }
 
 
@@ -501,14 +501,14 @@ fetchItems();
   };
   const getMyPlaceholders = async () => {
 
-    try{
-      const data =await getPlaceholder();
+    try {
+      const data = await getPlaceholder();
       if (data.statusText === "OK") {
         // console.log("These are all placeholder", res.data);
         setPlaceHolders(data.data);
-        console.log('placeholder data = ',data.data);
-    }
-  }catch(error){
+        console.log('placeholder data = ', data.data);
+      }
+    } catch (error) {
       console.log("this is error all media", error);
     }
     /*getPlaceholder().then(
@@ -2257,34 +2257,34 @@ fetchItems();
     );
   };
 
-  const handleSendMessage=async ()=>{
+  const handleSendMessage = async () => {
     //setMessagePreview(true);
-    const selectedMediaIds=selectedMedia.map((media)=>media.id);
-    const contactsId=messageSender.id;
-    const data={
-      "platform":messageType,
-     "media_placeholder_id":selectedMediaIds,
-      "filter_ids":messageReceiver,
-      "send_at":date,
-      "body":messageText,
-      'contact_ids':contactsId,
-     'user_id':JSON.parse(localStorage.getItem("user")).id,
+    const selectedMediaIds = selectedMedia.map((media) => media.id);
+    const contactsId = messageSender.id;
+    const data = {
+      "platform": messageType,
+      "media_placeholder_id": selectedMediaIds,
+      "filter_ids": messageReceiver,
+      "send_at": date,
+      "body": messageText,
+      'contact_ids': contactsId,
+      'user_id': JSON.parse(localStorage.getItem("user")).id,
     }
 
 
-    console.log('data = ',data)
+    console.log('data = ', data)
 
 
-    try{
+    try {
       const response = await createMessage(data);
-      console.log('create message = ',response);
-    }catch(e){
-      console.log('create message = ',e)
+      console.log('create message = ', response);
+    } catch (e) {
+      console.log('create message = ', e)
     }
-    
-  //  postMessage(data)
-    
- }
+
+    //  postMessage(data)
+
+  }
 
 
   return (
@@ -2343,12 +2343,12 @@ fetchItems();
             >
 
 
-            
+
               {/* <FormatAlignLeftIcon
                
               ></FormatAlignLeftIcon> */}
 
-             
+
 
               Create Message
             </p>
@@ -2442,32 +2442,32 @@ fetchItems();
           >
             <Grid container direction="row">
               <Grid item md={4} sm={4}>
-                
-                  {
-              showDrawer?
-              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(false);
-                setShowAnimation(true);
-                handleAnimation();
-              }}
-              style={{ cursor: "pointer", width:40}}></img>
-              :
-              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(true);
-                setShowAnimation(true);
-                handleAnimation();
 
-              }}
-              style={{ cursor: "pointer", width:40}}></img>            }
-              <span
+                {
+                  showDrawer ?
+                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                      setshowSideFilters(!showSideFilters);
+                      setShowDrawer(false);
+                      setShowAnimation(true);
+                      handleAnimation();
+                    }}
+                      style={{ cursor: "pointer", width: 40 }}></img>
+                    :
+                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                      setshowSideFilters(!showSideFilters);
+                      setShowDrawer(true);
+                      setShowAnimation(true);
+                      handleAnimation();
+
+                    }}
+                      style={{ cursor: "pointer", width: 40 }}></img>}
+                <span
                   style={{
                     fontWeight: "bold",
                     // marginLeft: 20,
                     fontSize: 20,
 
-                    padding:'16px'
+                    padding: '16px'
                   }}
                 >
 
@@ -2571,7 +2571,7 @@ fetchItems();
                           </Grid>
                           <Grid item md={4} xs={4}>
                             <button className={classes.blueButtonActive}>
-                              Team Boards
+                              Team Boards s
                             </button>
                           </Grid>
                           <Grid item md={4} xs={4}>
@@ -3895,7 +3895,7 @@ const useStyles = makeStyles({
     fontSize: 15,
     paddingBottom: 0,
     marginBottom: 0,
-  
+
     cursor: "pointer",
   },
   sideTwitterFilter: {
@@ -3904,9 +3904,9 @@ const useStyles = makeStyles({
     fontSize: 15,
     paddingBottom: 0,
     marginBottom: 0,
-    marginTop:20,
+    marginTop: 20,
     cursor: "pointer",
-    marginLeft:'10px'
+    marginLeft: '10px'
   },
   sideMediaFilter: {
     padding: 5,
@@ -3914,9 +3914,9 @@ const useStyles = makeStyles({
     fontSize: 13,
     paddingBottom: 0,
     marginBottom: 0,
-    marginTop:5,
+    marginTop: 5,
     cursor: "pointer",
-    marginLeft:'10px'
+    marginLeft: '10px'
   },
   sideSubFilter: {
     padding: 5,
@@ -4021,5 +4021,5 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
-export {useStyles};
+export { useStyles };
 export default MessageCreate;
