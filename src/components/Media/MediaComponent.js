@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useReducer, Fragment} from "react";
+import React, { useState, useEffect, useReducer, Fragment } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
     makeStyles,
     Grid,
@@ -10,7 +10,7 @@ import {
     Slider,
 } from "@material-ui/core";
 import moment from "moment";
-import {FaSlidersH, FaBars, FaTh} from "react-icons/fa";
+import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import AmimatedBurger from '../../images/animated_burger.gif';
 import FormatAlignLeftOutlinedIcon from '@mui/icons-material/FormatAlignLeftOutlined';
@@ -30,12 +30,12 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
 import ClearIcon from "@material-ui/icons/Clear";
-import {Dropdown, DropdownButton} from "react-bootstrap";
-import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
+import { Dropdown, DropdownButton } from "react-bootstrap";
+import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 import GifIcon from "@material-ui/icons/Gif";
 import DialogBox from "../common/Dialogs";
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
-import {DarkContainer} from "../common/Elements/Elements";
+import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 
@@ -67,7 +67,7 @@ import {
     getPlaceholderById,
     getMessages
 } from "../../ApiHelper";
-import {MoreHoriz} from "@material-ui/icons";
+import { MoreHoriz } from "@material-ui/icons";
 import SelectedContactItem from "./Media/Details/selected-contact";
 
 // const useStyles2 = makeStyles((theme) => ({
@@ -388,9 +388,9 @@ function MediaComponent(props) {
         );
     };
 
-    const CustomToggle = React.forwardRef(({children, onClick}, ref) => (
+    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
         <div
-            style={{fontSize: 17}}
+            style={{ fontSize: 17 }}
             ref={ref}
             onClick={(e) => {
                 e.preventDefault();
@@ -398,7 +398,7 @@ function MediaComponent(props) {
             }}
         >
             {children}
-            <KeyboardArrowDownIcon style={{marginLeft: 15, fontSize: 30}}/>
+            <KeyboardArrowDownIcon style={{ marginLeft: 15, fontSize: 30 }} />
         </div>
     ));
 
@@ -512,25 +512,25 @@ function MediaComponent(props) {
                     style={filtesSpacingStyle}
                 >
                     {statuses &&
-                    statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    statusFilter === option.label ? "#348ef7" : "white",
-                                color: statusFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                if (statusFilter === option.label) {
-                                    setStatusFilter(null);
-                                    props.addDataToFilter(option.label);
-                                } else {
-                                    props.addDataToFilter(option.label, "status");
-                                }
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                        statuses.map((option) => (
+                            <Dropdown.Item
+                                style={{
+                                    background:
+                                        statusFilter === option.label ? "#348ef7" : "white",
+                                    color: statusFilter === option.label ? "white" : "black",
+                                }}
+                                onClick={() => {
+                                    if (statusFilter === option.label) {
+                                        setStatusFilter(null);
+                                        props.addDataToFilter(option.label);
+                                    } else {
+                                        props.addDataToFilter(option.label, "status");
+                                    }
+                                }}
+                            >
+                                {option.label}
+                            </Dropdown.Item>
+                        ))}
                 </DropdownButton>
 
                 <DropdownButton
@@ -576,25 +576,25 @@ function MediaComponent(props) {
                     style={filtesSpacingStyle}
                 >
                     {statuses &&
-                    statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    gradeYearFilter === option.label ? "#348ef7" : "white",
-                                color: gradeYearFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                if (rankFilter === option.label) {
-                                    setGradeYearFilter(null);
-                                    props.addDataToFilter(option.label);
-                                } else {
-                                    props.addDataToFilter(option.label, "gradeYear");
-                                }
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                        statuses.map((option) => (
+                            <Dropdown.Item
+                                style={{
+                                    background:
+                                        gradeYearFilter === option.label ? "#348ef7" : "white",
+                                    color: gradeYearFilter === option.label ? "white" : "black",
+                                }}
+                                onClick={() => {
+                                    if (rankFilter === option.label) {
+                                        setGradeYearFilter(null);
+                                        props.addDataToFilter(option.label);
+                                    } else {
+                                        props.addDataToFilter(option.label, "gradeYear");
+                                    }
+                                }}
+                            >
+                                {option.label}
+                            </Dropdown.Item>
+                        ))}
                 </DropdownButton>
                 <div className="associatedButton">
                     <DropdownButton
@@ -620,26 +620,45 @@ function MediaComponent(props) {
                             ></input>
                         </Grid>
                         {myMediaContacts &&
-                        myMediaContacts.map((option) => {
-                            var name = option.first_name + " " + option.last_name;
-                            if (contactSearch != "") {
-                                if (
-                                    name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
-                                ) {
+                            myMediaContacts.map((option) => {
+                                var name = option.first_name + " " + option.last_name;
+                                if (contactSearch != "") {
+                                    if (
+                                        name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
+                                    ) {
+                                        return (
+                                            <Dropdown.Item
+                                                style={{
+                                                    background:
+                                                        timeZoneFilter === option.label
+                                                            ? "#348ef7"
+                                                            : "white",
+                                                    color:
+                                                        timeZoneFilter === option.label ? "white" : "black",
+                                                }}
+                                                onClick={() => {
+                                                    // setTimeZoneFilter(
+                                                    //   option.first_name + " " + option.last_name
+                                                    // );
+                                                    props.addDataToFilter(
+                                                        option.first_name + " " + option.last_name
+                                                    );
+                                                }}
+                                            >
+                                                {option.first_name + " " + option.last_name}
+                                            </Dropdown.Item>
+                                        );
+                                    }
+                                } else {
                                     return (
                                         <Dropdown.Item
                                             style={{
                                                 background:
-                                                    timeZoneFilter === option.label
-                                                        ? "#348ef7"
-                                                        : "white",
+                                                    timeZoneFilter === option.label ? "#348ef7" : "white",
                                                 color:
                                                     timeZoneFilter === option.label ? "white" : "black",
                                             }}
                                             onClick={() => {
-                                                // setTimeZoneFilter(
-                                                //   option.first_name + " " + option.last_name
-                                                // );
                                                 props.addDataToFilter(
                                                     option.first_name + " " + option.last_name
                                                 );
@@ -649,26 +668,7 @@ function MediaComponent(props) {
                                         </Dropdown.Item>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <Dropdown.Item
-                                        style={{
-                                            background:
-                                                timeZoneFilter === option.label ? "#348ef7" : "white",
-                                            color:
-                                                timeZoneFilter === option.label ? "white" : "black",
-                                        }}
-                                        onClick={() => {
-                                            props.addDataToFilter(
-                                                option.first_name + " " + option.last_name
-                                            );
-                                        }}
-                                    >
-                                        {option.first_name + " " + option.last_name}
-                                    </Dropdown.Item>
-                                );
-                            }
-                        })}
+                            })}
                     </DropdownButton>
                 </div>
 
@@ -717,20 +717,36 @@ function MediaComponent(props) {
                         </Grid>
 
                         {taggedMedia &&
-                        taggedMedia.map((option) => {
-                            if (stateSearch != "") {
-                                if (
-                                    option.name
-                                        .toLowerCase()
-                                        .indexOf(stateSearch.toLowerCase()) > -1
-                                ) {
+                            taggedMedia.map((option) => {
+                                if (stateSearch != "") {
+                                    if (
+                                        option.name
+                                            .toLowerCase()
+                                            .indexOf(stateSearch.toLowerCase()) > -1
+                                    ) {
+                                        return (
+                                            <Dropdown.Item
+                                                style={{
+                                                    background:
+                                                        stateFilter === option.name ? "#348ef7" : "white",
+                                                    color:
+                                                        stateFilter === option.name ? "white" : "black",
+                                                }}
+                                                onClick={() => {
+                                                    props.addDataToFilter(option.name, "State");
+                                                }}
+                                            >
+                                                {option.name}
+                                            </Dropdown.Item>
+                                        );
+                                    }
+                                } else {
                                     return (
                                         <Dropdown.Item
                                             style={{
                                                 background:
                                                     stateFilter === option.name ? "#348ef7" : "white",
-                                                color:
-                                                    stateFilter === option.name ? "white" : "black",
+                                                color: stateFilter === option.name ? "white" : "black",
                                             }}
                                             onClick={() => {
                                                 props.addDataToFilter(option.name, "State");
@@ -740,23 +756,7 @@ function MediaComponent(props) {
                                         </Dropdown.Item>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <Dropdown.Item
-                                        style={{
-                                            background:
-                                                stateFilter === option.name ? "#348ef7" : "white",
-                                            color: stateFilter === option.name ? "white" : "black",
-                                        }}
-                                        onClick={() => {
-                                            props.addDataToFilter(option.name, "State");
-                                        }}
-                                    >
-                                        {option.name}
-                                    </Dropdown.Item>
-                                );
-                            }
-                        })}
+                            })}
                     </div>
                 </DropdownButton>
             </Grid>
@@ -816,13 +816,13 @@ function MediaComponent(props) {
 
     const onChangeMediaDetailsSearch = (type, value) => {
         if (type === 'SELECTED_TEAM_CONTACTS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, ownerSearch: value});
+            setSearchMediaDetailsContainer({ ...searchMediaDetailsContainer, ownerSearch: value });
         } else if (type === 'SELECTED_TAGS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, tagSearch: value});
+            setSearchMediaDetailsContainer({ ...searchMediaDetailsContainer, tagSearch: value });
         } else if (type === 'SELECTED_PLACEHOLDERS') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, placeholderSearch: value});
+            setSearchMediaDetailsContainer({ ...searchMediaDetailsContainer, placeholderSearch: value });
         } else if (type === 'SELECTED_ASSOCIATE_PLACEHOLDER') {
-            setSearchMediaDetailsContainer({...searchMediaDetailsContainer, associateSearch: value});
+            setSearchMediaDetailsContainer({ ...searchMediaDetailsContainer, associateSearch: value });
         }
     }
 
@@ -859,44 +859,47 @@ function MediaComponent(props) {
     };
 
 
-    useEffect(async () => {
-        console.log('props.history = ', props.history)
+        useEffect(() => {
+            (async () => {
+                console.log('props.history = ', props.history)
 
-        if (localStorage.getItem("user")) {
-            await getMyContacts();
-            await getTaggedMedia();
-            await getMyMediaContacts();
-            await getMyTeamContacts();
-
-            const media = await getMyMedia();
-            const placeholders = await getMyPlaceholders();
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            const type = urlParams.get('type');
-
-            if (type && type === "media" && media && id) {
-                const index = media.findIndex((m) => m.id == id);
-                if (index !== -1) {
-                    handleSelectedPlaceHolder(media[index], false, false, false);
-                    setShowMediaStats(true);
-                    setShowBackButton(true);
+                if (localStorage.getItem("user")) {
+                    await getMyContacts();
+                    await getTaggedMedia();
+                    await getMyMediaContacts();
+                    await getMyTeamContacts();
+        
+                    const media = await getMyMedia();
+                    const placeholders = await getMyPlaceholders();
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id');
+                    const type = urlParams.get('type');
+        
+                    if (type && type === "media" && media && id) {
+                        const index = media.findIndex((m) => m.id == id);
+                        if (index !== -1) {
+                            handleSelectedPlaceHolder(media[index], false, false, false);
+                            setShowMediaStats(true);
+                            setShowBackButton(true);
+                        }
+                        console.log('index = ', index);
+                    } else if (type && type === "placeholder" && placeholders && id) {
+                        const index = placeholders.findIndex((m) => m.id == id);
+                        if (index !== -1) {
+                            setShowMediaStats(false);
+                            setShowBackButton(true);
+                            handleSelectedPlaceHolder(placeholders[index], true, false, false);
+                        }
+                    }
+        
+                    console.log('id=', id, 'type=', type, media)
+                    // getAllTags();
+                } else {
+                    window.location.href = "/";
                 }
-                console.log('index = ', index);
-            } else if (type && type === "placeholder" && placeholders && id) {
-                const index = placeholders.findIndex((m) => m.id == id);
-                if (index !== -1) {
-                    setShowMediaStats(false);
-                    setShowBackButton(true);
-                    handleSelectedPlaceHolder(placeholders[index], true, false, false);
-                }
-            }
-
-            console.log('id=', id, 'type=', type, media)
-            // getAllTags();
-        } else {
-            window.location.href = "/";
-        }
-    }, []);
+            })();
+        }, []);
+      
 
 
     const isSelectedCheckbox = (index) => {
@@ -1104,7 +1107,7 @@ function MediaComponent(props) {
     const handlePlaceholderClick = (m) => {
 
         console.log('handlePlaceholderClick = ', handlePlaceholderClick)
-        setDisplayListContainer({...displayListContainer, selectedPlaceholder: m})
+        setDisplayListContainer({ ...displayListContainer, selectedPlaceholder: m })
     }
 
     const handlePlaceholderHover = (hover) => {
@@ -1194,7 +1197,7 @@ function MediaComponent(props) {
             );
         } else {
 
-            setDisplaySearchContainers({...displaySearchContainers, displayOwner: false}
+            setDisplaySearchContainers({ ...displaySearchContainers, displayOwner: false }
             );
         }
     }
@@ -1209,7 +1212,7 @@ function MediaComponent(props) {
             );
         } else {
 
-            setDisplaySearchContainers({...displaySearchContainers, selectedTagContainer: false}
+            setDisplaySearchContainers({ ...displaySearchContainers, selectedTagContainer: false }
             );
         }
     }
@@ -1224,7 +1227,7 @@ function MediaComponent(props) {
                 }
             );
         } else {
-            setDisplaySearchContainers({...displaySearchContainers, selectedPlaceholderContainer: false}
+            setDisplaySearchContainers({ ...displaySearchContainers, selectedPlaceholderContainer: false }
             );
         }
     }
@@ -1238,7 +1241,7 @@ function MediaComponent(props) {
                 }
             );
         } else {
-            setDisplaySearchContainers({...displaySearchContainers, selectedAssociatePlaceholderContainer: false}
+            setDisplaySearchContainers({ ...displaySearchContainers, selectedAssociatePlaceholderContainer: false }
             );
         }
     }
@@ -1265,7 +1268,7 @@ function MediaComponent(props) {
 
     console.log('render = ', displayListContainer.selectedPlaceholder)
 
-    if ((displayListContainer.showMediaListView || props.filter.length>0 || displayListContainer.selectedPlaceholder) && media) {
+    if ((displayListContainer.showMediaListView || props.filter.length > 0 || displayListContainer.selectedPlaceholder) && media) {
         if (displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media) {
             MediaList = displayListContainer.selectedPlaceholder.media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
                 .map((item) => {
@@ -1334,22 +1337,22 @@ function MediaComponent(props) {
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
             />
 
-            <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
+            <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter} />
 
             {showFilters && renderFilters()}
             {props.filter.length > 0 &&
-            <Fragment>
-                <ItemMainHeader title={"Media"}
-                                dropdown_item_title={"Last Modified"}
-                                CustomToggle={CustomToggle}/>
-                <PlaceholderTableList list={MediaList}
-                                      handleScroll={handleScroll}
-                                      isPlaceholder={false}
-                                      setLightboxPicture={handleSetLightboxPicture}
-                                      setLightboxVideo={handleSetLightboxVideo}
-                                      showFullHeight={(props.filter).length>0?true:false}
-                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
-            </Fragment>}
+                <Fragment>
+                    <ItemMainHeader title={"Media"}
+                        dropdown_item_title={"Last Modified"}
+                        CustomToggle={CustomToggle} />
+                    <PlaceholderTableList list={MediaList}
+                        handleScroll={handleScroll}
+                        isPlaceholder={false}
+                        setLightboxPicture={handleSetLightboxPicture}
+                        setLightboxVideo={handleSetLightboxVideo}
+                        showFullHeight={(props.filter).length > 0 ? true : false}
+                        setSelectedPlaceHolder={handleSelectedPlaceHolderListView} />
+                </Fragment>}
 
             <div
                 style={{
@@ -1360,191 +1363,85 @@ function MediaComponent(props) {
             ></div>
             {showFiltersRow === true ? renderFilters() : <div></div>}
             {props.filter.length <= 0 &&
-            <div style={{width: "100%", overflowX: "scroll", marginTop: 10}}>
-                {
-                    showMediaStats ?
+                <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
+                    {
+                        showMediaStats ?
 
-                        <Grid container direction="column">
-                            <Grid item xs={displayListContainer.isPlaceholderSelected ? 6 : 12}>
-                                <MediaItemDetails
-                                    filter={filter}
-                                    teamContacts={teamContacts}
-                                    handlePlaceholderClick={handlePlaceholderClick}
-                                    setPlacehoderHover={handlePlaceholderHover}
-                                    placeholderHover={placeholderHover}
-                                    isPlaceHolder={false}
-                                    selectedCheckBoxes={selectedCheckBoxes}
-                                    mediaHover={mediaHover}
-                                    displayPlaceholder={displayPlaceholder}
-                                    makeMediaSelected={props.makeMediaSelected}
-                                    setMediaHover={handleMediaHover}
-                                    setDisplayAction={handleMediaDisplayAction}
-                                    makeCheckBoxSelected={makeCheckBoxSelected}
-                                    setShowMediaStats={handleShowMediaStats}
-                                    setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                    setDisplayOwner={handleSetDisplayOwner}
-                                    setDisplayTags={handleSetDisplayTags}
-                                    setDisplayPlaceholder={handleSetDisplayPlaceholder}
-                                    displayPlaceholder={displayPlaceholder}
-                                    displayTags={displayTags}
-                                    addDataToFilter={addDataToFilter}
-                                    id={"messageDetailScrollPublished"}
-                                    hideCheckBox={null}
-                                    hideStats={null}
-                                    selectedPlaceholder={displayListContainer.selectedPlaceholder}
-                                    removeDataFromFilter={removeDataFromFilter}
-                                    selectedTeamContacts={selectedTeamContacts}
-                                    showHover={false}
-                                    setSelectedTagContainer={handleSetSelectedTagContainer}
-                                    selectedTags={selectedTags}
-                                    taggedMedia={taggedMedia}
-                                    myMediaContacts={myMediaContacts}
-                                    setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
-                                    selectedMediaPlaceholders={selectedMediaPlaceholders}
-                                    placeholders={placeholders}
-                                    setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
-                                    selectedAssociatePlaceholders={selectedAssociatePlaceholders}
-                                    displaySearchContainers={displaySearchContainers}
-                                    onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
-                                    searchMediaDetailsContainer={searchMediaDetailsContainer}
-                                    contacts={contacts}
-
-                                />
-                            </Grid>
-
-                        </Grid>
-                        :
-                        <div
-                            style={{width: "100%", maxHeight: 460, minWidth: 1110}}
-                            className="fullHeightMedia"
-                            id="infinit"
-                            // onScroll={() => {
-                            //   handleScroll();
-                            // }}
-                        >
-
-                            {
-                                displayListContainer.selectedPlaceholder === null || props.message ?
-                                    (
-                                        displayListContainer.showMediaListView ? (
-                                                <Fragment>
-                                                    <ItemMainHeader title={"Media"}
-                                                                    dropdown_item_title={"Last Modified"}
-                                                                    CustomToggle={CustomToggle}/>
-                                                    <PlaceholderTableList list={MediaList}
-                                                                          handleScroll={handleScroll}
-                                                                          isPlaceholder={false}
-                                                                          setLightboxPicture={handleSetLightboxPicture}
-                                                                          setLightboxVideo={handleSetLightboxVideo}
-                                                                          setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
-                                                </Fragment>
-                                            ) :
-                                            <Media
-                                                CustomToggle={CustomToggle}
-                                                setViewMoreQuickAccess={handleViewMoreQuickAccess}
-                                                setQuickAccessEndIndex={handleQuickAccessEndIndex}
-                                                setQuickAccessStartIndex={handleQuickAccessStartIndex}
-                                                selectedPlaceholder={displayListContainer.selectedPlaceholder}
-                                                message={props.message}
-                                                media={media}
-                                                viewMoreQuickAccess={viewMoreQuickAccess}
-                                                quickAccessEndIndex={quickAccessEndIndex}
-                                                handlePlaceholderClick={handlePlaceholderClick}
-                                                setPlacehoderHover={handlePlaceholderHover}
-                                                placeholderHover={placeholderHover}
-                                                isPlaceHolder={false}
-                                                selectedCheckBoxes={selectedCheckBoxes}
-                                                mediaHover={mediaHover}
-                                                makeMediaSelected={props.makeMediaSelected}
-                                                setMediaHover={handleMediaHover}
-                                                setDisplayAction={handleMediaDisplayAction}
-                                                makeCheckBoxSelected={makeCheckBoxSelected}
-                                                setShowMediaStats={handleShowMediaStats}
-                                                setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                                showHover={true}
-                                                setShowBackButton={handleSetShowBackButton}
-                                                showBackButton={showBackButton}
-                                                setLightboxVideo={handleSetLightboxVideo}
-                                                setLightboxPicture={handleSetLightboxPicture}
-                                            />
-                                    )
-                                    : (
-                                        <PlaceholderDetails
-                                            handlePlaceholderClick={handlePlaceholderClick}
-                                            setPlacehoderHover={handlePlaceholderHover}
-                                            placeholderHover={placeholderHover}
-                                            isPlaceHolder={true}
-                                            item={displayListContainer.selectedPlaceholder}
-                                            selectedCheckBoxes={selectedCheckBoxes}
-                                            mediaHover={mediaHover}
-                                            makeMediaSelected={props.makeMediaSelected}
-                                            setMediaHover={handleMediaHover}
-                                            setDisplayAction={handleMediaDisplayAction}
-                                            makeCheckBoxSelected={makeCheckBoxSelected}
-                                            setShowMediaStats={handleShowMediaStats}
-                                            setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                            showHover={false}
-
-                                        />
-
-                                    )}
-
-                            {/*<PlaceholderListButton
-                                setShowlistView={handleSetShowListView}
-                                displayListContainer={displayListContainer}
-                            />*/}
-
-                            {
-                                displayListContainer.selectedPlaceholder === null ?
-                                    <Placeholder
-                                        CustomToggle={CustomToggle}
-                                        placeholders={placeholders}
-                                        handleScroll={handleScroll}
-                                        handleSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                        viewMorePlaceholder={viewMorePlaceholder}
-                                        placeholderEndIndex={placeholderEndIndex}
-                                        setViewMorePlaceholder={handleViewMorePlaceholder}
-                                        setPlaceholderEndIndex={handlePlaceholderEndIndex}
-                                        setPlaceholderStartIndex={handlePlaceholderStartIndex}
+                            <Grid container direction="column">
+                                <Grid item xs={displayListContainer.isPlaceholderSelected ? 6 : 12}>
+                                    <MediaItemDetails
+                                        filter={filter}
+                                        teamContacts={teamContacts}
                                         handlePlaceholderClick={handlePlaceholderClick}
                                         setPlacehoderHover={handlePlaceholderHover}
                                         placeholderHover={placeholderHover}
-                                        isPlaceHolder={true}
+                                        isPlaceHolder={false}
                                         selectedCheckBoxes={selectedCheckBoxes}
                                         mediaHover={mediaHover}
+                                        displayPlaceholder={displayPlaceholder}
                                         makeMediaSelected={props.makeMediaSelected}
                                         setMediaHover={handleMediaHover}
                                         setDisplayAction={handleMediaDisplayAction}
                                         makeCheckBoxSelected={makeCheckBoxSelected}
                                         setShowMediaStats={handleShowMediaStats}
                                         setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                        setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
-                                        showlistView={displayListContainer.showPlaceholderListView}
-                                        message={props.message}
-                                        showHover={true}
-                                        setShowBackButton={handleSetShowBackButton}
-                                        showBackButton={showBackButton}
-                                        setLightboxVideo={handleSetLightboxVideo}
-                                        setLightboxPicture={handleSetLightboxPicture}
+                                        setDisplayOwner={handleSetDisplayOwner}
+                                        setDisplayTags={handleSetDisplayTags}
+                                        setDisplayPlaceholder={handleSetDisplayPlaceholder}
+                                        displayPlaceholder={displayPlaceholder}
+                                        displayTags={displayTags}
+                                        addDataToFilter={addDataToFilter}
+                                        id={"messageDetailScrollPublished"}
+                                        hideCheckBox={null}
+                                        hideStats={null}
+                                        selectedPlaceholder={displayListContainer.selectedPlaceholder}
+                                        removeDataFromFilter={removeDataFromFilter}
+                                        selectedTeamContacts={selectedTeamContacts}
+                                        showHover={false}
+                                        setSelectedTagContainer={handleSetSelectedTagContainer}
+                                        selectedTags={selectedTags}
+                                        taggedMedia={taggedMedia}
+                                        myMediaContacts={myMediaContacts}
+                                        setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
+                                        selectedMediaPlaceholders={selectedMediaPlaceholders}
+                                        placeholders={placeholders}
+                                        setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
+                                        selectedAssociatePlaceholders={selectedAssociatePlaceholders}
+                                        displaySearchContainers={displaySearchContainers}
+                                        onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
+                                        searchMediaDetailsContainer={searchMediaDetailsContainer}
+                                        contacts={contacts}
+
                                     />
-                                    :
-                                    <div style={{marginTop: 20, height: '100%'}}>
-                                        <PlaceholderListButton
-                                            setShowlistView={handleSetPlaceholderDetailsListView}
-                                            displayListContainer={displayListContainer}
-                                            isPlaceholderDetails={true}
-                                        />
-                                        {
-                                            displayListContainer.showPlaceholderDetailsListView ?
-                                                <PlaceholderTableList list={MediaList}
-                                                                      handleScroll={handleScroll}
-                                                                      isPlaceholder={false}
-                                                                      isPlaceholderDetails={true}
-                                                                      setShowMediaStats={handleShowMediaStats}
-                                                                      setLightboxPicture={handleSetLightboxPicture}
-                                                                      setLightboxVideo={handleSetLightboxVideo}
-                                                                      setSelectedPlaceHolder={handleSuggestionPlaceholder}/>
-                                                :
+                                </Grid>
+
+                            </Grid>
+                            :
+                            <div
+                                style={{ width: "100%", maxHeight: 460, minWidth: 1110 }}
+                                className="fullHeightMedia"
+                                id="infinit"
+                            // onScroll={() => {
+                            //   handleScroll();
+                            // }}
+                            >
+
+                                {
+                                    displayListContainer.selectedPlaceholder === null || props.message ?
+                                        (
+                                            displayListContainer.showMediaListView ? (
+                                                <Fragment>
+                                                    <ItemMainHeader title={"Media"}
+                                                        dropdown_item_title={"Last Modified"}
+                                                        CustomToggle={CustomToggle} />
+                                                    <PlaceholderTableList list={MediaList}
+                                                        handleScroll={handleScroll}
+                                                        isPlaceholder={false}
+                                                        setLightboxPicture={handleSetLightboxPicture}
+                                                        setLightboxVideo={handleSetLightboxVideo}
+                                                        setSelectedPlaceHolder={handleSelectedPlaceHolderListView} />
+                                                </Fragment>
+                                            ) :
                                                 <Media
                                                     CustomToggle={CustomToggle}
                                                     setViewMoreQuickAccess={handleViewMoreQuickAccess}
@@ -1552,7 +1449,7 @@ function MediaComponent(props) {
                                                     setQuickAccessStartIndex={handleQuickAccessStartIndex}
                                                     selectedPlaceholder={displayListContainer.selectedPlaceholder}
                                                     message={props.message}
-                                                    media={displayListContainer.selectedPlaceholder.media}
+                                                    media={media}
                                                     viewMoreQuickAccess={viewMoreQuickAccess}
                                                     quickAccessEndIndex={quickAccessEndIndex}
                                                     handlePlaceholderClick={handlePlaceholderClick}
@@ -1572,48 +1469,154 @@ function MediaComponent(props) {
                                                     showBackButton={showBackButton}
                                                     setLightboxVideo={handleSetLightboxVideo}
                                                     setLightboxPicture={handleSetLightboxPicture}
-                                                    isPlaceholderDetails={true}
-
                                                 />
-                                        }
-                                    </div>
-                            }
+                                        )
+                                        : (
+                                            <PlaceholderDetails
+                                                handlePlaceholderClick={handlePlaceholderClick}
+                                                setPlacehoderHover={handlePlaceholderHover}
+                                                placeholderHover={placeholderHover}
+                                                isPlaceHolder={true}
+                                                item={displayListContainer.selectedPlaceholder}
+                                                selectedCheckBoxes={selectedCheckBoxes}
+                                                mediaHover={mediaHover}
+                                                makeMediaSelected={props.makeMediaSelected}
+                                                setMediaHover={handleMediaHover}
+                                                setDisplayAction={handleMediaDisplayAction}
+                                                makeCheckBoxSelected={makeCheckBoxSelected}
+                                                setShowMediaStats={handleShowMediaStats}
+                                                setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                                showHover={false}
+
+                                            />
+
+                                        )}
+
+                                {/*<PlaceholderListButton
+                                setShowlistView={handleSetShowListView}
+                                displayListContainer={displayListContainer}
+                            />*/}
+
+                                {
+                                    displayListContainer.selectedPlaceholder === null ?
+                                        <Placeholder
+                                            CustomToggle={CustomToggle}
+                                            placeholders={placeholders}
+                                            handleScroll={handleScroll}
+                                            handleSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                            viewMorePlaceholder={viewMorePlaceholder}
+                                            placeholderEndIndex={placeholderEndIndex}
+                                            setViewMorePlaceholder={handleViewMorePlaceholder}
+                                            setPlaceholderEndIndex={handlePlaceholderEndIndex}
+                                            setPlaceholderStartIndex={handlePlaceholderStartIndex}
+                                            handlePlaceholderClick={handlePlaceholderClick}
+                                            setPlacehoderHover={handlePlaceholderHover}
+                                            placeholderHover={placeholderHover}
+                                            isPlaceHolder={true}
+                                            selectedCheckBoxes={selectedCheckBoxes}
+                                            mediaHover={mediaHover}
+                                            makeMediaSelected={props.makeMediaSelected}
+                                            setMediaHover={handleMediaHover}
+                                            setDisplayAction={handleMediaDisplayAction}
+                                            makeCheckBoxSelected={makeCheckBoxSelected}
+                                            setShowMediaStats={handleShowMediaStats}
+                                            setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                            setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
+                                            showlistView={displayListContainer.showPlaceholderListView}
+                                            message={props.message}
+                                            showHover={true}
+                                            setShowBackButton={handleSetShowBackButton}
+                                            showBackButton={showBackButton}
+                                            setLightboxVideo={handleSetLightboxVideo}
+                                            setLightboxPicture={handleSetLightboxPicture}
+                                        />
+                                        :
+                                        <div style={{ marginTop: 20, height: '100%' }}>
+                                            <PlaceholderListButton
+                                                setShowlistView={handleSetPlaceholderDetailsListView}
+                                                displayListContainer={displayListContainer}
+                                                isPlaceholderDetails={true}
+                                            />
+                                            {
+                                                displayListContainer.showPlaceholderDetailsListView ?
+                                                    <PlaceholderTableList list={MediaList}
+                                                        handleScroll={handleScroll}
+                                                        isPlaceholder={false}
+                                                        isPlaceholderDetails={true}
+                                                        setShowMediaStats={handleShowMediaStats}
+                                                        setLightboxPicture={handleSetLightboxPicture}
+                                                        setLightboxVideo={handleSetLightboxVideo}
+                                                        setSelectedPlaceHolder={handleSuggestionPlaceholder} />
+                                                    :
+                                                    <Media
+                                                        CustomToggle={CustomToggle}
+                                                        setViewMoreQuickAccess={handleViewMoreQuickAccess}
+                                                        setQuickAccessEndIndex={handleQuickAccessEndIndex}
+                                                        setQuickAccessStartIndex={handleQuickAccessStartIndex}
+                                                        selectedPlaceholder={displayListContainer.selectedPlaceholder}
+                                                        message={props.message}
+                                                        media={displayListContainer.selectedPlaceholder.media}
+                                                        viewMoreQuickAccess={viewMoreQuickAccess}
+                                                        quickAccessEndIndex={quickAccessEndIndex}
+                                                        handlePlaceholderClick={handlePlaceholderClick}
+                                                        setPlacehoderHover={handlePlaceholderHover}
+                                                        placeholderHover={placeholderHover}
+                                                        isPlaceHolder={false}
+                                                        selectedCheckBoxes={selectedCheckBoxes}
+                                                        mediaHover={mediaHover}
+                                                        makeMediaSelected={props.makeMediaSelected}
+                                                        setMediaHover={handleMediaHover}
+                                                        setDisplayAction={handleMediaDisplayAction}
+                                                        makeCheckBoxSelected={makeCheckBoxSelected}
+                                                        setShowMediaStats={handleShowMediaStats}
+                                                        setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                                        showHover={true}
+                                                        setShowBackButton={handleSetShowBackButton}
+                                                        showBackButton={showBackButton}
+                                                        setLightboxVideo={handleSetLightboxVideo}
+                                                        setLightboxPicture={handleSetLightboxPicture}
+                                                        isPlaceholderDetails={true}
+
+                                                    />
+                                            }
+                                        </div>
+                                }
 
 
-                            {props.message ? (
-                                <div></div>
-                            ) : (
-                                !displayListContainer.selectedPlaceholder &&
-                                <Tag
-                                    taggedMedia={taggedMedia}
-                                    CustomToggle={CustomToggle}
-                                    handleShowTagsDialog={handleShowTagsDialog}
-                                    handleOpenSnackBar={handleOpenSnackBar}
-                                />
-                            )}
-                        </div>
-                }
+                                {props.message ? (
+                                    <div></div>
+                                ) : (
+                                    !displayListContainer.selectedPlaceholder &&
+                                    <Tag
+                                        taggedMedia={taggedMedia}
+                                        CustomToggle={CustomToggle}
+                                        handleShowTagsDialog={handleShowTagsDialog}
+                                        handleOpenSnackBar={handleOpenSnackBar}
+                                    />
+                                )}
+                            </div>
+                    }
 
-            </div>
+                </div>
             }
             <Grid container direction="row" alignItems="center"></Grid>
             {
                 props.filter.length <= 0 &&
                 < TagSearchModal
-                showTagsDialog={showTagsDialog}
-                tagSearch={tagSearch}
-                allTags={allTags}
-                setTagSearch={handleSetTagSearch}
-                setShowTagsDialog={handleShowTagsDialog}
-                setOpenSnackBar={handleOpenSnackBar}
+                    showTagsDialog={showTagsDialog}
+                    tagSearch={tagSearch}
+                    allTags={allTags}
+                    setTagSearch={handleSetTagSearch}
+                    setShowTagsDialog={handleShowTagsDialog}
+                    setOpenSnackBar={handleOpenSnackBar}
                 />
             }
             {lightboxPicture && (
-                <LightboxDialog url={lightboxPicture} isVideo={false} closeModal={handleSetLightboxPicture}/>
+                <LightboxDialog url={lightboxPicture} isVideo={false} closeModal={handleSetLightboxPicture} />
             )}
 
             {lightboxVideo && (
-                <LightboxDialog url={lightboxVideo} isVideo={true} closeModal={handleSetLightboxVideo}/>
+                <LightboxDialog url={lightboxVideo} isVideo={true} closeModal={handleSetLightboxVideo} />
             )}
         </div>
     );

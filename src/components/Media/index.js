@@ -1072,7 +1072,7 @@ function Media(props) {
                     addDataToFilter={addDataToFilter}
                     makeMediaSelected={makeMediaSelected}
                     handleMediaDrawer={handleMediaDrawer}
-                    history={props.history}
+                    history={props?.history}
                 ></MediaComponnet>
             </Grid>
             <DialogBox
