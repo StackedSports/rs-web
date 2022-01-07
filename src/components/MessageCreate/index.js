@@ -76,7 +76,7 @@ function MessageCreate(props) {
     console.log("component did mount");
 const fetchItems = async ()=>{
 try{
-    const result=await getMessage();
+    const result = await getMessage();
     console.log('data = ', result.data)
 } 
 catch(e){
@@ -2607,7 +2607,7 @@ fetchItems();
                                   >
                                     {boards.name}
                                     <Grid container direction="row">
-                                      {boards.athletes.profile_images.map(
+                                      {boards?.athletes?.profile_images?.map(
                                         (image, index) => {
                                           if (index < 8) {
                                             return (
@@ -2629,7 +2629,7 @@ fetchItems();
                                       <img></img>
                                     </Grid>
                                     <p style={{ color: "#3871da" }}>
-                                      {boards.athletes.profile_images.length}{" "}
+                                      {boards?.athletes?.profile_images?.length}{" "}
                                       contacts
                                     </p>
                                   </div>

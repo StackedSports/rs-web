@@ -357,9 +357,9 @@ export const getAllColumns = () => {
 export const getTags = () => {
   return axios({
     method: "get",
-    url: URL + `tags?type=Medium`,
+    url: URL + `media/tags`,
     headers: {
-      Accept: "application/json; version=3",
+      Accept: "application/json; version=1",
       "Content-Type": "application/json",
       Authorization:
         "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
@@ -450,6 +450,7 @@ export const getBoardFilters = () => {
   });
 };
 
+
 export const getMedia = () => {
   return axios({
     method: "get",
@@ -466,10 +467,10 @@ export const getMedia = () => {
   });
 };
 
-export const getPlaceholder = () => {
+export const getPlaceholder = (placeholder_id) => {
   return axios({
     method: "get",
-    url: URL + `media/placeholders`,
+    url: URL + `placeholder/${placeholder_id}`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
@@ -517,7 +518,6 @@ export const createMessage = (body) => {
 
   const data=JSON.stringify(body);
 
-
   return axios({
     method: "post",
     url: URL + "messages",
@@ -533,7 +533,7 @@ export const createMessage = (body) => {
   });
 };
 
-export const getMessages = () => {
+export const getMessages = ( ) => { 
   return axios({
     method: "get",
     url: URL + `messages?include_all=false`,
@@ -565,10 +565,10 @@ export const getMostRecentSendTimes = () => {
   });
 };
 
-export const getMessageInbox = () => {
+export const getMessageInbox = (id) => {
   return axios({
     method: "get",
-    url: URL + `messages/inbox`,
+    url: URL + `messages/${id}?only_sendable=true`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
@@ -581,10 +581,10 @@ export const getMessageInbox = () => {
   });
 };
 
-export const getMessage = () => {
+export const getMessage = (id) => {
   return axios({
     method: "get",
-    url: URL + `messages?include_all=false`,
+    url: URL + `messages/${id}?only_sendable=true`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",

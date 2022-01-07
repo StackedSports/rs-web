@@ -43,7 +43,7 @@ export default function AcccessibleTable(props) {
         style={{
           maxHeight: 190,
           overflow:
-            props.selectedDateQueue != null && props.selectedDateQueue != 0
+            props?.selectedDateQueue != null && props?.selectedDateQueue != 0
               ? "scroll"
               : "hidden",
           minWidth: 630,
@@ -99,11 +99,11 @@ export default function AcccessibleTable(props) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {props.selectedDateQueue != null &&
-          props.selectedDateQueue.length != 0 ? (
+          {props?.selectedDateQueue != null &&
+          props?.selectedDateQueue?.length != 0 ? (
             <TableBody>
-              {props.selectedDateQueue &&
-                props.selectedDateQueue.map((item) => {
+              {props?.selectedDateQueue &&
+                props?.selectedDateQueue?.map((item) => {
                   var type = item.platform && item.platform.name;
                   if (
                     item.item_type === "Message" &&
