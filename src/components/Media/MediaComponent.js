@@ -254,8 +254,7 @@ function MediaComponent(props) {
 
 
     const [showBackButton, setShowBackButton] = useState(false);
-
-
+    const [showFilters, setShowFilters] = useState(false);
 
 
     const [displaySearchContainers, setDisplaySearchContainers] = useState({
@@ -278,7 +277,7 @@ function MediaComponent(props) {
         showPlaceholderListView: false,
         showPlaceholderDetailsListView: false,
         showMediaListView: false,
-        isPlaceholderSelected:false,
+        isPlaceholderSelected: false,
         selectedPlaceholder: null
     });
 
@@ -312,8 +311,6 @@ function MediaComponent(props) {
     };
 
 
-
-
     const handleMediaHover = (mediaHover) => {
         console.log('media hover = ', mediaHover)
         setMediaHover(mediaHover);
@@ -328,12 +325,15 @@ function MediaComponent(props) {
     }
 
 
-
-
     const handleSetShowBackButton = (back) => {
         setShowBackButton(back);
     }
 
+
+    const handleSetShowFilters = () => {
+        console.log('handleSetShowFilters = ', filter);
+        setShowFilters(!showFilters);
+    }
 
     const getMyTeamContacts = () => {
         getTeamContacts().then(
@@ -403,19 +403,25 @@ function MediaComponent(props) {
     ));
 
 
-    const getMyMedia = () => {
-        getMedia().then(
-            (res) => {
-                // console.log("THis is all contacts res", res);
-                if (res.statusText === "OK") {
-                    console.log("These are all media", res.data);
-                    setMedia(res.data);
-                }
-            },
-            (error) => {
-                console.log("this is error all media", error);
+    const getMyMedia = async () => {
+        try {
+            const res = await getMedia();
+            if (res.statusText === "OK") {
+                console.log("These are all media", res.data);
+                const media = (res.data).map((item) => {
+                    item.type = "media";
+                    return item;
+                })
+                setMedia(media);
+                return media;
+            } else {
+                return null;
             }
-        );
+        } catch (error) {
+            console.log("this is error all media", error);
+            return null;
+
+        }
     };
 
     const getMyMediaContacts = () => {
@@ -433,19 +439,20 @@ function MediaComponent(props) {
         );
     };
 
-    const getMyPlaceholders = () => {
-        getPlaceholder().then(
-            (res) => {
-                // console.log("THis is all contacts res", res);
-                if (res.statusText === "OK") {
-                    console.log("These are all placeholder", res.data);
-                    setPlaceHolders(res.data);
-                }
-            },
-            (error) => {
-                console.log("this is error all media", error);
+    const getMyPlaceholders = async () => {
+        try {
+            const res = await getPlaceholder();
+            if (res.statusText === "OK") {
+                console.log("These are all placeholder", res.data);
+                setPlaceHolders(res.data);
+                return res.data;
+            } else {
+                return null;
             }
-        );
+        } catch (error) {
+            console.log("this is error all media", error);
+            return null;
+        }
     };
 
     const getTaggedMedia = () => {
@@ -853,22 +860,38 @@ function MediaComponent(props) {
 
 
     useEffect(async () => {
-        if (localStorage.getItem("user")) {
-            getMyContacts();
-            getMyMedia();
-            getMyPlaceholders();
-            getTaggedMedia();
-            getMyMediaContacts();
-            getMyTeamContacts();
-            try {
-                const response = await getMessages()
+        console.log('props.history = ', props.history)
 
-                ;
-                console.log('getMessages = ', response);
-            } catch (e) {
-                console.log('getMessages = ', e)
+        if (localStorage.getItem("user")) {
+            await getMyContacts();
+            await getTaggedMedia();
+            await getMyMediaContacts();
+            await getMyTeamContacts();
+
+            const media = await getMyMedia();
+            const placeholders = await getMyPlaceholders();
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const type = urlParams.get('type');
+
+            if (type && type === "media" && media && id) {
+                const index = media.findIndex((m) => m.id == id);
+                if (index !== -1) {
+                    handleSelectedPlaceHolder(media[index], false, false, false);
+                    setShowMediaStats(true);
+                    setShowBackButton(true);
+                }
+                console.log('index = ', index);
+            } else if (type && type === "placeholder" && placeholders && id) {
+                const index = placeholders.findIndex((m) => m.id == id);
+                if (index !== -1) {
+                    setShowMediaStats(false);
+                    setShowBackButton(true);
+                    handleSelectedPlaceHolder(placeholders[index], true, false, false);
+                }
             }
-            console.log('')
+
+            console.log('id=', id, 'type=', type, media)
             // getAllTags();
         } else {
             window.location.href = "/";
@@ -973,21 +996,19 @@ function MediaComponent(props) {
     }
 
 
-    const handleSelectedPlaceHolder =  (placeholder, isPlaceholder, setToDefault, isFromBackButton) => {
+    const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault, isFromBackButton) => {
         console.log('setSelectedPlaceholder = ', placeholder, isPlaceholder, setToDefault, isFromBackButton);
 
 
-
-
         if (isPlaceholder) {
+
             setDisplayListContainer({
                 ...displayListContainer,
                 showPlaceholderListView: true,
                 showPlaceholderDetailsListView: true,
-                isPlaceholderSelected:isPlaceholder,
+                isPlaceholderSelected: isPlaceholder,
                 selectedPlaceholder: placeholder
             })
-
         } else if (setToDefault) {
             setDisplayListContainer({
                 showPlaceholderListView: false,
@@ -1005,10 +1026,15 @@ function MediaComponent(props) {
             setDisplayListContainer({
                 ...displayListContainer,
                 showPlaceholderListView: false,
-                isPlaceholderSelected:isPlaceholder,
+                isPlaceholderSelected: isPlaceholder,
                 selectedPlaceholder: placeholder
             })
         }
+
+        if (placeholder) {
+            props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
+        }
+
     }
 
 
@@ -1025,12 +1051,15 @@ function MediaComponent(props) {
                         ...displayListContainer,
                         selectedPlaceholder: placeholders[index]
                     })
+                    props.history.push("?id=" + placeholders[index].id + "&type=" + placeholders[index].type);
                 } else {
                     setDisplayListContainer({
                         showPlaceholderListView: true,
                         showMediaListView: false,
                         selectedPlaceholder: placeholders[index]
                     })
+                    props.history.push("?id=" + placeholders[index].id + "&type=" + placeholders[index].type);
+
                 }
 
             }
@@ -1045,26 +1074,29 @@ function MediaComponent(props) {
                     ...displayListContainer,
                     selectedPlaceholder: media[index]
                 })
+                props.history.push("?id=" + media[index].id + "&type=" + media[index].type);
+
             }
         }
     }
 
 
-    const handleSetPlaceholderDetailsListView=(listView)=>{
+    const handleSetPlaceholderDetailsListView = (listView) => {
         setDisplayListContainer({
             ...displayListContainer,
             showPlaceholderDetailsListView: listView
         })
+        props.history.push("?id=" + listView.id + "&type=" + listView.type);
+
     }
 
 
-
-    const handleSuggestionPlaceholder=(placeholder,isPlaceholder)=>{
-        console.log('handleSuggestionPlaceholder = ',placeholder,isPlaceholder)
-        placeholder.file_name=placeholder.name;
+    const handleSuggestionPlaceholder = (placeholder, isPlaceholder) => {
+        console.log('handleSuggestionPlaceholder = ', placeholder, isPlaceholder)
+        placeholder.file_name = placeholder.name;
         setDisplayListContainer({
             ...displayListContainer,
-            isPlaceholderSelected:isPlaceholder,
+            isPlaceholderSelected: isPlaceholder,
             selectedPlaceholder: placeholder
         })
     }
@@ -1231,29 +1263,44 @@ function MediaComponent(props) {
 
     let MediaList = null;
 
-    console.log('render = ', displayListContainer)
+    console.log('render = ', displayListContainer.selectedPlaceholder)
 
-    if ((displayListContainer.showMediaListView || displayListContainer.selectedPlaceholder) && media) {
-        if(displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media){
+    if ((displayListContainer.showMediaListView || props.filter.length>0 || displayListContainer.selectedPlaceholder) && media) {
+        if (displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media) {
             MediaList = displayListContainer.selectedPlaceholder.media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
                 .map((item) => {
-                    return {name: item.name, url: item.urls.thumb, date: item.created_at, id: item.id}
+                    return {
+                        ...item,
+                        name: item.name,
+                        url: item.urls.thumb,
+                        date: item.created_at,
+                        id: item.id,
+                        type: 'media'
+                    }
                 });
-        }else{
+        } else {
             MediaList = media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
                 .map((item) => {
-                    return {name: item.name, url: item.urls.thumb, date: item.created_at, id: item.id}
+                    return {
+                        ...item,
+                        name: item.name,
+                        url: item.urls.thumb,
+                        date: item.created_at,
+                        id: item.id,
+                        type: 'media'
+                    }
                 });
         }
 
     }
 
 
+    console.log('filter = ', showFilters);
     return (
         <div
             style={{
                 width: props.showSideFilters === true ? "85%" : "100%",
-                height: "100%",
+                height: "90vh",
                 background: "white",
                 borderRadius: 5,
                 padding: 10,
@@ -1281,11 +1328,28 @@ function MediaComponent(props) {
                 showBackButton={showBackButton}
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
+                history={props.history}
+                showFilter={props.filter && props.filter.length > 0 ? true : false}
+                setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
             />
 
-            <SelectedItemsContainer filter={props.filter} removeDataFromFilter={removeDataFromFilter}/>
+            <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
 
+            {showFilters && renderFilters()}
+            {props.filter.length > 0 &&
+            <Fragment>
+                <ItemMainHeader title={"Media"}
+                                dropdown_item_title={"Last Modified"}
+                                CustomToggle={CustomToggle}/>
+                <PlaceholderTableList list={MediaList}
+                                      handleScroll={handleScroll}
+                                      isPlaceholder={false}
+                                      setLightboxPicture={handleSetLightboxPicture}
+                                      setLightboxVideo={handleSetLightboxVideo}
+                                      showFullHeight={(props.filter).length>0?true:false}
+                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+            </Fragment>}
 
             <div
                 style={{
@@ -1295,56 +1359,57 @@ function MediaComponent(props) {
                 }}
             ></div>
             {showFiltersRow === true ? renderFilters() : <div></div>}
+            {props.filter.length <= 0 &&
             <div style={{width: "100%", overflowX: "scroll", marginTop: 10}}>
                 {
                     showMediaStats ?
 
                         <Grid container direction="column">
-                            <Grid item xs={displayListContainer.isPlaceholderSelected?6:12}>
-                            <MediaItemDetails
-                                filter={filter}
-                                teamContacts={teamContacts}
-                                handlePlaceholderClick={handlePlaceholderClick}
-                                setPlacehoderHover={handlePlaceholderHover}
-                                placeholderHover={placeholderHover}
-                                isPlaceHolder={false}
-                                selectedCheckBoxes={selectedCheckBoxes}
-                                mediaHover={mediaHover}
-                                displayPlaceholder={displayPlaceholder}
-                                makeMediaSelected={props.makeMediaSelected}
-                                setMediaHover={handleMediaHover}
-                                setDisplayAction={handleMediaDisplayAction}
-                                makeCheckBoxSelected={makeCheckBoxSelected}
-                                setShowMediaStats={handleShowMediaStats}
-                                setSelectedPlaceHolder={handleSelectedPlaceHolder}
-                                setDisplayOwner={handleSetDisplayOwner}
-                                setDisplayTags={handleSetDisplayTags}
-                                setDisplayPlaceholder={handleSetDisplayPlaceholder}
-                                displayPlaceholder={displayPlaceholder}
-                                displayTags={displayTags}
-                                addDataToFilter={addDataToFilter}
-                                id={"messageDetailScrollPublished"}
-                                hideCheckBox={null}
-                                hideStats={null}
-                                selectedPlaceholder={displayListContainer.selectedPlaceholder}
-                                removeDataFromFilter={removeDataFromFilter}
-                                selectedTeamContacts={selectedTeamContacts}
-                                showHover={false}
-                                setSelectedTagContainer={handleSetSelectedTagContainer}
-                                selectedTags={selectedTags}
-                                taggedMedia={taggedMedia}
-                                myMediaContacts={myMediaContacts}
-                                setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
-                                selectedMediaPlaceholders={selectedMediaPlaceholders}
-                                placeholders={placeholders}
-                                setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
-                                selectedAssociatePlaceholders={selectedAssociatePlaceholders}
-                                displaySearchContainers={displaySearchContainers}
-                                onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
-                                searchMediaDetailsContainer={searchMediaDetailsContainer}
-                                contacts={contacts}
+                            <Grid item xs={displayListContainer.isPlaceholderSelected ? 6 : 12}>
+                                <MediaItemDetails
+                                    filter={filter}
+                                    teamContacts={teamContacts}
+                                    handlePlaceholderClick={handlePlaceholderClick}
+                                    setPlacehoderHover={handlePlaceholderHover}
+                                    placeholderHover={placeholderHover}
+                                    isPlaceHolder={false}
+                                    selectedCheckBoxes={selectedCheckBoxes}
+                                    mediaHover={mediaHover}
+                                    displayPlaceholder={displayPlaceholder}
+                                    makeMediaSelected={props.makeMediaSelected}
+                                    setMediaHover={handleMediaHover}
+                                    setDisplayAction={handleMediaDisplayAction}
+                                    makeCheckBoxSelected={makeCheckBoxSelected}
+                                    setShowMediaStats={handleShowMediaStats}
+                                    setSelectedPlaceHolder={handleSelectedPlaceHolder}
+                                    setDisplayOwner={handleSetDisplayOwner}
+                                    setDisplayTags={handleSetDisplayTags}
+                                    setDisplayPlaceholder={handleSetDisplayPlaceholder}
+                                    displayPlaceholder={displayPlaceholder}
+                                    displayTags={displayTags}
+                                    addDataToFilter={addDataToFilter}
+                                    id={"messageDetailScrollPublished"}
+                                    hideCheckBox={null}
+                                    hideStats={null}
+                                    selectedPlaceholder={displayListContainer.selectedPlaceholder}
+                                    removeDataFromFilter={removeDataFromFilter}
+                                    selectedTeamContacts={selectedTeamContacts}
+                                    showHover={false}
+                                    setSelectedTagContainer={handleSetSelectedTagContainer}
+                                    selectedTags={selectedTags}
+                                    taggedMedia={taggedMedia}
+                                    myMediaContacts={myMediaContacts}
+                                    setSelectedMediaPlaceholders={handleSetSelectedMediaPlaceholders}
+                                    selectedMediaPlaceholders={selectedMediaPlaceholders}
+                                    placeholders={placeholders}
+                                    setSelectedAssociatePlaceholderContainer={handleSetSelectedAssociatePlaceholder}
+                                    selectedAssociatePlaceholders={selectedAssociatePlaceholders}
+                                    displaySearchContainers={displaySearchContainers}
+                                    onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
+                                    searchMediaDetailsContainer={searchMediaDetailsContainer}
+                                    contacts={contacts}
 
-                            />
+                                />
                             </Grid>
 
                         </Grid>
@@ -1363,7 +1428,8 @@ function MediaComponent(props) {
                                     (
                                         displayListContainer.showMediaListView ? (
                                                 <Fragment>
-                                                    <ItemMainHeader title={"Media"} dropdown_item_title={"Last Modified"}
+                                                    <ItemMainHeader title={"Media"}
+                                                                    dropdown_item_title={"Last Modified"}
                                                                     CustomToggle={CustomToggle}/>
                                                     <PlaceholderTableList list={MediaList}
                                                                           handleScroll={handleScroll}
@@ -1462,7 +1528,7 @@ function MediaComponent(props) {
                                         setLightboxPicture={handleSetLightboxPicture}
                                     />
                                     :
-                                    <div style={{marginTop: 20,height:'100%'}}>
+                                    <div style={{marginTop: 20, height: '100%'}}>
                                         <PlaceholderListButton
                                             setShowlistView={handleSetPlaceholderDetailsListView}
                                             displayListContainer={displayListContainer}
@@ -1529,15 +1595,17 @@ function MediaComponent(props) {
                 }
 
             </div>
+            }
             <Grid container direction="row" alignItems="center"></Grid>
             {
-                <TagSearchModal
-                    showTagsDialog={showTagsDialog}
-                    tagSearch={tagSearch}
-                    allTags={allTags}
-                    setTagSearch={handleSetTagSearch}
-                    setShowTagsDialog={handleShowTagsDialog}
-                    setOpenSnackBar={handleOpenSnackBar}
+                props.filter.length <= 0 &&
+                < TagSearchModal
+                showTagsDialog={showTagsDialog}
+                tagSearch={tagSearch}
+                allTags={allTags}
+                setTagSearch={handleSetTagSearch}
+                setShowTagsDialog={handleShowTagsDialog}
+                setOpenSnackBar={handleOpenSnackBar}
                 />
             }
             {lightboxPicture && (

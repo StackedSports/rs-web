@@ -82,7 +82,7 @@ const ItemInfo = (props) => {
 
     const classes = useStyles();
 
-    console.log('info = ',props);
+    console.log('info = ', props);
     return (
         <div
             style={{
@@ -95,73 +95,64 @@ const ItemInfo = (props) => {
                     fontWeight: "bold",
                     fontSize: 20,
                     marginBottom: 0,
-                 
-                    
-                    
+
+
                 }}
             >
-               {' '+props.selectedPlaceholder.name}
+                {' ' + props.selectedPlaceholder.name}
             </p>
-            <p style={{color: "#9a9a9a",margin:0}} >
+            <p style={{color: "#9a9a9a", margin: 0}}>
                 File Type :
-                
-                    <span style={{color: "#9a9a9a"}}>
-                 {' '+props.selectedPlaceholder.file_type}
+
+                <span style={{color: "#9a9a9a"}}>
+                 {' ' + props.selectedPlaceholder.file_type}
                 </span>
-            
+
             </p>
-           
-            <p style={{color: "#9a9a9a",margin:0}} >
+
+            <p style={{color: "#9a9a9a", margin: 0}}>
                 Uploaded on :
-              {' '+(props.selectedPlaceholder.created_at && props.selectedPlaceholder.created_at.replace(/[^\d.-]/g, ' '))}
+                {' ' + (props.selectedPlaceholder.created_at && props.selectedPlaceholder.created_at.replace(/[^\d.-]/g, ' '))}
             </p>
-          
-                <p style={{color: "#9a9a9a",margin:0}}>
-                        Uploaded by :
-                   
-                      {' '+props.selectedPlaceholder.owner}
-                 
-                </p>
-                <p style={{color: "#9a9a9a",margin:0}}  >
+
+            <p style={{color: "#9a9a9a", margin: 0}}>
+                Uploaded by :
+
+                {props.selectedPlaceholder.owner && (props.selectedPlaceholder.owner.first_name+' '+
+                    props.selectedPlaceholder.owner.last_name)}
+
+            </p>
+            <p style={{color: "#9a9a9a", margin: 0}}>
                 File Size:
-               {' '+(props.selectedPlaceholder.size)/1000+' kb'}
+                {' ' + (props.selectedPlaceholder.size) / 1000 + ' kb'}
             </p>
-            
-               
-         
+
+
             <Grid
                 container
                 direction="row"
                 className={classes.messageDetailsHeading}
                 style={{color: "#9a9a9a"}}
-            
+
 
             >
                 Tags:
-                <div
-                    style={{
-                        border: "1px solid #0091ff",
-                        color: "#0091ff",
-                        padding: 4,
-                        fontSize: 10,
-                        borderRadius: 4,
-                        marginLeft: 10,
-                    }}
-                >
-                    OV WEEKENDS
-                </div>
-                <div
-                    style={{
-                        border: "1px solid #0091ff",
-                        color: "#0091ff",
-                        padding: 4,
-                        fontSize: 10,
-                        borderRadius: 4,
-                        marginLeft: 10,
-                    }}
-                >
-                    OV WEEKENDS
-                </div>
+                {props.selectedPlaceholder.tags &&
+                (props.selectedPlaceholder.tags).map((tag) =>
+                    <div
+                        style={{
+                            border: "1px solid #0091ff",
+                            color: "#0091ff",
+                            padding: 4,
+                            fontSize: 10,
+                            borderRadius: 4,
+                            marginLeft: 10,
+                        }}
+                    >
+                        {tag.name}
+                    </div>
+                )
+                }
             </Grid>
         </div>
     )

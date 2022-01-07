@@ -124,17 +124,20 @@ const PlaceholderTableList = (props) => {
     }
 
 
-    console.log('sorting order = ',sortingOrder)
+    console.log('sorting order = ',itemsList)
 
     return (
 
         <div style={{width: "100%",marginTop:props.isPlaceholderDetails?10:0, overflowY: 'scroll',overflowX: 'hidden'}}>
             <ListHeader
                 handleSortingOrder={handleSortingOrder}
+                isPlaceholder={props.isPlaceholder}
                 isPlaceholderDetails={props.isPlaceholderDetails}/>
 
             <div
-                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',height:props.isPlaceholderDetails?'55vh':'30vh'}}
+                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',
+                    height:props.isPlaceholderDetails?'55vh':
+                        (props.showFullHeight?'55vh':'30vh')}}
                 id="infinit"
                 onScroll={() => {
                     props.handleScroll();

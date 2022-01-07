@@ -8,10 +8,10 @@ function MyStreams(props) {
     const classes = useStyles();
     const [showBoardFilters, setshowBoardFilters] = useState(true);
     return (
-        <Grid direction='column'>
+        <Grid direction='column' >
           {props.myMedia === true ? (
             
-            <div>
+            <div >
             <p className={classes.sideMediaFilter}>
             My Media
             <KeyboardArrowDownIcon
@@ -105,7 +105,7 @@ function MyStreams(props) {
                className={classes.sideMediaFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+             
             }}
           >
             Images
@@ -117,7 +117,7 @@ function MyStreams(props) {
                className={classes.sideMediaFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+            
             }}
           >
             Videos
@@ -129,7 +129,7 @@ function MyStreams(props) {
                className={classes.sideMediaFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+            
             }}
           >
             Personalized Media
@@ -141,7 +141,7 @@ function MyStreams(props) {
                className={classes.sideMediaFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+             
             }}
           >
             PlaceHolder
@@ -153,32 +153,13 @@ function MyStreams(props) {
       </div>
           ) : (
             <div>
-            <p className={classes.sideTwitterFilter}>
-            Drafts
-            <KeyboardArrowDownIcon
-              style={{ fontSize: 25 , marginLeft:'20px'}}
-            ></KeyboardArrowDownIcon>
-             </p>
-            <div>
-              {["Ben Graves"].map((item) => {
-                return (
-                  <p
-                    className={classes.sideSubFilter}
-                    onClick={() => {
-                      addDataToFilter(item, "Board");
-                    }}
-                  >
-                    {item}
-                  </p>
-                );
-              })}
-            </div>
+           
          
           <p
             className={classes.sideTwitterFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+          
             }}
           >
             My Streams
@@ -194,13 +175,7 @@ function MyStreams(props) {
                     <p
                       className={classes.sideSubFilter}
                       onClick={() => {
-                        setMessageDetails(!messageDetails);
-                        setMessageStatus("Drafts");
-                        setIsMesasgeStatusClick(false);
-                        setMessagePreview(null);
-                        setMessageSelected([]);
-
-                        addDataToFilter(item, "Board");
+                        
                       }}
                     >
                       {item}
@@ -214,7 +189,7 @@ function MyStreams(props) {
                className={classes.sideTwitterFilter}
             onClick={() => {
               // setshowBoardFilters(!showBoardFilters);
-              setMessageDetails(!messageDetails);
+        
             }}
           >
             Team Streams
@@ -230,13 +205,7 @@ function MyStreams(props) {
                     <p
                       className={classes.sideSubFilter}
                       onClick={() => {
-                        setMessageDetails(!messageDetails);
-                        setMessageStatus("Drafts");
-                        setIsMesasgeStatusClick(false);
-                        setMessagePreview(null);
-                        setMessageSelected([]);
-
-                        addDataToFilter(item, "Board");
+                      
                       }}
                     >
                       {item}

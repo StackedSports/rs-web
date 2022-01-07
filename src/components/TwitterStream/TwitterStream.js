@@ -7,12 +7,20 @@ import "emoji-mart/css/emoji-mart.css";
 import Sidebar from "../common/sidebar/sidebar";
 import { Divider } from "@material-ui/core";
 import Content from "./Content/Content";
-import { getMessage } from "../../ApiHelper";
-import MenuStream from "./Menus/MenuStream/MenuStream";
-
+import { getTwitterStream } from "../../ApiHelper";
+import MenuStream from "./Menus/MenuStream/Menu/MenuStream";
+import Contacts from "../../components/Chat/Chat"
 
 export default function TwitterStream(props) {
-
+    
+    const [message, setMessage] = useState(false);
+    const [showTwitterStream, setTwitterStream] = useState(true);
+    const handleMessage=(message)=>{
+        setMessage(message)
+      }
+      const handleTwitterStream=(twitter)=>{
+        setTwitterStream(twitter)
+      }
 
     useEffect(async () => {
         try{
@@ -26,11 +34,13 @@ export default function TwitterStream(props) {
     return (
        <div>
            <Grid direction='row'>
-       <Sidebar messageCreate={true} TwitterStream={true} />
+       <Sidebar messageCreate={message? false : true} TwitterStream={message? false : true}
+        chat={message? true : false}/>
+        {message && <Contacts message={handleMessage} />}
        <Divider />
-       <MenuNewMessage MenuStream={true}/>
+   <MenuNewMessage  message={handleMessage} />
        
-           
+            
     
        </Grid>
        </div>

@@ -9,26 +9,52 @@ import { DarkContainer } from "../../../common/Elements/Elements";
 import { Divider } from "@material-ui/core";
 import MyStreams from "./MyStreams";
 import Content from "../../Content/Content";
-import MenuStream from "../MenuStream/MenuStream";
+import MenuStream from "../MenuStream/Menu/MenuStream";
 import Button from "@mui/material/Button/Button";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import FilterContent from "../../Content/Message/Filter/Search/FilterContent";
-import MenuNewStream from "../MenuStream/MenuNewStream";
+import MenuNewStream from "../MenuStream/Menu/MenuNewStream";
+import KeywordRules from "../MenuStream/KeywordContent/KeywordRules";
+import KeywordsInclude from "../MenuStream/KeywordContent/KeywordsInclude";
+import { Stack } from "@mui/material";
+import TweetTypes from "../MenuStream/TweetTypes/TweetTypes"
+import MediaContent from "../MenuStream/TweetTypes/MediaContent"
+import StreamName from "../MenuStream/Menu/StreamName";
+import HashtagRules from "../MenuStream/HashtagContent/HashtagRules";
+import HashtagContent from "../MenuStream/HashtagContent/HashtagContent";
+import GeographyRules from "../MenuStream/GeographyContent/GeographyRules";
+import GeographyContent from "../MenuStream/GeographyContent/GeographyContent";
+import AccountContent from "../MenuStream/AccountContent/AccountContent";
+import AccountRules from "../MenuStream/AccountContent/AccountRules";
+import TagsMenu from "../../Content/Message/Setting/TagMenu";
+import Sidebar from "../../../common/sidebar/sidebar"
 //import useStyles from'../../../MessageCreate/index'
-function MenuNewMessage() {
+function MenuNewMessage(props) {
     const [showSideFilters, setshowSideFilters] = useState(true);
    
     
-    const [addMedia, setAddMedia] = useState(false);
-    const [messageDetails, setMessageDetails] = useState(null);
-    const [messagePreview, setMessagePreview] = useState(null);
-    const [messageSelected, setMessageSelected] = useState([]);
-    const [filter, setFilter] = useState([]);
-    
+    const [menuStream, setMenuStream] = useState(false);
+    const [mediaContent, setMediaContent] = useState(false);
+    const [keyword, setKeyword] = useState(false);
+    const [hashtagContent, setHashtagContent] = useState(false);
+    const [geographyContent, setGeographyContent] = useState(false);
+    const [accountContent, setAccountContent] = useState(false);
+    const [keywordIncludes,setKeywordIncludes] = useState(false);
+    const [searchCriteria, setSearchCriteria] = useState(false);
+    const [filter, setFilter] = useState(true);
+    const [streamName, setStreamName] = useState(false);
+    const [tagMenu, setTagMenu] = useState(false);
    
+    const [keywordRules, setKeywordRules] = useState(false);
+    const [geographyRules, setGeographyRules] = useState(false);
+    const [hashtagRules, setHashtagRules] = useState(false);
+    const [accountRules, setAccountRules] = useState(false);
     const [ setOpenSnackBar] = React.useState(false);
-    const [tagSearch, setTagSearch] = useState("")
-    const [allTags, setAllTags] = useState(null);
+    const [tweetTypes, setTweetTypes] = useState(false)
+    const [streamButton, setStreamButton] = useState(false);
+    const [streamButtonColor, setStreamButtonColor] = useState(true);
+    const [actionButton, setActionButton] = useState(false);
+    const [hideGrid, setHideGrid] = useState(true);
     function disableScroll() {
       window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
       window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -44,17 +70,79 @@ function MenuNewMessage() {
       right: '-9px'
   }
 
-
+  const handleNewStreamGrid=()=>{
+    setHideGrid(!hideGrid)
+  }
+  const handleTagMenu=(tag)=>{
+    setTagMenu(tag)
+  }
+  const handleKeyword=(keyword)=>{
+    setKeyword(keyword)
+  }
+  const handleKeyowrdRules=(rules)=>{
+    setKeywordRules(rules)
+  }
+  const handleGeographyRules=(geo)=>{
+    setGeographyRules(geo)
+  }
+  const handlemenuStream=(rules)=>{
+    setMenuStream(rules)
+  }
+ 
+  const handleSearchCriteria=(rules)=>{
+    setSearchCriteria(rules)
+  }
   const handleSideFilters=()=>{
     setshowSideFilters(!showSideFilters)
   }
-
+  const handleFilter=()=>{
+    setFilter(!filter)
+  }
+  const handleKeywordIncludes=(includes)=>{
+    setKeywordIncludes(includes)
+  }
+  const handleMediaContent=(media)=>{
+    setMediaContent(media)
+  }
+  const handleAccountRules=(account)=>{
+    setAccountRules(account)
+  }
+  const handleAccountContent=(account)=>{
+    setAccountContent(account)
+  }
+  const handleGeographyContent=(geo)=>{
+    setGeographyContent(geo)
+  }
+  const handleHashtagContent=(hashtag)=>{
+    setHashtagContent(hashtag)
+  }
+  const handleTweetTypes=(tweet)=>{
+    setTweetTypes(tweet)
+  }
+  const handleHashtagRules=(hashtag)=>{
+    setHashtagRules(hashtag)
+  }
+  const handleStreamButton=(button)=>{
+    setStreamButton(button)
+  }
+  const handleStreamButtonColor=(color)=>{
+    setStreamButtonColor(color)
+  }
+  const handleStreamName=(name)=>{
+    setStreamName(name)
+  }
+  const handleActionButton=()=>{
+    setActionButton(!actionButton)
+  }
+  
     return (
         <div>
-            <DarkContainer contacts style={{ padding: 1, marginLeft: 60 }}>
+            <DarkContainer contacts style={{ padding: 1, marginLeft: 60,padding:showSideFilters?'10px':'20px' }}>
       
           
-      <Grid container direction="row">
+      <Grid container direction="row"
+      
+      >
         <Grid xs={showSideFilters?2:0} style={{display:showSideFilters?'block':'none'}}>
         
             
@@ -71,41 +159,120 @@ function MenuNewMessage() {
                 
               }}
             >
-              Create Message
+              Streams
         
             </p>
            <MyStreams/>
           </div>
         </Grid>
-        <Grid  xs={showSideFilters?10:12} style={{backgroundColor:'white'}} >
-          <Grid direction='column' >
+        <Grid  xs={showSideFilters?10:12} style={{backgroundColor:'white'}}
+        onClick={(e) => {
+         
+          setKeyword(false)
+          
+         e.stopPropagation();
+         
+         }}
+        
+        >
+          <Grid direction='column'
+           
+          
+          >
             <Grid xs={12}>
               
-        <MenuStream handleSideFilters={handleSideFilters}/>
+        <MenuStream criteria={handleSearchCriteria} showNew={handleFilter}
+         handleSideFilters={handleSideFilters} streambutton={streamButton}
+         checkkeyword={keywordIncludes} checkTypes={mediaContent} 
+         streamName={handleStreamName}
+         menu={menuStream}
+         seasonTicket={handlemenuStream}
+         actionbutton={handleActionButton}
+         button={actionButton}
+         hidegrid={handleNewStreamGrid}
+         streamButtonColor={streamButtonColor}
+         setStreamButtonColor={handleStreamButtonColor}
+        
+         />
+         
         
        </Grid>
        <Divider style={{marginLeft: '30px'}}/>
-       <Grid xs={12}  >
-              
-              <MenuNewStream/>
-              
+       <Grid container xs={12} 
+      
+       >
+     
+          
+       {filter && keywordIncludes &&      <Grid xs={3.1}>
+                 <KeywordsInclude  keywordIncludes={handleKeywordIncludes}/>
+                </Grid>}
+                {filter && mediaContent &&    <Grid xs={2.1}>
+              <MediaContent mediaContent={handleMediaContent} />
+              </Grid >}
+              {filter && hashtagContent &&    <Grid xs={2.8}>
+             <HashtagContent hashtagContent={handleHashtagContent} />
+              </Grid>}
+              {filter && geographyContent &&  <Grid xs={4.1}>
+               <GeographyContent geographyContent={handleGeographyContent} /> 
+              </Grid>    }
+              {filter && accountContent && <Grid xs={3.1}>
+              <AccountContent accountContent={handleAccountContent}/>
+              </Grid>        }
+          
+              {filter && <Grid xs={3}>   <MenuNewStream xyz={handleKeyowrdRules} tweetTypes={keywordIncludes} 
+           tweet={handleTweetTypes}   checkTypes={mediaContent} 
+           streambutton={handleStreamButton}  hashtagRules={handleHashtagRules} hashtagContent={hashtagContent}
+           geographyRules={handleGeographyRules} geographyContent={geographyContent} 
+            hashtagContent={hashtagContent} accountRules={handleAccountRules} accountContent={accountContent}
+           setKeyword={handleKeyword} keyword={keyword}
+           
+           />
+           </Grid>
+            }
+          
+             
              </Grid>
        <Divider style={{marginLeft: '30px'}}/>
       
-                <div style={{height:'61vh',overflow:'scroll',position:'relative',overflowX:'hidden'}}>
+                <div style={{height:hideGrid?'100%':'100%',position:'relative',overflowX:'hidden'}}>
+               
        <Grid xs={12} >
          <Grid container direction='row' >
-
+                
            <Grid xs={3} style={{height:'90vh',position:'sticky',top:0}}  >
-            <FilterContent />
-            
+           
+       { searchCriteria &&     <FilterContent />
+}    
              </Grid>
              
-             <span border/>
-            
-             
+           
              <Grid xs={6} >
-               <Content/>
+              {keywordRules && <KeywordRules xyz={handleKeyowrdRules} include={handleKeywordIncludes}
+              />}
+            {tweetTypes &&  <TweetTypes  media={handleMediaContent} types={handleTweetTypes}/>}
+           
+            {hashtagRules && <HashtagRules  hashtagContent={handleHashtagContent}  hashtagRules={handleHashtagRules} /> }
+           {geographyRules && <GeographyRules geographyContent={handleGeographyContent} geographyRules={handleGeographyRules} /> }
+            
+            {accountRules &&   <AccountRules accountRules={handleAccountRules} accountContent={handleAccountContent}/> }
+           {tagMenu &&  <TagsMenu  tagMenu={handleTagMenu}/>}
+           
+              <Content  tagMenu={handleTagMenu} message= {props.message} />
+             
+          {streamName &&    <StreamName streamName={handleStreamName}
+          hideNew={handleFilter}
+          streambutton={handleStreamButton}
+          filterContent={handleSearchCriteria}
+          streamMenu={handlemenuStream}
+          mediacontent={handleMediaContent}
+          keywordincludes={handleKeywordIncludes}
+          actionbutton={handleActionButton}
+          hidegrid={handleNewStreamGrid}
+          streamButton={handleStreamButtonColor}
+          geographyContent={handleGeographyContent}
+          hashtagContent={handleHashtagContent}
+          accountContent={handleAccountContent}
+          />}
                </Grid>
                <Grid xs={3}>
                  </Grid>

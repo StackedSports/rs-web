@@ -14,26 +14,30 @@ import MessageDetails from '../Content/Message/Details/Details'
 import MessageActions from '../Content/Message/Actions/Actions'
 import ProfileMedia from './Message/ProfileInfo/ProfileMedia';
 import { Divider } from '@material-ui/core';
+import SettingMenu from './Message/Setting/SettingMenu';
 
 
-export default function Content() {
+export default function Content(props) {
     return (
         <Fragment>
 
-            <Card variant="outlined" style={{padding: 10, width: '100%'}}>
+            <Card variant="outlined" style={{padding: 10, width: '100%',borderRadius:0}}>
                 <CardContent>
-                    <Grid container direction="row">
+                    <Grid container direction="row" >
                         <ProfileAvatar/>
                         <Box style={{width: '90%'}}>
+                       
+                                        
                             <Grid container direction="column">
                                 <Box>
                                     <Grid container direction="row">
-
+                                   
                                         <ProfileInfo/>
-
+                                        
                                         <Box sx={{flexGrow: 1}}></Box>
-
-                                        <MessageSetting/>
+                                         <MessageSetting tagMenu={props.tagMenu} message={props.message} />
+                                       
+                                    
                                     </Grid>
                                 </Box>
                                 <Box>
@@ -57,7 +61,7 @@ export default function Content() {
             </Card>
 
 
-            <Card variant="outlined" style={{padding: 10, width: '100%'}}>
+            <Card variant="outlined" style={{padding: 10, width: '100%',borderRadius:0}}>
                 <CardContent>
                     <Grid container direction="row">
                         <ProfileAvatar/>
@@ -71,7 +75,7 @@ export default function Content() {
 
                                         <Box sx={{flexGrow: 1}}></Box>
 
-                                        <MessageSetting/>
+                                        <MessageSetting tagMenu={props.tagMenu} message={props.message}/>
                                     </Grid>
                                 </Box>
                                 <Box>
@@ -122,7 +126,7 @@ export default function Content() {
             </Card>
             
 
-            <Card variant="outlined" style={{padding: 10, width: '100%'}}>
+            <Card variant="outlined" style={{padding: 10, width: '100%',borderRadius:0}}>
                 <CardContent>
                     <Grid container direction="row">
                         <ProfileAvatar/>
@@ -135,7 +139,7 @@ export default function Content() {
 
                                         <Box sx={{flexGrow: 1}}></Box>
 
-                                        <MessageSetting/>
+                                        <MessageSetting tagMenu={props.tagMenu} message={props.message}/>
                                     </Grid>
                                 </Box>
                                 <Box>

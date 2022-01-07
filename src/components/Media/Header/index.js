@@ -52,6 +52,7 @@ const Header=(props)=>{
                                        props.setShowBackButton(false);
                                        props.setSelectedPlaceHolder(null,false,false,true);
                                        props.setShowMediaStats(false);
+                                       props.history.push('/media');
                                    }}
 
   />
@@ -131,22 +132,27 @@ const Header=(props)=>{
                         />
 
                     )}
-                    {props.message && (
+
+
+                    {props.message ? (
+                        <div></div>
+                    ) : (
+                        props.showFilter &&
                         <DropDownButton
-                            haveLink={true}
-                            Link={<Link id={"toTag"} to="/message-create"></Link>}
-                            textColorSelected={"grey"}
-                            textColor={"gray"}
+                            textColorSelected={"#3871DA"}
+                            textColor={"white"}
                             backgroundColorSelected={"transparent"}
-                            backgroundColor={"transparent"}
-                            iconSelectedColor={"gray"}
-                            iconColor={"gray"}
-                            text={"Tag"}
+                            backgroundColor={"#3871DA"}
+                            iconSelectedColor={"white"}
+                            iconColor={"#3871DA"}
+                            text={"Filters"}
                             Icon={
-                                <LocalOfferOutlinedIcon></LocalOfferOutlinedIcon>
+                                <FaMagic></FaMagic>
                             }
-                            list={null}
+                            onClick={props.setShowFilters}
                         />
+
+
                     )}
 
 

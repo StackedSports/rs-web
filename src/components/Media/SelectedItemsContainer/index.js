@@ -4,12 +4,13 @@ import React from "react";
 
 
 const SelectedItemsContainer=(props)=>{
+    console.log('SelectedItemsContainer = ',props)
     return(
         <Grid container direction="row">
             {props.filter.length != 0 &&
             props.filter.map((fil, index) => {
                 return (
-                    <SelectedContactItem fil={fil} isFromHeader={true} index={index}
+                    <SelectedContactItem item={fil} isFromHeader={true} index={index}
                                          removeDataFromFilter={props.removeDataFromFilter}/>
                 );
             })}

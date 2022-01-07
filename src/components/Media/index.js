@@ -89,7 +89,7 @@ const useStyles = makeStyles({
     },
 });
 
-function Media() {
+function Media(props) {
     const classes = useStyles();
     // console.log("This is logged in user", localStorage.getItem("user"));
     const [filter, setFilter] = useState([]);
@@ -136,6 +136,9 @@ function Media() {
 
     const [allTags, setAllTags] = useState(null);
     const [page, setPage] = useState(1);
+
+    const [count,setCount]=useState(0);
+
 
     const [openSnakBar, setOpenSnackBar] = React.useState(false);
     const handleClick = () => {
@@ -535,25 +538,27 @@ function Media() {
     // console.log("THis is selected placeholders", selectedPlaceholder);
 
     const addDataToFilter = (value, type) => {
-        if (filter.includes(value)) {
-            var temp = [];
-            filter.map((item) => {
-                if (item != value) {
-                    temp.push(item);
-                }
-            });
-            setFilter(temp);
-            setuseLessState(uselessState + 1);
-        } else {
-            var temp = filter;
-            var tempType = filterType;
-            temp.push(value);
-            tempType.push(type);
-            setFilterType(tempType);
-            setFilter(temp);
-            setuseLessState(uselessState + 1);
+
+        const index=filter.findIndex((fil)=>fil.username===value);
+        if(index===-1){
+            filter.push({username:value});
+            setFilter(filter);
+            setCount(count+1)
         }
+        console.log('filter = ',filter);
     };
+    const removeDataFromFilter = (value, type) => {
+
+        const index=filter.findIndex((fil)=>fil.username===value.username);
+        if(index!==-1){
+            filter.splice(index,1);
+            setFilter(filter);
+            setCount(count+1)
+        }
+        console.log('filter = ',filter);
+    };
+
+
 
     const makeCheckBoxSelected = (index) => {
         if (selectedCheckBoxes.indexOf(index) > -1) {
@@ -579,16 +584,7 @@ function Media() {
         // console.log("THis is selected Checkbox", selectedCheckBoxes);
     };
 
-    const removeDataFromFilter = (index) => {
-        var temp = filter;
-        var tempType = filterType;
-        temp.splice(index, 1);
-        tempType.splice(index, 1);
-        var newArray = temp;
-        setFilter(newArray);
-        setFilterType(tempType);
-        setuseLessState(uselessState + 1);
-    };
+
     useEffect(() => {
         if (localStorage.getItem("user")) {
             // getMyContacts();
@@ -1071,9 +1067,12 @@ function Media() {
                     showSideFilters={showSideFilters}
                     setshowSideFilters={setshowSideFilters}
                     filter={filter}
+                    count={count}
+                    removeDataFromFilter={removeDataFromFilter}
                     addDataToFilter={addDataToFilter}
                     makeMediaSelected={makeMediaSelected}
                     handleMediaDrawer={handleMediaDrawer}
+                    history={props.history}
                 ></MediaComponnet>
             </Grid>
             <DialogBox
