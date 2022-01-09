@@ -2516,7 +2516,7 @@ function MessageCreate(props) {
                         style={{
                           background: "#edeef2",
                           width: "97%",
-                          height: 40,
+                          // height: 40,
                           borderRadius: 4,
                         }}
                       >
@@ -2546,7 +2546,7 @@ function MessageCreate(props) {
                   borderRadius: 4,
                   height: 40,
                 }}
-                placeholder="Search Tag Name"
+                placeholder="Search Name"
                 value={tagSearch}
                 onChange={(e) => {
                   setTagSearch(e.target.value);

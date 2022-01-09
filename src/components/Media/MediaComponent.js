@@ -372,11 +372,13 @@ function MediaComponent(props) {
         getAllContacts(page).then(
             (res) => {
                 // console.log("THis is all contacts res", res);
+        
+
                 if (res.statusText === "OK") {
                     console.log("These are all contacts", res.data);
                     setContacts(res.data);
                     // setCopyContacts(res.data);
-                    document.getElementById("infinit").scrollTop = 0;
+                    // document.getElementById("infinit").scrollTop = 0;
                     setFetching(false);
                 }
             },
@@ -859,47 +861,47 @@ function MediaComponent(props) {
     };
 
 
-        useEffect(() => {
-            (async () => {
-                console.log('props.history = ', props.history)
+    useEffect(() => {
+        (async () => {
+            console.log('props.history = ', props.history)
 
-                if (localStorage.getItem("user")) {
-                    await getMyContacts();
-                    await getTaggedMedia();
-                    await getMyMediaContacts();
-                    await getMyTeamContacts();
-        
-                    const media = await getMyMedia();
-                    const placeholders = await getMyPlaceholders();
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const id = urlParams.get('id');
-                    const type = urlParams.get('type');
-        
-                    if (type && type === "media" && media && id) {
-                        const index = media.findIndex((m) => m.id == id);
-                        if (index !== -1) {
-                            handleSelectedPlaceHolder(media[index], false, false, false);
-                            setShowMediaStats(true);
-                            setShowBackButton(true);
-                        }
-                        console.log('index = ', index);
-                    } else if (type && type === "placeholder" && placeholders && id) {
-                        const index = placeholders.findIndex((m) => m.id == id);
-                        if (index !== -1) {
-                            setShowMediaStats(false);
-                            setShowBackButton(true);
-                            handleSelectedPlaceHolder(placeholders[index], true, false, false);
-                        }
+            if (localStorage.getItem("user")) {
+                await getMyContacts();
+                await getTaggedMedia();
+                await getMyMediaContacts();
+                await getMyTeamContacts();
+
+                const media = await getMyMedia();
+                const placeholders = await getMyPlaceholders();
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                const type = urlParams.get('type');
+
+                if (type && type === "media" && media && id) {
+                    const index = media.findIndex((m) => m.id == id);
+                    if (index !== -1) {
+                        handleSelectedPlaceHolder(media[index], false, false, false);
+                        setShowMediaStats(true);
+                        setShowBackButton(true);
                     }
-        
-                    console.log('id=', id, 'type=', type, media)
-                    // getAllTags();
-                } else {
-                    window.location.href = "/";
+                    console.log('index = ', index);
+                } else if (type && type === "placeholder" && placeholders && id) {
+                    const index = placeholders.findIndex((m) => m.id == id);
+                    if (index !== -1) {
+                        setShowMediaStats(false);
+                        setShowBackButton(true);
+                        handleSelectedPlaceHolder(placeholders[index], true, false, false);
+                    }
                 }
-            })();
-        }, []);
-      
+
+                console.log('id=', id, 'type=', type, media)
+                // getAllTags();
+            } else {
+                window.location.href = "/";
+            }
+        })();
+    }, []);
+
 
 
     const isSelectedCheckbox = (index) => {

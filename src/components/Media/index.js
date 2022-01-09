@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import {makeStyles, Grid, Checkbox, Dialog} from "@material-ui/core";
+import { makeStyles, Grid, Checkbox, Dialog } from "@material-ui/core";
 import moment from "moment";
-import {FaSlidersH, FaBars, FaTh} from "react-icons/fa";
+import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 
@@ -12,12 +12,12 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ClearIcon from "@material-ui/icons/Clear";
-import {Dropdown, DropdownButton} from "react-bootstrap";
-import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
+import { Dropdown, DropdownButton } from "react-bootstrap";
+import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 import GifIcon from "@material-ui/icons/Gif";
 import DialogBox from "../common/Dialogs";
 
-import {DarkContainer} from "../common/Elements/Elements";
+import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import MediaComponnet from "./MediaComponent";
@@ -32,7 +32,7 @@ import {
     getPlaceholder,
     getMediaUsers,
 } from "../../ApiHelper";
-import {MoreHoriz} from "@material-ui/icons";
+import { MoreHoriz } from "@material-ui/icons";
 import Sidebar from "../common/sidebar/sidebar";
 
 function Alert(props) {
@@ -137,7 +137,7 @@ function Media(props) {
     const [allTags, setAllTags] = useState(null);
     const [page, setPage] = useState(1);
 
-    const [count,setCount]=useState(0);
+    const [count, setCount] = useState(0);
 
 
     const [openSnakBar, setOpenSnackBar] = React.useState(false);
@@ -279,25 +279,25 @@ function Media(props) {
                     style={filtesSpacingStyle}
                 >
                     {statuses &&
-                    statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    statusFilter === option.label ? "#348ef7" : "white",
-                                color: statusFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                if (statusFilter === option.label) {
-                                    setStatusFilter(null);
-                                    addDataToFilter(option.label);
-                                } else {
-                                    addDataToFilter(option.label, "status");
-                                }
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                        statuses.map((option) => (
+                            <Dropdown.Item
+                                style={{
+                                    background:
+                                        statusFilter === option.label ? "#348ef7" : "white",
+                                    color: statusFilter === option.label ? "white" : "black",
+                                }}
+                                onClick={() => {
+                                    if (statusFilter === option.label) {
+                                        setStatusFilter(null);
+                                        addDataToFilter(option.label);
+                                    } else {
+                                        addDataToFilter(option.label, "status");
+                                    }
+                                }}
+                            >
+                                {option.label}
+                            </Dropdown.Item>
+                        ))}
                 </DropdownButton>
 
                 <DropdownButton
@@ -343,25 +343,25 @@ function Media(props) {
                     style={filtesSpacingStyle}
                 >
                     {statuses &&
-                    statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    gradeYearFilter === option.label ? "#348ef7" : "white",
-                                color: gradeYearFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                if (rankFilter === option.label) {
-                                    setGradeYearFilter(null);
-                                    addDataToFilter(option.label);
-                                } else {
-                                    addDataToFilter(option.label, "gradeYear");
-                                }
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                        statuses.map((option) => (
+                            <Dropdown.Item
+                                style={{
+                                    background:
+                                        gradeYearFilter === option.label ? "#348ef7" : "white",
+                                    color: gradeYearFilter === option.label ? "white" : "black",
+                                }}
+                                onClick={() => {
+                                    if (rankFilter === option.label) {
+                                        setGradeYearFilter(null);
+                                        addDataToFilter(option.label);
+                                    } else {
+                                        addDataToFilter(option.label, "gradeYear");
+                                    }
+                                }}
+                            >
+                                {option.label}
+                            </Dropdown.Item>
+                        ))}
                 </DropdownButton>
                 <div className="associatedButton">
                     <DropdownButton
@@ -387,26 +387,45 @@ function Media(props) {
                             ></input>
                         </Grid>
                         {myMediaContacts &&
-                        myMediaContacts.map((option) => {
-                            var name = option.first_name + " " + option.last_name;
-                            if (contactSearch != "") {
-                                if (
-                                    name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
-                                ) {
+                            myMediaContacts.map((option) => {
+                                var name = option.first_name + " " + option.last_name;
+                                if (contactSearch != "") {
+                                    if (
+                                        name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
+                                    ) {
+                                        return (
+                                            <Dropdown.Item
+                                                style={{
+                                                    background:
+                                                        timeZoneFilter === option.label
+                                                            ? "#348ef7"
+                                                            : "white",
+                                                    color:
+                                                        timeZoneFilter === option.label ? "white" : "black",
+                                                }}
+                                                onClick={() => {
+                                                    // setTimeZoneFilter(
+                                                    //   option.first_name + " " + option.last_name
+                                                    // );
+                                                    addDataToFilter(
+                                                        option.first_name + " " + option.last_name
+                                                    );
+                                                }}
+                                            >
+                                                {option.first_name + " " + option.last_name}
+                                            </Dropdown.Item>
+                                        );
+                                    }
+                                } else {
                                     return (
                                         <Dropdown.Item
                                             style={{
                                                 background:
-                                                    timeZoneFilter === option.label
-                                                        ? "#348ef7"
-                                                        : "white",
+                                                    timeZoneFilter === option.label ? "#348ef7" : "white",
                                                 color:
                                                     timeZoneFilter === option.label ? "white" : "black",
                                             }}
                                             onClick={() => {
-                                                // setTimeZoneFilter(
-                                                //   option.first_name + " " + option.last_name
-                                                // );
                                                 addDataToFilter(
                                                     option.first_name + " " + option.last_name
                                                 );
@@ -416,26 +435,7 @@ function Media(props) {
                                         </Dropdown.Item>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <Dropdown.Item
-                                        style={{
-                                            background:
-                                                timeZoneFilter === option.label ? "#348ef7" : "white",
-                                            color:
-                                                timeZoneFilter === option.label ? "white" : "black",
-                                        }}
-                                        onClick={() => {
-                                            addDataToFilter(
-                                                option.first_name + " " + option.last_name
-                                            );
-                                        }}
-                                    >
-                                        {option.first_name + " " + option.last_name}
-                                    </Dropdown.Item>
-                                );
-                            }
-                        })}
+                            })}
                     </DropdownButton>
                 </div>
 
@@ -484,20 +484,36 @@ function Media(props) {
                         </Grid>
 
                         {taggedMedia &&
-                        taggedMedia.map((option) => {
-                            if (stateSearch != "") {
-                                if (
-                                    option.name
-                                        .toLowerCase()
-                                        .indexOf(stateSearch.toLowerCase()) > -1
-                                ) {
+                            taggedMedia.map((option) => {
+                                if (stateSearch != "") {
+                                    if (
+                                        option.name
+                                            .toLowerCase()
+                                            .indexOf(stateSearch.toLowerCase()) > -1
+                                    ) {
+                                        return (
+                                            <Dropdown.Item
+                                                style={{
+                                                    background:
+                                                        stateFilter === option.name ? "#348ef7" : "white",
+                                                    color:
+                                                        stateFilter === option.name ? "white" : "black",
+                                                }}
+                                                onClick={() => {
+                                                    addDataToFilter(option.name, "State");
+                                                }}
+                                            >
+                                                {option.name}
+                                            </Dropdown.Item>
+                                        );
+                                    }
+                                } else {
                                     return (
                                         <Dropdown.Item
                                             style={{
                                                 background:
                                                     stateFilter === option.name ? "#348ef7" : "white",
-                                                color:
-                                                    stateFilter === option.name ? "white" : "black",
+                                                color: stateFilter === option.name ? "white" : "black",
                                             }}
                                             onClick={() => {
                                                 addDataToFilter(option.name, "State");
@@ -507,23 +523,7 @@ function Media(props) {
                                         </Dropdown.Item>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <Dropdown.Item
-                                        style={{
-                                            background:
-                                                stateFilter === option.name ? "#348ef7" : "white",
-                                            color: stateFilter === option.name ? "white" : "black",
-                                        }}
-                                        onClick={() => {
-                                            addDataToFilter(option.name, "State");
-                                        }}
-                                    >
-                                        {option.name}
-                                    </Dropdown.Item>
-                                );
-                            }
-                        })}
+                            })}
                     </div>
                 </DropdownButton>
             </Grid>
@@ -539,23 +539,23 @@ function Media(props) {
 
     const addDataToFilter = (value, type) => {
 
-        const index=filter.findIndex((fil)=>fil.username===value);
-        if(index===-1){
-            filter.push({username:value});
+        const index = filter.findIndex((fil) => fil.username === value);
+        if (index === -1) {
+            filter.push({ username: value });
             setFilter(filter);
-            setCount(count+1)
+            setCount(count + 1)
         }
-        console.log('filter = ',filter);
+        console.log('filter = ', filter);
     };
     const removeDataFromFilter = (value, type) => {
 
-        const index=filter.findIndex((fil)=>fil.username===value.username);
-        if(index!==-1){
-            filter.splice(index,1);
+        const index = filter.findIndex((fil) => fil.username === value.username);
+        if (index !== -1) {
+            filter.splice(index, 1);
             setFilter(filter);
-            setCount(count+1)
+            setCount(count + 1)
         }
-        console.log('filter = ',filter);
+        console.log('filter = ', filter);
     };
 
 
@@ -701,7 +701,7 @@ function Media(props) {
                     container
                     direction="row"
                     justify="center"
-                    style={{background: "#f6f6f6"}}
+                    style={{ background: "#f6f6f6" }}
                     onMouseEnter={() => {
                         if (m.urls) {
                             setMediaHover(m.urls.medium);
@@ -712,7 +712,7 @@ function Media(props) {
                     }}
                 >
                     {(m.urls && mediaHover === m.urls.medium) ||
-                    selectedCheckBoxes.indexOf(m.hashid) > -1 ? (
+                        selectedCheckBoxes.indexOf(m.hashid) > -1 ? (
                         <div
                             style={{
                                 width: "100%",
@@ -761,7 +761,7 @@ function Media(props) {
                                 direction="row"
                                 alignItems="center"
                                 justify="center"
-                                style={{height: 100}}
+                                style={{ height: 100 }}
                             >
                                 <button
                                     style={{
@@ -790,24 +790,24 @@ function Media(props) {
                         <div></div>
                     )}
                     <img
-                        style={{width: "80%", height: 190, objectFit: "contain"}}
+                        style={{ width: "80%", height: 190, objectFit: "contain" }}
                         src={m.urls && m.urls.thumb}
                     ></img>
                 </Grid>
                 <Grid
                     container
                     direction="row"
-                    style={{height: 30, marginLeft: 12, marginTop: 2}}
+                    style={{ height: 30, marginLeft: 12, marginTop: 2 }}
                     alignItems="center"
                 >
                     {m.file_type === "image/gif" ? (
                         <GifIcon></GifIcon>
                     ) : m.file_type.indexOf("video") > -1 ? (
-                        <FaVideo style={{color: "#3871da", fontSize: 20}}></FaVideo>
+                        <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
                     ) : m.file_type.indexOf("image") > -1 ? (
                         <FaImage></FaImage>
                     ) : (
-                        <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                        <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
                     )}
                     <p
                         style={{
@@ -823,9 +823,9 @@ function Media(props) {
                             ? m.file_name.substring(0, 17) + " ..."
                             : m.file_name}
                     </p>
-                    <div style={{width: "100%"}}></div>
+                    <div style={{ width: "100%" }}></div>
                 </Grid>
-                <Grid container direction="row" style={{height: 30, marginLeft: 12}}>
+                <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
                     <p
                         style={{
                             margin: 0,
@@ -876,10 +876,10 @@ function Media(props) {
                     container
                     direction="row"
                     justify="center"
-                    style={{background: "#f6f6f6"}}
+                    style={{ background: "#f6f6f6" }}
                 >
                     {placeholderHover === m.media_preview ||
-                    selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
+                        selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
                         <div
                             style={{
                                 width: "100%",
@@ -930,7 +930,7 @@ function Media(props) {
                                 direction="row"
                                 alignItems="center"
                                 justify="center"
-                                style={{height: 100}}
+                                style={{ height: 100 }}
                             >
                                 <button
                                     style={{
@@ -954,26 +954,26 @@ function Media(props) {
                     )}
 
                     <img
-                        style={{width: "80%", height: 190, objectFit: "contain"}}
+                        style={{ width: "80%", height: 190, objectFit: "contain" }}
                         src={m.media_preview}
                     ></img>
                 </Grid>
                 <Grid
                     container
                     direction="row"
-                    style={{height: 30, marginLeft: 12, marginTop: 2}}
+                    style={{ height: 30, marginLeft: 12, marginTop: 2 }}
                     alignItems="center"
                 >
                     {m.media_preview.indexOf(".gif") > -1 ? (
                         <GifIcon></GifIcon>
                     ) : m.media_preview.indexOf(".png") > -1 ||
-                    m.media_preview.indexOf(".jpg") > -1 ||
-                    m.media_preview.indexOf(".jpeg") > -1 ? (
-                        <FaImage style={{color: "#3871da", fontSize: 20}}></FaImage>
+                        m.media_preview.indexOf(".jpg") > -1 ||
+                        m.media_preview.indexOf(".jpeg") > -1 ? (
+                        <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
                     ) : m.media_preview.indexOf(".mp4") > -1 ? (
                         <FaVideo></FaVideo>
                     ) : (
-                        <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                        <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
                     )}
                     <p
                         style={{
@@ -985,9 +985,9 @@ function Media(props) {
                     >
                         {m.name}
                     </p>
-                    <div style={{width: "100%"}}></div>
+                    <div style={{ width: "100%" }}></div>
                 </Grid>
-                <Grid container direction="row" style={{height: 30, marginLeft: 12}}>
+                <Grid container direction="row" style={{ height: 30, marginLeft: 12 }}>
                     <p
                         style={{
                             margin: 0,
@@ -1031,7 +1031,7 @@ function Media(props) {
     };
 
     return (
-        <DarkContainer contacts style={{padding: 20, marginLeft: 60}}>
+        <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
             {lightboxPicture && (
                 <Dialog
                     open={true}
@@ -1056,11 +1056,11 @@ function Media(props) {
                 </Dialog>
             )}
 
-            <Grid container direction="row" style={{height:'80%'}}>
+            <Grid container direction="row" style={{ height: '80%' }}>
                 {showSideFilters === true && (
                     <SidebarComponent myMediaContacts={myMediaContacts}
-                                      addDataToFilter={addDataToFilter}
-                                      />
+                        addDataToFilter={addDataToFilter}
+                    />
                 )}
                 <MediaComponnet
                     message={null}
@@ -1110,43 +1110,43 @@ function Media(props) {
                                 }}
                             ></input>
                         </Grid>
-                        <div style={{maxHeight: 400, minHeight: 400, overflow: "scroll"}}>
+                        <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
                             {allTags &&
-                            allTags.map((tags) => {
-                                if (tags.label.indexOf(tagSearch) > -1) {
-                                    return (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            alignItems="center"
-                                            style={{
-                                                borderBottom: "1px solid #d8d8d8",
-                                                paddingTop: 4,
-                                                paddingBottom: 4,
-                                            }}
-                                        >
-                                            <Grid item md={3} sm={3}>
-                                                <Checkbox
-                                                    color="primary"
-                                                    onChange={() => {
-                                                        // makeCheckBoxSelected(item.id);
-                                                    }}
-                                                    style={{marginTop: 1, marginBottom: 1}}
-                                                ></Checkbox>
+                                allTags.map((tags) => {
+                                    if (tags.label.indexOf(tagSearch) > -1) {
+                                        return (
+                                            <Grid
+                                                container
+                                                direction="row"
+                                                alignItems="center"
+                                                style={{
+                                                    borderBottom: "1px solid #d8d8d8",
+                                                    paddingTop: 4,
+                                                    paddingBottom: 4,
+                                                }}
+                                            >
+                                                <Grid item md={3} sm={3}>
+                                                    <Checkbox
+                                                        color="primary"
+                                                        onChange={() => {
+                                                            // makeCheckBoxSelected(item.id);
+                                                        }}
+                                                        style={{ marginTop: 1, marginBottom: 1 }}
+                                                    ></Checkbox>
+                                                </Grid>
+                                                <Grid item md={9} sm={9}>
+                                                    {tags.label}
+                                                </Grid>
                                             </Grid>
-                                            <Grid item md={9} sm={9}>
-                                                {tags.label}
-                                            </Grid>
-                                        </Grid>
-                                    );
-                                }
-                            })}
+                                        );
+                                    }
+                                })}
                         </div>
                         <Grid
                             container
                             direction="row"
                             justify="flex-end"
-                            style={{marginTop: 20, marginBottom: 5}}
+                            style={{ marginTop: 20, marginBottom: 5 }}
                         >
                             <HollowWhiteButton
                                 width={100}
@@ -1168,7 +1168,7 @@ function Media(props) {
                                 background="#3871DA"
                                 icon={
                                     <LocalOfferOutlinedIcon
-                                        style={{color: "white"}}
+                                        style={{ color: "white" }}
                                     ></LocalOfferOutlinedIcon>
                                 }
                             ></IconTextField>
