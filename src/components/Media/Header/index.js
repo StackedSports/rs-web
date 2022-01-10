@@ -89,6 +89,31 @@ const Header=(props)=>{
                             />
 
                     }
+
+
+                    {props.message ? (
+                        <div></div>
+                    ) : (
+
+                        props.showSave &&
+                        <DropDownButton
+                            textColorSelected={"#3871DA"}
+                            textColor={"white"}
+                            backgroundColorSelected={"transparent"}
+                            backgroundColor={"#3871DA"}
+                            iconSelectedColor={"white"}
+                            iconColor={"#3871DA"}
+                            text={"Save"}
+                            Icon={
+                                <FaMagic></FaMagic>
+                            }
+                            onClick={props.saveTag}
+                        />
+
+
+                    )}
+
+
                     {props.message ? (
                         <div></div>
                     ) : (

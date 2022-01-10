@@ -609,3 +609,21 @@ export const getPlaceholderById=(placeholderId)=>{
         },
     });
 }
+
+export const postTag = (body) => {
+
+    const data=JSON.stringify(body);
+
+
+    return axios({
+        method: "post",
+        url: URL + "media/"+body.id+"/add_tag",
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        },
+        data: data,
+    });
+};
