@@ -76,7 +76,7 @@ function MessageCreate(props) {
     console.log("component did mount");
     const fetchItems = async () => {
       try {
-        const result = await getMessage();
+        const result = await getMessage(id);
         console.log('data = ', result.data)
       }
       catch (e) {
@@ -2127,7 +2127,7 @@ function MessageCreate(props) {
                     marginLeft: 16,
                   }}
                 >
-                  From Area Coach
+                  Area Coach
                 </p>
               </p>
               <ClearIcon
@@ -2163,7 +2163,7 @@ function MessageCreate(props) {
                     marginLeft: 16,
                   }}
                 >
-                  From Position Coach
+                  Position Coach
                 </p>
               </p>
               <ClearIcon
@@ -2175,6 +2175,8 @@ function MessageCreate(props) {
             </Grid>
           </div>
         }
+        <p  className=" mr-3 mt-3">OR</p>
+
         <div
           container
           direction="row"
@@ -2438,10 +2440,10 @@ function MessageCreate(props) {
               padding: 16,
               paddingLeft: 30,
               paddingRight: 30,
-              paddingTop:0
+              paddingTop: 0
             }}
           >
-       
+
             <Grid container direction="row">
               {filter.length != 0 &&
                 filter.map((fil, index) => {
@@ -2485,15 +2487,16 @@ function MessageCreate(props) {
               }}
             ></div>
             {/* <Grid container direction="row" alignItems="center"></Grid> */}
-            <div style={{ width: "100%", overflowX: "hide",
-                           }}>
+            <div style={{
+              width: "100%", overflowX: "hide",
+            }}>
               <Grid container direction="row">
                 {displaySendTo ? (
-                  <Grid item md={4} xs={4} style={{borderRight: '1px solid rgb(216, 216, 216)'}}>
+                  <Grid item md={4} xs={4} style={{ borderRight: '1px solid rgb(216, 216, 216)' }}>
                     <Grid container direction="row" justify="flex-start">
-                      
 
-                {/* {
+
+                      {/* {
                   showDrawer ?
                     <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
                       setshowSideFilters(!showSideFilters);
@@ -2511,10 +2514,10 @@ function MessageCreate(props) {
 
                     }}
                       style={{ cursor: "pointer", width: 40 }}></img>} */}
-              
-                     <div
+
+                      <div
                         style={{
-                          background: "#edeef2",
+                          // background: "#edeef2",
                           width: "97%",
                           // height: 40,
                           borderRadius: 4,
@@ -2528,7 +2531,7 @@ function MessageCreate(props) {
                           </Grid>
                           <Grid item md={4} xs={4}>
                             <button className={classes.blueButtonActive}>
-                              Team Boards 
+                              Team Boards
                             </button>
                           </Grid>
                           <Grid item md={4} xs={4}>
@@ -2538,21 +2541,21 @@ function MessageCreate(props) {
                           </Grid>
                         </Grid>
                         <Grid container direction="row" justify="center">
-              <input
-                type="text"
-                style={{
-                  width: "100%",
-                  border: "1px solid rgb(216, 216, 216)",
-                  borderRadius: 4,
-                  height: 40,
-                }}
-                placeholder="Search Name"
-                value={tagSearch}
-                onChange={(e) => {
-                  setTagSearch(e.target.value);
-                }}
-              ></input>
-            </Grid>
+                          <input
+                            type="text"
+                            style={{
+                              width: "100%",
+                              border: "1px solid rgb(216, 216, 216)",
+                              borderRadius: 4,
+                              height: 40,
+                            }}
+                            placeholder="Search Name"
+                            value={tagSearch}
+                            onChange={(e) => {
+                              setTagSearch(e.target.value);
+                            }}
+                          ></input>
+                        </Grid>
                         <Grid container style={{ marginTop: 10 }}>
                           <div
                             style={{
@@ -2627,13 +2630,13 @@ function MessageCreate(props) {
                     style={{
                       width: "100%",
                       maxHeight: 330,
-                      marginLeft:'10px'
+                      marginLeft: '10px'
                       //  minWidth: 1110
                     }}
                     className="fullHeightCreateMessage hideScrollBar"
                   >
-                     <Grid
-                     className="mb-3"
+                    <Grid
+                      className="mb-3"
                       container
                       direction="row"
                       // alignItems="center"
@@ -2641,61 +2644,61 @@ function MessageCreate(props) {
                         // background: "#f5f6f9",
                         width: "100%",
                         // minWidth: 1110,
-                        
-                        
+
+
                         height: 70,
                         paddingTop: 16,
                       }}
-                      
-                   
+
+
                     >
-                    
-                  <div className="d-flex justify-content-between align-items-center">
-                  <span
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 16,
 
-                    padding: '16px'
-                  }}
-                >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 16,
 
-                  Create Message
-                </span>
-                <div className="d-flex">
-                <IconTextField
-                    width={100}
-                    text="More"
-                    textColor="#3871DA"
-                    icon={
-                      <ArrowDropDown
-                        style={{ color: "#3871DA" }}
-                      ></ArrowDropDown>
-                    }
-                  ></IconTextField>
-                  <IconTextField
-                    text="Save and Close"
-                    textColor="#3871DA"
-                    width={180}
-                    onClick={() => {
-                      setShowMessageFiltersRow(!showMessageFiltersRow);
-                    }}
-                    icon={<Check style={{ color: "#3871DA" }}></Check>}
-                  ></IconTextField>
-                  <IconButton
-                    text="Preview and Send"
-                    textColor="white"
-                    width={200}
-                    onClick={() => {
-                      handleSendMessage();
-                    }}
-                    icon={<Send style={{ color: "white" }}></Send>}
-                  ></IconButton>
-                </div>
-                  </div>
+                            padding: '16px'
+                          }}
+                        >
 
-           
-                  
+                          Create Message
+                        </span>
+                        <div className="d-flex">
+                          <IconTextField
+                            width={100}
+                            text="More"
+                            textColor="#3871DA"
+                            icon={
+                              <ArrowDropDown
+                                style={{ color: "#3871DA" }}
+                              ></ArrowDropDown>
+                            }
+                          ></IconTextField>
+                          <IconTextField
+                            text="Save and Close"
+                            textColor="#3871DA"
+                            width={180}
+                            onClick={() => {
+                              setShowMessageFiltersRow(!showMessageFiltersRow);
+                            }}
+                            icon={<Check style={{ color: "#3871DA" }}></Check>}
+                          ></IconTextField>
+                          <IconButton
+                            text="Preview and Send"
+                            textColor="white"
+                            width={200}
+                            onClick={() => {
+                              handleSendMessage();
+                            }}
+                            icon={<Send style={{ color: "white" }}></Send>}
+                          ></IconButton>
+                        </div>
+                      </div>
+
+
+
                     </Grid>
 
                     <Grid
@@ -2717,7 +2720,7 @@ function MessageCreate(props) {
                         setDisplayMessageSenders(false);
                       }}
                     >
-                    
+
                       {/* <Grid
                         item
                         md={displaySendTo ? 2 : 1}
