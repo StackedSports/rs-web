@@ -586,6 +586,8 @@ function Media(props) {
 
 
     useEffect(() => {
+
+
         if (localStorage.getItem("user")) {
             // getMyContacts();
             getMyMedia();
@@ -602,7 +604,10 @@ function Media(props) {
             // setupPage();
         } else {
             window.location.href = "/";
+
         }
+
+
     }, []);
 
     // console.log("This is filter bar", filter, filterType);
