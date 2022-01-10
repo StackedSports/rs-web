@@ -12,6 +12,8 @@ const useStyles = makeStyles({
     tableHeading: {
         fontWeight: 700,
         fontSize: 15,
+        margin:0,
+        padding:0
     },
     tableFields: {
         fontWeight: 500,
@@ -90,18 +92,18 @@ const PlaceholderItem = (props) => {
     return (
         <Grid
             onClick={() => {
-                if(props.isPlaceholderDetails){
+                if (props.isPlaceholderDetails) {
                     props.setShowMediaStats(true);
                     props.setSelectedPlaceHolder(item, props.isPlaceholder);
-                }else{
+                } else {
                     props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
                 }
             }}
-            onMouseEnter={(e)=>{
-                props.handleHover(props.index,true);
+            onMouseEnter={(e) => {
+                props.handleHover(props.index, true);
             }}
-            onMouseLeave={(e)=>{
-                props.handleHover(props.index,false);
+            onMouseLeave={(e) => {
+                props.handleHover(props.index, false);
             }}
             container
             direction="row"
@@ -113,34 +115,42 @@ const PlaceholderItem = (props) => {
                 paddingTop: 4,
                 paddingBottom: 4,
                 width: "100%",
-                padding:10,
-                backgroundColor:item.hover?'#f5f6f9':'white'
+                padding: 10,
+                backgroundColor: item.hover ? '#f5f6f9' : 'white'
             }}
         >
 
-            <Grid item md={0.5} xs={0.5}style={{margin:0}}>
-                {item.url.indexOf(".gif") > -1 ? (
-                    <GifIcon></GifIcon>
-                ) : item.url.indexOf(".png") > -1 ||
-                item.url.indexOf(".jpg") > -1 ||
-                item.url.indexOf(".jpeg") > -1 ? (
-                    <FaImage
-                        style={{color: "#3871da", fontSize: 20}}
-                    ></FaImage>
-                ) : item.url.indexOf(".mp4") > -1 ? (
-                    <FaVideo></FaVideo>
-                ) : (
-                    <FaFilePdf
-                        style={{color: "#3871da", fontSize: 20}}
-                    ></FaFilePdf>
-                )}
+            <Grid item md={0.5} xs={0.5} style={{margin: 0}}>
+                {item.hover ?
+                    <span className={classes.tableHeading}
+                    onClick={(e)=>{
+                    e.stopPropagation();
+                    }
+                    }
+                    >  {<Checkbox className={classes.tableHeading}/> }</span>
+                    :
+                    (item.url.indexOf(".gif") > -1 ? (
+                        <GifIcon></GifIcon>
+                    ) : item.url.indexOf(".png") > -1 ||
+                    item.url.indexOf(".jpg") > -1 ||
+                    item.url.indexOf(".jpeg") > -1 ? (
+                        <FaImage
+                            style={{color: "#3871da", fontSize: 20}}
+                        ></FaImage>
+                    ) : item.url.indexOf(".mp4") > -1 ? (
+                        <FaVideo></FaVideo>
+                    ) : (
+                        <FaFilePdf
+                            style={{color: "#3871da", fontSize: 20}}
+                        ></FaFilePdf>
+                    ))}
             </Grid>
             <Grid item md={2} xs={2}>
 
                 <span
                     className={classes.tableFields}
 
-                    style={{marginLeft:10,cursor:'pointer'}}
+                    style={{marginLeft: 10, cursor: 'pointer'}}
                 >
                                   {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
                                 </span>
@@ -155,7 +165,7 @@ const PlaceholderItem = (props) => {
             }}>
                 <img
 
-                    style={{width: 30, height: 30,marginLeft:13,cursor:'pointer'}}
+                    style={{width: 30, height: 30, marginLeft: 13, cursor: 'pointer'}}
                     src={item.url}
                 ></img>
             </Grid>
@@ -176,15 +186,15 @@ const PlaceholderItem = (props) => {
                                     className={classes.tableFields}
                                     style={{marginLeft: 40}}
                                 >
-                                  { props.isPlaceholder?(item.media_placeholder_id):item.team_contact_id}
+                                  {props.isPlaceholder ? (item.media_placeholder_id) : item.team_contact_id}
                                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
                                 <span className={classes.tableFields}
                                       style={{marginLeft: 40}}>
-                                  {item.owner && item.owner.first_name && ((item.owner.first_name+' '+item.owner.last_name).length>15?
-                                      (item.owner.first_name+' '+item.owner.last_name).slice(0,14):
-                                      (item.owner.first_name+' '+item.owner.last_name))
+                                  {item.owner && item.owner.first_name && ((item.owner.first_name + ' ' + item.owner.last_name).length > 15 ?
+                                      (item.owner.first_name + ' ' + item.owner.last_name).slice(0, 14) :
+                                      (item.owner.first_name + ' ' + item.owner.last_name))
                                   }
                                 </span>
             </Grid>

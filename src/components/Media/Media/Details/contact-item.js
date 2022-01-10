@@ -97,7 +97,7 @@ const DropDownItem = (props) => {
             className={classes.hoverGrid}
             onClick={() => {
                 props.setDisplay(false);
-                props.addDataToFilter({username: props.username, url: props.url}, props.type);
+                props.addDataToFilter({username: props.username, url: props.url,id:props.id}, props.type);
             }}
             // className={classes.sendAsP}
         >

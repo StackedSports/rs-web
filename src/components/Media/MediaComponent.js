@@ -64,6 +64,7 @@ import {
     getMediaUsers,
     getTeamContacts,
     getTags,
+    postTag,
     getPlaceholderById,
     getMessages
 } from "../../ApiHelper";
@@ -256,6 +257,7 @@ function MediaComponent(props) {
     const [showBackButton, setShowBackButton] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
 
+    const [count, setCount  ] = useState(0);
 
     const [displaySearchContainers, setDisplaySearchContainers] = useState({
         displayOwner: false,
@@ -300,6 +302,13 @@ function MediaComponent(props) {
     const handleClick = () => {
         setOpenSnackBar(true);
     };
+
+    const handleSetSelectedMediaDetails=(selectedTeamContacts,selectedTags)=>{
+        setSelectedTeamContacts(selectedTeamContacts);
+        setSelectedTags(selectedTags);
+    }
+
+
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -848,7 +857,8 @@ function MediaComponent(props) {
 
     const removeDataFromFilter = (value, type) => {
         if (type === 'SELECTED_TEAM_CONTACTS') {
-            setSelectedTeamContacts(selectedTeamContacts.filter((contact) => contact.username !== value.username));
+            //setSelectedTeamContacts(selectedTeamContacts.filter((contact) => contact.username !== value.username));
+            setSelectedTeamContacts([]);
         } else if (type === 'SELECTED_TAGS') {
             setSelectedTags(selectedTags.filter((tag) => tag.username !== value.username));
         } else if (type === 'SELECTED_PLACEHOLDERS') {
@@ -1000,7 +1010,11 @@ function MediaComponent(props) {
         console.log('setSelectedPlaceholder = ', placeholder, isPlaceholder, setToDefault, isFromBackButton);
 
 
+
+
         if (isPlaceholder) {
+
+
 
             setDisplayListContainer({
                 ...displayListContainer,
@@ -1023,6 +1037,8 @@ function MediaComponent(props) {
                 selectedPlaceholder: null
             })
         } else {
+
+
             setDisplayListContainer({
                 ...displayListContainer,
                 showPlaceholderListView: false,
@@ -1035,11 +1051,14 @@ function MediaComponent(props) {
             props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
         }
 
+
     }
 
 
     const handleSelectedPlaceHolderListView = (id, isPlaceholder) => {
         console.log('handleSelectedPlaceHolderListView = ', id, '   ', isPlaceholder)
+
+
         if (isPlaceholder) {
             const index = placeholders.findIndex((item) => item.id === id);
 
@@ -1082,6 +1101,7 @@ function MediaComponent(props) {
 
 
     const handleSetPlaceholderDetailsListView = (listView) => {
+
         setDisplayListContainer({
             ...displayListContainer,
             showPlaceholderDetailsListView: listView
@@ -1092,6 +1112,8 @@ function MediaComponent(props) {
 
 
     const handleSuggestionPlaceholder = (placeholder, isPlaceholder) => {
+
+
         console.log('handleSuggestionPlaceholder = ', placeholder, isPlaceholder)
         placeholder.file_name = placeholder.name;
         setDisplayListContainer({
@@ -1261,11 +1283,59 @@ function MediaComponent(props) {
     }
 
 
+    const saveTag = async () => {
+        console.log('index= ', displayListContainer.selectedPlaceholder);
+        /*try{
+            const result=await postTag({id:displayListContainer.selectedPlaceholder.id,tag:displayListContainer.selectedPlaceholder.tags})
+            console.log('result = ',result);
+        }catch (e) {
+            console.log('exception = ',e.toString())
+        }*/
+
+
+        const mediaIndex = media.findIndex((m) => m.id === displayListContainer.selectedPlaceholder.id);
+        if (mediaIndex != -1) {
+            const selectedMedia = media[mediaIndex];
+            if (selectedTeamContacts && selectedTeamContacts.length > 0) {
+                const selectedContact = selectedTeamContacts[0];
+                const teamContactIndex=teamContacts.findIndex((contact)=>selectedContact.id===contact.id);
+
+                if(teamContactIndex!==-1){
+                    const contact=teamContacts[teamContactIndex];
+                    selectedMedia.owner = {
+                        id: contact.id, first_name: contact.first_name,
+                        last_name: contact.last_name, email: contact.email,
+                        twitter_profile: contact.twitter_profile
+                    }
+                }
+            }
+
+            if(selectedTags && selectedTags.length>0){
+                selectedMedia.tags=[];
+                for(let tag of selectedTags){
+                    selectedMedia.tags.push({id:tag.id,name:tag.username});
+                }
+            }
+
+
+            media[mediaIndex]=selectedMedia;
+            setMedia(media);
+        }
+
+        setShowBackButton(false);
+        handleSelectedPlaceHolder(null,false,false,true);
+        setShowMediaStats(false);
+        props.history.push('/media');
+
+        console.log('id = ', mediaIndex, '   ',taggedMedia,'  ', selectedTags,'  ',)
+
+    }
+
     let MediaList = null;
 
     console.log('render = ', displayListContainer.selectedPlaceholder)
 
-    if ((displayListContainer.showMediaListView || props.filter.length>0 || displayListContainer.selectedPlaceholder) && media) {
+    if ((displayListContainer.showMediaListView || props.filter.length > 0 || displayListContainer.selectedPlaceholder) && media) {
         if (displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media) {
             MediaList = displayListContainer.selectedPlaceholder.media.filter((item) => item.name && item.urls && item.urls.thumb && item.created_at)
                 .map((item) => {
@@ -1329,7 +1399,9 @@ function MediaComponent(props) {
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
                 history={props.history}
-                showFilter={props.filter && props.filter.length > 0 ? true : false}
+                showSave={displayListContainer.selectedPlaceholder && !displayListContainer.isPlaceholderSelected ? true : false}
+                saveTag={saveTag}
+                showFilter={!displayListContainer.selectedPlaceholder ? true : false}
                 setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
             />
@@ -1347,7 +1419,7 @@ function MediaComponent(props) {
                                       isPlaceholder={false}
                                       setLightboxPicture={handleSetLightboxPicture}
                                       setLightboxVideo={handleSetLightboxVideo}
-                                      showFullHeight={(props.filter).length>0?true:false}
+                                      showFullHeight={(props.filter).length > 0 ? true : false}
                                       setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
             </Fragment>}
 
@@ -1367,6 +1439,7 @@ function MediaComponent(props) {
                         <Grid container direction="column">
                             <Grid item xs={displayListContainer.isPlaceholderSelected ? 6 : 12}>
                                 <MediaItemDetails
+                                    count={count}
                                     filter={filter}
                                     teamContacts={teamContacts}
                                     handlePlaceholderClick={handlePlaceholderClick}
@@ -1408,7 +1481,7 @@ function MediaComponent(props) {
                                     onChangeMediaDetailsSearch={onChangeMediaDetailsSearch}
                                     searchMediaDetailsContainer={searchMediaDetailsContainer}
                                     contacts={contacts}
-
+                                    setSelectedItems={handleSetSelectedMediaDetails}
                                 />
                             </Grid>
 
@@ -1600,12 +1673,12 @@ function MediaComponent(props) {
             {
                 props.filter.length <= 0 &&
                 < TagSearchModal
-                showTagsDialog={showTagsDialog}
-                tagSearch={tagSearch}
-                allTags={allTags}
-                setTagSearch={handleSetTagSearch}
-                setShowTagsDialog={handleShowTagsDialog}
-                setOpenSnackBar={handleOpenSnackBar}
+                    showTagsDialog={showTagsDialog}
+                    tagSearch={tagSearch}
+                    allTags={allTags}
+                    setTagSearch={handleSetTagSearch}
+                    setShowTagsDialog={handleShowTagsDialog}
+                    setOpenSnackBar={handleOpenSnackBar}
                 />
             }
             {lightboxPicture && (

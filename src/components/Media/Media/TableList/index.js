@@ -108,8 +108,8 @@ const PlaceholderTableList = (props) => {
         setCount(count+1);
 
         console.log('item = ',index,'  ',itemsList[index]);
-
     }
+
 
     if(sortingOrder.name && sortingOrder.name==="ascending"){
         itemsList.sort((a, b) => a.name.localeCompare(b.name))
