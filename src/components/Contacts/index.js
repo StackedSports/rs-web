@@ -124,7 +124,7 @@ const useStyles = makeStyles({
   }
 });
 
-function Home() {
+function Home(props) {
   const classes = useStyles();
   // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);

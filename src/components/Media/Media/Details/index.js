@@ -642,6 +642,11 @@ const MediaDetails = (props) => {
                             }}
                         >
                             <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                0%
+                            </p>
+                            <p
                                 style={{
                                     fontWeight: "bold",
                                     fontSize: 18,
@@ -662,7 +667,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightHeading}
                             >
-                                Media Sent In:
+                                0
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
@@ -680,12 +685,12 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightHeading}
                             >
-                                Media Published In:
+                                0
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                0 Tweets
+                                Retweets front Contacts (0/0)
                             </p>
                         </Grid>
                         <Grid
@@ -699,76 +704,10 @@ const MediaDetails = (props) => {
                             }}
                         >
                             <p
-                                style={{
-                                    fontWeight: "bold",
-                                    fontSize: 18,
-                                    margin: 0,
-                                    height: 30,
-                                }}
+                                className={classes.mediaStatsRightState}
                             >
-                                Message Stats
+                                0%
                             </p>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="center"
-                                alignItems="center"
-                                style={{
-                                    // height: "60%",
-                                }}
-                            >
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    95%
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                        height: 30,
-                                    }}
-                                >
-                                    Contact Engagement (286/300)
-                                </p>
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    64
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                    }}
-                                >
-                                    Favorite From Contacts (286/300)
-                                </p>
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    17
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                        height: 30,
-                                    }}
-                                >
-                                    Retweets front Contacts (286/300)
-                                </p>
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            style={{
-                                // height: "15%",
-                            }}
-                        >
                             <p
                                 style={{
                                     fontWeight: "bold",
@@ -777,7 +716,33 @@ const MediaDetails = (props) => {
                                     height: 30,
                                 }}
                             >
-                                Post Stats
+                                Contact Engagement (0/0)
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                0
+                            </p>
+                            <p
+                                style={{
+                                    // height: "60%",
+                                }}
+                            >
+                                Favorite From Contacts (0/0)
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                0
+                            </p>
+                            <p
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: 18,
+                                    margin: 0,
+                                    height: 30,
+                                }}
+                            >
                             </p>
                             <Grid
                                 container

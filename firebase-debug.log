@@ -1,0 +1,94 @@
+[debug] [2022-01-05T13:58:21.514Z] ----------------------------------------------------------------------
+[debug] [2022-01-05T13:58:21.519Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2022-01-05T13:58:21.519Z] CLI Version:   10.0.1
+[debug] [2022-01-05T13:58:21.519Z] Platform:      win32
+[debug] [2022-01-05T13:58:21.520Z] Node Version:  v14.17.1
+[debug] [2022-01-05T13:58:21.521Z] Time:          Wed Jan 05 2022 18:58:21 GMT+0500 (Pakistan Standard Time)
+[debug] [2022-01-05T13:58:21.521Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-01-05T13:58:21.702Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-01-05T13:58:21.703Z] > authorizing via signed-in user (shujaurr18@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\GitHub Projects\twitterstream
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  .firebaserc already has a default project, using recruite-suite. 
+[debug] [2022-01-05T13:59:50.970Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite [none]
+[debug] [2022-01-05T13:59:52.413Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite 403
+[debug] [2022-01-05T13:59:52.414Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2022-01-05T13:59:52.415Z] HTTP Error: 403, The caller does not have permission
+[debug] [2022-01-05T13:59:53.643Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at module.exports (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:38:12)
+    at Client.doRequest (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:241:23)
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)
+    at async Client.request (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:96:20)
+    at async Object.getFirebaseProject (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:290:21)
+    at async Object.doSetup [as project] (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:77:27)
+    at async init (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\index.js:19:9)
+[error] 
+[error] Error: Failed to get Firebase project recruite-suite. Please make sure the project exists and your account has permission to access it.
+[debug] [2022-01-05T14:00:13.815Z] ----------------------------------------------------------------------
+[debug] [2022-01-05T14:00:13.819Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2022-01-05T14:00:13.819Z] CLI Version:   10.0.1
+[debug] [2022-01-05T14:00:13.819Z] Platform:      win32
+[debug] [2022-01-05T14:00:13.820Z] Node Version:  v14.17.1
+[debug] [2022-01-05T14:00:13.821Z] Time:          Wed Jan 05 2022 19:00:13 GMT+0500 (Pakistan Standard Time)
+[debug] [2022-01-05T14:00:13.821Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-01-05T14:00:13.913Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-01-05T14:00:13.914Z] > authorizing via signed-in user (shujaurr18@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\GitHub Projects\twitterstream
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  .firebaserc already has a default project, using recruite-suite. 
+[debug] [2022-01-05T14:05:58.764Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite [none]
+[debug] [2022-01-05T14:06:00.180Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite 403
+[debug] [2022-01-05T14:06:00.181Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/recruite-suite {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2022-01-05T14:06:00.182Z] HTTP Error: 403, The caller does not have permission
+[debug] [2022-01-05T14:06:01.382Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at module.exports (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:38:12)
+    at Client.doRequest (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:241:23)
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)
+    at async Client.request (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:96:20)
+    at async Object.getFirebaseProject (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:290:21)
+    at async Object.doSetup [as project] (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:77:27)
+    at async init (C:\Users\DAR Laptops\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\index.js:19:9)
+[error] 
+[error] Error: Failed to get Firebase project recruite-suite. Please make sure the project exists and your account has permission to access it.

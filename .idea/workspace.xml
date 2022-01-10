@@ -2,14 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase-debug.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/header.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/Placeholder/item.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Content/Message/Setting/SettingMenu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Content/Message/Setting/TagMenu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/AccountContent/AccountContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/AccountContent/AccountRules.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/GeographyContent/GeographyContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/GeographyContent/GeographyRules.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/HashtagContent/HashtagContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/HashtagContent/HashtagRules.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/Keyword.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/KeywordContent/KeywordRules.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/KeywordContent/KeywordsInclude.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/Menu/Keyword.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/Menu/MenuNewStream.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/Menu/MenuStream.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/Menu/StreamName.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/StreamName.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/TweetTypes/MediaContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuStream/TweetTypes/TweetTypes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ApiHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ApiHelper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Header/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Contacts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/header.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Media/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MessageCreate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MessageCreate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TweetCreate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TweetCreate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/Content/Content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/Content/Content.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/Content/Message/Setting/MessageSetting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/Content/Message/Setting/MessageSetting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuNewMessage/MenuNewMessage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuNewMessage/MenuNewMessage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuNewMessage/MyStreams.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/Menus/MenuNewMessage/MyStreams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TwitterStream/TwitterStream.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/table.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +83,7 @@
           <entry key="gif" value="3" />
           <entry key="jpeg" value="1" />
           <entry key="jpg" value="1" />
-          <entry key="js" value="219" />
+          <entry key="js" value="220" />
           <entry key="json" value="1" />
           <entry key="jsx" value="3" />
           <entry key="png" value="4" />
@@ -63,7 +96,7 @@
           <entry key="Image" value="10" />
           <entry key="JSON" value="1" />
           <entry key="JSX Harmony" value="3" />
-          <entry key="JavaScript" value="219" />
+          <entry key="JavaScript" value="220" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="TypeScript" value="3" />
         </counts>
@@ -92,11 +125,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="1506" column="56" lean-forward="true" selection-start-line="1506" selection-start-column="56" selection-end-line="1506" selection-end-column="56" />
+            <state relative-caret-position="187">
+              <caret line="1427" column="26" selection-start-line="1427" selection-start-column="26" selection-end-line="1427" selection-end-column="26" />
               <folding>
                 <element signature="e#0#71#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-754">
+              <caret line="745" selection-start-line="745" selection-end-line="745" />
             </state>
           </provider>
         </entry>
@@ -116,17 +158,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/header.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-51">
-              <caret line="104" column="53" lean-forward="true" selection-start-line="104" selection-start-column="53" selection-end-line="104" selection-end-column="53" />
+            <state relative-caret-position="-34">
+              <caret line="105" column="53" selection-start-line="105" selection-start-column="53" selection-end-line="105" selection-end-column="53" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="129" column="66" selection-start-line="129" selection-start-column="66" selection-end-line="129" selection-end-column="66" />
+            <state relative-caret-position="272">
+              <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -170,8 +212,8 @@
       <find>setSelectedTeamContacts([])</find>
       <find>MediaItem</find>
       <find>MediaItemDetails</find>
-      <find>MediaItemDe</find>
       <find>tableHeading</find>
+      <find>MediaItemDe</find>
     </findStrings>
     <replaceStrings>
       <replace>props.sideFilterClass</replace>
@@ -232,10 +274,10 @@
         <option value="$PROJECT_DIR$/src/components/Media/Header/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/Details/contact-item.js" />
         <option value="$PROJECT_DIR$/src/ApiHelper.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
-        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" />
         <option value="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/MediaComponent.js" />
+        <option value="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" />
       </list>
     </option>
   </component>
@@ -295,6 +337,23 @@
               <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Media" type="462c0819:PsiDirectoryNode" />
+              <item name="Details" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="twitter-stream" type="b2602c69:ProjectViewProjectNode" />
+              <item name="twitter-stream" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="MediaComponent" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -307,7 +366,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1641817862867" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1641818606107" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -372,18 +431,18 @@
       <workItem from="1641567078657" duration="1033000" />
       <workItem from="1641584292006" duration="2102000" />
       <workItem from="1641586476569" duration="182000" />
-      <workItem from="1641798416466" duration="11700000" />
+      <workItem from="1641798416466" duration="12435000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="197948000" />
+    <option name="totallyTimeSpent" value="198683000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.31275168" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31275168" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -401,7 +460,7 @@
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.24498567" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.37965617" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
@@ -449,7 +508,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/Media/PlaceholderDetails/index.js</url>
-          <line>32</line>
+          <line>35</line>
           <option name="timeStamp" value="211" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -740,23 +799,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="138" column="25" selection-start-line="138" selection-start-column="25" selection-end-line="138" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="1506" column="56" lean-forward="true" selection-start-line="1506" selection-start-column="56" selection-end-line="1506" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -769,15 +811,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/header.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="104" column="53" lean-forward="true" selection-start-line="104" selection-start-column="53" selection-end-line="104" selection-end-column="53" />
+        <state relative-caret-position="-34">
+          <caret line="105" column="53" selection-start-line="105" selection-start-column="53" selection-end-line="105" selection-end-column="53" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/TableList/item.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="129" column="66" selection-start-line="129" selection-start-column="66" selection-end-line="129" selection-end-column="66" />
+        <state relative-caret-position="272">
+          <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="1427" column="26" selection-start-line="1427" selection-start-column="26" selection-end-line="1427" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Details/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-754">
+          <caret line="745" selection-start-line="745" selection-end-line="745" />
         </state>
       </provider>
     </entry>

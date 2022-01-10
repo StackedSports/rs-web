@@ -62,28 +62,28 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 function MessageCreate(props) {
-//api
-//var userProfile;
+  //api
+  //var userProfile;
 
   const [showModal, setShowModal] = useState(true);
   var [showSetting, setShowSetting] = useState(false);
   //const [allTags, setAllTags] = useState(null);
-  
-  
 
-  useEffect(async () => {
-    
+
+
+  useEffect(() => {
+
     console.log("component did mount");
-const fetchItems = async ()=>{
-try{
-    const result=await getMessage();
-    console.log('data = ', result.data)
-} 
-catch(e){
-    console.log('data = ',e); 
-}
-}
-fetchItems();
+    const fetchItems = async () => {
+      try {
+        const result = await getMessage();
+        console.log('data = ', result.data)
+      }
+      catch (e) {
+        console.log('data = ', e);
+      }
+    }
+    fetchItems();
 
   }, []);
 
@@ -94,11 +94,11 @@ fetchItems();
 
   }, []);
 
-  const handleAnimation=()=>{
+  const handleAnimation = () => {
     //setShowDrawer(true);
-    setTimeout(()=>{
+    setTimeout(() => {
       setShowAnimation(false);
-    },500)
+    }, 500)
   }
 
 
@@ -501,14 +501,14 @@ fetchItems();
   };
   const getMyPlaceholders = async () => {
 
-    try{
-      const data =await getPlaceholder();
+    try {
+      const data = await getPlaceholder();
       if (data.statusText === "OK") {
         // console.log("These are all placeholder", res.data);
         setPlaceHolders(data.data);
-        console.log('placeholder data = ',data.data);
-    }
-  }catch(error){
+        console.log('placeholder data = ', data.data);
+      }
+    } catch (error) {
       console.log("this is error all media", error);
     }
     /*getPlaceholder().then(
@@ -2257,34 +2257,34 @@ fetchItems();
     );
   };
 
-  const handleSendMessage=async ()=>{
+  const handleSendMessage = async () => {
     //setMessagePreview(true);
-    const selectedMediaIds=selectedMedia.map((media)=>media.id);
-    const contactsId=messageSender.id;
-    const data={
-      "platform":messageType,
-     "media_placeholder_id":selectedMediaIds,
-      "filter_ids":messageReceiver,
-      "send_at":date,
-      "body":messageText,
-      'contact_ids':contactsId,
-     'user_id':JSON.parse(localStorage.getItem("user")).id,
+    const selectedMediaIds = selectedMedia.map((media) => media.id);
+    const contactsId = messageSender.id;
+    const data = {
+      "platform": messageType,
+      "media_placeholder_id": selectedMediaIds,
+      "filter_ids": messageReceiver,
+      "send_at": date,
+      "body": messageText,
+      'contact_ids': contactsId,
+      'user_id': JSON.parse(localStorage.getItem("user")).id,
     }
 
 
-    console.log('data = ',data)
+    console.log('data = ', data)
 
 
-    try{
+    try {
       const response = await createMessage(data);
-      console.log('create message = ',response);
-    }catch(e){
-      console.log('create message = ',e)
+      console.log('create message = ', response);
+    } catch (e) {
+      console.log('create message = ', e)
     }
-    
-  //  postMessage(data)
-    
- }
+
+    //  postMessage(data)
+
+  }
 
 
   return (
@@ -2343,12 +2343,12 @@ fetchItems();
             >
 
 
-            
+
               {/* <FormatAlignLeftIcon
                
               ></FormatAlignLeftIcon> */}
 
-             
+
 
               Create Message
             </p>
@@ -2438,75 +2438,10 @@ fetchItems();
               padding: 16,
               paddingLeft: 30,
               paddingRight: 30,
+              paddingTop:0
             }}
           >
-            <Grid container direction="row">
-              <Grid item md={4} sm={4}>
-                
-                  {
-              showDrawer?
-              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(false);
-                setShowAnimation(true);
-                handleAnimation();
-              }}
-              style={{ cursor: "pointer", width:40}}></img>
-              :
-              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(true);
-                setShowAnimation(true);
-                handleAnimation();
-
-              }}
-              style={{ cursor: "pointer", width:40}}></img>            }
-              <span
-                  style={{
-                    fontWeight: "bold",
-                    // marginLeft: 20,
-                    fontSize: 20,
-
-                    padding:'16px'
-                  }}
-                >
-
-                  Create Message
-                </span>
-              </Grid>
-              <Grid item md={8} sm={8}>
-                <Grid container direction="row" justify="flex-end">
-                  <IconTextField
-                    width={100}
-                    text="More"
-                    textColor="#3871DA"
-                    icon={
-                      <ArrowDropDown
-                        style={{ color: "#3871DA" }}
-                      ></ArrowDropDown>
-                    }
-                  ></IconTextField>
-                  <IconTextField
-                    text="Save and Close"
-                    textColor="#3871DA"
-                    width={180}
-                    onClick={() => {
-                      setShowMessageFiltersRow(!showMessageFiltersRow);
-                    }}
-                    icon={<Check style={{ color: "#3871DA" }}></Check>}
-                  ></IconTextField>
-                  <IconButton
-                    text="Preview and Send"
-                    textColor="white"
-                    width={200}
-                    onClick={() => {
-                      handleSendMessage();
-                    }}
-                    icon={<Send style={{ color: "white" }}></Send>}
-                  ></IconButton>
-                </Grid>
-              </Grid>
-            </Grid>
+       
             <Grid container direction="row">
               {filter.length != 0 &&
                 filter.map((fil, index) => {
@@ -2546,24 +2481,46 @@ fetchItems();
               style={{
                 width: "100%",
                 border: "1px solid #f8f8f8",
-                marginTop: 16,
+                // marginTop: 16,
               }}
             ></div>
-            <Grid container direction="row" alignItems="center"></Grid>
-            <div style={{ width: "100%", overflowX: "hide", marginTop: 16 }}>
+            {/* <Grid container direction="row" alignItems="center"></Grid> */}
+            <div style={{ width: "100%", overflowX: "hide",
+                           }}>
               <Grid container direction="row">
                 {displaySendTo ? (
-                  <Grid item md={4} xs={4}>
+                  <Grid item md={4} xs={4} style={{borderRight: '1px solid rgb(216, 216, 216)'}}>
                     <Grid container direction="row" justify="flex-start">
-                      <div
+                      
+
+                {/* {
+                  showDrawer ?
+                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                      setshowSideFilters(!showSideFilters);
+                      setShowDrawer(false);
+                      setShowAnimation(true);
+                      handleAnimation();
+                    }}
+                      style={{ cursor: "pointer", width: 40 }}></img>
+                    :
+                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                      setshowSideFilters(!showSideFilters);
+                      setShowDrawer(true);
+                      setShowAnimation(true);
+                      handleAnimation();
+
+                    }}
+                      style={{ cursor: "pointer", width: 40 }}></img>} */}
+              
+                     <div
                         style={{
                           background: "#edeef2",
                           width: "97%",
-                          height: 40,
+                          // height: 40,
                           borderRadius: 4,
                         }}
                       >
-                        <Grid container direction="row">
+                        <Grid className="mt-3 mb-3" container direction="row">
                           <Grid item md={4} xs={4}>
                             <button className={classes.blueButton}>
                               My Boards
@@ -2571,7 +2528,7 @@ fetchItems();
                           </Grid>
                           <Grid item md={4} xs={4}>
                             <button className={classes.blueButtonActive}>
-                              Team Boards
+                              Team Boards 
                             </button>
                           </Grid>
                           <Grid item md={4} xs={4}>
@@ -2580,6 +2537,22 @@ fetchItems();
                             </button>
                           </Grid>
                         </Grid>
+                        <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "100%",
+                  border: "1px solid rgb(216, 216, 216)",
+                  borderRadius: 4,
+                  height: 40,
+                }}
+                placeholder="Search Name"
+                value={tagSearch}
+                onChange={(e) => {
+                  setTagSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
                         <Grid container style={{ marginTop: 10 }}>
                           <div
                             style={{
@@ -2607,7 +2580,7 @@ fetchItems();
                                   >
                                     {boards.name}
                                     <Grid container direction="row">
-                                      {boards.athletes.profile_images.map(
+                                      {boards?.athletes?.profile_images?.map(
                                         (image, index) => {
                                           if (index < 8) {
                                             return (
@@ -2629,7 +2602,7 @@ fetchItems();
                                       <img></img>
                                     </Grid>
                                     <p style={{ color: "#3871da" }}>
-                                      {boards.athletes.profile_images.length}{" "}
+                                      {boards?.athletes?.profile_images?.length}{" "}
                                       contacts
                                     </p>
                                   </div>
@@ -2654,10 +2627,77 @@ fetchItems();
                     style={{
                       width: "100%",
                       maxHeight: 330,
+                      marginLeft:'10px'
                       //  minWidth: 1110
                     }}
                     className="fullHeightCreateMessage hideScrollBar"
                   >
+                     <Grid
+                     className="mb-3"
+                      container
+                      direction="row"
+                      // alignItems="center"
+                      style={{
+                        // background: "#f5f6f9",
+                        width: "100%",
+                        // minWidth: 1110,
+                        
+                        
+                        height: 70,
+                        paddingTop: 16,
+                      }}
+                      
+                   
+                    >
+                    
+                  <div className="d-flex justify-content-between align-items-center">
+                  <span
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 16,
+
+                    padding: '16px'
+                  }}
+                >
+
+                  Create Message
+                </span>
+                <div className="d-flex">
+                <IconTextField
+                    width={100}
+                    text="More"
+                    textColor="#3871DA"
+                    icon={
+                      <ArrowDropDown
+                        style={{ color: "#3871DA" }}
+                      ></ArrowDropDown>
+                    }
+                  ></IconTextField>
+                  <IconTextField
+                    text="Save and Close"
+                    textColor="#3871DA"
+                    width={180}
+                    onClick={() => {
+                      setShowMessageFiltersRow(!showMessageFiltersRow);
+                    }}
+                    icon={<Check style={{ color: "#3871DA" }}></Check>}
+                  ></IconTextField>
+                  <IconButton
+                    text="Preview and Send"
+                    textColor="white"
+                    width={200}
+                    onClick={() => {
+                      handleSendMessage();
+                    }}
+                    icon={<Send style={{ color: "white" }}></Send>}
+                  ></IconButton>
+                </div>
+                  </div>
+
+           
+                  
+                    </Grid>
+
                     <Grid
                       container
                       direction="row"
@@ -2677,6 +2717,7 @@ fetchItems();
                         setDisplayMessageSenders(false);
                       }}
                     >
+                    
                       {/* <Grid
                         item
                         md={displaySendTo ? 2 : 1}
@@ -3895,7 +3936,7 @@ const useStyles = makeStyles({
     fontSize: 15,
     paddingBottom: 0,
     marginBottom: 0,
-  
+
     cursor: "pointer",
   },
   sideTwitterFilter: {
@@ -3904,9 +3945,9 @@ const useStyles = makeStyles({
     fontSize: 15,
     paddingBottom: 0,
     marginBottom: 0,
-    marginTop:20,
+    marginTop: 20,
     cursor: "pointer",
-    marginLeft:'10px'
+    marginLeft: '10px'
   },
   sideMediaFilter: {
     padding: 5,
@@ -3914,9 +3955,9 @@ const useStyles = makeStyles({
     fontSize: 13,
     paddingBottom: 0,
     marginBottom: 0,
-    marginTop:5,
+    marginTop: 5,
     cursor: "pointer",
-    marginLeft:'10px'
+    marginLeft: '10px'
   },
   sideSubFilter: {
     padding: 5,
@@ -4021,5 +4062,5 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
-export {useStyles};
+export { useStyles };
 export default MessageCreate;

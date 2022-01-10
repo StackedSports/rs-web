@@ -1,8 +1,8 @@
 import {Fragment} from "react";
 import {Grid, makeStyles} from "@material-ui/core";
 import React from "react";
-import Checkbox from '@mui/material/Checkbox';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+
+
 
 const useStyles = makeStyles({
     tableHeading: {
@@ -80,9 +80,9 @@ const useStyles = makeStyles({
     }
 });
 
-const ListHeader = (props) => {
+const ListHeader=()=>{
     const classes = useStyles();
-    return (
+    return(
         <Grid
             container
             direction="row"
@@ -90,40 +90,31 @@ const ListHeader = (props) => {
             style={{
                 background: "#f5f6f9",
                 width: "100%",
+                minWidth: 1110,
             }}
         >
-            <Grid item md={0.5} xs={0.5}>
-                <span className={classes.tableHeading}>  {<Checkbox/>}</span>
-            </Grid>
-            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('name')}>
+            <Grid item md={3} xs={3} style={{marginLeft: 12}}>
                 <span className={classes.tableHeading}>Name</span>
-                <KeyboardArrowDownOutlinedIcon/>
             </Grid>
             <Grid item md={1} xs={1}>
                 <span className={classes.tableHeading}>File</span>
             </Grid>
-            <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>File Sent
-                <KeyboardArrowDownOutlinedIcon/>
-                </span>
+            <Grid item md={1} xs={1}>
+                <span className={classes.tableHeading}>File Sent</span>
             </Grid>
             <Grid item md={2} xs={2}>
                       <span
                           className={classes.tableHeading}
+                          style={{marginLeft: 40}}
                       >
-                          {props.isPlaceholder ? "File Count" : "Associated To"}
-                          <KeyboardArrowDownOutlinedIcon/>
+                        Associated To
                       </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                <span className={classes.tableHeading}>
-                    {props.isPlaceholder ? "Associated To" : "Owner"}
-                    <KeyboardArrowDownOutlinedIcon/>
-                </span>
+                <span className={classes.tableHeading}>Owner</span>
             </Grid>
-            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('date')}>
+            <Grid item md={2} xs={2}>
                 <span className={classes.tableHeading}>Last Modified</span>
-                <KeyboardArrowDownOutlinedIcon/>
             </Grid>
         </Grid>
     )
