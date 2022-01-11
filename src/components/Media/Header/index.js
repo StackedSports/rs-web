@@ -10,12 +10,13 @@ import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
 import DropDownButton from "../DropDownButton";
 import {Link} from "react-router-dom";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
-import React from "react";
+import React, { useState } from "react";
 import PlaceholderListButton from '../Placehoder/PlaceholderListButton';
 
 
 const Header=(props)=>{
     console.log('header = ',props);
+    const [initalColor, setInitalColoe] = useState('transparent');
     return(
         <Grid container direction="row">
             <Grid item md={6} sm={6}>
@@ -121,10 +122,10 @@ const Header=(props)=>{
                             haveLink={true}
                             Link={<Link id={"toMessage"} to="/message-create"></Link>}
                             textColorSelected={"#3871DA"}
-                            textColor={"white"}
+                            textColor={"gray"}
                             backgroundColorSelected={"transparent"}
-                            backgroundColor={"#3871DA"}
-                            iconSelectedColor={"white"}
+                            backgroundColor={"transparent"}
+                            iconSelectedColor={"transparent"}
                             iconColor={"#3871DA"}
                             text={"Action"}
                             Icon={
@@ -162,13 +163,14 @@ const Header=(props)=>{
                     {props.message ? (
                         <div></div>
                     ) : (
+                        // Filters Button 
                         props.showFilter &&
                         <DropDownButton
                             textColorSelected={"#3871DA"}
-                            textColor={"white"}
+                            textColor={"gray"}
                             backgroundColorSelected={"transparent"}
-                            backgroundColor={"#3871DA"}
-                            iconSelectedColor={"white"}
+                            backgroundColor={"#FFF"}
+                            iconSelectedColor={"gray"}
                             iconColor={"#3871DA"}
                             text={"Filters"}
                             Icon={

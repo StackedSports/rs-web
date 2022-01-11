@@ -1,10 +1,10 @@
 import IconTextField from "../../common/Fields/IconTextField";
 import LocalOfferOutlinedIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
-import {Grid, makeStyles} from "@material-ui/core";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Grid, makeStyles } from "@material-ui/core";
 import DropDownItem from './item';
-import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
+import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 
 const useStyles = makeStyles({
     tableHeading: {
@@ -88,24 +88,25 @@ const DropDownButton = (props) => {
     const classes = useStyles();
 
 
-    const Icon=props.Icon;
+    const Icon = props.Icon;
 
-    console.log('icon = ',Icon)
+    console.log('icon = ', Icon)
     return (
         <div className="dropdown">
             {props.haveLink && props.Link}
             <IconTextField
                 width={100}
-                textColor={ props.textColor }
-                background={ props.backgroundColor}
+                textColor={displayAction ? props.textColor : props.textColorSelected}
+                background={displayAction ? props.backgroundColor : props.backgroundColorSelected}
                 text={props.text}
-                icon={React.cloneElement(props.Icon,{ style: {color:  props.iconSelectedColor  }})}
+                icon={React.cloneElement(props.Icon, { style: { color: displayAction ? props.iconSelectedColor : props.iconColor } })}
                 onClick={(e) => {
-                    props.onClick();
+                    props?.onClick()
+                    setDisplayAction(true);
                 }}
             ></IconTextField>
             {
-                /*props.list &&
+               props.list &&
                 <div
                     className={classes.dropdownHidden}
                     style={{
@@ -122,7 +123,7 @@ const DropDownButton = (props) => {
                             <DropDownItem title={type.title} index={index}/>
                         );
                     })}
-                </div>*/
+                </div>
             }
         </div>
 

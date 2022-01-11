@@ -1,10 +1,10 @@
-import {Grid, makeStyles} from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 
 import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
-import {isImage, isVideo} from '../../../../utils/FileUtils';
+import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
+import { isImage, isVideo } from '../../../../utils/FileUtils';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 
@@ -12,8 +12,8 @@ const useStyles = makeStyles({
     tableHeading: {
         fontWeight: 700,
         fontSize: 15,
-        margin:0,
-        padding:0
+        margin: 0,
+        padding: 0
     },
     tableFields: {
         fontWeight: 500,
@@ -89,6 +89,7 @@ const useStyles = makeStyles({
 const PlaceholderItem = (props) => {
     const classes = useStyles();
     const item = props.item;
+    const [checkboxval, setcheckboxval]= useState(false);
     return (
         <Grid
             onClick={() => {
@@ -120,28 +121,35 @@ const PlaceholderItem = (props) => {
             }}
         >
 
-            <Grid item md={0.5} xs={0.5} style={{margin: 0}}>
+            <Grid item md={0.5} xs={0.5} style={{ margin: 0 }}>
                 {item.hover ?
                     <span className={classes.tableHeading}
-                    onClick={(e)=>{
-                    e.stopPropagation();
-                    }
-                    }
-                    >  {<Checkbox className={classes.tableHeading}/> }</span>
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // console.log(e)
+                            {checkboxval===true?
+                                setcheckboxval(false):
+                                setcheckboxval(true)
+                            
+                            }
+                            // setcheckboxval(true)
+                        }
+                        }
+                    >  {<Checkbox checked={checkboxval} className={classes.tableHeading} />}</span>
                     :
                     (item.url.indexOf(".gif") > -1 ? (
                         <GifIcon></GifIcon>
                     ) : item.url.indexOf(".png") > -1 ||
-                    item.url.indexOf(".jpg") > -1 ||
-                    item.url.indexOf(".jpeg") > -1 ? (
+                        item.url.indexOf(".jpg") > -1 ||
+                        item.url.indexOf(".jpeg") > -1 ? (
                         <FaImage
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{ color: "#3871da", fontSize: 20 }}
                         ></FaImage>
                     ) : item.url.indexOf(".mp4") > -1 ? (
                         <FaVideo></FaVideo>
                     ) : (
                         <FaFilePdf
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{ color: "#3871da", fontSize: 20 }}
                         ></FaFilePdf>
                     ))}
             </Grid>
@@ -150,10 +158,10 @@ const PlaceholderItem = (props) => {
                 <span
                     className={classes.tableFields}
 
-                    style={{marginLeft: 10, cursor: 'pointer'}}
+                    style={{ marginLeft: 10, cursor: 'pointer' }}
                 >
-                                  {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
-                                </span>
+                    {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
+                </span>
             </Grid>
             <Grid item md={1} xs={1} onClick={(e) => {
                 if (isVideo(item.url)) {
@@ -165,45 +173,45 @@ const PlaceholderItem = (props) => {
             }}>
                 <img
 
-                    style={{width: 30, height: 30, marginLeft: 13, cursor: 'pointer'}}
+                    style={{ width: 30, height: 30, marginLeft: 13, cursor: 'pointer' }}
                     src={item.url}
                 ></img>
             </Grid>
 
             <Grid item md={2} xs={2}>
-                                <span className={classes.tableFields}>
-                                  {(item.name).length > 15 ? (
-                                      <CheckCircleIcon fontSize='small' style={{
-                                          fill: '#006644',
-                                          marginTop: '5px',
-                                          marginLeft: 50
+                <span className={classes.tableFields}>
+                    {(item.name).length > 15 ? (
+                        <CheckCircleIcon fontSize='small' style={{
+                            fill: '#006644',
+                            marginTop: '5px',
+                            marginLeft: 50
 
-                                      }}/>) : ''}
-                                </span>
+                        }} />) : ''}
+                </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                                <span
-                                    className={classes.tableFields}
-                                    style={{marginLeft: 40}}
-                                >
-                                  {props.isPlaceholder ? (item.media_placeholder_id) : item.team_contact_id}
-                                </span>
+                <span
+                    className={classes.tableFields}
+                    style={{ marginLeft: 40 }}
+                >
+                    {props.isPlaceholder ? (item.media_placeholder_id) : item.team_contact_id}
+                </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                                <span className={classes.tableFields}
-                                      style={{marginLeft: 40}}>
-                                  {item.owner && item.owner.first_name && ((item.owner.first_name + ' ' + item.owner.last_name).length > 15 ?
-                                      (item.owner.first_name + ' ' + item.owner.last_name).slice(0, 14) :
-                                      (item.owner.first_name + ' ' + item.owner.last_name))
-                                  }
-                                </span>
+                <span className={classes.tableFields}
+                    style={{ marginLeft: 40 }}>
+                    {item.owner && item.owner.first_name && ((item.owner.first_name + ' ' + item.owner.last_name).length > 15 ?
+                        (item.owner.first_name + ' ' + item.owner.last_name).slice(0, 14) :
+                        (item.owner.first_name + ' ' + item.owner.last_name))
+                    }
+                </span>
             </Grid>
             <Grid item md={2} xs={2}>
-                                <span className={classes.tableFields}
-                                      style={{marginLeft: 40}}
-                                >
-                                  {moment(item.created_at).format("MMMM Do YYYY")}
-                                </span>
+                <span className={classes.tableFields}
+                    style={{ marginLeft: 40 }}
+                >
+                    {moment(item.created_at).format("MMMM Do YYYY")}
+                </span>
             </Grid>
 
 
