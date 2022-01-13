@@ -1419,6 +1419,8 @@ function MediaComponent(props) {
                                       isPlaceholder={false}
                                       setLightboxPicture={handleSetLightboxPicture}
                                       setLightboxVideo={handleSetLightboxVideo}
+                                      filter={props.filter}
+                                      isMedia={true}
                                       showFullHeight={(props.filter).length > 0 ? true : false}
                                       setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
             </Fragment>}

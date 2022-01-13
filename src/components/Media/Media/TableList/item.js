@@ -121,13 +121,13 @@ const PlaceholderItem = (props) => {
         >
 
             <Grid item md={0.5} xs={0.5} style={{margin: 0}}>
-                {item.hover ?
+                {item.hover || item.isSelected?
                     <span className={classes.tableHeading}
                     onClick={(e)=>{
                     e.stopPropagation();
                     }
                     }
-                    >  {<Checkbox className={classes.tableHeading}/> }</span>
+                    >  {<Checkbox checked={item.isSelected} onChange={(e)=>props.handleItemSelected(props.index)} className={classes.tableHeading}/> }</span>
                     :
                     (item.url.indexOf(".gif") > -1 ? (
                         <GifIcon></GifIcon>

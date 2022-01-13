@@ -85,10 +85,14 @@ const useStyles = makeStyles({
 
 const PlaceholderTableList = (props) => {
     const classes = useStyles();
-    const [itemsList, setItemList] = useState(props.list);
+    let [itemsList, setItemList] = useState(props.list);
     const [count, setCount] = useState(0);
     const [sortingOrder,setSortingOrder] = useState({name:null,date:null});
 
+
+
+
+    console.log('filter = ',props.filter,'   itemslist = ',itemsList);
 
 
 
@@ -111,6 +115,20 @@ const PlaceholderTableList = (props) => {
     }
 
 
+    const handleItemSelected=(index)=>{
+        if(itemsList[index].isSelected){
+            itemsList[index].isSelected=false;
+        }else{
+            itemsList[index].isSelected=true;
+
+        }
+        setItemList(itemsList);
+        setCount(count+1);
+
+
+    }
+
+
     if(sortingOrder.name && sortingOrder.name==="ascending"){
         itemsList.sort((a, b) => a.name.localeCompare(b.name))
     }else  if(sortingOrder.name && sortingOrder.name==="descending"){
@@ -121,6 +139,15 @@ const PlaceholderTableList = (props) => {
         itemsList.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
     }else  if(sortingOrder.date && sortingOrder.date==="descending"){
         itemsList.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+
+    if(props.isMedia && props.filter && props.filter.length>0){
+        const filter=props.filter;
+
+        itemsList=itemsList.filter((item)=>(item && item.owner
+            && filter.findIndex((fil)=>((item.owner.first_name+' '+item.owner.last_name)===fil.username))!==-1));
+
     }
 
 
@@ -154,6 +181,7 @@ const PlaceholderTableList = (props) => {
                             item={item}
                             index={index}
                             key={item.key}
+                            handleItemSelected={handleItemSelected}
                             setShowMediaStats={props.setShowMediaStats}
                             isPlaceholderDetails={props.isPlaceholderDetails}
                             isPlaceholder={props.isPlaceholder}
