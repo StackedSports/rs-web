@@ -467,10 +467,10 @@ export const getMedia = () => {
   });
 };
 
-export const getPlaceholder = (placeholder_id) => {
+export const getPlaceholder = () => {
   return axios({
     method: "get",
-    url: URL + `placeholder/${placeholder_id}`,
+    url: URL + `media/placeholders`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",
@@ -565,10 +565,10 @@ export const getMostRecentSendTimes = () => {
   });
 };
 
-export const getMessageInbox = (id) => {
+export const getMessageInbox = () => {
   return axios({
     method: "get",
-    url: URL + `messages/${id}?only_sendable=true`,
+    url: URL + `messages/inbox`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",

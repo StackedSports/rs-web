@@ -385,7 +385,7 @@ function MediaComponent(props) {
                     console.log("These are all contacts", res.data);
                     setContacts(res.data);
                     // setCopyContacts(res.data);
-                    document.getElementById("infinit").scrollTop = 0;
+                    // document.getElementById("infinit").scrollTop = 0;
                     setFetching(false);
                 }
             },
@@ -869,17 +869,17 @@ function MediaComponent(props) {
     };
 
 
-    useEffect(async () => {
+    useEffect( () => {
         console.log('props.history = ', props.history)
 
         if (localStorage.getItem("user")) {
-            await getMyContacts();
-            await getTaggedMedia();
-            await getMyMediaContacts();
-            await getMyTeamContacts();
+             getMyContacts();
+             getTaggedMedia();
+             getMyMediaContacts();
+             getMyTeamContacts();
 
-            const media = await getMyMedia();
-            const placeholders = await getMyPlaceholders();
+            const media =  getMyMedia();
+            const placeholders =  getMyPlaceholders();
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             const type = urlParams.get('type');
