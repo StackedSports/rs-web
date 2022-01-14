@@ -13,7 +13,7 @@ export default function IconButton(props) {
         }
       }}
       style={{
-        background: "#3871DA",
+        background:props.background || "#3871DA",
         width: props.width || 130,
         height: 40,
         borderRadius: 4,

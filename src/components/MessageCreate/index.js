@@ -6,6 +6,9 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import SearchIcon from "@material-ui/icons/Search";
+import SelectSearch from "react-select-search";
+
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import GifIcon from "@material-ui/icons/Gif";
 import PhotoIcon from "@material-ui/icons/Photo";
@@ -173,6 +176,8 @@ function MessageCreate(props) {
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+
   const [tableData, setTableData] = React.useState([
     {
       name: "David Buttler",
@@ -2175,7 +2180,7 @@ function MessageCreate(props) {
             </Grid>
           </div>
         }
-        <p  className=" mr-3 mt-3">OR</p>
+        <p className=" mr-3 mt-3">OR</p>
 
         <div
           container
@@ -2541,20 +2546,35 @@ function MessageCreate(props) {
                           </Grid>
                         </Grid>
                         <Grid container direction="row" justify="center">
-                          <input
+
+                        <div className="form-group has-search w-100">
+    <span className="fa fa-search form-control-feedback"></span>
+    <input
+style={{
+  width: "100%",
+  border: "1px solid rgb(216, 216, 216)",
+  borderRadius: 4,
+  height: 40,
+  color:'#b5b9c0'
+}}
+    type="text" className="form-control w-100" placeholder="Search Board"/>
+  </div>
+                          {/* <input
+                          className='pl-2 pr-2'
                             type="text"
                             style={{
                               width: "100%",
                               border: "1px solid rgb(216, 216, 216)",
                               borderRadius: 4,
                               height: 40,
+                              color:'#b5b9c0'
                             }}
-                            placeholder="Search Name"
+                            placeholder="Search Borad"
                             value={tagSearch}
                             onChange={(e) => {
                               setTagSearch(e.target.value);
                             }}
-                          ></input>
+                          ></input> */}
                         </Grid>
                         <Grid container style={{ marginTop: 10 }}>
                           <div
@@ -2625,16 +2645,6 @@ function MessageCreate(props) {
                   md={displaySendTo ? 8 : 12}
                   xs={displaySendTo ? 8 : 12}
                 >
-                  {" "}
-                  <div
-                    style={{
-                      width: "100%",
-                      maxHeight: 330,
-                      marginLeft: '10px'
-                      //  minWidth: 1110
-                    }}
-                    className="fullHeightCreateMessage hideScrollBar"
-                  >
                     <Grid
                       className="mb-3"
                       container
@@ -2647,25 +2657,29 @@ function MessageCreate(props) {
 
 
                         height: 70,
-                        paddingTop: 16,
                       }}
 
 
                     >
 
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex justify-content-between align-items-center w-100">
                         <span
+                        
                           style={{
                             fontWeight: "bold",
-                            fontSize: 16,
+                            fontSize: 20,
 
                             padding: '16px'
                           }}
                         >
+<strong>
+Create Message
 
-                          Create Message
+
+</strong>
                         </span>
-                        <div className="d-flex">
+                        
+                        <div className="d-flex ">
                           <IconTextField
                             width={100}
                             text="More"
@@ -2687,12 +2701,15 @@ function MessageCreate(props) {
                           ></IconTextField>
                           <IconButton
                             text="Preview and Send"
-                            textColor="white"
+                            textColor="#3871DA"
                             width={200}
+                            background= '#6fbbd3 '
+
+                           
                             onClick={() => {
                               handleSendMessage();
                             }}
-                            icon={<Send style={{ color: "white" }}></Send>}
+                            icon={<Send style={{ color: "#3871DA" }}></Send>}
                           ></IconButton>
                         </div>
                       </div>
@@ -2700,6 +2717,17 @@ function MessageCreate(props) {
 
 
                     </Grid>
+                  {" "}
+                  <div
+                    style={{
+                      width: "100%",
+                      maxHeight: 330,
+                      marginLeft: '10px'
+                      //  minWidth: 1110
+                    }}
+                    className="fullHeightCreateMessage hideScrollBar"
+                  >
+                  
 
                     <Grid
                       container
