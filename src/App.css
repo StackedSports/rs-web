@@ -398,8 +398,8 @@ select-search {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .fullHeightCreateMessageSide {
--ms-overflow-style: none;  /* IE and Edge */
-scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .fullHeightCreateMessagePreview {
   min-height: calc(100vh - 200px);
@@ -538,5 +538,13 @@ scrollbar-width: none;  /* Firefox */
 }
 
 .MuiCheckbox-colorPrimary.Mui-checked {
-  color: #3871DA !important;
+  color: #3871da !important;
+}
+button:focus {
+  outline: none;
+  border: none;
+  color: #eee;
+  outline: 0 none -webkit-focus-ring-color !important;
+
+  background-color: #3871da;
 }
