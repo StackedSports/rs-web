@@ -548,3 +548,20 @@ button:focus {
 
   background-color: #3871da;
 }
+.css-1aquho2-MuiTabs-indicator {
+  display: none;
+}
+
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #f2f2f2 !important;
+  background: #3871da !important;
+}
+#simple-tabpanel-1 {
+  width: 100%;
+}
+#simple-tabpanel-0 {
+  width: 100%;
+}
+#simple-tabpanel-2 {
+  width: 100%;
+}
