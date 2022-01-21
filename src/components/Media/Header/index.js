@@ -33,11 +33,11 @@ const Header=(props)=>{
                                  style={{cursor: "pointer", width: 40}}></img>
                             :
                             <img src={props.showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                                props.setshowSideFilters(!props.showSideFilters);
-                                props.setShowDrawer(true);
-                                props.setShowAnimation(true);
-                                props.handleAnimation();
-                                props.handleMediaDrawer(false);
+                                props?.setshowSideFilters(!props.showSideFilters);
+                                props?.setShowDrawer(true);
+                                props?.setShowAnimation(true);
+                                props?.handleAnimation();
+                                props?.handleMediaDrawer(false);
 
                             }}
                                  style={{cursor: "pointer", width: 40}}></img>

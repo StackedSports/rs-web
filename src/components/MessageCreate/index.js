@@ -19,6 +19,7 @@ import AmimatedBurger from '../../images/animated_burger.gif';
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import {
@@ -54,6 +55,8 @@ import {
   getMessage,
   createMessage
 } from "../../ApiHelper";
+// import SearchBar from "material-ui-search-bar";
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
@@ -63,6 +66,8 @@ import { addDays } from "date-fns";
 import DrawerAnimation from '../../images/drawer_animation.gif';
 import BackAnimation from '../../images/back_animation.gif';
 import BackIcon from '../../images/back.png';
+import SearchBar from "material-ui-search-bar";
+
 import DrawerIcon from '../../images/drawer_contact.png';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -110,7 +115,6 @@ function MessageCreate(props) {
   const [showModal, setShowModal] = useState(true);
   var [showSetting, setShowSetting] = useState(false);
   //const [allTags, setAllTags] = useState(null);
-
 
 
   useEffect(() => {
@@ -207,6 +211,9 @@ function MessageCreate(props) {
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
+  const [rows, setRows] = useState(allBoards);
+
+  const [searched, setSearched] = useState("");
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
@@ -215,6 +222,8 @@ function MessageCreate(props) {
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
   const [searchValue, setSearchValue] = useState("");
+  const [stateiconColor, setstateiconColor] = useState('gray');
+
 
   const [tableData, setTableData] = React.useState([
     {
@@ -253,7 +262,23 @@ function MessageCreate(props) {
       date: "2017-11-23T07:26:00.497Z",
     },
   ]);
+  // const classes = useStyles();
 
+  const requestSearch = (searchedVal) => {
+
+    const filteredRows = allBoards.filter((row) => {
+      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
+  useEffect(() => {
+    setRows(allBoards)
+  }, [allBoards])
   useEffect(
     (data) => {
       console.log(data);
@@ -503,13 +528,13 @@ function MessageCreate(props) {
           style={{ height: 30, marginLeft: 16, marginTop: 2 }}
           alignItems="center"
         >
-          {m.media_preview.indexOf(".gif") > -1 ? (
+          {m.media_preview?.indexOf(".gif") > -1 ? (
             <GifIcon></GifIcon>
-          ) : m.media_preview.indexOf(".png") > -1 ||
-            m.media_preview.indexOf(".jpg") > -1 ||
-            m.media_preview.indexOf(".jpeg") > -1 ? (
+          ) : m?.media_preview?.indexOf(".png") > -1 ||
+            m?.media_preview?.indexOf(".jpg") > -1 ||
+            m?.media_preview?.indexOf(".jpeg") > -1 ? (
             <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
-          ) : m.media_preview.indexOf(".mp4") > -1 ? (
+          ) : m?.media_preview?.indexOf(".mp4") > -1 ? (
             <FaVideo></FaVideo>
           ) : (
             <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
@@ -523,7 +548,7 @@ function MessageCreate(props) {
               fontSize: 15,
             }}
           >
-            {m.name}
+            {m?.name}
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
@@ -2323,9 +2348,9 @@ function MessageCreate(props) {
   };
 
   const handleSendMessage = async () => {
-    //setMessagePreview(true);
-    const selectedMediaIds = selectedMedia.map((media) => media.id);
-    const contactsId = messageSender.id;
+    // setMessagePreview(true);
+    const selectedMediaIds = selectedMedia?.map((media) => media?.id);
+    const contactsId = messageSender?.id;
     const data = {
       "platform": messageType,
       "media_placeholder_id": selectedMediaIds,
@@ -2613,9 +2638,9 @@ function MessageCreate(props) {
                               {/* /////////////Tab panel for Teams boards//////////// */}
 
                               <div className="form-group has-search w-100 mt-3">
-                                <span className="fa fa-search form-control-feedback"></span>
+                                {/* <span className="fa fa-search form-control-feedback"></span> */}
 
-                                <input
+                                {/* <input
                                   style={{
                                     width: "100%",
                                     border: "1px solid rgb(216, 216, 216)",
@@ -2624,7 +2649,22 @@ function MessageCreate(props) {
                                     color: '#888',
                                     background: '#edeef2'
                                   }}
-                                  type="text" className="form-control w-100" placeholder="Search Board" />
+                                  type="text" className="form-control w-100" placeholder="Search Board" /> */}
+                                <SearchBar
+                                  style={{
+                                    boxShadow: 'none',
+                                    width: "100%",
+                                    border: "1px solid rgb(216, 216, 216)",
+                                    borderRadius: 4,
+                                    height: 40,
+                                    color: '#888',
+                                    background: '#edeef2'
+                                  }}
+                                  placeholder="Search My boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
                               </div>
                             </Grid>
                             <Grid container style={{ marginTop: 10 }}>
@@ -2636,8 +2676,8 @@ function MessageCreate(props) {
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {allBoards &&
-                                  allBoards.map((boards) => {
+                                {rows &&
+                                  rows.map((boards) => {
                                     return (
                                       boards.is_shared === false ? <>
                                         <div
@@ -2698,10 +2738,11 @@ function MessageCreate(props) {
                               {/* /////////////Tab panel for Teams boards//////////// */}
 
                               <div className="form-group has-search w-100 mt-3">
-                                <span className="fa fa-search form-control-feedback"></span>
 
-                                <input
+
+                                <SearchBar
                                   style={{
+                                    boxShadow: 'none',
                                     width: "100%",
                                     border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
@@ -2709,7 +2750,11 @@ function MessageCreate(props) {
                                     color: '#888',
                                     background: '#edeef2'
                                   }}
-                                  type="text" className="form-control w-100" placeholder="Search Board" />
+                                  placeholder="Search Team boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
                               </div>
                             </Grid>
                             <Grid container style={{ marginTop: 10 }}>
@@ -2721,8 +2766,8 @@ function MessageCreate(props) {
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {allBoards &&
-                                  allBoards.map((boards) => {
+                                {rows &&
+                                  rows.map((boards) => {
 
                                     return (
                                       <div
@@ -2777,10 +2822,10 @@ function MessageCreate(props) {
                               {/* /////////////Tab panel for Teams Indvidual//////////// */}
 
                               <div className="form-group has-search w-100 mt-3">
-                                <span className="fa fa-search form-control-feedback"></span>
 
-                                <input
+                                <SearchBar
                                   style={{
+                                    boxShadow: 'none',
                                     width: "100%",
                                     border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
@@ -2788,7 +2833,11 @@ function MessageCreate(props) {
                                     color: '#888',
                                     background: '#edeef2'
                                   }}
-                                  type="text" className="form-control w-100" placeholder="Search Board" />
+                                  placeholder="Search Individual boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
                               </div>
                             </Grid>
                             <Grid container style={{ marginTop: 10 }}>
@@ -2800,14 +2849,14 @@ function MessageCreate(props) {
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {allBoards &&
-                                  allBoards.map((boards) => {
+                                {rows &&
+                                  rows.map((boards) => {
                                     return (
                                       boards.is_shared === true ? <>
                                         <div
-                                        
+
                                           style={{
-                                            
+
                                             borderTop: "1px solid #edeef2",
                                             width: "100%",
                                             height: 100,
@@ -2819,24 +2868,25 @@ function MessageCreate(props) {
                                             // setMessageReceiver();
                                           }}
                                         >
-                                          {boards?.contacts?.profile_images?.map((image,index)=>{
-                                            return(
+                                          {/* {boards?.contacts?.profile_images?.map((image,index)=>{
+                                            return( */}
 
-                                          <div className="" key={index}>
-                                          <img
-                                                  src={image}
-                                                  style={{
-                                                    width: 35,
-                                                    height: 35,
-                                                    borderRadius: 20,
-                                                    // marginTop: 5,
-                                                  
-                                                  }}
-                                                ></img>
-                                                {/* <br /> */}
+
+                                          <div className="" >
+                                            <img
+                                              src={boards?.contacts?.profile_images[0]}
+                                              style={{
+                                                width: 35,
+                                                height: 35,
+                                                borderRadius: 20,
+                                                // marginTop: 5,
+
+                                              }}
+                                            ></img>
+
                                           </div>
-                                            )
-                                          })}
+                                          {/* )
+                                          })} */}
 
                                           {/* {boards.name} */}
 
@@ -3059,24 +3109,14 @@ function MessageCreate(props) {
                               setDisplayCreateMessage(false);
                             }}
                           >
-                            <p
-                              style={{
-                                color: "black",
-                                padding: 16,
-                                background: "#3871da",
-                                color: "white",
-                                fontWeight: 600,
-                                marginBottom: -4,
-                              }}
-                            >
-                              Set Message Type
-                            </p>
+
                             <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
                                 style={{ fontSize: 16 }}
 
                               ></Favorite>
+
                               <p
                                 style={{
                                   // color: "black",
@@ -3091,9 +3131,24 @@ function MessageCreate(props) {
                               >
 
                                 Set Preffered Channel
-                              </p> <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              </p> <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
                             </Grid>
+                            <Grid container alignItems="center" className={classes.messagetypeGrid}>
 
+
+                              <p
+                                style={{
+                                  marginLeft: 16,
+                               
+                                  fontSize: '10px',
+                                  fontWeight: 300,
+                                  marginBottom: -4,
+                                }}
+                              >
+
+                                *Select a default "Send As" option if a contact does not have a set Prefered Channel
+                              </p>
+                            </Grid>
                             {[
                               {
                                 title: "Twitter DM",
@@ -3119,7 +3174,7 @@ function MessageCreate(props) {
                                   ></FaComment>
                                 ),
                               },
-                            ].map((type) => {
+                            ].map((type,i) => {
                               return (
                                 <Grid
                                   container
@@ -3140,13 +3195,14 @@ function MessageCreate(props) {
                                   >
                                     {type.title}
                                   </p>
-                                  <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                                  <CheckCircle style={{ color:'gray' , fontSize: 18 }}></CheckCircle>
                                 </Grid>
                               );
                             })}
                           </div>
                         </div>
                       )}
+
                       {/* </Grid> */}
                     </Grid>
 
