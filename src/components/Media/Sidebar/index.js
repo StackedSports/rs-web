@@ -84,7 +84,7 @@ export default function Sidebar(props){
                         onClick={() => {
                             props.addDataToFilter(
                                 item.first_name + " " + item.last_name,
-                                "Board"
+                                "owner"
                             );
                         }}
                     >

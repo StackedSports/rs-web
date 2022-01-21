@@ -1,7 +1,7 @@
 import {Grid, makeStyles} from "@material-ui/core";
 import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import moment from "moment";
-import React, {useState,useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import ListHeader from './header';
 import PlaceholderItem from './item';
 
@@ -87,84 +87,130 @@ const PlaceholderTableList = (props) => {
     const classes = useStyles();
     let [itemsList, setItemList] = useState(props.list);
     const [count, setCount] = useState(0);
-    const [sortingOrder,setSortingOrder] = useState({name:null,date:null});
+    const [sortingOrder, setSortingOrder] = useState({name: null, date: null});
 
 
+    console.log('filter = ', props.filter, '   itemslist = ', itemsList);
 
 
-    console.log('filter = ',props.filter,'   itemslist = ',itemsList);
-
-
-
-    const handleSortingOrder=(type)=>{
-        if(sortingOrder[type]===null || sortingOrder[type]==='descending'){
-            setSortingOrder({...sortingOrder,[type]:"ascending"})
-        }else if(sortingOrder[type]===null || sortingOrder[type]==='ascending'){
-            setSortingOrder({...sortingOrder,[type]:"descending"})
+    const handleSortingOrder = (type) => {
+        if (sortingOrder[type] === null || sortingOrder[type] === 'descending') {
+            setSortingOrder({...sortingOrder, [type]: "ascending"})
+        } else if (sortingOrder[type] === null || sortingOrder[type] === 'ascending') {
+            setSortingOrder({...sortingOrder, [type]: "descending"})
         }
     }
 
 
-
-    const handleHover=(index,hover)=>{
-        itemsList[index].hover=hover;
+    const handleHover = (index, hover) => {
+        itemsList[index].hover = hover;
         setItemList(itemsList);
-        setCount(count+1);
+        setCount(count + 1);
 
-        console.log('item = ',index,'  ',itemsList[index]);
+        console.log('item = ', index, '  ', itemsList[index]);
     }
 
 
-    const handleItemSelected=(index)=>{
-        if(itemsList[index].isSelected){
-            itemsList[index].isSelected=false;
-        }else{
-            itemsList[index].isSelected=true;
+    const handleItemSelected = (index) => {
+        if (itemsList[index].isSelected) {
+            itemsList[index].isSelected = false;
+        } else {
+            itemsList[index].isSelected = true;
 
         }
         setItemList(itemsList);
-        setCount(count+1);
+        setCount(count + 1);
 
 
     }
 
 
-    if(sortingOrder.name && sortingOrder.name==="ascending"){
+    if (sortingOrder.name && sortingOrder.name === "ascending") {
         itemsList.sort((a, b) => a.name.localeCompare(b.name))
-    }else  if(sortingOrder.name && sortingOrder.name==="descending"){
+    } else if (sortingOrder.name && sortingOrder.name === "descending") {
         itemsList.sort((a, b) => b.name.localeCompare(a.name))
     }
 
-    if(sortingOrder.date && sortingOrder.date==="ascending"){
-        itemsList.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-    }else  if(sortingOrder.date && sortingOrder.date==="descending"){
-        itemsList.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    if (sortingOrder.date && sortingOrder.date === "ascending") {
+        itemsList.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    } else if (sortingOrder.date && sortingOrder.date === "descending") {
+        itemsList.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
 
 
-    if(props.isMedia && props.filter && props.filter.length>0){
-        const filter=props.filter;
+    let tempItemsList = [];
 
-        itemsList=itemsList.filter((item)=>(item && item.owner
-            && filter.findIndex((fil)=>((item.owner.first_name+' '+item.owner.last_name)===fil.username))!==-1));
+    console.log('filter list = ', props.filter, '   ', tempItemsList, '  ', itemsList)
 
+
+    if (props.isMedia && props.filter && props.filter.length > 0) {
+        const filter = props.filter;
+
+
+        for (let f of filter) {
+            if (f.type === 'owner') {
+
+                for (let item of itemsList) {
+                    if (item && item.owner && (item.owner.first_name + ' ' + item.owner.last_name) === f.username) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
+            } else if (f.type === 'date_created') {
+                for (let item of itemsList) {
+                    if (item && item.created_at && item.created_at === f.raw) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
+            }
+            else if (f.type === 'file_type') {
+                for (let item of itemsList) {
+                    if (item && item.file_type && item.file_type.includes((f.username).toLowerCase())) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
+            } else if (f.type === 'tag') {
+                for (let item of itemsList) {
+                    if (item && item.tags &&
+                        (item.tags).findIndex((t) => (t.name).toLowerCase() === (f.username).toLowerCase())!==-1) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
+            }
+        }
+
+    } else {
+        tempItemsList = JSON.parse(JSON.stringify(itemsList));
     }
 
 
-    console.log('sorting order = ',itemsList)
-
+    console.log('items list = ', tempItemsList)
     return (
 
-        <div style={{width: "100%",marginTop:props.isPlaceholderDetails?10:0, overflowY: 'scroll',overflowX: 'hidden'}}>
+        <div style={{
+            width: "100%",
+            marginTop: props.isPlaceholderDetails ? 10 : 0,
+            overflowY: 'scroll',
+            overflowX: 'hidden'
+        }}>
             <ListHeader
                 handleSortingOrder={handleSortingOrder}
                 isPlaceholder={props.isPlaceholder}
                 isPlaceholderDetails={props.isPlaceholderDetails}/>
 
             <div
-                style={{width: "100%",overflowY: 'scroll',overflowX: 'hidden',
-                    height:props.isPlaceholderDetails?'55vh':
-                        (props.showFullHeight?'55vh':'30vh')}}
+                style={{
+                    width: "100%", overflowY: 'scroll', overflowX: 'hidden',
+                    height: props.isPlaceholderDetails ? '55vh' :
+                        (props.showFullHeight ? '55vh' : '30vh')
+                }}
                 id="infinit"
                 onScroll={() => {
                     props.handleScroll();
@@ -172,11 +218,11 @@ const PlaceholderTableList = (props) => {
             >
 
 
-                {itemsList &&
-                itemsList.map((item, index) => {
+                {tempItemsList &&
+                tempItemsList.map((item, index) => {
 
                     return (
-                    
+
                         <PlaceholderItem
                             item={item}
                             index={index}

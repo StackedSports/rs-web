@@ -68,6 +68,8 @@ import {
     getPlaceholderById,
     getMessages
 } from "../../ApiHelper";
+import {fileTypes} from '../../utils/FileUtils';
+
 import {MoreHoriz} from "@material-ui/icons";
 import SelectedContactItem from "./Media/Details/selected-contact";
 
@@ -188,6 +190,7 @@ const PrettoSlider = withStyles({
     },
 })(Slider);
 
+
 function MediaComponent(props) {
     const classes = useStyles();
     // console.log("This is logged in user", localStorage.getItem("user"));
@@ -257,7 +260,7 @@ function MediaComponent(props) {
     const [showBackButton, setShowBackButton] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
 
-    const [count, setCount  ] = useState(0);
+    const [count, setCount] = useState(0);
 
     const [displaySearchContainers, setDisplaySearchContainers] = useState({
         displayOwner: false,
@@ -303,11 +306,10 @@ function MediaComponent(props) {
         setOpenSnackBar(true);
     };
 
-    const handleSetSelectedMediaDetails=(selectedTeamContacts,selectedTags)=>{
+    const handleSetSelectedMediaDetails = (selectedTeamContacts, selectedTags) => {
         setSelectedTeamContacts(selectedTeamContacts);
         setSelectedTags(selectedTags);
     }
-
 
 
     const handleClose = (event, reason) => {
@@ -479,29 +481,31 @@ function MediaComponent(props) {
         );
     };
 
-    const statuses = [
-        {
-            value: "1",
-            label: "Offer Hold",
-        },
-        {
-            value: "1",
-            label: "Offer Take",
-        },
-        {
-            value: "1",
-            label: "Off Board",
-        },
-        {
-            value: "1",
-            label: "Not Good Enough",
-        },
-    ];
 
     const filtesSpacingStyle = {
         marginRight: 5,
     };
     const renderFilters = () => {
+
+        let owners=[];
+        let dateCreated=[];
+        for(let m of media){
+            if(m.owner && m.owner.first_name && m.owner.last_name){
+                if(owners.findIndex((o)=>o.value===(m.owner.first_name+" "+m.owner.last_name))===-1){
+                    owners.push({type:'owner',value:m.owner.first_name+" "+m.owner.last_name})
+                }
+            }
+        }
+
+
+        for(let m of media){
+            if(m.created_at){
+                if(dateCreated.findIndex((o)=>o.value===m.created_at)===-1){
+                    dateCreated.push({type:'date_created',value:m.created_at})
+                }
+            }
+        }
+
         return (
             <Grid
                 container
@@ -520,8 +524,8 @@ function MediaComponent(props) {
                     placeholder="Status"
                     style={filtesSpacingStyle}
                 >
-                    {statuses &&
-                    statuses.map((option) => (
+                    {fileTypes &&
+                    fileTypes.map((option) => (
                         <Dropdown.Item
                             style={{
                                 background:
@@ -529,12 +533,7 @@ function MediaComponent(props) {
                                 color: statusFilter === option.label ? "white" : "black",
                             }}
                             onClick={() => {
-                                if (statusFilter === option.label) {
-                                    setStatusFilter(null);
-                                    props.addDataToFilter(option.label);
-                                } else {
-                                    props.addDataToFilter(option.label, "status");
-                                }
+                                props.addDataToFilter(option.label, "file_type");
                             }}
                         >
                             {option.label}
@@ -544,7 +543,7 @@ function MediaComponent(props) {
 
                 <DropdownButton
                     id="dropdown-basic-button"
-                    title={rankFilter || "Distibuted"}
+                    title={rankFilter || "Distributed"}
                     drop={"down"}
                     style={filtesSpacingStyle}
                 >
@@ -565,12 +564,8 @@ function MediaComponent(props) {
                                 color: rankFilter === option.label ? "white" : "black",
                             }}
                             onClick={() => {
-                                if (rankFilter === option.label) {
-                                    setRankFilter(null);
-                                    props.addDataToFilter(option.label);
-                                } else {
-                                    props.addDataToFilter(option.label, "ranks");
-                                }
+                                props.addDataToFilter(option.label, "distributed");
+
                             }}
                         >
                             {option.label}
@@ -584,26 +579,22 @@ function MediaComponent(props) {
                     placeholder="Status"
                     style={filtesSpacingStyle}
                 >
-                    {statuses &&
-                    statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    gradeYearFilter === option.label ? "#348ef7" : "white",
-                                color: gradeYearFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                if (rankFilter === option.label) {
-                                    setGradeYearFilter(null);
-                                    props.addDataToFilter(option.label);
-                                } else {
-                                    props.addDataToFilter(option.label, "gradeYear");
-                                }
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                    {
+                        owners.map((m) => {
+                            return(
+                                <Dropdown.Item
+                                    style={{
+                                        background:  "white",
+                                        color:  "black",
+                                    }}
+                                    onClick={() => {
+                                        props.addDataToFilter(m.value, "owner");
+                                    }}
+                                >
+                                    {m.value}
+                                </Dropdown.Item>
+                            )
+                        })}
                 </DropdownButton>
                 <div className="associatedButton">
                     <DropdownButton
@@ -650,7 +641,7 @@ function MediaComponent(props) {
                                                 //   option.first_name + " " + option.last_name
                                                 // );
                                                 props.addDataToFilter(
-                                                    option.first_name + " " + option.last_name
+                                                    option.first_name + " " + option.last_name,"owner"
                                                 );
                                             }}
                                         >
@@ -669,7 +660,7 @@ function MediaComponent(props) {
                                         }}
                                         onClick={() => {
                                             props.addDataToFilter(
-                                                option.first_name + " " + option.last_name
+                                                option.first_name + " " + option.last_name,"owner"
                                             );
                                         }}
                                     >
@@ -687,20 +678,23 @@ function MediaComponent(props) {
                     drop={"down"}
                     style={filtesSpacingStyle}
                 >
-                    {statuses.map((option) => (
-                        <Dropdown.Item
-                            style={{
-                                background:
-                                    timeZoneFilter === option.label ? "#348ef7" : "white",
-                                color: timeZoneFilter === option.label ? "white" : "black",
-                            }}
-                            onClick={() => {
-                                setTimeZoneFilter(option.label);
-                            }}
-                        >
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
+                    {
+                        dateCreated.map((m) => {
+                            return(
+                                <Dropdown.Item
+                                    style={{
+                                        background:  "white",
+                                        color:  "black",
+                                    }}
+                                    onClick={() => {
+                                        props.addDataToFilter(moment(m.value).format("MMMM Do YYYY"), "date_created",m.value);
+
+                                    }}
+                                >
+                                    {moment(m.value).format("MMMM Do YYYY")}
+                                </Dropdown.Item>
+                            )
+                        })}
                 </DropdownButton>
                 <DropdownButton
                     id="dropdown-basic-button"
@@ -742,7 +736,7 @@ function MediaComponent(props) {
                                                     stateFilter === option.name ? "white" : "black",
                                             }}
                                             onClick={() => {
-                                                props.addDataToFilter(option.name, "State");
+                                                props.addDataToFilter(option.name, "tag");
                                             }}
                                         >
                                             {option.name}
@@ -758,7 +752,7 @@ function MediaComponent(props) {
                                             color: stateFilter === option.name ? "white" : "black",
                                         }}
                                         onClick={() => {
-                                            props.addDataToFilter(option.name, "State");
+                                            props.addDataToFilter(option.name, "tag");
                                         }}
                                     >
                                         {option.name}
@@ -869,17 +863,17 @@ function MediaComponent(props) {
     };
 
 
-    useEffect( () => {
+    useEffect(() => {
         console.log('props.history = ', props.history)
 
         if (localStorage.getItem("user")) {
-             getMyContacts();
-             getTaggedMedia();
-             getMyMediaContacts();
-             getMyTeamContacts();
+            getMyContacts();
+            getTaggedMedia();
+            getMyMediaContacts();
+            getMyTeamContacts();
 
-            const media =  getMyMedia();
-            const placeholders =  getMyPlaceholders();
+            const media = getMyMedia();
+            const placeholders = getMyPlaceholders();
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             const type = urlParams.get('type');
@@ -1010,10 +1004,7 @@ function MediaComponent(props) {
         console.log('setSelectedPlaceholder = ', placeholder, isPlaceholder, setToDefault, isFromBackButton);
 
 
-
-
         if (isPlaceholder) {
-
 
 
             setDisplayListContainer({
@@ -1298,10 +1289,10 @@ function MediaComponent(props) {
             const selectedMedia = media[mediaIndex];
             if (selectedTeamContacts && selectedTeamContacts.length > 0) {
                 const selectedContact = selectedTeamContacts[0];
-                const teamContactIndex=teamContacts.findIndex((contact)=>selectedContact.id===contact.id);
+                const teamContactIndex = teamContacts.findIndex((contact) => selectedContact.id === contact.id);
 
-                if(teamContactIndex!==-1){
-                    const contact=teamContacts[teamContactIndex];
+                if (teamContactIndex !== -1) {
+                    const contact = teamContacts[teamContactIndex];
                     selectedMedia.owner = {
                         id: contact.id, first_name: contact.first_name,
                         last_name: contact.last_name, email: contact.email,
@@ -1310,24 +1301,24 @@ function MediaComponent(props) {
                 }
             }
 
-            if(selectedTags && selectedTags.length>0){
-                selectedMedia.tags=[];
-                for(let tag of selectedTags){
-                    selectedMedia.tags.push({id:tag.id,name:tag.username});
+            if (selectedTags && selectedTags.length > 0) {
+                selectedMedia.tags = [];
+                for (let tag of selectedTags) {
+                    selectedMedia.tags.push({id: tag.id, name: tag.username});
                 }
             }
 
 
-            media[mediaIndex]=selectedMedia;
+            media[mediaIndex] = selectedMedia;
             setMedia(media);
         }
 
         setShowBackButton(false);
-        handleSelectedPlaceHolder(null,false,false,true);
+        handleSelectedPlaceHolder(null, false, false, true);
         setShowMediaStats(false);
         props.history.push('/media');
 
-        console.log('id = ', mediaIndex, '   ',taggedMedia,'  ', selectedTags,'  ',)
+        console.log('id = ', mediaIndex, '   ', taggedMedia, '  ', selectedTags, '  ',)
 
     }
 

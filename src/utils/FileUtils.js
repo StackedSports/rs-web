@@ -1,3 +1,23 @@
+const fileTypes=[
+        {
+            type: "file_type",
+            label: "Image",
+        },
+        {
+            type: "file_type",
+            label: "Video",
+        },
+        {
+            type: "file_type",
+            label: "GIF",
+        },
+        {
+            type: "file_type",
+            label: "PDF",
+        },
+    ];
+
+
 const  getExtension = (filename) => {
     var parts = filename.split('.');
     return parts[parts.length - 1];
@@ -28,4 +48,5 @@ const isVideo= (filename)=> {
 }
 
 exports.isImage=isImage;
-exports.isVideo=isVideo
+exports.isVideo=isVideo;
+exports.fileTypes=fileTypes;
