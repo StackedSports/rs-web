@@ -88,6 +88,7 @@ const PlaceholderTableList = (props) => {
     let [itemsList, setItemList] = useState(props.list);
     const [count, setCount] = useState(0);
     const [sortingOrder, setSortingOrder] = useState({name: null, date: null});
+    const [selectAll, setSelectAll] = useState(false);
 
 
     console.log('filter = ', props.filter, '   itemslist = ', itemsList);
@@ -99,6 +100,20 @@ const PlaceholderTableList = (props) => {
         } else if (sortingOrder[type] === null || sortingOrder[type] === 'ascending') {
             setSortingOrder({...sortingOrder, [type]: "descending"})
         }
+    }
+
+
+    const handleSetSelectAll=()=>{
+
+        if(!selectAll){
+            itemsList=itemsList.map((item)=>{return {...item,isSelected:true}})
+
+        }else{
+            itemsList=itemsList.map((item)=>{return {...item,isSelected:false}})
+        }
+
+        setSelectAll(!selectAll);
+        setItemList(itemsList);
     }
 
 
@@ -203,6 +218,8 @@ const PlaceholderTableList = (props) => {
             <ListHeader
                 handleSortingOrder={handleSortingOrder}
                 isPlaceholder={props.isPlaceholder}
+                handleSetSelectAll={handleSetSelectAll}
+                selectAll={selectAll}
                 isPlaceholderDetails={props.isPlaceholderDetails}/>
 
             <div

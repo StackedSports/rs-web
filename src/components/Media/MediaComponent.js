@@ -1,4 +1,6 @@
 import React, {useState, useEffect, useReducer, Fragment} from "react";
+import ReactDOM from "react-dom";
+
 import MuiAlert from "@material-ui/lab/Alert";
 import {Link} from "react-router-dom";
 import {
@@ -56,6 +58,11 @@ import Tag from './Tags';
 
 import PlaceholderTableList from './Media/TableList/index';
 import Placeholder from './Placehoder';
+
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 import {
     getAllContacts,
     getMedia,
@@ -261,6 +268,7 @@ function MediaComponent(props) {
     const [showFilters, setShowFilters] = useState(false);
 
     const [count, setCount] = useState(0);
+    const [showNotification, setShowNotification] = useState(false);
 
     const [displaySearchContainers, setDisplaySearchContainers] = useState({
         displayOwner: false,
@@ -301,6 +309,10 @@ function MediaComponent(props) {
             title: "Archive Media & Placeholder",
         },
     ];
+
+
+    const notify = (msg) => toast(msg);
+
 
     const handleClick = () => {
         setOpenSnackBar(true);
@@ -487,24 +499,41 @@ function MediaComponent(props) {
     };
     const renderFilters = () => {
 
-        let owners=[];
-        let dateCreated=[];
-        for(let m of media){
-            if(m.owner && m.owner.first_name && m.owner.last_name){
-                if(owners.findIndex((o)=>o.value===(m.owner.first_name+" "+m.owner.last_name))===-1){
-                    owners.push({type:'owner',value:m.owner.first_name+" "+m.owner.last_name})
+        let owners = [];
+        let dateCreated = [];
+        let mediaContacts=[];
+
+        for (let m of media) {
+            if (m.owner && m.owner.first_name && m.owner.last_name) {
+                if (owners.findIndex((o) => o.value === (m.owner.first_name + " " + m.owner.last_name)) === -1) {
+                    owners.push({type: 'owner', value: m.owner.first_name + " " + m.owner.last_name})
                 }
             }
         }
 
 
-        for(let m of media){
-            if(m.created_at){
-                if(dateCreated.findIndex((o)=>o.value===m.created_at)===-1){
-                    dateCreated.push({type:'date_created',value:m.created_at})
+        for (let m of media) {
+            if (m.created_at) {
+                if (dateCreated.findIndex((o) => o.value === m.created_at) === -1) {
+                    dateCreated.push({type: 'date_created', value: m.created_at})
                 }
             }
         }
+
+
+        for (let c of contacts) {
+            if (c.first_name && c.last_name) {
+                if (mediaContacts.findIndex((o) => o.value === c.first_name+' '+c.last_name) === -1) {
+                    mediaContacts.push({type: 'associated_to', value: (c.first_name+' '+c.last_name)})
+                }
+            }
+        }
+
+
+        if(contactSearch.length>0){
+            mediaContacts=mediaContacts.filter((m)=>((m.value.toLowerCase()).includes(contactSearch.toLowerCase())));
+        }
+
 
         return (
             <Grid
@@ -581,11 +610,11 @@ function MediaComponent(props) {
                 >
                     {
                         owners.map((m) => {
-                            return(
+                            return (
                                 <Dropdown.Item
                                     style={{
-                                        background:  "white",
-                                        color:  "black",
+                                        background: "white",
+                                        color: "black",
                                     }}
                                     onClick={() => {
                                         props.addDataToFilter(m.value, "owner");
@@ -619,56 +648,22 @@ function MediaComponent(props) {
                                 }}
                             ></input>
                         </Grid>
-                        {myMediaContacts &&
-                        myMediaContacts.map((option) => {
-                            var name = option.first_name + " " + option.last_name;
-                            if (contactSearch != "") {
-                                if (
-                                    name.toLowerCase().indexOf(contactSearch.toLowerCase()) > -1
-                                ) {
-                                    return (
-                                        <Dropdown.Item
-                                            style={{
-                                                background:
-                                                    timeZoneFilter === option.label
-                                                        ? "#348ef7"
-                                                        : "white",
-                                                color:
-                                                    timeZoneFilter === option.label ? "white" : "black",
-                                            }}
-                                            onClick={() => {
-                                                // setTimeZoneFilter(
-                                                //   option.first_name + " " + option.last_name
-                                                // );
-                                                props.addDataToFilter(
-                                                    option.first_name + " " + option.last_name,"owner"
-                                                );
-                                            }}
-                                        >
-                                            {option.first_name + " " + option.last_name}
-                                        </Dropdown.Item>
-                                    );
-                                }
-                            } else {
+                        {
+                            mediaContacts.map((m) => {
                                 return (
                                     <Dropdown.Item
                                         style={{
-                                            background:
-                                                timeZoneFilter === option.label ? "#348ef7" : "white",
-                                            color:
-                                                timeZoneFilter === option.label ? "white" : "black",
+                                            background: "white",
+                                            color: "black",
                                         }}
                                         onClick={() => {
-                                            props.addDataToFilter(
-                                                option.first_name + " " + option.last_name,"owner"
-                                            );
+                                            props.addDataToFilter(m.value, "associated_to");
                                         }}
                                     >
-                                        {option.first_name + " " + option.last_name}
+                                        {m.value}
                                     </Dropdown.Item>
-                                );
-                            }
-                        })}
+                                )
+                            })}
                     </DropdownButton>
                 </div>
 
@@ -680,14 +675,14 @@ function MediaComponent(props) {
                 >
                     {
                         dateCreated.map((m) => {
-                            return(
+                            return (
                                 <Dropdown.Item
                                     style={{
-                                        background:  "white",
-                                        color:  "black",
+                                        background: "white",
+                                        color: "black",
                                     }}
                                     onClick={() => {
-                                        props.addDataToFilter(moment(m.value).format("MMMM Do YYYY"), "date_created",m.value);
+                                        props.addDataToFilter(moment(m.value).format("MMMM Do YYYY"), "date_created", m.value);
 
                                     }}
                                 >
@@ -863,43 +858,54 @@ function MediaComponent(props) {
     };
 
 
-    useEffect(() => {
-        console.log('props.history = ', props.history)
+    useEffect( () => {
 
-        if (localStorage.getItem("user")) {
-            getMyContacts();
-            getTaggedMedia();
-            getMyMediaContacts();
-            getMyTeamContacts();
+        (async () => {
+            if (localStorage.getItem("user")) {
+                await getMyContacts();
+                await getTaggedMedia();
+                await getMyMediaContacts();
+                await getMyTeamContacts();
 
-            const media = getMyMedia();
-            const placeholders = getMyPlaceholders();
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            const type = urlParams.get('type');
+                const media = await getMyMedia();
+                const placeholders = await getMyPlaceholders();
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                const type = urlParams.get('type');
+                console.log('type = ', type, '  ', id);
 
-            if (type && type === "media" && media && id) {
-                const index = media.findIndex((m) => m.id == id);
-                if (index !== -1) {
-                    handleSelectedPlaceHolder(media[index], false, false, false);
-                    setShowMediaStats(true);
-                    setShowBackButton(true);
+                if (type && type === "media" && media && id) {
+                    console.log('comes in media = ', type, '  ', id);
+
+                    const index = media.findIndex((m) => m.id == id);
+                    if (index !== -1) {
+                        ReactDOM.unstable_batchedUpdates(() => {
+                            setShowMediaStats(true);
+                            setShowBackButton(true);
+                            handleSelectedPlaceHolder(media[index], false, false, false);
+                        });
+                    }
+                    console.log('type = ', type, '  ', index);
+                } else if (type && type === "placeholder" && placeholders && id) {
+                    console.log('comes in placeholder = ', type, '  ', id);
+
+                    const index = placeholders.findIndex((m) => m.id == id);
+                    if (index !== -1) {
+                        ReactDOM.unstable_batchedUpdates(() => {
+                            setShowMediaStats(false);
+                            setShowBackButton(true);
+                            handleSelectedPlaceHolder(placeholders[index], true, false, false);
+                        });
+                    }
                 }
-                console.log('index = ', index);
-            } else if (type && type === "placeholder" && placeholders && id) {
-                const index = placeholders.findIndex((m) => m.id == id);
-                if (index !== -1) {
-                    setShowMediaStats(false);
-                    setShowBackButton(true);
-                    handleSelectedPlaceHolder(placeholders[index], true, false, false);
-                }
+
+                console.log('id=', id, 'type=', type, media)
+                // getAllTags();
+            } else {
+                window.location.href = "/";
             }
+        })();
 
-            console.log('id=', id, 'type=', type, media)
-            // getAllTags();
-        } else {
-            window.location.href = "/";
-        }
     }, []);
 
 
@@ -1313,14 +1319,16 @@ function MediaComponent(props) {
             setMedia(media);
         }
 
-        setShowBackButton(false);
-        handleSelectedPlaceHolder(null, false, false, true);
-        setShowMediaStats(false);
-        props.history.push('/media');
+        //setShowBackButton(false);
+        //handleSelectedPlaceHolder(null, false, false, true);
+        //setShowMediaStats(false);
+        //props.history.push('/media');
+        notify("Media saved successfully")
 
         console.log('id = ', mediaIndex, '   ', taggedMedia, '  ', selectedTags, '  ',)
 
     }
+
 
     let MediaList = null;
 
@@ -1356,7 +1364,7 @@ function MediaComponent(props) {
     }
 
 
-    console.log('filter = ', showFilters);
+    console.log('filter = ', displayListContainer, '  showMediaStats = ', showMediaStats);
     return (
         <div
             style={{
@@ -1681,6 +1689,17 @@ function MediaComponent(props) {
             {lightboxVideo && (
                 <LightboxDialog url={lightboxVideo} isVideo={true} closeModal={handleSetLightboxVideo}/>
             )}
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 }
