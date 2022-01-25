@@ -537,11 +537,11 @@ function Media(props) {
 
     // console.log("THis is selected placeholders", selectedPlaceholder);
 
-    const addDataToFilter = (value, type) => {
+    const addDataToFilter = (value, type,raw) => {
 
         const index = filter.findIndex((fil) => fil.username === value);
         if (index === -1) {
-            filter.push({ username: value });
+            filter.push({ username: value,type:type?type:'owner',raw });
             setFilter(filter);
             setCount(count + 1)
         }

@@ -92,8 +92,8 @@ const ListHeader = (props) => {
                 width: "100%",
             }}
         >
-            <Grid item md={0.5} xs={0.5}>
-                <span className={classes.tableHeading}>  {<Checkbox/>}</span>
+            <Grid item md={0.5} xs={0.5} onClick={(e)=>props.handleSetSelectAll()}>
+                <span className={classes.tableHeading}>  {<Checkbox checked={props.selectAll}/>}</span>
             </Grid>
             <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('name')}>
                 <span className={classes.tableHeading}>Name</span>

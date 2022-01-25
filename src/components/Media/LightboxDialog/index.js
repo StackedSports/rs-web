@@ -16,7 +16,7 @@ const LightboxDialog=(props)=>{
                      <source src={props.url} type="video/mp4"></source>
                  </video>
                  :
-                 <img  src={props.url}/>
+                 <img width="400" height="400" loop  src={props.url}/>
             }
         </Dialog>
     )
