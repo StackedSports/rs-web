@@ -54,7 +54,7 @@ export default function Sidebar(props){
     const myMediaContacts=props.myMediaContacts;
 
     return (
-        <div style={{ width: "15%" }}>
+        <div style={{ width: "15%",height:'90vh' }}>
             <p
                 style={{
                     padding: 5,

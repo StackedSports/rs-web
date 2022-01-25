@@ -145,7 +145,7 @@ const MediaDetails = (props) => {
     console.log('setMyMediaContacts =  ', props.selectedPlaceholder, '   ', selectedTags, '   ', selectedTeamContacts,'  ',props.count);
 
     return (
-        <div style={{height: '67vh'}}>
+        <div style={{height: '55vh'}}>
             <Grid
                 container
                 direction="row"

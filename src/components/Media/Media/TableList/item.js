@@ -157,11 +157,24 @@ const PlaceholderItem = (props) => {
                 </span>
             </Grid>
             <Grid item md={1} xs={1} onClick={(e) => {
-                if (isVideo(item.url)) {
-                    props.setLightboxVideo(item.url);
+
+
+                if (props.isPlaceHolder) {
+                    /*if (isVideo(item.media_preview)) {
+                        props.setLightboxVideo(item.media_preview);
+                    } else  {
+                        props.setLightboxPicture(item.media_preview);
+                    }*/
                 } else {
-                    props.setLightboxPicture(item.url);
+                    if (item.file_type.indexOf("video") > -1) {
+                        props.setLightboxVideo(item.urls.large);
+                    } else {
+                        props.setLightboxPicture(item.urls.medium);
+                    }
                 }
+
+
+
                 e.stopPropagation();
             }}>
                 <img
@@ -187,7 +200,9 @@ const PlaceholderItem = (props) => {
                     className={classes.tableFields}
                     style={{ marginLeft: 40 }}
                 >
-                    {props.isPlaceholder ? (item.media_placeholder_id) : item.team_contact_id}
+                    {props.isPlaceholder ? (item.media_placeholder_id) :
+                        (item.contact && item.contact.first_name && item.contact.last_name
+                            && item.contact.first_name+' '+item.contact.last_name)}
                 </span>
             </Grid>
             <Grid item md={2} xs={2}>

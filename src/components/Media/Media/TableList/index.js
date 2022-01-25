@@ -87,7 +87,7 @@ const PlaceholderTableList = (props) => {
     const classes = useStyles();
     let [itemsList, setItemList] = useState(props.list);
     const [count, setCount] = useState(0);
-    const [sortingOrder, setSortingOrder] = useState({name: null, date: null});
+    const [sortingOrder, setSortingOrder] = useState({name: null, date: null,owner:null,associatedTo:null});
     const [selectAll, setSelectAll] = useState(false);
 
 
@@ -95,10 +95,11 @@ const PlaceholderTableList = (props) => {
 
 
     const handleSortingOrder = (type) => {
+        let defaultSortingOrder={name: null, date: null,owner:null,associatedTo:null};
         if (sortingOrder[type] === null || sortingOrder[type] === 'descending') {
-            setSortingOrder({...sortingOrder, [type]: "ascending"})
+            setSortingOrder({...defaultSortingOrder, [type]: "ascending"})
         } else if (sortingOrder[type] === null || sortingOrder[type] === 'ascending') {
-            setSortingOrder({...sortingOrder, [type]: "descending"})
+            setSortingOrder({...defaultSortingOrder, [type]: "descending"})
         }
     }
 
@@ -153,9 +154,62 @@ const PlaceholderTableList = (props) => {
     }
 
 
+    if (sortingOrder.owner && sortingOrder.owner === "ascending") {
+
+        const itemsWithoutOwner=itemsList.filter((item)=>!item.owner || !item.owner.first_name);
+        const itemsWithOwner=itemsList.filter((item)=>item.owner && item.owner.first_name);
+
+
+        itemsWithOwner.sort((a, b) => (a.owner.first_name+' '+a.owner.last_name).
+        localeCompare(b.owner.first_name+' '+b.owner.last_name));
+
+        itemsList=itemsWithOwner.concat(itemsWithoutOwner);
+
+    } else if (sortingOrder.owner && sortingOrder.owner === "descending") {
+        const itemsWithoutOwner=itemsList.filter((item)=>!item.owner || !item.owner.first_name);
+        const itemsWithOwner=itemsList.filter((item)=>item.owner && item.owner.first_name);
+
+
+        itemsWithOwner.sort((a, b) => (b.owner.first_name+' '+b.owner.last_name).
+        localeCompare(a.owner.first_name+' '+a.owner.last_name));
+
+        itemsList=itemsWithOwner.concat(itemsWithoutOwner);
+
+    }
+
+
+
+
+    if (sortingOrder.associatedTo && sortingOrder.associatedTo === "ascending") {
+
+        const itemsWithoutOwner=itemsList.filter((item)=>!item.contact || !item.contact.first_name
+            || !!item.contact.last_name);
+        const itemsWithOwner=itemsList.filter((item)=>item.contact && item.contact.first_name
+        && item.contact.last_name);
+
+
+        itemsWithOwner.sort((a, b) => (a.contact.first_name+' '+a.contact.last_name).
+        localeCompare(b.contact.first_name+' '+b.contact.last_name));
+
+        itemsList=itemsWithOwner.concat(itemsWithoutOwner);
+
+    } else if (sortingOrder.associatedTo && sortingOrder.associatedTo === "descending") {
+        const itemsWithoutOwner=itemsList.filter((item)=>!item.contact || !item.contact.first_name
+            || !!item.contact.last_name);
+        const itemsWithOwner=itemsList.filter((item)=>item.contact && item.contact.first_name
+            && item.contact.last_name);
+
+        itemsWithOwner.sort((a, b) => (b.contact.first_name+' '+b.contact.last_name).
+        localeCompare(a.contact.first_name+' '+a.contact.last_name));
+
+        itemsList=itemsWithOwner.concat(itemsWithoutOwner);
+
+    }
+
+
     let tempItemsList = [];
 
-    console.log('filter list = ', props.filter, '   ', tempItemsList, '  ', itemsList)
+    console.log('filter list = ', sortingOrder, '   ', tempItemsList, '  ', itemsList)
 
 
     if (props.isMedia && props.filter && props.filter.length > 0) {
