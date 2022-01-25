@@ -6,6 +6,9 @@ import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import ExpandLessOutlinedIcon from "@material-ui/icons/ExpandLessOutlined";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import SearchIcon from "@material-ui/icons/Search";
+import SelectSearch from "react-select-search";
+import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import GifIcon from "@material-ui/icons/Gif";
 import PhotoIcon from "@material-ui/icons/Photo";
@@ -16,6 +19,7 @@ import AmimatedBurger from '../../images/animated_burger.gif';
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import {
@@ -51,24 +55,66 @@ import {
   getMessage,
   createMessage
 } from "../../ApiHelper";
+// import SearchBar from "material-ui-search-bar";
 
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 import DrawerAnimation from '../../images/drawer_animation.gif';
 import BackAnimation from '../../images/back_animation.gif';
 import BackIcon from '../../images/back.png';
+import SearchBar from "material-ui-search-bar";
+
 import DrawerIcon from '../../images/drawer_contact.png';
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box >
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 function MessageCreate(props) {
   //api
   //var userProfile;
+  const [value, setValue] = React.useState(1);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const [showModal, setShowModal] = useState(true);
   var [showSetting, setShowSetting] = useState(false);
   //const [allTags, setAllTags] = useState(null);
-
 
 
   useEffect(() => {
@@ -93,7 +139,6 @@ function MessageCreate(props) {
     handleAnimation();
 
   }, []);
-
   const handleAnimation = () => {
     //setShowDrawer(true);
     setTimeout(() => {
@@ -166,6 +211,9 @@ function MessageCreate(props) {
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
+  const [rows, setRows] = useState(allBoards);
+
+  const [searched, setSearched] = useState("");
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
@@ -173,6 +221,10 @@ function MessageCreate(props) {
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  const [stateiconColor, setstateiconColor] = useState('gray');
+
+
   const [tableData, setTableData] = React.useState([
     {
       name: "David Buttler",
@@ -210,7 +262,23 @@ function MessageCreate(props) {
       date: "2017-11-23T07:26:00.497Z",
     },
   ]);
+  // const classes = useStyles();
 
+  const requestSearch = (searchedVal) => {
+
+    const filteredRows = allBoards.filter((row) => {
+      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
+  useEffect(() => {
+    setRows(allBoards)
+  }, [allBoards])
   useEffect(
     (data) => {
       console.log(data);
@@ -460,13 +528,13 @@ function MessageCreate(props) {
           style={{ height: 30, marginLeft: 16, marginTop: 2 }}
           alignItems="center"
         >
-          {m.media_preview.indexOf(".gif") > -1 ? (
+          {m.media_preview?.indexOf(".gif") > -1 ? (
             <GifIcon></GifIcon>
-          ) : m.media_preview.indexOf(".png") > -1 ||
-            m.media_preview.indexOf(".jpg") > -1 ||
-            m.media_preview.indexOf(".jpeg") > -1 ? (
+          ) : m?.media_preview?.indexOf(".png") > -1 ||
+            m?.media_preview?.indexOf(".jpg") > -1 ||
+            m?.media_preview?.indexOf(".jpeg") > -1 ? (
             <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
-          ) : m.media_preview.indexOf(".mp4") > -1 ? (
+          ) : m?.media_preview?.indexOf(".mp4") > -1 ? (
             <FaVideo></FaVideo>
           ) : (
             <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
@@ -480,7 +548,7 @@ function MessageCreate(props) {
               fontSize: 15,
             }}
           >
-            {m.name}
+            {m?.name}
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
@@ -663,6 +731,8 @@ function MessageCreate(props) {
         if (res.statusText === "OK") {
           // console.log("These are all boards", res.data);
           setAllBoards(res.data);
+          console.log(res.data, "all boards")
+
         }
       },
       (error) => {
@@ -2106,76 +2176,94 @@ function MessageCreate(props) {
       <Grid container direction="row" style={{ width: '80%' }}>
         {
           fromAreaCoach && <div
-            container
-            direction="row"
-            alignItems="center"
-            justify="center"
-            className={classes.tags}
-            style={{ paddingLeft: 0 }}
+
           >
             <Grid
+              className="d-flex align-items-center"
               style={{ height: 40 }}
               container
               direction="row"
               alignItems="center"
             >
-              <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-                <p
-                  style={{
-                    margin: 0,
-                    fontWeight: 600,
-                    marginLeft: 16,
-                  }}
-                >
-                  Area Coach
+              <div
+
+
+                container
+                direction="row"
+                alignItems="center"
+                justify="center"
+                className={classes.tags}
+                style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
+              >
+
+
+                <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontWeight: 600,
+                      marginLeft: 16,
+                    }}
+                  >
+                    Area Coach
+                  </p>
                 </p>
-              </p>
-              <ClearIcon
-                onClick={() => {
-                  setFromAreaCoach(false)
-                }}
-                className={classes.tagCross}
-              ></ClearIcon>{" "}
+                <ClearIcon
+                  onClick={() => {
+                    setFromAreaCoach(false)
+                  }}
+                  className={classes.tagCross}
+                ></ClearIcon>{" "}
+              </div>
+              <p className=" m-0 mr-4 ">OR</p>
             </Grid>
-          </div>
+
+          </div >
         }
 
         {
           fromPositionCoach && <div
-            container
-            direction="row"
-            alignItems="center"
-            justify="center"
-            className={classes.tags}
-            style={{ paddingLeft: 0 }}
+
           >
             <Grid
               style={{ height: 40 }}
               container
               direction="row"
               alignItems="center"
+              className="d-flex align-items-center"
+
             >
-              <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-                <p
-                  style={{
-                    margin: 0,
-                    fontWeight: 600,
-                    marginLeft: 16,
-                  }}
-                >
-                  Position Coach
+              <div
+                container
+                direction="row"
+                alignItems="center"
+                justify="center"
+                className={classes.tags}
+                style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
+              >
+                <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontWeight: 600,
+                      marginLeft: 16,
+                    }}
+                  >
+                    Position Coach
+                  </p>
                 </p>
-              </p>
-              <ClearIcon
-                onClick={() => {
-                  setFromPositinCoach(false)
-                }}
-                className={classes.tagCross}
-              ></ClearIcon>{" "}
+                <ClearIcon
+                  onClick={() => {
+                    setFromPositinCoach(false)
+                  }}
+                  className={classes.tagCross}
+                ></ClearIcon>{" "}
+              </div>
+              <p className=" m-0 mr-4 ">OR</p>
+
             </Grid>
           </div>
         }
-        <p  className=" mr-3 mt-3">OR</p>
 
         <div
           container
@@ -2219,7 +2307,7 @@ function MessageCreate(props) {
             ></ClearIcon>{" "}
           </Grid>
         </div>
-      </Grid>
+      </Grid >
 
     );
   };
@@ -2260,9 +2348,9 @@ function MessageCreate(props) {
   };
 
   const handleSendMessage = async () => {
-    //setMessagePreview(true);
-    const selectedMediaIds = selectedMedia.map((media) => media.id);
-    const contactsId = messageSender.id;
+    // setMessagePreview(true);
+    const selectedMediaIds = selectedMedia?.map((media) => media?.id);
+    const contactsId = messageSender?.id;
     const data = {
       "platform": messageType,
       "media_placeholder_id": selectedMediaIds,
@@ -2524,13 +2612,13 @@ function MessageCreate(props) {
                         }}
                       >
                         <Grid className="mt-3 mb-3" container direction="row">
-                          <Grid item md={4} xs={4}>
+                          {/* <Grid item md={4} xs={4}>
                             <button className={classes.blueButton}>
                               My Boards
                             </button>
                           </Grid>
                           <Grid item md={4} xs={4}>
-                            <button className={classes.blueButtonActive}>
+                            <button className={classes.blueButton}>
                               Team Boards
                             </button>
                           </Grid>
@@ -2538,81 +2626,305 @@ function MessageCreate(props) {
                             <button className={classes.blueButton}>
                               Individuals
                             </button>
-                          </Grid>
+                          </Grid> */}
+                          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="My Boards" {...a11yProps(0)} />
+                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Team Boards" {...a11yProps(1)} />
+                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Individuals" {...a11yProps(2)} />
+                          </Tabs>
+
+                          <TabPanel value={value} index={0}>
+                            <Grid container direction="row" justify="center">
+                              {/* /////////////Tab panel for Teams boards//////////// */}
+
+                              <div className="form-group has-search w-100 mt-3">
+                                {/* <span className="fa fa-search form-control-feedback"></span> */}
+
+                                {/* <input
+                                  style={{
+                                    width: "100%",
+                                    border: "1px solid rgb(216, 216, 216)",
+                                    borderRadius: 4,
+                                    height: 40,
+                                    color: '#888',
+                                    background: '#edeef2'
+                                  }}
+                                  type="text" className="form-control w-100" placeholder="Search Board" /> */}
+                                <SearchBar
+                                  style={{
+                                    boxShadow: 'none',
+                                    width: "100%",
+                                    border: "1px solid rgb(216, 216, 216)",
+                                    borderRadius: 4,
+                                    height: 40,
+                                    color: '#888',
+                                    background: '#edeef2'
+                                  }}
+                                  placeholder="Search My boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
+                              </div>
+                            </Grid>
+                            <Grid container style={{ marginTop: 10 }}>
+                              <div
+                                style={{
+                                  width: "100%",
+                                  maxHeight: 330,
+                                  //  minWidth: 1110
+                                }}
+                                className="fullHeightCreateMessageSide"
+                              >
+                                {rows &&
+                                  rows.map((boards) => {
+                                    return (
+                                      boards.is_shared === false ? <>
+                                        <div
+                                          style={{
+                                            borderTop: "1px solid #edeef2",
+                                            width: "100%",
+                                            height: 100,
+                                            color: "#9e9e9e",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() => {
+                                            addDataToReceivers(boards.name);
+                                            // setMessageReceiver();
+                                          }}
+                                        >
+                                          {boards.name}
+
+                                          <Grid container direction="row">
+                                            {boards?.contacts?.profile_images?.map(
+                                              (image, index) => {
+                                                if (index < 8) {
+                                                  return (
+                                                    <img
+                                                      src={image || AvatarImg}
+                                                      style={{
+                                                        width: 35,
+                                                        height: 35,
+                                                        borderRadius: 20,
+                                                        marginTop: 5,
+                                                        marginLeft:
+                                                          index != 0 ? -10 : 0,
+                                                      }}
+                                                    ></img>
+                                                  );
+                                                }
+                                              }
+                                            )}
+                                            <img></img>
+                                          </Grid>
+                                          <p style={{ color: "#3871da" }}>
+                                            {boards?.athletes?.profile_images?.length}{" "}
+                                            contacts
+                                          </p>
+                                        </div>
+                                      </>
+                                        :
+                                        null
+                                    );
+
+                                  })}
+                              </div>
+                            </Grid>
+
+                          </TabPanel>
+                          <TabPanel className="" value={value} index={1}>
+
+                            <Grid container direction="row" justify="center">
+                              {/* /////////////Tab panel for Teams boards//////////// */}
+
+                              <div className="form-group has-search w-100 mt-3">
+
+
+                                <SearchBar
+                                  style={{
+                                    boxShadow: 'none',
+                                    width: "100%",
+                                    border: "1px solid rgb(216, 216, 216)",
+                                    borderRadius: 4,
+                                    height: 40,
+                                    color: '#888',
+                                    background: '#edeef2'
+                                  }}
+                                  placeholder="Search Team boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
+                              </div>
+                            </Grid>
+                            <Grid container style={{ marginTop: 10 }}>
+                              <div
+                                style={{
+                                  width: "100%",
+                                  maxHeight: 330,
+                                  //  minWidth: 1110
+                                }}
+                                className="fullHeightCreateMessageSide"
+                              >
+                                {rows &&
+                                  rows.map((boards) => {
+
+                                    return (
+                                      <div
+                                        style={{
+                                          borderTop: "1px solid #edeef2",
+                                          width: "100%",
+                                          height: 100,
+                                          color: "#9e9e9e",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          addDataToReceivers(boards.name);
+                                          // setMessageReceiver();
+                                        }}
+                                      >
+                                        {boards.name}
+
+                                        <Grid container direction="row">
+                                          {boards?.contacts?.profile_images?.map(
+                                            (image, index) => {
+                                              if (index < 8) {
+                                                return (
+                                                  <img
+                                                    src={image || AvatarImg}
+                                                    style={{
+                                                      width: 35,
+                                                      height: 35,
+                                                      borderRadius: 20,
+                                                      marginTop: 5,
+                                                      marginLeft:
+                                                        index != 0 ? -10 : 0,
+                                                    }}
+                                                  ></img>
+                                                );
+                                              }
+                                            }
+                                          )}
+                                          <img></img>
+                                        </Grid>
+                                        <p style={{ color: "#3871da" }}>
+                                          {boards?.athletes?.profile_images?.length}{" "}
+                                          contacts
+                                        </p>
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            </Grid>
+                          </TabPanel>
+                          <TabPanel value={value} index={2}>
+                            <Grid container direction="row" justify="center">
+                              {/* /////////////Tab panel for Teams Indvidual//////////// */}
+
+                              <div className="form-group has-search w-100 mt-3">
+
+                                <SearchBar
+                                  style={{
+                                    boxShadow: 'none',
+                                    width: "100%",
+                                    border: "1px solid rgb(216, 216, 216)",
+                                    borderRadius: 4,
+                                    height: 40,
+                                    color: '#888',
+                                    background: '#edeef2'
+                                  }}
+                                  placeholder="Search Individual boards"
+                                  value={searched}
+                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onCancelSearch={() => cancelSearch()}
+                                />
+                              </div>
+                            </Grid>
+                            <Grid container style={{ marginTop: 10 }}>
+                              <div
+                                style={{
+                                  width: "100%",
+                                  maxHeight: 330,
+                                  //  minWidth: 1110
+                                }}
+                                className="fullHeightCreateMessageSide"
+                              >
+                                {rows &&
+                                  rows.map((boards) => {
+                                    return (
+                                      boards.is_shared === true ? <>
+                                        <div
+
+                                          style={{
+
+                                            borderTop: "1px solid #edeef2",
+                                            width: "100%",
+                                            height: 100,
+                                            color: "#9e9e9e",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() => {
+                                            addDataToReceivers(boards.name);
+                                            // setMessageReceiver();
+                                          }}
+                                        >
+                                          {/* {boards?.contacts?.profile_images?.map((image,index)=>{
+                                            return( */}
+
+
+                                          <div className="" >
+                                            <img
+                                              src={boards?.contacts?.profile_images[0]}
+                                              style={{
+                                                width: 35,
+                                                height: 35,
+                                                borderRadius: 20,
+                                                // marginTop: 5,
+
+                                              }}
+                                            ></img>
+
+                                          </div>
+                                          {/* )
+                                          })} */}
+
+                                          {/* {boards.name} */}
+
+                                          {/* {boards?.contacts?.profile_images?.map(
+                                            (image, index) => {
+                                              if (index < 8) {
+                                              return (
+                                                <img
+                                                  src={image || AvatarImg}
+                                                  style={{
+                                                    width: 35,
+                                                    height: 35,
+                                                    borderRadius: 20,
+                                                    marginTop: 5,
+                                                  
+                                                  }}
+                                                ></img>
+                                              );
+                                            }
+                                            }
+                                          )} */}
+                                          {/* <img></img> */}
+                                          {/* <p style={{ color: "#3871da" }}>
+            {boards?.athletes?.profile_images?.length}{" "}
+            contacts
+          </p> */}
+                                        </div>
+                                      </>
+                                        :
+                                        null
+                                    );
+
+                                  })}
+                              </div>
+                            </Grid>
+                          </TabPanel>
                         </Grid>
-                        <Grid container direction="row" justify="center">
-                          <input
-                            type="text"
-                            style={{
-                              width: "100%",
-                              border: "1px solid rgb(216, 216, 216)",
-                              borderRadius: 4,
-                              height: 40,
-                            }}
-                            placeholder="Search Name"
-                            value={tagSearch}
-                            onChange={(e) => {
-                              setTagSearch(e.target.value);
-                            }}
-                          ></input>
-                        </Grid>
-                        <Grid container style={{ marginTop: 10 }}>
-                          <div
-                            style={{
-                              width: "100%",
-                              maxHeight: 330,
-                              //  minWidth: 1110
-                            }}
-                            className="fullHeightCreateMessageSide"
-                          >
-                            {allBoards &&
-                              allBoards.map((boards) => {
-                                return (
-                                  <div
-                                    style={{
-                                      borderTop: "1px solid #edeef2",
-                                      width: "100%",
-                                      height: 100,
-                                      color: "#9e9e9e",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={() => {
-                                      addDataToReceivers(boards.name);
-                                      // setMessageReceiver();
-                                    }}
-                                  >
-                                    {boards.name}
-                                    <Grid container direction="row">
-                                      {boards?.athletes?.profile_images?.map(
-                                        (image, index) => {
-                                          if (index < 8) {
-                                            return (
-                                              <img
-                                                src={image || AvatarImg}
-                                                style={{
-                                                  width: 35,
-                                                  height: 35,
-                                                  borderRadius: 20,
-                                                  marginTop: 5,
-                                                  marginLeft:
-                                                    index != 0 ? -10 : 0,
-                                                }}
-                                              ></img>
-                                            );
-                                          }
-                                        }
-                                      )}
-                                      <img></img>
-                                    </Grid>
-                                    <p style={{ color: "#3871da" }}>
-                                      {boards?.athletes?.profile_images?.length}{" "}
-                                      contacts
-                                    </p>
-                                  </div>
-                                );
-                              })}
-                          </div>
-                        </Grid>
+
                       </div>
                     </Grid>
                   </Grid>
@@ -2625,6 +2937,78 @@ function MessageCreate(props) {
                   md={displaySendTo ? 8 : 12}
                   xs={displaySendTo ? 8 : 12}
                 >
+                  <Grid
+                    className="mb-3"
+                    container
+                    direction="row"
+                    // alignItems="center"
+                    style={{
+                      // background: "#f5f6f9",
+                      width: "100%",
+                      // minWidth: 1110,
+
+
+                      height: 70,
+                    }}
+
+
+                  >
+
+                    <div className="d-flex justify-content-between align-items-center w-100">
+                      <span
+
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 20,
+
+                          padding: '16px'
+                        }}
+                      >
+                        <strong>
+                          Create Message
+
+
+                        </strong>
+                      </span>
+
+                      <div className="d-flex ">
+                        <IconTextField
+                          width={100}
+                          text="More"
+                          textColor="#3871DA"
+                          icon={
+                            <ArrowDropDown
+                              style={{ color: "#3871DA" }}
+                            ></ArrowDropDown>
+                          }
+                        ></IconTextField>
+                        <IconTextField
+                          text="Save and Close"
+                          textColor="#3871DA"
+                          width={180}
+                          onClick={() => {
+                            setShowMessageFiltersRow(!showMessageFiltersRow);
+                          }}
+                          icon={<Check style={{ color: "#3871DA" }}></Check>}
+                        ></IconTextField>
+                        <IconButton
+                          text="Preview and Send"
+                          textColor="#fff"
+                          width={200}
+                          background='#3871DA'
+
+
+                          onClick={() => {
+                            handleSendMessage();
+                          }}
+                          icon={<Send style={{ color: "#fff" }}></Send>}
+                        ></IconButton>
+                      </div>
+                    </div>
+
+
+
+                  </Grid>
                   {" "}
                   <div
                     style={{
@@ -2635,71 +3019,7 @@ function MessageCreate(props) {
                     }}
                     className="fullHeightCreateMessage hideScrollBar"
                   >
-                    <Grid
-                      className="mb-3"
-                      container
-                      direction="row"
-                      // alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-                        width: "100%",
-                        // minWidth: 1110,
 
-
-                        height: 70,
-                        paddingTop: 16,
-                      }}
-
-
-                    >
-
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: 16,
-
-                            padding: '16px'
-                          }}
-                        >
-
-                          Create Message
-                        </span>
-                        <div className="d-flex">
-                          <IconTextField
-                            width={100}
-                            text="More"
-                            textColor="#3871DA"
-                            icon={
-                              <ArrowDropDown
-                                style={{ color: "#3871DA" }}
-                              ></ArrowDropDown>
-                            }
-                          ></IconTextField>
-                          <IconTextField
-                            text="Save and Close"
-                            textColor="#3871DA"
-                            width={180}
-                            onClick={() => {
-                              setShowMessageFiltersRow(!showMessageFiltersRow);
-                            }}
-                            icon={<Check style={{ color: "#3871DA" }}></Check>}
-                          ></IconTextField>
-                          <IconButton
-                            text="Preview and Send"
-                            textColor="white"
-                            width={200}
-                            onClick={() => {
-                              handleSendMessage();
-                            }}
-                            icon={<Send style={{ color: "white" }}></Send>}
-                          ></IconButton>
-                        </div>
-                      </div>
-
-
-
-                    </Grid>
 
                     <Grid
                       container
@@ -2712,9 +3032,9 @@ function MessageCreate(props) {
                         border: "1px solid #d8d8d8",
                         borderRadius: 4,
                         height: 70,
-                        paddingTop: 16,
+                        // paddingTop: 16,
                       }}
-                      className="hoverHighlight"
+                      className="hoverHighlight d-flex align-items-center"
                       onMouseEnter={() => {
                         setDisplayCreateMessage(false);
                         setDisplayMessageSenders(false);
@@ -2789,24 +3109,14 @@ function MessageCreate(props) {
                               setDisplayCreateMessage(false);
                             }}
                           >
-                            <p
-                              style={{
-                                color: "black",
-                                padding: 16,
-                                background: "#3871da",
-                                color: "white",
-                                fontWeight: 600,
-                                marginBottom: -4,
-                              }}
-                            >
-                              Set Message Type
-                            </p>
+
                             <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
                                 style={{ fontSize: 16 }}
 
                               ></Favorite>
+
                               <p
                                 style={{
                                   // color: "black",
@@ -2821,9 +3131,24 @@ function MessageCreate(props) {
                               >
 
                                 Set Preffered Channel
-                              </p> <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              </p> <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
                             </Grid>
+                            <Grid container alignItems="center" className={classes.messagetypeGrid}>
 
+
+                              <p
+                                style={{
+                                  marginLeft: 16,
+                               
+                                  fontSize: '10px',
+                                  fontWeight: 300,
+                                  marginBottom: -4,
+                                }}
+                              >
+
+                                *Select a default "Send As" option if a contact does not have a set Prefered Channel
+                              </p>
+                            </Grid>
                             {[
                               {
                                 title: "Twitter DM",
@@ -2849,7 +3174,7 @@ function MessageCreate(props) {
                                   ></FaComment>
                                 ),
                               },
-                            ].map((type) => {
+                            ].map((type,i) => {
                               return (
                                 <Grid
                                   container
@@ -2870,17 +3195,19 @@ function MessageCreate(props) {
                                   >
                                     {type.title}
                                   </p>
-                                  <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                                  <CheckCircle style={{ color:'gray' , fontSize: 18 }}></CheckCircle>
                                 </Grid>
                               );
                             })}
                           </div>
                         </div>
                       )}
+
                       {/* </Grid> */}
                     </Grid>
 
                     <Grid
+
                       container
                       direction="row"
                       // alignItems="center"
@@ -2892,9 +3219,8 @@ function MessageCreate(props) {
                         borderRadius: 4,
                         height: 70,
                         marginTop: 16,
-                        paddingTop: 16,
                       }}
-                      className="hoverHighlight"
+                      className="hoverHighlight d-flex align-items-center"
                     >
                       {/* <Grid
                         item
@@ -3100,6 +3426,7 @@ function MessageCreate(props) {
                       {/* </Grid> */}
                     </Grid>
 
+
                     <Grid
                       container
                       direction="row"
@@ -3115,7 +3442,7 @@ function MessageCreate(props) {
                         padding: 16,
                         paddingLeft: 0,
                       }}
-                      className="hoverHighlight"
+                      className="hoverHighlight d-flex align-items-center"
                       onMouseEnter={() => {
                         setDisplayCreateMessage(false);
                         setDisplayMessageSenders(false);
@@ -3259,9 +3586,9 @@ function MessageCreate(props) {
                         borderRadius: 4,
                         height: 70,
                         marginTop: 16,
-                        paddingTop: 16,
+                        // paddingTop: 16,
                       }}
-                      className="hoverHighlight"
+                      className="hoverHighlight d-flex align-items-center"
                     >
                       {/* <Grid item md={2} xs={2}> */}
                       <p style={{ margin: 0, marginLeft: 16, width: 140 }}>
@@ -3326,10 +3653,10 @@ function MessageCreate(props) {
                         borderRadius: 4,
                         minHeight: 170,
                         marginTop: 16,
-                        paddingTop: 16,
+                        // paddingTop: 16,
                         paddingBottom: 16,
                       }}
-                      className="hoverHighlight"
+                      className="hoverHighlight d-flex align-items-center"
                     >
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
@@ -4017,7 +4344,7 @@ const useStyles = makeStyles({
   blueButton: {
     width: "100%",
     borderRadius: 4,
-    background: "transparent",
+    background: "#edeef2",
     height: 40,
     border: "none",
     color: "#b5b9c0",

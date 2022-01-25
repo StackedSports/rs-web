@@ -2,6 +2,7 @@
   background-color: rgb(243, 244, 248) !important;
   box-shadow: none !important;
   width: 410px !important;
+  /* color: #888; */
 }
 .select-search__input:hover {
   outline: none !important;
@@ -369,6 +370,21 @@ select-search {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #b5b9c0;
+}
 
 .fullHeightCreateMessageSide {
   min-height: calc(100vh - 260px);
@@ -376,7 +392,15 @@ select-search {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.fullHeightCreateMessageSide::-webkit-scrollbar {
+  display: none;
+}
 
+/* Hide scrollbar for IE, Edge and Firefox */
+.fullHeightCreateMessageSide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 .fullHeightCreateMessagePreview {
   min-height: calc(100vh - 200px);
   /* max-height: calc(100vh - 285px); */
@@ -514,5 +538,30 @@ select-search {
 }
 
 .MuiCheckbox-colorPrimary.Mui-checked {
-  color: #3871DA !important;
+  color: #3871da !important;
+}
+button:focus {
+  outline: none;
+  border: none;
+  color: #eee;
+  outline: 0 none -webkit-focus-ring-color !important;
+
+  background-color: #3871da;
+}
+.css-1aquho2-MuiTabs-indicator {
+  display: none;
+}
+
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #f2f2f2 !important;
+  background: #3871da !important;
+}
+#simple-tabpanel-1 {
+  width: 100%;
+}
+#simple-tabpanel-0 {
+  width: 100%;
+}
+#simple-tabpanel-2 {
+  width: 100%;
 }

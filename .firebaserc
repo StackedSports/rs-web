@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "recruite-suite",
-    "twitter": "twitterstream-e3ca2"
+    "twitter": "twitterstream-e3ca2",
+    "recurit": "messenger-1e383"
   },
   "targets": {}
 }

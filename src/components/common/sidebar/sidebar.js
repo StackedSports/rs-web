@@ -2068,7 +2068,7 @@ const Sidebar = (props) => {
                     </div>
                     <SelectSearch
                         search
-                        style={{ backgroundColor: "red", color: "red" }}
+                        style={{ backgroundColor: "red", color: "rgb(136, 136, 141)" }}
                         // closeOnSelect={false}
                         value={searchValue}
                         autoComplete
