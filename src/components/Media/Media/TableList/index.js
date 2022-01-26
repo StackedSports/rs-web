@@ -227,13 +227,23 @@ const PlaceholderTableList = (props) => {
                     }
                 }
             } else if (f.type === 'date_created') {
+
+                const rawFilter=f.raw;
                 for (let item of itemsList) {
-                    if (item && item.created_at && item.created_at === f.raw) {
-                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
-                            tempItemsList.push(item)
+                    if (item && item.created_at) {
+
+                        if((new Date(item.created_at).getTime() <= rawFilter.endDate.getTime()
+                            && (new Date(item.created_at).getTime()) >= rawFilter.startDate.getTime())){
+                            if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                                tempItemsList.push(item)
+                            }
                         }
                     }
                 }
+
+
+
+                console.log('date_created = ',f);
             }
             else if (f.type === 'file_type') {
                 for (let item of itemsList) {

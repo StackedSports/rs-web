@@ -79,6 +79,10 @@ import {fileTypes} from '../../utils/FileUtils';
 
 import {MoreHoriz} from "@material-ui/icons";
 import SelectedContactItem from "./Media/Details/selected-contact";
+import TimePicker from "../DateTimePicker";
+import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import {DateRangePicker} from "react-date-range";
+import {addDays} from "date-fns";
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -202,6 +206,17 @@ function MediaComponent(props) {
     const classes = useStyles();
     // console.log("This is logged in user", localStorage.getItem("user"));
     const [filter, setFilter] = useState([]);
+
+    const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+    const [state, setState] = useState([
+        {
+            startDate: new Date(),
+            endDate: new Date(),
+            key: "selection",
+        },
+    ]);
+
+
     const [filterType, setFilterType] = useState([]);
     const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
     const [uselessState, setuseLessState] = useState(0);
@@ -318,9 +333,12 @@ function MediaComponent(props) {
         setOpenSnackBar(true);
     };
 
-    const handleSetSelectedMediaDetails = (selectedTeamContacts, selectedTags) => {
+    const handleSetSelectedMediaDetails = (selectedTeamContacts, selectedTags,
+                                           selectedMediaPlaceholders, selectedAssociatePlaceholders) => {
         setSelectedTeamContacts(selectedTeamContacts);
         setSelectedTags(selectedTags);
+        setSelectedMediaPlaceholders(selectedMediaPlaceholders)
+        setSelectedAssociatePlaceholders(selectedAssociatePlaceholders)
     }
 
 
@@ -497,11 +515,98 @@ function MediaComponent(props) {
     const filtesSpacingStyle = {
         marginRight: 5,
     };
+
+
+    const CalendarFilter = () => {
+        return (
+            <div class="dropdown">
+                <Grid
+                    container
+                    direction={"row"}
+                    alignItems="center"
+                    justify="space-between"
+                    style={{
+                        border: "1px solid #dadada",
+                        width: "max-content",
+                        borderRadius: 4,
+                        height: 40,
+                        color: displayRangeCalendar === false ? "black" : "white",
+                        background:
+                            displayRangeCalendar === false ? "transparent" : "#3871DA",
+                    }}
+                    onClick={() => {
+                        setDisplayRageCalendar(true);
+                    }}
+                >
+                    <ArrowBackwardIosIcon
+                        style={{marginRight: 8, marginLeft: 8, fontSize: 12}}
+                    ></ArrowBackwardIosIcon>
+                    <div style={{border: "1px solid #dadada", height: 38}}></div>
+                    <p
+                        style={{
+                            fontWeight: "bold",
+                            margin: 0,
+                            marginLeft: 4,
+                            marginRight: 4,
+                        }}
+                    >
+                        {new moment(state[0].startDate).format("MM-DD-YYYY") +
+                        " - " +
+                        new moment(state[0].endDate).format("MM-DD-YYYY")}
+                    </p>
+                    <div style={{borderLeft: "1px solid #dadada", height: 38}}></div>
+                    <ArrowForwardIosIcon
+                        style={{marginRight: 8, marginLeft: 8, fontSize: 12}}
+                    ></ArrowForwardIosIcon>
+                </Grid>
+
+                <div
+                    // class="dropdown-content"
+                    className={classes.dropdownHidden}
+                    style={{
+                        marginLeft: 0,
+                        marginTop: 0,
+                        display: displayRangeCalendar ? "block" : "none",
+                    }}
+                    onMouseLeave={() => {
+                        setDisplayRageCalendar(false);
+                    }}
+                >
+                    <Grid style={{}}>
+                        {/* <DateRange
+          minDate={addDays(new Date(), -30)}
+          maxDate={addDays(new Date(), 30)}
+        ></DateRange> */}
+                        <DateRangePicker
+                            onChange={(item) => {
+                                setState([item.selection])
+                                console.log('item = ', item);
+
+                                const value = new moment(item.startDate).format("MM-DD-YYYY")
+                                    + ' - ' +
+                                    new moment(item.endDate).format("MM-DD-YYYY");
+
+                                props.addDataToFilter(value, "date_created", item.selection);
+
+                            }}
+                            months={1}
+                            minDate={addDays(new Date(), -30)}
+                            maxDate={addDays(new Date(), 30)}
+                            direction="horizontal"
+                            // scroll={{ enabled: true }}
+                            ranges={state}
+                        />
+                    </Grid>
+                </div>
+            </div>
+        );
+    };
+
     const renderFilters = () => {
 
         let owners = [];
         let dateCreated = [];
-        let mediaContacts=[];
+        let mediaContacts = [];
 
         for (let m of media) {
             if (m.owner && m.owner.first_name && m.owner.last_name) {
@@ -523,15 +628,15 @@ function MediaComponent(props) {
 
         for (let c of contacts) {
             if (c.first_name && c.last_name) {
-                if (mediaContacts.findIndex((o) => o.value === c.first_name+' '+c.last_name) === -1) {
-                    mediaContacts.push({type: 'associated_to', value: (c.first_name+' '+c.last_name)})
+                if (mediaContacts.findIndex((o) => o.value === c.first_name + ' ' + c.last_name) === -1) {
+                    mediaContacts.push({type: 'associated_to', value: (c.first_name + ' ' + c.last_name)})
                 }
             }
         }
 
 
-        if(contactSearch.length>0){
-            mediaContacts=mediaContacts.filter((m)=>((m.value.toLowerCase()).includes(contactSearch.toLowerCase())));
+        if (contactSearch.length > 0) {
+            mediaContacts = mediaContacts.filter((m) => ((m.value.toLowerCase()).includes(contactSearch.toLowerCase())));
         }
 
 
@@ -546,6 +651,7 @@ function MediaComponent(props) {
                     paddingBottom: 20,
                 }}
             >
+
                 <DropdownButton
                     id="dropdown-basic-button"
                     title={statusFilter || "File Type"}
@@ -667,35 +773,14 @@ function MediaComponent(props) {
                     </DropdownButton>
                 </div>
 
-                <DropdownButton
-                    id="dropdown-basic-button"
-                    title={timeZoneFilter || "Date"}
-                    drop={"down"}
-                    style={filtesSpacingStyle}
-                >
-                    {
-                        dateCreated.map((m) => {
-                            return (
-                                <Dropdown.Item
-                                    style={{
-                                        background: "white",
-                                        color: "black",
-                                    }}
-                                    onClick={() => {
-                                        props.addDataToFilter(moment(m.value).format("MMMM Do YYYY"), "date_created", m.value);
+                <CalendarFilter></CalendarFilter>
 
-                                    }}
-                                >
-                                    {moment(m.value).format("MMMM Do YYYY")}
-                                </Dropdown.Item>
-                            )
-                        })}
-                </DropdownButton>
                 <DropdownButton
                     id="dropdown-basic-button"
                     title={stateFilter || "Tag"}
                     drop={"down"}
                     style={filtesSpacingStyle}
+                    style={{marginLeft: 5}}
                 >
                     <div>
                         <Grid container direction="row" justify="center">
@@ -757,6 +842,8 @@ function MediaComponent(props) {
                         })}
                     </div>
                 </DropdownButton>
+
+
             </Grid>
         );
     };
@@ -858,7 +945,7 @@ function MediaComponent(props) {
     };
 
 
-    useEffect( () => {
+    useEffect(() => {
 
         (async () => {
             if (localStorage.getItem("user")) {
@@ -1315,6 +1402,20 @@ function MediaComponent(props) {
             }
 
 
+            if (selectedMediaPlaceholders && selectedMediaPlaceholders.length > 0) {
+                selectedMedia.media_placeholder_id = selectedMediaPlaceholders[0].id;
+            }
+
+            if (selectedAssociatePlaceholders && selectedAssociatePlaceholders.length > 0) {
+                selectedMedia.contact = {
+                    id: selectedAssociatePlaceholders[0].id,
+                    first_name: selectedAssociatePlaceholders[0].username.split(" ")[0],
+                    last_name: selectedAssociatePlaceholders[0].username.split(" ")[1]
+                };
+            }
+
+            console.log('asdasdsd =  ', selectedMediaPlaceholders, '   ', selectedAssociatePlaceholders)
+
             media[mediaIndex] = selectedMedia;
             setMedia(media);
         }
@@ -1369,7 +1470,7 @@ function MediaComponent(props) {
         <div
             style={{
                 width: props.showSideFilters === true ? "85%" : "100%",
-                height: showMediaStats?"70vh":"85vh",
+                height: showMediaStats ? "100%" : "95vh",
                 background: "white",
                 borderRadius: 5,
                 padding: 10,
@@ -1407,7 +1508,7 @@ function MediaComponent(props) {
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
 
-            {showFilters && renderFilters()}
+            {showFilters && !showMediaStats && renderFilters()}
             {props.filter.length > 0 &&
             <Fragment>
                 <ItemMainHeader title={"Media"}

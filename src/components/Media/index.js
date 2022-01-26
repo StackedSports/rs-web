@@ -540,10 +540,20 @@ function Media(props) {
     const addDataToFilter = (value, type,raw) => {
 
         const index = filter.findIndex((fil) => fil.username === value);
-        if (index === -1) {
+
+
+        console.log('addDataToFilter = ',value, type,raw)
+
+        if (index === -1 && type!=='date_created') {
             filter.push({ username: value,type:type?type:'owner',raw });
-            setFilter(filter);
-            setCount(count + 1)
+        }else{
+            if(type==='date_created'){
+                let tempFilter=filter.filter((f)=>f.type!=='date_created');
+                tempFilter.push({ username: value,type:type?type:'owner',raw });
+                setFilter(tempFilter);
+                setCount(count + 1)
+
+            }
         }
         console.log('filter = ', filter);
     };

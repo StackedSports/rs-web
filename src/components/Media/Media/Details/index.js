@@ -89,27 +89,31 @@ const MediaDetails = (props) => {
     const classes = useStyles();
 
 
-
     // const [selectedTeamContacts, setSelectedTeamContacts] = useState(props.selectedTeamContacts);
     // const [selectedTags, setSelectedTags] = useState(props.selectedTags);
 
     const filter = props.filter,
         teamContacts = props.teamContacts,
         taggedMedia = props.taggedMedia,
-        selectedMediaPlaceholders = props.selectedMediaPlaceholders,
         placeholders = props.placeholders,
         myMediaContacts = props.myMediaContacts,
         contacts = props.contacts,
-        selectedPlaceholder = props.selectedPlaceholder,
-        selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
+        selectedPlaceholder = props.selectedPlaceholder;
 
 
-    let selectedTags=props.selectedTags;
-    let selectedTeamContacts=props.selectedTeamContacts;
+    let selectedTags = props.selectedTags;
+    let selectedTeamContacts = props.selectedTeamContacts;
+    let selectedMediaPlaceholders = props.selectedMediaPlaceholders;
+    let selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
+
 
     React.useEffect(() => {
-        selectedTags=[];
-        selectedTeamContacts=[];
+        selectedTags = [];
+        selectedTeamContacts = [];
+        selectedMediaPlaceholders = [];
+        selectedAssociatePlaceholders = [];
+
+
         if (selectedPlaceholder &&
             selectedPlaceholder.owner &&
             selectedPlaceholder.owner.twitter_profile) {
@@ -133,19 +137,50 @@ const MediaDetails = (props) => {
 
         }
 
+
+        if (selectedPlaceholder && selectedPlaceholder.media_placeholder_id) {
+            const findIndex = placeholders.findIndex((p) => p.id === selectedPlaceholder.media_placeholder_id)
+            if (findIndex != -1) {
+                const placeholder = placeholders[findIndex];
+                selectedMediaPlaceholders.push({
+                    username: placeholder.name, id: placeholder.id,
+                    url: placeholder.media_preview
+                })
+            }
+        }
+
+
+        if (selectedPlaceholder && selectedPlaceholder.contact && selectedPlaceholder.contact.first_name
+        && selectedPlaceholder.contact.last_name) {
+            const findIndex = contacts.findIndex((c) => c.first_name + ' ' + c.last_name
+                ===
+                selectedPlaceholder.contact.first_name+' '+selectedPlaceholder.contact.last_name)
+            if (findIndex != -1) {
+                const contact = contacts[findIndex];
+                selectedAssociatePlaceholders.push({
+                    username: contact.first_name + ' ' + contact.last_name,
+                    id: contact.id,
+                    url: contact.twitter_profile.profile_image
+                })
+            }
+        }
+
         // setSelectedTeamContacts(selectedTeamContacts)
         // setSelectedTags(selectedTags)
 
-        props.setSelectedItems(selectedTeamContacts,selectedTags);
-        console.log('MediaDetails componentDidMount = ',selectedTags,'  ',selectedTeamContacts);
+        props.setSelectedItems(selectedTeamContacts, selectedTags,
+            selectedMediaPlaceholders,selectedAssociatePlaceholders);
+        console.log('MediaDetails componentDidMount = ',);
 
     }, []);
 
 
-    console.log('setMyMediaContacts =  ', props.selectedPlaceholder, '   ', selectedTags, '   ', selectedTeamContacts,'  ',props.count);
+    console.log('setMyMediaContacts =  ', props.selectedPlaceholder, '   ', selectedTags, '   ', selectedTeamContacts, '  ', props.count);
 
     return (
-        <div style={{height: '55vh'}}>
+        <div style={{
+            height: '100%'
+        }}>
             <Grid
                 container
                 direction="row"
@@ -154,7 +189,6 @@ const MediaDetails = (props) => {
                     borderRadius: 4,
                     marginTop: 16,
                     position: 'relative',
-                    overflowX: 'hidden',
                 }}
             >
                 {/* <Grid item md={4} xs={4}> */}
@@ -497,6 +531,7 @@ const MediaDetails = (props) => {
                                                             placeholder && placeholder.name &&
                                                             <DropDownItem
                                                                 addDataToFilter={props.addDataToFilter}
+                                                                id={placeholder.id}
                                                                 username={placeholder.name}
                                                                 url={placeholder.media_preview}
                                                                 setDisplay={props.setSelectedMediaPlaceholders}
@@ -606,7 +641,7 @@ const MediaDetails = (props) => {
                                                             contact.first_name && contact.last_name &&
                                                             <DropDownItem
                                                                 addDataToFilter={props.addDataToFilter}
-
+                                                                id={contact.id}
                                                                 username={contact.first_name + ' ' + contact.last_name}
                                                                 url={contact.twitter_profile.profile_image}
                                                                 setDisplay={props.setSelectedAssociatePlaceholderContainer}
