@@ -177,6 +177,11 @@ function MessageCreate(props) {
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
   const [messageType, setMessageType] = useState(null);
+  const [twitterDm, settwitterDm] = useState();
+  const [personalText, setPersonalText] = useState();
+  const [rsText, setrsText] = useState();
+
+
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
   const [messagePreview, setMessagePreview] = useState(null);
@@ -224,7 +229,7 @@ function MessageCreate(props) {
   const [searchValue, setSearchValue] = useState("");
   const [stateiconColor, setstateiconColor] = useState('gray');
 
-
+  console.log(allBoards, "All Boards")
   const [tableData, setTableData] = React.useState([
     {
       name: "David Buttler",
@@ -2348,17 +2353,17 @@ function MessageCreate(props) {
   };
 
   const handleSendMessage = async () => {
-    // setMessagePreview(true);
+    setMessagePreview(true);
     const selectedMediaIds = selectedMedia?.map((media) => media?.id);
     const contactsId = messageSender?.id;
     const data = {
-      "platform": messageType,
-      "media_placeholder_id": selectedMediaIds,
-      "filter_ids": messageReceiver,
-      "send_at": date,
-      "body": messageText,
-      'contact_ids': contactsId,
-      'user_id': JSON.parse(localStorage.getItem("user")).id,
+      platform: messageType,
+      media_placeholder_id: selectedMediaIds,
+      filter_ids: messageReceiver,
+      send_at: date,
+      body: messageText,
+      contact_ids: contactsId,
+      user_id: JSON.parse(localStorage.getItem("user")).id,
     }
 
 
@@ -3056,12 +3061,8 @@ function MessageCreate(props) {
                       >
                         Send As:
                       </p>
-                      {/* </Grid> */}
-                      {/* <Grid
-                        item
-                        md={displaySendTo ? 10 : 11}
-                        xs={displaySendTo ? 10 : 11}
-                      > */}
+                  
+                  
                       {messageType ? (
                         renderMessageTypeTag(messageType)
                       ) : (
@@ -3139,7 +3140,7 @@ function MessageCreate(props) {
                               <p
                                 style={{
                                   marginLeft: 16,
-                               
+
                                   fontSize: '10px',
                                   fontWeight: 300,
                                   marginBottom: -4,
@@ -3149,7 +3150,7 @@ function MessageCreate(props) {
                                 *Select a default "Send As" option if a contact does not have a set Prefered Channel
                               </p>
                             </Grid>
-                            {[
+                            {/* {[
                               {
                                 title: "Twitter DM",
                                 icon: (
@@ -3174,8 +3175,9 @@ function MessageCreate(props) {
                                   ></FaComment>
                                 ),
                               },
-                            ].map((type,i) => {
-                              return (
+                            ] */}
+                            {/* // .map((type, i) => { */}
+                              {/* // return ( */}
                                 <Grid
                                   container
                                   alignItems="center"
@@ -3184,7 +3186,9 @@ function MessageCreate(props) {
                                     setMessageType(type);
                                   }}
                                 >
-                                  {type.icon}
+                                 <FaTwitter
+                                    className={classes.messageTypeIcon}
+                                  ></FaTwitter>
                                   <p
                                     style={{
                                       margin: 0,
@@ -3193,12 +3197,60 @@ function MessageCreate(props) {
                                       width: "65%"
                                     }}
                                   >
-                                    {type.title}
+                                    Twitter DM
                                   </p>
-                                  <CheckCircle style={{ color:'gray' , fontSize: 18 }}></CheckCircle>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
                                 </Grid>
-                              );
-                            })}
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    setMessageType(type);
+                                    
+                                  }}
+                                >
+                               <FaPhone
+                                    className={classes.messageTypeIcon}
+                                  ></FaPhone>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Personal Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                </Grid>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    setMessageType(type);
+                                  }}
+                                >
+                                 <FaComment
+                                    className={classes.messageTypeIcon}
+                                  ></FaComment>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Rs Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                </Grid>
+
+                              {/* // );
+                            // })} */}
                           </div>
                         </div>
                       )}
