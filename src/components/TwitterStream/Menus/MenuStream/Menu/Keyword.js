@@ -12,7 +12,7 @@ function Keyword(props) {
     return (
         <div  >
        
-        <Paper>
+        <Paper width={300}>
             <Stack  style = {{padding:20,marginLeft:'10px',marginRight:'20px',marginBottom:0}} >
           
             <Typography variant='body2'  value={10}  onClick={(e) => {
@@ -60,7 +60,7 @@ function Keyword(props) {
               }} 
             
             >
-            TweetTypes
+            <span > TweetType</span> 
             </Typography>
             </Stack>
             </Paper>

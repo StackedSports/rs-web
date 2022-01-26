@@ -178,8 +178,8 @@ export default function MenuStream(props) {
                         marginLeft:'15px',
                         fontSize: '13px',
                         fontWeight:"bold",
-                        color: streamButton && props.streamButtonColor===true ? 'white' :'black',
-                        background:  streamButton && props.streamButtonColor===true ?  '#3871da': 'white',
+                        color: streamButton && props.streamButtonColor ===true ?'white' :'black',
+                        background:  streamButton && props.streamButtonColor ===true ? '#3871da': 'white',
                         borderColor:'#E1E1E1',
                         textTransform:"none"
                        
