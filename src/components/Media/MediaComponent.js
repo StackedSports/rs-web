@@ -1369,7 +1369,7 @@ function MediaComponent(props) {
         <div
             style={{
                 width: props.showSideFilters === true ? "85%" : "100%",
-                height: showMediaStats?"70vh":"85vh",
+                height: showMediaStats?"100%":"100%",
                 background: "white",
                 borderRadius: 5,
                 padding: 10,

@@ -10,12 +10,28 @@ import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import Autocomplete from '@mui/material/Autocomplete';
 import { Paper } from '@mui/material';
 
-function KeywordRules(props) {
- 
 
+function KeywordRules(props) {
+ const [item,setItem]=React.useState(null)
+
+  const top100Films = [
+    { title: 'Keyword Set - Tickets' },
+    { title: ' Keyword Set - Recruitig'},
+    { title: 'Keyword Set - Season ' },
+    { title: 'Keyword Set - Twitter'},
+    { title: 'Keyword Set - Stream' },
+    { title: "Keyword Set - Filter"},
+    { title: 'Keyword Set - Season'},
+    {
+      title: 'Keyword Set - Tickets'
+    }
+  
+  ];
+
+  const [selectedItem,setSelecteditem]=React.useState('')
 
     const style = {
         position: 'absolute',
@@ -32,10 +48,10 @@ function KeywordRules(props) {
       const [keyword, setKeyword] = React.useState(null);
       const [circleIcon, setCircleIcon] = React.useState(false);
       const [begin,setbegin]= React.useState(false);
-      const [keyworddisable,setKeywordDisable] =  React.useState(false);
+      const [keyworddisable,setKeywordDisable] =  React.useState(true);
       const handleChange = (event) => {
         setTweet(event.target.value);
-        event.target.value===30?setKeywordDisable(true):'';
+        event.target.value===30?setKeywordDisable(true):setKeywordDisable(false);
       };
       console.log('setkeywordDisable : ',keyworddisable)
       const handleChangeKeyword = (event) => {
@@ -58,7 +74,7 @@ function KeywordRules(props) {
       
         
         "& .MuiSelect-select":{
-          border:'2.3px solid #1976d2',
+          border:'2.3px solid #1976d2' ,
           borderRadius: "5px 5px 0 0"
           
         },
@@ -119,10 +135,13 @@ function KeywordRules(props) {
          
           <Select
            
-          className={classes.select}
+          
           value={keyword}
           displayEmpty
-            
+          style={{
+         border:keyworddisable?'2.3px solid #e1e1e1 ':'2px solid #1976d2',
+         borderRadius: "5px 5px 0 0"
+        }}
              disabled={keyworddisable}
           inputProps={{ "aria-label": "Without label" }}
           onChange={handleChangeKeyword}>
@@ -135,10 +154,17 @@ function KeywordRules(props) {
           </Select>
          </FormControl>
          <FormControl fullWidth size='small'>
-         <TextField label="Search or Create New keyword Match" type="search" fullWidth size='small' />
-        </FormControl>
-        <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>Keyword Set - Tickets </Typography>
-        <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>Keyword Set - Recruitig</Typography>
+         <Autocomplete
+        id="free-solo-demo"
+        freeSolo
+        options={top100Films.map((option) => option.title)}
+        onChange={(event,values) => {
+          console.log('hamza',values)
+          setSelecteditem(values);
+        }}
+        renderInput={(params) => <TextField {...params} label="Search or Create New Keyword Match" />}
+      /> </FormControl>
+        <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>{selectedItem} </Typography>
         
         <Stack direction='row' spacing={1} >
          
