@@ -2654,7 +2654,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
@@ -2744,7 +2744,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
@@ -2827,7 +2827,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
