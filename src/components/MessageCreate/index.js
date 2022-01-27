@@ -584,19 +584,8 @@ function MessageCreate(props) {
     } catch (error) {
       console.log("this is error all media", error);
     }
-    /*getPlaceholder().then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          // console.log("These are all placeholder", res.data);
-          setPlaceHolders(res.data);
-          console.log('data = ',res.data)
-        }
-      },
-      (error) => {
-        console.log("this is error all media", error);
-      }
-    );*/
+
+    
   };
 
   const showActionButton = () => {
@@ -3183,7 +3172,22 @@ function MessageCreate(props) {
                                   alignItems="center"
                                   className={classes.messagetypeGrid}
                                   onClick={() => {
-                                    setMessageType(type);
+                                    settwitterDm( <>
+                                    
+                                    <FaTwitter
+                                      className={classes.messageTypeIcon}
+                                    ></FaTwitter>
+                                    <p
+                                      style={{
+                                        margin: 0,
+                                        fontWeight: 600,
+                                        marginLeft: 16,
+                                        width: "65%"
+                                      }}
+                                    >
+                                      Twitter DM
+                                    </p>
+                                    </>)
                                   }}
                                 >
                                  <FaTwitter

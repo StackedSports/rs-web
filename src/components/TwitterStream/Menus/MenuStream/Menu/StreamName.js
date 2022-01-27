@@ -5,9 +5,9 @@ import { Typography } from '@material-ui/core'
 import { Paper } from '@material-ui/core'
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
-import FormControl from '@mui/material/FormControl';
+
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+
 function StreamName(props) {
 
     const style = {
@@ -21,12 +21,14 @@ function StreamName(props) {
         boxShadow: 24,
         p: 2,
       };
-      const txtValue="Season Ticket Oct";
+      
       const[check,setcheckBox]=useState(false);
 
     return (
         <div style={{outline:'none'}}>
-        <Modal  open={open} sx={{border:'none'}}  >
+        <Modal  open={open} sx={{border:'none'}} 
+        onClose={props.streamButtonColor}
+        >
          
              <Box sx={{ ...style,outline:'none',padding:0 }}>
                <Box style={{padding:'20px'}}>
@@ -61,12 +63,12 @@ function StreamName(props) {
 
 <Stack >
 
-<Paper elavation={22} style={{display:'flex',marginTop:'0.5px',flexDirection:'row-reverse',height:'7vh',width:'100%'}}>
+<Paper elavation={22} >
+
+<Stack direction="row-reverse" spacing={5}  style={{padding:'15px'}} >
 
 
-
-
-<Typography variant='button' style={{marginRight:'10px',cursor:'pointer',color:'#6d6d6d',padding:'10px'}}
+<Typography variant='button' style={{marginRight:10,cursor:'pointer',color:'#6d6d6d'}}
 onClick={(e) => {
 { check && props.streamName(false)}
 {check && props.hideNew()}
@@ -77,24 +79,36 @@ onClick={(e) => {
 {check && props.keywordincludes(false)}
 {check && props.actionbutton(false)}
 {check && props.hidegrid()}
-{check && props.streamButton(false)}
+{check && props.streamButtonColor(false)}
 {check && props.accountContent(false)}
 {check && props.hashtagContent(false)}
 {check && props.geographyContent(false)}
 }} >Apply</Typography>
+
 <Typography variant='button'
-style={{marginRight:'10px',cursor:'default',color:'#6d6d6d',padding:'10px'}}>
+onClick={(e) => {
+    {
+   props.streamName(false)}
+  
+   {props.streamButtonColor(false)}
+    
+}}
+style={{cursor:'pointer',color:'#6d6d6d'}}>
 Cancel
 </Typography>
 
 
 
-<Typography variant='body2'  style={{marginRight:'55px',marginTop:'13px'}}>SharewithTeam</Typography>
-<Checkbox size="small"  checked={check} onChange={(e) => {setcheckBox(!check)}}/>
+<Typography variant='body2'  >Share with Team</Typography>
+<Checkbox size="small"  style={{marginRight:10,marginBottom:10,padding:0}} 
+onChange={(e) => {
+  setcheckBox(!check)
+  
+  }}/>
 
 
 
-
+</Stack>
 </Paper>
 </Stack>
 

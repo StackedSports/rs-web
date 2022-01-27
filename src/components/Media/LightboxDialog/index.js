@@ -3,6 +3,8 @@ import React from "react";
 
 
 const LightboxDialog=(props)=>{
+
+    console.log('showing dialog = ',props)
     return(
         <Dialog
             open={true}
@@ -16,7 +18,7 @@ const LightboxDialog=(props)=>{
                      <source src={props.url} type="video/mp4"></source>
                  </video>
                  :
-                 <img width="400" height="400" loop  src={props.url}/>
+                 <img loop  src={props.url}/>
             }
         </Dialog>
     )

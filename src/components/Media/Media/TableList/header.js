@@ -107,7 +107,7 @@ const ListHeader = (props) => {
                 <KeyboardArrowDownOutlinedIcon/>
                 </span>
             </Grid>
-            <Grid item md={2} xs={2}>
+            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('associatedTo')}>
                       <span
                           className={classes.tableHeading}
                       >
@@ -115,7 +115,7 @@ const ListHeader = (props) => {
                           <KeyboardArrowDownOutlinedIcon/>
                       </span>
             </Grid>
-            <Grid item md={2} xs={2}>
+            <Grid item md={2} xs={2} onClick={(e) => props.handleSortingOrder('owner')}>
                 <span className={classes.tableHeading}>
                     {props.isPlaceholder ? "Associated To" : "Owner"}
                     <KeyboardArrowDownOutlinedIcon/>

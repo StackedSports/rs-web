@@ -192,7 +192,7 @@ function MenuNewMessage(props) {
          hidegrid={handleNewStreamGrid}
          streamButtonColor={streamButtonColor}
          setStreamButtonColor={handleStreamButtonColor}
-        
+      
          />
          
         
@@ -268,7 +268,7 @@ function MenuNewMessage(props) {
           keywordincludes={handleKeywordIncludes}
           actionbutton={handleActionButton}
           hidegrid={handleNewStreamGrid}
-          streamButton={handleStreamButtonColor}
+          streamButtonColor={handleStreamButtonColor}
           geographyContent={handleGeographyContent}
           hashtagContent={handleHashtagContent}
           accountContent={handleAccountContent}
