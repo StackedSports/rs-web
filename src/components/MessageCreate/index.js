@@ -718,7 +718,23 @@ function MessageCreate(props) {
       }
     );
   };
+const getCreateSearch=()=>{
+  getAllContacts().then(
+    (res) => {
+      // console.log("THis is all boards", res);
+      var gradYears = [];
+      if (res.statusText === "OK") {
+        // console.log("These are all boards", res.data);
+        setAllBoards(res.data);
+        console.log(res.data, "getCreateSearch")
 
+      }
+    },
+    (error) => {
+      console.log("this is error all grad year", error);
+    }
+  );
+}
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -2124,6 +2140,7 @@ function MessageCreate(props) {
       getMyMedia();
       getMyTeamContacts();
       getAllBoards();
+      getCreateSearch();
     } else {
       window.location.href = "/";
     }
@@ -3219,10 +3236,10 @@ function MessageCreate(props) {
                                   settwitterDm(true)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  setMessageType([{
-                                    title: 'Twitter DM',
-                                    icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
-                                  }])
+                                  // setMessageType([{
+                                  //   title: 'Twitter DM',
+                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+                                  // }])
 
                                 }}
                               >
@@ -3255,11 +3272,11 @@ function MessageCreate(props) {
                                   setPersonalText(false)
                                   setrsText(false)
                                   
-                                  setMessageType([{
-                                    title: 'Twitter DM',
-                                    icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+                                  // setMessageType([{
+                                  //   title: 'Twitter DM',
+                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
 
-                                  }])
+                                  // }])
                                 }}
                               >
                                 <FaTwitter
@@ -3291,12 +3308,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(true)
                                   setrsText(false)
-                                  setMessageType([{
-                                    title: ' Personal Text',
-                                    icon: (<FaPhone
-                                      className={classes.messageTypeIcon}
-                                    ></FaPhone>)
-                                  }])
+                                  // setMessageType([{
+                                  //   title: ' Personal Text',
+                                  //   icon: (<FaPhone
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaPhone>)
+                                  // }])
                                 }}
                               >
                                 <FaPhone
@@ -3323,12 +3340,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  setMessageType([{
-                                    title: ' Personal Text',
-                                    icon: (<FaPhone
-                                      className={classes.messageTypeIcon}
-                                    ></FaPhone>)
-                                  }])
+                                  // setMessageType([{
+                                  //   title: ' Personal Text',
+                                  //   icon: (<FaPhone
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaPhone>)
+                                  // }])
 
                                 }}
                               >
