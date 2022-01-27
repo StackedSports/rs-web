@@ -585,7 +585,7 @@ function MessageCreate(props) {
       console.log("this is error all media", error);
     }
 
-    
+
   };
 
   const showActionButton = () => {
@@ -3050,8 +3050,8 @@ function MessageCreate(props) {
                       >
                         Send As:
                       </p>
-                  
-                  
+
+
                       {messageType ? (
                         renderMessageTypeTag(messageType)
                       ) : (
@@ -3166,31 +3166,15 @@ function MessageCreate(props) {
                               },
                             ] */}
                             {/* // .map((type, i) => { */}
-                              {/* // return ( */}
-                                <Grid
-                                  container
-                                  alignItems="center"
-                                  className={classes.messagetypeGrid}
-                                  onClick={() => {
-                                    settwitterDm( <>
-                                    
-                                    <FaTwitter
-                                      className={classes.messageTypeIcon}
-                                    ></FaTwitter>
-                                    <p
-                                      style={{
-                                        margin: 0,
-                                        fontWeight: 600,
-                                        marginLeft: 16,
-                                        width: "65%"
-                                      }}
-                                    >
-                                      Twitter DM
-                                    </p>
-                                    </>)
-                                  }}
-                                >
-                                 <FaTwitter
+                            {/* // return ( */}
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(<>
+
+                                  <FaTwitter
                                     className={classes.messageTypeIcon}
                                   ></FaTwitter>
                                   <p
@@ -3203,57 +3187,73 @@ function MessageCreate(props) {
                                   >
                                     Twitter DM
                                   </p>
-                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                                </Grid>
-                                <Grid
-                                  container
-                                  alignItems="center"
-                                  className={classes.messagetypeGrid}
-                                  onClick={() => {
-                                    setMessageType(type);
-                                    
-                                  }}
-                                >
-                               <FaPhone
-                                    className={classes.messageTypeIcon}
-                                  ></FaPhone>
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontWeight: 600,
-                                      marginLeft: 16,
-                                      width: "65%"
-                                    }}
-                                  >
-                                    Personal Text
-                                  </p>
-                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                                </Grid>
-                                <Grid
-                                  container
-                                  alignItems="center"
-                                  className={classes.messagetypeGrid}
-                                  onClick={() => {
-                                    setMessageType(type);
-                                  }}
-                                >
-                                 <FaComment
-                                    className={classes.messageTypeIcon}
-                                  ></FaComment>
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontWeight: 600,
-                                      marginLeft: 16,
-                                      width: "65%"
-                                    }}
-                                  >
-                                    Rs Text
-                                  </p>
-                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                                </Grid>
+                                </>)
+                              }}
+                            >
+                              <FaTwitter
+                                className={classes.messageTypeIcon}
+                              ></FaTwitter>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Twitter DM
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                setMessageType(type);
 
-                              {/* // );
+                              }}
+                            >
+                              <FaPhone
+                                className={classes.messageTypeIcon}
+                              ></FaPhone>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Personal Text
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                setMessageType(type);
+                              }}
+                            >
+                              <FaComment
+                                className={classes.messageTypeIcon}
+                              ></FaComment>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Rs Text
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+
+                            {/* // );
                             // })} */}
                           </div>
                         </div>
