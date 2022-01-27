@@ -1,0 +1,443 @@
+      {/* ///////////Twitter Dm section////////////// */}
+                            {twitterDm===false? <>
+                              <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(true)
+                                setPersonalText(false)
+                                setrsText(false)
+                                settwitterDm===true?setMessageType([{
+                                  title:'Twitter DM',
+                                  icon:<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>
+                                }]):null
+                              }}
+                            >
+                              <FaTwitter
+                                className={classes.messageTypeIcon}
+                              ></FaTwitter>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Twitter DM
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            </>:twitterDm===true? <>
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(false)
+                                setPersonalText(false)
+                                setrsText(false)
+                                // settwitterDm===true?setMessageType([{
+                                //   title:'Twitter DM',
+                                //   icon:<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>
+                                // }]):null
+                              }}
+                            >
+                              <FaTwitter
+                                className={classes.messageTypeIcon}
+                              ></FaTwitter>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Twitter DM
+                              </p>
+                              <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            
+                            </>:null}
+
+                          {/* ///////////Personal Text section////////////// */}
+                       
+                            {personalText===false?<>
+                              <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(false)
+                                setPersonalText(true)
+                                setrsText(false)
+
+                              }}
+                            >
+                               <FaPhone
+                                className={classes.messageTypeIcon}
+                              ></FaPhone>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Personal Text
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            </>:personalText===true?<>
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(false)
+                                setPersonalText(false)
+                                setrsText(false)
+
+
+                              }}
+                            >
+                            <FaPhone
+                                className={classes.messageTypeIcon}
+                              ></FaPhone>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Personal Text
+                              </p>
+                              <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            
+                            </>:null}            
+                            {/* ///////////Rs Text section////////////// */}
+                       
+                            {rsText===false?<>
+                              <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(false)
+                                setPersonalText(false)
+                                setrsText(true)
+
+                              }}
+                            >
+                             <FaComment
+                                className={classes.messageTypeIcon}
+                              ></FaComment>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Rs Text
+                              </p>
+                              <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            </>:rsText===true?<>
+                            <Grid
+                              container
+                              alignItems="center"
+                              className={classes.messagetypeGrid}
+                              onClick={() => {
+                                settwitterDm(false)
+                                setPersonalText(false)
+                                setrsText(false)
+
+
+                              }}
+                            >
+                          <FaComment
+                                className={classes.messageTypeIcon}
+                              ></FaComment>
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 16,
+                                  width: "65%"
+                                }}
+                              >
+                                Rs Text
+                              </p>
+                              <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                            </Grid>
+                            
+                            </>:null} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              <Grid
+
+                      container
+                      direction="row"
+                      // alignItems="center"
+                      style={{
+                        // background: "#f5f6f9",
+                        width: "100%",
+                        // minWidth: 1110,
+                        border: "1px solid #d8d8d8",
+                        borderRadius: 4,
+                        height: 70,
+                        marginTop: 16,
+                      }}
+                      className="hoverHighlight d-flex align-items-center"
+                    >
+                      {/* <Grid
+                        item
+                        md={displaySendTo ? 2 : 2}
+                        xs={displaySendTo ? 2 : 2}
+                      > */}
+                      <p
+                        style={{
+                          margin: 0,
+                          marginLeft: 16,
+                          marginRight: 16,
+                          width: 90,
+                        }}
+                      >
+                        Send From:
+                      </p>
+                      {/* </Grid>
+                      <Grid item md={10} xs={10}> */}
+                      {messageSender ? (
+                        renderMessageSenderTag(messageSender)
+                      ) : (
+                        <div class="dropdown">
+                          <IconTextField
+                            width={170}
+                            background={
+                              displayMessageSenders ? "#3871da" : "white"
+                            }
+                            text={
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: displayMessageSenders
+                                    ? "white"
+                                    : "black",
+                                }}
+                              >
+                                Add Sender
+                              </p>
+                            }
+                            iconStart={
+                              <FaPlus
+                                style={{
+                                  color: displayMessageSenders
+                                    ? "white"
+                                    : "#3871da",
+                                }}
+                              ></FaPlus>
+                            }
+                            onMouseEnter={() => {
+                              setDisplayCreateMessage(false);
+                              setDisplayMessageSenders(true);
+                            }}
+                          ></IconTextField>
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 180,
+                              marginTop: -40,
+                              display: displayMessageSenders ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplayMessageSenders(false);
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 8,
+                                marginBottom: 0,
+                                background: "#3871da",
+                                color: "white",
+                                fontWeight: 600,
+                              }}
+                            >
+                              Send on the behalf of
+                            </p>
+                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                              <p
+                                onClick={
+                                  () => {
+                                    setFromPositinCoach(false)
+                                    setFromAreaCoach(true)
+                                  }
+                                }
+                                style={{ width: '80%', margin: 0 }}
+                              >
+                                Area Recruiting Coach
+
+                              </p>
+                              {
+                                fromAreaCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              }
+
+                            </Grid>
+
+                            <div
+                              style={{
+                                width: "100%",
+                                border: "1px solid #d8d8d8",
+                              }}
+                            ></div>
+                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                              <p
+                                style={{ width: '80%', margin: 0 }}
+
+                                onClick={
+                                  () => {
+                                    setFromPositinCoach(true)
+                                    setFromAreaCoach(false)
+                                  }
+                                }
+                              >
+                                Position Coach
+                              </p>
+                              {
+                                fromPositionCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                              }
+                            </Grid>
+
+                            <div
+                              style={{
+                                width: "100%",
+                                border: "1px solid #d8d8d8",
+                              }}
+                            ></div>
+                            <p
+                              style={{
+                                color: "gray",
+                                fontSize: 11,
+                                width: 200,
+                                marginLeft: 16,
+                              }}
+                            >
+                              ** select a default send account if recruite do
+                              not have a coach assigned
+                            </p>
+                            {
+                              teamContacts &&
+                              teamContacts.map((type) => {
+                                return (
+                                  <Grid
+                                    container
+                                    alignItems="center"
+                                    // style={{
+                                    //   height: 50,
+                                    //   marginLeft: 0,
+                                    //   marginTop: -12,
+                                    //   cursor: "pointer",
+                                    // }}
+                                    className={classes.sendAsP}
+                                    onClick={() => {
+                                      setMessageSender(type);
+                                    }}
+                                  >
+                                    <img
+                                      style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 20,
+                                        marginLeft: 16,
+                                      }}
+                                      src={
+                                        type.twitter_profile &&
+                                        type.twitter_profile.profile_image
+                                      }
+                                    ></img>
+                                    {JSON.parse(localStorage.getItem("user"))
+                                      .id === type.id ? (
+                                      <p
+                                        style={{
+                                          margin: 0,
+                                          fontWeight: 600,
+                                          marginLeft: 8,
+                                        }}
+                                      >
+                                        {type.twitter_profile &&
+                                          "You @" +
+                                          type.twitter_profile.screen_name +
+                                          ""}
+                                      </p>
+                                    ) : (
+                                      <p
+                                        style={{
+                                          margin: 0,
+                                          fontWeight: 600,
+                                          marginLeft: 16,
+                                        }}
+                                      >
+                                        {type.twitter_profile &&
+                                          " @" +
+                                          type.twitter_profile.screen_name +
+                                          " "}
+                                      </p>
+                                    )}
+                                  </Grid>
+                                );
+                              })
+                            }
+                          </div>
+                        </div>
+                      )}
+                      {/* </Grid> */}
+                    </Grid>
