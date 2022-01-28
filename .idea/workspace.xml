@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Header/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Details/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/Item/item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Placehoder/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Sidebar/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Tags/TagSearchModal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Tags/TagSearchModal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Tags/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Tags/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Tags/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Tags/item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,13 +66,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="css" value="1" />
-          <entry key="js" value="33018" />
+          <entry key="js" value="33022" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="1" />
-          <entry key="JavaScript" value="33018" />
+          <entry key="JavaScript" value="33022" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -164,8 +150,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="91" column="103" selection-start-line="91" selection-start-column="103" selection-end-line="91" selection-end-column="103" />
+            <state relative-caret-position="198">
+              <caret line="96" column="17" lean-forward="true" selection-start-line="96" selection-start-column="17" selection-end-line="96" selection-end-column="17" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -439,12 +425,12 @@
       <workItem from="1643101688274" duration="191000" />
       <workItem from="1643137924138" duration="2335000" />
       <workItem from="1643184950173" duration="11221000" />
-      <workItem from="1643375587340" duration="6110000" />
+      <workItem from="1643375587340" duration="6252000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="242006000" />
+    <option name="totallyTimeSpent" value="242148000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
@@ -868,8 +854,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/Media/Item/item.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="91" column="103" selection-start-line="91" selection-start-column="103" selection-end-line="91" selection-end-column="103" />
+        <state relative-caret-position="198">
+          <caret line="96" column="17" lean-forward="true" selection-start-line="96" selection-start-column="17" selection-end-line="96" selection-end-column="17" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>

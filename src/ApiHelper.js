@@ -297,7 +297,7 @@ export const getLast30Stats = () => {
   });
 };
 
-export const getAllContacts = (page) => {
+export const getAllContacts = (page,search) => {
   // console.log("This is start", start);
   // console.log("This is end", end);
   // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
@@ -309,7 +309,7 @@ export const getAllContacts = (page) => {
   return axios({
     method: "get",
     url:
-      URL + `contacts?page=${page}&per_page=${perPage}&sort_column=first_name`,
+      URL + `contacts?page=${page}&per_page=${perPage}&sort_column=first_name&search=${search}`,
     headers: {
       Accept: "application/json; version=1",
       "Content-Type": "application/json",

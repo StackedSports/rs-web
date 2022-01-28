@@ -565,3 +565,9 @@ button:focus {
 #simple-tabpanel-2 {
   width: 100%;
 }
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+  
+
+  text-transform: capitalize !important; 
+ 
+}

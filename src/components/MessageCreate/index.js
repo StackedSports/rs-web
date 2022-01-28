@@ -176,7 +176,12 @@ function MessageCreate(props) {
   const [date, setDate] = useState(new Date());
   const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
-  const [messageType, setMessageType] = useState(null);
+  const [messageType, setMessageType] = useState();
+  const [twitterDm, settwitterDm] = useState(false);
+  const [personalText, setPersonalText] = useState(false);
+  const [rsText, setrsText] = useState(false);
+
+
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
   const [messagePreview, setMessagePreview] = useState(null);
@@ -224,7 +229,7 @@ function MessageCreate(props) {
   const [searchValue, setSearchValue] = useState("");
   const [stateiconColor, setstateiconColor] = useState('gray');
 
-
+  console.log(allBoards, "All Boards")
   const [tableData, setTableData] = React.useState([
     {
       name: "David Buttler",
@@ -295,7 +300,9 @@ function MessageCreate(props) {
       key: "selection",
     },
   ]);
-
+  console.log('===========displayCreateMessage=========================');
+  console.log(displayCreateMessage);
+  console.log('======================displayCreateMessage==============');
   const CalendarFilter = () => {
     return (
       <div class="dropdown">
@@ -579,19 +586,8 @@ function MessageCreate(props) {
     } catch (error) {
       console.log("this is error all media", error);
     }
-    /*getPlaceholder().then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          // console.log("These are all placeholder", res.data);
-          setPlaceHolders(res.data);
-          console.log('data = ',res.data)
-        }
-      },
-      (error) => {
-        console.log("this is error all media", error);
-      }
-    );*/
+
+
   };
 
   const showActionButton = () => {
@@ -722,7 +718,23 @@ function MessageCreate(props) {
       }
     );
   };
+const getCreateSearch=()=>{
+  getAllContacts().then(
+    (res) => {
+      // console.log("THis is all boards", res);
+      var gradYears = [];
+      if (res.statusText === "OK") {
+        // console.log("These are all boards", res.data);
+        setAllBoards(res.data);
+        console.log(res.data, "getCreateSearch")
 
+      }
+    },
+    (error) => {
+      console.log("this is error all grad year", error);
+    }
+  );
+}
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -2128,6 +2140,7 @@ function MessageCreate(props) {
       getMyMedia();
       getMyTeamContacts();
       getAllBoards();
+      getCreateSearch();
     } else {
       window.location.href = "/";
     }
@@ -2136,7 +2149,9 @@ function MessageCreate(props) {
   // console.log("THis is great message type", messageType);
 
   const renderMessageReceiver = (messageType) => {
+
     return messageType.map((item) => {
+
       return (
         <div
           container
@@ -2312,6 +2327,11 @@ function MessageCreate(props) {
     );
   };
   const renderMessageTypeTag = (messageType) => {
+    console.log('===========renderMessageTypeTag=========================');
+    console.log(messageType.title, "title");
+    console.log(messageType.icon, "icon");
+
+    console.log('======================renderMessageTypeTag==============');
     return (
       <div
         container
@@ -2327,9 +2347,10 @@ function MessageCreate(props) {
           direction="row"
           alignItems="center"
         >
-          {messageType.icon}
+          {messageType[0].icon}
+
           <p style={{ margin: 0, marginLeft: 5, marginRight: 5 }}>
-            {messageType.title}
+            {messageType[0].title}
           </p>
           <ClearIcon
             onClick={() => {
@@ -2348,17 +2369,17 @@ function MessageCreate(props) {
   };
 
   const handleSendMessage = async () => {
-    // setMessagePreview(true);
+    setMessagePreview(true);
     const selectedMediaIds = selectedMedia?.map((media) => media?.id);
     const contactsId = messageSender?.id;
     const data = {
-      "platform": messageType,
-      "media_placeholder_id": selectedMediaIds,
-      "filter_ids": messageReceiver,
-      "send_at": date,
-      "body": messageText,
-      'contact_ids': contactsId,
-      'user_id': JSON.parse(localStorage.getItem("user")).id,
+      platform: messageType,
+      media_placeholder_id: selectedMediaIds,
+      filter_ids: messageReceiver,
+      send_at: date,
+      body: messageText,
+      contact_ids: contactsId,
+      user_id: JSON.parse(localStorage.getItem("user")).id,
     }
 
 
@@ -2654,7 +2675,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
@@ -2744,7 +2765,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
@@ -2827,7 +2848,7 @@ function MessageCreate(props) {
                                   style={{
                                     boxShadow: 'none',
                                     width: "100%",
-                                    border: "1px solid rgb(216, 216, 216)",
+                                    // border: "1px solid rgb(216, 216, 216)",
                                     borderRadius: 4,
                                     height: 40,
                                     color: '#888',
@@ -3009,7 +3030,7 @@ function MessageCreate(props) {
 
 
                   </Grid>
-                  {" "}
+
                   <div
                     style={{
                       width: "100%",
@@ -3056,12 +3077,8 @@ function MessageCreate(props) {
                       >
                         Send As:
                       </p>
-                      {/* </Grid> */}
-                      {/* <Grid
-                        item
-                        md={displaySendTo ? 10 : 11}
-                        xs={displaySendTo ? 10 : 11}
-                      > */}
+
+
                       {messageType ? (
                         renderMessageTypeTag(messageType)
                       ) : (
@@ -3095,6 +3112,7 @@ function MessageCreate(props) {
                             onMouseEnter={() => {
                               setDisplayCreateMessage(true);
                               setDisplayMessageSenders(false);
+                            
                             }}
                           ></IconTextField>
                           <div
@@ -3103,7 +3121,7 @@ function MessageCreate(props) {
                             style={{
                               marginLeft: 180,
                               marginTop: -40,
-                              display: displayCreateMessage ? "block" : "none",
+                              display: displayCreateMessage===false?'none':'block',
                             }}
                             onMouseLeave={() => {
                               setDisplayCreateMessage(false);
@@ -3139,7 +3157,7 @@ function MessageCreate(props) {
                               <p
                                 style={{
                                   marginLeft: 16,
-                               
+
                                   fontSize: '10px',
                                   fontWeight: 300,
                                   marginBottom: -4,
@@ -3149,7 +3167,8 @@ function MessageCreate(props) {
                                 *Select a default "Send As" option if a contact does not have a set Prefered Channel
                               </p>
                             </Grid>
-                            {[
+
+                            {/* {[
                               {
                                 title: "Twitter DM",
                                 icon: (
@@ -3157,6 +3176,7 @@ function MessageCreate(props) {
                                     className={classes.messageTypeIcon}
                                   ></FaTwitter>
                                 ),
+
                               },
                               {
                                 title: "Personal Text",
@@ -3174,31 +3194,254 @@ function MessageCreate(props) {
                                   ></FaComment>
                                 ),
                               },
-                            ].map((type,i) => {
-                              return (
-                                <Grid
-                                  container
-                                  alignItems="center"
-                                  className={classes.messagetypeGrid}
-                                  onClick={() => {
-                                    setMessageType(type);
-                                  }}
-                                >
-                                  {type.icon}
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontWeight: 600,
-                                      marginLeft: 16,
-                                      width: "65%"
+                            ]
+                              .map((type, i) => {
+                                return (
+                                  <Grid
+                                    container
+                                    alignItems="center"
+                                    className={classes.messagetypeGrid}
+                                    onClick={() => {
+                                      setDisplayCreateMessage(true);
+
+                                      setMessageType(type)
                                     }}
                                   >
-                                    {type.title}
-                                  </p>
-                                  <CheckCircle style={{ color:'gray' , fontSize: 18 }}></CheckCircle>
-                                </Grid>
-                              );
-                            })}
+                                    {type.icon}
+                                    <p
+                                      style={{
+                                        margin: 0,
+                                        fontWeight: 600,
+                                        marginLeft: 16,
+                                        width: "65%"
+                                      }}
+                                    >
+                                      {type.title}
+                                    </p>
+                                    <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                  </Grid>
+
+
+                                );
+                              })} */}
+
+
+                            {/* ///////////Twitter Dm section////////////// */}
+                            {twitterDm === false ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  settwitterDm(true)
+                                  setPersonalText(false)
+                                  setrsText(false)
+                                  // setMessageType([{
+                                  //   title: 'Twitter DM',
+                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+                                  // }])
+
+                                }}
+                              >
+                                <FaTwitter
+                                  className={classes.messageTypeIcon}
+                                ></FaTwitter>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Twitter DM
+                                </p>
+                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+                            </> : twitterDm === true ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                style={{
+                              
+
+                                }}
+                                onClick={() => {
+                                  settwitterDm(false)
+                                  setPersonalText(false)
+                                  setrsText(false)
+                                  
+                                  // setMessageType([{
+                                  //   title: 'Twitter DM',
+                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+
+                                  // }])
+                                }}
+                              >
+                                <FaTwitter
+                                  className={classes.messageTypeIcon}
+                                ></FaTwitter>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Twitter DM
+                                </p>
+                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+
+                            </> : null}
+
+                            {/* ///////////Personal Text section////////////// */}
+
+                            {personalText === false ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  settwitterDm(false)
+                                  setPersonalText(true)
+                                  setrsText(false)
+                                  // setMessageType([{
+                                  //   title: ' Personal Text',
+                                  //   icon: (<FaPhone
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaPhone>)
+                                  // }])
+                                }}
+                              >
+                                <FaPhone
+                                  className={classes.messageTypeIcon}
+                                ></FaPhone>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Personal Text
+                                </p>
+                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+                            </> : personalText === true ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  settwitterDm(false)
+                                  setPersonalText(false)
+                                  setrsText(false)
+                                  // setMessageType([{
+                                  //   title: ' Personal Text',
+                                  //   icon: (<FaPhone
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaPhone>)
+                                  // }])
+
+                                }}
+                              >
+                                <FaPhone
+                                  className={classes.messageTypeIcon}
+                                ></FaPhone>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Personal Text
+                                </p>
+                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+
+                            </> : null}
+                            {/* ///////////Rs Text section////////////// */}
+
+                            {rsText === false ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  settwitterDm(false)
+                                  setPersonalText(false)
+                                  setrsText(true)
+                                  setMessageType([{
+                                    title: ' Rs Text',
+                                    icon: (<FaComment
+                                      className={classes.messageTypeIcon}
+                                    ></FaComment>)
+                                  }])
+                                }}
+                              >
+                                <FaComment
+                                  className={classes.messageTypeIcon}
+                                ></FaComment>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Rs Text
+                                </p>
+                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+                            </> : rsText === true ? <>
+                              <Grid
+                                container
+                                alignItems="center"
+                                className={classes.messagetypeGrid}
+                                onClick={() => {
+                                  settwitterDm(false)
+                                  setPersonalText(false)
+                                  setrsText(false)
+                                  setMessageType([{
+                                    title: ' Rs Text',
+                                    icon: (<FaComment
+                                      className={classes.messageTypeIcon}
+                                    ></FaComment>)
+                                  }])
+
+                                }}
+                              >
+                                <FaComment
+                                  className={classes.messageTypeIcon}
+                                ></FaComment>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 16,
+                                    width: "65%"
+                                  }}
+                                >
+                                  Rs Text
+                                </p>
+                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                              </Grid>
+
+                            </> : null}
+
+
+
+
+
+
+
                           </div>
                         </div>
                       )}
