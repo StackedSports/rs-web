@@ -89,7 +89,7 @@ const MediaItem = (props) => {
                 }
                 {
                     props.isPlaceHolder ?
-                        <PlaceHolderImageView url={m.media_preview}/> :
+                        <PlaceHolderImageView url={m.media && m.media.length>0 && m.media[0].urls.thumb}/> :
                         <img
                             style={{width: "80%", height: 190, objectFit: "contain"}}
                             src={m.urls && m.urls.thumb}

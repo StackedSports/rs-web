@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {makeStyles} from "@material-ui/core";
-
 
 
 const useStyles = makeStyles({
@@ -48,13 +47,13 @@ const useStyles = makeStyles({
 });
 
 
-export default function Sidebar(props){
+export default function Sidebar(props) {
     const classes = useStyles();
 
-    const myMediaContacts=props.myMediaContacts;
+    const myMediaContacts = props.myMediaContacts;
 
     return (
-        <div style={{ width: "15%",height:'90vh' }}>
+        <div style={{width: "15%", height: '90vh'}}>
             <p
                 style={{
                     padding: 5,
@@ -73,7 +72,7 @@ export default function Sidebar(props){
             <p className={classes.sideFilter}>
                 My Media{" "}
                 <KeyboardArrowDownIcon
-                    style={{ fontSize: 26, marginLeft: 20 }}
+                    style={{fontSize: 26, marginLeft: 20}}
                 ></KeyboardArrowDownIcon>
             </p>
             {myMediaContacts &&
@@ -95,59 +94,84 @@ export default function Sidebar(props){
             <p
                 className={classes.sideFilter}
                 onClick={() => {
-                    //setshowBoardFilters(!showBoardFilters);
+                    props.addDataToFilter(
+                        "Recent",
+                        "recent"
+                    );
                 }}
             >
                 Recent
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
             <p
                 className={classes.sideFilter}
                 onClick={() => {
-                    setshowBoardFilters(!showBoardFilters);
+                    props.addDataToFilter(
+                        "Image",
+                        "file_type"
+                    );
                 }}
             >
                 Images
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
             <p
                 className={classes.sideFilter}
                 onClick={() => {
-                    //setshowBoardFilters(!showBoardFilters);
+                    props.addDataToFilter(
+                        "Video",
+                        "file_type"
+                    );
                 }}
             >
                 Videos
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
             <p
                 className={classes.sideFilter}
                 onClick={() => {
-                    //setshowBoardFilters(!showBoardFilters);
+                    props.addDataToFilter(
+                        "GIF",
+                        "file_type"
+                    );
                 }}
             >
                 Gifs
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
             {/*showBoardFilters === true && <div></div>*/}
 
-            <p className={classes.sideFilter}>
+            <p className={classes.sideFilter}
+               onClick={() => {
+                   props.addDataToFilter(
+                       "Personalized Media",
+                       "personalized"
+                   );
+               }}>
                 Personalized Media
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
-            <p className={classes.sideFilter}>
+            <p className={classes.sideFilter}
+               onClick={() => {
+                   props.addDataToFilter(
+                       "Placeholders",
+                       "placeholders"
+                   );
+               }}
+            >
                 Placeholders
                 <ArrowForwardIosIcon
-                    style={{ fontSize: 17, marginLeft: 17 }}
+                    style={{fontSize: 17, marginLeft: 17}}
                 ></ArrowForwardIosIcon>
             </p>
         </div>

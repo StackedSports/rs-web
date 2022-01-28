@@ -262,6 +262,22 @@ const PlaceholderTableList = (props) => {
                         }
                     }
                 }
+            }else if (f.type === 'recent') {
+                for (let item of itemsList) {
+                    if (item && item.created_at) {
+                        const startDate=new Date(new moment().clone().subtract({ days: 30 }));
+                        const endDate=new Date(new moment());
+                        console.log('start date = ',startDate.getTime(),' end date = ',endDate.getTime(),' item = ',
+                            (new Date(item.created_at).getTime() <= startDate.getTime()));
+
+                        if((new Date(item.created_at).getTime() >= startDate.getTime()
+                            && (new Date(item.created_at).getTime()) <= endDate.getTime())){
+                            if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                                tempItemsList.push(item)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -270,7 +286,7 @@ const PlaceholderTableList = (props) => {
     }
 
 
-    console.log('items list = ', tempItemsList)
+    console.log('items list = ', props)
     return (
 
         <div style={{

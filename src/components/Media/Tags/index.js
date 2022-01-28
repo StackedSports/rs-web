@@ -20,6 +20,8 @@ const Tag=(props)=>{
                                 tag={tag}
                                 setShowTagsDialog={props.handleShowTagsDialog}
                                 setOpenSnackBar={props.handleOpenSnackBar}
+                                addDataToFilter={props.addDataToFilter}
+
                             />
                         );
                     }

@@ -1,10 +1,10 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import {Grid, makeStyles} from "@material-ui/core";
 import moment from "moment";
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
-import { isImage, isVideo } from '../../../../utils/FileUtils';
+import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
+import {isImage, isVideo} from '../../../../utils/FileUtils';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 
@@ -89,7 +89,7 @@ const useStyles = makeStyles({
 const PlaceholderItem = (props) => {
     const classes = useStyles();
     const item = props.item;
-    const [checkboxval, setcheckboxval]= useState(false);
+    const [checkboxval, setcheckboxval] = useState(false);
     return (
         <Grid
             onClick={() => {
@@ -122,27 +122,28 @@ const PlaceholderItem = (props) => {
         >
 
             <Grid item md={0.5} xs={0.5} style={{margin: 0}}>
-                {item.hover || item.isSelected?
+                {item.hover || item.isSelected ?
                     <span className={classes.tableHeading}
-                    onClick={(e)=>{
-                    e.stopPropagation();
-                    }
-                    }
-                    >  {<Checkbox checked={item.isSelected} onChange={(e)=>props.handleItemSelected(props.index)} className={classes.tableHeading}/> }</span>
+                          onClick={(e) => {
+                              e.stopPropagation();
+                          }
+                          }
+                    >  {<Checkbox checked={item.isSelected} onChange={(e) => props.handleItemSelected(props.index)}
+                                  className={classes.tableHeading}/>}</span>
                     :
                     (item.url.indexOf(".gif") > -1 ? (
                         <GifIcon></GifIcon>
                     ) : item.url.indexOf(".png") > -1 ||
-                        item.url.indexOf(".jpg") > -1 ||
-                        item.url.indexOf(".jpeg") > -1 ? (
+                    item.url.indexOf(".jpg") > -1 ||
+                    item.url.indexOf(".jpeg") > -1 ? (
                         <FaImage
-                            style={{ color: "#3871da", fontSize: 20 }}
+                            style={{color: "#3871da", fontSize: 20}}
                         ></FaImage>
                     ) : item.url.indexOf(".mp4") > -1 ? (
                         <FaVideo></FaVideo>
                     ) : (
                         <FaFilePdf
-                            style={{ color: "#3871da", fontSize: 20 }}
+                            style={{color: "#3871da", fontSize: 20}}
                         ></FaFilePdf>
                     ))}
             </Grid>
@@ -151,7 +152,7 @@ const PlaceholderItem = (props) => {
                 <span
                     className={classes.tableFields}
 
-                    style={{ marginLeft: 10, cursor: 'pointer' }}
+                    style={{marginLeft: 10, cursor: 'pointer'}}
                 >
                     {(item.name).length > 15 ? (item.name.slice(0, 15) + ' ...') : item.name}
                 </span>
@@ -159,12 +160,12 @@ const PlaceholderItem = (props) => {
             <Grid item md={1} xs={1} onClick={(e) => {
 
 
-                if (props.isPlaceHolder) {
-                    /*if (isVideo(item.media_preview)) {
+                if (props.isPlaceholder) {
+                    if (isVideo(item.media_preview)) {
                         props.setLightboxVideo(item.media_preview);
                     } else  {
                         props.setLightboxPicture(item.media_preview);
-                    }*/
+                    }
                 } else {
                     if (item.file_type.indexOf("video") > -1) {
                         props.setLightboxVideo(item.urls.large);
@@ -174,40 +175,55 @@ const PlaceholderItem = (props) => {
                 }
 
 
-
                 e.stopPropagation();
             }}>
                 <img
 
-                    style={{ width: 30, height: 30, marginLeft: 13, cursor: 'pointer' }}
+                    style={{width: 30, height: 30, marginLeft: 13, cursor: 'pointer'}}
                     src={item.url}
                 ></img>
             </Grid>
 
             <Grid item md={2} xs={2}>
                 <span className={classes.tableFields}>
-                    {(item.name).length > 15 ? (
-                        <CheckCircleIcon fontSize='small' style={{
-                            fill: '#006644',
-                            marginTop: '5px',
-                            marginLeft: 50
+                    {
+                        props.isPlaceholder && item.media ? (
+                            item.media.length > 0 && item.media[0].activity &&
+                            Object.keys(item.media[0].activity)
+                                .filter((k, i) => item.media[0].activity[k] > 0).length > 0
+                            &&
+                            <CheckCircleIcon fontSize='small' style={{
+                                fill: '#006644',
+                                marginTop: '5px',
+                                marginLeft: 50
 
-                        }} />) : ''}
+                            }}/>
+                        ) : (
+                             item.activity &&
+                            Object.keys(item.activity)
+                                .filter((k, i) => item.activity[k] > 0).length > 0 &&
+                            <CheckCircleIcon fontSize='small' style={{
+                                fill: '#006644',
+                                marginTop: '5px',
+                                marginLeft: 50
+
+                            }}/>
+                        )
+
+                    }
                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
                 <span
                     className={classes.tableFields}
-                    style={{ marginLeft: 40 }}
+                    style={{marginLeft: 40}}
                 >
-                    {props.isPlaceholder ? (item.media_placeholder_id) :
-                        (item.contact && item.contact.first_name && item.contact.last_name
-                            && item.contact.first_name+' '+item.contact.last_name)}
+                    {props.isPlaceholder && item.media && item.media.length}
                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
                 <span className={classes.tableFields}
-                    style={{ marginLeft: 40 }}>
+                      style={{marginLeft: 40}}>
                     {item.owner && item.owner.first_name && ((item.owner.first_name + ' ' + item.owner.last_name).length > 15 ?
                         (item.owner.first_name + ' ' + item.owner.last_name).slice(0, 14) :
                         (item.owner.first_name + ' ' + item.owner.last_name))
@@ -216,7 +232,7 @@ const PlaceholderItem = (props) => {
             </Grid>
             <Grid item md={2} xs={2}>
                 <span className={classes.tableFields}
-                    style={{ marginLeft: 40 }}
+                      style={{marginLeft: 40}}
                 >
                     {moment(item.created_at).format("MMMM Do YYYY")}
                 </span>

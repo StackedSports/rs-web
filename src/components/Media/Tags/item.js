@@ -11,6 +11,8 @@ const Item=(props)=>{
             onClick={() => {
                 props.setShowTagsDialog(false);
                 props.setOpenSnackBar(true);
+                props.addDataToFilter(props.tag.name, "tag");
+
             }}
             text={props.tag.name}
             textColor="black"

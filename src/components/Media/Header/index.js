@@ -145,16 +145,17 @@ const Header=(props)=>{
                             haveLink={true}
                             Link={<Link id={"toTag"} to="/message-create"></Link>}
                             textColorSelected={"grey"}
-                            textColor={"gray"}
+                            textColor={props.selectedCheckBoxes && props.selectedCheckBoxes.length>0?"blue":'grey'}
                             backgroundColorSelected={"transparent"}
                             backgroundColor={"transparent"}
-                            iconSelectedColor={"gray"}
+                            iconSelectedColor={props.selectedCheckBoxes && props.selectedCheckBoxes.length>0?"blue":'grey'}
                             iconColor={"gray"}
                             text={"Tag"}
                             Icon={
                                 <LocalOfferOutlinedIcon></LocalOfferOutlinedIcon>
                             }
-                            list={null}
+                            onClick={props.selectedCheckBoxes && props.selectedCheckBoxes.length>0
+                            && props.setShowTagsDialog}
                         />
 
                     )}

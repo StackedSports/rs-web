@@ -8,22 +8,30 @@ import PlaceholderItem from "../Media/TableList/item";
 
 
 const Placeholder = (props) => {
-    console.log('placeholders = ',props.placeholders)
+    console.log('placeholders = ', props.placeholders)
 
-    let placeholders=null;
-    if(props.showlistView && props.placeholders){
-        placeholders=(props.placeholders).filter((item)=>item.name)
-            .map((item)=>{ return {name:item.name,url:item.media_preview?item.media_preview:'',date:item.created_at,id:item.id,
-                type:'placeholder'}});
-    }else{
-        placeholders=props.placeholders;
-        if(placeholders)
-        placeholders=placeholders.map((placeholder)=>{
-            placeholder.type="placeholder";
-            return placeholder;
-        })
+    let placeholders = null;
+    if (props.showlistView && props.placeholders) {
+        placeholders = (props.placeholders).filter((item) => item.name)
+            .map((item) => {
+                return {
+                    ...item, name: item.name,
+                    url: item.media && item.media.length && item.media[0].urls['thumb'],
+                    media_preview:item.media && item.media.length && item.media[0].urls['original'],
+                    date: item.created_at,
+                    id: item.id,
+                    type: 'placeholder'
+                }
+            });
+    } else {
+        placeholders = props.placeholders;
+        if (placeholders)
+            placeholders = placeholders.map((placeholder) => {
+                placeholder.type = "placeholder";
+                return placeholder;
+            })
     }
-    console.log('placeholders = ',props.showlistView)
+    console.log('placeholders = ', props.showlistView)
 
 
     return (

@@ -546,6 +546,9 @@ function Media(props) {
 
         if (index === -1 && type!=='date_created') {
             filter.push({ username: value,type:type?type:'owner',raw });
+            setFilter(filter);
+            setCount(count + 1)
+
         }else{
             if(type==='date_created'){
                 let tempFilter=filter.filter((f)=>f.type!=='date_created');
