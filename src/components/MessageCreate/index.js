@@ -49,6 +49,7 @@ import MediaComponnet from "../Media/MediaComponent";
 import {
   getAllContacts,
   getBoardFilters,
+  getAllContactsSearch,
   getMedia,
   getTeamContacts,
   getPlaceholder,
@@ -718,8 +719,8 @@ function MessageCreate(props) {
       }
     );
   };
-const getCreateSearch=()=>{
-  getAllContacts().then(
+const getCreateSearch=(page,search)=>{
+  getAllContactsSearch(page,search).then(
     (res) => {
       // console.log("THis is all boards", res);
       var gradYears = [];
@@ -2856,7 +2857,7 @@ const getCreateSearch=()=>{
                                   }}
                                   placeholder="Search Individual boards"
                                   value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
+                                  onChange={(searchVal) => getAllContactsSearch(searchVal)}
                                   onCancelSearch={() => cancelSearch()}
                                 />
                               </div>
@@ -3128,7 +3129,7 @@ const getCreateSearch=()=>{
                             }}
                           >
 
-                            <Grid container alignItems="center" className={classes.messagetypeGrid}  >
+                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
                                 style={{ fontSize: 16 }}
@@ -3150,8 +3151,8 @@ const getCreateSearch=()=>{
 
                                 Set Preffered Channel
                               </p> <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                            </Grid>
-                            <Grid container alignItems="center" className={classes.messagetypeGrid}>
+                            </Grid> */}
+                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}>
 
 
                               <p
@@ -3166,7 +3167,7 @@ const getCreateSearch=()=>{
 
                                 *Select a default "Send As" option if a contact does not have a set Prefered Channel
                               </p>
-                            </Grid>
+                            </Grid> */}
 
                             {/* {[
                               {
@@ -3342,9 +3343,9 @@ const getCreateSearch=()=>{
                                   setrsText(false)
                                   // setMessageType([{
                                   //   title: ' Personal Text',
-                                  //   icon: (<FaPhone
+                                  //   icon: (<BiSave
                                   //     className={classes.messageTypeIcon}
-                                  //   ></FaPhone>)
+                                  //   ></BiSave>)
                                   // }])
 
                                 }}
@@ -3377,12 +3378,12 @@ const getCreateSearch=()=>{
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(true)
-                                  setMessageType([{
-                                    title: ' Rs Text',
-                                    icon: (<FaComment
-                                      className={classes.messageTypeIcon}
-                                    ></FaComment>)
-                                  }])
+                                  // setMessageType([{
+                                  //   title: ' Rs Text',
+                                  //   icon: (<FaComment
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaComment>)
+                                  // }])
                                 }}
                               >
                                 <FaComment
@@ -3409,12 +3410,12 @@ const getCreateSearch=()=>{
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  setMessageType([{
-                                    title: ' Rs Text',
-                                    icon: (<FaComment
-                                      className={classes.messageTypeIcon}
-                                    ></FaComment>)
-                                  }])
+                                  // setMessageType([{
+                                  //   title: ' Rs Text',
+                                  //   icon: (<FaComment
+                                  //     className={classes.messageTypeIcon}
+                                  //   ></FaComment>)
+                                  // }])
 
                                 }}
                               >
@@ -3439,7 +3440,49 @@ const getCreateSearch=()=>{
 
 
 
+<p className="text-center  mt-2"style={{cursor:'pointer'}} 
+ onClick={() => {
+  // settwitterDm(false)
+  // setPersonalText(false)
+  // setrsText(false)
+  // setMessageType([{
+  //   title: ' Rs Text',
+  //   icon: (<FaComment
+  //     className={classes.messageTypeIcon}
+  //   ></FaComment>)
+  // }])
+  if(twitterDm===true){
+    setMessageType([{
+        title: ' Twitter Dm',
+        icon: (   <FaTwitter
+          className={classes.messageTypeIcon}
+        ></FaTwitter>)
+      }])
+  }  if(personalText===true){
+    setMessageType([{
+        title: ' Personal Text',
+        icon: (    <FaPhone
+          className={classes.messageTypeIcon}
+        ></FaPhone>)
+      }])
+  }
+  if(rsText===true){
+    setMessageType([{
+        title: ' Rs Text',
+        icon: (<FaComment
+              className={classes.messageTypeIcon}
+            ></FaComment>)
+      }])
+  }
 
+}}
+> 
+<CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+
+save 
+
+
+</p>
 
 
                           </div>
