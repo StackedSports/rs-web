@@ -154,7 +154,8 @@ const MediaDetails = (props) => {
         && selectedPlaceholder.contact.last_name) {
             const findIndex = contacts.findIndex((c) => c.first_name + ' ' + c.last_name
                 ===
-                selectedPlaceholder.contact.first_name+' '+selectedPlaceholder.contact.last_name)
+                selectedPlaceholder.contact.first_name+' '+selectedPlaceholder.contact.last_name);
+            console.log('find index = ',findIndex);
             if (findIndex != -1) {
                 const contact = contacts[findIndex];
                 selectedAssociatePlaceholders.push({

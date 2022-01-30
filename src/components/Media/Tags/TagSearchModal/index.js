@@ -13,7 +13,7 @@ const TagSearchModal =(props)=>{
         <DialogBox
             // title={"POST"}
             maxWidth="sm"
-            open={false}
+            open={props.showTagsDialog}
             message={
                 <div>
                     <p

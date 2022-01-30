@@ -227,7 +227,7 @@ function MediaComponent(props) {
     const [showFiltersRow, setShowFiltersRow] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
     const [showSideFilters, setshowSideFilters] = useState(true);
-    const [showTagsDialog, setShowTagsDialog] = useState(true);
+    const [showTagsDialog, setShowTagsDialog] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [tagSearch, setTagSearch] = useState("");
     const [showMediaStats, setShowMediaStats] = useState(false);
@@ -370,6 +370,9 @@ function MediaComponent(props) {
         setShowBackButton(back);
     }
 
+    const handleTagsDialog=()=>{
+        setShowTagsDialog(!showTagsDialog)
+    }
 
     const handleSetShowFilters = () => {
         console.log('handleSetShowFilters = ', filter);
@@ -1492,6 +1495,7 @@ function MediaComponent(props) {
                 showAnimation={showAnimation}
                 showSideFilters={showSideFilters}
                 showMediaStats={showMediaStats}
+                selectedCheckBoxes={selectedCheckBoxes}
                 dropDownButtonItemsList={dropDownButtonItemsList}
                 showDrawer={showDrawer}
                 setShowBackButton={handleSetShowBackButton}
@@ -1504,6 +1508,7 @@ function MediaComponent(props) {
                 showFilter={!displayListContainer.selectedPlaceholder ? true : false}
                 setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
+                setShowTagsDialog={handleTagsDialog}
             />
 
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
@@ -1764,6 +1769,7 @@ function MediaComponent(props) {
                                     CustomToggle={CustomToggle}
                                     handleShowTagsDialog={handleShowTagsDialog}
                                     handleOpenSnackBar={handleOpenSnackBar}
+                                    addDataToFilter={props.addDataToFilter}
                                 />
                             )}
                         </div>
@@ -1773,7 +1779,7 @@ function MediaComponent(props) {
             }
             <Grid container direction="row" alignItems="center"></Grid>
             {
-                props.filter.length <= 0 &&
+
                 < TagSearchModal
                     showTagsDialog={showTagsDialog}
                     tagSearch={tagSearch}
