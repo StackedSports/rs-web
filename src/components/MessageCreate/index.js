@@ -219,14 +219,14 @@ function MessageCreate(props) {
 
   const [AllSearchBoards, setAllSearchBoards] = useState(null);
 
-  
+
   const [positions, setAllPositions] = useState(null);
   const [rows, setRows] = useState(allBoards);
   const [individualrows, setindividualRows] = useState(allindividualBoards);
 
 
   const [searched, setSearched] = useState("");
-  
+
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
@@ -281,14 +281,15 @@ function MessageCreate(props) {
 
     const filteredRows = allBoards.filter((row) => {
       return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-    }); 
+    });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
       return row.first_name.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setRows(filteredRows);
-    getMyContactsSearch()
     setindividualRows(filteredRowsIndv)
-    
+
+    getMyContactsSearch()
+
   };
   const requestSearchForindividual = (searchedVal) => {
 
@@ -297,7 +298,7 @@ function MessageCreate(props) {
     });
     getMyContactsSearch()
     setRows(filteredRows);
-    
+
   };
   const cancelSearchIndividual = () => {
     setSearched("");
@@ -314,6 +315,8 @@ function MessageCreate(props) {
     (data) => {
       console.log(data);
       setTableData(tableData);
+      requestSearch()
+      // setindividualRows(s)
       // action on update of movies
     },
     [tableData]
@@ -327,7 +330,7 @@ function MessageCreate(props) {
     },
   ]);
   console.log('===========allindividualBoards=========================');
-  console.log(allindividualBoards,"allindividualBoards");
+  console.log(allindividualBoards, "allindividualBoards");
   console.log('======================allindividualBoards==============');
   const CalendarFilter = () => {
     return (
@@ -750,25 +753,25 @@ function MessageCreate(props) {
     console.log("This is the date", page);
     // || "2020-12-13"
     getAllContacts(page).then(
-        (res) => {
-            // console.log("THis is all contacts res", res);
-            if (res.statusText === "OK") {
-                console.log("These are all contacts", res.data);
-                setAllindividualBoards(res.data);
-                // setAllBoards(res.data);
-                // setCopyContacts(res.data);
-                // document.getElementById("infinit").scrollTop = 0;
-                setFetching(false);
-            }
-        },
-        (error) => {
-            getMyContactsSearch(1);
-            setPage(1);
-            console.log("this is error all contacts", error);
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all contacts", res.data);
+          setAllindividualBoards(res.data);
+          // setAllBoards(res.data);
+          // setCopyContacts(res.data);
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
         }
+      },
+      (error) => {
+        getMyContactsSearch(1);
+        setPage(1);
+        console.log("this is error all contacts", error);
+      }
     );
     // setLoading(false)
-};
+  };
   // const getCreateSearch = () => {
   //   getAllContacts,Search().then(
   //     (res) => {
@@ -2926,50 +2929,50 @@ function MessageCreate(props) {
                                 className="fullHeightCreateMessageSide"
                               >
                                 {individualrows &&
-                                  individualrows.map((indv,ind) => {
-                                
+                                  individualrows.map((indv, ind) => {
+
 
                                     return (
-                                    
-                                        <div
-key={ind}
-                                          style={{
 
-                                            borderTop: "1px solid #edeef2",
-                                            width: "100%",
-                                            height: 100,
-                                            color: "#9e9e9e",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() => {
-                                            addDataToReceivers(indv.first_name);
-                                            // setMessageReceiver();
-                                          }}
-                                          className="d-flex align-items-center"
-                                        >
-                                          {/* {indv?.contacts?.profile_images?.map((image,index)=>{
+                                      <div
+                                        key={ind}
+                                        style={{
+
+                                          borderTop: "1px solid #edeef2",
+                                          width: "100%",
+                                          height: 100,
+                                          color: "#9e9e9e",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          addDataToReceivers(indv.first_name, indv.first_name);
+                                          // setMessageReceiver();
+                                        }}
+                                        className="d-flex align-items-center"
+                                      >
+                                        {/* {indv?.contacts?.profile_images?.map((image,index)=>{
                                             return( */}
 
 
-                                          <div className="mr-4" >
-                                            <img
-                                              src={indv?.twitter_profile?.profile_image}
-                                              style={{
-                                                width: 35,
-                                                height: 35,
-                                                borderRadius: 20,
-                                                // marginTop: 5,
+                                        <div className="mr-4" >
+                                          <img
+                                            src={indv?.twitter_profile?.profile_image}
+                                            style={{
+                                              width: 35,
+                                              height: 35,
+                                              borderRadius: 20,
+                                              // marginTop: 5,
 
-                                              }}
-                                            ></img>
+                                            }}
+                                          ></img>
 
-                                          </div>
-                                          {/* )
+                                        </div>
+                                        {/* )
                                           })} */}
 
-                                          {indv.first_name}
+                                        {indv.first_name} {indv.last_name}
 
-                                          {/* {boards?.contacts?.profile_images?.map(
+                                        {/* {boards?.contacts?.profile_images?.map(
                                             (image, index) => {
                                               if (index < 8) {
                                               return (
@@ -2987,14 +2990,14 @@ key={ind}
                                             }
                                             }
                                           )} */}
-                                          {/* <img></img> */}
-                                          {/* <p style={{ color: "#3871da" }}>
+                                        {/* <img></img> */}
+                                        {/* <p style={{ color: "#3871da" }}>
             {boards?.athletes?.profile_images?.length}{" "}
             contacts
           </p> */}
-                                        </div>
-                                      
-                                      
+                                      </div>
+
+
                                     );
 
                                   })}
@@ -3803,7 +3806,7 @@ key={ind}
                       </p>
                       {/* </Grid> */}
                       {/* <Grid item md={11} xs={11}> */}
-                      
+
                       {messageReceiver.length > 0 ? (
                         <Grid
                           container
