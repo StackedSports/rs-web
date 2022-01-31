@@ -116,12 +116,12 @@ const MediaDetails = (props) => {
 
         if (selectedPlaceholder &&
             selectedPlaceholder.owner &&
-            selectedPlaceholder.owner.twitter_profile) {
+            selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name) {
 
             selectedTeamContacts.push({
                 id: selectedPlaceholder.owner.id,
-                username: selectedPlaceholder.owner.twitter_profile.screen_name,
-                url: selectedPlaceholder.owner.twitter_profile.profile_image
+                username: selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name,
+                url: ''
             });
         }
 
