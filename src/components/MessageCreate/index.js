@@ -279,11 +279,11 @@ function MessageCreate(props) {
 
   const requestSearch = (searchedVal) => {
 
-    const filteredRows = allBoards.filter((row) => {
-      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    const filteredRows = allBoards?.filter((row) => {
+      return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
     });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
-      return row.first_name.toLowerCase().includes(searchedVal.toLowerCase());
+      return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setRows(filteredRows);
     setindividualRows(filteredRowsIndv)
@@ -2956,7 +2956,8 @@ function MessageCreate(props) {
 
                                         <div className="mr-4" >
                                           <img
-                                            src={indv?.twitter_profile?.profile_image}
+                                            alt={indv?.first_name}
+                                            src={indv.twitter_profile.profile_image||AvatarImg}
                                             style={{
                                               width: 35,
                                               height: 35,
@@ -3169,7 +3170,12 @@ function MessageCreate(props) {
                                 }}
                               ></ExpandMoreOutlinedIcon>
                             }
-                            onMouseEnter={() => {
+                            // onMouseEnter={() => {
+                            //   setDisplayCreateMessage(true);
+                            //   setDisplayMessageSenders(false);
+
+                            // }}
+                            onClick={() => {
                               setDisplayCreateMessage(true);
                               setDisplayMessageSenders(false);
 
@@ -3296,6 +3302,12 @@ function MessageCreate(props) {
                                   settwitterDm(true)
                                   setPersonalText(false)
                                   setrsText(false)
+                                  setMessageType([{
+                                    title: ' Twitter Dm',
+                                    icon: (<FaTwitter
+                                      className={classes.messageTypeIcon}
+                                    ></FaTwitter>)
+                                  }])
                                   // setMessageType([{
                                   //   title: 'Twitter DM',
                                   //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
@@ -3331,6 +3343,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
+                                  setMessageType([{
+                                    title: ' Twitter Dm',
+                                    icon: (<FaTwitter
+                                      className={classes.messageTypeIcon}
+                                    ></FaTwitter>)
+                                  }])
 
                                   // setMessageType([{
                                   //   title: 'Twitter DM',
@@ -3368,12 +3386,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(true)
                                   setrsText(false)
-                                  // setMessageType([{
-                                  //   title: ' Personal Text',
-                                  //   icon: (<FaPhone
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></FaPhone>)
-                                  // }])
+                                  setMessageType([{
+                                    title: ' Personal Text',
+                                    icon: (<FaPhone
+                                      className={classes.messageTypeIcon}
+                                    ></FaPhone>)
+                                  }])
                                 }}
                               >
                                 <FaPhone
@@ -3400,12 +3418,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  // setMessageType([{
-                                  //   title: ' Personal Text',
-                                  //   icon: (<BiSave
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></BiSave>)
-                                  // }])
+                                  setMessageType([{
+                                    title: ' Personal Text',
+                                    icon: (<BiSave
+                                      className={classes.messageTypeIcon}
+                                    ></BiSave>)
+                                  }])
 
                                 }}
                               >
@@ -3437,12 +3455,13 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(true)
-                                  // setMessageType([{
-                                  //   title: ' Rs Text',
-                                  //   icon: (<FaComment
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></FaComment>)
-                                  // }])
+                                  
+                                  setMessageType([{
+                                    title: ' Rs Text',
+                                    icon: (<FaComment
+                                      className={classes.messageTypeIcon}
+                                    ></FaComment>)
+                                  }])
                                 }}
                               >
                                 <FaComment
@@ -3469,12 +3488,12 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  // setMessageType([{
-                                  //   title: ' Rs Text',
-                                  //   icon: (<FaComment
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></FaComment>)
-                                  // }])
+                                  setMessageType([{
+                                    title: ' Rs Text',
+                                    icon: (<FaComment
+                                      className={classes.messageTypeIcon}
+                                    ></FaComment>)
+                                  }])
 
                                 }}
                               >
@@ -3499,49 +3518,7 @@ function MessageCreate(props) {
 
 
 
-                            <p className="text-center  mt-2" style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                // settwitterDm(false)
-                                // setPersonalText(false)
-                                // setrsText(false)
-                                // setMessageType([{
-                                //   title: ' Rs Text',
-                                //   icon: (<FaComment
-                                //     className={classes.messageTypeIcon}
-                                //   ></FaComment>)
-                                // }])
-                                if (twitterDm === true) {
-                                  setMessageType([{
-                                    title: ' Twitter Dm',
-                                    icon: (<FaTwitter
-                                      className={classes.messageTypeIcon}
-                                    ></FaTwitter>)
-                                  }])
-                                } if (personalText === true) {
-                                  setMessageType([{
-                                    title: ' Personal Text',
-                                    icon: (<FaPhone
-                                      className={classes.messageTypeIcon}
-                                    ></FaPhone>)
-                                  }])
-                                }
-                                if (rsText === true) {
-                                  setMessageType([{
-                                    title: ' Rs Text',
-                                    icon: (<FaComment
-                                      className={classes.messageTypeIcon}
-                                    ></FaComment>)
-                                  }])
-                                }
-
-                              }}
-                            >
-                              <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
-
-                              save
-
-
-                            </p>
+                           
 
 
                           </div>
@@ -3614,7 +3591,7 @@ function MessageCreate(props) {
                                 }}
                               ></FaPlus>
                             }
-                            onMouseEnter={() => {
+                            onClick={() => {
                               setDisplayCreateMessage(false);
                               setDisplayMessageSenders(true);
                             }}
@@ -3629,6 +3606,7 @@ function MessageCreate(props) {
                             }}
                             onMouseLeave={() => {
                               setDisplayMessageSenders(false);
+                              setDisplayCreateMessage(false)
                             }}
                           >
                             <p
@@ -3875,6 +3853,8 @@ function MessageCreate(props) {
                               // }}
                               onClick={() => {
                                 setDisplaySendTo(true);
+
+
                               }}
                             ></IconTextField>
                           )}
@@ -3913,7 +3893,8 @@ function MessageCreate(props) {
                             //   setDisplayMessageSenders(false);
                             // }}
                             onClick={() => {
-                              setDisplaySendTo(true);
+                              // setDisplaySendTo(true);
+                                {displaySendTo===true?setDisplaySendTo(false):displaySendTo===false?setDisplaySendTo(true):null}
                             }}
                           ></IconTextField>
                         </div>
