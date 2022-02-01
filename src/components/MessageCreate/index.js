@@ -2957,7 +2957,7 @@ function MessageCreate(props) {
                                         <div className="mr-4" >
                                           <img
                                             alt={indv?.first_name}
-                                            src={indv.twitter_profile.profile_image||AvatarImg}
+                                            src={indv.twitter_profile.profile_image || AvatarImg}
                                             style={{
                                               width: 35,
                                               height: 35,
@@ -3455,7 +3455,7 @@ function MessageCreate(props) {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(true)
-                                  
+
                                   setMessageType([{
                                     title: ' Rs Text',
                                     icon: (<FaComment
@@ -3518,7 +3518,7 @@ function MessageCreate(props) {
 
 
 
-                           
+
 
 
                           </div>
@@ -3894,7 +3894,7 @@ function MessageCreate(props) {
                             // }}
                             onClick={() => {
                               // setDisplaySendTo(true);
-                                {displaySendTo===true?setDisplaySendTo(false):displaySendTo===false?setDisplaySendTo(true):null}
+                              { displaySendTo === true ? setDisplaySendTo(false) : displaySendTo === false ? setDisplaySendTo(true) : null }
                             }}
                           ></IconTextField>
                         </div>
