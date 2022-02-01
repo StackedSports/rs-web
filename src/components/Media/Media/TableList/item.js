@@ -95,7 +95,7 @@ const PlaceholderItem = (props) => {
             onClick={() => {
                 if (props.isPlaceholderDetails) {
                     props.setShowMediaStats(true);
-                    props.setSelectedPlaceHolder(item, props.isPlaceholder);
+                    props.setSelectedPlaceHolder(item, props.isPlaceholder,props.placeholderId);
                 } else {
                     props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
                 }

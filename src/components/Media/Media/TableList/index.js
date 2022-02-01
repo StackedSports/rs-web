@@ -278,6 +278,14 @@ const PlaceholderTableList = (props) => {
                         }
                     }
                 }
+            }else if (f.type === 'personalized') {
+                for (let item of itemsList) {
+                    if (item && item.contact ) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
             }
         }
 
@@ -324,6 +332,7 @@ const PlaceholderTableList = (props) => {
                             item={item}
                             index={index}
                             key={item.key}
+                            placeholderId={props.placeholderId}
                             handleItemSelected={handleItemSelected}
                             setShowMediaStats={props.setShowMediaStats}
                             isPlaceholderDetails={props.isPlaceholderDetails}
