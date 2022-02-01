@@ -226,7 +226,9 @@ const PlaceholderTableList = (props) => {
                         }
                     }
                 }
-            } else if (f.type === 'date_created') {
+            } 
+            
+            else if (f.type === 'date_created') {
 
                 const rawFilter=f.raw;
                 for (let item of itemsList) {
@@ -261,8 +263,8 @@ const PlaceholderTableList = (props) => {
                             tempItemsList.push(item)
                         }
                     }
-                }
-            }else if (f.type === 'recent') {
+                }}
+             else if (f.type === 'recent') {
                 for (let item of itemsList) {
                     if (item && item.created_at) {
                         const startDate=new Date(new moment().clone().subtract({ days: 30 }));

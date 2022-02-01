@@ -16,7 +16,8 @@ const MediaItem = (props) => {
     const m = props.item;
 
 
-    console.log('m = ', props)
+    console.log('media contains = ', m)
+    
 
     return (
         <div
@@ -120,7 +121,7 @@ const MediaItem = (props) => {
                             m.media_preview ? isImage(m.media_preview) ? (
                                     <FaImage></FaImage>
                                 ) : isVideo(m.media_preview) > -1 ? (
-                                    <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
+                                    <FaVideo style={{color: "#3871da", fontSize: 20, zIndex: 100}}></FaVideo>
                                 ) : (
                                     <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
                                 ) :
@@ -134,7 +135,7 @@ const MediaItem = (props) => {
                              m.file_type === "image/gif") ? (
                             <GifIcon></GifIcon>
                         ) : m.file_type.indexOf("video") > -1 ? (
-                            <FaVideo style={{color: "#3871da", fontSize: 206, zIndex: 100}}></FaVideo>
+                            <FaVideo style={{color: "#141414", fontSize: 20, zIndex: 100}}></FaVideo>
                         ) : m.file_type.indexOf("image") > -1 ? (
                             <FaImage></FaImage>
                         ) : (
@@ -178,9 +179,13 @@ const MediaItem = (props) => {
                         cursor: 'default'
                     }}
                 >
-                    Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
-                    Coach Graves
-                </p>
+                    Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {"  "}
+                  { m.owner!=null?
+                  
+                  m.owner.first_name +  m.owner.last_name :
+                 m.media[0].owner.first_name + m.media[0].owner.last_name
+
+}</p>
             </Grid>
         </div>
     );
