@@ -88,7 +88,9 @@ const useStyles = makeStyles({
 
 const PlaceholderItem = (props) => {
     const classes = useStyles();
+
     const item = props.item;
+    console.log("tablelist details",item)
     const [checkboxval, setcheckboxval] = useState(false);
     return (
         <Grid
@@ -218,7 +220,14 @@ const PlaceholderItem = (props) => {
                     className={classes.tableFields}
                     style={{marginLeft: 40}}
                 >
-                    {props.isPlaceholder && item.media && item.media.length}
+                    {
+                        item.contact && item.contact.first_name &&
+                        (item.contact.first_name+' '+item.contact.last_name)
+                    }
+                    {props.isPlaceholder && 
+                     item.media && item.media.length 
+            
+                    }
                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -228,13 +237,17 @@ const PlaceholderItem = (props) => {
                         (item.owner.first_name + ' ' + item.owner.last_name).slice(0, 14) :
                         (item.owner.first_name + ' ' + item.owner.last_name))
                     }
+                    {
+                        props.isPlaceholder&& item.media[0] && item.media[0].media_placeholder_id && 
+                        item.media[0].media_placeholder_id
+                    }
                 </span>
             </Grid>
             <Grid item md={2} xs={2}>
                 <span className={classes.tableFields}
                       style={{marginLeft: 40}}
                 >
-                    {moment(item.created_at).format("MMMM Do YYYY")}
+                    {moment(item.date).format("MMMM Do YYYY")}
                 </span>
             </Grid>
 

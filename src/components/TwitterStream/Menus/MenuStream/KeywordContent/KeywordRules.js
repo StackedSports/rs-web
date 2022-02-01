@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Paper } from '@mui/material';
+import { FaStackpath } from 'react-icons/fa';
 
 
 function KeywordRules(props) {
@@ -31,7 +32,8 @@ function KeywordRules(props) {
   
   ];
 
-  const [selectedItem,setSelecteditem]=React.useState('')
+  const [selectedItem,setSelecteditem]=React.useState([])
+  const [count,setCount]=React.useState(0)
 
     const style = {
         position: 'absolute',
@@ -92,7 +94,7 @@ function KeywordRules(props) {
         console.info('You clicked the Chip.');
       };
       const classes = useStyles();
-      console.log({tweet})
+      console.log('selectedItems = ',selectedItem)
       
     return (
         
@@ -156,23 +158,39 @@ function KeywordRules(props) {
          <FormControl fullWidth size='small'>
          <Autocomplete
         id="free-solo-demo"
-        freeSolo
+        multiple
         options={top100Films.map((option) => option.title)}
         onChange={(event,values) => {
-          console.log('hamza',values)
+          console.log('hamza',selectedItem)
+        
+          selectedItem.push(values)
           setSelecteditem(values);
+          setCount(count+1)
+         
         }}
         renderInput={(params) => <TextField {...params} label="Search or Create New Keyword Match" />}
       /> </FormControl>
-        <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>{selectedItem} </Typography>
         
+        {
+          selectedItem.map((item)=>         
+          <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>
+          {item}
+         </Typography>
+         
+          )
+        }
+           
+         
+         
+       
+
         <Stack direction='row' spacing={1} >
          
         <Chip
         label="Season Tickets"
         className={classes.icon}
         onClick={(e) => {
-          setCircleIcon(true)
+          setCircleIcon(!circleIcon)
         handleClick
         }}
         

@@ -215,10 +215,18 @@ function MessageCreate(props) {
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
+  const [allindividualBoards, setAllindividualBoards] = useState(null);
+
+  const [AllSearchBoards, setAllSearchBoards] = useState(null);
+
+
   const [positions, setAllPositions] = useState(null);
   const [rows, setRows] = useState(allBoards);
+  const [individualrows, setindividualRows] = useState(allindividualBoards);
+
 
   const [searched, setSearched] = useState("");
+
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [page, setPage] = useState(1);
@@ -271,12 +279,31 @@ function MessageCreate(props) {
 
   const requestSearch = (searchedVal) => {
 
+    const filteredRows = allBoards?.filter((row) => {
+      return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    const filteredRowsIndv = allindividualBoards?.filter((row) => {
+      return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+    setindividualRows(filteredRowsIndv)
+
+    getMyContactsSearch()
+
+  };
+  const requestSearchForindividual = (searchedVal) => {
+
     const filteredRows = allBoards.filter((row) => {
       return row.name.toLowerCase().includes(searchedVal.toLowerCase());
     });
+    getMyContactsSearch()
     setRows(filteredRows);
-  };
 
+  };
+  const cancelSearchIndividual = () => {
+    setSearched("");
+    requestSearchForindividual(searched);
+  };
   const cancelSearch = () => {
     setSearched("");
     requestSearch(searched);
@@ -288,6 +315,8 @@ function MessageCreate(props) {
     (data) => {
       console.log(data);
       setTableData(tableData);
+      requestSearch()
+      // setindividualRows(s)
       // action on update of movies
     },
     [tableData]
@@ -300,9 +329,9 @@ function MessageCreate(props) {
       key: "selection",
     },
   ]);
-  console.log('===========displayCreateMessage=========================');
-  console.log(displayCreateMessage);
-  console.log('======================displayCreateMessage==============');
+  console.log('===========allindividualBoards=========================');
+  console.log(allindividualBoards, "allindividualBoards");
+  console.log('======================allindividualBoards==============');
   const CalendarFilter = () => {
     return (
       <div class="dropdown">
@@ -696,7 +725,7 @@ function MessageCreate(props) {
         }
       },
       (error) => {
-        // getMyContacts(1);
+        // getMyContactsSearch(1);
         // document.getElementById("infinit").scrollTop = 0;
         setPage(1);
         console.log("this is error all contacts", error);
@@ -718,23 +747,48 @@ function MessageCreate(props) {
       }
     );
   };
-const getCreateSearch=()=>{
-  getAllContacts().then(
-    (res) => {
-      // console.log("THis is all boards", res);
-      var gradYears = [];
-      if (res.statusText === "OK") {
-        // console.log("These are all boards", res.data);
-        setAllBoards(res.data);
-        console.log(res.data, "getCreateSearch")
-
+  const getMyContactsSearch = (page) => {
+    // setLoading(true);
+    setFetching(true);
+    console.log("This is the date", page);
+    // || "2020-12-13"
+    getAllContacts(page).then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all contacts", res.data);
+          setAllindividualBoards(res.data);
+          // setAllBoards(res.data);
+          // setCopyContacts(res.data);
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        }
+      },
+      (error) => {
+        getMyContactsSearch(1);
+        setPage(1);
+        console.log("this is error all contacts", error);
       }
-    },
-    (error) => {
-      console.log("this is error all grad year", error);
-    }
-  );
-}
+    );
+    // setLoading(false)
+  };
+  // const getCreateSearch = () => {
+  //   getAllContacts,Search().then(
+  //     (res) => {
+  //       // console.log("THis is all boards", res);
+  //       var gradYears = [];
+  //       if (res.statusText === "OK") {
+  //         // console.log("These are all boards", res.data);
+  //         setAllBoards(res.data);
+  //         console.log(res.data, "getCreateSearch")
+
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log("this is error all grad year", error);
+  //     }
+  //   );
+  // }
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -2136,11 +2190,11 @@ const getCreateSearch=()=>{
         setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
       }
       getMyPlaceholders();
-      // getMyContacts();
+      // getMyContactsSearch()
       getMyMedia();
       getMyTeamContacts();
       getAllBoards();
-      getCreateSearch();
+      // getCreateSearch();
     } else {
       window.location.href = "/";
     }
@@ -2789,51 +2843,55 @@ const getCreateSearch=()=>{
                               >
                                 {rows &&
                                   rows.map((boards) => {
-
                                     return (
-                                      <div
-                                        style={{
-                                          borderTop: "1px solid #edeef2",
-                                          width: "100%",
-                                          height: 100,
-                                          color: "#9e9e9e",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() => {
-                                          addDataToReceivers(boards.name);
-                                          // setMessageReceiver();
-                                        }}
-                                      >
-                                        {boards.name}
+                                      boards.is_shared === true ? <>
+                                        <div
+                                          style={{
+                                            borderTop: "1px solid #edeef2",
+                                            width: "100%",
+                                            height: 100,
+                                            color: "#9e9e9e",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() => {
+                                            addDataToReceivers(boards.name);
+                                            // setMessageReceiver();
+                                          }}
+                                        >
+                                          {boards.name}
 
-                                        <Grid container direction="row">
-                                          {boards?.contacts?.profile_images?.map(
-                                            (image, index) => {
-                                              if (index < 8) {
-                                                return (
-                                                  <img
-                                                    src={image || AvatarImg}
-                                                    style={{
-                                                      width: 35,
-                                                      height: 35,
-                                                      borderRadius: 20,
-                                                      marginTop: 5,
-                                                      marginLeft:
-                                                        index != 0 ? -10 : 0,
-                                                    }}
-                                                  ></img>
-                                                );
+                                          <Grid container direction="row">
+                                            {boards?.contacts?.profile_images?.map(
+                                              (image, index) => {
+                                                if (index < 8) {
+                                                  return (
+                                                    <img
+                                                      src={image || AvatarImg}
+                                                      style={{
+                                                        width: 35,
+                                                        height: 35,
+                                                        borderRadius: 20,
+                                                        marginTop: 5,
+                                                        marginLeft:
+                                                          index != 0 ? -10 : 0,
+                                                      }}
+                                                    ></img>
+                                                  );
+                                                }
                                               }
-                                            }
-                                          )}
-                                          <img></img>
-                                        </Grid>
-                                        <p style={{ color: "#3871da" }}>
-                                          {boards?.athletes?.profile_images?.length}{" "}
-                                          contacts
-                                        </p>
-                                      </div>
+                                            )}
+                                            <img></img>
+                                          </Grid>
+                                          <p style={{ color: "#3871da" }}>
+                                            {boards?.athletes?.profile_images?.length}{" "}
+                                            contacts
+                                          </p>
+                                        </div>
+                                      </>
+                                        :
+                                        null
                                     );
+
                                   })}
                               </div>
                             </Grid>
@@ -2870,48 +2928,52 @@ const getCreateSearch=()=>{
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {rows &&
-                                  rows.map((boards) => {
+                                {individualrows &&
+                                  individualrows.map((indv, ind) => {
+
+
                                     return (
-                                      boards.is_shared === true ? <>
-                                        <div
 
-                                          style={{
+                                      <div
+                                        key={ind}
+                                        style={{
 
-                                            borderTop: "1px solid #edeef2",
-                                            width: "100%",
-                                            height: 100,
-                                            color: "#9e9e9e",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() => {
-                                            addDataToReceivers(boards.name);
-                                            // setMessageReceiver();
-                                          }}
-                                        >
-                                          {/* {boards?.contacts?.profile_images?.map((image,index)=>{
+                                          borderTop: "1px solid #edeef2",
+                                          width: "100%",
+                                          height: 100,
+                                          color: "#9e9e9e",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          addDataToReceivers(indv.first_name, indv.first_name);
+                                          // setMessageReceiver();
+                                        }}
+                                        className="d-flex align-items-center"
+                                      >
+                                        {/* {indv?.contacts?.profile_images?.map((image,index)=>{
                                             return( */}
 
 
-                                          <div className="" >
-                                            <img
-                                              src={boards?.contacts?.profile_images[0]}
-                                              style={{
-                                                width: 35,
-                                                height: 35,
-                                                borderRadius: 20,
-                                                // marginTop: 5,
+                                        <div className="mr-4" >
+                                          <img
+                                            alt={indv?.first_name}
+                                            src={indv.twitter_profile.profile_image || AvatarImg}
+                                            style={{
+                                              width: 35,
+                                              height: 35,
+                                              borderRadius: 20,
+                                              // marginTop: 5,
 
-                                              }}
-                                            ></img>
+                                            }}
+                                          ></img>
 
-                                          </div>
-                                          {/* )
+                                        </div>
+                                        {/* )
                                           })} */}
 
-                                          {/* {boards.name} */}
+                                        {indv.first_name} {indv.last_name}
 
-                                          {/* {boards?.contacts?.profile_images?.map(
+                                        {/* {boards?.contacts?.profile_images?.map(
                                             (image, index) => {
                                               if (index < 8) {
                                               return (
@@ -2929,15 +2991,14 @@ const getCreateSearch=()=>{
                                             }
                                             }
                                           )} */}
-                                          {/* <img></img> */}
-                                          {/* <p style={{ color: "#3871da" }}>
+                                        {/* <img></img> */}
+                                        {/* <p style={{ color: "#3871da" }}>
             {boards?.athletes?.profile_images?.length}{" "}
             contacts
           </p> */}
-                                        </div>
-                                      </>
-                                        :
-                                        null
+                                      </div>
+
+
                                     );
 
                                   })}
@@ -3109,10 +3170,15 @@ const getCreateSearch=()=>{
                                 }}
                               ></ExpandMoreOutlinedIcon>
                             }
-                            onMouseEnter={() => {
+                            // onMouseEnter={() => {
+                            //   setDisplayCreateMessage(true);
+                            //   setDisplayMessageSenders(false);
+
+                            // }}
+                            onClick={() => {
                               setDisplayCreateMessage(true);
                               setDisplayMessageSenders(false);
-                            
+
                             }}
                           ></IconTextField>
                           <div
@@ -3121,14 +3187,14 @@ const getCreateSearch=()=>{
                             style={{
                               marginLeft: 180,
                               marginTop: -40,
-                              display: displayCreateMessage===false?'none':'block',
+                              display: displayCreateMessage === false ? 'none' : 'block',
                             }}
                             onMouseLeave={() => {
                               setDisplayCreateMessage(false);
                             }}
                           >
 
-                            <Grid container alignItems="center" className={classes.messagetypeGrid}  >
+                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
                                 style={{ fontSize: 16 }}
@@ -3150,8 +3216,8 @@ const getCreateSearch=()=>{
 
                                 Set Preffered Channel
                               </p> <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                            </Grid>
-                            <Grid container alignItems="center" className={classes.messagetypeGrid}>
+                            </Grid> */}
+                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}>
 
 
                               <p
@@ -3166,7 +3232,7 @@ const getCreateSearch=()=>{
 
                                 *Select a default "Send As" option if a contact does not have a set Prefered Channel
                               </p>
-                            </Grid>
+                            </Grid> */}
 
                             {/* {[
                               {
@@ -3236,6 +3302,12 @@ const getCreateSearch=()=>{
                                   settwitterDm(true)
                                   setPersonalText(false)
                                   setrsText(false)
+                                  setMessageType([{
+                                    title: ' Twitter Dm',
+                                    icon: (<FaTwitter
+                                      className={classes.messageTypeIcon}
+                                    ></FaTwitter>)
+                                  }])
                                   // setMessageType([{
                                   //   title: 'Twitter DM',
                                   //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
@@ -3264,14 +3336,20 @@ const getCreateSearch=()=>{
                                 alignItems="center"
                                 className={classes.messagetypeGrid}
                                 style={{
-                              
+
 
                                 }}
                                 onClick={() => {
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  
+                                  setMessageType([{
+                                    title: ' Twitter Dm',
+                                    icon: (<FaTwitter
+                                      className={classes.messageTypeIcon}
+                                    ></FaTwitter>)
+                                  }])
+
                                   // setMessageType([{
                                   //   title: 'Twitter DM',
                                   //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
@@ -3308,12 +3386,12 @@ const getCreateSearch=()=>{
                                   settwitterDm(false)
                                   setPersonalText(true)
                                   setrsText(false)
-                                  // setMessageType([{
-                                  //   title: ' Personal Text',
-                                  //   icon: (<FaPhone
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></FaPhone>)
-                                  // }])
+                                  setMessageType([{
+                                    title: ' Personal Text',
+                                    icon: (<FaPhone
+                                      className={classes.messageTypeIcon}
+                                    ></FaPhone>)
+                                  }])
                                 }}
                               >
                                 <FaPhone
@@ -3340,12 +3418,12 @@ const getCreateSearch=()=>{
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(false)
-                                  // setMessageType([{
-                                  //   title: ' Personal Text',
-                                  //   icon: (<FaPhone
-                                  //     className={classes.messageTypeIcon}
-                                  //   ></FaPhone>)
-                                  // }])
+                                  setMessageType([{
+                                    title: ' Personal Text',
+                                    icon: (<BiSave
+                                      className={classes.messageTypeIcon}
+                                    ></BiSave>)
+                                  }])
 
                                 }}
                               >
@@ -3377,6 +3455,7 @@ const getCreateSearch=()=>{
                                   settwitterDm(false)
                                   setPersonalText(false)
                                   setrsText(true)
+
                                   setMessageType([{
                                     title: ' Rs Text',
                                     icon: (<FaComment
@@ -3512,7 +3591,7 @@ const getCreateSearch=()=>{
                                 }}
                               ></FaPlus>
                             }
-                            onMouseEnter={() => {
+                            onClick={() => {
                               setDisplayCreateMessage(false);
                               setDisplayMessageSenders(true);
                             }}
@@ -3527,6 +3606,7 @@ const getCreateSearch=()=>{
                             }}
                             onMouseLeave={() => {
                               setDisplayMessageSenders(false);
+                              setDisplayCreateMessage(false)
                             }}
                           >
                             <p
@@ -3704,6 +3784,7 @@ const getCreateSearch=()=>{
                       </p>
                       {/* </Grid> */}
                       {/* <Grid item md={11} xs={11}> */}
+
                       {messageReceiver.length > 0 ? (
                         <Grid
                           container
@@ -3772,6 +3853,8 @@ const getCreateSearch=()=>{
                               // }}
                               onClick={() => {
                                 setDisplaySendTo(true);
+
+
                               }}
                             ></IconTextField>
                           )}
@@ -3810,7 +3893,8 @@ const getCreateSearch=()=>{
                             //   setDisplayMessageSenders(false);
                             // }}
                             onClick={() => {
-                              setDisplaySendTo(true);
+                              // setDisplaySendTo(true);
+                              { displaySendTo === true ? setDisplaySendTo(false) : displaySendTo === false ? setDisplaySendTo(true) : null }
                             }}
                           ></IconTextField>
                         </div>

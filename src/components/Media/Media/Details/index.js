@@ -116,12 +116,12 @@ const MediaDetails = (props) => {
 
         if (selectedPlaceholder &&
             selectedPlaceholder.owner &&
-            selectedPlaceholder.owner.twitter_profile) {
+            selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name) {
 
             selectedTeamContacts.push({
                 id: selectedPlaceholder.owner.id,
-                username: selectedPlaceholder.owner.twitter_profile.screen_name,
-                url: selectedPlaceholder.owner.twitter_profile.profile_image
+                username: selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name,
+                url: ''
             });
         }
 
@@ -151,20 +151,17 @@ const MediaDetails = (props) => {
 
 
         if (selectedPlaceholder && selectedPlaceholder.contact && selectedPlaceholder.contact.first_name
-        && selectedPlaceholder.contact.last_name) {
-            const findIndex = contacts.findIndex((c) => c.first_name + ' ' + c.last_name
-                ===
-                selectedPlaceholder.contact.first_name+' '+selectedPlaceholder.contact.last_name);
-            console.log('find index = ',findIndex);
-            if (findIndex != -1) {
-                const contact = contacts[findIndex];
-                selectedAssociatePlaceholders.push({
-                    username: contact.first_name + ' ' + contact.last_name,
-                    id: contact.id,
-                    url: contact.twitter_profile.profile_image
-                })
+            && selectedPlaceholder.contact.last_name) {
+                
+                   
+                    selectedAssociatePlaceholders.push({
+    
+                        username: selectedPlaceholder.contact.first_name + ' ' + selectedPlaceholder.contact.last_name,
+                        id: selectedPlaceholder.contact.id,
+                        url: selectedPlaceholder.contact.twitter_profile.profile_image
+                    })
+                
             }
-        }
 
         // setSelectedTeamContacts(selectedTeamContacts)
         // setSelectedTags(selectedTags)
