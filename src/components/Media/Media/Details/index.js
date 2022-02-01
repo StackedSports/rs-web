@@ -158,7 +158,7 @@ const MediaDetails = (props) => {
     
                         username: selectedPlaceholder.contact.first_name + ' ' + selectedPlaceholder.contact.last_name,
                         id: selectedPlaceholder.contact.id,
-                        url: selectedPlaceholder.contact.twitter_profile.profile_image
+                        url: selectedPlaceholder.contact.twitter_profile
                     })
                 
             }
