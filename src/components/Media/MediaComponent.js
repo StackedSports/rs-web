@@ -1387,16 +1387,16 @@ function MediaComponent(props) {
             :
             media.findIndex((m) => m.id === displayListContainer.selectedPlaceholder.id);
 
-        console.log('media index= ',placeholders[mediaIndex])
+        console.log('media index= ', placeholders[mediaIndex])
 
-        let placeholderMediaItemIndex=displayListContainer.selectedPlaceholder.parentId &&
-            (placeholders[mediaIndex].media).findIndex((f)=>f.id===displayListContainer.selectedPlaceholder.id);
+        let placeholderMediaItemIndex = displayListContainer.selectedPlaceholder.parentId &&
+            (placeholders[mediaIndex].media).findIndex((f) => f.id === displayListContainer.selectedPlaceholder.id);
 
-        console.log('media index= ',placeholderMediaItemIndex)
+        console.log('media index= ', placeholderMediaItemIndex)
 
         if (mediaIndex != -1) {
             const selectedMedia = displayListContainer.selectedPlaceholder.parentId ?
-                placeholders[mediaIndex].media[placeholderMediaItemIndex]: media[mediaIndex];
+                placeholders[mediaIndex].media[placeholderMediaItemIndex] : media[mediaIndex];
             if (selectedTeamContacts && selectedTeamContacts.length > 0) {
                 const selectedContact = selectedTeamContacts[0];
                 const teamContactIndex = teamContacts.findIndex((contact) => selectedContact.id === contact.id);
@@ -1433,7 +1433,7 @@ function MediaComponent(props) {
 
 
             if (selectedAssociatePlaceholders.parentId) {
-                placeholders[mediaIndex].media[placeholderMediaItemIndex]=selectedMedia;
+                placeholders[mediaIndex].media[placeholderMediaItemIndex] = selectedMedia;
                 setPlaceHolders(placeholders);
             } else {
                 media[mediaIndex] = selectedMedia;
@@ -1459,6 +1459,12 @@ function MediaComponent(props) {
         props.filter &&
         props.filter.findIndex((f) => f.type === 'placeholders') === -1 ? false :
             !displayListContainer.selectedPlaceholder && true
+
+
+    const personalizedMediaSelected =
+        props.filter &&
+        props.filter.findIndex((f) => f.type === 'personalized') === -1 ? false : true
+
 
     console.log('render = ', displayListContainer.selectedPlaceholder)
 
@@ -1497,7 +1503,8 @@ function MediaComponent(props) {
         <div
             style={{
                 width: props.showSideFilters === true ? "85%" : "100%",
-                height: showMediaStats ? "100%" : "95vh",
+                height: showMediaStats ? "100%" :
+                    (personalizedMediaSelected && !showOnlyPlaceholders) ? "130vh" : "95vh",
                 background: "white",
                 borderRadius: 5,
                 padding: 10,
@@ -1553,10 +1560,12 @@ function MediaComponent(props) {
                                       isMedia={true}
                                       showFullHeight={(props.filter).length > 0 ? true : false}
                                       setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+
+
             </Fragment>}
 
             {
-                showOnlyPlaceholders &&
+                (showOnlyPlaceholders || personalizedMediaSelected) &&
                 <Placeholder
                     CustomToggle={CustomToggle}
                     placeholders={placeholders}
@@ -1580,13 +1589,14 @@ function MediaComponent(props) {
                     setShowMediaStats={handleShowMediaStats}
                     setSelectedPlaceHolder={handleSelectedPlaceHolder}
                     setSelectedPlaceHolderListView={handleSelectedPlaceHolderListView}
-                    showlistView={displayListContainer.showPlaceholderListView}
+                    showlistView={true}
                     message={props.message}
                     showHover={true}
                     setShowBackButton={handleSetShowBackButton}
                     showBackButton={showBackButton}
                     setLightboxVideo={handleSetLightboxVideo}
                     setLightboxPicture={handleSetLightboxPicture}
+                    personalizedMediaSelected={personalizedMediaSelected}
                 />
             }
 

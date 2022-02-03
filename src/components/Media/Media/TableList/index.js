@@ -209,7 +209,7 @@ const PlaceholderTableList = (props) => {
 
     let tempItemsList = [];
 
-    console.log('filter list = ', sortingOrder, '   ', tempItemsList, '  ', itemsList)
+    console.log('filter list = ', props.personalizedMediaSelected)
 
 
     if (props.isMedia && props.filter && props.filter.length > 0) {
@@ -291,9 +291,21 @@ const PlaceholderTableList = (props) => {
             }
         }
 
-    } else {
+    }else if(props.isPlaceholder && props.personalizedMediaSelected){
+        for (let item of itemsList) {
+            const media=item.media;
+            if (media && media.length>0 && media[0].media_placeholder_id ) {
+                if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                    tempItemsList.push(item)
+                }
+            }
+        }
+    }
+    else {
         tempItemsList = JSON.parse(JSON.stringify(itemsList));
     }
+
+
 
 
     console.log('items list = ', props)
