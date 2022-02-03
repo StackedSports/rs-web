@@ -282,7 +282,7 @@ const PlaceholderTableList = (props) => {
                 }
             }else if (f.type === 'personalized') {
                 for (let item of itemsList) {
-                    if (item && item.contact ) {
+                    if (item && item.contact && item.contact.first_name  ) {
                         if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
                             tempItemsList.push(item)
                         }
@@ -296,7 +296,7 @@ const PlaceholderTableList = (props) => {
     }
 
 
-    console.log('items list = ', props)
+    console.log('Temp items list = ', tempItemsList)
     return (
 
         <div style={{

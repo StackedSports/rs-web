@@ -3,7 +3,7 @@ import MediaItem from "../Item/item";
 import ClearIcon from "@material-ui/icons/Clear";
 import React, {Fragment, useState} from "react";
 
-
+import { Divider } from "@mui/material";
 import MediaInfo from './info';
 import SelectedContactItem from './selected-contact';
 import DropDownItem from './contact-item';
@@ -659,177 +659,198 @@ const MediaDetails = (props) => {
                 </Grid>
                 {props.hideStats === null && (
                     <div
+                    style={{
+                        borderLeft: "1px solid #d2d2d2",
+                        width: "25%",
+                    }}
+                >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
                         style={{
-                            borderLeft: "1px solid #d2d2d2",
-                            width: "25%",
+                            height: "10%",
+                           
                         }}
                     >
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
+                      
+                        <p
                             style={{
-                                height: "10%",
-                                borderBottom: "1px solid #d2d2d2",
+                                fontWeight: "bold",
+                                fontSize: 18,
+                                margin: 0,
+                                height: 30,
                             }}
                         >
-                            <p
-                                className={classes.mediaStatsRightState}
-                            >
-                                0%
-                            </p>
-                            <p
-                                style={{
-                                    fontWeight: "bold",
-                                    fontSize: 18,
-                                    margin: 0,
-                                    height: 30,
-                                }}
-                            >
-                                Media Stats
-                            </p>
-                        </Grid>
-                        <Grid
+                            Media Stats
+                        </p>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        className={classes.mediaStatsGrid}
+                    >
+                        <p
+                            className={classes.mediaStatsRightHeading}
+                        >
+                          Media sent in:
+                        </p>
+                        <p
+                            className={classes.mediaStatsRightState}
+                        >
+                            {props.selectedPlaceholder.activity!=null?
+                            props.selectedPlaceholder.activity.sms+props.selectedPlaceholder.activity.dms+props.selectedPlaceholder.activity.pts:0} Messages
+                        </p>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        className={classes.mediaStatsGrid}
+                    >
+                        <p
+                            className={classes.mediaStatsRightHeading}
+                        >
+                            Media Published in:
+                        </p>
+                        <p
+                            className={classes.mediaStatsRightState}
+                        >
+                            {props.selectedPlaceholder.activity!=null?
+                            props.selectedPlaceholder.activity.tweets:0} Tweets
+                        </p>
+                    </Grid>
+                    <Divider/>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        
+                        style={{
+                            // height: "15%",
+                            borderBottom: "1px solid #d2d2d2",
+                        }}
+                    >
+                        <p
+                            className={classes.mediaStatsRightState}
+                        >
+                            Messaging Stats
+                        </p>
+                        <p
+                        className={classes.mediaStatsRightState}
+                            style={{
+                                fontWeight: "bold",
+                                fontSize: 25,
+                                margin: 0,
+                                height: 30,
+                            }}
+                        >
+                            -
+                        </p>
+                        <p
+                            style={{
+                               
+                                fontSize: 18,
+                                margin: 0,
+                                height: 30,
+                            }}
+                        >
+                            Response Rate (0/0)
+                        </p>
+                        <p
+                            className={classes.mediaStatsRightState}
+                            style={{fontWeight:'bold',
+                            fontSize: 25,}}
+                        >
+                            -
+                        </p>
+                        <p
+                            style={{
+                                // height: "60%",
+                            }}
+                        >
+                            Opt-out Rate
+                        </p>
+                     
+                       
+                    </Grid>
+                    <Grid
                             container
                             direction="row"
                             justify="center"
                             alignItems="center"
                             className={classes.mediaStatsGrid}
-                        >
-                            <p
-                                className={classes.mediaStatsRightHeading}
-                            >
-                                0
-                            </p>
-                            <p
-                                className={classes.mediaStatsRightState}
-                            >
-                                0 Messages
-                            </p>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                            className={classes.mediaStatsGrid}
-                        >
-                            <p
-                                className={classes.mediaStatsRightHeading}
-                            >
-                                0
-                            </p>
-                            <p
-                                className={classes.mediaStatsRightState}
-                            >
-                                Retweets front Contacts (0/0)
-                            </p>
-                        </Grid>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
                             style={{
-                                // height: "15%",
-                                borderBottom: "1px solid #d2d2d2",
+                                // height: "60%",
+                                
                             }}
                         >
                             <p
                                 className={classes.mediaStatsRightState}
                             >
-                                0%
+                                Post Stats
                             </p>
                             <p
                                 style={{
-                                    fontWeight: "bold",
+                                    fontWeight:'bold',
+                                    fontSize: 25,
+                                    margin: 0,
+                                    height: 30,
+                                }}
+                            >
+                               -
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                                style={{
+                                    fontWeight:"normal",
+                                    fontSize: 18,
+                                    margin: 0,
+                                }}
+                            >
+                                Contact Engagement
+                            </p>
+                            <p
+                                style={{fontWeight:'bold',
+                                    fontSize: 25,
+                                    margin: 0,
+                                }}
+                            >
+                                -
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                                style={{
+                                    fontWeight:"normal",
+                                    fontSize: 18,
+                                    margin: 0,
+                                }}
+                            >
+                                Favourites from Contacts
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                                style={{fontWeight:'bold',
+                                fontSize: 25,}}
+                            >
+                                -
+                            </p>
+                            <p
+                                style={{
                                     fontSize: 18,
                                     margin: 0,
                                     height: 30,
                                 }}
                             >
-                                Contact Engagement (0/0)
+                                Retweets front Contacts 
                             </p>
-                            <p
-                                className={classes.mediaStatsRightState}
-                            >
-                                0
-                            </p>
-                            <p
-                                style={{
-                                    // height: "60%",
-                                }}
-                            >
-                                Favorite From Contacts (0/0)
-                            </p>
-                            <p
-                                className={classes.mediaStatsRightState}
-                            >
-                                0
-                            </p>
-                            <p
-                                style={{
-                                    fontWeight: "bold",
-                                    fontSize: 18,
-                                    margin: 0,
-                                    height: 30,
-                                }}
-                            >
-                            </p>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="center"
-                                alignItems="center"
-                                style={{
-                                    // height: "60%",
-                                }}
-                            >
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    95%
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                        height: 30,
-                                    }}
-                                >
-                                    Contact Engagement (286/300)
-                                </p>
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    64
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                    }}
-                                >
-                                    Favorite From Contacts (286/300)
-                                </p>
-                                <p
-                                    className={classes.mediaStatsRightState}
-                                >
-                                    17
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: 12,
-                                        margin: 0,
-                                        height: 30,
-                                    }}
-                                >
-                                    Retweets front Contacts (286/300)
-                                </p>
-                            </Grid>
                         </Grid>
-                    </div>
+                </div>
                 )}
             </Grid>
         </div>
