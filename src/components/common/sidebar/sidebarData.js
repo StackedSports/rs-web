@@ -8,7 +8,7 @@ import { BsPerson } from "react-icons/bs";
 import { BiCommentAdd } from "react-icons/bi";
 import { TiImageOutline } from "react-icons/ti";
 import { TiSocialTwitter } from "react-icons/ti";
-import { BsBarChart } from "react-icons/bs";
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import { IoIosSettings } from "react-icons/io";
 
 export const SidebarData = [
@@ -75,10 +75,10 @@ export const SidebarData = [
     iconOpened: <RiIcons.RiArrowUpSFill />,
   },
   {
-    title: "Reports",
-    path: "/contact-profile",
+    title: "Twitter Stream",
+    path: "/twitter-stream",
     icon: (
-      <BsBarChart
+      <PublicOutlinedIcon
         style={{
           height: "24px",
           width: "24px",

@@ -168,7 +168,7 @@ function Home(props) {
 
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-
+  const totalContacts=0
   const columnNames = [
     {
       name: "First Name",
@@ -284,6 +284,7 @@ function Home(props) {
           if (page > 1) {
             var temp = contacts;
             temp = temp.concat(res.data);
+          
             // temp.push(res.data);
             setContacts(temp);
             setCopyContacts(temp);
@@ -292,7 +293,8 @@ function Home(props) {
             // document.getElementById("infinit").scrollTop = 0;
             setFetching(false);
           } else {
-            console.log("These are all contacts", res.data);
+            console.log("These are all contacts", contacts);
+          
             setContacts(res.data);
             setCopyContacts(res.data);
             if (document.getElementById("infinit")) {
@@ -1185,7 +1187,7 @@ function Home(props) {
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}>1806</span>{" "}
+                  You have <span style={{ color: "#3871DA" }}> {contacts!=null?contacts.length:""} </span>{" "}
                   contacts in the system
                 </span>
               )}

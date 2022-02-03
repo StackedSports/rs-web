@@ -282,7 +282,7 @@ const PlaceholderTableList = (props) => {
                 }
             }else if (f.type === 'personalized') {
                 for (let item of itemsList) {
-                    if (item && item.contact ) {
+                    if (item && item.contact && item.contact.first_name  ) {
                         if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
                             tempItemsList.push(item)
                         }
@@ -306,8 +306,6 @@ const PlaceholderTableList = (props) => {
     }
 
 
-
-
     console.log('items list = ', props)
     return (
 
@@ -315,7 +313,7 @@ const PlaceholderTableList = (props) => {
             width: "100%",
             marginTop: props.isPlaceholderDetails ? 10 : 0,
             overflowY: 'scroll',
-            overflowX: 'hidden'
+            overflowX: 'hidden',
         }}>
             <ListHeader
                 handleSortingOrder={handleSortingOrder}
@@ -328,7 +326,8 @@ const PlaceholderTableList = (props) => {
                 style={{
                     width: "100%", overflowY: 'scroll', overflowX: 'hidden',
                     height: props.isPlaceholderDetails ? '55vh' :
-                        (props.showFullHeight ? '55vh' : '30vh')
+                        (props.showFullHeight ? '55vh' : '30vh'),
+                    display:tempItemsList.length<1?'none':'block'
                 }}
                 id="infinit"
                 onScroll={() => {

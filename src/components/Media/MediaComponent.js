@@ -537,8 +537,9 @@ function MediaComponent(props) {
                         background:
                             displayRangeCalendar === false ? "transparent" : "#3871DA",
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
                         setDisplayRageCalendar(true);
+                        e.stopPropagation()
                     }}
                 >
                     <ArrowBackwardIosIcon
@@ -571,9 +572,9 @@ function MediaComponent(props) {
                         marginTop: 0,
                         display: displayRangeCalendar ? "block" : "none",
                     }}
-                    onMouseLeave={() => {
-                        setDisplayRageCalendar(false);
-                    }}
+                  
+                        //setDisplayRageCalendar(false);
+                   
                 >
                     <Grid style={{}}>
                         {/* <DateRange
@@ -653,6 +654,7 @@ function MediaComponent(props) {
                     borderBottom: "1px solid #f8f8f8",
                     paddingBottom: 20,
                 }}
+             
             >
 
                 <DropdownButton
@@ -670,8 +672,9 @@ function MediaComponent(props) {
                                     statusFilter === option.label ? "#348ef7" : "white",
                                 color: statusFilter === option.label ? "white" : "black",
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
                                 props.addDataToFilter(option.label, "file_type");
+                                e.stopPropagation();
                             }}
                         >
                             {option.label}
@@ -1513,6 +1516,9 @@ function MediaComponent(props) {
             }}
             onClick={(e) => {
                 closeAllMediaDetailsDialogs();
+                setDisplayRageCalendar(false)
+                e.stopPropagation();
+
             }}
         >
             <Header

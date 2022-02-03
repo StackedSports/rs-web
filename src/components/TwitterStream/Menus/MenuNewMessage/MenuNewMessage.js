@@ -44,7 +44,7 @@ function MenuNewMessage(props) {
     const [filter, setFilter] = useState(true);
     const [streamName, setStreamName] = useState(false);
     const [tagMenu, setTagMenu] = useState(false);
-   
+    const [selectedItem,setSelecteditem]=React.useState([])
     const [keywordRules, setKeywordRules] = useState(false);
     const [geographyRules, setGeographyRules] = useState(false);
     const [hashtagRules, setHashtagRules] = useState(false);
@@ -55,6 +55,8 @@ function MenuNewMessage(props) {
     const [streamButtonColor, setStreamButtonColor] = useState(true);
     const [actionButton, setActionButton] = useState(false);
     const [hideGrid, setHideGrid] = useState(true);
+    const [countkeywordrules,setCountKeywordRules]=React.useState(0)
+    const [count,setCount]=React.useState(0)
     function disableScroll() {
       window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
       window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -75,6 +77,10 @@ function MenuNewMessage(props) {
   }
   const handleTagMenu=(tag)=>{
     setTagMenu(tag)
+  }
+  const handleSelectedItem=(selectedItem)=>{
+      setCount(count+1)
+    setSelecteditem(selectedItem)
   }
   const handleKeyword=(keyword)=>{
     setKeyword(keyword)
@@ -135,6 +141,9 @@ function MenuNewMessage(props) {
     setActionButton(!actionButton)
   }
   
+  const handleCountKeywordRules=(count)=>{
+    setCountKeywordRules(count)
+  }
     return (
         <div>
             <DarkContainer contacts style={{ padding: 1, marginLeft: 60,padding:showSideFilters?'10px':'20px' }}>
@@ -203,8 +212,13 @@ function MenuNewMessage(props) {
        >
      
           
-       {filter && keywordIncludes &&      <Grid xs={3.1}>
-                 <KeywordsInclude  keywordIncludes={handleKeywordIncludes}/>
+       { keywordIncludes &&      <Grid xs={3.1}>
+                 <KeywordsInclude  handleKeywordIncludes={handleKeywordIncludes}
+               keywordIncludes={keywordIncludes}
+                  selectedItem={selectedItem}
+                  count={count}
+                  handleSelectedItem={handleSelectedItem}
+                 />
                 </Grid>}
                 {filter && mediaContent &&    <Grid xs={2.1}>
               <MediaContent mediaContent={handleMediaContent} />
@@ -225,6 +239,7 @@ function MenuNewMessage(props) {
            geographyRules={handleGeographyRules} geographyContent={geographyContent} 
             hashtagContent={hashtagContent} accountRules={handleAccountRules} accountContent={accountContent}
            setKeyword={handleKeyword} keyword={keyword}
+           countkeywordrules={countkeywordrules}
            
            />
            </Grid>
@@ -248,6 +263,9 @@ function MenuNewMessage(props) {
            
              <Grid xs={6} >
               {keywordRules && <KeywordRules xyz={handleKeyowrdRules} include={handleKeywordIncludes}
+              handleSelectedItem={handleSelectedItem} selectedItem={selectedItem}
+              handleCountKeywordRules={handleCountKeywordRules}
+              keywordIncludes={keywordIncludes}
               />}
             {tweetTypes &&  <TweetTypes  media={handleMediaContent} types={handleTweetTypes}/>}
            
