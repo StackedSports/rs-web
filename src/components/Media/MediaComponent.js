@@ -1501,6 +1501,20 @@ function MediaComponent(props) {
     }
 
 
+
+    if(personalizedMediaSelected){
+        for(let placeholder of placeholders){
+            if(placeholder.media && (placeholder.media).length>0){
+                const placeholderMedia=(placeholder.media).map((p)=>{
+                    p.IsPlaceholderMedia=true;
+                    return p;
+                });
+                MediaList=MediaList.concat(placeholderMedia);
+            }
+        }
+    }
+
+
     console.log('filter = ', displayListContainer, '  showMediaStats = ', showMediaStats);
     return (
         <div
@@ -1571,7 +1585,7 @@ function MediaComponent(props) {
             </Fragment>}
 
             {
-                (showOnlyPlaceholders || personalizedMediaSelected) &&
+                (showOnlyPlaceholders) &&
                 <Placeholder
                     CustomToggle={CustomToggle}
                     placeholders={placeholders}

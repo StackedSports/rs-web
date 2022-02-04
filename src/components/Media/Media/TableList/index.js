@@ -71,7 +71,6 @@ const useStyles = makeStyles({
         fontSize: 18,
         margin: 0,
         height: 30,
-        fontSize: 20,
         fontWeight: 'bold',
         width: '100%',
         textAlign: 'center'
@@ -291,15 +290,6 @@ const PlaceholderTableList = (props) => {
             }
         }
 
-    }else if(props.isPlaceholder && props.personalizedMediaSelected){
-        for (let item of itemsList) {
-            const media=item.media;
-            if (media && media.length>0 && media[0].media_placeholder_id ) {
-                if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
-                    tempItemsList.push(item)
-                }
-            }
-        }
     }
     else {
         tempItemsList = JSON.parse(JSON.stringify(itemsList));

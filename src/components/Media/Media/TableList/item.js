@@ -183,7 +183,7 @@ const PlaceholderItem = (props) => {
                 <img
 
                     style={{width: 30, height: 30, marginLeft: 13, cursor: 'pointer'}}
-                    src={item.url}
+                    src={!item.IsPlaceholderMedia?item.url:item.urls.thumb}
                 ></img>
             </Grid>
 
