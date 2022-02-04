@@ -91,9 +91,9 @@ const HoverItem = (props) => {
                                 }
                             } else {
                                 if (m.file_type.indexOf("video") > -1) {
-                                    props.setLightboxVideo(m.urls.large);
+                                    props.setLightboxVideo(m.urls.original);
                                 } else {
-                                    props.setLightboxPicture(m.urls.medium);
+                                    props.setLightboxPicture(m.urls.original);
                                 }
                             }
                             e.stopPropagation();
