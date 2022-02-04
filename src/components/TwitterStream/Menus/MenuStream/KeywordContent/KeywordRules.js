@@ -191,7 +191,7 @@ function KeywordRules(props) {
          
        
 
-        <Stack direction='column' spacing={1} style={{height:count>3?100:'',overflowY:count>3?"scroll":'',overFlowX:'hidden'}} >
+        <Stack direction='column' spacing={1} style={{height:count>2?100:'',overflowY:count>2?"scroll":'',overFlowX:'hidden'}} >
         
         {props.selectedItem.map((item,index)=> 
         <li key={index}>

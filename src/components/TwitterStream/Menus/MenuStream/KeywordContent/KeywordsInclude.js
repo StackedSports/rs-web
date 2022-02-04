@@ -10,7 +10,7 @@ function KeywordsInclude(props) {
             <Paper
                     style={{
                         borderRadius: 5,
-                        marginLeft:'28.5px',
+                        marginLeft:props.selectedItem.length>0?'28.5px':'',
                         marginTop:'15px',
                         marginBottom:'10px',
                         color: 'black',
@@ -28,8 +28,8 @@ function KeywordsInclude(props) {
                    
                     variant="outlined"
                     >
-                         <Stack direction='column' spacing={1} style={{  height:35,
-                        width:"",overflowY:props.selectedItem.length>0?"scroll":'',overFlowX:'hidden'}} >
+                         <Stack direction='column' spacing={1} style={{  height:props.selectedItem.length>0?35:0,
+                        width:"",overflowY:props.selectedItem.length>0?"scroll":"hidden",overFlowX:'hidden'}} >
         
                         
                   { props.selectedItem.map((item,index)=>  

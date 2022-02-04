@@ -327,7 +327,7 @@ const PlaceholderTableList = (props) => {
                     width: "100%", overflowY: 'scroll', overflowX: 'hidden',
                     height: props.isPlaceholderDetails ? '55vh' :
                         (props.showFullHeight ? '55vh' : '30vh'),
-                    display:tempItemsList.length<1?'none':'block'
+//                    display:tempItemsList.length<1?'none':'block'
                 }}
                 id="infinit"
                 onScroll={() => {

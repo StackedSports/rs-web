@@ -2,7 +2,7 @@ import {Grid, makeStyles} from "@material-ui/core";
 import moment from "moment";
 import React, {useState} from "react";
 
-import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import GifIcon from '@mui/icons-material/GifBoxOutlined';
 import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
 import {isImage, isVideo} from '../../../../utils/FileUtils';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -134,16 +134,25 @@ const PlaceholderItem = (props) => {
                     className={classes.tableHeading} size="small"  style={{borderRadius:"1px",padding:0}} 
                     />}</span>
                     :
-                    (item.url.indexOf(".gif") > -1 ? (
-                        <GifIcon></GifIcon>
-                    ) : item.url.indexOf(".png") > -1 ||
-                    item.url.indexOf(".jpg") > -1 ||
-                    item.url.indexOf(".jpeg") > -1 ? (
+                   (item.file_type==="image/gif" ? (
+                        <GifIcon 
+                        style={{color: "3871da", fontSize: 25}}
+                        >    
+                        </GifIcon>
+                    ): item.file_type==="image/jpeg" ||
+                    item.file_type==="image/png"?
+                    (
                         <FaImage
                             style={{color: "#3871da", fontSize: 20}}
                         ></FaImage>
-                    ) : item.url.indexOf(".mp4") > -1 ? (
-                        <FaVideo></FaVideo>
+                    ) : 
+                    item.file_type==="video/mp4"  ||
+                    item.file_type==="video/quicktime" 
+                    ? (
+                        <FaVideo 
+                        style={{color: "#3871da", fontSize: 20}}
+                        >    
+                        </FaVideo>
                     ) : (
                         <FaFilePdf
                             style={{color: "#3871da", fontSize: 20}}
@@ -171,9 +180,9 @@ const PlaceholderItem = (props) => {
                     }
                 } else {
                     if (item.file_type.indexOf("video") > -1) {
-                        props.setLightboxVideo(item.urls.large);
+                        props.setLightboxVideo(item.urls.original);
                     } else {
-                        props.setLightboxPicture(item.urls.medium);
+                        props.setLightboxPicture(item.urls.original);
                     }
                 }
 
