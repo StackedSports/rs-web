@@ -3,10 +3,12 @@ import MediaItem from "../Item/item";
 import ClearIcon from "@material-ui/icons/Clear";
 import React, {Fragment, useState} from "react";
 
-import { Divider } from "@mui/material";
+import {Divider} from "@mui/material";
 import MediaInfo from './info';
 import SelectedContactItem from './selected-contact';
 import DropDownItem from './contact-item';
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import Pagination from "../../Pagination";
 
 
 const useStyles = makeStyles({
@@ -87,18 +89,25 @@ const useStyles = makeStyles({
 const MediaDetails = (props) => {
 
     const classes = useStyles();
+    const [page, setPage] = useState(1);
 
 
     // const [selectedTeamContacts, setSelectedTeamContacts] = useState(props.selectedTeamContacts);
     // const [selectedTags, setSelectedTags] = useState(props.selectedTags);
+
+
+
+
 
     const filter = props.filter,
         teamContacts = props.teamContacts,
         taggedMedia = props.taggedMedia,
         placeholders = props.placeholders,
         myMediaContacts = props.myMediaContacts,
-        contacts = props.contacts,
         selectedPlaceholder = props.selectedPlaceholder;
+
+    let contacts=props.contacts;
+
 
 
     let selectedTags = props.selectedTags;
@@ -106,6 +115,21 @@ const MediaDetails = (props) => {
     let selectedMediaPlaceholders = props.selectedMediaPlaceholders;
     let selectedAssociatePlaceholders = props.selectedAssociatePlaceholders;
 
+
+
+
+    const onPaginationChange=(page)=>{
+        console.log('page = ',page,'   ',contacts);
+
+        const pageExistInContact=contacts.findIndex((f)=>f.page===page);
+        setPage(page);
+
+        if(pageExistInContact===-1){
+            props.getMyContacts(page);
+        }
+
+
+    }
 
     React.useEffect(() => {
         selectedTags = [];
@@ -116,11 +140,11 @@ const MediaDetails = (props) => {
 
         if (selectedPlaceholder &&
             selectedPlaceholder.owner &&
-            selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name) {
+            selectedPlaceholder.owner.first_name + " " + selectedPlaceholder.owner.last_name) {
 
             selectedTeamContacts.push({
                 id: selectedPlaceholder.owner.id,
-                username: selectedPlaceholder.owner.first_name+" "+selectedPlaceholder.owner.last_name,
+                username: selectedPlaceholder.owner.first_name + " " + selectedPlaceholder.owner.last_name,
                 url: ''
             });
         }
@@ -152,25 +176,30 @@ const MediaDetails = (props) => {
 
         if (selectedPlaceholder && selectedPlaceholder.contact && selectedPlaceholder.contact.first_name
             && selectedPlaceholder.contact.last_name) {
-                
-                   
-                    selectedAssociatePlaceholders.push({
-    
-                        username: selectedPlaceholder.contact.first_name + ' ' + selectedPlaceholder.contact.last_name,
-                        id: selectedPlaceholder.contact.id,
-                        url: selectedPlaceholder.contact.twitter_profile
-                    })
-                
-            }
+
+
+            selectedAssociatePlaceholders.push({
+
+                username: selectedPlaceholder.contact.first_name + ' ' + selectedPlaceholder.contact.last_name,
+                id: selectedPlaceholder.contact.id,
+                url: selectedPlaceholder.contact.twitter_profile
+            })
+
+        }
 
         // setSelectedTeamContacts(selectedTeamContacts)
         // setSelectedTags(selectedTags)
 
         props.setSelectedItems(selectedTeamContacts, selectedTags,
-            selectedMediaPlaceholders,selectedAssociatePlaceholders);
+            selectedMediaPlaceholders, selectedAssociatePlaceholders);
         console.log('MediaDetails componentDidMount = ',);
 
     }, []);
+
+
+    let filterContacts=contacts.filter((c)=>c.page===page);
+
+
 
 
     console.log('setMyMediaContacts =  ', props.selectedPlaceholder, '   ', selectedTags, '   ', selectedTeamContacts, '  ', props.count);
@@ -593,7 +622,7 @@ const MediaDetails = (props) => {
                                             className={classes.dropdownHidden}
                                             style={{
                                                 display: props.displaySearchContainers.selectedAssociatePlaceholderContainer ? "block" : "none",
-                                                height: '35vh',
+                                                height: '250px',
                                                 position: 'absolute',
                                                 left: '55%',
                                                 top: '-26vh',
@@ -605,7 +634,7 @@ const MediaDetails = (props) => {
                                         >
                                             <Fragment style={{position: 'relative'}}>
                                                 <Grid container direction="row" justify="center"
-                                                      style={{position: 'sticky', top: 0, padding: 7}}>
+                                                      style={{position: 'sticky', top: -5, padding: 7,background:'white'}}>
                                                     <input
                                                         type="text"
                                                         style={{
@@ -626,26 +655,38 @@ const MediaDetails = (props) => {
                                                         value={props.searchMediaDetailsContainer.associateSearch}
                                                     ></input>
                                                 </Grid>
-                                                {contacts &&
-                                                contacts
-                                                    .filter((contact) => ((
-                                                            contact.first_name && contact.last_name &&
-                                                            ((contact.first_name + " " + contact.last_name).toLowerCase())
-                                                                .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
-                                                        props.searchMediaDetailsContainer.associateSearch.length === 0
-                                                    ))
-                                                    .map((contact, index) => {
-                                                        return (
-                                                            contact.first_name && contact.last_name &&
-                                                            <DropDownItem
-                                                                addDataToFilter={props.addDataToFilter}
-                                                                id={contact.id}
-                                                                username={contact.first_name + ' ' + contact.last_name}
-                                                                url={contact.twitter_profile.profile_image}
-                                                                setDisplay={props.setSelectedAssociatePlaceholderContainer}
-                                                                type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
-                                                        );
-                                                    })}
+                                                <div style={{marginLeft:10,zIndex: 10,background:'white',
+                                                    position: 'sticky', top: '216px'}}>
+                                                    <Pagination onPaginationChange={onPaginationChange}/>
+                                                </div>
+                                                <div style={{height: '100%', width: '280px',marginTop:'-40px'}}>
+                                                    {
+                                                        props.fetching?
+                                                            <Grid style={{width:'100%',height:'100%'}} alignItems="center" justify="center" container >
+                                                                <CircularProgress />
+                                                            </Grid>
+                                                            :
+                                                        filterContacts &&
+                                                            filterContacts
+                                                            .filter((contact) => ((
+                                                                    contact.first_name && contact.last_name &&
+                                                                    ((contact.first_name + " " + contact.last_name).toLowerCase())
+                                                                        .includes((props.searchMediaDetailsContainer.associateSearch).toLowerCase())) ||
+                                                                props.searchMediaDetailsContainer.associateSearch.length === 0
+                                                            ))
+                                                            .map((contact, index) => {
+                                                                return (
+                                                                    contact.first_name && contact.last_name &&
+                                                                    <DropDownItem
+                                                                        addDataToFilter={props.addDataToFilter}
+                                                                        id={contact.id}
+                                                                        username={contact.first_name + ' ' + contact.last_name}
+                                                                        url={contact.twitter_profile.profile_image}
+                                                                        setDisplay={props.setSelectedAssociatePlaceholderContainer}
+                                                                        type={"SELECTED_ASSOCIATE_PLACEHOLDER"}/>
+                                                                );
+                                                            })}
+                                                </div>
                                             </Fragment>
                                         </div>
                                         }
@@ -659,127 +700,129 @@ const MediaDetails = (props) => {
                 </Grid>
                 {props.hideStats === null && (
                     <div
-                    style={{
-                        borderLeft: "1px solid #d2d2d2",
-                        width: "25%",
-                    }}
-                >
-                    <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
                         style={{
-                            height: "10%",
-                           
+                            borderLeft: "1px solid #d2d2d2",
+                            width: "25%",
                         }}
                     >
-                      
-                        <p
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
                             style={{
-                                fontWeight: "bold",
-                                fontSize: 18,
-                                margin: 0,
-                                height: 30,
+                                height: "10%",
+
                             }}
                         >
-                            Media Stats
-                        </p>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                        className={classes.mediaStatsGrid}
-                    >
-                        <p
-                            className={classes.mediaStatsRightHeading}
+
+                            <p
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: 18,
+                                    margin: 0,
+                                    height: 30,
+                                }}
+                            >
+                                Media Stats
+                            </p>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                            className={classes.mediaStatsGrid}
                         >
-                          Media sent in:
-                        </p>
-                        <p
-                            className={classes.mediaStatsRightState}
+                            <p
+                                className={classes.mediaStatsRightHeading}
+                            >
+                                Media sent in:
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                {props.selectedPlaceholder.activity != null ?
+                                    props.selectedPlaceholder.activity.sms + props.selectedPlaceholder.activity.dms + props.selectedPlaceholder.activity.pts : 0} Messages
+                            </p>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                            className={classes.mediaStatsGrid}
                         >
-                            {props.selectedPlaceholder.activity!=null?
-                            props.selectedPlaceholder.activity.sms+props.selectedPlaceholder.activity.dms+props.selectedPlaceholder.activity.pts:0} Messages
-                        </p>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                        className={classes.mediaStatsGrid}
-                    >
-                        <p
-                            className={classes.mediaStatsRightHeading}
-                        >
-                            Media Published in:
-                        </p>
-                        <p
-                            className={classes.mediaStatsRightState}
-                        >
-                            {props.selectedPlaceholder.activity!=null?
-                            props.selectedPlaceholder.activity.tweets:0} Tweets
-                        </p>
-                    </Grid>
-                    <Divider/>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                        
-                        style={{
-                            // height: "15%",
-                            borderBottom: "1px solid #d2d2d2",
-                        }}
-                    >
-                        <p
-                            className={classes.mediaStatsRightState}
-                        >
-                            Messaging Stats
-                        </p>
-                        <p
-                        className={classes.mediaStatsRightState}
+                            <p
+                                className={classes.mediaStatsRightHeading}
+                            >
+                                Media Published in:
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                {props.selectedPlaceholder.activity != null ?
+                                    props.selectedPlaceholder.activity.tweets : 0} Tweets
+                            </p>
+                        </Grid>
+                        <Divider/>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+
                             style={{
-                                fontWeight: "bold",
-                                fontSize: 25,
-                                margin: 0,
-                                height: 30,
+                                // height: "15%",
+                                borderBottom: "1px solid #d2d2d2",
                             }}
                         >
-                            -
-                        </p>
-                        <p
-                            style={{
-                               
-                                fontSize: 18,
-                                margin: 0,
-                                height: 30,
-                            }}
-                        >
-                            Response Rate (0/0)
-                        </p>
-                        <p
-                            className={classes.mediaStatsRightState}
-                            style={{fontWeight:'bold',
-                            fontSize: 25,}}
-                        >
-                            -
-                        </p>
-                        <p
-                            style={{
-                                // height: "60%",
-                            }}
-                        >
-                            Opt-out Rate
-                        </p>
-                     
-                       
-                    </Grid>
-                    <Grid
+                            <p
+                                className={classes.mediaStatsRightState}
+                            >
+                                Messaging Stats
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: 25,
+                                    margin: 0,
+                                    height: 30,
+                                }}
+                            >
+                                -
+                            </p>
+                            <p
+                                style={{
+
+                                    fontSize: 18,
+                                    margin: 0,
+                                    height: 30,
+                                }}
+                            >
+                                Response Rate (0/0)
+                            </p>
+                            <p
+                                className={classes.mediaStatsRightState}
+                                style={{
+                                    fontWeight: 'bold',
+                                    fontSize: 25,
+                                }}
+                            >
+                                -
+                            </p>
+                            <p
+                                style={{
+                                    // height: "60%",
+                                }}
+                            >
+                                Opt-out Rate
+                            </p>
+
+
+                        </Grid>
+                        <Grid
                             container
                             direction="row"
                             justify="center"
@@ -787,7 +830,7 @@ const MediaDetails = (props) => {
                             className={classes.mediaStatsGrid}
                             style={{
                                 // height: "60%",
-                                
+
                             }}
                         >
                             <p
@@ -797,18 +840,18 @@ const MediaDetails = (props) => {
                             </p>
                             <p
                                 style={{
-                                    fontWeight:'bold',
+                                    fontWeight: 'bold',
                                     fontSize: 25,
                                     margin: 0,
                                     height: 30,
                                 }}
                             >
-                               -
+                                -
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
                                 style={{
-                                    fontWeight:"normal",
+                                    fontWeight: "normal",
                                     fontSize: 18,
                                     margin: 0,
                                 }}
@@ -816,7 +859,8 @@ const MediaDetails = (props) => {
                                 Contact Engagement
                             </p>
                             <p
-                                style={{fontWeight:'bold',
+                                style={{
+                                    fontWeight: 'bold',
                                     fontSize: 25,
                                     margin: 0,
                                 }}
@@ -826,7 +870,7 @@ const MediaDetails = (props) => {
                             <p
                                 className={classes.mediaStatsRightState}
                                 style={{
-                                    fontWeight:"normal",
+                                    fontWeight: "normal",
                                     fontSize: 18,
                                     margin: 0,
                                 }}
@@ -835,8 +879,10 @@ const MediaDetails = (props) => {
                             </p>
                             <p
                                 className={classes.mediaStatsRightState}
-                                style={{fontWeight:'bold',
-                                fontSize: 25,}}
+                                style={{
+                                    fontWeight: 'bold',
+                                    fontSize: 25,
+                                }}
                             >
                                 -
                             </p>
@@ -847,10 +893,10 @@ const MediaDetails = (props) => {
                                     height: 30,
                                 }}
                             >
-                                Retweets front Contacts 
+                                Retweets front Contacts
                             </p>
                         </Grid>
-                </div>
+                    </div>
                 )}
             </Grid>
         </div>

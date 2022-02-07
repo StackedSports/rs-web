@@ -304,7 +304,7 @@ export const getAllContacts = (page) => {
   var page = page || 1;
   var pageCount = page || 1;
   console.log("THis is page count", pageCount, "this is page", page);
-  var perPage = 200 * pageCount;
+  var perPage = 50;
   console.log("This is perpage", perPage);
   return axios({
     method: "get",

@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useReducer, Fragment} from "react";
 import ReactDOM from "react-dom";
 
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 import MuiAlert from "@material-ui/lab/Alert";
 import {Link} from "react-router-dom";
 import {
@@ -12,41 +15,14 @@ import {
     Slider,
 } from "@material-ui/core";
 import moment from "moment";
-import {FaSlidersH, FaBars, FaTh} from "react-icons/fa";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import AmimatedBurger from '../../images/animated_burger.gif';
-import FormatAlignLeftOutlinedIcon from '@mui/icons-material/FormatAlignLeftOutlined';
-import DrawerAnimation from '../../images/drawer_animation.gif';
-import BackAnimation from '../../images/back_animation.gif';
-import BackIcon from '../../images/back.png';
-import DrawerIcon from '../../images/drawer_contact.png';
 
-import {
-    Search,
-} from "@material-ui/icons";
-
-import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-
-import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
-import ClearIcon from "@material-ui/icons/Clear";
 import {Dropdown, DropdownButton} from "react-bootstrap";
-import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
-import GifIcon from "@material-ui/icons/Gif";
-import DialogBox from "../common/Dialogs";
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
-import {DarkContainer} from "../common/Elements/Elements";
-import IconTextField from "../common/Fields/IconTextField";
-import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 
 
-import MediaItem from './Media/Item/item';
 import MediaItemDetails from './Media/Details';
-import DropDownButton from './DropDownButton';
 import ItemMainHeader from './Media/Header';
-import TagItem from './Tags/item';
 import TagSearchModal from './Tags/TagSearchModal';
 import LightboxDialog from './LightboxDialog';
 import Header from './Header';
@@ -55,13 +31,15 @@ import Media from './Media';
 import PlaceholderDetails from './PlaceholderDetails';
 import PlaceholderListButton from './Placehoder/PlaceholderListButton';
 import Tag from './Tags';
-
+import Pagination from './Pagination';
 import PlaceholderTableList from './Media/TableList/index';
 import Placeholder from './Placehoder';
 
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import {
     getAllContacts,
@@ -71,9 +49,6 @@ import {
     getMediaUsers,
     getTeamContacts,
     getTags,
-    postTag,
-    getPlaceholderById,
-    getMessages
 } from "../../ApiHelper";
 import {fileTypes} from '../../utils/FileUtils';
 
@@ -84,14 +59,6 @@ import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {DateRangePicker} from "react-date-range";
 import {addDays} from "date-fns";
 
-// const useStyles2 = makeStyles((theme) => ({
-//   root: {
-//     width: "100%",
-//     "& > * + *": {
-//       marginTop: theme.spacing(2),
-//     },
-//   },
-// }));
 const useStyles = makeStyles({
     tableHeading: {
         fontWeight: 700,
@@ -154,7 +121,6 @@ const useStyles = makeStyles({
         textAlign: "center",
     },
     mediaStatsRightState: {
-        fontSize: 18,
         margin: 0,
         height: 30,
         fontSize: 20,
@@ -207,6 +173,8 @@ function MediaComponent(props) {
     // console.log("This is logged in user", localStorage.getItem("user"));
     const [filter, setFilter] = useState([]);
 
+
+
     const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
     const [state, setState] = useState([
         {
@@ -249,7 +217,7 @@ function MediaComponent(props) {
     const [timeZoneFilter, setTimeZoneFilter] = useState(null);
     const [stateFilter, setStateFilter] = useState(null);
 
-    const [contacts, setContacts] = useState(null);
+    const [contacts, setContacts] = useState([]);
     const [myMediaContacts, setMyMediaContacts] = useState(null);
     const [media, setMedia] = useState(null);
     const [placeholders, setPlaceHolders] = useState(null);
@@ -263,6 +231,7 @@ function MediaComponent(props) {
 
     const [allTags, setAllTags] = useState(null);
     const [page, setPage] = useState(1);
+    const [loadingContacts, setLoadingContacts] = useState(false);
 
     const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
@@ -417,17 +386,20 @@ function MediaComponent(props) {
             (res) => {
                 // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
-                    console.log("These are all contacts", res.data);
-                    setContacts(res.data);
-                    // setCopyContacts(res.data);
-                    // document.getElementById("infinit").scrollTop = 0;
+                    let tempContacts=(res.data).map((c)=>{
+                        c.page=page;
+                        return c;
+                    });
+                    tempContacts=contacts.concat(tempContacts);
+                    setContacts(tempContacts);
+                    console.log("These are all contacts", tempContacts);
+
                     setFetching(false);
                 }
             },
             (error) => {
-                getMyContacts(1);
-                setPage(1);
                 console.log("this is error all contacts", error);
+                setFetching(false);
             }
         );
     };
@@ -572,9 +544,9 @@ function MediaComponent(props) {
                         marginTop: 0,
                         display: displayRangeCalendar ? "block" : "none",
                     }}
-                  
-                        //setDisplayRageCalendar(false);
-                   
+
+                    //setDisplayRageCalendar(false);
+
                 >
                     <Grid style={{}}>
                         {/* <DateRange
@@ -606,11 +578,30 @@ function MediaComponent(props) {
         );
     };
 
+
+
+    const onPaginationChange=(page)=>{
+        console.log('page = ',page);
+
+        const pageExistInContact=contacts.findIndex((f)=>f.page===page);
+
+        if(pageExistInContact===-1){
+            getMyContacts(page);
+        }
+        setPage(page);
+
+    }
+
     const renderFilters = () => {
 
         let owners = [];
         let dateCreated = [];
         let mediaContacts = [];
+
+
+
+        const filteredContacts=contacts.filter((c)=>c.page===page);
+
 
         for (let m of media) {
             if (m.owner && m.owner.first_name && m.owner.last_name) {
@@ -630,7 +621,7 @@ function MediaComponent(props) {
         }
 
 
-        for (let c of contacts) {
+        for (let c of filteredContacts) {
             if (c.first_name && c.last_name) {
                 if (mediaContacts.findIndex((o) => o.value === c.first_name + ' ' + c.last_name) === -1) {
                     mediaContacts.push({type: 'associated_to', value: (c.first_name + ' ' + c.last_name)})
@@ -654,7 +645,7 @@ function MediaComponent(props) {
                     borderBottom: "1px solid #f8f8f8",
                     paddingBottom: 20,
                 }}
-             
+
             >
 
                 <DropdownButton
@@ -745,38 +736,55 @@ function MediaComponent(props) {
                         placeholder="Status"
                         style={filtesSpacingStyle}
                     >
-                        <Grid container direction="row" justify="center">
-                            <input
-                                type="text"
-                                style={{
-                                    width: "90%",
-                                    border: "1px solid #ebebeb",
-                                    borderRadius: 4,
-                                }}
-                                placeholder="Search Contacts"
-                                value={contactSearch}
-                                onChange={(e) => {
-                                    setContactSearch(e.target.value);
-                                }}
-                            ></input>
-                        </Grid>
-                        {
-                            mediaContacts.map((m) => {
-                                return (
-                                    <Dropdown.Item
-                                        style={{
-                                            background: "white",
-                                            color: "black",
-                                        }}
-                                        onClick={() => {
-                                            props.addDataToFilter(m.value, "associated_to");
-                                        }}
-                                    >
-                                        {m.value}
-                                    </Dropdown.Item>
-                                )
-                            })}
+                        <Fragment style={{position: 'relative'}}>
+
+                            <Grid container direction="row" justify="center"
+                                  style={{position: 'sticky', top: -10}}>
+                                <input
+                                    type="text"
+                                    style={{
+                                        width: "90%",
+                                        border: "1px solid #ebebeb",
+                                        borderRadius: 4,
+                                    }}
+                                    placeholder="Search Contacts"
+                                    value={contactSearch}
+                                    onChange={(e) => {
+                                        setContactSearch(e.target.value);
+                                    }}
+                                ></input>
+                            </Grid>
+                            <div style={{height: '120px',width:'280px',overflow:'hidden'}}>
+                                {
+                                    fetching?
+                                        <Grid  style={{width:'100%',height:'100%'}} alignItems="center" justify="center" container >
+                                            <CircularProgress />
+                                        </Grid>
+                                        :
+                                    mediaContacts.map((m) => {
+                                        return (
+                                            <Dropdown.Item
+                                                style={{
+                                                    background: "white",
+                                                    color: "black",
+                                                }}
+                                                onClick={() => {
+                                                    props.addDataToFilter(m.value, "associated_to");
+                                                }}
+                                            >
+                                                {m.value}
+                                            </Dropdown.Item>
+                                        )
+                                    })}
+                            </div>
+                            <div style={{marginLeft:10,zIndex: 10,background:'white', position: 'sticky', top: 155}}>
+                                <Pagination onPaginationChange={onPaginationChange}/>
+                            </div>
+                        </Fragment>
+
+
                     </DropdownButton>
+
                 </div>
 
                 <CalendarFilter></CalendarFilter>
@@ -955,7 +963,7 @@ function MediaComponent(props) {
 
         (async () => {
             if (localStorage.getItem("user")) {
-                await getMyContacts();
+                await getMyContacts(1);
                 await getTaggedMedia();
                 await getMyMediaContacts();
                 await getMyTeamContacts();
@@ -1235,7 +1243,7 @@ function MediaComponent(props) {
     }
 
     const handleSetTagSearch = (tagSearch) => {
-        setOpenSnackBar(tagSearch);
+        setTagSearch(tagSearch);
     }
 
     const handleSetLightboxVideo = (lightbox) => {
@@ -1501,15 +1509,14 @@ function MediaComponent(props) {
     }
 
 
-
-    if(personalizedMediaSelected){
-        for(let placeholder of placeholders){
-            if(placeholder.media && (placeholder.media).length>0){
-                const placeholderMedia=(placeholder.media).map((p)=>{
-                    p.IsPlaceholderMedia=true;
+    if (personalizedMediaSelected) {
+        for (let placeholder of placeholders) {
+            if (placeholder.media && (placeholder.media).length > 0) {
+                const placeholderMedia = (placeholder.media).map((p) => {
+                    p.IsPlaceholderMedia = true;
                     return p;
                 });
-                MediaList=MediaList.concat(placeholderMedia);
+                MediaList = MediaList.concat(placeholderMedia);
             }
         }
     }
@@ -1639,6 +1646,8 @@ function MediaComponent(props) {
                         <Grid container direction="column">
                             <Grid item xs={displayListContainer.isPlaceholderSelected ? 6 : 12}>
                                 <MediaItemDetails
+                                    getMyContacts={getMyContacts}
+                                    fetching={fetching}
                                     count={count}
                                     filter={filter}
                                     teamContacts={teamContacts}
@@ -1877,7 +1886,7 @@ function MediaComponent(props) {
                 < TagSearchModal
                     showTagsDialog={showTagsDialog}
                     tagSearch={tagSearch}
-                    allTags={allTags}
+                    allTags={taggedMedia}
                     setTagSearch={handleSetTagSearch}
                     setShowTagsDialog={handleShowTagsDialog}
                     setOpenSnackBar={handleOpenSnackBar}
