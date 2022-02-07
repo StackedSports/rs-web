@@ -71,7 +71,6 @@ const useStyles = makeStyles({
         fontSize: 18,
         margin: 0,
         height: 30,
-        fontSize: 20,
         fontWeight: 'bold',
         width: '100%',
         textAlign: 'center'
@@ -209,7 +208,7 @@ const PlaceholderTableList = (props) => {
 
     let tempItemsList = [];
 
-    console.log('filter list = ', sortingOrder, '   ', tempItemsList, '  ', itemsList)
+    console.log('filter list = ', props.personalizedMediaSelected)
 
 
     if (props.isMedia && props.filter && props.filter.length > 0) {
@@ -280,10 +279,19 @@ const PlaceholderTableList = (props) => {
                         }
                     }
                 }
+            }else if (f.type === 'personalized') {
+                for (let item of itemsList) {
+                    if (item && item.contact && item.contact.first_name  ) {
+                        if (tempItemsList.findIndex((t) => t.id === item.id) === -1) {
+                            tempItemsList.push(item)
+                        }
+                    }
+                }
             }
         }
 
-    } else {
+    }
+    else {
         tempItemsList = JSON.parse(JSON.stringify(itemsList));
     }
 
@@ -295,7 +303,7 @@ const PlaceholderTableList = (props) => {
             width: "100%",
             marginTop: props.isPlaceholderDetails ? 10 : 0,
             overflowY: 'scroll',
-            overflowX: 'hidden'
+            overflowX: 'hidden',
         }}>
             <ListHeader
                 handleSortingOrder={handleSortingOrder}
@@ -308,7 +316,8 @@ const PlaceholderTableList = (props) => {
                 style={{
                     width: "100%", overflowY: 'scroll', overflowX: 'hidden',
                     height: props.isPlaceholderDetails ? '55vh' :
-                        (props.showFullHeight ? '55vh' : '30vh')
+                        (props.showFullHeight ? '55vh' : '30vh'),
+//                    display:tempItemsList.length<1?'none':'block'
                 }}
                 id="infinit"
                 onScroll={() => {
@@ -326,6 +335,7 @@ const PlaceholderTableList = (props) => {
                             item={item}
                             index={index}
                             key={item.key}
+                            placeholderId={props.placeholderId}
                             handleItemSelected={handleItemSelected}
                             setShowMediaStats={props.setShowMediaStats}
                             isPlaceholderDetails={props.isPlaceholderDetails}

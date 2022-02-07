@@ -16,6 +16,9 @@ import { FaStackpath } from 'react-icons/fa';
 
 
 function KeywordRules(props) {
+  
+
+
  const [item,setItem]=React.useState(null)
 
   const top100Films = [
@@ -60,7 +63,7 @@ function KeywordRules(props) {
         setKeyword(event.target.value);
         
       };
-
+      
       const useStyles = makeStyles((theme)=>({
       
         afterSelect:{
@@ -76,7 +79,7 @@ function KeywordRules(props) {
       
         
         "& .MuiSelect-select":{
-          border:'2.3px solid #1976d2' ,
+          border:'3px solid #1976d2' ,
           borderRadius: "5px 5px 0 0"
           
         },
@@ -95,7 +98,7 @@ function KeywordRules(props) {
       };
       const classes = useStyles();
       console.log('selectedItems = ',selectedItem)
-      
+      console.log("keywordContent = ",props.keywordIncludes)
     return (
         
         <div style={{outline:'none'}}>
@@ -141,8 +144,8 @@ function KeywordRules(props) {
           value={keyword}
           displayEmpty
           style={{
-         border:keyworddisable?'2.3px solid #e1e1e1 ':'2px solid #1976d2',
-         borderRadius: "5px 5px 0 0"
+         border:keyworddisable?'1px solid':'3px solid #1976d2',
+         borderRadius: "3px 3px 0 0"
         }}
              disabled={keyworddisable}
           inputProps={{ "aria-label": "Without label" }}
@@ -159,50 +162,54 @@ function KeywordRules(props) {
          <Autocomplete
         id="free-solo-demo"
         multiple
+        freeSolo
+        autoSelect
         options={top100Films.map((option) => option.title)}
-        onChange={(event,values) => {
-          console.log('hamza',selectedItem)
         
-          selectedItem.push(values)
-          setSelecteditem(values);
-          setCount(count+1)
+        onChange={(event,values) => {
+         
+          props.handleSelectedItem(selectedItem)
+          props.selectedItem.push(values)
+          props.handleSelectedItem(values);
+          setCount(count+1);
+          props.handleCountKeywordRules(count);
          
         }}
         renderInput={(params) => <TextField {...params} label="Search or Create New Keyword Match" />}
       /> </FormControl>
         
-        {
+        {/*{
           selectedItem.map((item)=>         
           <Typography variant = 'subtitle2' style={{fontWeight:'bold',marginLeft:'10px'}}>
           {item}
          </Typography>
          
           )
-        }
+        }*/}
            
          
          
        
 
-        <Stack direction='row' spacing={1} >
-         
+        <Stack direction='column' spacing={1} style={{height:count>2?100:'',overflowY:count>2?"scroll":'',overFlowX:'hidden'}} >
+        
+        {props.selectedItem.map((item,index)=> 
+        <li key={index}>
         <Chip
-        label="Season Tickets"
+        label={item}
         className={classes.icon}
         onClick={(e) => {
           setCircleIcon(!circleIcon)
         handleClick
         }}
-        
-       
+           style={{borderRadius:'5px',width:'34%',backgroundColor:circleIcon ?'white':'#f0f0f0',padding:0}}
+        />
       
-        style={{borderRadius:'5px',width:'34%',backgroundColor:circleIcon ?'white':'#f0f0f0',padding:0}}
-        
-      />
-    
-     { circleIcon && 
-       <CheckCircleIcon fontSize='small' style={{fill:'#006644',marginTop:'5px'}}/>
-}</Stack>  
+    { item!=null?
+       <CheckCircleIcon fontSize='small' style={{fill:'#006644',marginTop:'5px',marginLeft:5}}/>:''
+  }
+   </li>)}  
+  </Stack>  
       
         </Stack>
 
@@ -210,13 +217,13 @@ function KeywordRules(props) {
    </Box>
    <Stack >
 
-   <Typography variant = 'subtitle2' style={{marginLeft:'30px',marginBottom:'-14px'}}>Keyword Set - Recruitig</Typography>
-    
+  {/* <Typography variant = 'subtitle2' style={{marginLeft:'30px',marginBottom:'-14px'}}>Keyword Set - Recruitig</Typography>
+    */}
    <Paper elavation={24} style={{display:'flex',marginLeft : '-1.3px',flexDirection:'row-reverse',width:'100.6%',   borderRadius: 0,}}>
  <Typography variant='button' style={{marginRight:'10px',cursor:'pointer',color:'#6d6d6d',padding:'10px'}}
  onClick={(e) => {
-   {circleIcon && tweet && props.include(true)}
-  {circleIcon && tweet && props.xyz(false)}
+   {tweet && props.include(true)}
+  { tweet && props.xyz(false)}
   e.stopPropagation();
  }} >Apply</Typography>
  <Typography variant='button'

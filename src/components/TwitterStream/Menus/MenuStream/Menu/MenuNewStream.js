@@ -53,8 +53,10 @@ function MenuNewStream(props) {
                    types={props.tweet} hashtagRules={props.hashtagRules}
                     geographyRules={props.geographyRules} geographyContent={props.geographyContent}
                     checkTypes={props.checkTypes}  hashtagContent={props.hashtagContent} 
-                    accountRules={props.accountRules} accountContent={props.accountContent} />}
-
+                    accountRules={props.accountRules} accountContent={props.accountContent} 
+                    countkeywordrules={props.countkeywordrules}
+                    />}
+                    
                     </div>
                     </Stack>
        </Box>

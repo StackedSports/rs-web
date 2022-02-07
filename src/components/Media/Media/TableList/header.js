@@ -90,6 +90,7 @@ const ListHeader = (props) => {
             style={{
                 background: "#f5f6f9",
                 width: "100%",
+                
             }}
         >
             <Grid item md={0.5} xs={0.5} onClick={(e)=>props.handleSetSelectAll()}>

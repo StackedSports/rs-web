@@ -90,7 +90,7 @@ const MediaItem = (props) => {
                 }
                 {
                     props.isPlaceHolder ?
-                        <PlaceHolderImageView url={m.media && m.media.length>0 && m.media[0].urls.thumb}/> :
+                        <PlaceHolderImageView url={m.media && m.media.length>0 && m.media[0].urls.original}/> :
                         <img
                             style={{width: "80%", height: 190, objectFit: "contain"}}
                             src={m.urls && m.urls.thumb}
@@ -121,11 +121,11 @@ const MediaItem = (props) => {
                             m.media_preview ? isImage(m.media_preview) ? (
                                     <FaImage></FaImage>
                                 ) : isVideo(m.media_preview) > -1 ? (
-                                    <FaVideo style={{color: "#3871da", fontSize: 20, zIndex: 100}}></FaVideo>
+                                    <FaVideo style={{color: "black", fontSize: 20, zIndex: 100}}></FaVideo>
                                 ) : (
-                                    <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                                    <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
                                 ) :
-                                <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                                <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
 
 
                         )

@@ -3,20 +3,20 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as RiIcons from "react-icons/ri";
-import { BiHome } from "react-icons/bi";
-import { BsPerson } from "react-icons/bs";
-import { BiCommentAdd } from "react-icons/bi";
-import { TiImageOutline } from "react-icons/ti";
-import { TiSocialTwitter } from "react-icons/ti";
-import { BsBarChart } from "react-icons/bs";
-import { IoIosSettings } from "react-icons/io";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
     icon: (
-      <BiHome
+      <HomeOutlinedIcon
         style={{
           height: "24px",
           width: "24px",
@@ -32,7 +32,7 @@ export const SidebarData = [
     title: "Contact",
     path: "/contacts",
     icon: (
-      <BsPerson
+      <PersonOutlineOutlinedIcon
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
         color="rgb(113, 115, 118)"
       />
@@ -44,7 +44,7 @@ export const SidebarData = [
     title: "Message Create",
     path: "/message-create",
     icon: (
-      <BiCommentAdd
+      <AddCommentOutlinedIcon
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
         color="rgb(113, 115, 118)"
       />
@@ -54,7 +54,7 @@ export const SidebarData = [
     title: "Media",
     path: "/media",
     icon: (
-      <TiImageOutline
+      <ImageOutlinedIcon
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
         color="rgb(113, 115, 118)"
       />
@@ -65,7 +65,7 @@ export const SidebarData = [
 
     path: "/tweet-create",
     icon: (
-      <TiSocialTwitter
+      <TwitterIcon
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
         color="rgb(113, 115, 118)"
       />
@@ -75,10 +75,10 @@ export const SidebarData = [
     iconOpened: <RiIcons.RiArrowUpSFill />,
   },
   {
-    title: "Reports",
-    path: "/contact-profile",
+    title: "Twitter Stream",
+    path: "/twitter-stream",
     icon: (
-      <BsBarChart
+      <PublicOutlinedIcon
         style={{
           height: "24px",
           width: "24px",
@@ -92,7 +92,7 @@ export const SidebarData = [
     title: "Settings",
     path: "/team-settings",
     icon: (
-      <IoIosSettings
+      <SettingsIcon
         style={{ height: "24px", width: "24px", opacity: 0.9 }}
         color="rgb(113, 115, 118)"
       />

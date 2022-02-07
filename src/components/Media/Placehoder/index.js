@@ -41,6 +41,7 @@ const Placeholder = (props) => {
             {props.showlistView === true && props.message === null ? (
                     <PlaceholderTableList
                         list={placeholders}
+                        personalizedMediaSelected={props.personalizedMediaSelected}
                         handleScroll={props.handleScroll}
                         isPlaceholder={true}
                         setLightboxVideo={props.setLightboxVideo}

@@ -2,7 +2,7 @@ import {Grid, makeStyles} from "@material-ui/core";
 import moment from "moment";
 import React, {useState} from "react";
 
-import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import GifIcon from '@mui/icons-material/GifBoxOutlined';
 import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
 import {isImage, isVideo} from '../../../../utils/FileUtils';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -97,7 +97,7 @@ const PlaceholderItem = (props) => {
             onClick={() => {
                 if (props.isPlaceholderDetails) {
                     props.setShowMediaStats(true);
-                    props.setSelectedPlaceHolder(item, props.isPlaceholder);
+                    props.setSelectedPlaceHolder(item, props.isPlaceholder,props.placeholderId);
                 } else {
                     props.setSelectedPlaceHolder(item.id, props.isPlaceholder);
                 }
@@ -123,7 +123,7 @@ const PlaceholderItem = (props) => {
             }}
         >
 
-            <Grid item md={0.5} xs={0.5} style={{margin: 0}}>
+            <Grid item md={0.5} xs={0.5} style={{}}>
                 {item.hover || item.isSelected ?
                     <span className={classes.tableHeading}
                           onClick={(e) => {
@@ -131,21 +131,31 @@ const PlaceholderItem = (props) => {
                           }
                           }
                     >  {<Checkbox checked={item.isSelected} onChange={(e) => props.handleItemSelected(props.index)}
-                                  className={classes.tableHeading}/>}</span>
+                    className={classes.tableHeading} size="small"  style={{borderRadius:"1px",padding:0}} 
+                    />}</span>
                     :
-                    (item.url.indexOf(".gif") > -1 ? (
-                        <GifIcon></GifIcon>
-                    ) : item.url.indexOf(".png") > -1 ||
-                    item.url.indexOf(".jpg") > -1 ||
-                    item.url.indexOf(".jpeg") > -1 ? (
+                   (item.file_type==="image/gif" ? (
+                        <GifIcon 
+                        style={{color: "black", fontSize: 25}}
+                        >    
+                        </GifIcon>
+                    ): item.file_type==="image/jpeg" ||
+                    item.file_type==="image/png"?
+                    (
                         <FaImage
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{color: "black", fontSize: 20}}
                         ></FaImage>
-                    ) : item.url.indexOf(".mp4") > -1 ? (
-                        <FaVideo></FaVideo>
+                    ) : 
+                    item.file_type==="video/mp4"  ||
+                    item.file_type==="video/quicktime" 
+                    ? (
+                        <FaVideo 
+                        style={{color: "black", fontSize: 20}}
+                        >    
+                        </FaVideo>
                     ) : (
                         <FaFilePdf
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{color: "black", fontSize: 20}}
                         ></FaFilePdf>
                     ))}
             </Grid>
@@ -170,9 +180,9 @@ const PlaceholderItem = (props) => {
                     }
                 } else {
                     if (item.file_type.indexOf("video") > -1) {
-                        props.setLightboxVideo(item.urls.large);
+                        props.setLightboxVideo(item.urls.original);
                     } else {
-                        props.setLightboxPicture(item.urls.medium);
+                        props.setLightboxPicture(item.urls.original);
                     }
                 }
 
@@ -182,7 +192,7 @@ const PlaceholderItem = (props) => {
                 <img
 
                     style={{width: 30, height: 30, marginLeft: 13, cursor: 'pointer'}}
-                    src={item.url}
+                    src={!item.IsPlaceholderMedia?item.url:item.urls.thumb}
                 ></img>
             </Grid>
 

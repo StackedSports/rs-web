@@ -15,13 +15,14 @@ function Keyword(props) {
         <Paper width={300}>
             <Stack  style = {{padding:20,marginLeft:'10px',marginRight:'20px',marginBottom:0}} >
           
-            <Typography variant='body2'  value={10}  onClick={(e) => {
-           {props.Types ===false  ? props.abc(true):''}
-            { props.Types ===false ? props.xyz(false):''}
+            <Typography variant='body2' value={10}  onClick={(e) => {
+           { props.countkeywordrules<=20 && props.abc(true)}
+            { props.countkeywordrules<=20 && props.xyz(false)}
+            
             e.stopPropagation();
               }} 
               
-              style = {{padding:'5px', cursor:props.Types===false ? 'pointer':'default'}}>
+              style = {{padding:'5px', cursor:props.countkeywordrules<=20?'pointer':"default"}}>
                  
             Keywords
             </Typography>
