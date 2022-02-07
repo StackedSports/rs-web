@@ -121,11 +121,11 @@ const MediaItem = (props) => {
                             m.media_preview ? isImage(m.media_preview) ? (
                                     <FaImage></FaImage>
                                 ) : isVideo(m.media_preview) > -1 ? (
-                                    <FaVideo style={{color: "#3871da", fontSize: 20, zIndex: 100}}></FaVideo>
+                                    <FaVideo style={{color: "black", fontSize: 20, zIndex: 100}}></FaVideo>
                                 ) : (
-                                    <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                                    <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
                                 ) :
-                                <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                                <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
 
 
                         )

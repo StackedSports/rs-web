@@ -135,26 +135,26 @@ const PlaceholderItem = (props) => {
                     :
                    (item.file_type==="image/gif" ? (
                         <GifIcon 
-                        style={{color: "3871da", fontSize: 25}}
+                        style={{color: "black", fontSize: 25}}
                         >    
                         </GifIcon>
                     ): item.file_type==="image/jpeg" ||
                     item.file_type==="image/png"?
                     (
                         <FaImage
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{color: "black", fontSize: 20}}
                         ></FaImage>
                     ) : 
                     item.file_type==="video/mp4"  ||
                     item.file_type==="video/quicktime" 
                     ? (
                         <FaVideo 
-                        style={{color: "#3871da", fontSize: 20}}
+                        style={{color: "black", fontSize: 20}}
                         >    
                         </FaVideo>
                     ) : (
                         <FaFilePdf
-                            style={{color: "#3871da", fontSize: 20}}
+                            style={{color: "black", fontSize: 20}}
                         ></FaFilePdf>
                     ))}
             </Grid>
