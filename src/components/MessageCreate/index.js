@@ -283,8 +283,12 @@ function MessageCreate(props) {
       return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
     });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
-      return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase());
+      return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+      row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+      row?.phone?.includes(searchedVal)||row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase()) 
+      ;
     });
+    // phone
     setRows(filteredRows);
     setindividualRows(filteredRowsIndv)
 
@@ -300,6 +304,10 @@ function MessageCreate(props) {
     setRows(filteredRows);
 
   };
+  console.log('-----------------individualFilter result-------------------------')
+console.log('====================================');
+console.log(individualrows);
+console.log('===========individualFilter result=========================');
   const cancelSearchIndividual = () => {
     setSearched("");
     requestSearchForindividual(searched);
@@ -2940,12 +2948,12 @@ function MessageCreate(props) {
 
                                           borderTop: "1px solid #edeef2",
                                           width: "100%",
-                                          height: 100,
+                                          height: 60,
                                           color: "#9e9e9e",
                                           cursor: "pointer",
                                         }}
                                         onClick={() => {
-                                          addDataToReceivers(indv.first_name, indv.first_name);
+                                          addDataToReceivers(indv.first_name, indv.last_name);
                                           // setMessageReceiver();
                                         }}
                                         className="d-flex align-items-center"
