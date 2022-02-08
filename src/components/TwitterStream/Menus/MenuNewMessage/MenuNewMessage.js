@@ -57,6 +57,7 @@ function MenuNewMessage(props) {
     const [hideGrid, setHideGrid] = useState(true);
     const [countkeywordrules,setCountKeywordRules]=React.useState(0)
     const [count,setCount]=React.useState(0)
+    const [tweet,setTweet]=React.useState([])
     function disableScroll() {
       window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
       window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -71,7 +72,9 @@ function MenuNewMessage(props) {
       background: 'grey',
       right: '-9px'
   }
-
+  const handleTweet=(tweet)=>{
+    setTweet(tweet)
+  }
   const handleNewStreamGrid=()=>{
     setHideGrid(!hideGrid)
   }
@@ -218,6 +221,7 @@ function MenuNewMessage(props) {
                   selectedItem={selectedItem}
                   count={count}
                   handleSelectedItem={handleSelectedItem}
+                  tweet={tweet}
                  />
                 </Grid>}
                 {filter && mediaContent &&    <Grid xs={2.1}>
@@ -266,6 +270,7 @@ function MenuNewMessage(props) {
               handleSelectedItem={handleSelectedItem} selectedItem={selectedItem}
               handleCountKeywordRules={handleCountKeywordRules}
               keywordIncludes={keywordIncludes}
+              handleTweet={handleTweet}
               />}
             {tweetTypes &&  <TweetTypes  media={handleMediaContent} types={handleTweetTypes}/>}
            

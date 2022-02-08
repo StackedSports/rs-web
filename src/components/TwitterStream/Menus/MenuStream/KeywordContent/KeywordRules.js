@@ -57,6 +57,14 @@ function KeywordRules(props) {
       const handleChange = (event) => {
         setTweet(event.target.value);
         event.target.value===30?setKeywordDisable(true):setKeywordDisable(false);
+        if(event.target.value===10){
+          props.handleTweet("Tweet Includes")
+        }else  if(event.target.value===20){
+         props.handleTweet("Exclude Tweets with")
+       }else{
+         props.handleTweet("Exact Match")
+       }
+      
       };
       console.log('setkeywordDisable : ',keyworddisable)
       const handleChangeKeyword = (event) => {

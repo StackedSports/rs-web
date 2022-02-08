@@ -42,7 +42,7 @@ function KeywordsInclude(props) {
    
    }}>  
    
- Keywords: Includes; {item}
+ Keywords: {props.tweet}; {item}
 <ClearIcon onClick={(e) => {
      var array =props.selectedItem;
   
