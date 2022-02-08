@@ -185,6 +185,8 @@ function MediaComponent(props) {
     ]);
 
 
+
+    const [mediaHistory,setMediaHistory]=useState([]);
     const [filterType, setFilterType] = useState([]);
     const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
     const [uselessState, setuseLessState] = useState(0);
@@ -490,6 +492,34 @@ function MediaComponent(props) {
     const filtesSpacingStyle = {
         marginRight: 5,
     };
+
+
+    const handleHistory=()=>{
+
+        const tempHistory=mediaHistory.slice(0,-1);
+        if(tempHistory.length>0){
+            const placeholder=tempHistory[0].selectedPlaceholder;
+
+            //setShowBackButton(false);
+            //handleSelectedPlaceHolder(null,false,false,true);
+            setDisplayListContainer(tempHistory[0]);
+
+            setShowMediaStats(false);
+            props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
+
+
+        }else{
+            setShowBackButton(false);
+            handleSelectedPlaceHolder(null,false,false,true);
+            setShowMediaStats(false);
+            props.history.push('/media');
+        }
+
+        setMediaHistory(tempHistory);
+
+        console.log('history = ',mediaHistory);
+    }
+
 
 
     const CalendarFilter = () => {
@@ -1121,23 +1151,51 @@ function MediaComponent(props) {
                 isPlaceholderSelected: isPlaceholder,
                 selectedPlaceholder: placeholder
             })
+
+            mediaHistory.push({
+                ...displayListContainer,
+                showPlaceholderListView: true,
+                showPlaceholderDetailsListView: true,
+                isPlaceholderSelected: isPlaceholder,
+                selectedPlaceholder: placeholder
+            });
+
         } else if (setToDefault) {
+
             setDisplayListContainer({
                 showPlaceholderListView: false,
                 showMediaListView: false,
                 selectedPlaceholder: null
             })
+
+            mediaHistory.push({
+                showPlaceholderListView: false,
+                showMediaListView: false,
+                selectedPlaceholder: null
+            })
         } else if (isFromBackButton) {
+
             const placehodlerListView = displayListContainer.showMediaListView ? true : false;
             setDisplayListContainer({
                 ...displayListContainer,
                 showPlaceholderListView: placehodlerListView,
                 selectedPlaceholder: null
             })
+
+
+
         } else {
 
 
             setDisplayListContainer({
+                ...displayListContainer,
+                showPlaceholderListView: false,
+                isPlaceholderSelected: isPlaceholder,
+                selectedPlaceholder: placeholder
+            })
+
+
+            mediaHistory.push({
                 ...displayListContainer,
                 showPlaceholderListView: false,
                 isPlaceholderSelected: isPlaceholder,
@@ -1149,6 +1207,8 @@ function MediaComponent(props) {
             props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
         }
 
+
+        setMediaHistory(mediaHistory);
 
     }
 
@@ -1167,10 +1227,23 @@ function MediaComponent(props) {
                     setDisplayListContainer({
                         ...displayListContainer,
                         selectedPlaceholder: placeholders[index]
+                    });
+
+                    mediaHistory.push({
+                        ...displayListContainer,
+                        selectedPlaceholder: placeholders[index]
                     })
+
                     props.history.push("?id=" + placeholders[index].id + "&type=" + placeholders[index].type);
                 } else {
                     setDisplayListContainer({
+                        showPlaceholderListView: true,
+                        showMediaListView: false,
+                        selectedPlaceholder: placeholders[index]
+                    })
+
+
+                    mediaHistory.push({
                         showPlaceholderListView: true,
                         showMediaListView: false,
                         selectedPlaceholder: placeholders[index]
@@ -1179,6 +1252,7 @@ function MediaComponent(props) {
 
                 }
 
+                setMediaHistory(mediaHistory);
             }
 
         } else {
@@ -1187,11 +1261,22 @@ function MediaComponent(props) {
             if (index !== -1) {
                 setShowBackButton(true);
                 setShowMediaStats(true);
+
+
                 setDisplayListContainer({
                     ...displayListContainer,
                     selectedPlaceholder: media[index]
+                });
+
+                mediaHistory.push({
+                    ...displayListContainer,
+                    selectedPlaceholder: media[index]
                 })
+
                 props.history.push("?id=" + media[index].id + "&type=" + media[index].type);
+
+
+                setMediaHistory(mediaHistory);
 
             }
         }
@@ -1203,7 +1288,16 @@ function MediaComponent(props) {
         setDisplayListContainer({
             ...displayListContainer,
             showPlaceholderDetailsListView: listView
+        });
+
+        mediaHistory.push({
+            ...displayListContainer,
+            showPlaceholderDetailsListView: listView
         })
+
+
+        setMediaHistory(mediaHistory);
+
         props.history.push("?id=" + listView.id + "&type=" + listView.type);
 
     }
@@ -1220,13 +1314,27 @@ function MediaComponent(props) {
             ...displayListContainer,
             isPlaceholderSelected: isPlaceholder,
             selectedPlaceholder: placeholder
+        });
+
+        mediaHistory.push({
+            ...displayListContainer,
+            isPlaceholderSelected: isPlaceholder,
+            selectedPlaceholder: placeholder
         })
+
+        setMediaHistory(mediaHistory);
+
     }
 
     const handlePlaceholderClick = (m) => {
 
-        console.log('handlePlaceholderClick = ', handlePlaceholderClick)
-        setDisplayListContainer({...displayListContainer, selectedPlaceholder: m})
+        console.log('handlePlaceholderClick = ', handlePlaceholderClick);
+        setDisplayListContainer({...displayListContainer, selectedPlaceholder: m});
+
+        mediaHistory.push({...displayListContainer, selectedPlaceholder: m})
+
+        setMediaHistory(mediaHistory);
+
     }
 
     const handlePlaceholderHover = (hover) => {
@@ -1283,6 +1391,12 @@ function MediaComponent(props) {
 
         console.log('handleSetShowListView = ', showMediaList, showPlaceholderList)
         setDisplayListContainer({
+            selectedPlaceholder: null,
+            showPlaceholderListView: showPlaceholderList,
+            showMediaListView: showMediaList
+        });
+
+        mediaHistory.push({
             selectedPlaceholder: null,
             showPlaceholderListView: showPlaceholderList,
             showMediaListView: showMediaList
@@ -1567,7 +1681,11 @@ function MediaComponent(props) {
                 setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
                 setShowTagsDialog={handleTagsDialog}
+                handleHistory={handleHistory}
             />
+
+
+
             {!displayListContainer.selectedPlaceholder &&
             <SelectedItemsContainer filter={props.filter} removeDataFromFilter={props.removeDataFromFilter}/>
             }
