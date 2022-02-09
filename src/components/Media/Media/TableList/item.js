@@ -72,7 +72,6 @@ const useStyles = makeStyles({
         textAlign: "center",
     },
     mediaStatsRightState: {
-        fontSize: 18,
         margin: 0,
         height: 30,
         fontSize: 20,

@@ -50,10 +50,8 @@ const Header=(props)=>{
                                onClick={
                                    (e) => {
 
-                                       props.setShowBackButton(false);
-                                       props.setSelectedPlaceHolder(null,false,false,true);
-                                       props.setShowMediaStats(false);
-                                       props.history.push('/media');
+
+                                       props.handleHistory();
                                    }}
 
   />

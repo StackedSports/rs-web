@@ -9,6 +9,8 @@ import React from "react";
 const TagSearchModal =(props)=>{
 
     const allTags=props.allTags;
+
+    console.log('alltags = ',allTags)
     return(
         <DialogBox
             // title={"POST"}
@@ -49,7 +51,7 @@ const TagSearchModal =(props)=>{
                     <div style={{maxHeight: 400, minHeight: 400, overflow: "scroll"}}>
                         {allTags &&
                         allTags.map((tags) => {
-                            if (tags.label.indexOf(tagSearch) > -1) {
+                            if (tags.name.indexOf(props.tagSearch) > -1) {
                                 return (
                                     <Grid
                                         container
@@ -71,7 +73,7 @@ const TagSearchModal =(props)=>{
                                             ></Checkbox>
                                         </Grid>
                                         <Grid item md={9} sm={9}>
-                                            {tags.label}
+                                            {tags.name}
                                         </Grid>
                                     </Grid>
                                 );
@@ -97,7 +99,7 @@ const TagSearchModal =(props)=>{
                             width={100}
                             onClick={() => {
                                 props.setShowTagsDialog(false);
-                                propssetOpenSnackBar(true);
+                                props.setOpenSnackBar(true);
                             }}
                             text="Tag"
                             textColor="white"
