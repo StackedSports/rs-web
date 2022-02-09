@@ -47,7 +47,7 @@ import IconButton from "../common/Buttons/IconButton";
 import TimePicker from "../DateTimePicker/index";
 import MediaComponnet from "../Media/MediaComponent";
 import {
-  getAllContacts,
+  getAllContactsWithSearch,
   getBoardFilters,
   getMedia,
   getTeamContacts,
@@ -278,6 +278,7 @@ function MessageCreate(props) {
   // const classes = useStyles();
 
   const requestSearch = (searchedVal) => {
+    getMyContactsSearch()
 
     const filteredRows = allBoards?.filter((row) => {
       return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
@@ -760,7 +761,7 @@ console.log('===========individualFilter result=========================');
     setFetching(true);
     console.log("This is the date", page);
     // || "2020-12-13"
-    getAllContacts(page).then(
+    getAllContactsWithSearch(page).then(
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
@@ -2774,6 +2775,8 @@ console.log('===========individualFilter result=========================');
                                           onClick={() => {
                                             addDataToReceivers(boards.name);
                                             // setMessageReceiver();
+      // setMessageReceiver(temp);
+
                                           }}
                                         >
                                           {boards.name}
@@ -2953,7 +2956,11 @@ console.log('===========individualFilter result=========================');
                                           cursor: "pointer",
                                         }}
                                         onClick={() => {
-                                          addDataToReceivers(indv.first_name, indv.last_name);
+                                        // const full_name=indv.first_name {indv.last_name}
+                                        // const m =(indv.first_name,indv.last_name)
+                                          addDataToReceivers( `${indv.first_name} ${indv.last_name}`);
+                                          // setMessageReceiver( indv.first_name,indv.last_name);
+
                                           // setMessageReceiver();
                                         }}
                                         className="d-flex align-items-center"
