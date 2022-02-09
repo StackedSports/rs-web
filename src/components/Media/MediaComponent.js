@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
+
+
 import MuiAlert from "@material-ui/lab/Alert";
 import {Link} from "react-router-dom";
 import {
@@ -12,7 +14,7 @@ import {
     Checkbox,
     Dialog,
     withStyles,
-    Slider,
+    Slider, Snackbar,
 } from "@material-ui/core";
 import moment from "moment";
 
@@ -49,6 +51,7 @@ import {
     getMediaUsers,
     getTeamContacts,
     getTags,
+    getSearchedContacts,
 } from "../../ApiHelper";
 import {fileTypes} from '../../utils/FileUtils';
 
@@ -58,6 +61,7 @@ import TimePicker from "../DateTimePicker";
 import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import {DateRangePicker} from "react-date-range";
 import {addDays} from "date-fns";
+import {DarkContainer} from "../common/Elements/Elements";
 
 const useStyles = makeStyles({
     tableHeading: {
@@ -174,7 +178,6 @@ function MediaComponent(props) {
     const [filter, setFilter] = useState([]);
 
 
-
     const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
     const [state, setState] = useState([
         {
@@ -185,8 +188,7 @@ function MediaComponent(props) {
     ]);
 
 
-
-    const [mediaHistory,setMediaHistory]=useState([]);
+    const [mediaHistory, setMediaHistory] = useState([]);
     const [filterType, setFilterType] = useState([]);
     const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
     const [uselessState, setuseLessState] = useState(0);
@@ -220,6 +222,10 @@ function MediaComponent(props) {
     const [stateFilter, setStateFilter] = useState(null);
 
     const [contacts, setContacts] = useState([]);
+
+
+    const [searchedContacts, setSearchedContacts] = useState([]);
+
     const [myMediaContacts, setMyMediaContacts] = useState(null);
     const [media, setMedia] = useState(null);
     const [placeholders, setPlaceHolders] = useState(null);
@@ -388,11 +394,11 @@ function MediaComponent(props) {
             (res) => {
                 // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
-                    let tempContacts=(res.data).map((c)=>{
-                        c.page=page;
+                    let tempContacts = (res.data).map((c) => {
+                        c.page = page;
                         return c;
                     });
-                    tempContacts=contacts.concat(tempContacts);
+                    tempContacts = contacts.concat(tempContacts);
                     setContacts(tempContacts);
                     console.log("These are all contacts", tempContacts);
 
@@ -405,6 +411,22 @@ function MediaComponent(props) {
             }
         );
     };
+
+
+    const handleSearchContacts = async (search) => {
+        setFetching(true);
+        try{
+            const res=await getSearchedContacts(search);
+            console.log('handleSearchContacts = ',res.data ,'   search  = ',search)
+            setSearchedContacts(res.data);
+            setFetching(false);
+
+        }catch (error) {
+            console.log('error = ',error)
+            setFetching(false);
+        }
+    };
+
 
     const CustomToggle = React.forwardRef(({children, onClick}, ref) => (
         <div
@@ -494,11 +516,11 @@ function MediaComponent(props) {
     };
 
 
-    const handleHistory=()=>{
+    const handleHistory = () => {
 
-        const tempHistory=mediaHistory.slice(0,-1);
-        if(tempHistory.length>0){
-            const placeholder=tempHistory[0].selectedPlaceholder;
+        const tempHistory = mediaHistory.slice(0, -1);
+        if (tempHistory.length > 0) {
+            const placeholder = tempHistory[0].selectedPlaceholder;
 
             //setShowBackButton(false);
             //handleSelectedPlaceHolder(null,false,false,true);
@@ -508,18 +530,17 @@ function MediaComponent(props) {
             props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
 
 
-        }else{
+        } else {
             setShowBackButton(false);
-            handleSelectedPlaceHolder(null,false,false,true);
+            handleSelectedPlaceHolder(null, false, false, true);
             setShowMediaStats(false);
             props.history.push('/media');
         }
 
         setMediaHistory(tempHistory);
 
-        console.log('history = ',mediaHistory);
+        console.log('history = ', mediaHistory);
     }
-
 
 
     const CalendarFilter = () => {
@@ -609,28 +630,29 @@ function MediaComponent(props) {
     };
 
 
+    const onPaginationChange = (page) => {
+        console.log('page = ', page);
 
-    const onPaginationChange=(page)=>{
-        console.log('page = ',page);
+        const pageExistInContact = contacts.findIndex((f) => f.page === page);
 
-        const pageExistInContact=contacts.findIndex((f)=>f.page===page);
-
-        if(pageExistInContact===-1){
+        if (pageExistInContact === -1) {
             getMyContacts(page);
         }
         setPage(page);
 
     }
 
+
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+
+
     const renderFilters = () => {
 
         let owners = [];
         let dateCreated = [];
         let mediaContacts = [];
-
-
-
-        const filteredContacts=contacts.filter((c)=>c.page===page);
 
 
         for (let m of media) {
@@ -651,7 +673,7 @@ function MediaComponent(props) {
         }
 
 
-        for (let c of filteredContacts) {
+        for (let c of searchedContacts) {
             if (c.first_name && c.last_name) {
                 if (mediaContacts.findIndex((o) => o.value === c.first_name + ' ' + c.last_name) === -1) {
                     mediaContacts.push({type: 'associated_to', value: (c.first_name + ' ' + c.last_name)})
@@ -660,9 +682,7 @@ function MediaComponent(props) {
         }
 
 
-        if (contactSearch.length > 0) {
-            mediaContacts = mediaContacts.filter((m) => ((m.value.toLowerCase()).includes(contactSearch.toLowerCase())));
-        }
+        console.log('searched contacts = ',searchedContacts)
 
 
         return (
@@ -777,38 +797,45 @@ function MediaComponent(props) {
                                         border: "1px solid #ebebeb",
                                         borderRadius: 4,
                                     }}
+                                    disabled={fetching ? true : false}
                                     placeholder="Search Contacts"
                                     value={contactSearch}
+                                    onKeyDown={(e)=>{
+                                        console.log('e = ',e.keyCode)
+                                        if (e.keyCode === 13) {
+                                            handleSearchContacts(contactSearch)
+                                        }
+                                        e.stopPropagation();
+                                    }}
                                     onChange={(e) => {
-                                        setContactSearch(e.target.value);
+                                        const search = e.target.value;
+                                        setContactSearch(search);
                                     }}
                                 ></input>
                             </Grid>
-                            <div style={{height: '120px',width:'280px',overflow:'hidden'}}>
+                            <div style={{height: '120px', width: '250px'}}>
                                 {
-                                    fetching?
-                                        <Grid  style={{width:'100%',height:'100%'}} alignItems="center" justify="center" container >
-                                            <CircularProgress />
+                                    fetching ?
+                                        <Grid style={{width: '100%', height: '100%'}} alignItems="center"
+                                              justify="center" container>
+                                            <CircularProgress/>
                                         </Grid>
                                         :
-                                    mediaContacts.map((m) => {
-                                        return (
-                                            <Dropdown.Item
-                                                style={{
-                                                    background: "white",
-                                                    color: "black",
-                                                }}
-                                                onClick={() => {
-                                                    props.addDataToFilter(m.value, "associated_to");
-                                                }}
-                                            >
-                                                {m.value}
-                                            </Dropdown.Item>
-                                        )
-                                    })}
-                            </div>
-                            <div style={{marginLeft:10,zIndex: 10,background:'white', position: 'sticky', top: 155}}>
-                                <Pagination onPaginationChange={onPaginationChange}/>
+                                        mediaContacts.map((m) => {
+                                            return (
+                                                <Dropdown.Item
+                                                    style={{
+                                                        background: "white",
+                                                        color: "black",
+                                                    }}
+                                                    onClick={() => {
+                                                        props.addDataToFilter(m.value, "associated_to");
+                                                    }}
+                                                >
+                                                    {m.value}
+                                                </Dropdown.Item>
+                                            )
+                                        })}
                             </div>
                         </Fragment>
 
@@ -1181,7 +1208,6 @@ function MediaComponent(props) {
                 showPlaceholderListView: placehodlerListView,
                 selectedPlaceholder: null
             })
-
 
 
         } else {
@@ -1570,8 +1596,8 @@ function MediaComponent(props) {
         //handleSelectedPlaceHolder(null, false, false, true);
         //setShowMediaStats(false);
         //props.history.push('/media');
-        notify("Media saved successfully")
-
+        //notify("Media saved successfully")
+        setOpenSnackBar(true);
         console.log('id = ', mediaIndex, '   ', taggedMedia, '  ', selectedTags, '  ',)
 
     }
@@ -1683,7 +1709,6 @@ function MediaComponent(props) {
                 setShowTagsDialog={handleTagsDialog}
                 handleHistory={handleHistory}
             />
-
 
 
             {!displayListContainer.selectedPlaceholder &&
@@ -2017,17 +2042,17 @@ function MediaComponent(props) {
             {lightboxVideo && (
                 <LightboxDialog url={lightboxVideo} isVideo={true} closeModal={handleSetLightboxVideo}/>
             )}
-            <ToastContainer
-                position="top-right"
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
+
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={openSnakBar}
+                autoHideDuration={2000}
+                onClose={handleClose}
+            >
+                <Alert onClose={handleClose} severity="success">
+                    Media saved successfully
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
