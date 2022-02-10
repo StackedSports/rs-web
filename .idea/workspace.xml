@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/TableList/item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/Media/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/Media/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Media/MediaComponent.js" afterDir="false" />
-    </list>
+    <list default="true" id="33d5e8b2-1bfa-42a4-bde7-3516b3e078f1" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,8 +92,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="1909" column="68" selection-start-line="1909" selection-start-column="68" selection-end-line="1909" selection-end-column="68" />
+            <state relative-caret-position="117">
+              <caret line="1916" column="19" lean-forward="true" selection-start-line="1916" selection-start-column="19" selection-end-line="1916" selection-end-column="19" />
               <folding>
                 <element signature="e#0#71#0" expanded="true" />
                 <element signature="e#62512#66177#0" />
@@ -317,7 +311,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1644487025509" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1644487101546" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -408,12 +402,12 @@
       <workItem from="1644316872151" duration="4680000" />
       <workItem from="1644367617701" duration="1557000" />
       <workItem from="1644429905809" duration="4016000" />
-      <workItem from="1644482110789" duration="4868000" />
+      <workItem from="1644482110789" duration="4944000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="283316000" />
+    <option name="totallyTimeSpent" value="283392000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
@@ -437,7 +431,7 @@
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.23065902" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.53151864" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="1" weight="0.25" />
@@ -851,8 +845,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Media/MediaComponent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="1909" column="68" selection-start-line="1909" selection-start-column="68" selection-end-line="1909" selection-end-column="68" />
+        <state relative-caret-position="117">
+          <caret line="1916" column="19" lean-forward="true" selection-start-line="1916" selection-start-column="19" selection-end-line="1916" selection-end-column="19" />
           <folding>
             <element signature="e#0#71#0" expanded="true" />
             <element signature="e#62512#66177#0" />
