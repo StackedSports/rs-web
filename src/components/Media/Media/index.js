@@ -10,7 +10,7 @@ import React, {Fragment} from "react";
 const Media = (props) => {
 
     const media = props.media;
-    console.log('media = ',props)
+    console.log('media list  = ',props)
     return (
         <Fragment>
             { !props.isPlaceholderDetails &&
