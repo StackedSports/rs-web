@@ -1,7 +1,5 @@
 {
   "projects": {
-    "default": "recurit-3397b",
-    "recruit": "recruit-suite-149f6"
-  },
-  "targets": {}
+    "default": "recurit-3397b"
+  }
 }
