@@ -69,7 +69,12 @@ function KeywordRules(props) {
       console.log('setkeywordDisable : ',keyworddisable)
       const handleChangeKeyword = (event) => {
         setKeyword(event.target.value);
-        
+        if(event.target.value===10){
+          props.handleKeywordAnd("And")
+        }
+        else{
+          props.handleKeywordAnd("OR")
+        }
       };
       
       const useStyles = makeStyles((theme)=>({
@@ -203,7 +208,7 @@ function KeywordRules(props) {
         
         {props.selectedItem.map((item,index)=> 
         <li key={index}>
-        <Chip
+ <Chip
         label={item}
         className={classes.icon}
         onClick={(e) => {
@@ -213,7 +218,7 @@ function KeywordRules(props) {
            style={{borderRadius:'5px',width:'34%',backgroundColor:circleIcon ?'white':'#f0f0f0',padding:0}}
         />
       
-    { item!=null?
+    { item!=null  ?
        <CheckCircleIcon fontSize='small' style={{fill:'#006644',marginTop:'5px',marginLeft:5}}/>:''
   }
    </li>)}  

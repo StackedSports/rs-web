@@ -65,7 +65,7 @@ function KeywordsInclude(props) {
 )}
         </Stack>               
                     </Paper>
-                    
+                    <Typography style={{marginTop:20,marginLeft:20}} >{props.countkeywordrules>1?props.keywordAnd:''}</Typography>
            
         </Stack>
 

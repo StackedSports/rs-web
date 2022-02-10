@@ -87,7 +87,7 @@ export default function Sidebar(props) {
                             );
                         }}
                     >
-                        {item.first_name + " " + item.last_name} {"(0)"}
+                        {item.first_name + " " + item.last_name} {}
                     </p>
                 );
             })}

@@ -58,6 +58,7 @@ function MenuNewMessage(props) {
     const [countkeywordrules,setCountKeywordRules]=React.useState(0)
     const [count,setCount]=React.useState(0)
     const [tweet,setTweet]=React.useState([])
+    const [keywordAnd,setKeywordAnd]=React.useState([])
     function disableScroll() {
       window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
       window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -74,6 +75,9 @@ function MenuNewMessage(props) {
   }
   const handleTweet=(tweet)=>{
     setTweet(tweet)
+  }
+  const handleKeywordAnd=(keyword)=>{
+    setKeywordAnd(keyword)
   }
   const handleNewStreamGrid=()=>{
     setHideGrid(!hideGrid)
@@ -222,6 +226,9 @@ function MenuNewMessage(props) {
                   count={count}
                   handleSelectedItem={handleSelectedItem}
                   tweet={tweet}
+                  countkeywordrules={countkeywordrules}
+                  keywordAnd={keywordAnd}
+               
                  />
                 </Grid>}
                 {filter && mediaContent &&    <Grid xs={2.1}>
@@ -271,6 +278,8 @@ function MenuNewMessage(props) {
               handleCountKeywordRules={handleCountKeywordRules}
               keywordIncludes={keywordIncludes}
               handleTweet={handleTweet}
+              handleKeywordAnd={handleKeywordAnd}
+
               />}
             {tweetTypes &&  <TweetTypes  media={handleMediaContent} types={handleTweetTypes}/>}
            
