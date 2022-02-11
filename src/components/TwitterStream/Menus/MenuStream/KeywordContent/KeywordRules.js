@@ -64,7 +64,6 @@ function KeywordRules(props) {
        }else{
          props.handleTweet("Exact Match")
        }
-      
       };
       console.log('setkeywordDisable : ',keyworddisable)
       const handleChangeKeyword = (event) => {
@@ -75,6 +74,7 @@ function KeywordRules(props) {
         else{
           props.handleKeywordAnd("OR")
         }
+        
       };
       
       const useStyles = makeStyles((theme)=>({
@@ -110,8 +110,7 @@ function KeywordRules(props) {
         console.info('You clicked the Chip.');
       };
       const classes = useStyles();
-      console.log('selectedItems = ',selectedItem)
-      console.log("keywordContent = ",props.keywordIncludes)
+      console.log("keywordContent = ",props)
     return (
         
         <div style={{outline:'none'}}>
@@ -179,14 +178,13 @@ function KeywordRules(props) {
         autoSelect
         options={top100Films.map((option) => option.title)}
         
-        onChange={(event,values) => {
-         
-          props.handleSelectedItem(selectedItem)
-          props.selectedItem.push(values)
-          props.handleSelectedItem(values);
-          setCount(count+1);
-          props.handleCountKeywordRules(count);
-         
+        onChange={(event,value) => {
+         console.log("values",value)
+          //props.handleSelectedItem(selectedItem)
+          //props.selectedItem.push(values)
+          setCount(count+1);  
+          props.handleSelectedItem(value.slice(-1));
+                 
         }}
         renderInput={(params) => <TextField {...params} label="Search or Create New Keyword Match" />}
       /> </FormControl>
@@ -204,11 +202,11 @@ function KeywordRules(props) {
          
        
 
-        <Stack direction='column' spacing={1} style={{height:count>2?100:'',overflowY:count>2?"scroll":'',overFlowX:'hidden'}} >
+        <Stack direction='column' spacing={1} style={{height:props.selectedItem.length>2?100:'',overflowY:props.selectedItem.length>2?"scroll":'',overFlowX:'hidden'}} >
         
         {props.selectedItem.map((item,index)=> 
         <li key={index}>
- <Chip
+        <Chip
         label={item}
         className={classes.icon}
         onClick={(e) => {
@@ -218,7 +216,7 @@ function KeywordRules(props) {
            style={{borderRadius:'5px',width:'34%',backgroundColor:circleIcon ?'white':'#f0f0f0',padding:0}}
         />
       
-    { item!=null  ?
+    { item!=null?
        <CheckCircleIcon fontSize='small' style={{fill:'#006644',marginTop:'5px',marginLeft:5}}/>:''
   }
    </li>)}  
