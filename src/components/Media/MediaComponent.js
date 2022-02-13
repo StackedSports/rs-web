@@ -1703,6 +1703,8 @@ function MediaComponent(props) {
                 history={props.history}
                 showSave={displayListContainer.selectedPlaceholder && !displayListContainer.isPlaceholderSelected ? true : false}
                 saveTag={saveTag}
+                // setMedia={}
+                setAddMedia={props.setAddMedia}
                 showFilter={!displayListContainer.selectedPlaceholder ? true : false}
                 setShowFilters={handleSetShowFilters}
                 showListButton={displayListContainer.selectedPlaceholder ? false : true}
