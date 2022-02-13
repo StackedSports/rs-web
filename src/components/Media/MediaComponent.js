@@ -174,7 +174,6 @@ const PrettoSlider = withStyles({
 
 function MediaComponent(props) {
     const classes = useStyles();
-    // console.log("This is logged in user", localStorage.getItem("user"));
     const [filter, setFilter] = useState([]);
 
 
@@ -330,7 +329,6 @@ function MediaComponent(props) {
 
 
     const handleMediaHover = (mediaHover) => {
-        console.log('media hover = ', mediaHover)
         setMediaHover(mediaHover);
     }
 
@@ -352,14 +350,12 @@ function MediaComponent(props) {
     }
 
     const handleSetShowFilters = () => {
-        console.log('handleSetShowFilters = ', filter);
         setShowFilters(!showFilters);
     }
 
     const getMyTeamContacts = () => {
         getTeamContacts().then(
             (res) => {
-                // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
                     setTeamContacts(res.data);
                 }
@@ -371,15 +367,12 @@ function MediaComponent(props) {
     const getAllTags = () => {
         getTags().then(
             (res) => {
-                // console.log("THis is all tags", res);
                 var TAGS = [];
                 if (res.statusText === "OK") {
-                    // console.log("These are all tags", res.data);
                     setAllTags(res.data);
                 }
             },
             (error) => {
-                console.log("this is error all tags", error);
             }
         );
     };
@@ -388,11 +381,9 @@ function MediaComponent(props) {
     const getMyContacts = (page) => {
         // setLoading(true);
         setFetching(true);
-        console.log("This is the date", page);
         // || "2020-12-13"
         getAllContacts(page).then(
             (res) => {
-                // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
                     let tempContacts = (res.data).map((c) => {
                         c.page = page;
@@ -400,13 +391,11 @@ function MediaComponent(props) {
                     });
                     tempContacts = contacts.concat(tempContacts);
                     setContacts(tempContacts);
-                    console.log("These are all contacts", tempContacts);
 
                     setFetching(false);
                 }
             },
             (error) => {
-                console.log("this is error all contacts", error);
                 setFetching(false);
             }
         );
@@ -417,12 +406,10 @@ function MediaComponent(props) {
         setFetching(true);
         try{
             const res=await getSearchedContacts(search);
-            console.log('handleSearchContacts = ',res.data ,'   search  = ',search)
             setSearchedContacts(res.data);
             setFetching(false);
 
         }catch (error) {
-            console.log('error = ',error)
             setFetching(false);
         }
     };
@@ -447,7 +434,6 @@ function MediaComponent(props) {
         try {
             const res = await getMedia();
             if (res.statusText === "OK") {
-                console.log("These are all media", res.data);
                 const media = (res.data).map((item) => {
                     item.type = "media";
                     return item;
@@ -458,7 +444,6 @@ function MediaComponent(props) {
                 return null;
             }
         } catch (error) {
-            console.log("this is error all media", error);
             return null;
 
         }
@@ -467,14 +452,11 @@ function MediaComponent(props) {
     const getMyMediaContacts = () => {
         getMediaUsers().then(
             (res) => {
-                // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
-                    // console.log("These are all my media contacts", res.data);
                     setMyMediaContacts(res.data);
                 }
             },
             (error) => {
-                console.log("this is error all media", error);
             }
         );
     };
@@ -483,14 +465,12 @@ function MediaComponent(props) {
         try {
             const res = await getPlaceholder();
             if (res.statusText === "OK") {
-                console.log("These are all placeholder", res.data);
                 setPlaceHolders(res.data);
                 return res.data;
             } else {
                 return null;
             }
         } catch (error) {
-            console.log("this is error all media", error);
             return null;
         }
     };
@@ -498,14 +478,11 @@ function MediaComponent(props) {
     const getTaggedMedia = () => {
         getMediaTag().then(
             (res) => {
-                // console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
-                    console.log("These are all tagged  Media", res.data);
                     setTaggedMedia(res.data);
                 }
             },
             (error) => {
-                console.log("this is error all media", error);
             }
         );
     };
@@ -539,7 +516,6 @@ function MediaComponent(props) {
 
         setMediaHistory(tempHistory);
 
-        console.log('history = ', mediaHistory);
     }
 
 
@@ -607,7 +583,6 @@ function MediaComponent(props) {
                         <DateRangePicker
                             onChange={(item) => {
                                 setState([item.selection])
-                                console.log('item = ', item);
 
                                 const value = new moment(item.startDate).format("MM-DD-YYYY")
                                     + ' - ' +
@@ -631,7 +606,6 @@ function MediaComponent(props) {
 
 
     const onPaginationChange = (page) => {
-        console.log('page = ', page);
 
         const pageExistInContact = contacts.findIndex((f) => f.page === page);
 
@@ -682,7 +656,6 @@ function MediaComponent(props) {
         }
 
 
-        console.log('searched contacts = ',searchedContacts)
 
 
         return (
@@ -801,7 +774,6 @@ function MediaComponent(props) {
                                     placeholder="Search Contacts"
                                     value={contactSearch}
                                     onKeyDown={(e)=>{
-                                        console.log('e = ',e.keyCode)
                                         if (e.keyCode === 13) {
                                             handleSearchContacts(contactSearch)
                                         }
@@ -937,7 +909,6 @@ function MediaComponent(props) {
                 setSelectedTeamContacts(tempSelectedTeamContacts);
             }
 
-            console.log(selectedTeamContacts);
 
         } else if (type === 'SELECTED_TAGS') {
 
@@ -991,7 +962,6 @@ function MediaComponent(props) {
                     temp.push(item);
                 }
             });
-            console.log("This is temp", temp);
             setSelectedCheckboxes(temp);
             setuseLessState(uselessState + 1);
         } else {
@@ -1030,10 +1000,8 @@ function MediaComponent(props) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
                 const type = urlParams.get('type');
-                console.log('type = ', type, '  ', id);
 
                 if (type && type === "media" && media && id) {
-                    console.log('comes in media = ', type, '  ', id);
 
                     const index = media.findIndex((m) => m.id == id);
                     if (index !== -1) {
@@ -1043,9 +1011,7 @@ function MediaComponent(props) {
                             handleSelectedPlaceHolder(media[index], false, false, false);
                         });
                     }
-                    console.log('type = ', type, '  ', index);
                 } else if (type && type === "placeholder" && placeholders && id) {
-                    console.log('comes in placeholder = ', type, '  ', id);
 
                     const index = placeholders.findIndex((m) => m.id == id);
                     if (index !== -1) {
@@ -1057,7 +1023,6 @@ function MediaComponent(props) {
                     }
                 }
 
-                console.log('id=', id, 'type=', type, media)
                 // getAllTags();
             } else {
                 window.location.href = "/";
@@ -1068,11 +1033,9 @@ function MediaComponent(props) {
 
 
     const isSelectedCheckbox = (index) => {
-        console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
     };
 
     const checkFilters = (item) => {
-        // console.log("These are tags for all", item.tags);
         var isValid = false;
         if (props.filter.length != 0) {
             props.filter.map((filt, index) => {
@@ -1090,22 +1053,13 @@ function MediaComponent(props) {
                 }
                 if (filterType[index] === "gradeYear") {
                     if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-                        console.log(
-                            "This is inseide grader",
-                            moment(item.grad_year).format("YYYY"),
-                            filt
-                        );
                         isValid = true;
                         return;
                     }
                 }
                 if (filterType[index] === "Tag") {
                     if (Number(moment(item.grad_year).format("YYYY")) === filt) {
-                        console.log(
-                            "This is inseide grader",
-                            moment(item.grad_year).format("YYYY"),
-                            filt
-                        );
+
                         isValid = true;
                         return;
                     }
@@ -1122,14 +1076,7 @@ function MediaComponent(props) {
         var visibleHeight = agreement.clientHeight;
         var scrollableHeight = agreement.scrollHeight;
         var position = agreement.scrollTop;
-        // console.log(
-        //   "This is poistion",
-        //   position,
-        //   "This is scrollable",
-        //   scrollableHeight,
-        //   "This is visible height",
-        //   visibleHeight
-        // );
+
         if (position + visibleHeight == scrollableHeight) {
             // alert("We are in the endgaem now");
             if (!fetching) {
@@ -1165,7 +1112,6 @@ function MediaComponent(props) {
 
 
     const handleSelectedPlaceHolder = (placeholder, isPlaceholder, setToDefault, isFromBackButton) => {
-        console.log('setSelectedPlaceholder = ', placeholder, isPlaceholder, setToDefault, isFromBackButton);
 
 
         if (isPlaceholder) {
@@ -1195,11 +1141,7 @@ function MediaComponent(props) {
                 selectedPlaceholder: null
             })
 
-            mediaHistory.push({
-                showPlaceholderListView: false,
-                showMediaListView: false,
-                selectedPlaceholder: null
-            })
+
         } else if (isFromBackButton) {
 
             const placehodlerListView = displayListContainer.showMediaListView ? true : false;
@@ -1235,12 +1177,12 @@ function MediaComponent(props) {
 
 
         setMediaHistory(mediaHistory);
+        console.log('media history handleSelectedPlaceHolder = ',mediaHistory)
 
     }
 
 
     const handleSelectedPlaceHolderListView = (id, isPlaceholder) => {
-        console.log('handleSelectedPlaceHolderListView = ', id, '   ', isPlaceholder)
 
 
         if (isPlaceholder) {
@@ -1259,6 +1201,8 @@ function MediaComponent(props) {
                         ...displayListContainer,
                         selectedPlaceholder: placeholders[index]
                     })
+
+
 
                     props.history.push("?id=" + placeholders[index].id + "&type=" + placeholders[index].type);
                 } else {
@@ -1306,6 +1250,9 @@ function MediaComponent(props) {
 
             }
         }
+
+        console.log('media history handleSelectedPlaceHolderListView = ',mediaHistory)
+
     }
 
 
@@ -1316,22 +1263,19 @@ function MediaComponent(props) {
             showPlaceholderDetailsListView: listView
         });
 
-        mediaHistory.push({
-            ...displayListContainer,
-            showPlaceholderDetailsListView: listView
-        })
 
 
-        setMediaHistory(mediaHistory);
 
-        props.history.push("?id=" + listView.id + "&type=" + listView.type);
+        //props.history.push("?id=" + listView.id + "&type=" + listView.type);
+
+
+        console.log('media history handleSetPlaceholderDetailsListView = ',mediaHistory)
 
     }
 
 
     const handleSuggestionPlaceholder = (placeholder, isPlaceholder, placeholderId) => {
 
-        console.log('special case care = ', placeholderId)
         props.history.push("?id=" + placeholder.id + "&type=" + placeholder.type);
 
         placeholder.parentId = placeholderId;
@@ -1350,16 +1294,19 @@ function MediaComponent(props) {
 
         setMediaHistory(mediaHistory);
 
+        console.log('media history handleSuggestionPlaceholder = ',mediaHistory)
+
+
     }
 
     const handlePlaceholderClick = (m) => {
 
-        console.log('handlePlaceholderClick = ', handlePlaceholderClick);
         setDisplayListContainer({...displayListContainer, selectedPlaceholder: m});
 
         mediaHistory.push({...displayListContainer, selectedPlaceholder: m})
 
         setMediaHistory(mediaHistory);
+        console.log('media history handlePlaceholderClick = ',mediaHistory)
 
     }
 
@@ -1415,18 +1362,12 @@ function MediaComponent(props) {
 
     const handleSetShowListView = (showMediaList, showPlaceholderList) => {
 
-        console.log('handleSetShowListView = ', showMediaList, showPlaceholderList)
         setDisplayListContainer({
             selectedPlaceholder: null,
             showPlaceholderListView: showPlaceholderList,
             showMediaListView: showMediaList
         });
 
-        mediaHistory.push({
-            selectedPlaceholder: null,
-            showPlaceholderListView: showPlaceholderList,
-            showMediaListView: showMediaList
-        });
 
     }
 
@@ -1524,13 +1465,6 @@ function MediaComponent(props) {
 
 
     const saveTag = async () => {
-        console.log('index= ', displayListContainer.selectedPlaceholder);
-        /*try{
-            const result=await postTag({id:displayListContainer.selectedPlaceholder.id,tag:displayListContainer.selectedPlaceholder.tags})
-            console.log('result = ',result);
-        }catch (e) {
-            console.log('exception = ',e.toString())
-        }*/
 
 
         let mediaIndex = displayListContainer.selectedPlaceholder.parentId ?
@@ -1538,12 +1472,10 @@ function MediaComponent(props) {
             :
             media.findIndex((m) => m.id === displayListContainer.selectedPlaceholder.id);
 
-        console.log('media index= ', placeholders[mediaIndex])
 
         let placeholderMediaItemIndex = displayListContainer.selectedPlaceholder.parentId &&
             (placeholders[mediaIndex].media).findIndex((f) => f.id === displayListContainer.selectedPlaceholder.id);
 
-        console.log('media index= ', placeholderMediaItemIndex)
 
         if (mediaIndex != -1) {
             const selectedMedia = displayListContainer.selectedPlaceholder.parentId ?
@@ -1598,7 +1530,6 @@ function MediaComponent(props) {
         //props.history.push('/media');
         //notify("Media saved successfully")
         setOpenSnackBar(true);
-        console.log('id = ', mediaIndex, '   ', taggedMedia, '  ', selectedTags, '  ',)
 
     }
 
@@ -1617,7 +1548,6 @@ function MediaComponent(props) {
         props.filter.findIndex((f) => f.type === 'personalized') === -1 ? false : true
 
 
-    console.log('render = ', displayListContainer.selectedPlaceholder)
 
     if ((displayListContainer.showMediaListView || props.filter.length > 0 || displayListContainer.selectedPlaceholder) && media) {
         if (displayListContainer.selectedPlaceholder && displayListContainer.selectedPlaceholder.media) {
@@ -1662,7 +1592,6 @@ function MediaComponent(props) {
     }
 
 
-    console.log('filter = ', displayListContainer, '  showMediaStats = ', showMediaStats);
     return (
         <div
             style={{
@@ -1980,7 +1909,7 @@ function MediaComponent(props) {
                                                     setQuickAccessStartIndex={handleQuickAccessStartIndex}
                                                     selectedPlaceholder={displayListContainer.selectedPlaceholder}
                                                     message={props.message}
-                                                    media={displayListContainer.selectedPlaceholder.media}
+                                                    media={MediaList}
                                                     viewMoreQuickAccess={viewMoreQuickAccess}
                                                     quickAccessEndIndex={quickAccessEndIndex}
                                                     handlePlaceholderClick={handlePlaceholderClick}

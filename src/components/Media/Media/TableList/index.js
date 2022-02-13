@@ -90,7 +90,6 @@ const PlaceholderTableList = (props) => {
     const [selectAll, setSelectAll] = useState(false);
 
 
-    console.log('filter = ', props.filter, '   itemslist = ', itemsList);
 
 
     const handleSortingOrder = (type) => {
@@ -296,7 +295,6 @@ const PlaceholderTableList = (props) => {
     }
 
 
-    console.log('items list = ', props)
     return (
 
         <div style={{

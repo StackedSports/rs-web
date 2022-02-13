@@ -1,14 +1,18 @@
 import React from 'react'
 import { Paper, Typography } from '@mui/material'
 import ClearIcon from '@material-ui/icons/Clear'
-import { Stack } from '@mui/material'
+import { Stack,Grid } from '@mui/material'
 function KeywordsInclude(props) {
     
     return (
-        <Stack direction='row'>
-          
-            <Paper
-                    style={{
+        <Grid container xs={12} >
+           
+             { props.selectedItem.map((item,index)=>  
+    
+          <React.Fragment>
+           <Paper
+           
+            style={{
                         borderRadius: 5,
                         marginLeft:props.selectedItem.length>0?'28.5px':'',
                         marginTop:'15px',
@@ -28,46 +32,39 @@ function KeywordsInclude(props) {
                    
                     variant="outlined"
                     >
-                         <Stack direction='column' spacing={1} style={{  height:props.selectedItem.length>0?35:0,
-                        width:"",overflowY:props.selectedItem.length>0?"scroll":"hidden",overFlowX:'hidden'}} >
+                         <Stack direction='column'style={{  }} >
         
                         
-                  { props.selectedItem.map((item,index)=>  
+               
 
 <p key={index}>
 <Typography variant='body2' style={{borderRadius: 5,
    marginLeft:'15px',
    fontSize: '13px',
-   fontWeight: 'bold',marginTop:'7px'
+
+   fontWeight: 'bold',marginTop:'15px'
    
    }}>  
    
- Keywords: Includes; {item}
+ Keywords: {props.tweet}; {item}
 <ClearIcon onClick={(e) => {
-     var array =props.selectedItem;
-  
-     console.log("remove keyword content ",props.keywordIncludes)
-     if (props.selectedItem.length>0) {
-        array.splice(index, 1);
-        props.handleSelectedItem(array)
-       
-      }else {
-          props.handleKeywordIncludes(false)
-          
-     console.log("remove keyword includes ",props.KeywordsInclude)
-      }
-
+     props.handleRemoveItem(index);
   }}
 
   style={{fill: '#ff1616',marginLeft:'10px',marginRight:'5px',fontSize:15,cursor:'pointer'}}/>
   </Typography>
   </p>
-)}
-        </Stack>               
-                    </Paper>
-                    
-           
-        </Stack>
+
+        </Stack>     
+                    </Paper> 
+ {
+     index<(props.selectedItem).length-1 &&
+     <Typography style={{marginTop:30,marginLeft:20}} >{props.selectedItem.length>1?props.keywordAnd:''}</Typography>
+ }
+</React.Fragment>
+            )}
+               
+        </Grid>
 
         
         

@@ -89,7 +89,6 @@ const PlaceholderItem = (props) => {
     const classes = useStyles();
 
     const item = props.item;
-    console.log("tablelist details",item)
     const [checkboxval, setcheckboxval] = useState(false);
     return (
         <Grid

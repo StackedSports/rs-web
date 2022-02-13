@@ -44,7 +44,8 @@ function MenuNewMessage(props) {
     const [filter, setFilter] = useState(true);
     const [streamName, setStreamName] = useState(false);
     const [tagMenu, setTagMenu] = useState(false);
-    const [selectedItem,setSelecteditem]=React.useState([])
+    const [selectedItem,setSelecteditem]=React.useState([
+    ])
     const [keywordRules, setKeywordRules] = useState(false);
     const [geographyRules, setGeographyRules] = useState(false);
     const [hashtagRules, setHashtagRules] = useState(false);
@@ -57,6 +58,8 @@ function MenuNewMessage(props) {
     const [hideGrid, setHideGrid] = useState(true);
     const [countkeywordrules,setCountKeywordRules]=React.useState(0)
     const [count,setCount]=React.useState(0)
+    const [tweet,setTweet]=React.useState([])
+    const [keywordAnd,setKeywordAnd]=React.useState([])
     function disableScroll() {
       window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
       window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
@@ -71,17 +74,31 @@ function MenuNewMessage(props) {
       background: 'grey',
       right: '-9px'
   }
-
+  const handleTweet=(tweet)=>{
+    setTweet(tweet)
+  }
+  const handleKeywordAnd=(keyword)=>{
+    setKeywordAnd(keyword)
+  }
   const handleNewStreamGrid=()=>{
     setHideGrid(!hideGrid)
   }
   const handleTagMenu=(tag)=>{
     setTagMenu(tag)
   }
-  const handleSelectedItem=(selectedItem)=>{
+  const handleSelectedItem=(values)=>{
       setCount(count+1)
+      console.log("valuess",values)
+      selectedItem.push(values);
     setSelecteditem(selectedItem)
   }
+
+  const handleRemoveItem=(index)=>{
+    setCount(count+1);
+    selectedItem.splice(index,1);
+  setSelecteditem(selectedItem)
+}
+
   const handleKeyword=(keyword)=>{
     setKeyword(keyword)
   }
@@ -217,7 +234,13 @@ function MenuNewMessage(props) {
                keywordIncludes={keywordIncludes}
                   selectedItem={selectedItem}
                   count={count}
+                  handleRemoveItem={handleRemoveItem}
                   handleSelectedItem={handleSelectedItem}
+                  tweet={tweet}
+                  countkeywordrules={countkeywordrules}
+                  keywordAnd={keywordAnd}
+               
+
                  />
                 </Grid>}
                 {filter && mediaContent &&    <Grid xs={2.1}>
@@ -266,6 +289,8 @@ function MenuNewMessage(props) {
               handleSelectedItem={handleSelectedItem} selectedItem={selectedItem}
               handleCountKeywordRules={handleCountKeywordRules}
               keywordIncludes={keywordIncludes}
+              handleTweet={handleTweet}
+              handleKeywordAnd={handleKeywordAnd}
               />}
             {tweetTypes &&  <TweetTypes  media={handleMediaContent} types={handleTweetTypes}/>}
            

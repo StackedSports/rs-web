@@ -57,10 +57,23 @@ function KeywordRules(props) {
       const handleChange = (event) => {
         setTweet(event.target.value);
         event.target.value===30?setKeywordDisable(true):setKeywordDisable(false);
+        if(event.target.value===10){
+          props.handleTweet("Tweet Includes")
+        }else  if(event.target.value===20){
+         props.handleTweet("Exclude Tweets with")
+       }else{
+         props.handleTweet("Exact Match")
+       }
       };
       console.log('setkeywordDisable : ',keyworddisable)
       const handleChangeKeyword = (event) => {
         setKeyword(event.target.value);
+        if(event.target.value===10){
+          props.handleKeywordAnd("And")
+        }
+        else{
+          props.handleKeywordAnd("OR")
+        }
         
       };
       
@@ -97,8 +110,7 @@ function KeywordRules(props) {
         console.info('You clicked the Chip.');
       };
       const classes = useStyles();
-      console.log('selectedItems = ',selectedItem)
-      console.log("keywordContent = ",props.keywordIncludes)
+      console.log("keywordContent = ",props)
     return (
         
         <div style={{outline:'none'}}>
@@ -166,14 +178,13 @@ function KeywordRules(props) {
         autoSelect
         options={top100Films.map((option) => option.title)}
         
-        onChange={(event,values) => {
-         
-          props.handleSelectedItem(selectedItem)
-          props.selectedItem.push(values)
-          props.handleSelectedItem(values);
-          setCount(count+1);
-          props.handleCountKeywordRules(count);
-         
+        onChange={(event,value) => {
+         console.log("values",value)
+          //props.handleSelectedItem(selectedItem)
+          //props.selectedItem.push(values)
+          setCount(count+1);  
+          props.handleSelectedItem(value.slice(-1));
+                 
         }}
         renderInput={(params) => <TextField {...params} label="Search or Create New Keyword Match" />}
       /> </FormControl>
@@ -191,7 +202,7 @@ function KeywordRules(props) {
          
        
 
-        <Stack direction='column' spacing={1} style={{height:count>2?100:'',overflowY:count>2?"scroll":'',overFlowX:'hidden'}} >
+        <Stack direction='column' spacing={1} style={{height:props.selectedItem.length>2?100:'',overflowY:props.selectedItem.length>2?"scroll":'',overFlowX:'hidden'}} >
         
         {props.selectedItem.map((item,index)=> 
         <li key={index}>
