@@ -21,14 +21,16 @@ export default function TwitterStream(props) {
       const handleTwitterStream=(twitter)=>{
         setTwitterStream(twitter)
       }
-
-    useEffect(async () => {
-        try{
-            const result=await getMessage();
-            console.log('result = ',result)
-        }catch (e) {
-            console.log('error = ',e)
-        }
+const getfunc = async()=>{
+    try{
+        const result=await getMessage();
+        console.log('result = ',result)
+    }catch (e) {
+        console.log('error = ',e)
+    }
+}
+    useEffect( () => {
+        getfunc()
     });
 
     return (

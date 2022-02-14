@@ -102,7 +102,7 @@ const Header = (props) => {
                         onClick={() => {
                           if (props.setAddMedia) {
                             props.setAddMedia(false);
-                            console.log('==============props.setAddMedia======================');
+                                
                             console.log(props.setAddMedia);
                             console.log('=============props.setAddMedia=======================');   
                           }

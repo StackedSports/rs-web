@@ -116,11 +116,11 @@ const useStyles = makeStyles({
       background: "#ebebeb",
     },
   },
-  contactsColumnCheckbox :{
+  contactsColumnCheckbox: {
     // "&:after": {
-      color:'#3871DA'
+    color: '#3871DA'
     // },
- 
+
   }
 });
 
@@ -168,7 +168,7 @@ function Home(props) {
 
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-  const totalContacts=0
+  const totalContacts = 0
   const columnNames = [
     {
       name: "First Name",
@@ -284,7 +284,7 @@ function Home(props) {
           if (page > 1) {
             var temp = contacts;
             temp = temp.concat(res.data);
-          
+
             // temp.push(res.data);
             setContacts(temp);
             setCopyContacts(temp);
@@ -294,7 +294,7 @@ function Home(props) {
             setFetching(false);
           } else {
             console.log("These are all contacts", contacts);
-          
+
             setContacts(res.data);
             setCopyContacts(res.data);
             if (document.getElementById("infinit")) {
@@ -359,7 +359,7 @@ function Home(props) {
         var TAGS = [];
         if (res.statusText === "OK") {
           console.log("These are all tags", res.data);
-          res.data.map((item) => {
+          res?.data?.map((item) => {
             TAGS.push({
               value: item.name,
               label: item.name,
@@ -540,11 +540,11 @@ function Home(props) {
 
   }, []);
 
-  const handleAnimation=()=>{
+  const handleAnimation = () => {
     //setShowDrawer(true);
-    setTimeout(()=>{
+    setTimeout(() => {
       setShowAnimation(false);
-    },500)
+    }, 500)
   }
 
 
@@ -1033,25 +1033,25 @@ function Home(props) {
         >
           <Grid container direction="row">
             <Grid item md={6} sm={6}>
-            {
-              showDrawer?
-              <img src={showAnimation?DrawerAnimation:DrawerIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(false);
-                setShowAnimation(true);
-                handleAnimation();
-              }}
-              style={{ cursor: "pointer", width:40}}></img>
-              :
-              <img src={showAnimation?BackAnimation:BackIcon} onClick={(e) => {
-                setshowSideFilters(!showSideFilters);
-                setShowDrawer(true);
-                setShowAnimation(true);
-                handleAnimation();
+              {
+                showDrawer ?
+                  <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(false);
+                    setShowAnimation(true);
+                    handleAnimation();
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>
+                  :
+                  <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(true);
+                    setShowAnimation(true);
+                    handleAnimation();
 
-              }}
-              style={{ cursor: "pointer", width:40}}></img>            }
-            
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>}
+
               {/* <FormatAlignLeftIcon
                
               ></FormatAlignLeftIcon> */}
@@ -1187,7 +1187,7 @@ function Home(props) {
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts!=null?contacts.length:""} </span>{" "}
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? contacts.length : ""} </span>{" "}
                   contacts in the system
                 </span>
               )}
@@ -1261,7 +1261,7 @@ function Home(props) {
                                 {item.Heading}
                               </p>
                             )}
-                            <Checkbox  color="primary" ></Checkbox>
+                            <Checkbox color="primary" ></Checkbox>
                             {/* {item.icon} */}
                             {/* <i
                               class="fa fa-user-circle"
@@ -1367,16 +1367,15 @@ function Home(props) {
                         alignItems="center"
                         className={classes.contactsRow}
                         onClick={() => {
-                          if(hoveredIndex===null)
-                          {
+                          if (hoveredIndex === null) {
                             localStorage.setItem(
                               "CONTACT_DATA",
                               JSON.stringify(item)
                             );
-  
+
                             window.location.href = "/contact-profile";
                           }
-               
+
                         }}
                       >
                         <Grid item md={1} xs={1}>
@@ -1410,9 +1409,9 @@ function Home(props) {
                               }}
                               src={
                                 item.twitter_profile &&
-                                item.twitter_profile.profile_image.includes(
-                                  "contact-missing-image"
-                                ) == false
+                                  item.twitter_profile.profile_image.includes(
+                                    "contact-missing-image"
+                                  ) == false
                                   ? item.twitter_profile.profile_image
                                   : AvatarImg
                               }
@@ -1440,7 +1439,7 @@ function Home(props) {
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
                             {item.twitter_profile &&
-                            item.twitter_profile.screen_name
+                              item.twitter_profile.screen_name
                               ? "@" + item.twitter_profile.screen_name
                               : ""}
                           </span>
