@@ -935,7 +935,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
         badgeContent={
           <ClearIcon
             style={{ height: 10, width: 10, cursor: "pointer" }}
-            onClick={() => {
+          /*  onClick={() => {
               var alreadySelected = false;
               media.map((item) => {
                 if (m.hashid === item.hashid) {
@@ -953,7 +953,12 @@ const handleAddMedia=(media)=> setAddMedia(media)
                 localStorage.setItem("selectedMedia", JSON.stringify(temp));
                 setuseLessState(uselessState + 1);
               }
-            }}
+            }}*/
+            onClick={() =>
+            setMedia(null)
+            }
+
+
           ></ClearIcon>
         }
         color="error"
@@ -4045,13 +4050,18 @@ const handleAddMedia=(media)=> setAddMedia(media)
                       </Grid>
 
                       {media  &&
-                        media.map((m) => {
-                          return mediaContainer(m);
-                        })
+                       /* media.map((m) => {
+                          return mediaContainer(media[0]);
+                        })*/
+                              mediaContainer(media[0])
+
                        }
                         <Grid item container md={10} xs={10}>
              
-                            <Grid item xs={2.5} md ={2.5}
+                        { media ?
+                        <div></div> 
+                        : 
+                        <Grid item xs={2.5} md ={2.5}
                               container
                               direction="row"
                               style={{
@@ -4076,7 +4086,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                 }}
                               ></FaPlus>{" "}
                               Add Media
-                            </Grid>
+                            </Grid>}
                           {" "}
                         </Grid>
                     
