@@ -3,11 +3,24 @@ import HollowWhiteButton from "../../../common/Buttons/HollowWhiteButton";
 import IconTextField from "../../../common/Fields/IconTextField";
 import LocalOfferOutlinedIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import DialogBox from "../../../common/Dialogs";
-import React from "react";
-
+import React, {useEffect} from "react";
+import {getTags} from '../../../../ApiHelper'
 
 const TagSearchModal =(props)=>{
+    const [tags,setTags]=React.useState([]);
+    useEffect(() => {
 
+        (async () => {
+         try{
+            const result=await getTags();
+                setTags(result.data);
+            console.log("alltags",result)
+         }catch(e){
+            console.log("error",e)
+         }
+        })();
+
+    }, []);
     const allTags=props.allTags;
 
     console.log('alltags = ',allTags)
@@ -49,8 +62,8 @@ const TagSearchModal =(props)=>{
                         ></input>
                     </Grid>
                     <div style={{maxHeight: 400, minHeight: 400, overflow: "scroll"}}>
-                        {allTags &&
-                        allTags.map((tags) => {
+                        {tags &&
+                        tags.map((tags) => {
                             if (tags.name.indexOf(props.tagSearch) > -1) {
                                 return (
                                     <Grid

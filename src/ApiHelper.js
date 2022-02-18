@@ -391,7 +391,7 @@ export const getAllColumns = () => {
 export const getTags = () => {
     return axios({
         method: "get",
-        url: URL + `media/tags`,
+        url: URL + `tags`,
         headers: {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
@@ -521,7 +521,7 @@ export const getMediaTag = () => {
     console.log('token = ', JSON.parse(localStorage.getItem("user")).token)
     return axios({
         method: "get",
-        url: URL + `media/tags`,
+        url: URL + `tags/with_media`,
         headers: {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
@@ -545,6 +545,27 @@ export const getMediaUsers = () => {
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
+    });
+};
+
+export const updateMedia = (body) => {
+
+    const data = JSON.stringify(body);
+    console.log("mediaURL",URL + `media/${body.id}`)
+    return axios({
+        method: "put",
+        url: URL + `media/${body.id}`,
+
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+        data: data,
     });
 };
 //Create message API
@@ -648,16 +669,17 @@ export const postTag = (body) => {
 
     const data = JSON.stringify(body);
 
-
+console.log("URL", URL + `media/${body.id}`)
     return axios({
         method: "post",
-        url: URL + "media/" + body.id + "/add_tag",
+        url: URL + "media/" + body.id + "/add_tags",
         headers: {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-        },
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            },
         data: data,
     });
 };

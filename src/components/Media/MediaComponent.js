@@ -51,6 +51,8 @@ import {
     getMediaUsers,
     getTeamContacts,
     getTags,
+    postTag,
+    updateMedia,
     getSearchedContacts,
 } from "../../ApiHelper";
 import {fileTypes} from '../../utils/FileUtils';
@@ -364,20 +366,10 @@ function MediaComponent(props) {
             }
         );
     };
-    const getAllTags = () => {
-        getTags().then(
-            (res) => {
-                var TAGS = [];
-                if (res.statusText === "OK") {
-                    setAllTags(res.data);
-                }
-            },
-            (error) => {
-            }
-        );
-    };
+    
+       
 
-
+   
     const getMyContacts = (page) => {
         // setLoading(true);
         setFetching(true);
@@ -448,7 +440,20 @@ function MediaComponent(props) {
 
         }
     };
-
+    const getMediaTags = () => {
+        getMediaTag().then(
+            (res) => {
+                // console.log("THis is all contacts res", res);
+                if (res.statusText === "OK") {
+                    console.log("These are all media tags", res.data);
+                    setTaggedMedia(res.data);
+                }
+            },
+            (error) => {
+                console.log("this is error all media", error);
+            }
+        );
+    };
     const getMyMediaContacts = () => {
         getMediaUsers().then(
             (res) => {
@@ -479,7 +484,7 @@ function MediaComponent(props) {
         getMediaTag().then(
             (res) => {
                 if (res.statusText === "OK") {
-                    setTaggedMedia(res.data);
+                    //setTaggedMedia(res.data);
                 }
             },
             (error) => {
@@ -994,7 +999,7 @@ function MediaComponent(props) {
                 await getTaggedMedia();
                 await getMyMediaContacts();
                 await getMyTeamContacts();
-
+                await getMediaTags();
                 const media = await getMyMedia();
                 const placeholders = await getMyPlaceholders();
                 const urlParams = new URLSearchParams(window.location.search);
@@ -1521,6 +1526,26 @@ function MediaComponent(props) {
             } else {
                 media[mediaIndex] = selectedMedia;
                 setMedia(media);
+
+            }
+            console.log("selectedMedia",selectedMedia)
+          
+            const filterTags=selectedMedia.tags.map(tags => tags.id)
+            const addTags={id:selectedMedia.id,media:{tag:filterTags}};
+            const addOwner={id:selectedMedia.id,media:{name:selectedMedia.name,team_contact_id:selectedMedia.contact.id,
+                media_placeholder_id:selectedMedia.media_placeholder_id,owner:selectedMedia.owner.id,archive:true}}
+            console.log("addTags",addTags)
+            console.log("addOwner",addOwner)
+            try{
+              // const res= await postTag(addTags);
+
+               
+              // console.log("addtags",res)
+              const res= await updateMedia(addOwner)
+                console.log("addOwner",res)
+            }
+            catch(e){
+                console.log("erroraddtags",e)
             }
         }
 
@@ -1941,6 +1966,7 @@ function MediaComponent(props) {
                                 !displayListContainer.selectedPlaceholder &&
                                 <Tag
                                     taggedMedia={taggedMedia}
+                                    allTags={allTags}
                                     CustomToggle={CustomToggle}
                                     handleShowTagsDialog={handleShowTagsDialog}
                                     handleOpenSnackBar={handleOpenSnackBar}

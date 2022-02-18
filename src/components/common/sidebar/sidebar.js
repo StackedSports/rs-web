@@ -1994,7 +1994,7 @@ const Sidebar = (props) => {
                 props.messageCreate === true ||
                 props.TweetCreate === true ? (
                     <LogoContainer style={{ width: 60 }}>
-                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50 }} />
+                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50,height:50 }} />
                     </LogoContainer>
                 ) : (
                     <LogoContainer>

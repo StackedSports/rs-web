@@ -141,6 +141,9 @@ function Media(props) {
 
 
     const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+    
+    
     const handleClick = () => {
         setOpenSnackBar(true);
     };
@@ -264,6 +267,7 @@ function Media(props) {
         marginRight: 5,
     };
     const renderFilters = () => {
+        console.log("taggedMedia", taggedMedia)
         return (
             <Grid
                 container
@@ -486,7 +490,7 @@ function Media(props) {
                                 }}
                             ></input>
                         </Grid>
-
+                            
                         {taggedMedia &&
                             taggedMedia.map((option) => {
                                 if (stateSearch != "") {

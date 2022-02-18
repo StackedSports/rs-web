@@ -1,7 +1,7 @@
 import {Grid, makeStyles} from "@material-ui/core";
 import MediaItem from "../Item/item";
 import ClearIcon from "@material-ui/icons/Clear";
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useState,useEffect} from "react";
 
 import {Divider} from "@mui/material";
 import MediaInfo from './info';
@@ -9,7 +9,7 @@ import SelectedContactItem from './selected-contact';
 import DropDownItem from './contact-item';
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Pagination from "../../Pagination";
-
+import {getTags} from '../../../../ApiHelper';
 
 const useStyles = makeStyles({
     tableHeading: {
@@ -88,6 +88,21 @@ const useStyles = makeStyles({
 
 const MediaDetails = (props) => {
 
+    const[alltags,setAllTags]=React.useState([])
+    useEffect(() => {
+  
+      (async () => {
+       try{
+          const result=await getTags();
+              setAllTags(result.data);
+          console.log("alltags",result)
+       }catch(e){
+          console.log("error",e)
+       }
+      })();
+  
+  }, []);
+
     const classes = useStyles();
     const [page, setPage] = useState(1);
 
@@ -98,10 +113,10 @@ const MediaDetails = (props) => {
 
 
 
-
+    console.log("TAGGS",alltags)
     const filter = props.filter,
         teamContacts = props.teamContacts,
-        taggedMedia = props.taggedMedia,
+        taggedMedia = alltags,
         placeholders = props.placeholders,
         myMediaContacts = props.myMediaContacts,
         selectedPlaceholder = props.selectedPlaceholder;

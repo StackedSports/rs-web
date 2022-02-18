@@ -21,12 +21,12 @@ const PlaceholderDetails=(props)=>{
             </Grid>
             <Grid item md={9} xs={9}>
                 <p style={{fontWeight: "bold", fontSize: 20,marginLeft:'25px'}}>
-                    {selectedPlaceholder.name}
+                    {selectedPlaceholder.name&&selectedPlaceholder.name}
                 </p>
                 <p style={{margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
                     FileType: 
                     <span style={{color: "#9a9a9a"}}>
-                 {' '+selectedPlaceholder.media[0].file_type}
+                 {' '+selectedPlaceholder.media[0].first_type&&selectedPlaceholder.media[0].file_type}
                 </span>
                 </p>
                 <p style={{ margin: 0,marginLeft:'15px',color: "#9a9a9a",}}>
