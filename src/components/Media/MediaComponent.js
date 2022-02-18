@@ -1616,7 +1616,7 @@ function MediaComponent(props) {
         }
     }
 
-
+    console.log("addmediaaa",props.addMedia)
     return (
         <div
             style={{
@@ -1644,6 +1644,10 @@ function MediaComponent(props) {
                 setSelectedPlaceHolder={handleSelectedPlaceHolder}
                 handleMediaDrawer={props.handleMediaDrawer}
                 handleAnimation={handleAnimation}
+                setAddMedia={props.setAddMedia}
+                allMedia={media}
+                setMedia={props.setMedia}
+                selectedCheckBoxes={selectedCheckBoxes}
                 showAnimation={showAnimation}
                 showSideFilters={showSideFilters}
                 showMediaStats={showMediaStats}
@@ -1655,6 +1659,7 @@ function MediaComponent(props) {
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
                 history={props.history}
+                addMedia={props.addMedia}
                 showSave={displayListContainer.selectedPlaceholder && !displayListContainer.isPlaceholderSelected ? true : false}
                 saveTag={saveTag}
                 showFilter={!displayListContainer.selectedPlaceholder ? true : false}
@@ -1671,19 +1676,21 @@ function MediaComponent(props) {
 
             {showFilters && !showMediaStats && renderFilters()}
             {props.filter.length > 0 && !showOnlyPlaceholders && !displayListContainer.selectedPlaceholder &&
-            <Fragment>
-                <ItemMainHeader title={"Media"}
-                                dropdown_item_title={"Last Modified"}
-                                CustomToggle={CustomToggle}/>
-                <PlaceholderTableList list={MediaList}
-                                      handleScroll={handleScroll}
-                                      isPlaceholder={false}
-                                      setLightboxPicture={handleSetLightboxPicture}
-                                      setLightboxVideo={handleSetLightboxVideo}
-                                      filter={props.filter}
-                                      isMedia={true}
-                                      showFullHeight={(props.filter).length > 0 ? true : false}
-                                      setSelectedPlaceHolder={handleSelectedPlaceHolderListView}/>
+                <Fragment>
+                    <ItemMainHeader title={"Media"}
+                        dropdown_item_title={"Last Modified"}
+                        CustomToggle={CustomToggle} 
+                        addMedia={props.addMedia}
+                        />
+                    <PlaceholderTableList list={MediaList}
+                        handleScroll={handleScroll}
+                        isPlaceholder={false}
+                        setLightboxPicture={handleSetLightboxPicture}
+                        setLightboxVideo={handleSetLightboxVideo}
+                        filter={props.filter}
+                        isMedia={true}
+                        showFullHeight={(props.filter).length > 0 ? true : false}
+                        setSelectedPlaceHolder={handleSelectedPlaceHolderListView} />
 
 
             </Fragment>}
@@ -1932,7 +1939,8 @@ function MediaComponent(props) {
                                                     setQuickAccessStartIndex={handleQuickAccessStartIndex}
                                                     selectedPlaceholder={displayListContainer.selectedPlaceholder}
                                                     message={props.message}
-                                                    media={MediaList}
+                                                    addMedia={props.addMedia}
+                                                    media={media}
                                                     viewMoreQuickAccess={viewMoreQuickAccess}
                                                     quickAccessEndIndex={quickAccessEndIndex}
                                                     handlePlaceholderClick={handlePlaceholderClick}
