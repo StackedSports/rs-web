@@ -285,9 +285,9 @@ function MessageCreate(props) {
     });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
       return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
-      row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
-      row?.phone?.includes(searchedVal)||row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase()) 
-      ;
+        row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+        row?.phone?.includes(searchedVal) || row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase())
+        ;
     });
     // phone
     setRows(filteredRows);
@@ -306,9 +306,9 @@ function MessageCreate(props) {
 
   };
   console.log('-----------------individualFilter result-------------------------')
-console.log('====================================');
-console.log(individualrows);
-console.log('===========individualFilter result=========================');
+  console.log('====================================');
+  console.log(individualrows);
+  console.log('===========individualFilter result=========================');
   const cancelSearchIndividual = () => {
     setSearched("");
     requestSearchForindividual(searched);
@@ -341,6 +341,9 @@ console.log('===========individualFilter result=========================');
   console.log('===========allindividualBoards=========================');
   console.log(allindividualBoards, "allindividualBoards");
   console.log('======================allindividualBoards==============');
+  console.log('============selectedMedia========================');
+  console.log(selectedMedia);
+  console.log('=======================selectedMedia=============');
   const CalendarFilter = () => {
     return (
       <div class="dropdown">
@@ -415,6 +418,33 @@ console.log('===========individualFilter result=========================');
       </div>
     );
   };
+
+  // const makeMediaSelected = (index) => {
+  //   var alreadySelected = false;
+  //   selectedMedia.map((item) => {
+  //     if (index.hashid === item.hashid) {
+  //       alreadySelected = true;
+  //     }
+  //   });
+  //   if (alreadySelected) {
+  //     var temp = [];
+  //     selectedMedia.map((item) => {
+  //       if (index.hashid != item.hashid) {
+  //         temp.push(item);
+  //       }
+  //     });
+  //     setSelectedCheckboxes(temp);
+  //     setSelectedMedia(temp);
+  //     setuseLessState(uselessState + 1);
+  //   } else {
+  //     var temp = selectedMedia;
+  //     temp.push(index);
+  //     setSelectedMedia(temp);
+  //     setuseLessState(uselessState + 1);
+  //   }
+  //   localStorage.setItem("selectedMedia", JSON.stringify(selectedMedia));
+  //   // console.log("This is selected media", selectedMedia);
+  // };
 
   const makeMediaSelected = (index) => {
     var alreadySelected = false;
@@ -892,7 +922,8 @@ console.log('===========individualFilter result=========================');
   };
 
   const mediaContainer = (m) => {
-    // console.log("THis is container ", m);
+    alert('ok')
+    console.log("THis is container ", m);
     return (
       <Badge
         badgeContent={
@@ -2668,7 +2699,7 @@ console.log('===========individualFilter result=========================');
                     <Grid container direction="row" justify="flex-start">
 
 
-                      {/* {
+                      {
                   showDrawer ?
                     <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
                       setshowSideFilters(!showSideFilters);
@@ -2685,7 +2716,7 @@ console.log('===========individualFilter result=========================');
                       handleAnimation();
 
                     }}
-                      style={{ cursor: "pointer", width: 40 }}></img>} */}
+                      style={{ cursor: "pointer", width: 40 }}></img>}
 
                       <div
                         style={{
@@ -2775,7 +2806,7 @@ console.log('===========individualFilter result=========================');
                                           onClick={() => {
                                             addDataToReceivers(boards.name);
                                             // setMessageReceiver();
-      // setMessageReceiver(temp);
+                                            // setMessageReceiver(temp);
 
                                           }}
                                         >
@@ -2956,9 +2987,9 @@ console.log('===========individualFilter result=========================');
                                           cursor: "pointer",
                                         }}
                                         onClick={() => {
-                                        // const full_name=indv.first_name {indv.last_name}
-                                        // const m =(indv.first_name,indv.last_name)
-                                          addDataToReceivers( `${indv.first_name} ${indv.last_name}`);
+                                          // const full_name=indv.first_name {indv.last_name}
+                                          // const m =(indv.first_name,indv.last_name)
+                                          addDataToReceivers(`${indv.first_name} ${indv.last_name}`);
                                           // setMessageReceiver( indv.first_name,indv.last_name);
 
                                           // setMessageReceiver();
@@ -3995,10 +4026,10 @@ console.log('===========individualFilter result=========================');
                         borderRadius: 4,
                         minHeight: 170,
                         marginTop: 16,
-                        // paddingTop: 16,
+                        paddingTop: 16,
                         paddingBottom: 16,
                       }}
-                      className="hoverHighlight d-flex align-items-center"
+                      className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
@@ -4040,6 +4071,8 @@ console.log('===========individualFilter result=========================');
                         </Grid>
                       )}
                     </Grid>
+
+
 
                     <Grid
                       container
