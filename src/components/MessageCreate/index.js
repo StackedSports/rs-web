@@ -10,8 +10,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import SelectSearch from "react-select-search";
 import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
-import GifIcon from "@material-ui/icons/Gif";
+
 import PhotoIcon from "@material-ui/icons/Photo";
+import GifIcon from "@material-ui/icons/Gif";
+
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import { ArrowDropDown, Check, CheckCircle, Search, Send, Info, Favorite } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -159,13 +161,14 @@ function MessageCreate(props) {
   const [selectedDrafts, setSelectedDrafts] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
+  const [addMedia,setAddMedia]=useState(false);
   // const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displaySnippets, setDisplaySnippets] = useState(false);
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
   const [displayTextPlaceholders, setDisplayTextPlaceholders] = useState(false);
-  const [addMedia, setAddMedia] = useState(false);
+ // const [addMedia, setAddMedia] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
   const [displaySendTo, setDisplaySendTo] = useState(false);
@@ -180,7 +183,7 @@ function MessageCreate(props) {
   const [twitterDm, settwitterDm] = useState(false);
   const [personalText, setPersonalText] = useState(false);
   const [rsText, setrsText] = useState(false);
-
+const handleAddMedia=(media)=> setAddMedia(media)
 
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
@@ -207,7 +210,8 @@ function MessageCreate(props) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [placeholders, setPlaceHolders] = useState(null);
   const [contacts, setContacts] = useState(null);
-  const [media, setMedia] = useState(null);
+  const [media, setMedia] = useState();
+  const handleMedia =(media)=>setMedia(media)
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -236,7 +240,7 @@ function MessageCreate(props) {
   const [showAnimation, setShowAnimation] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [stateiconColor, setstateiconColor] = useState('gray');
-
+  console.log("selectedcheckbox",media)
   console.log(allBoards, "All Boards")
   const [tableData, setTableData] = React.useState([
     {
@@ -778,7 +782,7 @@ function MessageCreate(props) {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           // console.log("These are all media", res.data);
-          setMedia(res.data);
+         
         }
       },
       (error) => {
@@ -828,6 +832,7 @@ function MessageCreate(props) {
   //     }
   //   );
   // }
+
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -922,8 +927,9 @@ function MessageCreate(props) {
   };
 
   const mediaContainer = (m) => {
-    alert('ok')
-    console.log("THis is container ", m);
+    //alert('ok')
+    
+    console.log("THis is container ", media);
     return (
       <Badge
         badgeContent={
@@ -931,19 +937,19 @@ function MessageCreate(props) {
             style={{ height: 10, width: 10, cursor: "pointer" }}
             onClick={() => {
               var alreadySelected = false;
-              selectedMedia.map((item) => {
+              media.map((item) => {
                 if (m.hashid === item.hashid) {
                   alreadySelected = true;
                 }
               });
               if (alreadySelected) {
                 var temp = [];
-                selectedMedia.map((item) => {
+                media.map((item) => {
                   if (m.hashid != item.hashid) {
                     temp.push(item);
                   }
                 });
-                setSelectedMedia(temp);
+                setMedia(temp);
                 localStorage.setItem("selectedMedia", JSON.stringify(temp));
                 setuseLessState(uselessState + 1);
               }
@@ -2621,7 +2627,9 @@ function MessageCreate(props) {
           <MediaComponnet
             showSideFilters={true}
             // setshowSideFilters={setshowSideFilters}
-            setAddMedia={setAddMedia}
+            addMedia={addMedia}
+            setAddMedia={handleAddMedia}
+            setMedia={handleMedia}
             filter={filter}
             addDataToFilter={addDataToFilter}
             message
@@ -4032,20 +4040,22 @@ function MessageCreate(props) {
                       className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
+                     
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 
-                      {selectedMedia.length > 0 ? (
-                        selectedMedia.map((m) => {
+                      {media  &&
+                        media.map((m) => {
                           return mediaContainer(m);
                         })
-                      ) : (
-                        <Grid item md={10} xs={10}>
-                          <div class="dropdown">
-                            <Grid
+                       }
+                        <Grid item container md={10} xs={10}>
+             
+                            <Grid item xs={2.5} md ={2.5}
                               container
                               direction="row"
                               style={{
+                                marginLeft:10,
                                 border: "1px solid #d8d8d8",
                                 height: 150,
                                 width: 150,
@@ -4067,9 +4077,9 @@ function MessageCreate(props) {
                               ></FaPlus>{" "}
                               Add Media
                             </Grid>
-                          </div>{" "}
+                          {" "}
                         </Grid>
-                      )}
+                    
                     </Grid>
 
 

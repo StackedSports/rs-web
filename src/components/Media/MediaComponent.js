@@ -1590,7 +1590,7 @@ const getalltagsuseeffcet = async ()=>{
         }
     }
 
-
+    console.log("addmediaaa",props.addMedia)
     return (
         <div
             style={{
@@ -1618,6 +1618,10 @@ const getalltagsuseeffcet = async ()=>{
                 setSelectedPlaceHolder={handleSelectedPlaceHolder}
                 handleMediaDrawer={props.handleMediaDrawer}
                 handleAnimation={handleAnimation}
+                setAddMedia={props.setAddMedia}
+                allMedia={media}
+                setMedia={props.setMedia}
+                selectedCheckBoxes={selectedCheckBoxes}
                 showAnimation={showAnimation}
                 showSideFilters={showSideFilters}
                 showMediaStats={showMediaStats}
@@ -1629,6 +1633,7 @@ const getalltagsuseeffcet = async ()=>{
                 setShowlistView={handleSetShowListView}
                 displayListContainer={displayListContainer}
                 history={props.history}
+                addMedia={props.addMedia}
                 showSave={displayListContainer.selectedPlaceholder && !displayListContainer.isPlaceholderSelected ? true : false}
                 saveTag={saveTag}
                 // setMedia={}
@@ -1651,7 +1656,9 @@ const getalltagsuseeffcet = async ()=>{
                 <Fragment>
                     <ItemMainHeader title={"Media"}
                         dropdown_item_title={"Last Modified"}
-                        CustomToggle={CustomToggle} />
+                        CustomToggle={CustomToggle} 
+                        addMedia={props.addMedia}
+                        />
                     <PlaceholderTableList list={MediaList}
                         handleScroll={handleScroll}
                         isPlaceholder={false}
@@ -1802,6 +1809,7 @@ const getalltagsuseeffcet = async ()=>{
                                                     setQuickAccessStartIndex={handleQuickAccessStartIndex}
                                                     selectedPlaceholder={displayListContainer.selectedPlaceholder}
                                                     message={props.message}
+                                                    addMedia={props.addMedia}
                                                     media={media}
                                                     viewMoreQuickAccess={viewMoreQuickAccess}
                                                     quickAccessEndIndex={quickAccessEndIndex}

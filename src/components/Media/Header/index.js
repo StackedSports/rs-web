@@ -18,6 +18,8 @@ import PlaceholderListButton from '../Placehoder/PlaceholderListButton';
 const Header = (props) => {
     console.log('header = ', props);
     const [initalColor, setInitalColoe] = useState('transparent');
+    console.log("addmedia",props.selectedCheckBoxes);
+   const selectedCheckBoxes=props.selectedCheckBoxes
     return (
         <Grid container direction="row">
             <Grid item md={4} sm={4}>
@@ -81,7 +83,7 @@ const Header = (props) => {
 
 
 
-                    {
+                    {props. addMedia ?(<div></div>):
                         props.showListButton &&
                         <PlaceholderListButton
 
@@ -92,18 +94,25 @@ const Header = (props) => {
 
                     }
           
-          {props.message ? (
-                        <div></div>
-                    ) : (
+          {props.addMedia && 
+                      
 
                         // props.showSave &&
                         <IconTextField
                         width={150}
                         onClick={() => {
-                          if (props.setAddMedia) {
+                          if (props.addMedia) {
                             props.setAddMedia(false);
-                                
-                            console.log(props.setAddMedia);
+                            
+                            let filterMedia=[];
+                            for(let m of props.allMedia){
+                                if(selectedCheckBoxes.indexOf(m.hashid)!==-1){
+                                    filterMedia.push(m);
+                                }
+                            }
+
+                            props.setMedia(filterMedia)
+                            console.log("filterMedia",filterMedia);
                             console.log('=============props.setAddMedia=======================');   
                           }
                         }}
@@ -113,10 +122,10 @@ const Header = (props) => {
                       ></IconTextField>
 
 
-                    )}
+                    }
 
         
-                    {props.message ? (
+                    {props.addMedia ? (
                         <div></div>
                     ) : (
 
@@ -139,7 +148,7 @@ const Header = (props) => {
                     )}
 
 
-                    {props.message ? (
+                    {props.addMedia ? (
                         <div></div>
                     ) : (
                         <DropDownButton
@@ -163,7 +172,7 @@ const Header = (props) => {
                     )}
 
 
-                    {props.message ? (
+                    {props.addMedia ? (
                         <div></div>
                     ) : (
                         <DropDownButton
