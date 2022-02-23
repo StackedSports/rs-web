@@ -10,10 +10,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import SelectSearch from "react-select-search";
 import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
-
-import PhotoIcon from "@material-ui/icons/Photo";
 import GifIcon from "@material-ui/icons/Gif";
-
+import PhotoIcon from "@material-ui/icons/Photo";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import { ArrowDropDown, Check, CheckCircle, Search, Send, Info, Favorite } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
@@ -111,9 +109,7 @@ function MessageCreate(props) {
   //var userProfile;
   const [value, setValue] = React.useState(1);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
   const [showModal, setShowModal] = useState(true);
   var [showSetting, setShowSetting] = useState(false);
   //const [allTags, setAllTags] = useState(null);
@@ -161,14 +157,13 @@ function MessageCreate(props) {
   const [selectedDrafts, setSelectedDrafts] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
-  const [addMedia,setAddMedia]=useState(false);
   // const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displaySnippets, setDisplaySnippets] = useState(false);
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
   const [displayTextPlaceholders, setDisplayTextPlaceholders] = useState(false);
- // const [addMedia, setAddMedia] = useState(false);
+  const [addMedia, setAddMedia] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
   const [displaySendTo, setDisplaySendTo] = useState(false);
@@ -183,7 +178,7 @@ function MessageCreate(props) {
   const [twitterDm, settwitterDm] = useState(false);
   const [personalText, setPersonalText] = useState(false);
   const [rsText, setrsText] = useState(false);
-const handleAddMedia=(media)=> setAddMedia(media)
+
 
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
@@ -210,8 +205,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [placeholders, setPlaceHolders] = useState(null);
   const [contacts, setContacts] = useState(null);
-  const [media, setMedia] = useState();
-  const handleMedia =(media)=>setMedia(media)
+  const [media, setMedia] = useState(null);
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -220,16 +214,27 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [allindividualBoards, setAllindividualBoards] = useState(null);
+  // const [allMYBoards, setallMYBoards] = useState(null);
+
 
   const [AllSearchBoards, setAllSearchBoards] = useState(null);
 
 
   const [positions, setAllPositions] = useState(null);
   const [rows, setRows] = useState(allBoards);
+  const [myBoardrows, setMyBoardRows] = useState(allBoards);
+  const [teamBoardrows, setTeamBoardRows] = useState(allBoards);
+
+
+
   const [individualrows, setindividualRows] = useState(allindividualBoards);
 
 
   const [searched, setSearched] = useState("");
+  const [searchedMyBoard, setsearchedMyBoard] = useState("");
+  const [searchedTeamBoard, setsearchedTeamBoard] = useState("");
+
+
 
   const [teamContacts, setTeamContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
@@ -240,7 +245,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [showAnimation, setShowAnimation] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [stateiconColor, setstateiconColor] = useState('gray');
-  console.log("selectedcheckbox",media)
+
   console.log(allBoards, "All Boards")
   const [tableData, setTableData] = React.useState([
     {
@@ -280,12 +285,58 @@ const handleAddMedia=(media)=> setAddMedia(media)
     },
   ]);
   // const classes = useStyles();
-
-  const requestSearch = (searchedVal) => {
+  const requestSearchMyBoard = (searchedVal) => {
     getMyContactsSearch()
 
     const filteredRows = allBoards?.filter((row) => {
       return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    // const filteredRowsIndv = allindividualBoards?.filter((row) => {
+    //   return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+    //     row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+    //     row?.phone?.includes(searchedVal) || row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase())
+    //     ;
+    // });
+    // phone
+    setMyBoardRows(filteredRows);
+    // setindividualRows(filteredRowsIndv)
+
+    getMyContactsSearch()
+
+  }
+  // request search for team board
+  const requestSearchTeamBoard = (searchedVal) => {
+    getMyContactsSearch()
+
+    const filteredRows = allBoards?.filter((row) => {
+      return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    // const filteredRowsIndv = allindividualBoards?.filter((row) => {
+    //   return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+    //     row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
+    //     row?.phone?.includes(searchedVal) || row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase())
+    //     ;
+    // });
+    // phone
+    setTeamBoardRows(filteredRows);
+    // setindividualRows(filteredRowsIndv)
+
+    getMyContactsSearch()
+
+  }
+  const cancelSearchTeamBoard = () => {
+    setsearchedTeamBoard("");
+    requestSearchTeamBoard(searchedTeamBoard);
+  };
+  const cancelSearchMyBoard = () => {
+    setsearchedMyBoard("");
+    requestSearchMyBoard(searchedMyBoard);
+  };
+  const requestSearch = (searchedVal) => {
+    getMyContactsSearch()
+
+    const filteredRows = allBoards?.filter((row) => {
+      return row?.name?.toLowerCase()?.includes(searchedVal?.toLowerCase());
     });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
       return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
@@ -321,14 +372,32 @@ const handleAddMedia=(media)=> setAddMedia(media)
     setSearched("");
     requestSearch(searched);
   };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    requestSearchTeamBoard('')
+    requestSearchMyBoard('')
+    requestSearch('')
+    // setSearched("")
+    // setsearchedMyBoard("")
+    // setsearchedTeamBoard("")
+    // setMyBoardRows(allBoards)
+    // setTeamBoardRows(allBoards)
+    // setindividualRows(allBoards)
+  };
   useEffect(() => {
     setRows(allBoards)
-  }, [allBoards])
+
+    setMyBoardRows(allBoards)
+    setTeamBoardRows(allBoards)
+
+
+  }, [allBoards, setMyBoardRows, setTeamBoardRows])
   useEffect(
     (data) => {
       console.log(data);
       setTableData(tableData);
       requestSearch()
+      requestSearchMyBoard()
       // setindividualRows(s)
       // action on update of movies
     },
@@ -782,7 +851,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           // console.log("These are all media", res.data);
-         
+          setMedia(res.data);
         }
       },
       (error) => {
@@ -832,7 +901,6 @@ const handleAddMedia=(media)=> setAddMedia(media)
   //     }
   //   );
   // }
-
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -927,9 +995,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
   };
 
   const mediaContainer = (m) => {
-    //alert('ok')
-    
-    console.log("THis is container ", media);
+    alert('ok')
+    console.log("THis is container ", m);
     return (
       <Badge
         badgeContent={
@@ -937,19 +1004,19 @@ const handleAddMedia=(media)=> setAddMedia(media)
             style={{ height: 10, width: 10, cursor: "pointer" }}
             onClick={() => {
               var alreadySelected = false;
-              media.map((item) => {
+              selectedMedia.map((item) => {
                 if (m.hashid === item.hashid) {
                   alreadySelected = true;
                 }
               });
               if (alreadySelected) {
                 var temp = [];
-                media.map((item) => {
+                selectedMedia.map((item) => {
                   if (m.hashid != item.hashid) {
                     temp.push(item);
                   }
                 });
-                setMedia(temp);
+                setSelectedMedia(temp);
                 localStorage.setItem("selectedMedia", JSON.stringify(temp));
                 setuseLessState(uselessState + 1);
               }
@@ -2627,9 +2694,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
           <MediaComponnet
             showSideFilters={true}
             // setshowSideFilters={setshowSideFilters}
-            addMedia={addMedia}
-            setAddMedia={handleAddMedia}
-            setMedia={handleMedia}
+            setAddMedia={setAddMedia}
             filter={filter}
             addDataToFilter={addDataToFilter}
             message
@@ -2708,23 +2773,23 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
 
                       {
-                  showDrawer ?
-                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(false);
-                      setShowAnimation(true);
-                      handleAnimation();
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>
-                    :
-                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(true);
-                      setShowAnimation(true);
-                      handleAnimation();
+                        showDrawer ?
+                          <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                            setshowSideFilters(!showSideFilters);
+                            setShowDrawer(false);
+                            setShowAnimation(true);
+                            handleAnimation();
+                          }}
+                            style={{ cursor: "pointer", width: 40 }}></img>
+                          :
+                          <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                            setshowSideFilters(!showSideFilters);
+                            setShowDrawer(true);
+                            setShowAnimation(true);
+                            handleAnimation();
 
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>}
+                          }}
+                            style={{ cursor: "pointer", width: 40 }}></img>}
 
                       <div
                         style={{
@@ -2784,9 +2849,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                     background: '#edeef2'
                                   }}
                                   placeholder="Search My boards"
-                                  value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
-                                  onCancelSearch={() => cancelSearch()}
+                                  value={searchedMyBoard}
+                                  onChange={(searchVal) => requestSearchMyBoard(searchVal)}
+                                  onCancelSearch={() => cancelSearchMyBoard()}
                                 />
                               </div>
                             </Grid>
@@ -2799,8 +2864,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {rows &&
-                                  rows.map((boards) => {
+                                {myBoardrows &&
+                                  myBoardrows.map((boards) => {
                                     return (
                                       boards.is_shared === false ? <>
                                         <div
@@ -2876,9 +2941,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                     background: '#edeef2'
                                   }}
                                   placeholder="Search Team boards"
-                                  value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
-                                  onCancelSearch={() => cancelSearch()}
+                                  value={searchedTeamBoard}
+                                  onChange={(searchVal) => requestSearchTeamBoard(searchVal)}
+                                  onCancelSearch={() => cancelSearchTeamBoard()}
                                 />
                               </div>
                             </Grid>
@@ -2891,8 +2956,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                 }}
                                 className="fullHeightCreateMessageSide"
                               >
-                                {rows &&
-                                  rows.map((boards) => {
+                                {teamBoardrows &&
+                                  teamBoardrows.map((boards) => {
                                     return (
                                       boards.is_shared === true ? <>
                                         <div
@@ -3011,7 +3076,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                         <div className="mr-4" >
                                           <img
                                             alt={indv?.first_name}
-                                            src={indv.twitter_profile.profile_image || AvatarImg}
+                                            src={indv?.twitter_profile.profile_image || AvatarImg}
                                             style={{
                                               width: 35,
                                               height: 35,
@@ -4040,22 +4105,20 @@ const handleAddMedia=(media)=> setAddMedia(media)
                       className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
-                     
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 
-                      {media  &&
-                        media.map((m) => {
+                      {selectedMedia.length > 0 ? (
+                        selectedMedia.map((m) => {
                           return mediaContainer(m);
                         })
-                       }
-                        <Grid item container md={10} xs={10}>
-             
-                            <Grid item xs={2.5} md ={2.5}
+                      ) : (
+                        <Grid item md={10} xs={10}>
+                          <div class="dropdown">
+                            <Grid
                               container
                               direction="row"
                               style={{
-                                marginLeft:10,
                                 border: "1px solid #d8d8d8",
                                 height: 150,
                                 width: 150,
@@ -4077,9 +4140,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
                               ></FaPlus>{" "}
                               Add Media
                             </Grid>
-                          {" "}
+                          </div>{" "}
                         </Grid>
-                    
+                      )}
                     </Grid>
 
 

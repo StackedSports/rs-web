@@ -52,6 +52,7 @@ import {
   getBoardFilters,
   getPositions,
   getAllColumns,
+  getAllContactsWithSearch,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
@@ -154,6 +155,8 @@ function Home(props) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
+  const [allcontacts, setAllContacts] = useState(null);
+
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -271,7 +274,31 @@ function Home(props) {
 
     return null;
   };
-
+  const getMyContactsSearch = (page) => {
+    // setLoading(true);
+    setFetching(true);
+    console.log("This is the date", page);
+    // || "2020-12-13"
+    getAllContactsWithSearch(page).then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all contacts", res.data);
+          setAllContacts(res.data);
+          // setAllBoards(res.data);
+          // setCopyContacts(res.data);
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        }
+      },
+      (error) => {
+        getMyContactsSearch(1);
+        setPage(1);
+        console.log("this is error all contacts", error);
+      }
+    );
+    // setLoading(false)
+  };
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -279,7 +306,7 @@ function Home(props) {
     // || "2020-12-13"
     getAllContacts(page).then(
       (res) => {
-        // console.log("THis is all contacts res", res);
+        console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           if (page > 1) {
             var temp = contacts;
@@ -290,17 +317,19 @@ function Home(props) {
             setCopyContacts(temp);
             setuseLessState(uselessState + 1);
             console.log("These are all new contacts", temp);
+            
+
             // document.getElementById("infinit").scrollTop = 0;
             setFetching(false);
           } else {
-            console.log("These are all contacts", contacts);
-
+            
             setContacts(res.data);
             setCopyContacts(res.data);
             if (document.getElementById("infinit")) {
               document.getElementById("infinit").scrollTop = 0;
             }
-
+            
+            console.log("These are all contacts", contacts);
             setFetching(false);
           }
         }
@@ -317,7 +346,7 @@ function Home(props) {
   const getAllGradeYears = () => {
     getGradeYears().then(
       (res) => {
-        // console.log("THis is all grade Years", res);
+        console.log("THis is all grade Years", res);
         var gradYears = [];
         if (res.statusText === "OK") {
           // console.log("These are all contacts", res.data);
@@ -380,8 +409,9 @@ function Home(props) {
         // console.log("THis is all statuses", res);
         var STATUSES = [];
         if (res.statusText === "OK") {
-          // console.log("These are all statuses", res.data);
+          console.log("These are all statuses", res.data);
           res.data.map((item) => {
+
             STATUSES.push({
               value: item.status,
               label: item.status,
@@ -441,10 +471,10 @@ function Home(props) {
   const getAllRanks = () => {
     getRanks().then(
       (res) => {
-        // console.log("THis is all ranks", res);
+        console.log("THis is all ranks", res);
         var RANKS = [];
         if (res.statusText === "OK") {
-          // console.log("These are all ranks", res.data);
+          console.log("These are all ranks", res.data);
           res.data.map((item) => {
             RANKS.push({
               value: item.rank,
@@ -606,6 +636,8 @@ function Home(props) {
                   color: rankFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
+                  // alert("ok")
+                  // setContacts(allcontacts)
                   if (rankFilter === option.label) {
                     setRankFilter(null);
                     addDataToFilter(option.label);
@@ -660,8 +692,16 @@ function Home(props) {
                   timeZoneFilter === option.label ? "#348ef7" : "white",
                 color: timeZoneFilter === option.label ? "white" : "black",
               }}
+              // onClick={() => {
+              //   setTimeZoneFilter(option.label);
+              // }}
               onClick={() => {
-                setTimeZoneFilter(option.label);
+                if (timeZoneFilter === option.label) {
+                  setTimeZoneFilter(null);
+                  addDataToFilter(option.label);
+                } else {
+                  addDataToFilter(option.label, "TimeZone");
+                }
               }}
             >
               {option.label}
@@ -869,6 +909,7 @@ function Home(props) {
       getAllBoards();
       getAllPositions();
       getColumns();
+      getMyContactsSearch();
       // setupPage();
     } else {
       window.location.href = "/";
@@ -898,22 +939,36 @@ function Home(props) {
             return;
           }
         }
+        // TimeZone
         if (filterType[index] === "gradeYear") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+          if (Number(item.grad_year) === filt) {
             console.log(
               "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
+              item.grad_year,
               filt
             );
             isValid = true;
             return;
           }
         }
-        if (filterType[index] === "Tag") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+        if (filterType[index] === "TimeZone") {
+          if (Number(item.TimeZone) === filt) {
             console.log(
               "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
+              item.TimeZone,
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+        
+        if (filterType[index] === "Tag") {
+          if (Number(item.grad_year) === filt) {
+
+            console.log(
+              "This is inseide grader",
+              item.grad_year,
               filt
             );
             isValid = true;
@@ -1355,6 +1410,9 @@ function Home(props) {
             >
               {contacts ? (
                 contacts.map((item, index) => {
+                  console.log('===============contacts====================='),
+                    console.log(contacts,'<<<<<<<<<<===contacts=<<<<<<<'),
+                    console.log('================contacts====================');
                   // console.log(
                   //   "This is filter funtion",
                   //   isSelectedCheckbox(index)
@@ -1362,6 +1420,7 @@ function Home(props) {
                   if (checkFilters(item) === true) {
                     return (
                       <Grid
+                        key={index}
                         container
                         direction="row"
                         alignItems="center"
@@ -1460,8 +1519,7 @@ function Home(props) {
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
                             {item.grad_year
-                              ? moment(item.grad_year).format("YYYY")
-                              : ""}
+                            }
                           </span>
                         </Grid>
                         <Grid item md={2} xs={2}>
