@@ -15,6 +15,8 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ForumIcon from "@material-ui/icons/Forum";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 import { BiChat, BiBell } from "react-icons/bi";
 import Modal from "../../dashboard/model";
 import { GlobalStyle } from "./globalStyle";
@@ -38,10 +40,25 @@ import {
 } from "@material-ui/icons";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import Alert from '@mui/material/Alert';
 import { InputGroup, FormControl } from "react-bootstrap";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconTextField from "../../common/Fields/IconTextField";
-import { getTags, getTeamContacts } from "../../../ApiHelper";
+import {Button as MuiButton } from '@mui/material';
+
+import LoadingButton from '@mui/lab/LoadingButton';
+
+import { 
+  getTags,
+  getTeamContacts, 
+  getPlaceholder, 
+  getAllContacts2,
+  getSearchedContacts,
+  addTag,
+  getAssociatedContactByFileName,
+  uploadMedia,
+  addTagToMedia
+} from "../../../ApiHelper";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const options = [
@@ -342,10 +359,51 @@ const useStyles = makeStyles({
     background: "#006644",
     color: "white",
   },
+
+  deleteForverIcon: {
+    "&:hover": {
+      cursor: "pointer"
+    },
+  }
 });
+
+const dummyFiles = [
+  // {
+  //   name: "file1.png"
+  // },
+  // {
+  //   name: "test.png"
+  // },
+  // {
+  //   name: "test2.png"
+  // },
+  // {
+  //   name: "test3.png"
+  // },
+  // {
+  //   name: "test4.png"
+  // }
+]
+
+const dummyAssociatedPeople = [
+  // "loading",
+  // null,
+  // null,
+  // null,
+  // null
+]
+
+const dummyUploadProgress = [
+  // "none",
+  // "ready",
+  // "uploading",
+  // "success",
+  // "failed"  
+]
 
 const Sidebar = (props) => {
   let history = useHistory();
+
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [addContact, setAddContact] = useState(false);
@@ -356,23 +414,35 @@ const Sidebar = (props) => {
   const [tagFilter, setTagFilter] = useState([]);
   const [placeholderFilter, setPlaceholderFilter] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
-  const [teamContacts, setTeamContacts] = useState(null);
+  const [teamMembers, setTeamMembers] = useState(null);
   const [allTags, setAllTags] = useState(null);
   const [displayOwner, setDisplayOwner] = useState(null);
   const [displayTags, setDisplayTags] = useState(null);
   const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
-  const [associatedPeople, setAssociatedPeople] = useState([]);
+  const [associatedPeople, setAssociatedPeople] = useState(dummyAssociatedPeople);
   const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState([]);
-  var [displayAssociate, setDisplayAssociate] = useState(null);
-  const [dropFiles, setDropFiles] = useState([]);
+  const [displayAssociate, setDisplayAssociate] = useState(null);
+  const [dropFiles, setDropFiles] = useState(dummyFiles);
   const [activeTabCSV, setActiveTabCSV] = useState(1);
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchTags, setSearchTags] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const classes = useStyles();
 
-
-
+	// new media upload
+  const [teamContacts, setTeamContacts] = useState([])
+	const [allPlaceholders, setAllPlaceholders] = useState([])
+	const [owners, setOwners] = useState([])
+	const [tagInput, setTagInput] = useState("")
+	const [tags, setTags] = useState([])
+	const [placeholders, setPlaceholders] = useState([])
+	const [placeholderInput, setPlaceholderInput] = useState("")
+	const [searchPlaceholder, setSearchPlaceholder] = useState("");
+  const [searchTeamContact, setSearchTeamContact] = useState("")
+  const [uploadStatus, setUploadStatus] = useState(dummyUploadProgress)
+  const [uploadingMedia, setUploadingMedia] = useState(false)
+  const [mediaAlert, setMediaAlert] = useState({ message: "", visible: false })
+  //const []
   const TagsDropDown = () => {
     return (
       <div class="dropdownMedia">
@@ -407,9 +477,7 @@ const Sidebar = (props) => {
             allTags.map((item, index) => {
               // console.log("This is item", item);
               if (searchTags != "") {
-                if (
-                  item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1
-                ) {
+                if (item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1) {
                   return (
                     <Grid
                       container
@@ -484,7 +552,7 @@ const Sidebar = (props) => {
         style={{
           height: "max-content",
           background: "#fafcfd",
-          marginTop: 16,
+          // marginTop: 16,
           marginBottom: 16,
           borderRadius: 4,
           border: "1px dotted gray",
@@ -506,7 +574,7 @@ const Sidebar = (props) => {
             margin: 0,
           }}
         >
-          Upload Your Document
+          Upload Media
         </p>
 
         <p
@@ -526,108 +594,501 @@ const Sidebar = (props) => {
           >
             Browse
           </span>{" "}
-          your file here
+          your files here
         </p>
       </Grid>
     );
   };
-  const getMyTeamContacts = () => {
-    getTeamContacts().then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          setTeamContacts(res.data);
+
+  const searchForContactsssss = () => {
+    // try to search for Aaron Becker
+    // Andy Rondeau
+    // @a_savaiinaea
+    // a_savaiinaea
+    // +1 (555) 666-7777
+    // let params = [
+    //   "Andy Rondeau", // yes
+    //   "Andy_Rondeau", // no
+    //   "andy_rondeau", // no
+    //   "@a_savaiinaea",
+    //   "a_savaiinaea", // yes
+    //   "+1 (555) 666-7777", // yes
+    // ]
+
+    // params.forEach(param => {
+    //   getSearchedContacts(param).then(
+    //     (res) => {
+    //       console.log("searched for " + param)
+    //       console.log(res.data)
+    //     },
+    //     (error) => {
+    //       console.log("searched for " + param)
+    //       console.log(error)
+    //     }
+    //   )
+    // })
+
+    getAllContacts2()
+    
+  }
+
+	const getTeamMembers = () => {
+		getTeamContacts().then(
+			(res) => {
+				// console.log("THis is all contacts res", res);
+				if (res.statusText === "OK") {
+					setTeamMembers(res.data);
+					// console.log("******************") 
+					// console.log(res.data)
+					// console.log("******************") 
+				}
+			},
+			(error) => {}
+		);
+	};
+
+	const getAllTags = () => {
+		getTags().then(
+			(res) => {
+				// console.log("THis is all tags", res);
+				var TAGS = [];
+
+				if (res.statusText === "OK") {
+					console.log("These are all tags", res.data);
+					setAllTags(res.data);
+				}
+			},
+			(error) => {
+				console.log("get all tags error: ", error);
+			}
+		);
+	};
+
+	const getAllPlaceholders = () => {
+		getPlaceholder().then(
+			(res) => {
+				if (res.statusText === "OK") {
+					console.log("These are all placeholders", res.data);
+					setAllPlaceholders(res.data);
+				}
+			},
+			(error) => {
+				console.log("get all placeholders error: ", error)
+			}
+		)
+	}
+
+	useEffect(() => {
+		if (localStorage.getItem("user")) {
+			getTeamMembers();
+			getAllTags();
+			getAllPlaceholders();
+		} else {
+			window.location.href = "/";
+		}
+	}, []);
+
+  const addMemberToOwners = member => {
+		// add member to owners if it member
+		// is not an owner yet
+
+		let duplicate = false
+
+		for(let i in owners) {
+			//console.log(owner)
+			if(owners[i].id == member.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newOwners = Object.assign([], owners)
+			newOwners.push(member)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setOwners(newOwners)
+		}
+  	};
+
+  	const removeMemberFromOwners = member => {
+      let newOwners = owners.filter(owner => owner.id !== member.id)
+      setOwners(newOwners)
+  	}
+
+	// Add Tag to Tags list
+	const addTagToTags = tag => {
+		let duplicate = false
+
+		for(let i in tags) {
+			//console.log(owner)
+			if(tags[i].id == tag.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newTags = Object.assign([], tags)
+			newTags.push(tag)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setTags(newTags)
+		}
+	}
+
+	const removeTagFromTags = tag => {
+		let newTags = tags.filter(tg => tg.id !== tag.id)
+		setTags(newTags)
+  	}
+
+	const onTagInputChange = e => {
+		setTagInput(e.target.value)
+	}
+
+	const onTagInputKeyPress = e => {
+		if(e.key === "Enter") {
+			let newTag = {
+				id: "new-" + Date.now(),
+				name: tagInput
+			}
+			addTagToTags(newTag)
+			setTagInput("")
+		}
+	}
+
+	const addPlaceholderToPlaceholders = (placeholder) => {
+		let duplicate = false
+
+		for(let i in placeholders) {
+			//console.log(owner)
+			if(placeholders[i].id == placeholder.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newPlaceholders = Object.assign([], placeholders)
+			newPlaceholders.push(placeholder)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setPlaceholders(newPlaceholders)
+		}
+	}
+
+	const removePlaceholderFromPlaceholders = (placeholder) => {
+		let newPlaceholders = placeholders.filter(ph => ph.id !== placeholder.id)
+		setPlaceholders(newPlaceholders)
+	}
+
+	const onPlaceholderInputChange = e => {
+		setPlaceholderInput(e.target.value)
+	}
+
+	const onPlaceholderInputKeyPress = e => {
+		if(e.key === "Enter") {
+			let newPlaceholder = {
+				id: "new-" + Date.now(),
+				name: placeholderInput
+			}
+			addPlaceholderToPlaceholders(newPlaceholder)
+			setPlaceholderInput("")
+		}
+	}
+
+  const onSearchTeamContactKeyPress = (e) => {
+    if(e.key === "Enter") {
+      getSearchedContacts(searchTeamContact).then(
+        (res) => {
+          if (res.statusText === "OK") {
+            console.log("These are all team contacts from search ", res.data);
+            setTeamContacts(res.data);
+          }
+        },
+        (error) => {
+          console.log("search contacts error " + error)
         }
-      },
-      (error) => {}
-    );
-  };
-  const getAllTags = () => {
-    getTags().then(
-      (res) => {
-        // console.log("THis is all tags", res);
-        var TAGS = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all tags", res.data);
-          setAllTags(res.data);
-        }
-      },
-      (error) => {
-        console.log("this is error all tags", error);
+      )
+    }
+  }
+
+  
+
+	const addTagToFilter = (value, type) => {
+		if (tagFilter.includes(value)) {
+			var temp = [];
+			tagFilter.map((item) => {
+				if (item != value) {
+				temp.push(item);
+				}
+			});
+			setTagFilter(temp);
+			setuseLessState(uselessState + 1);
+		} else {
+			var temp = tagFilter;
+			temp.push(value);
+			setTagFilter(temp);
+			setuseLessState(uselessState + 1);
+		}
+	};
+
+	
+	// console.log("These are associated people", associatedPeople);
+	// console.log("These are associated people index", associatedPeopleIndex);
+
+  // let file = {
+  //   lastModified: 1640966381181
+  //   lastModifiedDate: Fri Dec 31 2021 12:59:41 GMT-0300 (Horário Padrão de Brasília) {}
+  //   name: "Beautifying.pptx"
+  //   size: 4438537
+  //   type: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  //   webkitRelativePath: ""
+  // }
+
+  const onMediaAlertClose = (e) => {
+    setMediaAlert({
+      message: "",
+      visible: false
+    })
+  }
+
+  const handleAssociateContactToFile = (files, associated, uploadStatus) => {
+    return new Promise((resolve, reject) => {
+
+      let count = files.length
+
+      console.log("start count " + count)
+
+      files.forEach((file, index) => {
+        getAssociatedContactByFileName(file.name)
+            .then(contact => {
+              associated[index] = contact
+
+              console.log("return " + index)
+              console.log(associated)
+            })
+            .catch(error => {
+              console.log("error " + error)
+              associated[index] = null
+
+              console.log(associated)
+              if(error === "found multiple contacts") {
+                // TODO: alert user that could not auto associate
+                // due to search returning multiple contacts
+              } else if (error === "could not find contacts") {
+                // TODO: alert user that could not auto associate
+                // due to search not finding any contacts
+              } else {
+                // TODO: handle axios/server error
+              }
+            })
+            .finally(() => {
+              uploadStatus[index] = "ready"
+
+              count--
+
+              console.log("finally " + count)
+              console.log(associated)
+
+              if(count == 0) {
+                resolve([files, associated])
+              }
+            })
+      })
+    })
+  }
+
+  const handleImportFiles = (files) => {
+    let tempFiles = []
+    let tempAssociated = []
+    let tempUploadStatus = []
+
+    let pushedCount = 0
+
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i]
+
+      console.log(file)
+
+      if(((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
+        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) { 
+        // 5MB for images and 15MB for videos
+
+        console.log(file.name + "*")
+
+        tempFiles.push(file)
+        tempAssociated.push("loading")
+        tempUploadStatus.push("none")
       }
-    );
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("user")) {
-      getMyTeamContacts();
-      getAllTags();
-    } else {
-      window.location.href = "/";
     }
-  }, []);
 
-  const addDataToFilter = (value, type) => {
-    console.log("This is the value", value);
-    if (filter.includes(value)) {
-      var temp = [];
-      filter.map((item) => {
-        if (item != value) {
-          temp.push(item);
-        }
-      });
-      setFilter(temp);
-      setuseLessState(uselessState + 1);
-    } else {
-      var temp = filter;
-      temp.push(value);
-      setFilter(temp);
-      setuseLessState(uselessState + 1);
+    if(files.length != tempFiles.length) {
+      setMediaAlert({
+        message: "One or more files were not added since they do not match the file upload criteria",
+        visible: true
+      })
     }
-  };
 
-  const addTagToFilter = (value, type) => {
-    if (tagFilter.includes(value)) {
-      var temp = [];
-      tagFilter.map((item) => {
-        if (item != value) {
-          temp.push(item);
-        }
-      });
-      setTagFilter(temp);
-      setuseLessState(uselessState + 1);
-    } else {
-      var temp = tagFilter;
-      temp.push(value);
-      setTagFilter(temp);
-      setuseLessState(uselessState + 1);
-    }
-  };
-  console.log("These are associated people", associatedPeople);
-  console.log("These are associated people index", associatedPeopleIndex);
-  const drop = (ev) => {
-    ev.preventDefault();
+    const initialAssociated = Object.assign([], associatedPeople)
+    const initialUploadStatus = Object.assign([], uploadStatus)
 
-    var tempFiles = [];
-    for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-      tempFiles.push(ev.dataTransfer.files[i]);
-    }
-    console.log("These aree files ", tempFiles);
-    var temp = dropFiles;
-    var temp2 = temp.concat(tempFiles);
-    setDropFiles(temp2);
-  };
+    handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+      .then(() => {
+        console.log("**************************")
+        console.log("result")
+        console.log("**************************")
+
+        console.log(tempFiles)
+        console.log(tempAssociated)
+
+        setAssociatedPeople(initialAssociated.concat(tempAssociated))
+        setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
+        // setDropFiles(dropFiles.concat(tempFiles));
+      })
+
+    console.log("Droped files ", tempFiles);
+    setAssociatedPeople(associatedPeople.concat(tempAssociated))
+    setDropFiles(dropFiles.concat(tempFiles));
+    setUploadStatus(uploadStatus.concat(tempUploadStatus))
+    // setAssociatedPeople(associated)
+    // setDropFiles(tempFiles);
+  }
 
   const handleFileChange = (e) => {
-    var tempFiles = [];
-    for (var i = 0; i < e.target.files.length; i++) {
-      tempFiles.push(e.target.files[i]);
-    }
-    console.log("These aree files ", tempFiles);
-    var temp = dropFiles;
-    var temp2 = temp.concat(tempFiles);
-    setDropFiles(temp2);
+    console.log(e)
+    handleImportFiles(e.target.files)
+    return
+    // var tempFiles = [];
+    // for (var i = 0; i < e.target.files.length; i++) {
+    //   tempFiles.push(e.target.files[i]);
+    // }
+    // console.log("These aree files ", tempFiles);
+    // var temp = dropFiles;
+    // var temp2 = temp.concat(tempFiles);
+    // setDropFiles(temp2);
+  }
+
+  const drop = (ev) => {
+    ev.preventDefault();
+    handleImportFiles(ev.dataTransfer.files)
+    // let tempFiles = Object.assign([], dropFiles)
+    // let associated = Object.assign([], associatedPeople)
+
+    
+    
   };
+
+  const deleteMedia = (index) => {
+    let tempFiles = Object.assign([], dropFiles)
+    let tempAssociated = Object.assign([], associatedPeople)
+    let tempUploadStatus = Object.assign([], uploadStatus)
+
+    tempFiles.splice(index, 1)
+    tempAssociated.splice(index, 1)
+    tempUploadStatus.splice(index, 1)
+
+    setDropFiles(tempFiles)
+    setAssociatedPeople(tempAssociated)
+    setUploadStatus(tempUploadStatus)
+  }
+
+  const onUploadMedia = () => {
+
+    // uploadingMedia
+    // associatedPeople
+    // uploadProgress
+    // dropFiles
+
+    // placeholders[0]
+    // tags
+    // owners[0]
+
+    setUploadingMedia(true)
+
+    let tempUploadStatus = Object.assign([], uploadStatus)
+
+    let count = dropFiles.length
+
+    dropFiles.forEach((file, index) => {
+      let media = {
+        file,
+        owner: owners[0]?.id.toString(),
+        placeholder: placeholders[0]?.id.toString(),
+        contact: associatedPeople[index]?.id.toString(),
+        tags: tags
+      }
+
+      console.log("upload " + index)
+      console.log(media)     
+
+      //return
+
+      tempUploadStatus[index] = "uploading"
+      setUploadStatus(tempUploadStatus)
+
+      uploadMedia(media)
+        .then(res => {
+          console.log(res)
+
+          let mediaRes = res
+
+          let temp2 = Object.assign([], tempUploadStatus)
+          tempUploadStatus[index] = "success"
+          temp2[index] = "success"
+          setUploadStatus(temp2)
+          console.log(temp2)
+
+          tags.forEach(tag => {
+            //if(typeof tag.id == "string" && tag.id.includes("new-")) {
+              addTagToMedia(mediaRes.id, tag.name)
+                .then(res => {
+                  console.log(res)
+                })
+                .catch(error => {
+                  console.log(error)
+                })
+            //}
+          })
+
+          // last id 314852
+        })
+        .catch(error => {
+          console.log(error)
+
+          let temp2 = Object.assign([], tempUploadStatus)
+          temp2[index] = "failed"
+          tempUploadStatus[index] = "failed"
+          setUploadStatus(temp2)
+          console.log(temp2)
+
+          //tempUploadStatus[index] = "failed"
+          //setUploadStatus(tempUploadStatus)
+        })
+        .finally(() => {
+          //setUploadStatus(tempUploadStatus)
+          count--
+
+          if(count == 0)
+            setUploadingMedia(false)
+        })
+    })
+  }
+
+  const onCloseMedia = () => {
+    setAddMedia(false)
+    setDropFiles([])
+    setAssociatedPeople([])
+    setUploadStatus([])
+    setOwners([])
+    setPlaceholders([])
+    setTags([])
+  }
+
+  
 
   const addPlaceholderToFilter = (value, type) => {
     if (placeholderFilter.includes(value)) {
@@ -647,40 +1108,20 @@ const Sidebar = (props) => {
     }
   };
 
-  const associateContactToMedia = (value, index) => {
-    console.log("This is the contact", value, index);
-    if (associatedPeople.includes(value)) {
-      var temp = [];
-      var tempIndex = [];
-      associatedPeople.map((item) => {
-        if (item != value) {
-          temp.push(item);
-        }
-      });
-      associatedPeopleIndex.map((item) => {
-        if (item != index) {
-          tempIndex.push(item);
-        }
-      });
-      console.log("This is the contact temp", temp, tempIndex);
-      setAssociatedPeople(temp);
-      setAssociatedPeopleIndex(tempIndex);
-      setuseLessState(uselessState + 1);
-    } else {
-      var temp = associatedPeople;
-      var tempIndex = associatedPeopleIndex;
-      temp.push(value);
-      tempIndex.push(index);
-      setAssociatedPeople(temp);
-      setAssociatedPeopleIndex(tempIndex);
-      setuseLessState(uselessState + 1);
-    }
-    setuseLessState(uselessState + 1);
-    console.log("This is the contact", associatedPeople, associatedPeopleIndex);
+  const associateContactToMedia = (teamContact, index) => {
+    console.log("This is the contact ", teamContact, index);
 
-    // console.log("thse are associated people", associatedPeople);
-    // console.log("This is associated people index", associatedPeopleIndex);
-  };
+    let temp = Object.assign([], associatedPeople)
+    temp[index] = teamContact
+    setAssociatedPeople(temp)
+    
+  }
+
+  const removeContactFromMedia = (index) => {
+    let temp = Object.assign([], associatedPeople)
+    temp[index] = null
+    setAssociatedPeople(temp)
+  }
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -704,6 +1145,9 @@ const Sidebar = (props) => {
   const showSidebar = () => setSidebar(!sidebar);
 
   console.log("This is props contacts", props.contacts);
+
+  console.log("displayAssociate = " + displayAssociate)
+
   return (
     <>
       <Link id="userSettings" to="/dashboard/user-settings"></Link>
@@ -717,7 +1161,9 @@ const Sidebar = (props) => {
         // value={post.image.name}
         onChange={handleFileChange}
       />
+
       <Modal open={showModal} setShowModal={setShowModal} />
+
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}
@@ -729,6 +1175,7 @@ const Sidebar = (props) => {
           <span style={{ textDecoration: "underline" }}>view profile</span>
         </Alert>
       </Snackbar>
+
       <Dialog
         maxWidth={"lg"}
         width={"lg"}
@@ -1280,6 +1727,10 @@ const Sidebar = (props) => {
         </Grid>
       </Dialog>
 
+      {/*********************************************************************************/}
+      {/***************************** Add Media Dialog **********************************/}
+      {/*********************************************************************************/}
+
       <Dialog
         maxWidth={"lg"}
         width={"lg"}
@@ -1290,17 +1741,19 @@ const Sidebar = (props) => {
           // setDisplayOwner(false);
         }}
         onClick={(e) => {
+			  console.log("my on click " + e.target.id)
+        console.log("my on click " + displayAssociate)
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
           if (e.target.id != "tags" && e.target.id != "searchtags") {
             setDisplayTags(false);
           }
-          if (e.target.id != "placeholder") {
+          if (e.target.id != "placeholder" && e.target.id != "searchplaceholder") {
             setDisplayPlaceholder(false);
           }
           if (e.target.id != displayAssociate) {
-            console.log("This is id", e.target.id, displayAssociate);
+            //console.log("This is id", e.target.id, displayAssociate);
             // alert("This will be null");
             setDisplayAssociate(null);
           }
@@ -1323,8 +1776,8 @@ const Sidebar = (props) => {
               alignItems="center"
               style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
             >
-              {filter.length != 0 &&
-                filter.map((fil, index) => {
+              {owners.length != 0 &&
+                owners.map((owner, index) => {
                   return (
                     <div
                       container
@@ -1339,10 +1792,11 @@ const Sidebar = (props) => {
                         direction="row"
                         alignItems="center"
                       >
-                        {fil}
+                        {owner.first_name + " " + owner.last_name}
                         <ClearIcon
                           onClick={() => {
-                            addDataToFilter(fil);
+                          //console.log("my Clear Team Member filter")
+                          removeMemberFromOwners(owner)
                           }}
                           style={{
                             color: "red",
@@ -1354,77 +1808,79 @@ const Sidebar = (props) => {
                       </Grid>
                     </div>
                   );
-                })}
-              <div class="dropdownMedia">
-                <input
-                  type="text"
-                  style={{
-                    height: 60,
-                    flex: "auto",
-                    border: "none",
-                    padding: 16,
-                  }}
-                  id="owner"
-                  onClick={(e) => {
-                    console.log("This is ", e.target.id);
-                    setDisplayOwner(true);
-                  }}
-                  placeholder="+ Add Owner"
-                ></input>
-                <div
-                  className={classes.dropdownHidden}
-                  style={{
-                    display: displayOwner ? "block" : "none",
-                  }}
-                >
-                  {teamContacts &&
-                    teamContacts.map((type, index) => {
-                      return (
-                        <Grid
-                          container
-                          alignItems="center"
-                          style={{
-                            height: 60,
-                            marginLeft: 0,
-                            marginTop: -12,
-                            cursor: "pointer",
-                          }}
-                          className={classes.hoverGrid}
-                          onClick={() => {
-                            if (type.twitter_profile) {
-                              addDataToFilter(type.twitter_profile.screen_name);
-                            }
-                          }}
-                          // className={classes.sendAsP}
-                        >
-                          <img
+              })}
+              {owners.length == 0 &&
+                <div class="dropdownMedia">
+                  <input
+                    type="text"
+                    style={{
+                      height: 60,
+                      flex: "auto",
+                      border: "none",
+                      padding: 16,
+                    }}
+                    id="owner"
+                    onClick={(e) => {
+                      //console.log("This is ", e.target.id);
+                      setDisplayOwner(true);
+                    }}
+                    placeholder="+ Add Owner"
+                  ></input>
+                  <div
+                    className={classes.dropdownHidden}
+                    style={{
+                      display: displayOwner ? "block" : "none",
+                    }}
+                  >
+                    {teamMembers &&
+                      teamMembers.map((teamMember, index) => {
+                        return (
+                          <Grid
+                            container
+                            alignItems="center"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 20,
-                              marginLeft: 12,
+                              height: 60,
+                              marginLeft: 0,
+                              marginTop: -12,
+                              cursor: "pointer",
                             }}
-                            src={
-                              type.twitter_profile &&
-                              type.twitter_profile.profile_image
-                            }
-                          ></img>
-
-                          <p
-                            style={{
-                              margin: 0,
-                              fontWeight: 600,
-                              marginLeft: 12,
+                            className={classes.hoverGrid}
+                            onClick={() => {
+                              if (teamMember.twitter_profile) {
+                  addMemberToOwners(teamMember);
+                              }
                             }}
+                            // className={classes.sendAsP}
                           >
-                            {type.twitter_profile &&
-                              type.twitter_profile.screen_name + " "}
-                          </p>
-                        </Grid>
-                      );
-                    })}
-                </div>{" "}
-              </div>
+                            <img
+                              style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 20,
+                                marginLeft: 12,
+                              }}
+                              src={
+                  teamMember.twitter_profile &&
+                  teamMember.twitter_profile.profile_image
+                              }
+                            ></img>
+
+                            <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                            >
+                              {teamMember.first_name + " " + teamMember.last_name}
+                            </p>
+                          </Grid>
+                        );
+                      })}
+                  </div>{" "}
+                </div>
+              }
+              
             </Grid>
 
             {/* <InputGroup className="mb-3">
@@ -1454,8 +1910,8 @@ const Sidebar = (props) => {
               alignItems="center"
               style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
             >
-              {tagFilter.length != 0 &&
-                tagFilter.map((fil, index) => {
+              {tags.length != 0 &&
+                tags.map((tag, index) => {
                   return (
                     <div
                       container
@@ -1470,10 +1926,10 @@ const Sidebar = (props) => {
                         direction="row"
                         alignItems="center"
                       >
-                        {fil}
+                        {tag.name}
                         <ClearIcon
                           onClick={() => {
-                            addTagToFilter(fil);
+                            removeTagFromTags(tag);
                           }}
                           style={{
                             color: "red",
@@ -1496,8 +1952,13 @@ const Sidebar = (props) => {
                     padding: 16,
                   }}
                   id="tags"
+				  name="tag"
+				  value={tagInput}
+				  onChange={onTagInputChange}
+				  onKeyPress={onTagInputKeyPress}
                   onClick={(e) => {
-                    console.log("This is ", e.target.id);
+                    //console.log("This is ", e.target.id);
+					//getAllTags()
                     setDisplayTags(true);
                   }}
                   placeholder="+ Add Tag"
@@ -1533,11 +1994,7 @@ const Sidebar = (props) => {
                     allTags.map((item, index) => {
                       // console.log("This is item", item);
                       if (searchTags != "") {
-                        if (
-                          item.name
-                            .toLowerCase()
-                            .indexOf(searchTags.toLowerCase()) > -1
-                        ) {
+                        if (item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1) {
                           return (
                             <Grid
                               container
@@ -1550,7 +2007,7 @@ const Sidebar = (props) => {
                               }}
                               className={classes.hoverGrid}
                               onClick={() => {
-                                addTagToFilter(item.name);
+                                addTagToTags(item);
                               }}
                               // className={classes.sendAsP}
                             >
@@ -1579,7 +2036,7 @@ const Sidebar = (props) => {
                             }}
                             className={classes.hoverGrid}
                             onClick={() => {
-                              addTagToFilter(item.name);
+								addTagToTags(item);
                             }}
                             // className={classes.sendAsP}
                           >
@@ -1617,8 +2074,8 @@ const Sidebar = (props) => {
               alignItems="center"
               style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
             >
-              {placeholderFilter.length != 0 &&
-                placeholderFilter.map((fil, index) => {
+              {placeholders.length != 0 &&
+                placeholders.map((placeholder, index) => {
                   return (
                     <div
                       container
@@ -1633,10 +2090,10 @@ const Sidebar = (props) => {
                         direction="row"
                         alignItems="center"
                       >
-                        {fil}
+                        {placeholder.name}
                         <ClearIcon
                           onClick={() => {
-                            addPlaceholderToFilter(fil);
+                            removePlaceholderFromPlaceholders(placeholder);
                           }}
                           style={{
                             color: "red",
@@ -1648,62 +2105,121 @@ const Sidebar = (props) => {
                       </Grid>
                     </div>
                   );
-                })}
-              <div class="dropdownMedia">
-                <input
-                  type="text"
-                  style={{
-                    height: 60,
-                    flex: "auto",
-                    border: "none",
-                    padding: 16,
-                  }}
-                  id="placeholder"
-                  onClick={(e) => {
-                    setDisplayPlaceholder(true);
-                  }}
-                  placeholder="+ Add Media placeholder or personalized graphics"
-                ></input>
-                <div
-                  className={classes.dropdownHidden}
-                  style={{
-                    display: displayPlaceholder ? "block" : "none",
-                  }}
-                >
-                  {allTags &&
-                    allTags.map((type, index) => {
-                      return (
-                        <Grid
-                          container
-                          alignItems="center"
-                          style={{
-                            height: 50,
-                            marginLeft: 0,
-                            marginTop: -12,
-                            cursor: "pointer",
-                          }}
-                          className={classes.hoverGrid}
-                          onClick={() => {
-                            addPlaceholderToFilter(type.name);
-                          }}
-                          // className={classes.sendAsP}
-                        >
-                          <p
-                            style={{
-                              margin: 0,
-                              fontWeight: 600,
-                              marginLeft: 12,
-                            }}
-                          >
-                            {type.name}
-                          </p>
-                        </Grid>
-                      );
-                    })}
-                </div>{" "}
-              </div>
+              })}
+              {placeholders.length == 0 &&
+                <div class="dropdownMedia">
+                  <input
+                    type="text"
+                    style={{
+                      height: 60,
+                      flex: "auto",
+                      border: "none",
+                      padding: 16,
+                    }}
+                    id="placeholder"
+                    value={placeholderInput}
+                    onChange={onPlaceholderInputChange}
+                    onKeyPress={onPlaceholderInputKeyPress}
+                    onClick={(e) => {
+                      setDisplayPlaceholder(true);
+                    }}
+                    placeholder="+ Add Media Placeholder"
+                  ></input>
+                  <div
+                    className={classes.dropdownHidden}
+                    style={{
+                      display: displayPlaceholder ? "block" : "none",
+                    }}
+                  >
+                    <Grid container direction="row" justify="center">
+                      <input
+                        type="text"
+                        style={{
+                          width: "90%",
+                          border: "1px solid #ebebeb",
+                          borderRadius: 4,
+                          marginTop: 8,
+                        }}
+                        id="searchplaceholder"
+                        placeholder="Search Placeholder"
+                        value={searchPlaceholder}
+                        onChange={(e) => {
+                          setSearchPlaceholder(e.target.value);
+                          setDisplayPlaceholder(true);
+                        }}
+                        onClick={(e) => {
+                          setDisplayPlaceholder(true);
+                        }}
+                      ></input>
+                    </Grid>
+                    {allPlaceholders &&
+                      allPlaceholders.map((placeholder, index) => {
+                        if(searchPlaceholder != "") {
+                          if (placeholder.name.toLowerCase().indexOf(searchPlaceholder.toLowerCase()) > -1) {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                style={{
+                                height: 50,
+                                marginLeft: 0,
+                                cursor: "pointer",
+                                }}
+                                className={classes.hoverGrid}
+                                onClick={() => {
+                                  //console.log(placeholder)
+                                addPlaceholderToPlaceholders(placeholder);
+                                }}
+                                // className={classes.sendAsP}
+                              >
+                                <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                                >
+                                {placeholder.name}
+                                </p>
+                              </Grid>
+                              );
+                          }
+                        } else {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                              height: 50,
+                              marginLeft: 0,
+                              cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                              onClick={() => {
+                              //console.log(type)
+                                addPlaceholderToPlaceholders(placeholder);
+                              }}
+                              // className={classes.sendAsP}
+                            >
+                              <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                              >
+                              {placeholder.name}
+                              </p>
+                            </Grid>
+                            );
+                        }
+                      })}
+                  </div>{" "}
+                </div>
+              }
             </Grid>
           </Grid>
+          
           {dropFiles.length < 1 ? (
             <FileDropZone></FileDropZone>
           ) : (
@@ -1735,9 +2251,19 @@ const Sidebar = (props) => {
                 </Grid>
                 <Grid item md={4}>
                   <Grid container direction="row"></Grid>
-                  <p className={classes.tableP}>Upload Progress</p>
+                  <p className={classes.tableP}>Upload Status</p>
                 </Grid>
               </Grid>
+              {mediaAlert.visible &&
+                <Alert 
+                  style={{ boxShadow: "0 0 transparent"}}
+                  variant="standard"
+                  severity="warning"
+                  onClose={onMediaAlertClose}
+                >
+                  {mediaAlert.message}
+                </Alert>
+              }
               {dropFiles.map((item, index) => {
                 return (
                   <Grid container style={{ height: 60 }} alignItems="center">
@@ -1745,129 +2271,171 @@ const Sidebar = (props) => {
                       <p className={classes.tableP}> {item.name}</p>
                     </Grid>
                     <Grid item md={4}>
-                      {associatedPeopleIndex.includes(index) === false ? (
-                        <div class="dropdownMedia">
+                      {console.log(associatedPeople)}
+                      {associatedPeople[index] === "loading" && (
+                        <Grid
+                          style={{
+                            height: 40,
+                            flex: "auto",
+                            border: "none",
+                            padding: 16,
+                          }}
+                        >
+                          <LinearProgress
+                            style={{
+                              width: 240
+                            }}
+                          />
+                          {/* <p>Loading...</p> */}
+                        </Grid>
+                      )}
+                      {associatedPeople[index] === null && (
+                        <div class="dropdownMedia"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="text"
+                          style={{
+                            height: 40,
+                            flex: "auto",
+                            border: "none",
+                            padding: 16,
+                          }}
+                          id={"associate" + item.name}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setDisplayAssociate(e.target.id);
+                            //displayAssociate = e.target.id;
+                            console.log("This is id down", e.target.id);
+                          }}
+                          placeholder="+ Associate Contact"
+                        ></input>
+                        <div
+                          className={classes.dropdownHidden}
+                          style={{
+                            display:
+                              displayAssociate == ("associate" + item.name)
+                                ? "block"
+                                : "none",
+                            maxHeight: 240,
+                          }}
+                        >
                           <input
                             type="text"
                             style={{
-                              height: 40,
-                              flex: "auto",
-                              border: "none",
-                              padding: 16,
+                              width: "90%",
+                              border: "1px solid #ebebeb",
+                              borderRadius: 4,
+                              marginTop: 8,
+                              marginBottom: 4,
+                              marginLeft: 12,
+                              padding: 4
                             }}
-                            id={"associate" + item.name}
+                            id="searchTeamContact"
+                            placeholder="Search Contact"
+                            value={searchTeamContact}
+                            onChange={(e) => {
+                              setSearchTeamContact(e.target.value);
+                              //setDisplayTeamContact(true);
+                            }}
+                            onKeyPress={onSearchTeamContactKeyPress}
                             onClick={(e) => {
-                              e.preventDefault();
-                              setDisplayAssociate(e.target.id);
-                              displayAssociate = e.target.id;
-                              console.log("This is id down", displayAssociate);
+                              e.stopPropagation()
+                              //setDisplayPlaceholder(true);
                             }}
-                            placeholder="+ Associate Contact"
                           ></input>
-                          <div
-                            className={classes.dropdownHidden}
-                            style={{
-                              display:
-                                displayAssociate === "associate" + item.name
-                                  ? "block"
-                                  : "none",
-                              maxHeight: 120,
-                            }}
-                          >
-                            {teamContacts &&
-                              teamContacts.map((type) => {
-                                return (
-                                  <Grid
-                                    container
-                                    alignItems="center"
+                          {teamContacts &&
+                            teamContacts.map((teamContact) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: 50,
+                                    marginLeft: 0,
+                                    cursor: "pointer",
+                                  }}
+                                  className={classes.hoverGrid}
+                                  onClick={() => {
+                                    // addPlaceholderToFilter(type.name);
+                                    console.log("This is great", teamContact);
+                                    if (associatedPeople.includes(teamContact.id)) {
+                                      alert(
+                                        "This id is already associated to other user!"
+                                      );
+                                    } else {
+                                      associateContactToMedia(teamContact, index);
+                                    }
+
+                                    // if (type.twitter_profile) {
+                                    //   // setAssociatedPeople(
+                                    //   //   type.twitter_profile.screen_name
+                                    //   // );
+                                    //   // setAssociatedPeopleIndex(index);
+                                    //
+                                    // }
+                                  }}
+                                  // className={classes.sendAsP}
+                                >
+                                  <img
                                     style={{
-                                      height: 50,
-                                      marginLeft: 0,
-                                      marginTop: -12,
-                                      cursor: "pointer",
+                                      width: 30,
+                                      height: 30,
+                                      borderRadius: 20,
+                                      marginLeft: 12,
                                     }}
-                                    className={classes.hoverGrid}
-                                    onClick={() => {
-                                      // addPlaceholderToFilter(type.name);
-                                      console.log("This is great", type);
-                                      if (associatedPeople.includes(type.id)) {
-                                        alert(
-                                          "This id is already associated to other user!"
-                                        );
-                                      } else {
-                                        associateContactToMedia(type.id, index);
-                                      }
+                                    src={
+                                      teamContact.twitter_profile &&
+                                      teamContact.twitter_profile.profile_image
+                                    }
+                                  ></img>
 
-                                      // if (type.twitter_profile) {
-                                      //   // setAssociatedPeople(
-                                      //   //   type.twitter_profile.screen_name
-                                      //   // );
-                                      //   // setAssociatedPeopleIndex(index);
-                                      //
-                                      // }
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 12,
                                     }}
-                                    // className={classes.sendAsP}
                                   >
-                                    <img
-                                      style={{
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 20,
-                                        marginLeft: 12,
-                                      }}
-                                      src={
-                                        type.twitter_profile &&
-                                        type.twitter_profile.profile_image
-                                      }
-                                    ></img>
-
-                                    <p
-                                      style={{
-                                        margin: 0,
-                                        fontWeight: 600,
-                                        marginLeft: 12,
-                                      }}
-                                    >
-                                      {type.twitter_profile &&
-                                        type.twitter_profile.screen_name + " "}
-                                    </p>
-                                  </Grid>
-                                );
-                              })}
-                          </div>{" "}
-                        </div>
-                      ) : (
-                        <div
-                          container
-                          direction="row"
-                          alignItems="center"
-                          justify="center"
-                          className={classes.tags}
-                        >
-                          <Grid
-                            style={{ height: 50 }}
+                                    {teamContact.first_name + " " +  teamContact.last_name}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                        </div>{" "}
+                      </div>
+                      )}
+                      {associatedPeople[index] && associatedPeople[index] !== "loading" && (
+                        (
+                          <div
                             container
                             direction="row"
                             alignItems="center"
+                            justify="center"
+                            className={classes.tags}
                           >
-                            {/* {fil} */}
-                            {associatedPeople[index]}
-                            <ClearIcon
-                              onClick={() => {
-                                associateContactToMedia(
-                                  associatedPeople[index],
-                                  index
-                                );
-                              }}
-                              style={{
-                                color: "red",
-                                fontSize: 17,
-                                cursor: "pointer",
-                                marginLeft: 8,
-                              }}
-                            ></ClearIcon>{" "}
-                          </Grid>
-                        </div>
+                            <Grid
+                              style={{ height: 50 }}
+                              container
+                              direction="row"
+                              alignItems="center"
+                            >
+                              {associatedPeople[index].first_name + " " + associatedPeople[index].last_name}
+                              <ClearIcon
+                                onClick={() => {
+                                  removeContactFromMedia(index)
+                                }}
+                                style={{
+                                  color: "red",
+                                  fontSize: 17,
+                                  cursor: "pointer",
+                                  marginLeft: 8,
+                                }}
+                              ></ClearIcon>{" "}
+                            </Grid>
+                          </div>
+                        )
                       )}
                     </Grid>
                     <Grid item md={4}>
@@ -1877,7 +2445,7 @@ const Sidebar = (props) => {
                         alignItems="center"
                         style={{ height: 40 }}
                       >
-                        <PrettoSlider
+                        {/* <PrettoSlider
                           value={5}
                           max={10}
                           style={{ width: "60%" }}
@@ -1891,20 +2459,59 @@ const Sidebar = (props) => {
                           }}
                         >
                           0%
-                        </p>
+                        </p> */}
+                        <Grid
+                          style={{
+                            height: 40,
+                            //flex: "auto",
+                            border: "none",
+                            padding: 8,
+                            paddingLeft: 16,
+                          }}
+                          
+                          alignItems="center"
+                        >
+                          {console.log(uploadStatus)}
+                          {console.log("bruuuuuuuh")}
+                          {uploadStatus[index] === "uploading" && (
+                            <Grid
+                            style={{
+                              height: 40,
+                              flex: "auto",
+                              border: "none",
+                              paddingTop: 10,
+                              paddingLeft: 0,
+                              paddingRight: 0
+                            }}
+                          >
+                            <LinearProgress
+                              style={{
+                                width: 240
+                              }}
+                            />
+                            {/* <p>Loading...</p> */}
+                          </Grid>
+                          )}
+                          {uploadStatus[index] === "none" && (
+                            <p style={{color: "#aaa", width: 240}}></p>
+                          )}
+                          {uploadStatus[index] === "ready" && (
+                            <p style={{color: "#aaa", width: 240}}>Ready To Upload</p>
+                          )}
+                          {uploadStatus[index] === "failed" && (
+                            <p style={{color: "red", width: 240}}>Failed To Upload</p>
+                          )}
+                          {uploadStatus[index] === "success" && (
+                            <p style={{color: "green", width: 240}}>Upload Successfull!</p>
+                          )}
+                          
+                          {/* <p>Loading...</p> */}
+                        </Grid>
                         <DeleteForeverIcon
+                          className={classes.deleteForverIcon}
+                          style={{ color: "#444"}}
                           onClick={() => {
-                            var tempDF = [];
-                            dropFiles.map((df) => {
-                              if (df.name != item.name) {
-                                tempDF.push(df);
-                              }
-                            });
-                            setDropFiles(tempDF);
-                            associateContactToMedia(
-                              associatedPeople[index],
-                              index
-                            );
+                            deleteMedia(index)
                           }}
                         ></DeleteForeverIcon>
                       </Grid>
@@ -1912,7 +2519,7 @@ const Sidebar = (props) => {
                   </Grid>
                 );
               })}
-              <div style={{ width: "100%", textAlign: "right" }}>
+              {/* <div style={{ width: "100%", textAlign: "right" }}>
                 <span
                   style={{ color: "#6aa8f4", cursor: "pointer" }}
                   onClick={() => {
@@ -1921,42 +2528,72 @@ const Sidebar = (props) => {
                 >
                   Browse More Files
                 </span>
-              </div>
+              </div> */}
+              <FileDropZone></FileDropZone>
             </div>
           )}
 
           <Grid item md={5} xs={5}></Grid>
           <Grid item md={7} xs={7}>
             <Grid container direction="row" justify="flex-end">
-              <IconTextField
-                width={150}
+              <MuiButton
                 onClick={() => {
-                  setAddMedia(false);
+                  onCloseMedia();
                 }}
-                textAlign="center"
-                textWidth="100%"
-                text="Cancel"
-                textColor={"#3871da"}
+                style={{
+                  width: 120,
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  marginRight: 10
+                }}
+                disableElevation
+                variant="outlined"
                 // border
                 // background={"#3871da"}
-              ></IconTextField>
-              <IconTextField
+              >
+                Cancel
+              </MuiButton>
+
+              <LoadingButton
+                style={{
+                    width: 120,
+                    backgroundColor: "#3871da",
+                    fontWeight: "bold",
+                    textTransform: "capitalize"
+                }}
+                onClick={onUploadMedia}
+                loading={uploadingMedia}
+                endIcon={uploadingMedia ? <span></span> : <CloudUploadIcon style={{ color: "white" }}/> }
+                disableElevation
+                // color="#3871da"
+                variant="contained">
+                Upload
+              </LoadingButton>
+              
+              {/* <IconTextField
                 width={120}
                 onClick={() => {
-                  setAddMedia(false);
-                  setOpenSnackBar(true);
+				          // console.log("my on upload click")
+                  // setAddMedia(false);
+                  // setOpenSnackBar(true);
+                  // searchForContactsssss()
+                  // addTag()
+                  onUploadMedia()
                 }}
                 text="Upload"
-                textColor={"white"}
-                background={"#3871da"}
+                textColor="white"
+                background="#3871da"
                 icon={
-                  <CloudUploadIcon style={{ color: "white" }}></CloudUploadIcon>
+                  <CloudUploadIcon style={{ color: "white" }}/> 
                 }
-              ></IconTextField>
+              ></IconTextField> */}
             </Grid>
           </Grid>
         </Grid>
       </Dialog>
+
+      {/*********************************************************************************/}
+      {/*********************************************************************************/}
 
         <IconContext.Provider value={{ color: "#fff" }}>
             <NavResponsive>

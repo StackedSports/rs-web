@@ -16,7 +16,7 @@ const MediaItem = (props) => {
     const m = props.item;
 
 
-    console.log('media contains = ', m)
+    //console.log('media contains = ', m)
     
 
     return (

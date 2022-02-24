@@ -19,6 +19,10 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import TwitterStream from'./components/TwitterStream/TwitterStream'
 import  MediaC from "./components/MediaComponent/Media";
 
+// messages
+// messages/create
+// messages/finished
+
 function App() {
   return (
     <div className="body">

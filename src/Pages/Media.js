@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+
 import Sidebar from "../components/common/sidebar/sidebar";
 import Media from "../components/Media";
 // import { Modal } from "../model";
 import { withRouter } from "react-router-dom";
 
- function MediaPage(props) {
+function MediaPage(props) {
   const [showModal, setShowModal] = useState(true);
 
   const openModal = () => {
@@ -17,4 +18,5 @@ import { withRouter } from "react-router-dom";
     </>
   );
 }
+
 export default withRouter(MediaPage);

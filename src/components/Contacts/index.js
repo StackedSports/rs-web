@@ -153,7 +153,7 @@ function Home(props) {
   const [tagFilter, setTagFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const [contacts, setContacts] = useState(null);
+  const [contacts, setContacts] = useState([]);
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -281,8 +281,7 @@ function Home(props) {
       (res) => {
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          if (page > 1) {
-            var temp = contacts;
+            var temp = Object.assign([], contacts);
             temp = temp.concat(res.data);
 
             // temp.push(res.data);
@@ -292,17 +291,22 @@ function Home(props) {
             console.log("These are all new contacts", temp);
             // document.getElementById("infinit").scrollTop = 0;
             setFetching(false);
-          } else {
-            console.log("These are all contacts", contacts);
 
-            setContacts(res.data);
-            setCopyContacts(res.data);
+            //console.log("These are all contacts", res.data);
+
+            //setContacts(res.data);
+            //setCopyContacts(res.data);
+
             if (document.getElementById("infinit")) {
               document.getElementById("infinit").scrollTop = 0;
             }
 
             setFetching(false);
-          }
+          // if (page > 1) {
+            
+          // } else {
+            
+          // }
         }
       },
       (error) => {
