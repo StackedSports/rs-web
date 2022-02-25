@@ -18,6 +18,7 @@ import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import { ArrowDropDown, Check, CheckCircle, Search, Send, Info, Favorite } from "@material-ui/icons";
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import AmimatedBurger from '../../images/animated_burger.gif';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ClearIcon from "@material-ui/icons/Clear";
 import moment from "moment";
 import { Dropdown, DropdownButton } from "react-bootstrap";
@@ -55,7 +56,9 @@ import {
   getTeamContacts,
   getPlaceholder,
   getMessage,
-  createMessage
+  createMessage,
+  getMessages,
+  getBoardFiltersById
 } from "../../ApiHelper";
 // import SearchBar from "material-ui-search-bar";
 
@@ -71,12 +74,13 @@ import BackIcon from '../../images/back.png';
 import SearchBar from "material-ui-search-bar";
 
 import DrawerIcon from '../../images/drawer_contact.png';
+import { id } from "date-fns/locale";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
+  const today = new Date().toLocaleDateString()
   return (
     <div
       role="tabpanel"
@@ -124,11 +128,13 @@ function MessageCreate(props) {
     console.log("component did mount");
     const fetchItems = async () => {
       try {
+
         const result = await getMessage(id);
-        console.log('data = ', result.data)
+        const res = await getMessages()
+        console.log('getmessages = ', res.data)
       }
       catch (e) {
-        console.log('data = ', e);
+        console.log('getmessages = ', e);
       }
     }
     fetchItems();
@@ -162,6 +168,7 @@ function MessageCreate(props) {
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [addMedia,setAddMedia]=useState(false);
+  const [recieve,setRecieve]=useState([])
   // const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
@@ -184,12 +191,13 @@ function MessageCreate(props) {
   const [personalText, setPersonalText] = useState(false);
   const [rsText, setrsText] = useState(false);
 const handleAddMedia=(media)=> setAddMedia(media)
-
+  const [messageStatus,setMessageStatus] = useState(null)
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
   const [messagePreview, setMessagePreview] = useState(null);
-  const [messageStatus, setMessageStatus] = useState("Drafts");
+ 
   const [messageCreated, setMessageCreated] = useState(false);
+  const [messageNotCreated, setMessageNotCreated] = useState(false);
   const [fromAreaCoach, setFromAreaCoach] = useState(false);
   const [fromPositionCoach, setFromPositinCoach] = useState(false);
 
@@ -220,9 +228,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [allindividualBoards, setAllindividualBoards] = useState(null);
-
+  const [saveMessage,setSaveMessage] = useState([]);
   const [AllSearchBoards, setAllSearchBoards] = useState(null);
-
+console.log("SaveMessage",saveMessage)
 
   const [positions, setAllPositions] = useState(null);
   const [rows, setRows] = useState(allBoards);
@@ -242,55 +250,29 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [stateiconColor, setstateiconColor] = useState('gray');
   console.log("selectedcheckbox",media)
   console.log(allBoards, "All Boards")
-  const [tableData, setTableData] = React.useState([
-    {
-      name: "David Buttler",
-      boardList: "Midwest List",
-      phoneNumber: "1111111111",
-      firstName: "David",
-      date: "2017-11-23T07:26:00.497Z",
-    },
-    {
-      name: "Alvi Alian",
-      boardList: "Broad List",
-      phoneNumber: "2222222222",
-      firstName: "Bob",
-      date: "2018-11-23T07:26:00.497Z",
-    },
-    {
-      name: "David Buttler",
-      boardList: "Midwest List",
-      phoneNumber: "1111111111",
-      firstName: "David",
-      date: "2017-11-23T07:26:00.497Z",
-    },
-    {
-      name: "Alvi Alian",
-      boardList: "Broad List",
-      phoneNumber: "2222222222",
-      firstName: "Bob",
-      date: "2018-11-23T07:26:00.497Z",
-    },
-    {
-      name: "David Buttler",
-      boardList: "Midwest List",
-      phoneNumber: "1111111111",
-      firstName: "David",
-      date: "2017-11-23T07:26:00.497Z",
-    },
-  ]);
-  // const classes = useStyles();
+  const [tableData, setTableData] = React.useState([ ]);
+  function showStatus(){
+  
+  //   setTimeout(()=>{
+    //  moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?setMessageStatus("Drafts"):""
+      
+    // },100)
+   
+
+     
+   }  // const classes = useStyles();
 
   const requestSearch = (searchedVal) => {
+    console.log("searchedVal",searchedVal)
     getMyContactsSearch()
 
     const filteredRows = allBoards?.filter((row) => {
-      return row?.name?.toLowerCase().includes(searchedVal.toLowerCase());
+      return row?.name?.toLowerCase().includes(searchedVal?.toLowerCase());
     });
     const filteredRowsIndv = allindividualBoards?.filter((row) => {
-      return row?.first_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
-        row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal.toLowerCase()) ||
-        row?.phone?.includes(searchedVal) || row?.last_name?.toLowerCase().includes(searchedVal.toLowerCase())
+      return row?.first_name?.toLowerCase().includes(searchedVal?.toLowerCase()) ||
+        row?.twitter_profile.screen_name?.toLowerCase().includes(searchedVal?.toLowerCase()) ||
+        row?.phone?.includes(searchedVal) || row?.last_name?.toLowerCase().includes(searchedVal?.toLowerCase())
         ;
     });
     // phone
@@ -326,8 +308,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
   }, [allBoards])
   useEffect(
     (data) => {
-      console.log(data);
-      setTableData(tableData);
+     
+      setTableData(saveMessage.filter_ids);
+      console.log("tabledata = ",tableData)
       requestSearch()
       // setindividualRows(s)
       // action on update of movies
@@ -583,7 +566,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
           height: 250,
           // marginLeft: 16,
           border:
-            selectedCheckBoxes.indexOf(m.media_preview) > -1
+            selectedCheckBoxes.indexOf(m) > -1
               ? "3px solid #4d83e0"
               : "1px solid #d2d2d2",
           borderRadius: 4,
@@ -598,7 +581,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
         >
           <img
             style={{ width: "80%", height: 190, objectFit: "contain" }}
-            src={m.media_preview}
+            src={m?.urls?.original}
           ></img>
         </Grid>
         <Grid
@@ -607,14 +590,15 @@ const handleAddMedia=(media)=> setAddMedia(media)
           style={{ height: 30, marginLeft: 16, marginTop: 2 }}
           alignItems="center"
         >
-          {m.media_preview?.indexOf(".gif") > -1 ? (
-            <GifIcon></GifIcon>
-          ) : m?.media_preview?.indexOf(".png") > -1 ||
-            m?.media_preview?.indexOf(".jpg") > -1 ||
-            m?.media_preview?.indexOf(".jpeg") > -1 ? (
+          {m.file_type=="image/gif"  ? (
+            <GifIcon style={{ color: "#3871da", fontSize: 20 }} ></GifIcon>
+          ) :m.file_type=="image/png"  ||
+         m.file_type=="image/jpg"  ||
+         m.file_type=="image/jpeg" ||
+         m.file_type=="image" ? (
             <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
-          ) : m?.media_preview?.indexOf(".mp4") > -1 ? (
-            <FaVideo></FaVideo>
+          ) :m.file_type=="mp4" ? (
+            <FaVideo style={{ color: "#3871da", fontSize: 20 }} ></FaVideo>
           ) : (
             <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
           )}
@@ -623,11 +607,11 @@ const handleAddMedia=(media)=> setAddMedia(media)
               fontWeight: "bold",
               fontSize: 12,
               margin: 0,
-              marginLeft: 16,
-              fontSize: 15,
+              marginLeft: 5,
+              
             }}
           >
-            {m?.name}
+            {m.file_name}
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
@@ -639,8 +623,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
               color: "#5a5a5a",
             }}
           >
-            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
-            Coach Graves
+            Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {" "}
+            {m.owner.first_name+" "+m.owner.last_name}
           </p>
         </Grid>
       </div>
@@ -832,7 +816,18 @@ const handleAddMedia=(media)=> setAddMedia(media)
   //     }
   //   );
   // }
-
+const getBoardsFilterById=(id)=>{
+console.log("boardID",id)
+  getBoardFiltersById(id).then(
+    (res)=>{
+      if(res.statusText==="OK"){
+        console.log(res.data, "boardsById")
+      }
+    }, (error) => {
+      console.log("this is error all grad year", error);
+    }
+  );
+}
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -954,9 +949,11 @@ const handleAddMedia=(media)=> setAddMedia(media)
                 setuseLessState(uselessState + 1);
               }
             }}*/
-            onClick={() =>
+            onClick={() =>{
             setMedia(null)
-            }
+          saveMessage.media_placeholder_id=null
+            setSaveMessage(saveMessage)
+            }}
 
 
           ></ClearIcon>
@@ -1207,6 +1204,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   };
 
   const renderMessageDetails = () => {
+    console.log("table data = ",tableData)
     return (
       <div
         style={{
@@ -1373,7 +1371,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
             direction="row"
             onClick={() => {
               let data = tableData.sort((a, b) =>
-                a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
               );
               console.log(data);
               setTableData(() => [...data]);
@@ -1392,12 +1390,12 @@ const handleAddMedia=(media)=> setAddMedia(media)
           md={1}
           xs={1}
           onClick={() => {
-            let data = tableData.sort((a, b) =>
-              a.boardList > b.boardList ? 1 : b.boardList > a.boardList ? -1 : 0
+            let data = saveMessage.filter_ids.sort((a, b) =>
+             a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
             );
-            console.log(data);
+           
             setTableData(() => [...data]);
-            console.log("asda");
+            
           }}
         >
           <span className={classes.tableHeading}>Board/List</span>
@@ -1409,11 +1407,11 @@ const handleAddMedia=(media)=> setAddMedia(media)
           xs={2}
           onClick={() => {
             let data = tableData.sort((a, b) =>
-              a.phoneNumber > b.phoneNumber
+            a.phone? ( a.phone > b.phone
                 ? 1
                 : b.phoneNumber > a.phoneNumber
                   ? -1
-                  : 0
+                  : 0):''
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1427,7 +1425,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
         <Grid
           onClick={() => {
             let data = tableData.sort((a, b) =>
-              a.firstName > b.firstName ? 1 : b.firstName > a.firstName ? -1 : 0
+            a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+    
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1444,9 +1443,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
           md={2}
           xs={2}
           onClick={() => {
-            const data = tableData.sort((first, second) => {
+            const data = tableData.date.sort((first, second) => {
               return (
-                new Date(first.date).getTime() - new Date(second.date).getTime()
+                new Date(first).getTime() - new Date(second).getTime()
               );
             });
 
@@ -1473,7 +1472,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
         </Grid>
       </Grid>
 
-      {tableData.map((item, index) => {
+      {tableData && tableData.map((item, index) => {
         return (
           <Grid
             container
@@ -1502,19 +1501,19 @@ const handleAddMedia=(media)=> setAddMedia(media)
               ></Checkbox>
             </Grid>
             <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{item.name}</span>
+              <span className={classes.tableFields}>{item.first_name&&item.first_name+" "+item.last_name}</span>
             </Grid>
             <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>{item.boardList}</span>
+              <span className={classes.tableFields}>{item.name&&item.name}</span>
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableFields} style={{ marginLeft: 40 }}>
-                {formatPhoneNumber(item.phoneNumber)}
+                {formatPhoneNumber(item?.phone)}
               </span>
             </Grid>
 
             <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{item.firstName}</span>
+              <span className={classes.tableFields}>{item.first_name&&item.first_name}</span>
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableFields}>
@@ -1524,23 +1523,32 @@ const handleAddMedia=(media)=> setAddMedia(media)
               </span>
             </Grid>
             <Grid item md={2} xs={2}>
-              {messageStatus === "Drafts" ? (
+              
                 <span className={classes.tableFields}>
-                  <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info>{" "}
-                  Drafts{" "}
+                  <Info style={{ color: messageStatus==="Drafts"?"#f0ad24": 
+                  messageStatus==="In Progress"?"#54a300":"#8bb14c", fontSize: 16 }}></Info>{" "}
+                   {moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                 { setMessageStatus("Drafts")}
+                { messageStatus
+                 }
                 </span>
-              ) : messageStatus === "error" ? (
-                <span className={classes.tableFields}>
-                  <Info style={{ color: "#f0ad24", fontSize: 16 }}></Info> ERROR{" "}
+              ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }} >
+                   { setMessageStatus("In Progress")}
+                { messageStatus
+                 }
+                 
                 </span>
               ) : (
-                <span className={classes.tableFields}>
-                  <FaCalendar
-                    style={{ color: "#0292ff", fontSize: 16 }}
-                  ></FaCalendar>{" "}
-                  Scheduled{" "}
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                   { setMessageStatus("Sent")}
+                { messageStatus
+                 }
                 </span>
               )}
+               </span>
+          
             </Grid>
           </Grid>
         );
@@ -1549,6 +1557,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   );
 
   const MessageDetailsCard = (props) => {
+    console.log("messageCreate",props)
     return (
       <Grid
         container
@@ -1589,7 +1598,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
             padding: 16,
           }}
         >
-          {placeholderContainer(props.selectedPlaceholder)}
+
+          { saveMessage.media_placeholder_id&& placeholderContainer(saveMessage.media_placeholder_id)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -1605,45 +1615,52 @@ const handleAddMedia=(media)=> setAddMedia(media)
                 marginBottom: 0,
               }}
             >
-              {props.selectedPlaceholder.name}
+              {saveMessage.media_placeholder_id&&saveMessage.media_placeholder_id.file_name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
-              {props.messageStatus === "Drafts" ? (
+              
+              {moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
                   Drafts
                 </span>
-              ) : props.messageStatus === "Scheduled" ? (
-                <span className={classes.mdMargin} style={{ color: "#54a300" }}>
-                  Scheduled
+              ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                <span className={classes.mdMargin} style={{ color: "#54a300" }} >
+                  
+                  In Progress
                 </span>
               ) : (
                 <span className={classes.mdMargin} style={{ color: "#8bb14c" }}>
                   Sent
                 </span>
               )}
+
+
+              
+               
+          
             </p>
             <p class className={classes.messageDetailsHeading}>
               Send As:
-              <strong className={classes.mdMargin}>SMS/MMS TEXT</strong>{" "}
+              <strong className={classes.mdMargin}>{saveMessage?.platform}</strong>
             </p>
             <p class className={classes.messageDetailsHeading}>
               Sender:
-              <strong className={classes.mdMargin}>Jake Smith</strong>{" "}
-              (651.999.9999)
+              <strong className={classes.mdMargin}>{saveMessage?.contact_ids?.first_name+" "+saveMessage?.contact_ids?.last_name}</strong>{" "}
+              {saveMessage.contact_ids.phone?saveMessage.contact_ids.phone:''}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Recepient:
               <strong className={classes.mdMargin}>
-                Jake Smith Ohio Group
-              </strong>{" "}
-              (256 participants)
+                {saveMessage?.filter_ids?.length}
+              </strong>
+            
             </p>
-            {props.messageStatus === "Scheduled" ? (
+            {saveMessage.contact_ids.status === "Scheduled" ? (
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                  June 15, 2021 15:00
+                
                 </strong>{" "}
                 <span
                   style={{ textDecoration: "underline", cursor: "pointer" }}
@@ -1659,7 +1676,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                  June 15, 2021 15:00
+                {moment(date).format(" MM/DD/YYYY")}
                 </strong>{" "}
               </p>
             )}
@@ -1680,20 +1697,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
                   marginLeft: 16,
                 }}
               >
-                OV WEEKENDS
-              </div>
-              <div
-                style={{
-                  border: "1px solid #0091ff",
-                  color: "#0091ff",
-                  padding: 4,
-                  fontSize: 10,
-                  borderRadius: 4,
-                  marginLeft: 16,
-                }}
-              >
-                OV WEEKENDS
-              </div>
+                {saveMessage.media_placeholder_id?.tags&&saveMessage.media_placeholder_id.tags.map((tags) => tags.name )}
+   </div>
+   
             </Grid>
             <p class className={classes.messageDetailsHeading}>
               Message Text:
@@ -1703,13 +1709,16 @@ const handleAddMedia=(media)=> setAddMedia(media)
               className={classes.messageDetailsHeading}
               style={{ color: "black", fontWeight: 500 }}
             >
-              Hy first_name - Register online now to reserve your sport in
-              paradise http://www.manydiazfootballcampuse.manucampus.com
+              {saveMessage.body.replace("First_Name",saveMessage.filter_ids.map((name)=>name.first_name&&name.first_name))
+              .replace("Last_Name",saveMessage.filter_ids.map((name)=>name.last_name&&name.last_name))
+              .replace("Nick_Name",saveMessage.filter_ids.map((name)=>name.nick_name&&name.nick_name))
+              .replace("State",saveMessage.filter_ids.map((name)=>name.state && name.state))
+              .replace("HighSchool",saveMessage.filter_ids.map((name)=>name.high_school&&name.high_school))
+              
+              }   
             </p>
           </div>
-          <p class className={classes.messageDetailsHeading}>
-            Queued by Ben Graves on 20 march 2021 at 2:21 pm
-          </p>
+       
         </Grid>
         {props.hideStats === null && (
           <div
@@ -2092,10 +2101,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
 
-            <img src={AmimatedBurger} onClick={(e) => {
-              setshowSideFilters(!showSideFilters);
-            }}
-              style={{ cursor: "pointer", width: 40 }}></img>
+          <ArrowBackIosNewIcon style={{cursor:"pointer"}}  onClick={() => {
+                          setMessagePreview(false);
+                        }}/>
 
             <span
               style={{
@@ -2203,7 +2211,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
       setuseLessState(uselessState + 1);
     }
   };
-
+  
   const addDataToReceivers = (value, type) => {
     if (messageReceiver.includes(value)) {
       var temp = [];
@@ -2213,12 +2221,14 @@ const handleAddMedia=(media)=> setAddMedia(media)
         }
       });
       setMessageReceiver(temp);
+      setRecieve(temp)
       // console.log("This is temp", temp);
       setuseLessState(uselessState + 1);
     } else {
       var temp = messageReceiver;
       temp.push(value);
       setMessageReceiver(temp);
+      setRecieve(temp)
       // console.log("This is temp", temp);
       setuseLessState(uselessState + 1);
     }
@@ -2245,16 +2255,17 @@ const handleAddMedia=(media)=> setAddMedia(media)
       getMyMedia();
       getMyTeamContacts();
       getAllBoards();
+     // setTimeout()
       // getCreateSearch();
     } else {
       window.location.href = "/";
     }
-  }, []);
+  }, [messagePreview]);
 
   // console.log("THis is great message type", messageType);
 
   const renderMessageReceiver = (messageType) => {
-
+    console.log("messageType",messageType)
     return messageType.map((item) => {
 
       return (
@@ -2273,7 +2284,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
             alignItems="center"
           >
             {messageType.icon}
-            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item}</p>
+            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item.first_name?item.first_name+" "+item.last_name:item.name}</p>
             <ClearIcon
               onClick={() => {
                 addDataToReceivers(item);
@@ -2292,6 +2303,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   };
 
   const renderMessageSenderTag = (sender) => {
+    console.log("sendertag",sender)
     return (
       <Grid container direction="row" style={{ width: '80%' }}>
         {
@@ -2431,9 +2443,10 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
     );
   };
+  
   const renderMessageTypeTag = (messageType) => {
-    console.log('===========renderMessageTypeTag=========================');
-    console.log(messageType.title, "title");
+    console.log('===========renderMessageTypeTag=========================',messageType);
+    console.log(messageType, "title");
     console.log(messageType.icon, "icon");
 
     console.log('======================renderMessageTypeTag==============');
@@ -2473,22 +2486,40 @@ const handleAddMedia=(media)=> setAddMedia(media)
     );
   };
 
-  const handleSendMessage = async () => {
+ const handleSendMessage = async () => {
+    
     setMessagePreview(true);
-    const selectedMediaIds = selectedMedia?.map((media) => media?.id);
-    const contactsId = messageSender?.id;
+  
+    const contactsId = messageSender?messageSender.id:null
     const data = {
-      platform: messageType,
-      media_placeholder_id: selectedMediaIds,
-      filter_ids: messageReceiver,
+      message:{
+      platform: messageType[0].title,
+      media_placeholder_id: media && media[0]?media[0].id:null,
+      filter_ids: recieve.map((filterid)=>filterid.id).join(","),
       send_at: date,
-      body: messageText,
+      body:  messageText,
       contact_ids: contactsId,
       user_id: JSON.parse(localStorage.getItem("user")).id,
-    }
+     } }
+     const save = {
+    
+      platform: messageType[0].title,
+      media_placeholder_id:media && media[0]?media[0]:null,
+      filter_ids: recieve,
+      send_at: date,
+      body: messageText,
+      contact_ids: messageSender,
+      user_id: JSON.parse(localStorage.getItem("user")).id,
+      }
 
+      setTableData(save.filter_ids);
 
-    console.log('data = ', data)
+     setSaveMessage(save)
+     console.log("saveMessage",saveMessage)
+     setMessageCreated(true)
+   const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
+    {filterName && getBoardsFilterById(save.filter_ids[0].id) }
+    console.log('handleSendMessage = ', data)
 
 
     try {
@@ -2502,6 +2533,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
   }
 
+  const name=JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name
 
   return (
     <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
@@ -2535,14 +2567,31 @@ const handleAddMedia=(media)=> setAddMedia(media)
           setMessageCreated(false);
         }}
       >
-        <Alert
-          onClose={() => {
+     
+        <Alert  onClose={() => {
             setMessageCreated(false);
-          }}
-          severity="success"
-        >
-          Message Created Sucessfully !
-        </Alert>
+          }} severity="success">
+                  Message Created Successfully !
+                </Alert>
+              
+
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={messageNotCreated}
+        autoHideDuration={2000}
+        onClose={() => {
+          setMessageNotCreated(false);
+        }}
+      >
+  
+                <Alert  onClose={() => {
+            setMessageNotCreated(false);
+          }} severity="error">
+                   <strong>Fill  all the required fields</strong>
+                </Alert>
+
+
       </Snackbar>
 
       <Grid container direction="row">
@@ -2574,7 +2623,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
                 style={{ fontSize: 12 }}
               ></ArrowForwardIosIcon>
               <div>
-                {["Ben Graves"].map((item) => {
+                {[name].map((item) => {
                   return (
                     <p
                       className={classes.sideSubFilter}
@@ -2763,7 +2812,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
                           <TabPanel value={value} index={0}>
                             <Grid container direction="row" justify="center">
-                              {/* /////////////Tab panel for Teams boards//////////// */}
+                              {/* /////////////Tab panel for My boards//////////// */}
 
                               <div className="form-group has-search w-100 mt-3">
                                 {/* <span className="fa fa-search form-control-feedback"></span> */}
@@ -2817,7 +2866,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                             cursor: "pointer",
                                           }}
                                           onClick={() => {
-                                            addDataToReceivers(boards.name);
+                                            addDataToReceivers(boards);
+                                            
                                             // setMessageReceiver();
                                             // setMessageReceiver(temp);
 
@@ -2909,7 +2959,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                             cursor: "pointer",
                                           }}
                                           onClick={() => {
-                                            addDataToReceivers(boards.name);
+                                            addDataToReceivers(boards);
+                                            
                                             // setMessageReceiver();
                                           }}
                                         >
@@ -3002,7 +3053,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
                                         onClick={() => {
                                           // const full_name=indv.first_name {indv.last_name}
                                           // const m =(indv.first_name,indv.last_name)
-                                          addDataToReceivers(`${indv.first_name} ${indv.last_name}`);
+                                          addDataToReceivers(indv);
+                                        
                                           // setMessageReceiver( indv.first_name,indv.last_name);
 
                                           // setMessageReceiver();
@@ -3111,7 +3163,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
                         </strong>
                       </span>
-
+        
                       <div className="d-flex ">
                         <IconTextField
                           width={100}
@@ -3140,7 +3192,9 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
 
                           onClick={() => {
-                            handleSendMessage();
+               
+
+                           { messageType && messageReceiver && messageText && messageSender  ? handleSendMessage():setMessageNotCreated(true) } 
                           }}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
@@ -4217,7 +4271,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
                           </p>
                           {[
                             {
-                              title: "[Fist_Name]",
+                              title: "[First_Name]",
                             },
                             {
                               title: "[Last_Name]",
