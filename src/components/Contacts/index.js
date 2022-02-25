@@ -1245,7 +1245,9 @@ const usTimezone=[
     if (filter.length != 0) {
       filter.map((filt, index) => {
         if (filterType[index] === "status") {
-          if (item.status != null && item.status.status === filt) {
+          console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>",filt);
+
+          if (item?.status != null && item?.status === filt) {
             isValid = true;
             return;
           }
@@ -1301,9 +1303,9 @@ const usTimezone=[
         }
 
         if (filterType[index] === 'Coach') {
-          console.log(item.position_coach?.full_name,'<<<<<<<<<================item= 1========>>>>>>>>>>>>');
+          console.log(item.area_coach?.full_name,'<<<<<<<<<================item= 1========>>>>>>>>>>>>',filt);
 
-          if (item.position_coach?.full_name === filt) {
+          if (item.area_coach?.full_name === filt ||item.position_coach?.full_name === filt) {
             console.log(
               "This is inseide state",
               item.State,
