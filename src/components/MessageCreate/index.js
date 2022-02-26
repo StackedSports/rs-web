@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, Grid, Checkbox, Snackbar, Badge } from "@material-ui/core";
+import { makeStyles, Grid, Checkbox, Snackbar, Badge, Paper } from "@material-ui/core";
 import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
@@ -10,6 +10,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import SelectSearch from "react-select-search";
 import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
+import SendIcon from '@mui/icons-material/Send';
 
 import PhotoIcon from "@material-ui/icons/Photo";
 import GifIcon from "@material-ui/icons/Gif";
@@ -58,7 +59,8 @@ import {
   getMessage,
   createMessage,
   getMessages,
-  getBoardFiltersById
+  getBoardFiltersById,
+  getSnippets
 } from "../../ApiHelper";
 // import SearchBar from "material-ui-search-bar";
 
@@ -119,16 +121,47 @@ function MessageCreate(props) {
     setValue(newValue);
   };
   const [showModal, setShowModal] = useState(true);
-  var [showSetting, setShowSetting] = useState(false);
+  const [snippets, setSnippets] = useState([]);
+
   //const [allTags, setAllTags] = useState(null);
 
+  const getAllMessages = () => {
+    getMessages().then(
+      (res) => {
+        // console.log("THis is all ranks", res);
+       
+        if (res.statusText === "OK") {
+          console.log("These are all message", res.data);
+           }
+        },
+        (error) => {
+          console.log("this is error all poistion", error);
+        }
+      );
+    };
+    const getAllSnippets = () => {
+      getSnippets().then(
+        (res) => {
+          // console.log("THis is all ranks", res);
+          
+          if (res.statusText === "OK") {
+            console.log("These are all Snippets", res.data);
+             }
+             setSnippets(res.data)
+          },
+          (error) => {
+            console.log("this is error all Snippets", error);
+          }
+        );
+      };
+  
 
   useEffect(() => {
 
     console.log("component did mount");
     const fetchItems = async () => {
       try {
-
+        
         const result = await getMessage(id);
         const res = await getMessages()
         console.log('getmessages = ', res.data)
@@ -138,14 +171,14 @@ function MessageCreate(props) {
       }
     }
     fetchItems();
-
+    getAllMessages()
   }, []);
 
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
     handleAnimation();
-
+    getAllSnippets();
   }, []);
   const handleAnimation = () => {
     //setShowDrawer(true);
@@ -164,7 +197,7 @@ function MessageCreate(props) {
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [selectedMessages, setSelectedMessages] = useState([]);
-  const [selectedDrafts, setSelectedDrafts] = useState([]);
+  const [selectedDrafts, setSelectedDrafts] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
   const [addMedia,setAddMedia]=useState(false);
@@ -198,6 +231,8 @@ const handleAddMedia=(media)=> setAddMedia(media)
  
   const [messageCreated, setMessageCreated] = useState(false);
   const [messageNotCreated, setMessageNotCreated] = useState(false);
+  const [messageDeleted,setMessageDeleted] = useState(false)
+  const [saveDraft,setSaveDraft] = useState(false)
   const [fromAreaCoach, setFromAreaCoach] = useState(false);
   const [fromPositionCoach, setFromPositinCoach] = useState(false);
 
@@ -236,7 +271,8 @@ console.log("SaveMessage",saveMessage)
   const [rows, setRows] = useState(allBoards);
   const [individualrows, setindividualRows] = useState(allindividualBoards);
 
-
+  const [sendMessage,setSendMessage]=useState(false)
+  const [scheduleMessage,setScheduleMessage]=useState(false)
   const [searched, setSearched] = useState("");
 
   const [teamContacts, setTeamContacts] = useState(null);
@@ -309,7 +345,7 @@ console.log("SaveMessage",saveMessage)
   useEffect(
     (data) => {
      
-      setTableData(saveMessage.filter_ids);
+      setTableData(saveMessage?.filter_ids);
       console.log("tabledata = ",tableData)
       requestSearch()
       // setindividualRows(s)
@@ -516,7 +552,7 @@ console.log("SaveMessage",saveMessage)
     return null;
   };
 
-  const makeDraftSelected = (index) => {
+  /*const makeDraftSelected = (index) => {
     if (selectedDrafts.indexOf(index) > -1) {
       var temp = [];
       selectedDrafts.map((item) => {
@@ -536,7 +572,7 @@ console.log("SaveMessage",saveMessage)
       setuseLessState(uselessState + 1);
     }
     // console.log("THis is selected Checkbox", selectedCheckBoxes);
-  };
+  };*/
 
   const makeCheckBoxSelected = (index) => {
     if (selectedCheckBoxes.indexOf(index) > -1) {
@@ -563,14 +599,14 @@ console.log("SaveMessage",saveMessage)
       <div
         style={{
           width: 270,
-          height: 250,
+          
           // marginLeft: 16,
           border:
             selectedCheckBoxes.indexOf(m) > -1
               ? "3px solid #4d83e0"
               : "1px solid #d2d2d2",
           borderRadius: 4,
-          // marginBottom: 10,
+          //marginBottom: 10,
         }}
       >
         <Grid
@@ -580,27 +616,27 @@ console.log("SaveMessage",saveMessage)
           style={{ background: "#f6f6f6" }}
         >
           <img
-            style={{ width: "80%", height: 190, objectFit: "contain" }}
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
             src={m?.urls?.original}
           ></img>
         </Grid>
         <Grid
           container
           direction="row"
-          style={{ height: 30, marginLeft: 16, marginTop: 2 }}
+          style={{ height: 30, marginLeft: 16, marginTop: 10 }}
           alignItems="center"
         >
           {m.file_type=="image/gif"  ? (
-            <GifIcon style={{ color: "#3871da", fontSize: 20 }} ></GifIcon>
+            <GifIcon style={{ color: "black", fontSize: 20 }} ></GifIcon>
           ) :m.file_type=="image/png"  ||
          m.file_type=="image/jpg"  ||
          m.file_type=="image/jpeg" ||
          m.file_type=="image" ? (
-            <FaImage style={{ color: "#3871da", fontSize: 20 }}></FaImage>
+            <FaImage style={{ color: "black", fontSize: 20 }}></FaImage>
           ) :m.file_type=="mp4" ? (
-            <FaVideo style={{ color: "#3871da", fontSize: 20 }} ></FaVideo>
+            <FaVideo style={{ color: "black", fontSize: 20 }} ></FaVideo>
           ) : (
-            <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+            <FaFilePdf style={{ color: "black", fontSize: 20 }}></FaFilePdf>
           )}
           <p
             style={{
@@ -649,60 +685,128 @@ console.log("SaveMessage",saveMessage)
   const showActionButton = () => {
     return (
       <>
-        <div class="dropdown">
+        <div class="dropdown" >
           <IconTextField
             // width={180}
             width={100}
+         
             text="Action"
-            background={selectedDrafts.length == 0 ? "transparent" : "#3871DA"}
-            textColor={selectedDrafts.length === 0 ? "black" : "white"}
+            background={selectedDrafts ? "#3871DA" : "transparent"}
+            textColor={selectedDrafts ? "white" : "black"}
             icon={
               <FaMagic
                 style={{
-                  color: selectedDrafts.length === 0 ? "#3871DA" : "white",
+                  color: selectedDrafts ? "white" : "#3871DA",
                 }}
               ></FaMagic>
             }
+
+            onClick={() => {
+              setSelectedDrafts(!selectedDrafts)
+            
+            }}
+
+
           ></IconTextField>
-          {!!selectedDrafts.length && (
-            <div class="dropdown-content">
-              <div style={{ textAlign: "end", cursor: "pointer" }}>
-                <p style={{ color: "rgb(117, 117, 117)", margin: 12 }}>Tag</p>
+          {selectedDrafts && (
+            <Paper elevation={3} class="dropdown" 
+            style={{textAlign: "end", cursor: "pointer",background:'white',marginLeft:-20,position:"fixed"}} >
+              <div class="dropdown" style={{  }}>
+                <p style={{ color: "black", margin: 12 }}
+                 onClick={() => {
+                 setMessagePreview(false)
+                 setSelectedDrafts(false)
+                }}
+                
+                >Edit</p>
                 <p
                   onClick={() => {
-                    window.location.reload();
-                    localStorage.removeItem("selectedMedia");
+                  setSaveMessage(null)
+                  setMessageType(null)
+                 setMessageText("")
+                  setMessageSender(null)
+                  setRecieve(null)
+                  setMessageReceiver([])
+                  settwitterDm(false)
+                  setrsText(false)
+                  setPersonalText(false)
+                  setMedia(null)
+                  setMessageDeleted(true)
+                  setMessagePreview(false)
+                  setDate(new Date())
+                  setMessageDeleted(true)
+                  setSelectedDrafts(false)
                   }}
-                  style={{ color: "rgb(117, 117, 117)", margin: 12 }}
+                  style={{ color: "red", margin: 12 }}
                 >
-                  Create New Message
+                   Delete Message
+               
+
+
                 </p>
-                <p style={{ color: "rgb(161, 161, 161)", margin: 12 }}>
-                  Archeive
+                <p style={{ color: "black", margin: 12 }}
+                 onClick={() => {
+                  setSaveMessage(null)
+                  setMessageType(null)
+                 setMessageText("")
+                  setMessageSender(null)
+                  setRecieve(null)
+                  setMessageReceiver([])
+                  settwitterDm(false)
+                  setrsText(false)
+                  setPersonalText(false)
+                  setMedia(null)
+                  setSaveDraft(true)
+                  setMessagePreview(false)
+                  setDate(new Date())
+                  setSelectedDrafts(false)
+                  }}
+                >
+                  Save As Draft & Exit
                 </p>
               </div>
-            </div>
+            </Paper>
           )}
         </div>
       </>
     );
   };
   const showFilterButton = () => {
+    
     return (
+      
       <IconTextField
-        text="Filter"
-        textColor={showMessageFiltersRow === false ? "black" : "white"}
-        background={showMessageFiltersRow === false ? "transparent" : "#3871DA"}
+        text={moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?"Schedule":"Send"}
+        textColor={ "white"}
+        background={"#3871DA"}
         width={120}
         onClick={() => {
-          setShowMessageFiltersRow(!showMessageFiltersRow);
+                 setSaveMessage(null)
+                  setMessageType(null)
+                 setMessageText("")
+                  setMessageSender(null)
+                  setRecieve(null)
+                  setMessageReceiver([])
+                  settwitterDm(false)
+                  setrsText(false)
+                  setPersonalText(false)
+                  setMedia(null)
+                  moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
+                  setScheduleMessage(true):setSendMessage(true)
+                  setMessagePreview(false)
+                  setDate(new Date())
+
         }}
         icon={
-          <FaSlidersH
+          moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
+          <CalendarTodayIcon
             style={{
-              color: showMessageFiltersRow === false ? "#3871DA" : "white",
+              color:  "white",
             }}
-          ></FaSlidersH>
+          ></CalendarTodayIcon>:<SendIcon
+          style={{
+            color:  "white",
+          }}/>
         }
       ></IconTextField>
     );
@@ -963,13 +1067,13 @@ console.log("boardID",id)
         <div
           style={{
             width: 270,
-            height: 250,
+            
             marginLeft: 20,
             // border: "1px solid #d2d2d2",
             border: "1px solid #d2d2d2",
             borderRadius: 4,
             // marginTop: 20,
-            marginBottom: 10,
+           
           }}
         >
           <Grid
@@ -987,8 +1091,8 @@ console.log("boardID",id)
           // }}
           >
             <img
-              style={{ width: "80%", height: 190, objectFit: "contain" }}
-              src={m.urls && m.urls.thumb}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              src={m.urls && m.urls.original}
             ></img>
           </Grid>
           <Grid
@@ -1350,8 +1454,8 @@ console.log("boardID",id)
         <Grid item md={1} xs={1}>
           <Checkbox
             color="primary"
-            checked={selectedDrafts.length === 6}
-            onChange={() => {
+      //      checked={selectedDrafts.length === 6}
+           /* onChange={() => {
               var array = [1, 2, 3, 4, 5, 6];
               var temp = [];
               if (selectedDrafts.length === array.length) {
@@ -1362,7 +1466,7 @@ console.log("boardID",id)
                 });
                 setSelectedDrafts(temp);
               }
-            }}
+            }}*/
           ></Checkbox>
         </Grid>
         <Grid item md={2} xs={2}>
@@ -1442,17 +1546,7 @@ console.log("boardID",id)
           item
           md={2}
           xs={2}
-          onClick={() => {
-            const data = tableData.date.sort((first, second) => {
-              return (
-                new Date(first).getTime() - new Date(second).getTime()
-              );
-            });
-
-            console.log(data);
-            setTableData(() => [...data]);
-            console.log("asda");
-          }}
+        
         >
           <span className={classes.tableHeading}>Delivered at</span>
         </Grid>
@@ -1491,9 +1585,9 @@ console.log("boardID",id)
               <Checkbox
                 color="primary"
                 onChange={() => {
-                  makeDraftSelected(item);
+               //   makeDraftSelected(item);
                 }}
-                checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+            //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
                 style={{ marginTop: 1, marginBottom: 1 }}
                 onMouseLeave={() => {
                   setHoveredIndex(null);
@@ -1504,7 +1598,8 @@ console.log("boardID",id)
               <span className={classes.tableFields}>{item.first_name&&item.first_name+" "+item.last_name}</span>
             </Grid>
             <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>{item.name&&item.name}</span>
+              <span className={classes.tableFields}>
+              </span>
             </Grid>
             <Grid item md={2} xs={2}>
               <span className={classes.tableFields} style={{ marginLeft: 40 }}>
@@ -1599,7 +1694,7 @@ console.log("boardID",id)
           }}
         >
 
-          { saveMessage.media_placeholder_id&& placeholderContainer(saveMessage.media_placeholder_id)}
+          { saveMessage?.media_placeholder_id&& placeholderContainer(saveMessage?.media_placeholder_id)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -1647,7 +1742,7 @@ console.log("boardID",id)
             <p class className={classes.messageDetailsHeading}>
               Sender:
               <strong className={classes.mdMargin}>{saveMessage?.contact_ids?.first_name+" "+saveMessage?.contact_ids?.last_name}</strong>{" "}
-              {saveMessage.contact_ids.phone?saveMessage.contact_ids.phone:''}
+              {saveMessage.contact_ids.phone?formatPhoneNumber(saveMessage.contact_ids.phone):''}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Recepient:
@@ -1702,20 +1797,14 @@ console.log("boardID",id)
    
             </Grid>
             <p class className={classes.messageDetailsHeading}>
-              Message Text:
+              Message Text :
             </p>
             <p
               class
               className={classes.messageDetailsHeading}
               style={{ color: "black", fontWeight: 500 }}
             >
-              {saveMessage.body.replace("First_Name",saveMessage.filter_ids.map((name)=>name.first_name&&name.first_name))
-              .replace("Last_Name",saveMessage.filter_ids.map((name)=>name.last_name&&name.last_name))
-              .replace("Nick_Name",saveMessage.filter_ids.map((name)=>name.nick_name&&name.nick_name))
-              .replace("State",saveMessage.filter_ids.map((name)=>name.state && name.state))
-              .replace("HighSchool",saveMessage.filter_ids.map((name)=>name.high_school&&name.high_school))
-              
-              }   
+              {saveMessage.body }   
             </p>
           </div>
        
@@ -1890,6 +1979,7 @@ console.log("boardID",id)
                 setIsMesasgeStatusClick(false);
                 setMessagePreview(null);
                 setMessageSelected([]);
+                
               }}
               style={{ cursor: "pointer", fontSize: 30, fontWeight: "bold" }}
             ></KeyboardArrowLeftIcon>
@@ -2103,6 +2193,7 @@ console.log("boardID",id)
 
           <ArrowBackIosNewIcon style={{cursor:"pointer"}}  onClick={() => {
                           setMessagePreview(false);
+                          setSelectedDrafts(false)
                         }}/>
 
             <span
@@ -2284,7 +2375,7 @@ console.log("boardID",id)
             alignItems="center"
           >
             {messageType.icon}
-            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item.first_name?item.first_name+" "+item.last_name:item.name}</p>
+            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item?.first_name?item.first_name+" "+item.last_name:item.name}</p>
             <ClearIcon
               onClick={() => {
                 addDataToReceivers(item);
@@ -2534,9 +2625,11 @@ console.log("boardID",id)
   }
 
   const name=JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name
-
+   
   return (
-    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
+    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}
+   
+    >
       {showTimePicker && (
         <TimePicker
           open={showTimePicker}
@@ -2554,28 +2647,97 @@ console.log("boardID",id)
         open={openSnakBar}
         autoHideDuration={2000}
         onClose={handleClose}
+        
       >
         <Alert onClose={handleClose} severity="success">
           {selectedCheckBoxes.length + " "} contacts have been tagged!
         </Alert>
       </Snackbar>
+     
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={messageCreated}
         autoHideDuration={2000}
         onClose={() => {
           setMessageCreated(false);
+          setMessageDeleted(false)
         }}
       >
      
         <Alert  onClose={() => {
             setMessageCreated(false);
           }} severity="success">
-                  Message Created Successfully !
+                  Message Preview And Send !
                 </Alert>
               
 
       </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={sendMessage}
+        autoHideDuration={2000}
+        onClose={() => {
+          setSendMessage(false);
+          
+        }}
+      >
+     
+        <Alert  onClose={() => {
+            setSendMessage(false);
+          }} severity="success">
+                 Message Sent !
+                </Alert>
+              
+
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={scheduleMessage}
+        autoHideDuration={2000}
+        onClose={() => {
+         setScheduleMessage(false)
+        }}
+      >
+     
+        <Alert  onClose={() => {
+            setScheduleMessage(false);
+          }} severity="success">
+                  Message Scheduled!
+                </Alert>
+              
+
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={messageDeleted}
+        autoHideDuration={2000}
+        onClose={() => {
+          
+          setMessageDeleted(false)
+        }}
+      >
+      <Alert  onClose={() => {
+            setMessageDeleted(false);
+          }} severity="error">
+                  Message Removed
+                </Alert>
+                </Snackbar>
+                <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={saveDraft}
+        autoHideDuration={2000}
+        onClose={() => {
+          
+          setSaveDraft(false)
+        }}
+      >
+      <Alert  onClose={() => {
+            setSaveDraft(false);
+          }} severity="info">
+                  Message Saved As Drafts
+                </Alert>
+                </Snackbar>
+
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={messageNotCreated}
@@ -3164,8 +3326,8 @@ console.log("boardID",id)
                         </strong>
                       </span>
         
-                      <div className="d-flex ">
-                        <IconTextField
+                     <div className="d-flex ">
+                    {/*    <IconTextField
                           width={100}
                           text="More"
                           textColor="#3871DA"
@@ -3183,7 +3345,7 @@ console.log("boardID",id)
                             setShowMessageFiltersRow(!showMessageFiltersRow);
                           }}
                           icon={<Check style={{ color: "#3871DA" }}></Check>}
-                        ></IconTextField>
+                        ></IconTextField>*/}
                         <IconButton
                           text="Preview and Send"
                           textColor="#fff"
@@ -3198,7 +3360,7 @@ console.log("boardID",id)
                           }}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
-                      </div>
+                        </div>
                     </div>
 
 
@@ -4148,17 +4310,18 @@ console.log("boardID",id)
 
 
 
+                   
                     <Grid
                       container
                       direction="row"
                       alignItems="center"
                       style={{
                         // background: "#f5f6f9",
-                        width: "100%",
+                        
                         // minWidth: 1110,
                         border: "1px solid #d8d8d8",
                         borderRadius: 4,
-                        height: 170,
+                        height: 100,
                         marginTop: 16,
                         paddingTop: 16,
                       }}
@@ -4169,21 +4332,22 @@ console.log("boardID",id)
                       }}
                     >
                       {/* <Grid item md={2} xs={2}> */}
-                      <p style={{ margin: 0, marginLeft: 16, width: 100 }}>
+                      <p style={{ marginBottom:40, marginLeft: 10}}>
                         Message Text:
                       </p>
-                      {/* </Grid> */}
-                      <Grid item md={12} xs={12}>
                         <div class="dropdown">
+                          
                           <textarea
                             type="text"
                             id={"textArea"}
                             style={{
                               border: "none",
-                              height: 120,
-                              width: "100%",
+                              outline:"none",
+                              marginBottom:10,
+                              width:"500%",
+                              height:"100%",
                               borderRadius: 4,
-                              paddingLeft: 16,
+                              paddingLeft: 12,
                               resize: "none",
                             }}
                             value={messageText}
@@ -4192,7 +4356,11 @@ console.log("boardID",id)
                             }}
                             placeholder="Type message"
                           ></textarea>
+                         
                         </div>
+                      {/* </Grid> */}
+                      <Grid item md={12} xs={12} direction >
+                      
                       </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center">
@@ -4449,17 +4617,7 @@ console.log("boardID",id)
                           >
                             Snippets
                           </p>
-                          {[
-                            {
-                              title: "#StackedSports",
-                            },
-                            {
-                              title: "- Ben Graves",
-                            },
-                            {
-                              title: "#Beleive22",
-                            },
-                          ].map((type) => {
+                          {(snippets).map((type) => {
                             return (
                               <Grid
                                 container
@@ -4471,7 +4629,7 @@ console.log("boardID",id)
                                     document.getElementById("textArea")
                                       .selectionStart === messageText.length
                                   ) {
-                                    setMessageText(messageText + type.title);
+                                    setMessageText(messageText + type.content);
                                   } else {
                                     for (
                                       var i = 0;
@@ -4484,7 +4642,7 @@ console.log("boardID",id)
                                         document.getElementById("textArea")
                                           .selectionStart
                                       ) {
-                                        newVal = newVal + type.title;
+                                        newVal = newVal + type.content;
                                       }
                                     }
                                     setMessageText(newVal);
@@ -4498,7 +4656,7 @@ console.log("boardID",id)
                                     marginLeft: 16,
                                   }}
                                 >
-                                  {type.title}
+                                  {type.content}
                                 </p>
                               </Grid>
                             );
