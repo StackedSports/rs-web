@@ -414,8 +414,8 @@ function Home(props) {
       }
     );
   };
- 
-  
+
+
 
   const getAllTags = () => {
     getTagsWithContacts().then(
@@ -780,16 +780,16 @@ function Home(props) {
       abbreviation: "WI"
     }]
 
-const usTimezone=[
-{value:"America/Puerto_Rico",name:"Atlantic"},
-{value:"America/New_York",name:"Eastern"},
-{value:"America/Chicago",name:"Central"},
-{value:"America/Denver",name:"Mountain"},
-{value:"America/Phoenix",name:"MST"},
-{value:"America/Los_Angeles",name:"Pacific"},
-{value:"America/Anchorage",name:"Alaska"},
-{value:"Pacific/Honolulu",name:"Hawaii"}
-]
+  const usTimezone = [
+    { value: "America/Puerto_Rico", name: "Atlantic" },
+    { value: "America/New_York", name: "Eastern" },
+    { value: "America/Chicago", name: "Central" },
+    { value: "America/Denver", name: "Mountain" },
+    { value: "America/Phoenix", name: "MST" },
+    { value: "America/Los_Angeles", name: "Pacific" },
+    { value: "America/Anchorage", name: "Alaska" },
+    { value: "Pacific/Honolulu", name: "Hawaii" }
+  ]
 
   useEffect(() => {
     setShowDrawer(false);
@@ -923,14 +923,14 @@ const usTimezone=[
               onClick={() => {
                 setTimeZoneFilter(option.name);
               }}
-              // onClick={() => {
-              //   if (timeZoneFilter === option.name) {
-              //     setTimeZoneFilter(null);
-              //     addDataToFilter(option.name);
-              //   } else {
-              //     addDataToFilter(option.name, "ustimezones");
-              //   }
-              // }}
+            // onClick={() => {
+            //   if (timeZoneFilter === option.name) {
+            //     setTimeZoneFilter(null);
+            //     addDataToFilter(option.name);
+            //   } else {
+            //     addDataToFilter(option.name, "ustimezones");
+            //   }
+            // }}
             >
               {option.name}
             </Dropdown.Item>
@@ -1008,7 +1008,7 @@ const usTimezone=[
           style={filtesSpacingStyle}
         >
           {positions &&
-          console.log(positions,"position ok"),
+            console.log(positions, "position ok"),
             positions.map((option, ind) => (
               <Dropdown.Item
                 key={ind}
@@ -1245,7 +1245,7 @@ const usTimezone=[
     if (filter.length != 0) {
       filter.map((filt, index) => {
         if (filterType[index] === "status") {
-          console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>",filt);
+          console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>", filt);
 
           if (item?.status != null && item?.status.status === filt) {
             isValid = true;
@@ -1259,7 +1259,7 @@ const usTimezone=[
           }
         }
         if (filterType[index] === "Position") {
-          console.log(item.positions, "<<<<<<<<<<<<<---------Item--------->>>>>>>>>>>>>>",filt);
+          console.log(item.positions, "<<<<<<<<<<<<<---------Item--------->>>>>>>>>>>>>>", filt);
           if (item.positions != null && filt.includes((item.positions.map((el) => (el.name))))) {
             isValid = true;
             return;
@@ -1289,7 +1289,7 @@ const usTimezone=[
         //   }
         // }
         if (filterType[index] === 'State') {
-          console.log(item,'<<<<<<<<<================item= 0========>>>>>>>>>>>>',filt);
+          console.log(item, '<<<<<<<<<================item= 0========>>>>>>>>>>>>', filt);
 
           if (item?.state === filt) {
             console.log(
@@ -1303,9 +1303,9 @@ const usTimezone=[
         }
 
         if (filterType[index] === 'Coach') {
-          console.log(item.area_coach?.full_name,'<<<<<<<<<================item= 1========>>>>>>>>>>>>',filt);
+          console.log(item.area_coach?.full_name, '<<<<<<<<<================item= 1========>>>>>>>>>>>>', filt);
 
-          if (item.area_coach?.full_name === filt ||item.position_coach?.full_name === filt) {
+          if (item.area_coach?.full_name === filt || item.position_coach?.full_name === filt) {
             console.log(
               "This is inseide state",
               item.State,
