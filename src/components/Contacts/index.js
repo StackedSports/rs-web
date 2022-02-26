@@ -1247,7 +1247,7 @@ const usTimezone=[
         if (filterType[index] === "status") {
           console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>",filt);
 
-          if (item?.status != null && item?.status === filt) {
+          if (item?.status != null && item?.status.status === filt) {
             isValid = true;
             return;
           }

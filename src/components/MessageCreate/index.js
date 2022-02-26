@@ -2338,6 +2338,7 @@ function MessageCreate(props) {
             <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item}</p>
             <ClearIcon
               onClick={() => {
+                // alert(item)
                 addDataToReceivers(item);
               }}
               style={{
