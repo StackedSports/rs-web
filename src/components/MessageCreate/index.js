@@ -1002,7 +1002,7 @@ function MessageCreate(props) {
         badgeContent={
           <ClearIcon
             style={{ height: 10, width: 10, cursor: "pointer" }}
-          /*  onClick={() => {
+            onClick={() => {
               var alreadySelected = false;
               selectedMedia.map((item) => {
                 if (m.hashid === item.hashid) {
@@ -1020,12 +1020,7 @@ function MessageCreate(props) {
                 localStorage.setItem("selectedMedia", JSON.stringify(temp));
                 setuseLessState(uselessState + 1);
               }
-            }}*/
-            onClick={() =>
-            setMedia(null)
-            }
-
-
+            }}
           ></ClearIcon>
         }
         color="error"
@@ -4114,7 +4109,6 @@ function MessageCreate(props) {
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 
-<<<<<<< HEAD
                       {selectedMedia.length > 0 ? (
                         selectedMedia.map((m) => {
                           return mediaContainer(m);
@@ -4123,21 +4117,6 @@ function MessageCreate(props) {
                         <Grid item md={10} xs={10}>
                           <div class="dropdown">
                             <Grid
-=======
-                      {media  &&
-                       /* media.map((m) => {
-                          return mediaContainer(media[0]);
-                        })*/
-                              mediaContainer(media[0])
-
-                       }
-                        <Grid item container md={10} xs={10}>
-             
-                        { media ?
-                        <div></div> 
-                        : 
-                        <Grid item xs={2.5} md ={2.5}
->>>>>>> 6824c8aeca129fdad385e2cbeeba49a62bf8cc88
                               container
                               direction="row"
                               style={{
@@ -4161,13 +4140,8 @@ function MessageCreate(props) {
                                 }}
                               ></FaPlus>{" "}
                               Add Media
-<<<<<<< HEAD
                             </Grid>
                           </div>{" "}
-=======
-                            </Grid>}
-                          {" "}
->>>>>>> 6824c8aeca129fdad385e2cbeeba49a62bf8cc88
                         </Grid>
                       )}
                     </Grid>
