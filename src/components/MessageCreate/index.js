@@ -3326,8 +3326,8 @@ console.log("boardID",id)
                         </strong>
                       </span>
         
-                     <div className="d-flex ">
-                    {/*    <IconTextField
+            <div className="d-flex ">
+         {/*               <IconTextField
                           width={100}
                           text="More"
                           textColor="#3871DA"
@@ -3335,7 +3335,7 @@ console.log("boardID",id)
                             <ArrowDropDown
                               style={{ color: "#3871DA" }}
                             ></ArrowDropDown>
-                          }
+                          
                         ></IconTextField>
                         <IconTextField
                           text="Save and Close"
@@ -3360,7 +3360,7 @@ console.log("boardID",id)
                           }}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
-                        </div>
+                      </div>
                     </div>
 
 

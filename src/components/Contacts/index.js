@@ -52,6 +52,9 @@ import {
   getBoardFilters,
   getPositions,
   getAllColumns,
+  getAllContactsWithSearch,
+  getTeamContacts,
+  getTagsWithContacts,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
@@ -136,12 +139,15 @@ function Home(props) {
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
-  const [tagSearch, setTagSearch] = useState("");
+  // const [tagSearch, setTagSearch] = useState("");
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
+  const [tagSearch, setTagSearch] = useState("");
+
+
 
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
@@ -154,6 +160,8 @@ function Home(props) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
+  const [allcontacts, setAllContacts] = useState(null);
+
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
@@ -161,6 +169,8 @@ function Home(props) {
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
+  const [allTeamContacts, setTeamContacts] = useState(null);
+
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
@@ -271,7 +281,31 @@ function Home(props) {
 
     return null;
   };
-
+  const getMyContactsSearch = (page) => {
+    // setLoading(true);
+    setFetching(true);
+    console.log("This is the date", page);
+    // || "2020-12-13"
+    getAllContactsWithSearch(page).then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          console.log("These are all contacts", res.data);
+          setAllContacts(res.data);
+          // setAllBoards(res.data);
+          // setCopyContacts(res.data);
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        }
+      },
+      (error) => {
+        getMyContactsSearch(1);
+        setPage(1);
+        console.log("this is error all contacts", error);
+      }
+    );
+    // setLoading(false)
+  };
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -279,7 +313,7 @@ function Home(props) {
     // || "2020-12-13"
     getAllContacts(page).then(
       (res) => {
-        // console.log("THis is all contacts res", res);
+        console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           if (page > 1) {
             var temp = contacts;
@@ -290,10 +324,11 @@ function Home(props) {
             setCopyContacts(temp);
             setuseLessState(uselessState + 1);
             console.log("These are all new contacts", temp);
+
+
             // document.getElementById("infinit").scrollTop = 0;
             setFetching(false);
           } else {
-            console.log("These are all contacts", contacts);
 
             setContacts(res.data);
             setCopyContacts(res.data);
@@ -301,6 +336,7 @@ function Home(props) {
               document.getElementById("infinit").scrollTop = 0;
             }
 
+            console.log("These are all contacts", contacts);
             setFetching(false);
           }
         }
@@ -317,7 +353,7 @@ function Home(props) {
   const getAllGradeYears = () => {
     getGradeYears().then(
       (res) => {
-        // console.log("THis is all grade Years", res);
+        console.log("THis is all grade Years", res);
         var gradYears = [];
         if (res.statusText === "OK") {
           // console.log("These are all contacts", res.data);
@@ -336,6 +372,11 @@ function Home(props) {
     );
   };
 
+
+
+
+
+
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -351,14 +392,38 @@ function Home(props) {
       }
     );
   };
+  const getAllTeamContacts = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all statuses", res);
+        var COACH = [];
+        if (res.statusText === "OK") {
+          console.log("These are all COACH", res.data);
+          res.data.map((item) => {
+
+            COACH.push({
+              value: `${item.first_name} ${item.last_name}`,
+              label: `${item.first_name} ${item.last_name}`,
+            });
+          });
+          setTeamContacts(COACH);
+        }
+      },
+      (error) => {
+        console.log("this is error all statuses", error);
+      }
+    );
+  };
+
+
 
   const getAllTags = () => {
-    getTags().then(
+    getTagsWithContacts().then(
       (res) => {
         // console.log("THis is all tags", res);
         var TAGS = [];
         if (res.statusText === "OK") {
-          console.log("These are all tags", res.data);
+          console.log("These are allcontacts tags", res.data);
           res?.data?.map((item) => {
             TAGS.push({
               value: item.name,
@@ -380,8 +445,9 @@ function Home(props) {
         // console.log("THis is all statuses", res);
         var STATUSES = [];
         if (res.statusText === "OK") {
-          // console.log("These are all statuses", res.data);
+          console.log("These are all statuses", res.data);
           res.data.map((item) => {
+
             STATUSES.push({
               value: item.status,
               label: item.status,
@@ -404,8 +470,10 @@ function Home(props) {
         if (res.statusText === "OK") {
           console.log("These are all positions", res.data);
           res.data.map((item) => {
+            console.log("These are all item inside map", item.name);
+
             POSITIONS.push({
-              value: item.name,
+              value: item,
               label: item.name,
             });
           });
@@ -441,10 +509,10 @@ function Home(props) {
   const getAllRanks = () => {
     getRanks().then(
       (res) => {
-        // console.log("THis is all ranks", res);
+        console.log("THis is all ranks", res);
         var RANKS = [];
         if (res.statusText === "OK") {
-          // console.log("These are all ranks", res.data);
+          console.log("These are all ranks", res.data);
           res.data.map((item) => {
             RANKS.push({
               value: item.rank,
@@ -479,59 +547,249 @@ function Home(props) {
     },
   ];
   const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    " New Mexico",
-    " New York",
-    " North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    " Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
+    {
+      name: "Alabama",
+      abbreviation: "AL"
+    },
+    {
+      name: "Alaska",
+      abbreviation: "AK"
+    },
+    {
+      name: "American Samoa",
+      abbreviation: "AS"
+    },
+    {
+      name: "Arizona",
+      abbreviation: "AZ"
+    },
+    {
+      name: "Arkansas",
+      abbreviation: "AR"
+    },
+    {
+      name: "California",
+      abbreviation: "CA"
+    },
+    {
+      name: "Colorado",
+      abbreviation: "CO"
+    },
+    {
+      name: "Connecticut",
+      abbreviation: "CT"
+    },
+    {
+      name: "Delaware",
+      abbreviation: "DE"
+    },
+    {
+      name: "District Of Columbia",
+      abbreviation: "DC"
+    },
+    {
+      name: "Federated States Of Micronesia",
+      abbreviation: "FM"
+    },
+    {
+      name: "Florida",
+      abbreviation: "FL"
+    },
+    {
+      name: "Georgia",
+      abbreviation: "GA"
+    },
+    {
+      name: "Guam",
+      abbreviation: "GU"
+    },
+    {
+      name: "Hawaii",
+      abbreviation: "HI"
+    },
+    {
+      name: "Idaho",
+      abbreviation: "ID"
+    },
+    {
+      name: "Illinois",
+      abbreviation: "IL"
+    },
+    {
+      name: "Indiana",
+      abbreviation: "IN"
+    },
+    {
+      name: "Iowa",
+      abbreviation: "IA"
+    },
+    {
+      name: "Kansas",
+      abbreviation: "KS"
+    },
+    {
+      name: "Kentucky",
+      abbreviation: "KY"
+    },
+    {
+      name: "Louisiana",
+      abbreviation: "LA"
+    },
+    {
+      name: "Maine",
+      abbreviation: "ME"
+    },
+    {
+      name: "Marshall Islands",
+      abbreviation: "MH"
+    },
+    {
+      name: "Maryland",
+      abbreviation: "MD"
+    },
+    {
+      name: "Massachusetts",
+      abbreviation: "MA"
+    },
+    {
+      name: "Michigan",
+      abbreviation: "MI"
+    },
+    {
+      name: "Minnesota",
+      abbreviation: "MN"
+    },
+    {
+      name: "Mississippi",
+      abbreviation: "MS"
+    },
+    {
+      name: "Missouri",
+      abbreviation: "MO"
+    },
+    {
+      name: "Montana",
+      abbreviation: "MT"
+    },
+    {
+      name: "Nebraska",
+      abbreviation: "NE"
+    },
+    {
+      name: "Nevada",
+      abbreviation: "NV"
+    },
+    {
+      name: "New Hampshire",
+      abbreviation: "NH"
+    },
+    {
+      name: "New Jersey",
+      abbreviation: "NJ"
+    },
+    {
+      name: "New Mexico",
+      abbreviation: "NM"
+    },
+    {
+      name: "New York",
+      abbreviation: "NY"
+    },
+    {
+      name: "North Carolina",
+      abbreviation: "NC"
+    },
+    {
+      name: "North Dakota",
+      abbreviation: "ND"
+    },
+    {
+      name: "Northern Mariana Islands",
+      abbreviation: "MP"
+    },
+    {
+      name: "Ohio",
+      abbreviation: "OH"
+    },
+    {
+      name: "Oklahoma",
+      abbreviation: "OK"
+    },
+    {
+      name: "Oregon",
+      abbreviation: "OR"
+    },
+    {
+      name: "Palau",
+      abbreviation: "PW"
+    },
+    {
+      name: "Pennsylvania",
+      abbreviation: "PA"
+    },
+    {
+      name: "Puerto Rico",
+      abbreviation: "PR"
+    },
+    {
+      name: "Rhode Island",
+      abbreviation: "RI"
+    },
+    {
+      name: "South Carolina",
+      abbreviation: "SC"
+    },
+    {
+      name: "South Dakota",
+      abbreviation: "SD"
+    },
+    {
+      name: "Tennessee",
+      abbreviation: "TN"
+    },
+    {
+      name: "Texas",
+      abbreviation: "TX"
+    },
+    {
+      name: "Utah",
+      abbreviation: "UT"
+    },
+    {
+      name: "Vermont",
+      abbreviation: "VT"
+    },
+    {
+      name: "Virgin Islands",
+      abbreviation: "VI"
+    },
+    {
+      name: "Virginia",
+      abbreviation: "VA"
+    },
+    {
+      name: "Washington",
+      abbreviation: "WA"
+    },
+    {
+      name: "West Virginia",
+      abbreviation: "WV"
+    },
+    {
+      name: "Wisconsin",
+      abbreviation: "WI"
+    }]
 
-
+  const usTimezone = [
+    { value: "America/Puerto_Rico", name: "Atlantic" },
+    { value: "America/New_York", name: "Eastern" },
+    { value: "America/Chicago", name: "Central" },
+    { value: "America/Denver", name: "Mountain" },
+    { value: "America/Phoenix", name: "MST" },
+    { value: "America/Los_Angeles", name: "Pacific" },
+    { value: "America/Anchorage", name: "Alaska" },
+    { value: "Pacific/Honolulu", name: "Hawaii" }
+  ]
 
   useEffect(() => {
     setShowDrawer(false);
@@ -606,6 +864,8 @@ function Home(props) {
                   color: rankFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
+                  // alert("ok")
+                  // setContacts(allcontacts)
                   if (rankFilter === option.label) {
                     setRankFilter(null);
                     addDataToFilter(option.label);
@@ -650,21 +910,29 @@ function Home(props) {
           id="dropdown-basic-button"
           title={timeZoneFilter || "Time Zone"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="Time Zone"
           style={filtesSpacingStyle}
         >
-          {statuses.map((option) => (
+          {usTimezone.map((option) => (
             <Dropdown.Item
               style={{
                 background:
-                  timeZoneFilter === option.label ? "#348ef7" : "white",
-                color: timeZoneFilter === option.label ? "white" : "black",
+                  timeZoneFilter === option.name ? "#348ef7" : "white",
+                color: timeZoneFilter === option.name ? "white" : "black",
               }}
               onClick={() => {
-                setTimeZoneFilter(option.label);
+                setTimeZoneFilter(option.name);
               }}
+            // onClick={() => {
+            //   if (timeZoneFilter === option.name) {
+            //     setTimeZoneFilter(null);
+            //     addDataToFilter(option.name);
+            //   } else {
+            //     addDataToFilter(option.name, "ustimezones");
+            //   }
+            // }}
             >
-              {option.label}
+              {option.name}
             </Dropdown.Item>
           ))}
         </DropdownButton>
@@ -692,23 +960,26 @@ function Home(props) {
               ></input>
             </Grid>
 
-            {states.map((option) => {
+            {states.map((option, ind) => {
+              console.log(option, "=====option------option===========>>>>>>>>>>>>>>>>");
               if (stateSearch != "") {
                 if (
-                  option.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
+                  option.name.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
                 ) {
                   return (
                     <Dropdown.Item
+                      key={ind}
                       style={{
                         background:
-                          stateFilter === option ? "#348ef7" : "white",
-                        color: stateFilter === option ? "white" : "black",
+                          stateFilter === option.abbreviation ? "#348ef7" : "white",
+                        color: stateFilter === option.abbreviation ? "white" : "black",
                       }}
                       onClick={() => {
-                        addDataToFilter(option, "State");
+
+                        addDataToFilter(option.abbreviation, "State");
                       }}
                     >
-                      {option}
+                      {option.name}
                     </Dropdown.Item>
                   );
                 }
@@ -716,14 +987,14 @@ function Home(props) {
                 return (
                   <Dropdown.Item
                     style={{
-                      background: stateFilter === option ? "#348ef7" : "white",
-                      color: stateFilter === option ? "white" : "black",
+                      background: stateFilter === option.abbreviation ? "#348ef7" : "white",
+                      color: stateFilter === option.abbreviation ? "white" : "black",
                     }}
                     onClick={() => {
-                      addDataToFilter(option, "State");
+                      addDataToFilter(option.abbreviation, "State");
                     }}
                   >
-                    {option}
+                    {option.name}
                   </Dropdown.Item>
                 );
               }
@@ -737,15 +1008,25 @@ function Home(props) {
           style={filtesSpacingStyle}
         >
           {positions &&
-            positions.map((option) => (
+            console.log(positions, "position ok"),
+            positions.map((option, ind) => (
               <Dropdown.Item
+                key={ind}
                 style={{
                   background:
-                    positionFilter === option.label ? "#348ef7" : "white",
-                  color: positionFilter === option.label ? "white" : "black",
+                    positionFilter === option.value.abbreviation ? "#348ef7" : "white",
+                  color: positionFilter === option.value.abbreviation ? "white" : "black",
                 }}
+                // onClick={() => {
+                //   addDataToFilter(option, "Position");
+                // }}
                 onClick={() => {
-                  addDataToFilter(option, "Position");
+                  if (positionFilter === option.value.abbreviation) {
+                    setPositionFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.value.abbreviation, "Position");
+                  }
                 }}
               >
                 {option.label}
@@ -759,14 +1040,22 @@ function Home(props) {
           placeholder="Status"
           style={filtesSpacingStyle}
         >
-          {statuses.map((option) => (
+          {allTeamContacts.map((option) => (
             <Dropdown.Item
               style={{
                 background: coachFilter === option.label ? "#348ef7" : "white",
                 color: coachFilter === option.label ? "white" : "black",
               }}
+              // onClick={() => {
+              //   setCoachFilter(option.label);
+              // }}
               onClick={() => {
-                setCoachFilter(option.label);
+                if (coachFilter === option.label) {
+                  setCoachFilter(null);
+                  addDataToFilter(option.label);
+                } else {
+                  addDataToFilter(option.label, "Coach");
+                }
               }}
             >
               {option.label}
@@ -780,25 +1069,92 @@ function Home(props) {
           placeholder="Status"
           style={filtesSpacingStyle}
         >
+          <Grid container direction="row" justify="center">
+            <input
+              type="text"
+              style={{
+                width: "90%",
+                border: "1px solid #ebebeb",
+                borderRadius: 4,
+              }}
+              placeholder="Search Tag"
+              value={tagSearch}
+              onChange={(e) => {
+                setTagSearch(e.target.value);
+              }}
+            ></input>
+          </Grid>
           {allTags &&
-            allTags.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background: tagFilter === option.label ? "#348ef7" : "white",
-                  color: tagFilter === option.label ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (rankFilter === option.label) {
-                    setTagFilter(null);
-                    addDataToFilter(option.label);
-                  } else {
-                    addDataToFilter(option.label, "Tag");
-                  }
-                }}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
+            allTags.map((option, ind) => {
+
+              if (tagSearch != "") {
+                if (
+                  option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background: tagFilter === option.label ? "#348ef7" : "white",
+                        color: tagFilter === option.label ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        if (rankFilter === option.label) {
+                          setTagFilter(null);
+                          addDataToFilter(option.label);
+                        } else {
+                          addDataToFilter(option.label, "Tag");
+                        }
+                      }}
+                    >
+                      {option.label}
+                    </Dropdown.Item>
+                  );
+                }
+              } else {
+                return (
+                  // <Dropdown.Item
+                  //   style={{
+                  //     background: stateFilter === option.abbreviation ? "#348ef7" : "white",
+                  //     color: stateFilter === option.abbreviation ? "white" : "black",
+                  //   }}
+                  //   onClick={() => {
+                  //     addDataToFilter(option.abbreviation, "State");
+                  //   }}
+                  // >
+                  //   {option.abbreviation}
+                  // </Dropdown.Item>
+                  <Dropdown.Item
+                    style={{
+                      background: tagFilter === option.label ? "#348ef7" : "white",
+                      color: tagFilter === option.label ? "white" : "black",
+                    }}
+                    onClick={() => {
+
+                      addDataToFilter(option.label, "Tag");
+
+                    }}
+                  >
+                    {option.label}
+                  </Dropdown.Item>
+                );
+              }
+              // <Dropdown.Item
+              //   style={{
+              //     background: tagFilter === option.label ? "#348ef7" : "white",
+              //     color: tagFilter === option.label ? "white" : "black",
+              //   }}
+              //   onClick={() => {
+              //     if (rankFilter === option.label) {
+              //       setTagFilter(null);
+              //       addDataToFilter(option.label);
+              //     } else {
+              //       addDataToFilter(option.label, "Tag");
+              //     }
+              //   }}
+              // >
+              //   {option.label}
+              // </Dropdown.Item>
+            })}
         </DropdownButton>
       </Grid>
     );
@@ -867,15 +1223,17 @@ function Home(props) {
       getAllStatuses();
       getAllTags();
       getAllBoards();
+      getAllTeamContacts()
       getAllPositions();
       getColumns();
+      getMyContactsSearch();
       // setupPage();
     } else {
       window.location.href = "/";
     }
   }, []);
 
-  // console.log("This is filter bar", filter, filterType);
+  console.log("This is filter bar", filter, filterType);
 
   const isSelectedCheckbox = (index) => {
     console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
@@ -887,7 +1245,9 @@ function Home(props) {
     if (filter.length != 0) {
       filter.map((filt, index) => {
         if (filterType[index] === "status") {
-          if (item.status != null && item.status.status === filt) {
+          console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>", filt);
+
+          if (item?.status != null && item?.status.status === filt) {
             isValid = true;
             return;
           }
@@ -898,11 +1258,57 @@ function Home(props) {
             return;
           }
         }
+        if (filterType[index] === "Position") {
+          console.log(item.positions, "<<<<<<<<<<<<<---------Item--------->>>>>>>>>>>>>>", filt);
+          if (item.positions != null && filt.includes((item.positions.map((el) => (el.name))))) {
+            isValid = true;
+            return;
+          }
+        }
+
         if (filterType[index] === "gradeYear") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+          if (Number(item.grad_year) === filt) {
             console.log(
               "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
+              item.grad_year,
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+        // if (filterType[index] === 'ustimezones') {
+        //   if (item.ustimezones.ustimezones === filt) {
+        //     console.log(
+        //       "This is inseide ustimezones",
+        //       item.ustimezones,
+        //       filt
+        //     );
+        //     isValid = true;
+        //     return;
+        //   }
+        // }
+        if (filterType[index] === 'State') {
+          console.log(item, '<<<<<<<<<================item= 0========>>>>>>>>>>>>', filt);
+
+          if (item?.state === filt) {
+            console.log(
+              "This is inseide state",
+              item.State,
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+
+        if (filterType[index] === 'Coach') {
+          console.log(item.area_coach?.full_name, '<<<<<<<<<================item= 1========>>>>>>>>>>>>', filt);
+
+          if (item.area_coach?.full_name === filt || item.position_coach?.full_name === filt) {
+            console.log(
+              "This is inseide state",
+              item.State,
               filt
             );
             isValid = true;
@@ -910,10 +1316,12 @@ function Home(props) {
           }
         }
         if (filterType[index] === "Tag") {
-          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+          console.log(item.tags.map((el) => (el.name)), "-------------->>>>>>Tag item<-------------->");
+          if (filt.includes((item.tags.map((el) => (el.name))))) {
+
             console.log(
               "This is inseide grader",
-              moment(item.grad_year).format("YYYY"),
+              item.tags,
               filt
             );
             isValid = true;
@@ -1355,6 +1763,9 @@ function Home(props) {
             >
               {contacts ? (
                 contacts.map((item, index) => {
+                  console.log('===============contacts====================='),
+                    console.log(contacts, '<<<<<<<<<<===contacts=<<<<<<<'),
+                    console.log('================contacts====================');
                   // console.log(
                   //   "This is filter funtion",
                   //   isSelectedCheckbox(index)
@@ -1362,6 +1773,7 @@ function Home(props) {
                   if (checkFilters(item) === true) {
                     return (
                       <Grid
+                        key={index}
                         container
                         direction="row"
                         alignItems="center"
@@ -1460,8 +1872,7 @@ function Home(props) {
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
                             {item.grad_year
-                              ? moment(item.grad_year).format("YYYY")
-                              : ""}
+                            }
                           </span>
                         </Grid>
                         <Grid item md={2} xs={2}>
