@@ -2084,7 +2084,7 @@ console.log("boardID",id)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id?.tags.length>0&&  <div
+           { saveMessage.media_placeholder_id.tags.length>0&&  <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
