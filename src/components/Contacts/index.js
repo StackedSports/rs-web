@@ -38,7 +38,6 @@ import {
   FaLocationArrow,
 } from "react-icons/fa";
 import DialogBox from "../common/Dialogs";
-
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
@@ -175,7 +174,7 @@ function Home(props) {
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
-
+const [showFilterButton,setShowFilterButton]= useState(false)
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const totalContacts = 0
@@ -499,6 +498,7 @@ function Home(props) {
           //   });
           // });
           setAllColumns(res.data);
+          setShowFilterButton(true)
         }
       },
       (error) => {
@@ -1486,24 +1486,27 @@ function Home(props) {
                     ></AccountBoxIcon>
                   }
                 ></IconTextField>
-                <IconTextField
-                  text="Filter"
-                  width={120}
-                  onClick={() => {
-                    setShowFiltersRow(!showFiltersRow);
-                  }}
-                  textColor={showFiltersRow === false ? "black" : "white"}
-                  background={
-                    showFiltersRow === false ? "transparent" : "#3871DA"
-                  }
-                  icon={
-                    <FaSlidersH
-                      style={{
-                        color: showFiltersRow === false ? "#3871DA" : "white",
-                      }}
-                    ></FaSlidersH>
-                  }
-                ></IconTextField>
+                {showFilterButton===false?null:
+                 <IconTextField
+                 text="Filter"
+                 width={120}
+                 onClick={() => {
+                   setShowFiltersRow(!showFiltersRow);
+                 }}
+                 textColor={showFiltersRow === false ? "black" : "white"}
+                 background={
+                   showFiltersRow === false ? "transparent" : "#3871DA"
+                 }
+                 icon={
+                   <FaSlidersH
+                     style={{
+                       color: showFiltersRow === false ? "#3871DA" : "white",
+                     }}
+                   ></FaSlidersH>
+                 }
+               ></IconTextField>
+                }
+               
               </Grid>
             </Grid>
           </Grid>
@@ -1647,6 +1650,7 @@ function Home(props) {
                     </p>
                     {allColumns &&
                       allColumns.map((item) => {
+                        
                         return (
                           <Grid
                             container
