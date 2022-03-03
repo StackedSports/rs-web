@@ -38,7 +38,7 @@ const Placeholder = (props) => {
         <Fragment>
             <ItemMainHeader title={"Placeholders"} dropdown_item_title={"Last Modified"}
                             CustomToggle={props.CustomToggle}/>
-            {props.showlistView === true  ? (
+            {props.showlistView === true && props.message === null ? (
                     <PlaceholderTableList
                         list={placeholders}
                         personalizedMediaSelected={props.personalizedMediaSelected}
