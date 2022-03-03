@@ -1138,7 +1138,7 @@ console.log("boardID",id)
                 color: "#5a5a5a",
               }}
             >
-              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {" "}
+              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {"    "}
               {m.owner&&m.owner.first_name+" "+m.owner.last_name}
             </p>
           </Grid>
@@ -2084,7 +2084,7 @@ console.log("boardID",id)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id.tags.length>0&&  <div
+           { saveMessage.media_placeholder_id?.tags.length>0&&  <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
