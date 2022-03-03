@@ -338,7 +338,7 @@ console.log("SaveMessage",saveMessage)
   useEffect(
     (data) => {
      
-      setTableData(saveMessage?.filter_ids);
+      setTableData(recieve);
       console.log("tabledata = ",tableData)
       requestSearch()
       // setindividualRows(s)
@@ -660,7 +660,8 @@ console.log("SaveMessage",saveMessage)
             }}
           >
             Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD h:mm a")} by {" "}
-            {m.owner?.first_name+" "+m.owner?.last_name}
+            {m.owner?m.owner.first_name+" "+m.owner.last_name:
+            JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}
           </p>
         </Grid>
       </div>
@@ -1137,8 +1138,8 @@ console.log("boardID",id)
                 color: "#5a5a5a",
               }}
             >
-              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
-              Coach Graves
+              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {" "}
+              {m.owner&&m.owner.first_name+" "+m.owner.last_name}
             </p>
           </Grid>
         </div>
@@ -1702,7 +1703,8 @@ console.log("boardID",id)
           }}
         >
           
-          { props.selectedPlaceholder.media.urls ? placeholderContainer(props.selectedPlaceholder.media):''}
+          { props.selectedPlaceholder.media.urls ? placeholderContainer(props.selectedPlaceholder.media):
+           placeholderContainer(filterMessage.media)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -1718,7 +1720,7 @@ console.log("boardID",id)
                 marginBottom: 0,
               }}
             >
-              {filterMessage.media?.name && filterMessage.media.name}
+              {filterMessage.media.name && filterMessage.media.name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
@@ -1947,6 +1949,9 @@ console.log("boardID",id)
             totalcount+=  saveMessage.contact_ids.map(m =>m.length)
             setCount(totalcount)
     console.log("totalcount",count)*/}
+    let count = 0
+    saveMessage.filter_ids.map((m)=>m.contacts.profile_images?count+=m.contacts.profile_images.length:0)
+    count = count + saveMessage.contact_ids.length
     return (
       <Grid
         container
@@ -1988,7 +1993,7 @@ console.log("boardID",id)
           }}
         >
 
-          { saveMessage?.media_placeholder_id&& placeholderContainer(saveMessage?.media_placeholder_id)}
+          { saveMessage?.media_placeholder_id && placeholderContainer(saveMessage?.media_placeholder_id)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -2004,7 +2009,7 @@ console.log("boardID",id)
                 marginBottom: 0,
               }}
             >
-              {saveMessage.media_placeholder_id&&saveMessage.media_placeholder_id.file_name}
+              {saveMessage.media_placeholder_id &&  saveMessage.media_placeholder_id.file_name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
@@ -2044,8 +2049,7 @@ console.log("boardID",id)
             <p class className={classes.messageDetailsHeading}>
               Recepient:
               <strong className={classes.mdMargin}>
-                {saveMessage.filter_ids.map(m => m.contacts.profile_images.length)+
-                saveMessage.contact_ids.map(m =>m.length)}
+                {count}
               </strong>
             
             </p>
@@ -2080,7 +2084,7 @@ console.log("boardID",id)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id?.tags&&  <div
+           { saveMessage.media_placeholder_id.tags.length>0&&  <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
@@ -2897,6 +2901,7 @@ console.log("boardID",id)
     
     setMessagePreview(true);
     console.log("recieve",recieve)
+     let count = 0;
     const contactsId = messageSender?messageSender.id:null
     const contactsdata=recieve.filter(m=>m.first_name?recieve:null)
      const filtersdata=recieve.filter(m=>m.name?recieve:null)
@@ -2910,7 +2915,8 @@ console.log("boardID",id)
       contact_ids: contactsdata,
       user_id: JSON.parse(localStorage.getItem("user")).id,
      } }
-    
+
+   
      
      const save = {
     
@@ -2921,13 +2927,13 @@ console.log("boardID",id)
       body: messageText,
       contact_ids: contactsdata,
       user_id: JSON.parse(localStorage.getItem("user")).id,
+    
       }
       const saverecieve=save.filter_ids+save.contacts_ids
       setTableData(recieve);
 
      setSaveMessage(save)
      console.log("saveMessage",saveMessage)
-     console.log("filter_idscount",save.filter_ids.counts)
      setMessageCreated(true)
    const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
     {filterName && getBoardsFilterById(save.filter_ids[0].id) }
@@ -3676,7 +3682,7 @@ console.log("boardID",id)
                           onClick={() => {
                
 
-                           { messageType && messageReceiver && messageText && messageSender  ? handleSendMessage():setMessageNotCreated(true) } 
+                           { messageType && messageReceiver && (messageText||media) && messageSender  ? handleSendMessage():setMessageNotCreated(true) } 
                           }}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
