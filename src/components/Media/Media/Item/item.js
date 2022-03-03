@@ -55,8 +55,8 @@ const MediaItem = (props) => {
                 }}
             >
                 {
-                    (props.placeholderHover === m.media_preview) ||
-                    props.selectedCheckBoxes.indexOf(m.media_preview) > -1 ? (
+                    (m.urls && props.placeholderHover === m.media) ||
+                    props.selectedCheckBoxes.indexOf(m.media) > -1 ? (
                             props.showHover ?
                                 <HoverItem
                                     isPlaceHolder={props.isPlaceHolder}

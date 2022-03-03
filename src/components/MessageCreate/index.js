@@ -338,7 +338,7 @@ function MessageCreate(props) {
   useEffect(
     (data) => {
 
-      setTableData(saveMessage?.filter_ids);
+      setTableData(recieve);
       console.log("tabledata = ", tableData)
       requestSearch()
       // setindividualRows(s)
@@ -660,7 +660,8 @@ function MessageCreate(props) {
             }}
           >
             Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD h:mm a")} by {" "}
-            {m.owner?.first_name + " " + m.owner?.last_name}
+            {m.owner ? m.owner.first_name + " " + m.owner.last_name :
+              JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}
           </p>
         </Grid>
       </div>
@@ -1137,8 +1138,8 @@ function MessageCreate(props) {
                 color: "#5a5a5a",
               }}
             >
-              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by
-              Coach Graves
+              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {" "}
+              {m.owner && m.owner.first_name + " " + m.owner.last_name}
             </p>
           </Grid>
         </div>
@@ -1706,7 +1707,8 @@ function MessageCreate(props) {
           }}
         >
 
-          {props.selectedPlaceholder.media.urls ? placeholderContainer(props.selectedPlaceholder.media) : ''}
+          {props.selectedPlaceholder.media.urls ? placeholderContainer(props.selectedPlaceholder.media) :
+            placeholderContainer(filterMessage.media)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -1722,7 +1724,7 @@ function MessageCreate(props) {
                 marginBottom: 0,
               }}
             >
-              {filterMessage.media?.name && filterMessage.media.name}
+              {filterMessage.media.name && filterMessage.media.name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
@@ -1951,6 +1953,9 @@ function MessageCreate(props) {
             totalcount+=  saveMessage.contact_ids.map(m =>m.length)
             setCount(totalcount)
     console.log("totalcount",count)*/}
+    let count = 0
+    saveMessage?.filter_ids?.map((m) => m.contacts.profile_images ? count += m?.contacts?.profile_images?.length : 0)
+    count = count + saveMessage?.contact_ids?.length
     return (
       <Grid
         container
@@ -2045,11 +2050,10 @@ function MessageCreate(props) {
               <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
               {JSON.parse(localStorage.getItem("user")).phone}
             </p>
-            <p class className={classes.messageDetailsHeading}>
+            <p class className={classes?.messageDetailsHeading}>
               Recepient:
               <strong className={classes.mdMargin}>
-                {saveMessage.filter_ids.map(m => m.contacts.profile_images.length) +
-                  saveMessage.contact_ids.map(m => m.length)}
+                {count}
               </strong>
 
             </p>
@@ -2084,7 +2088,7 @@ function MessageCreate(props) {
               className={classes.messageDetailsHeading}
             >
               Tags:
-              {saveMessage.media_placeholder_id?.tags && <div
+              {saveMessage.media_placeholder_id.tags.length > 0 && <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
@@ -2384,44 +2388,44 @@ function MessageCreate(props) {
           paddingRight: 30,
         }}
       >
-       
-        
+
+
         {" "}
         <Grid container direction="row" style={{ marginTop: 10 }}>
-            {filter.length != 0 &&
-              filter.map((fil, index) => {
-                return (
-                  <div
+          {filter.length != 0 &&
+            filter.map((fil, index) => {
+              return (
+                <div
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="center"
+                  className={classes.tags}
+                >
+                  <Grid
+                    style={{ height: 40 }}
                     container
                     direction="row"
                     alignItems="center"
-                    justify="center"
-                    className={classes.tags}
                   >
-                    <Grid
-                      style={{ height: 40 }}
-                      container
-                      direction="row"
-                      alignItems="center"
-                    >
-                      {fil}
-                      <ClearIcon
-                        onClick={() => {
-                          removeDataFromFilter(index);
-                          setMessageDetails(false)
-                        }}
-                        style={{
-                          color: "red",
-                          fontSize: 17,
-                          cursor: "pointer",
-                          marginLeft: 8,
-                        }}
-                      ></ClearIcon>{" "}
-                    </Grid>
-                  </div>
-                );
-              })}
-          </Grid>
+                    {fil}
+                    <ClearIcon
+                      onClick={() => {
+                        removeDataFromFilter(index);
+                        setMessageDetails(false)
+                      }}
+                      style={{
+                        color: "red",
+                        fontSize: 17,
+                        cursor: "pointer",
+                        marginLeft: 8,
+                      }}
+                    ></ClearIcon>{" "}
+                  </Grid>
+                </div>
+              );
+            })}
+        </Grid>
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
 
@@ -2449,7 +2453,7 @@ function MessageCreate(props) {
             </Grid>
           </Grid>
 
-         
+
 
           <div
             style={{
@@ -2611,7 +2615,7 @@ function MessageCreate(props) {
     window.location.href = "/";
   }
   const addDataToFilter = (value, type) => {
-    console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
+    // console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
     if (filter.includes(value)) {
       var temp = filter;
       if (temp.length === 1) {
@@ -2910,6 +2914,7 @@ function MessageCreate(props) {
 
     setMessagePreview(true);
     console.log("recieve", recieve)
+    //  let count = 0;
     const contactsId = messageSender ? messageSender.id : null
     const contactsdata = recieve.filter(m => m.first_name ? recieve : null)
     const filtersdata = recieve.filter(m => m.name ? recieve : null)
@@ -2924,7 +2929,12 @@ function MessageCreate(props) {
         user_id: JSON.parse(localStorage.getItem("user")).id,
       }
     }
-
+    try {
+      const response = await createMessage(data);
+      console.log('create message = ', response);
+    } catch (e) {
+      console.log('create message = ', e)
+    }
 
     const save = {
 
@@ -2935,29 +2945,30 @@ function MessageCreate(props) {
       body: messageText,
       contact_ids: contactsdata,
       user_id: JSON.parse(localStorage.getItem("user")).id,
+  
     }
     const saverecieve = save.filter_ids + save.contacts_ids
     setTableData(recieve);
-
+  
     setSaveMessage(save)
     console.log("saveMessage", saveMessage)
-    console.log("filter_idscount", save.filter_ids.counts)
     setMessageCreated(true)
     const filterName = save.filter_ids?.filter((filterid) => filterid?.name).map((filter) => filter.name)
     { filterName && getBoardsFilterById(save.filter_ids[0].id) }
     console.log('handleSendMessage = ', data)
 
-
-    try {
-      const response = await createMessage(data);
-      console.log('create message = ', response);
-    } catch (e) {
-      console.log('create message = ', e)
-    }
-
-    //  postMessage(data)
-
   }
+
+
+
+ 
+
+
+  
+
+  //  postMessage(data)
+
+
 
   const name = JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name
   const [item, setItem] = useState()
@@ -3185,10 +3196,10 @@ function MessageCreate(props) {
             makeMediaSelected={makeMediaSelected}
           ></MediaComponnet>
         ) : messageDetails ? (
-         
-           
-            <MessageDetails item={item} />
-         
+
+
+          <MessageDetails item={item} />
+
           //   <MessageDetails />
         ) : messagePreview ? (
           <MessagePreview />
@@ -3659,8 +3670,7 @@ function MessageCreate(props) {
 
                           onClick={() => {
 
-
-                            { messageType && messageReceiver && messageText && messageSender ? handleSendMessage() : setMessageNotCreated(true) }
+                            { messageType && messageReceiver && (messageText || media) && messageSender ? handleSendMessage() : setMessageNotCreated(true) }
                           }}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
