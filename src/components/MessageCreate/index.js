@@ -2387,34 +2387,7 @@ function MessageCreate(props) {
        
         
         {" "}
-        <Grid container direction="row">
-          <Grid item md={4} sm={4}>
-
-
-            <img src={AmimatedBurger} onClick={(e) => {
-              setshowSideFilters(!showSideFilters);
-            }}
-              style={{ cursor: "pointer", width: 40 }}></img>
-
-            <span
-              style={{
-                padding: 16,
-                fontWeight: "bold",
-                // marginLeft: 20,
-                fontSize: 20,
-              }}
-            >
-              Messages
-            </span>
-          </Grid>
-
-          <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-
-            </Grid>
-          </Grid>
-
-          <Grid container direction="row" style={{ marginTop: 10 }}>
+        <Grid container direction="row" style={{ marginTop: 10 }}>
             {filter.length != 0 &&
               filter.map((fil, index) => {
                 return (
@@ -2449,6 +2422,34 @@ function MessageCreate(props) {
                 );
               })}
           </Grid>
+        <Grid container direction="row">
+          <Grid item md={4} sm={4}>
+
+
+            <img src={AmimatedBurger} onClick={(e) => {
+              setshowSideFilters(!showSideFilters);
+            }}
+              style={{ cursor: "pointer", width: 40 }}></img>
+
+            <span
+              style={{
+                padding: 16,
+                fontWeight: "bold",
+                // marginLeft: 20,
+                fontSize: 20,
+              }}
+            >
+              Messages
+            </span>
+          </Grid>
+
+          <Grid item md={8} sm={8}>
+            <Grid container direction="row" justify="flex-end">
+
+            </Grid>
+          </Grid>
+
+         
 
           <div
             style={{
