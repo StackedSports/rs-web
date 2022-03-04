@@ -7,7 +7,7 @@ import FormatAlignLeftOutlinedIcon from '@mui/icons-material/FormatAlignLeftOutl
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 import IconTextField from "../../common/Fields/IconTextField";
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import DropDownButton from "../DropDownButton";
 import { Link } from "react-router-dom";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -24,7 +24,13 @@ const Header = (props) => {
         <Grid container direction="row">
             <Grid item md={4} sm={4}>
 
-                {
+                {props.addMedia ?
+                <ArrowBackIosIcon style={{cursor:"pointer"}} onClick={() => {
+                    props.setAddMedia(false);
+                            
+                }}/>
+                
+                :
                     !props.showBackButton ? (props.showDrawer ?
                         <img src={props.showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
                             props.setshowSideFilters(!props.showSideFilters);

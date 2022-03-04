@@ -80,7 +80,8 @@ import DrawerIcon from '../../images/drawer_contact.png';
 
 
 import { id } from "date-fns/locale";
-
+let filterMessage = []
+let filterMessageDetails = []
 function Alert(props) {
  
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -335,6 +336,7 @@ console.log("SaveMessage",saveMessage)
   useEffect(() => {
     setRows(allBoards)
   }, [allBoards])
+  
   useEffect(
     (data) => {
      
@@ -591,7 +593,7 @@ console.log("SaveMessage",saveMessage)
     return (
       <div
         style={{
-          width: 270,
+          width: 300,
          
           // marginLeft: 16,
           border:
@@ -660,6 +662,16 @@ console.log("SaveMessage",saveMessage)
             }}
           >
             Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD h:mm a")} by {" "}
+           
+          </p>
+           <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              color: "#5a5a5a",
+            }}
+          >
+            
             {m.owner?m.owner.first_name+" "+m.owner.last_name:
             JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}
           </p>
@@ -1440,6 +1452,223 @@ console.log("boardID",id)
       </div>
     );
   };
+  const selectedMessageStatusTable = (props) => (
+   
+    <>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        style={{
+          background: "#f5f6f9",
+          width: "100%",
+          cursor: "pointer",
+          minWidth: 1025,
+        }}
+      >
+        <Grid item md={1} xs={1}>
+          <Checkbox
+            color="primary"
+      //      checked={selectedDrafts.length === 6}
+           /* onChange={() => {
+              var array = [1, 2, 3, 4, 5, 6];
+              var temp = [];
+              if (selectedDrafts.length === array.length) {
+                setSelectedDrafts([]);
+              } else {
+                array.map((item) => {
+                  temp.push(item);
+                });
+                setSelectedDrafts(temp);
+              }
+            }}*/
+          ></Checkbox>
+        </Grid>
+        <Grid item md={2} xs={2}>
+          <Grid
+            container
+            direction="row"
+            onClick={() => {
+              let data = props.contact_list.sort((a, b) =>
+              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+              );
+              console.log(data);
+              setTableData(() => [...data]);
+              console.log("asda");
+            }}
+          >
+            <span className={classes.tableHeading}>Full Name</span>
+            {/* <pan style={{ transform: "rotate(180deg)" }}>
+              {" "}
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
+            </span> */}
+          </Grid>
+        </Grid>
+        <Grid
+       
+        >
+          <span className={classes.tableHeading}>Board/List</span>
+        </Grid>
+
+        <Grid
+          item
+          md={2}
+          xs={2}
+          onClick={() => {
+            let data = props.contact_list.sort((a, b) =>
+            a.phone? ( a.phone > b.phone
+                ? 1
+                : b.phoneNumber > a.phoneNumber
+                  ? -1
+                  : 0):''
+            );
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+        >
+          <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
+            Phone Number
+          </span>
+        </Grid>
+        <Grid
+          onClick={() => {
+            let data = props.contact_list.sort((a, b) =>
+            a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+    
+            );
+            console.log(data);
+            setTableData(() => [...data]);
+            console.log("asda");
+          }}
+          item
+          md={2}
+          xs={2}
+        >
+          <span className={classes.tableHeading}>First Name</span>
+        </Grid>
+        <Grid
+          item
+          md={2}
+          xs={2}
+        
+        >
+          <span className={classes.tableHeading}>Delivered at</span>
+        </Grid>
+        <Grid
+          item
+          md={2}
+          xs={2}
+          onClick={() => {
+            setIsMesasgeStatusClick(true);
+            setMessageStatus("error");
+          }}
+        >
+          <Grid container direction="row">
+            <span className={classes.tableHeading}>Message Status</span>
+            <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      {props.contact_list && props.contact_list.map((item, index) => {
+       
+   
+    
+
+        return (
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            style={{
+              border: "1px solid #d8d8d8",
+              borderBottom: "none",
+              borderRadius: 4,
+              paddingTop: 4,
+              paddingBottom: 4,
+              minWidth: 1025,
+            }}
+          >
+            <Grid item md={1} xs={1}>
+              <Checkbox
+                color="primary"
+                onChange={() => {
+               //   makeDraftSelected(item);
+                }}
+            //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                style={{ marginTop: 1, marginBottom: 1 }}
+                onMouseLeave={() => {
+                  setHoveredIndex(null);
+                }}
+              ></Checkbox>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              <span className={classes.tableFields}>
+              {item.first_name?item.first_name+" "+item.last_name:
+             ""}</span>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <span className={classes.tableFields}>
+              {""}
+              </span>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              <span className={classes.tableFields} >
+                {formatPhoneNumber(item?.phone)}
+              </span>
+            </Grid>
+
+            <Grid item md={2} xs={2}>
+              <span >{item.first_name&&item.first_name}</span>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              <span className={classes.tableFields}>
+                {/*isMesasgeStatusClick
+                  ? "-"
+                  : moment(date).format("MM/DD/YYYY  h:mm a")*/}
+              </span>
+            </Grid>
+            <Grid item md={2} xs={2}>
+              
+                <span >
+                  <Info style={{ color: item?.status==="pending"?"#f0ad24": 
+                  item?.status==="sent"?"#54a300": item?.status==="error"?"red":"#8bb14c", fontSize: 16 }}></Info>{" "}
+                    <span  >
+                
+                { item?.status
+                 }
+                </span>
+                   {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                 { setMessageStatus("Drafts")}
+                { messageStatus
+                 }
+                </span>
+              ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }} >
+                   { setMessageStatus("In Progress")}
+                { messageStatus
+                 }
+                 
+                </span>
+              ) : (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                   { setMessageStatus("Sent")}
+                { messageStatus
+                 }
+                </span>
+              )*/}
+               </span>
+          
+            </Grid>
+          </Grid>
+        );
+      })}
+    </>
+  );
+
+
   const messageStatusTable = () => (
     <>
       <Grid
@@ -1570,6 +1799,8 @@ console.log("boardID",id)
 
       {tableData && tableData.map((item, index) => {
         console.log("date",date,item)
+    
+
         return (
           <Grid
             container
@@ -1598,10 +1829,13 @@ console.log("boardID",id)
               ></Checkbox>
             </Grid>
             <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{item.first_name&&item.first_name+" "+item.last_name}</span>
+              <span className={classes.tableFields}>
+              {item.first_name?item.first_name+" "+item.last_name:
+             ""}</span>
             </Grid>
             <Grid item md={1} xs={1}>
               <span className={classes.tableFields}>
+              {""}
               </span>
             </Grid>
             <Grid item md={2} xs={2}>
@@ -1661,6 +1895,8 @@ console.log("boardID",id)
   const MessageFilterDetails = (props) => {
     console.log("allMessagesss",props)
     const filterMessage=props.selectedPlaceholder
+    
+       filterMessageDetails=filterMessage
     console.log("filtering",filterMessage)
     return (
       <Grid
@@ -1756,7 +1992,7 @@ console.log("boardID",id)
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                {moment(date).format(" MM/DD/YYYY h:mm a")}
+                {moment(filterMessageDetails.send_at).format(" MM/DD/YYYY h:mm a")}
                 </strong>{" "}
               </p>
           
@@ -1831,8 +2067,7 @@ console.log("boardID",id)
                 height: "60%",
                 borderBottom: "1px solid #d2d2d2",
               }}
-            >
-              <p
+            >   <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -1841,7 +2076,8 @@ console.log("boardID",id)
                   textAlign: "center",
                 }}
               >
-                95%
+                
+            {((filterMessageDetails.recipients.status_counts.sent/filterMessageDetails.recipients.count)*100).toFixed(2)+"%"}
               </p>
               <p
                 style={{
@@ -1850,9 +2086,9 @@ console.log("boardID",id)
                   height: 30,
                 }}
               >
-                Delivery Rate (286/300)
+                Delivery Rate ({filterMessageDetails.recipients.status_counts.sent+"/"+filterMessageDetails.recipients.count})
               </p>
-              <p
+             {/* <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -1890,7 +2126,339 @@ console.log("boardID",id)
                 }}
               >
                 Opt out Rate (286/300)
+              </p>*/}
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "25%",
+                // borderBottom: "1px solid #d2d2d2",
+              }}
+              onClick={() => {
+                if (messageSelected.length > 0) {
+                  console.log("SAdasd", messageSelected);
+                  setMessageDetails(!messageDetails);
+
+                  setIsMesasgeStatusClick(false);
+                  setMessageStatus("Drafts");
+
+                  console.log("ASd");
+                  setMessageSelected([]);
+                  
+                } else {
+                  setMessageDetails(null);
+                  filterMessageDetails=filterMessage
+                  setMessagePreview(null);
+                  console.log("ASd");
+                  setMessageSelected([{}]);
+                 
+                }
+              }}
+            >
+              <IconTextField
+                background={messageSelected.length && "rgb(58, 114, 217)"}
+                text="Delivery "
+                width={180}
+                textColor={messageSelected.length && "white"}
+                onClick={() => { }}
+                icon={
+                  <Search
+                    style={{
+                      color: messageSelected.length ? "white" : "#0091ff",
+                      marginRight: 8,
+                    }}
+                  ></Search>
+                }
+              ></IconTextField>
+            </Grid>
+          </div>
+        )}
+      </Grid>
+    );
+  };
+
+  const SelectedMessageDetails = (props) => {
+    console.log("messageCreatepropss",filterMessageDetails)
+    {/*const [count,setCount] = useState()
+    let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
+    
+            totalcount+=  saveMessage.contact_ids.map(m =>m.length)
+            setCount(totalcount)
+    console.log("totalcount",count)*/}
+    
+    return (
+      <Grid
+        container
+        direction="row"
+        style={{
+          border: "1px solid #d2d2d2",
+          borderRadius: 4,
+          marginTop: 16,
+          height: "auto",
+        }}
+      >
+        {/* <Grid item md={4} xs={4}> */}
+        <div
+          style={{
+            borderRight: "1px solid #d2d2d2",
+            width: "5%",
+          }}
+        >
+          <Grid container direction="row" justify="center">
+            {props.hideCheckBox === null && (
+              <Checkbox
+                color={"primary"}
+                checked={
+                  selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
+                }
+                onChange={(e) => {
+                  makeMessageSelected(props.selectedPlaceholder.id);
+                }}
+              ></Checkbox>
+            )}
+          </Grid>
+        </div>
+        <Grid
+          container
+          direction="row"
+          style={{
+            width: props.hideStats ? "90%" : "70%",
+            padding: 16,
+          }}
+        >
+
+          { filterMessageDetails?.media && placeholderContainer(filterMessageDetails?.media)}
+          {/* </Grid> */}
+          {/* <Grid item md={8} xs={8}> */}
+          <div
+            style={{
+              marginLeft: 16,
+              width: "50%",
+            }}
+          >
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                marginBottom: 0,
+              }}
+            >
+              {filterMessageDetails.media &&  filterMessageDetails.media.name}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Message Status:
+              
+              <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  {filterMessageDetails.status}
+                </span>
+              {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  Drafts
+                </span>
+              ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                <span className={classes.mdMargin} style={{ color: "#54a300" }} >
+                  
+                  In Progress
+                </span>
+              ) : (
+                <span className={classes.mdMargin} style={{ color: "#8bb14c" }}>
+                  Sent
+                </span>
+              )*/}
+
+
+              
+               
+          
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Send As:
+              <strong className={classes.mdMargin}>{filterMessageDetails.platform?.name}</strong>
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Sender:
+              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
+              {formatPhoneNumber(JSON.parse(localStorage.getItem("user")).phone)}
+            </p>
+            <p class className={classes.messageDetailsHeading}>
+              Recepient:
+              <strong className={classes.mdMargin}>
+                {filterMessageDetails.recipients?.count}
+              </strong>
               </p>
+               <p class className={classes.messageDetailsHeading}>
+              Pending:
+              <strong className={classes.mdMargin}>
+                {filterMessageDetails.recipients?.status_counts.pending}
+              </strong>
+            
+            </p>
+             <p class className={classes.messageDetailsHeading}>
+              Sent:
+              <strong className={classes.mdMargin}>
+                {filterMessageDetails.recipients?.status_counts.sent}
+              </strong>
+            
+            </p>
+            {saveMessage.contact_ids.status === "Scheduled" ? (
+              <p class className={classes.messageDetailsHeading}>
+                Start Sending at:
+                <strong className={classes.mdMargin}>
+                
+                </strong>{" "}
+                <span
+                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                  onClick={() => {
+                    setMessageStatus("Drafts");
+                    setMessageCreated(false);
+                  }}
+                >
+                  (Unschedule & more to drafts)
+                </span>
+              </p>
+            ) : (
+              <p class className={classes.messageDetailsHeading}>
+                Start Sending at:
+                <strong className={classes.mdMargin}>
+                {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
+                </strong>{" "}
+              </p>
+            )}
+
+            <Grid
+              container
+              direction="row"
+              className={classes.messageDetailsHeading}
+            >
+              Tags:
+           { saveMessage.media_placeholder_id?.tags?.length>0&&  <div
+                style={{
+                  border: "1px solid #0091ff",
+                  color: "#0091ff",
+                  padding: 4,
+                  fontSize: 10,
+                  borderRadius: 4,
+                  marginLeft: 16,
+                }}
+              >
+                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name )}
+   </div>}
+   
+            </Grid>
+            <p class className={classes.messageDetailsHeading}>
+              Message Text :
+            </p>
+            <p
+              class
+              className={classes.messageDetailsHeading}
+              style={{ color: "black", fontWeight: 500 }}
+            >
+              {filterMessageDetails.body }   
+            </p>
+          </div>
+       
+        </Grid>
+        {props.hideStats === null && (
+          <div
+            style={{
+              borderLeft: "1px solid #d2d2d2",
+              width: "25%",
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "15%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Message Stats
+              </p>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              style={{
+                height: "60%",
+                borderBottom: "1px solid #d2d2d2",
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 26,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                
+            {((filterMessageDetails.recipients.status_counts.sent/filterMessageDetails.recipients.count)*100).toFixed(2)+"%"}
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Delivery Rate ({filterMessageDetails.recipients.status_counts.sent+"/"+filterMessageDetails.recipients.count})
+              </p>
+            {/*  <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 26,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                }}
+              >
+                Response Rate (286/300)
+              </p>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 26,
+                  margin: 0,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                95%
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  margin: 0,
+                  height: 30,
+                }}
+              >
+                Opt out Rate (286/300)
+              </p>*/}
             </Grid>
             <Grid
               container
@@ -1942,7 +2510,7 @@ console.log("boardID",id)
   };
 
   const MessageDetailsCard = (props) => {
-    console.log("messageCreateprops",props)
+    console.log("messageprops",props)
     {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
@@ -1950,7 +2518,7 @@ console.log("boardID",id)
             setCount(totalcount)
     console.log("totalcount",count)*/}
     let count = 0
-    saveMessage.filter_ids.map((m)=>m.contacts.profile_images?count+=m.contacts.profile_images.length:0)
+    saveMessage?.filter_ids?.map((m)=>m.contacts.profile_images?count+=m.contacts.profile_images.length:0)
     count = count + saveMessage.contact_ids.length
     return (
       <Grid
@@ -2084,7 +2652,7 @@ console.log("boardID",id)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id.tags.length>0&&  <div
+           { saveMessage.media_placeholder_id?.tags?.length>0&&  <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
@@ -2258,7 +2826,11 @@ console.log("boardID",id)
     );
   };
 
-  const RenderSelectedMessage = () => {
+  const RenderSelectedMessage = (props) => {
+    console.log('selectedmessage',props)
+
+
+
     return (
       <div
         style={{
@@ -2327,11 +2899,11 @@ console.log("boardID",id)
               placeholders.map((selectedPlaceholder, index) => {
                 if (index < 1) {
                   return (
-                    <MessageDetailsCard
+                    <SelectedMessageDetails
                       hideCheckBox={false}
                       hideStats={null}
                       selectedPlaceholder={selectedPlaceholder}
-                    ></MessageDetailsCard>
+                    ></SelectedMessageDetails>
                     
                   );
                 }
@@ -2344,7 +2916,7 @@ console.log("boardID",id)
               minHeight: "calc(100vh - 520px )",
             }}
           >
-            {messageStatusTable()}
+            {selectedMessageStatusTable(filterMessageDetails.recipients)}
           </div>
         </Grid>
       </div>
@@ -2352,24 +2924,26 @@ console.log("boardID",id)
   };
 
   const MessageDetails = (props) => {
-    const [filter,setFilterMessage] = useState([])
-    const firstname=JSON.parse(localStorage.getItem("user")).first_name.trim()
-    const lastname=JSON.parse(localStorage.getItem("user")).last_name.trim()
-    console.log("fistandlastnamee",firstname,lastname)
-    console.log("itemboards",props.item)
-    let filterMessage=allMessages?.filter(m => m.sender.first_name===firstname && m.sender.last_name===lastname).slice(0,100);
-    console.log("filtering",filterMessage)
-    {props.item!=null?(
-    props.item==="Scheduled"?
-    filterMessage=filterMessage?.filter(m => m.status==="Draft"):
-    props.item==="In Progress"?
-    filterMessage=filterMessage?.filter(m => m.status==="In Progress"): 
-    props.item==="Finished"?
-    filterMessage=filterMessage?.filter(m => m.status==="Sent"):
-    props.item==="Archived"?
-    filterMessage:filterMessage):filterMessage}
-          console.log("filterMessages",filterMessage)
-  return (
+    // const [filter, setFilterMessage] = useState([])
+    const firstname = JSON.parse(localStorage.getItem("user")).first_name.trim()
+    const lastname = JSON.parse(localStorage.getItem("user")).last_name.trim()
+    console.log("fistandlastnamee", firstname, lastname)
+    console.log("itemboards", props.item)
+     filterMessage = allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname).slice(0, 100);
+    console.log("filtering", filterMessage)
+    {
+      props.item != null ? (
+        props.item === "Scheduled" ?
+          filterMessage = filterMessage?.filter(m => m.status === "Draft") :
+          props.item === "In Progress" ?
+            filterMessage = filterMessage?.filter(m => m.status === "In Progress") :
+            props.item === "Finished" ?
+              filterMessage = filterMessage?.filter(m => m.status === "Sent") :
+              props.item === "Archived" ?
+                filterMessage : filterMessage) : filterMessage
+    }
+    console.log("filterMessages", filterMessage)
+    return (
       <div
         style={{
           width: showSideFilters === true ? "85%" : "100%",
@@ -2381,7 +2955,44 @@ console.log("boardID",id)
           paddingRight: 30,
         }}
       >
+
+
         {" "}
+        <Grid container direction="row" style={{ marginTop: 10 }}>
+          {filter.length != 0 &&
+            filter.map((fil, index) => {
+              return (
+                <div
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="center"
+                  className={classes.tags}
+                >
+                  <Grid
+                    style={{ height: 40 }}
+                    container
+                    direction="row"
+                    alignItems="center"
+                  >
+                    {fil}
+                    <ClearIcon
+                      onClick={() => {
+                        removeDataFromFilter(index);
+                        setMessageDetails(false)
+                      }}
+                      style={{
+                        color: "red",
+                        fontSize: 17,
+                        cursor: "pointer",
+                        marginLeft: 8,
+                      }}
+                    ></ClearIcon>{" "}
+                  </Grid>
+                </div>
+              );
+            })}
+        </Grid>
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
 
@@ -2405,45 +3016,11 @@ console.log("boardID",id)
 
           <Grid item md={8} sm={8}>
             <Grid container direction="row" justify="flex-end">
-        
+
             </Grid>
           </Grid>
 
-          <Grid container direction="row" style={{marginTop:10}}>
-            {filter.length != 0 &&
-              filter.map((fil, index) => {
-                return (
-                  <div
-                    container
-                    direction="row"
-                    alignItems="center"
-                    justify="center"
-                    className={classes.tags}
-                  >
-                    <Grid
-                      style={{ height: 40 }}
-                      container
-                      direction="row"
-                      alignItems="center"
-                    >
-                      {fil}
-                      <ClearIcon
-                        onClick={() => {
-                          removeDataFromFilter(index);
-                          setMessageDetails(false)
-                        }}
-                        style={{
-                          color: "red",
-                          fontSize: 17,
-                          cursor: "pointer",
-                          marginLeft: 8,
-                        }}
-                      ></ClearIcon>{" "}
-                    </Grid>
-                  </div>
-                );
-              })}
-          </Grid>
+
 
           <div
             style={{
@@ -2464,6 +3041,7 @@ console.log("boardID",id)
               maxHeight: 330,
               //  minWidth: 1110
             }}
+
             className="fullHeightCreateMessageDetails hideScrollBar"
             id={"messageDetailScrollPublished"}
             onScroll={() => {
@@ -2476,6 +3054,7 @@ console.log("boardID",id)
               }
             }}
           >
+
             {allMessages &&
               filterMessage.map((selectedPlaceholder, index) => {
                 if (index <= filterMessage.length) {
@@ -2493,6 +3072,7 @@ console.log("boardID",id)
       </div>
     );
   };
+
 
   const MessagePreview = () => {
     return (
@@ -2602,8 +3182,11 @@ console.log("boardID",id)
   } else {
     window.location.href = "/";
   }
-  const addDataToFilter = (value, type) => {
+
+const addDataToFilter = (value, type) => {
+     console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
     if (filter.includes(value)) {
+      
       var temp = filter;
       if (temp.length === 1) {
         setFilter(temp);
@@ -2622,6 +3205,8 @@ console.log("boardID",id)
       setuseLessState(uselessState + 1);
     }
   };
+
+  
   
   const addDataToReceivers = (value, type) => {
     if (messageReceiver.includes(value)) {
@@ -3150,7 +3735,8 @@ console.log("boardID",id)
                         onClick={() => {
                           setMessageDetails(!messageDetails);
                           setItem(item)
-                         messageDetails && addDataToFilter(item, "Board");
+                          //setFilter(item)
+                          addDataToFilter(item, "Board");
                         }}
                       >
                         {item}
@@ -3182,7 +3768,7 @@ console.log("boardID",id)
         ) : messagePreview ? (
           <MessagePreview />
         ) : messageSelected.length ? (
-          <RenderSelectedMessage />
+          <RenderSelectedMessage item={item} />
         ) : (
           <div
             style={{
@@ -3197,7 +3783,7 @@ console.log("boardID",id)
             }}
           >
 
-            <Grid container direction="row">
+            {/*<Grid container direction="row">
               {filter.length != 0 &&
                 filter.map((fil, index) => {
                   return (
@@ -3214,7 +3800,7 @@ console.log("boardID",id)
                         direction="row"
                         alignItems="center"
                       >
-                        {fil}
+                        {"fil"}
                         <ClearIcon
                           onClick={() => {
                             removeDataFromFilter(index);
@@ -3230,7 +3816,7 @@ console.log("boardID",id)
                     </div>
                   );
                 })}
-            </Grid>
+            </Grid>*/}
 
             <div
               style={{
