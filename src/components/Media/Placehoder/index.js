@@ -31,7 +31,7 @@ const Placeholder = (props) => {
                 return placeholder;
             })
     }
-    console.log('placeholders = ', props.showlistView)
+    console.log('placeholders = ', props)
 
 
     return (
