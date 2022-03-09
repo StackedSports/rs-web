@@ -1242,10 +1242,10 @@ const [showFilterButton,setShowFilterButton]= useState(false)
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
     var isValid = false;
+    console.log(item, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>",filter);
     if (filter.length != 0) {
       filter.map((filt, index) => {
         if (filterType[index] === "status") {
-          console.log(item?.status, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>", filt);
 
           if (item?.status != null && item?.status.status === filt) {
             isValid = true;
