@@ -52,6 +52,7 @@ import {
   getPositions,
   getAllColumns,
   getAllContactsWithSearch,
+  getBoardFiltersById,
   getTeamContacts,
   getTagsWithContacts,
 } from "../../ApiHelper";
@@ -139,26 +140,37 @@ function Home(props) {
   const [showTagsDialog, setShowTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
   // const [tagSearch, setTagSearch] = useState("");
+  const [boardsById, setBordsById] = useState();
+
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
   const [tagSearch, setTagSearch] = useState("");
+  const [isBoardContact, setIsBoardContact] = useState(false);
+
 
 
 
   const [statusFilter, setStatusFilter] = useState(null);
+  // const [statusFilter, setStatusFilter] = useState(null);
+
+
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
+  const [boardFilter, setBoardFilter] = useState(null);
+
   const [tagFilter, setTagFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [contacts, setContacts] = useState(null);
+  // const [contacts, setBordsById] = useState(null);
+
   const [allcontacts, setAllContacts] = useState(null);
 
   const [copyContacts, setCopyContacts] = useState(null);
@@ -170,11 +182,12 @@ function Home(props) {
   const [allBoards, setAllBoards] = useState(null);
   const [allTeamContacts, setTeamContacts] = useState(null);
 
+const [handlescroll,sethandlescroll]=useState(true)
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
-const [showFilterButton,setShowFilterButton]= useState(false)
+  const [showFilterButton, setShowFilterButton] = useState(false)
 
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const totalContacts = 0
@@ -308,6 +321,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
+    // setContacts(null)
     console.log("This is the date", page);
     // || "2020-12-13"
     getAllContacts(page).then(
@@ -322,7 +336,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
             setContacts(temp);
             setCopyContacts(temp);
             setuseLessState(uselessState + 1);
-            console.log("These are all new contacts", temp);
+            console.log("These are all new contacts", contacts);
 
 
             // document.getElementById("infinit").scrollTop = 0;
@@ -370,12 +384,6 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       }
     );
   };
-
-
-
-
-
-
   const getAllBoards = () => {
     getBoardFilters().then(
       (res) => {
@@ -413,9 +421,6 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       }
     );
   };
-
-
-
   const getAllTags = () => {
     getTagsWithContacts().then(
       (res) => {
@@ -437,7 +442,6 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       }
     );
   };
-
   const getAllStatuses = () => {
     getStatuses().then(
       (res) => {
@@ -460,7 +464,6 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       }
     );
   };
-
   const getAllPositions = () => {
     getPositions().then(
       (res) => {
@@ -527,7 +530,60 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       }
     );
   };
+  const getBoardsFilterById = (id) => {
+    // setLoading(true);
+    setFetching(true);
+    sethandlescroll(false)
+    // setContacts(null)
+    console.log("This is board id", id);
+    // || "2020-12-13"
+    getBoardFiltersById(id).then(
+      (res) => {
+        console.log("THis is all boards by id", res);
+        if (res.statusText === "OK") {
+          // var temp ;
+          // temp = temp.concat(res.data.contacts.list);
+setContacts(res.data.contacts.list)
+          // temp.push(res.data);
+          setBordsById(res.data)
+          // setContacts(res.data.contacts.list);
+          // checkFilters(true)
+          // setCopyContacts(temp);
+          // setuseLessState(uselessState + 1);
+          console.log("These are all board contacts", res.data.contacts.list);
+          console.log("thi si state", contacts);
 
+
+
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        }
+      },
+      (error) => {
+        // getMyContacts(1);
+        // document.getElementById("infinit").scrollTop = 0;
+        // setPage(1);
+        console.log("this is error all contacts", error);
+      }
+    );
+  };
+  // const getBoardsFilterById=(id)=>{
+  //   console.log("boardID",id)
+  //     getBoardFiltersById(id).then(
+  //       (res)=>{
+  //         if(res.statusText==="OK"){
+  //           setBordsById(res.data)
+  //           setContacts(res.data.contacts.list)
+  //           console.log(res.data.contacts.list, "boardsById")
+  //           console.log(contacts, "inside board filter")
+
+
+  //         }
+  //       }, (error) => {
+  //         console.log("this is error all grad year", error);
+  //       }
+  //     );
+  //   }
   const statuses = [
     {
       value: "1",
@@ -804,8 +860,6 @@ const [showFilterButton,setShowFilterButton]= useState(false)
       setShowAnimation(false);
     }, 500)
   }
-
-
   const filtesSpacingStyle = {
     marginRight: 5,
   };
@@ -1062,6 +1116,9 @@ const [showFilterButton,setShowFilterButton]= useState(false)
             </Dropdown.Item>
           ))}
         </DropdownButton>
+
+        {/* boardsById */}
+
         <DropdownButton
           id="dropdown-basic-button"
           title={tagFilter || "Tag"}
@@ -1165,6 +1222,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
     window.location.href = "/";
   }
   const addDataToFilter = (value, type) => {
+    console.log(value, 'Add data to filter function', type);
     if (filter.includes(value)) {
       var temp = filter;
       if (temp.length === 1) {
@@ -1214,6 +1272,9 @@ const [showFilterButton,setShowFilterButton]= useState(false)
     setFilter(newArray);
     setFilterType(tempType);
     setuseLessState(uselessState + 1);
+    sethandlescroll(true)
+    getMyContacts()
+    // alert("sdfasd")
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -1242,14 +1303,34 @@ const [showFilterButton,setShowFilterButton]= useState(false)
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
     var isValid = false;
-    console.log(item, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>",filter);
+
+    // console.log(item, boardsById, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>", filter);
     if (filter.length != 0) {
       filter.map((filt, index) => {
+        console.log(item != null && boardsById?.name === filt, 'cheking')
         if (filterType[index] === "status") {
 
           if (item?.status != null && item?.status.status === filt) {
             isValid = true;
             return;
+          }
+          // alert("ok")
+
+        }
+
+        if (filterType[index] === "boards") {
+
+       
+          if (item != null && boardsById?.name === filt) {
+            // console.log(boardsById?.contacts?.list?.map((el) => el?.id.includes(contacts?.map((el) => el?.id))) , 'new checking', contacts?.map((el) => el?.id))
+            // if (boardsById?.contacts?.list?.map((el) => el?.id) === contacts?.map((el) => el?.id)) {
+              isValid = true;
+              return;
+
+            // }
+            // setContacts(null)
+            // setContacts(boardsById.contacts.list)
+
           }
         }
         if (filterType[index] === "ranks") {
@@ -1277,6 +1358,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
             return;
           }
         }
+
         // if (filterType[index] === 'ustimezones') {
         //   if (item.ustimezones.ustimezones === filt) {
         //     console.log(
@@ -1336,6 +1418,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
   };
 
   function handleScroll() {
+    // if(handlescroll){
     var agreement = document.getElementById("infinit");
     var visibleHeight = agreement.clientHeight;
     var scrollableHeight = agreement.scrollHeight;
@@ -1408,12 +1491,50 @@ const [showFilterButton,setShowFilterButton]= useState(false)
                     return (
                       <p
                         className={classes.sideSubFilter}
+                        // onClick={() => {
+                        //   // alert(board.id)
+                        //   getBoardsFilterById(board.id)
+
+                        //   addDataToFilter(board.name,'boards');
+                        // }}
                         onClick={() => {
-                          addDataToFilter(board.name, "Board");
+                          getBoardsFilterById(board.id)
+                          
+                          if (boardFilter === board.name) {
+                            // removeDataFromFilter
+                            setBoardFilter(null);
+                            addDataToFilter(board.name,"boards");
+                            // setAllContacts(...contacts)
+                          } 
+                          
+                          else {
+                            addDataToFilter(board.name, "boards");
+                            
+                          }
                         }}
                       >
                         {board.name}
                       </p>
+                      // {allStatuses &&
+                      //   allStatuses.map((option) => (
+                      //     <Dropdown.Item
+                      //       style={{
+                      //         background:
+                      //           statusFilter === option.label ? "#348ef7" : "white",
+                      //         color: statusFilter === option.label ? "white" : "black",
+                      //       }}
+                      //       onClick={() => {
+                      //         if (statusFilter === option.label) {
+                      //           setStatusFilter(null);
+                      //           addDataToFilter(option.label);
+                      //         } else {
+                      //           addDataToFilter(option.label, "status");
+                      //         }
+                      //       }}
+                      //     >
+                      //       {option.label}
+                      //     </Dropdown.Item>
+                      //   ))}
                     );
                   })}
               </div>
@@ -1486,27 +1607,27 @@ const [showFilterButton,setShowFilterButton]= useState(false)
                     ></AccountBoxIcon>
                   }
                 ></IconTextField>
-                {showFilterButton===false?null:
-                 <IconTextField
-                 text="Filter"
-                 width={120}
-                 onClick={() => {
-                   setShowFiltersRow(!showFiltersRow);
-                 }}
-                 textColor={showFiltersRow === false ? "black" : "white"}
-                 background={
-                   showFiltersRow === false ? "transparent" : "#3871DA"
-                 }
-                 icon={
-                   <FaSlidersH
-                     style={{
-                       color: showFiltersRow === false ? "#3871DA" : "white",
-                     }}
-                   ></FaSlidersH>
-                 }
-               ></IconTextField>
+                {showFilterButton === false ? null :
+                  <IconTextField
+                    text="Filter"
+                    width={120}
+                    onClick={() => {
+                      setShowFiltersRow(!showFiltersRow);
+                    }}
+                    textColor={showFiltersRow === false ? "black" : "white"}
+                    background={
+                      showFiltersRow === false ? "transparent" : "#3871DA"
+                    }
+                    icon={
+                      <FaSlidersH
+                        style={{
+                          color: showFiltersRow === false ? "#3871DA" : "white",
+                        }}
+                      ></FaSlidersH>
+                    }
+                  ></IconTextField>
                 }
-               
+
               </Grid>
             </Grid>
           </Grid>
@@ -1650,7 +1771,7 @@ const [showFilterButton,setShowFilterButton]= useState(false)
                     </p>
                     {allColumns &&
                       allColumns.map((item) => {
-                        
+
                         return (
                           <Grid
                             container
@@ -1761,20 +1882,27 @@ const [showFilterButton,setShowFilterButton]= useState(false)
               style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
               className="fullHeightContacts"
               id="infinit"
+              
               onScroll={() => {
-                handleScroll();
+                if(handlescroll){
+
+                  handleScroll();
+                }
+               
               }}
             >
+
+
               {contacts ? (
                 contacts.map((item, index) => {
-                  console.log('===============contacts====================='),
-                    console.log(contacts, '<<<<<<<<<<===contacts=<<<<<<<'),
-                    console.log('================contacts====================');
-                  // console.log(
-                  //   "This is filter funtion",
-                  //   isSelectedCheckbox(index)
-                  // );
+                  // console.log(item,'===============contacts====================='),
+                  // console.log(isBoardContact, '<<<<<<<<<<===contacts=<<<<<<<'),
+                  console.log(checkFilters(item), '<<<<==<<<<<==============contacts====================');
                   if (checkFilters(item) === true) {
+                    console.log(
+                      "This is filter funtion",
+                      item
+                    );
                     return (
                       <Grid
                         key={index}
@@ -1919,6 +2047,8 @@ const [showFilterButton,setShowFilterButton]= useState(false)
                   </div>
                 </Grid>
               )}
+
+
             </div>
           </div>
           <Grid container direction="row" alignItems="center"></Grid>
