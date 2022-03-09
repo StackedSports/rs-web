@@ -86,7 +86,22 @@ export const getTaskQueue = () => {
         },
     });
 };
+export const getPlatform = () => {
+    console.log(JSON.parse(localStorage.getItem("user")).token);
 
+    return axios({
+        method: "get",
+        url: URL + "team/platforms",
+        headers: {
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            Accept: "application/json; version=1",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+    });
+};
 export const getTaskQueueForDay = (date) => {
     var endpoint = "";
     // console.log("This is date", date === null);
@@ -420,6 +435,24 @@ export const getTagsWithContacts = () => {
         },
     });
 };
+export const getTagsWithMessages = () => {
+    return axios({
+        method: "get",
+        url: URL + `tags/with_messages`,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+    });
+};
+
+
+
 export const getTags = () => {
     return axios({
         method: "get",
