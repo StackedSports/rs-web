@@ -83,19 +83,26 @@ const HoverItem = (props) => {
                         }}
                         onClick={(e) => {
                             console.log('hover click = ',props);
-                            if (props.isPlaceHolder) {
-                                if (isVideo(m.media_preview)) {
-                                    props.setLightboxVideo(m.media_preview);
+                            if(props.assetUrl.original){
+                                if (isVideo(props.assetUrl.original)) {
+                                    props.setLightboxVideo(props.assetUrl.original);
                                 } else  {
-                                    props.setLightboxPicture(m.media_preview);
-                                }
-                            } else {
-                                if (m.file_type.indexOf("video") > -1) {
-                                    props.setLightboxVideo(m.urls.original);
-                                } else {
-                                    props.setLightboxPicture(m.urls.original);
+                                    props.setLightboxPicture(props.assetUrl.original);
                                 }
                             }
+                            // if (props.isPlaceHolder) {
+                            //     if (isVideo(m.media_preview)) {
+                            //         props.setLightboxVideo(m.media_preview);
+                            //     } else  {
+                            //         props.setLightboxPicture(m.media_preview);
+                            //     }
+                            // } else {
+                            //     if (m.file_type.indexOf("video") > -1) {
+                            //         props.setLightboxVideo(m.urls.original);
+                            //     } else {
+                            //         props.setLightboxPicture(m.urls.original);
+                            //     }
+                            // }
                             e.stopPropagation();
                         }}
                     >

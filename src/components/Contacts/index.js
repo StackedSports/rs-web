@@ -1306,7 +1306,7 @@ function Home(props) {
 
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
-    {console.log(totalcount,'acha acvha acha')}
+    
 if(totalcount<50){
   // setContacts(allcontacts)
   // setPage(page+1)

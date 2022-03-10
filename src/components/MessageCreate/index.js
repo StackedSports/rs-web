@@ -122,19 +122,23 @@ function a11yProps(index) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+
 function MessageCreate(props) {
   //api
   //var userProfile;
   const [value, setValue] = React.useState(1);
+  const [boardsId, setBoardsId] = React.useState([])
+  const [counts, setCount] = React.useState(0)
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const [showModal, setShowModal] = useState(true);
   const [snippets, setSnippets] = useState([]);
-  const [statusses, setStatuses] = useState([]);
+  const [statusses, setStatuses] = useState(["Draft", "Scheduled", "In Progress", "Finished", "Archived", "Error"]);
   const [messagesTags, setMessagesTags] = useState([]);
   const [allPlatforms, setPlatforms] = useState([]);
-
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(99)
   const [allMessages, setAllMessages] = useState();
   //const [allTags, setAllTags] = useState(null);
   console.log("AllMessages", allMessages)
@@ -154,37 +158,8 @@ function MessageCreate(props) {
       }
     );
   };
-  const getAllSnippets = () => {
-    getSnippets().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
 
-        if (res.statusText === "OK") {
-          console.log("These are all Snippets", res.data);
-        }
-        setSnippets(res.data)
-      },
-      (error) => {
-        console.log("this is error all Snippets", error);
-      }
-    );
-  };
 
-  const getAllStatusses = () => {
-    getStatuses().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-
-        if (res.statusText === "OK") {
-          console.log("These are all statuses", res.data);
-        }
-        setStatuses(res.data)
-      },
-      (error) => {
-        console.log("this is error all statuses", error);
-      }
-    );
-  };
 
   const getMessagesTags = () => {
     getTagsWithMessages().then(
@@ -207,34 +182,30 @@ function MessageCreate(props) {
         // console.log("THis is all ranks", res);
 
         if (res.statusText === "OK") {
-          console.log("These are all messagesTags", res.data);
+          console.log("These are all Tags", res.data);
         }
         setMessagesTags(res.data)
       },
       (error) => {
-        console.log("this is error all messageTags", error);
+        console.log("this is error all Tags", error);
       }
     );
   };
 
-  const getAllPlatforms = () => {
-    getPlatform().then(
+  const getAllSnippets = () => {
+    getSnippets().then(
       (res) => {
         // console.log("THis is all ranks", res);
-
         if (res.statusText === "OK") {
-          console.log("These are all platform", res.data);
+          console.log("These are all Snippets", res.data);
         }
-        setPlatforms(res.data)
+        setSnippets(res.data)
       },
       (error) => {
-        console.log("this is error all Platforms", error);
+        console.log("this is error all Snippets", error);
       }
     );
   };
-
-
-
 
   useEffect(() => {
     setShowDrawer(false);
@@ -244,8 +215,11 @@ function MessageCreate(props) {
     getAllMessages();
     getAllPlatforms();
     getAllTags();
-    getAllStatusses();
+
+    getMessagesTags();
   }, []);
+
+
   const handleAnimation = () => {
     //setShowDrawer(true);
     setTimeout(() => {
@@ -409,11 +383,12 @@ function MessageCreate(props) {
     setRows(allBoards)
   }, [allBoards])
 
+
   useEffect(
     (data) => {
 
-      setTableData(recieve);
-      console.log("tabledata = ", tableData)
+      //setTableData(recieve);
+
       requestSearch()
       // setindividualRows(s)
       // action on update of movies
@@ -1027,699 +1002,714 @@ function MessageCreate(props) {
   //     }
   //   );
   // }
+  console.log(boardsId, "boardsById")
   const getBoardsFilterById = (id) => {
     console.log("boardID", id)
     getBoardFiltersById(id).then(
       (res) => {
         if (res.statusText === "OK") {
-          console.log(res.data, "boardsById")
+          console.log(res.data, "boardsId")
+
+          setBoardsId([...boardsId, res.data])
         }
-      }, (error) => {
-        console.log("this is error all grad year", error);
       }
-    );
-  }
-  const getAllBoards = () => {
-    getBoardFilters().then(
-      (res) => {
-        // console.log("THis is all boards", res);
-        var gradYears = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all boards", res.data);
-          setAllBoards(res.data);
-          console.log(res.data, "all boards")
+    )
+    const getAllBoards = () => {
+      getBoardFilters().then(
+        (res) => {
+          // console.log("THis is all boards", res);
+          var gradYears = [];
+          if (res.statusText === "OK") {
+            // console.log("These are all boards", res.data);
+            setAllBoards(res.data);
+            console.log(res.data, "all boards")
 
+          }
+        },
+        (error) => {
+          console.log("this is error all grad year", error);
         }
-      },
-      (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
+      );
+    };
 
 
-  const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
+    const states = [
+      "Alabama",
+      "Alaska",
+      "Arizona",
+      "Arkansas",
+      "California",
+      "Colorado",
+      "Connecticut",
+      "Delaware",
+      "Florida",
+      "Georgia",
+      "Hawaii",
+      "Idaho",
+      "Illinois",
+      "Indiana",
+      "Iowa",
+      "Kansas",
+      "Kentucky",
+      "Louisiana",
+      "Maine",
+      "Maryland",
+      "Massachusetts",
+      "Michigan",
+      "Minnesota",
+      "Mississippi",
+      "Missouri",
+      "Montana",
+      "Nebraska",
+      "Nevada",
+      "New Hampshire",
+      "New Jersey",
+      "New Mexico",
+      "New York",
+      "North Carolina",
+      "North Dakota",
+      "Ohio",
+      "Oklahoma",
+      "Oregon",
+      "Pennsylvania",
+      "Rhode Island",
+      "South Carolina",
+      "South Dakota",
+      "Tennessee",
+      "Texas",
+      "Utah",
+      "Vermont",
+      "Virginia",
+      "Washington",
+      "West Virginia",
+      "Wisconsin",
+      "Wyoming",
+    ];
 
-  const filtesSpacingStyle = {
-    marginRight: 5,
-  };
+    const filtesSpacingStyle = {
+      marginRight: 5,
+    };
 
-  const mediaContainer = (m) => {
-    //alert('ok')
+    const mediaContainer = (m) => {
+      //alert('ok')
 
-    console.log("THis is container ", media);
-    return (
-      <Badge
-        badgeContent={
-          <ClearIcon
-            style={{ height: 10, width: 10, cursor: "pointer" }}
-            /*  onClick={() => {
-                var alreadySelected = false;
-                media.map((item) => {
-                  if (m.hashid === item.hashid) {
-                    alreadySelected = true;
-                  }
-                });
-                if (alreadySelected) {
-                  var temp = [];
+      console.log("THis is container ", m);
+      return (
+        <Badge
+          badgeContent={
+            <ClearIcon
+              style={{ height: 10, width: 10, cursor: "pointer" }}
+              /*  onClick={() => {
+                  var alreadySelected = false;
                   media.map((item) => {
-                    if (m.hashid != item.hashid) {
-                      temp.push(item);
+                    if (m.hashid === item.hashid) {
+                      alreadySelected = true;
                     }
                   });
-                  setMedia(temp);
-                  localStorage.setItem("selectedMedia", JSON.stringify(temp));
-                  setuseLessState(uselessState + 1);
-                }
-              }}*/
-            onClick={() => {
-              setMedia(null)
-              saveMessage.media_placeholder_id = null
-              setSaveMessage(saveMessage)
+                  if (alreadySelected) {
+                    var temp = [];
+                    media.map((item) => {
+                      if (m.hashid != item.hashid) {
+                        temp.push(item);
+                      }
+                    });
+                    setMedia(temp);
+                    localStorage.setItem("selectedMedia", JSON.stringify(temp));
+                    setuseLessState(uselessState + 1);
+                  }
+                }}*/
+              onClick={() => {
+                setMedia(null)
+                saveMessage.media_placeholder_id = null
+                setSaveMessage(saveMessage)
+              }}
+
+
+            ></ClearIcon>
+          }
+          color="error"
+        >
+          <div
+            style={{
+              width: 270,
+
+              marginLeft: 20,
+              // border: "1px solid #d2d2d2",
+              border: "1px solid #d2d2d2",
+              borderRadius: 4,
+              // marginTop: 20,
+
             }}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              style={{ background: "#f6f6f6" }}
+            // onMouseEnter={() => {
+            //   if (m.urls) {
+            //     setMediaHover(m.urls.medium);
+            //   }
+            // }}
+            // onMouseLeave={() => {
+            //   setMediaHover(null);
+            // }}
+            >
+              <img
+                style={{ width: "100%", height: 150, objectFit: "contain" }}
+                src={m?.urls && m?.urls?.original}
+              ></img>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              style={{ height: 30, marginLeft: 16, marginTop: 2 }}
+              alignItems="center"
+            >
+              {m.file_type === "image/gif" ? (
+                <GifIcon></GifIcon>
+              ) : m.file_type.indexOf("video") > -1 ? (
+                <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
+              ) : m.file_type.indexOf("image") > -1 ? (
+                <FaImage></FaImage>
+              ) : (
+                <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
+              )}
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  margin: 0,
+                  marginLeft: 16,
+                  fontSize: 15,
+                }}
+              >
+                {m.file_name.length > 17
+                  ? m.file_name.substring(0, 17) + " ..."
+                  : m.file_name}
+              </p>
+              <div style={{ width: "100%" }}></div>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              style={{ height: 30, marginLeft: 16 }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 13,
+                  color: "#5a5a5a",
+                }}
+              >
+                Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {"    "}
+                {m.owner && m.owner.first_name + " " + m.owner.last_name}
+              </p>
+            </Grid>
+          </div>
+        </Badge>
+      );
+    };
 
-
-          ></ClearIcon>
-        }
-        color="error"
-      >
-        <div
+    const renderMessageFilters = () => {
+      return (
+        <Grid
+          container
+          direction="row"
+          spacing={1}
           style={{
-            width: 270,
-
-            marginLeft: 20,
-            // border: "1px solid #d2d2d2",
-            border: "1px solid #d2d2d2",
-            borderRadius: 4,
-            // marginTop: 20,
-
+            marginTop: 25,
+            borderBottom: "1px solid #f8f8f8",
+            paddingBottom: 20,
           }}
         >
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ background: "#f6f6f6" }}
-          // onMouseEnter={() => {
-          //   if (m.urls) {
-          //     setMediaHover(m.urls.medium);
-          //   }
-          // }}
-          // onMouseLeave={() => {
-          //   setMediaHover(null);
-          // }}
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={statusFilter || "Type"}
+            drop={"down"}
+            placeholder="Type"
+            style={filtesSpacingStyle}
           >
-            <img
-              style={{ width: "100%", height: 150, objectFit: "contain" }}
-              src={m.urls && m.urls.original}
-            ></img>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            style={{ height: 30, marginLeft: 16, marginTop: 2 }}
-            alignItems="center"
-          >
-            {m.file_type === "image/gif" ? (
-              <GifIcon></GifIcon>
-            ) : m.file_type.indexOf("video") > -1 ? (
-              <FaVideo style={{ color: "#3871da", fontSize: 20 }}></FaVideo>
-            ) : m.file_type.indexOf("image") > -1 ? (
-              <FaImage></FaImage>
-            ) : (
-              <FaFilePdf style={{ color: "#3871da", fontSize: 20 }}></FaFilePdf>
-            )}
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 12,
-                margin: 0,
-                marginLeft: 16,
-                fontSize: 15,
-              }}
-            >
-              {m.file_name.length > 17
-                ? m.file_name.substring(0, 17) + " ..."
-                : m.file_name}
-            </p>
-            <div style={{ width: "100%" }}></div>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            style={{ height: 30, marginLeft: 16 }}
-          >
-            <p
-              style={{
-                margin: 0,
-                fontSize: 13,
-                color: "#5a5a5a",
-              }}
-            >
-              Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {"    "}
-              {m.owner && m.owner.first_name + " " + m.owner.last_name}
-            </p>
-          </Grid>
-        </div>
-      </Badge>
-    );
-  };
+            {console.log("platforms", allPlatforms)}
+            {allPlatforms &&
+              allPlatforms.map((option) => (
+                <Dropdown.Item
+                  style={{
+                    background:
+                      statusFilter === option.name ? "#348ef7" : "white",
+                    color: statusFilter === option.name ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    if (statusFilter === option.name) {
+                      setStatusFilter(null);
+                      addDataToFilter(option.name);
+                    } else {
+                      addDataToFilter(option.name, "status");
+                    }
+                  }}
+                >
+                  {option.name}
+                </Dropdown.Item>
+              ))}
+          </DropdownButton>
 
-  const renderMessageFilters = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        spacing={1}
-        style={{
-          marginTop: 25,
-          borderBottom: "1px solid #f8f8f8",
-          paddingBottom: 20,
-        }}
-      >
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={statusFilter || "Type"}
-          drop={"down"}
-          placeholder="Type"
-          style={filtesSpacingStyle}
-        >
-          {console.log("platforms", allPlatforms)}
-          {allPlatforms &&
-            allPlatforms.map((option) => (
-              <Dropdown.Item
-                style={{
-                  background:
-                    statusFilter === option.name ? "#348ef7" : "white",
-                  color: statusFilter === option.name ? "white" : "black",
-                }}
-                onClick={() => {
-                  if (statusFilter === option.name) {
-                    setStatusFilter(null);
-                    addDataToFilter(option.name);
-                  } else {
-                    addDataToFilter(option.name, "status");
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={stateFilter || "Sender"}
+            drop={"down"}
+            placeholder="Sender"
+            style={filtesSpacingStyle}
+          >
+            <div>
+              <Grid container direction="row" justify="center">
+                <input
+                  type="text"
+                  style={{
+                    width: "90%",
+                    border: "1px solid #ebebeb",
+                    borderRadius: 4,
+                  }}
+                  placeholder="Search States"
+                  value={stateSearch}
+                  onChange={(e) => {
+                    setStateSearch(e.target.value);
+                  }}
+                ></input>
+              </Grid>
+
+              {teamContacts.map((option) => {
+                var name = option.first_name + " " + option.last_name;
+                if (stateSearch != "") {
+                  if (
+                    name.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
+                  ) {
+                    if (option.twitter_profile) {
+                      return (
+                        <Dropdown.Item
+                          style={{
+                            background:
+                              stateFilter === name ? "#348ef7" : "white",
+                            color: stateFilter === name ? "white" : "black",
+                          }}
+                          onClick={() => {
+                            addDataToFilter(option, "State");
+                          }}
+                        >
+                          {name}
+                        </Dropdown.Item>
+                      );
+                    }
                   }
-                }}
-              >
-                {option.name}
-              </Dropdown.Item>
-            ))}
-        </DropdownButton>
-
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={stateFilter || "Sender"}
-          drop={"down"}
-          placeholder="Sender"
-          style={filtesSpacingStyle}
-        >
-          <div>
-            <Grid container direction="row" justify="center">
-              <input
-                type="text"
-                style={{
-                  width: "90%",
-                  border: "1px solid #ebebeb",
-                  borderRadius: 4,
-                }}
-                placeholder="Search States"
-                value={stateSearch}
-                onChange={(e) => {
-                  setStateSearch(e.target.value);
-                }}
-              ></input>
-            </Grid>
-
-            {teamContacts.map((option) => {
-              var name = option.first_name + " " + option.last_name;
-              if (stateSearch != "") {
-                if (
-                  name.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
-                ) {
-                  if (option.twitter_profile) {
-                    return (
-                      <Dropdown.Item
-                        style={{
-                          background:
-                            stateFilter === name ? "#348ef7" : "white",
-                          color: stateFilter === name ? "white" : "black",
-                        }}
-                        onClick={() => {
-                          addDataToFilter(option, "State");
-                        }}
-                      >
-                        {name}
-                      </Dropdown.Item>
-                    );
-                  }
+                } else {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background: stateFilter === name ? "#348ef7" : "white",
+                        color: stateFilter === name ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        addDataToFilter(name, "State");
+                      }}
+                    >
+                      {name}
+                    </Dropdown.Item>
+                  );
                 }
-              } else {
-                return (
-                  <Dropdown.Item
-                    style={{
-                      background: stateFilter === name ? "#348ef7" : "white",
-                      color: stateFilter === name ? "white" : "black",
-                    }}
-                    onClick={() => {
-                      addDataToFilter(name, "State");
-                    }}
-                  >
-                    {name}
-                  </Dropdown.Item>
-                );
-              }
-            })}
-          </div>
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={gradeYearFilter || "Tags"}
-          drop={"down"}
-          placeholder="Tags"
-          style={filtesSpacingStyle}
-        >
-          {messagesTags &&
-            messagesTags.map((option) => (
+              })}
+            </div>
+          </DropdownButton>
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={gradeYearFilter || "Tags"}
+            drop={"down"}
+            placeholder="Tags"
+            style={filtesSpacingStyle}
+          >
+            {messagesTags &&
+              messagesTags.map((option) => (
+                <Dropdown.Item
+                  style={{
+                    background:
+                      gradeYearFilter === option.name ? "#348ef7" : "white",
+                    color: gradeYearFilter === option.name ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    if (rankFilter === option.name) {
+                      setGradeYearFilter(null);
+                      addDataToFilter(option.name);
+                    } else {
+                      addDataToFilter(option.name, "gradeYear");
+                    }
+                  }}
+                >
+                  {option.name}
+                </Dropdown.Item>
+              ))}
+          </DropdownButton>
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={timeZoneFilter || "Status"}
+            drop={"down"}
+            placeholder="Status"
+            style={filtesSpacingStyle}
+          >
+            {statusses.map((option) => (
               <Dropdown.Item
                 style={{
                   background:
-                    gradeYearFilter === option.name ? "#348ef7" : "white",
-                  color: gradeYearFilter === option.name ? "white" : "black",
+                    timeZoneFilter === option ? "#348ef7" : "white",
+                  color: timeZoneFilter === option ? "white" : "black",
                 }}
                 onClick={() => {
-                  if (rankFilter === option.name) {
-                    setGradeYearFilter(null);
-                    addDataToFilter(option.name);
-                  } else {
-                    addDataToFilter(option.name, "gradeYear");
-                  }
+                  addDataToFilter(option, "statuses");
                 }}
               >
-                {option.name}
+                {option}
               </Dropdown.Item>
             ))}
-        </DropdownButton>
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={timeZoneFilter || "Status"}
-          drop={"down"}
-          placeholder="Status"
-          style={filtesSpacingStyle}
-        >
-          {statusses.map((option) => (
-            <Dropdown.Item
-              style={{
-                background:
-                  timeZoneFilter === option.status ? "#348ef7" : "white",
-                color: timeZoneFilter === option.status ? "white" : "black",
-              }}
-              onClick={() => {
-                setTimeZoneFilter(option.status);
-              }}
-            >
-              {option.status}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <CalendarFilter></CalendarFilter>
-      </Grid>
-    );
-  };
+          </DropdownButton>
+          <CalendarFilter></CalendarFilter>
 
-  const renderMessageDetails = () => {
-    console.log("table data = ", tableData)
-    return (
-      <div
-        style={{
-          width: showSideFilters === true ? "85%" : "100%",
-          height: "100%",
-          background: "white",
-          borderRadius: 5,
-          padding: 16,
-          paddingLeft: 30,
-          paddingRight: 30,
-        }}
-      >
-        {" "}
-        <Grid container direction="row">
-          <Grid item md={4} sm={4}>
-            {/* <FormatAlignLeftIcon
+        </Grid>
+      );
+    };
+
+    const renderMessageDetails = () => {
+      console.log("table data = ", tableData)
+      return (
+        <div
+          style={{
+            width: showSideFilters === true ? "85%" : "100%",
+            height: "100%",
+            background: "white",
+            borderRadius: 5,
+            padding: 16,
+            paddingLeft: 30,
+            paddingRight: 30,
+          }}
+        >
+          {" "}
+          <Grid container direction="row">
+            <Grid item md={4} sm={4}>
+              {/* <FormatAlignLeftIcon
               onClick={(e) => {
                 setshowSideFilters(!showSideFilters);
               }}
               style={{ cursor: "pointer", fontSize: 18 }}
             ></FormatAlignLeftIcon> */}
 
-            <img src={AmimatedBurger} onClick={(e) => {
-              setshowSideFilters(!showSideFilters);
-            }}
-              style={{ cursor: "pointer", width: 40 }}></img>
+              {
+                showDrawer ?
+                  <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(false);
+                    setShowAnimation(true);
+                    handleAnimation();
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>
+                  :
+                  <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(true);
+                    setShowAnimation(true);
+                    handleAnimation();
 
-            <span
-              style={{
-                padding: 16,
-                fontWeight: "bold",
-                // marginLeft: 20,
-                fontSize: 20,
-              }}
-            >
-              Messages Details
-            </span>
-          </Grid>
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>}
 
-          <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              {showActionButton()}
-              {showFilterButton()}
+              <span
+                style={{
+                  padding: 16,
+                  fontWeight: "bold",
+                  // marginLeft: 20,
+                  fontSize: 20,
+                }}
+              >
+                Messages Details
+              </span>
             </Grid>
-          </Grid>
 
-          <Grid container direction="row">
-            {filter.length != 0 &&
-              filter.map((fil, index) => {
-                return (
-                  <div
-                    container
-                    direction="row"
-                    alignItems="center"
-                    justify="center"
-                    className={classes.tags}
-                  >
-                    <Grid
-                      style={{ height: 40 }}
+            <Grid item md={8} sm={8}>
+              <Grid container direction="row" justify="flex-end">
+                {showActionButton()}
+                {showFilterButton()}
+              </Grid>
+            </Grid>
+
+            <Grid container direction="row">
+              {filter.length != 0 &&
+                filter.map((fil, index) => {
+                  return (
+                    <div
                       container
                       direction="row"
                       alignItems="center"
+                      justify="center"
+                      className={classes.tags}
                     >
-                      {fil}
-                      <ClearIcon
-                        onClick={() => {
-                          removeDataFromFilter(index);
-                        }}
-                        style={{
-                          color: "red",
-                          fontSize: 17,
-                          cursor: "pointer",
-                          marginLeft: 8,
-                        }}
-                      ></ClearIcon>{" "}
-                    </Grid>
-                  </div>
+                      <Grid
+                        style={{ height: 40 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {fil}
+                        <ClearIcon
+                          onClick={() => {
+                            removeDataFromFilter(index);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                            marginLeft: 8,
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
+            </Grid>
+
+            <div
+              style={{
+                width: "100%",
+                border: "1px solid #f8f8f8",
+                marginTop: 10,
+              }}
+            ></div>
+            {showMessageFiltersRow === true ? (
+              renderMessageFilters()
+            ) : (
+              <div></div>
+            )}
+
+            <div
+              style={{
+                width: "100%",
+                maxHeight: 330,
+                //  minWidth: 1110
+              }}
+              className="fullHeightCreateMessageDetails hideScrollBar"
+              id={"messageDetailScrollPublished"}
+              onScroll={() => {
+                var scroll = document.getElementById(
+                  "messageDetailScrollPublished"
                 );
-              })}
+                if (scroll) {
+                  scrollPosition = scroll.scrollTop;
+                  // console.log("THis is scroll", scrollPosition);
+                }
+              }}
+            >
+
+              {placeholders &&
+                placeholders.map((selectedPlaceholder, index) => {
+                  if (index < 1) {
+                    return (
+                      <MessageDetailsCard
+                        hideCheckBox={null}
+                        hideStats={null}
+                        selectedPlaceholder={selectedPlaceholder}
+                      ></MessageDetailsCard>
+                    );
+                  }
+                })}
+            </div>
+          </Grid>
+        </div>
+      );
+    };
+    const selectedMessageStatusTable = (props) => (
+
+      <>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          style={{
+            background: "#f5f6f9",
+            width: "100%",
+            cursor: "pointer",
+            minWidth: 1025,
+          }}
+        >
+          <Grid item md={1} xs={1}>
+            <Checkbox
+              color="primary"
+            //      checked={selectedDrafts.length === 6}
+            /* onChange={() => {
+               var array = [1, 2, 3, 4, 5, 6];
+               var temp = [];
+               if (selectedDrafts.length === array.length) {
+                 setSelectedDrafts([]);
+               } else {
+                 array.map((item) => {
+                   temp.push(item);
+                 });
+                 setSelectedDrafts(temp);
+               }
+             }}*/
+            ></Checkbox>
+          </Grid>
+          <Grid item md={2} xs={2}>
+            <Grid
+              container
+              direction="row"
+              onClick={() => {
+                let data = props.contact_list.sort((a, b) =>
+                  a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+                );
+                console.log(data);
+                setTableData(() => [...data]);
+                console.log("asda");
+              }}
+            >
+              <span className={classes.tableHeading}>Full Name</span>
+              {/* <pan style={{ transform: "rotate(180deg)" }}>
+              {" "}
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
+            </span> */}
+            </Grid>
+          </Grid>
+          <Grid
+
+          >
+            <span className={classes.tableHeading}>Board/List</span>
           </Grid>
 
-          <div
-            style={{
-              width: "100%",
-              border: "1px solid #f8f8f8",
-              marginTop: 10,
-            }}
-          ></div>
-          {showMessageFiltersRow === true ? (
-            renderMessageFilters()
-          ) : (
-            <div></div>
-          )}
-
-          <div
-            style={{
-              width: "100%",
-              maxHeight: 330,
-              //  minWidth: 1110
-            }}
-            className="fullHeightCreateMessageDetails hideScrollBar"
-            id={"messageDetailScrollPublished"}
-            onScroll={() => {
-              var scroll = document.getElementById(
-                "messageDetailScrollPublished"
+          <Grid
+            item
+            md={2}
+            xs={2}
+            onClick={() => {
+              let data = props.contact_list.sort((a, b) =>
+                a.phone ? (a.phone > b.phone
+                  ? 1
+                  : b.phoneNumber > a.phoneNumber
+                    ? -1
+                    : 0) : ''
               );
-              if (scroll) {
-                scrollPosition = scroll.scrollTop;
-                // console.log("THis is scroll", scrollPosition);
-              }
+              console.log(data);
+              setTableData(() => [...data]);
+              console.log("asda");
             }}
           >
-
-            {placeholders &&
-              placeholders.map((selectedPlaceholder, index) => {
-                if (index < 1) {
-                  return (
-                    <MessageDetailsCard
-                      hideCheckBox={null}
-                      hideStats={null}
-                      selectedPlaceholder={selectedPlaceholder}
-                    ></MessageDetailsCard>
-                  );
-                }
-              })}
-          </div>
-        </Grid>
-      </div>
-    );
-  };
-  const selectedMessageStatusTable = (props) => (
-
-    <>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        style={{
-          background: "#f5f6f9",
-          width: "100%",
-          cursor: "pointer",
-          minWidth: 1025,
-        }}
-      >
-        <Grid item md={1} xs={1}>
-          <Checkbox
-            color="primary"
-          //      checked={selectedDrafts.length === 6}
-          /* onChange={() => {
-             var array = [1, 2, 3, 4, 5, 6];
-             var temp = [];
-             if (selectedDrafts.length === array.length) {
-               setSelectedDrafts([]);
-             } else {
-               array.map((item) => {
-                 temp.push(item);
-               });
-               setSelectedDrafts(temp);
-             }
-           }}*/
-          ></Checkbox>
-        </Grid>
-        <Grid item md={2} xs={2}>
+            <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
+              Phone Number
+            </span>
+          </Grid>
           <Grid
-            container
-            direction="row"
             onClick={() => {
               let data = props.contact_list.sort((a, b) =>
                 a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+
               );
               console.log(data);
               setTableData(() => [...data]);
               console.log("asda");
             }}
+            item
+            md={2}
+            xs={2}
           >
-            <span className={classes.tableHeading}>Full Name</span>
-            {/* <pan style={{ transform: "rotate(180deg)" }}>
-              {" "}
-              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
-            </span> */}
+            <span className={classes.tableHeading}>First Name</span>
           </Grid>
-        </Grid>
-        <Grid
-
-        >
-          <span className={classes.tableHeading}>Board/List</span>
-        </Grid>
-
-        <Grid
-          item
-          md={2}
-          xs={2}
-          onClick={() => {
-            let data = props.contact_list.sort((a, b) =>
-              a.phone ? (a.phone > b.phone
-                ? 1
-                : b.phoneNumber > a.phoneNumber
-                  ? -1
-                  : 0) : ''
-            );
-            console.log(data);
-            setTableData(() => [...data]);
-            console.log("asda");
-          }}
-        >
-          <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
-            Phone Number
-          </span>
-        </Grid>
-        <Grid
-          onClick={() => {
-            let data = props.contact_list.sort((a, b) =>
-              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
-
-            );
-            console.log(data);
-            setTableData(() => [...data]);
-            console.log("asda");
-          }}
-          item
-          md={2}
-          xs={2}
-        >
-          <span className={classes.tableHeading}>First Name</span>
-        </Grid>
-        <Grid
-          item
-          md={2}
-          xs={2}
-
-        >
-          <span className={classes.tableHeading}>Delivered at</span>
-        </Grid>
-        <Grid
-          item
-          md={2}
-          xs={2}
-          onClick={() => {
-            setIsMesasgeStatusClick(true);
-            setMessageStatus("error");
-          }}
-        >
-          <Grid container direction="row">
-            <span className={classes.tableHeading}>Message Status</span>
-            <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      {props.contact_list && props.contact_list.map((item, index) => {
-
-
-
-
-        return (
           <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              border: "1px solid #d8d8d8",
-              borderBottom: "none",
-              borderRadius: 4,
-              paddingTop: 4,
-              paddingBottom: 4,
-              minWidth: 1025,
+            item
+            md={2}
+            xs={2}
+
+          >
+            <span className={classes.tableHeading}>Delivered at</span>
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={2}
+            onClick={() => {
+              setIsMesasgeStatusClick(true);
+              setMessageStatus("error");
             }}
           >
-            <Grid item md={1} xs={1}>
-              <Checkbox
-                color="primary"
-                onChange={() => {
-                  //   makeDraftSelected(item);
-                }}
-                //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                style={{ marginTop: 1, marginBottom: 1 }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                }}
-              ></Checkbox>
+            <Grid container direction="row">
+              <span className={classes.tableHeading}>Message Status</span>
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
             </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {item.first_name ? item.first_name + " " + item.last_name :
-                  ""}</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>
-                {""}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields} >
-                {formatPhoneNumber(item?.phone)}
-              </span>
-            </Grid>
+          </Grid>
+        </Grid>
 
-            <Grid item md={2} xs={2}>
-              <span >{item.first_name && item.first_name}</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {/*isMesasgeStatusClick
+        {props.contact_list && props.contact_list.map((item, index) => {
+
+
+
+
+          return (
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                border: "1px solid #d8d8d8",
+                borderBottom: "none",
+                borderRadius: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                minWidth: 1025,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  color="primary"
+                  onChange={() => {
+                    //   makeDraftSelected(item);
+                  }}
+                  //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                  style={{ marginTop: 1, marginBottom: 1 }}
+                  onMouseLeave={() => {
+                    setHoveredIndex(null);
+                  }}
+                ></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {item.first_name ? item.first_name + " " + item.last_name :
+                    ""}</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableFields}>
+                  {""}
+                </span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields} >
+                  {formatPhoneNumber(item?.phone)}
+                </span>
+              </Grid>
+
+              <Grid item md={2} xs={2}>
+                <span >{item.first_name && item.first_name}</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {/*isMesasgeStatusClick
                   ? "-"
                   : moment(date).format("MM/DD/YYYY  h:mm a")*/}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-
-              <span >
-                <Info style={{
-                  color: item?.status === "pending" ? "#f0ad24" :
-                    item?.status === "sent" ? "#54a300" : item?.status === "error" ? "red" : "#8bb14c", fontSize: 16
-                }}></Info>{" "}
-                <span  >
-
-                  {item?.status
-                  }
                 </span>
-                {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+              </Grid>
+              <Grid item md={2} xs={2}>
+
+                <span >
+                  <Info style={{
+                    color: item?.status === "pending" ? "#f0ad24" :
+                      item?.status === "sent" ? "#54a300" : item?.status === "error" ? "red" : "#8bb14c", fontSize: 16
+                  }}></Info>{" "}
+                  <span  >
+
+                    {item?.status
+                    }
+                  </span>
+                  {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                  { setMessageStatus("Drafts")}
                 { messageStatus
@@ -1739,214 +1729,218 @@ function MessageCreate(props) {
                  }
                 </span>
               )*/}
-              </span>
+                </span>
 
+              </Grid>
+            </Grid>
+          );
+        })}
+      </>
+    );
+
+
+    const messageStatusTable = () => (
+      <>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          style={{
+            background: "#f5f6f9",
+            width: "100%",
+            cursor: "pointer",
+            minWidth: 1025,
+          }}
+        >
+          <Grid item md={1} xs={1}>
+            <Checkbox
+              color="primary"
+            //      checked={selectedDrafts.length === 6}
+            /* onChange={() => {
+               var array = [1, 2, 3, 4, 5, 6];
+               var temp = [];
+               if (selectedDrafts.length === array.length) {
+                 setSelectedDrafts([]);
+               } else {
+                 array.map((item) => {
+                   temp.push(item);
+                 });
+                 setSelectedDrafts(temp);
+               }
+             }}*/
+            ></Checkbox>
+          </Grid>
+          <Grid item md={2} xs={2}>
+            <Grid
+              container
+              direction="row"
+              onClick={() => {
+                let data = tableData.sort((a, b) =>
+                  a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+                );
+                console.log(data);
+                setTableData(() => [...data]);
+                console.log("asda");
+              }}
+            >
+              <span className={classes.tableHeading}>Full Name</span>
+              {/* <pan style={{ transform: "rotate(180deg)" }}>
+              {" "}
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
+            </span> */}
             </Grid>
           </Grid>
-        );
-      })}
-    </>
-  );
-
-
-  const messageStatusTable = () => (
-    <>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        style={{
-          background: "#f5f6f9",
-          width: "100%",
-          cursor: "pointer",
-          minWidth: 1025,
-        }}
-      >
-        <Grid item md={1} xs={1}>
-          <Checkbox
-            color="primary"
-          //      checked={selectedDrafts.length === 6}
-          /* onChange={() => {
-             var array = [1, 2, 3, 4, 5, 6];
-             var temp = [];
-             if (selectedDrafts.length === array.length) {
-               setSelectedDrafts([]);
-             } else {
-               array.map((item) => {
-                 temp.push(item);
-               });
-               setSelectedDrafts(temp);
-             }
-           }}*/
-          ></Checkbox>
-        </Grid>
-        <Grid item md={2} xs={2}>
           <Grid
-            container
-            direction="row"
+            item
+            md={1}
+            xs={1}
+            onClick={() => {
+              let data = saveMessage.filter_ids.sort((a, b) =>
+                a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+              );
+
+              setTableData(() => [...data]);
+
+            }}
+          >
+            <span className={classes.tableHeading}>Board/List</span>
+          </Grid>
+
+          <Grid
+            item
+            md={2}
+            xs={2}
+            onClick={() => {
+              let data = tableData.sort((a, b) =>
+                a.phone ? (a.phone > b.phone
+                  ? 1
+                  : b.phoneNumber > a.phoneNumber
+                    ? -1
+                    : 0) : ''
+              );
+              console.log(data);
+              setTableData(() => [...data]);
+              console.log("asda");
+            }}
+          >
+            <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
+              Phone Number
+            </span>
+          </Grid>
+          <Grid
             onClick={() => {
               let data = tableData.sort((a, b) =>
                 a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+
               );
               console.log(data);
               setTableData(() => [...data]);
               console.log("asda");
             }}
+            item
+            md={2}
+            xs={2}
           >
-            <span className={classes.tableHeading}>Full Name</span>
-            {/* <pan style={{ transform: "rotate(180deg)" }}>
-              {" "}
-              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>{" "}
-            </span> */}
+            <span className={classes.tableHeading}>First Name</span>
           </Grid>
-        </Grid>
-        <Grid
-          item
-          md={1}
-          xs={1}
-          onClick={() => {
-            let data = saveMessage.filter_ids.sort((a, b) =>
-              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
-            );
-
-            setTableData(() => [...data]);
-
-          }}
-        >
-          <span className={classes.tableHeading}>Board/List</span>
-        </Grid>
-
-        <Grid
-          item
-          md={2}
-          xs={2}
-          onClick={() => {
-            let data = tableData.sort((a, b) =>
-              a.phone ? (a.phone > b.phone
-                ? 1
-                : b.phoneNumber > a.phoneNumber
-                  ? -1
-                  : 0) : ''
-            );
-            console.log(data);
-            setTableData(() => [...data]);
-            console.log("asda");
-          }}
-        >
-          <span className={classes.tableHeading} style={{ marginLeft: 40 }}>
-            Phone Number
-          </span>
-        </Grid>
-        <Grid
-          onClick={() => {
-            let data = tableData.sort((a, b) =>
-              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
-
-            );
-            console.log(data);
-            setTableData(() => [...data]);
-            console.log("asda");
-          }}
-          item
-          md={2}
-          xs={2}
-        >
-          <span className={classes.tableHeading}>First Name</span>
-        </Grid>
-        <Grid
-          item
-          md={2}
-          xs={2}
-
-        >
-          <span className={classes.tableHeading}>Delivered at</span>
-        </Grid>
-        <Grid
-          item
-          md={2}
-          xs={2}
-          onClick={() => {
-            setIsMesasgeStatusClick(true);
-            setMessageStatus("error");
-          }}
-        >
-          <Grid container direction="row">
-            <span className={classes.tableHeading}>Message Status</span>
-            <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      {tableData && tableData.map((item, index) => {
-        console.log("date", date, item)
-
-
-        return (
           <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              border: "1px solid #d8d8d8",
-              borderBottom: "none",
-              borderRadius: 4,
-              paddingTop: 4,
-              paddingBottom: 4,
-              minWidth: 1025,
+            item
+            md={2}
+            xs={2}
+
+          >
+            <span className={classes.tableHeading}>Delivered at</span>
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={2}
+            onClick={() => {
+              setIsMesasgeStatusClick(true);
+              setMessageStatus("error");
             }}
           >
-            <Grid item md={1} xs={1}>
-              <Checkbox
-                color="primary"
-                onChange={() => {
-                  //   makeDraftSelected(item);
-                }}
-                //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                style={{ marginTop: 1, marginBottom: 1 }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                }}
-              ></Checkbox>
+            <Grid container direction="row">
+              <span className={classes.tableHeading}>Message Status</span>
+              <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
             </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {item.first_name ? item.first_name + " " + item.last_name :
-                  ""}</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>
-                {""}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields} style={{ marginLeft: 40 }}>
-                {formatPhoneNumber(item?.phone)}
-              </span>
-            </Grid>
+          </Grid>
+        </Grid>
+        {console.log("tabledata", tableData)}
+        {tableData && tableData.map((item, index) => {
+          console.log("date", date, item)
 
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{item.first_name && item.first_name}</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {isMesasgeStatusClick
-                  ? "-"
-                  : moment(date).format("MM/DD/YY  h:mm a")}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
 
-              <span className={classes.tableFields}>
-                <Info style={{
-                  color: messageStatus === "Drafts" ? "#f0ad24" :
-                    messageStatus === "In Progress" ? "#54a300" : "#8bb14c", fontSize: 16
-                }}></Info>{" "}
-                <span className={classes.mdMargin} style={{ marginLeft: 5 }}>
-                  {setMessageStatus("Drafts")}
-                  {messageStatus
-                  }
-                </span>
-                {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+          return (
+            item.name ?
+              item.contacts.list.map((contact) => {
+                { console.log("VONTACTS", contact) }
+                return (
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    style={{
+                      border: "1px solid #d8d8d8",
+                      borderBottom: "none",
+                      borderRadius: 4,
+                      paddingTop: 4,
+                      paddingBottom: 4,
+                      minWidth: 1025,
+                    }}
+                  >
+                    <Grid item md={1} xs={1}>
+                      <Checkbox
+                        color="primary"
+                        onChange={() => {
+                          //   makeDraftSelected(item);
+                        }}
+                        //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                        style={{ marginTop: 1, marginBottom: 1 }}
+                        onMouseLeave={() => {
+                          setHoveredIndex(null);
+                        }}
+                      ></Checkbox>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableFields}>
+                        {contact.first_name ? contact.first_name + " " + contact.last_name :
+                          ""}</span>
+                    </Grid>
+                    <Grid item md={1} xs={1}>
+                      <span className={classes.tableFields}>
+                        {item.name}
+                      </span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableFields} style={{ marginLeft: 40 }}>
+                        {formatPhoneNumber(contact.phone)}
+                      </span>
+                    </Grid>
+
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableFields}>{contact.first_name && contact.first_name}</span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+                      <span className={classes.tableFields}>
+                        {isMesasgeStatusClick
+                          ? "-"
+                          : moment(date).format("MM/DD/YY  h:mm a")}
+                      </span>
+                    </Grid>
+                    <Grid item md={2} xs={2}>
+
+                      <span className={classes.tableFields}>
+                        <Info style={{
+                          color: messageStatus === "Drafts" ? "#f0ad24" :
+                            messageStatus === "In Progress" ? "#54a300" : "#8bb14c", fontSize: 16
+                        }}></Info>{" "}
+                        <span className={classes.mdMargin} style={{ marginLeft: 5 }}>
+                          {setMessageStatus("Drafts")}
+                          {messageStatus
+                          }
+                        </span>
+                        {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                  { setMessageStatus("Drafts")}
                 { messageStatus
@@ -1966,119 +1960,213 @@ function MessageCreate(props) {
                  }
                 </span>
               )*/}
-              </span>
+                      </span>
 
-            </Grid>
-          </Grid>
-        );
-      })}
-    </>
-  );
-  const MessageFilterDetails = (props) => {
-    console.log("allMessagesss", props)
-    const filterMessage = props.selectedPlaceholder
+                    </Grid>
+                  </Grid>);
 
-    filterMessageDetails = filterMessage
 
-    return (
-      <Grid
-        container
-        direction="row"
-        style={{
-          border: "1px solid #d2d2d2",
-          borderRadius: 4,
-          marginTop: 16,
-          height: "auto",
-        }}
-      >
-        {/* <Grid item md={4} xs={4}> */}
-        <div
-          style={{
-            borderRight: "1px solid #d2d2d2",
-            width: "5%",
-          }}
-        >
-          <Grid container direction="row" justify="center">
-            {props.hideCheckBox === null && (
-              <Checkbox
-                color={"primary"}
-                checked={
-                  selectedMessages.indexOf(filterMessage?.id) > -1
-                }
-                onChange={(e) => {
-                  makeMessageSelected(filterMessage?.id);
+
+              })
+
+              :
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                style={{
+                  border: "1px solid #d8d8d8",
+                  borderBottom: "none",
+                  borderRadius: 4,
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                  minWidth: 1025,
                 }}
-              ></Checkbox>
-            )}
-          </Grid>
-        </div>
+              >
+                <Grid item md={1} xs={1}>
+                  <Checkbox
+                    color="primary"
+                    onChange={() => {
+                      //   makeDraftSelected(item);
+                    }}
+                    //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                    style={{ marginTop: 1, marginBottom: 1 }}
+                    onMouseLeave={() => {
+                      setHoveredIndex(null);
+                    }}
+                  ></Checkbox>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields}>
+                    {item.first_name ? item.first_name + " " + item.last_name :
+                      ""}</span>
+                </Grid>
+                <Grid item md={1} xs={1}>
+                  <span className={classes.tableFields}>
+                    {item.name}
+                  </span>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields} style={{ marginLeft: 40 }}>
+                    {formatPhoneNumber(item?.phone)}
+                  </span>
+                </Grid>
+
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields}>{item.first_name && item.first_name}</span>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields}>
+                    {isMesasgeStatusClick
+                      ? "-"
+                      : moment(date).format("MM/DD/YY  h:mm a")}
+                  </span>
+                </Grid>
+                <Grid item md={2} xs={2}>
+
+                  <span className={classes.tableFields}>
+                    <Info style={{
+                      color: messageStatus === "Drafts" ? "#f0ad24" :
+                        messageStatus === "In Progress" ? "#54a300" : "#8bb14c", fontSize: 16
+                    }}></Info>{" "}
+                    <span className={classes.mdMargin} style={{ marginLeft: 5 }}>
+                      {setMessageStatus("Drafts")}
+                      {messageStatus
+                      }
+                    </span>
+                    {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                 { setMessageStatus("Drafts")}
+                { messageStatus
+                 }
+                </span>
+              ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }} >
+                   { setMessageStatus("In Progress")}
+                { messageStatus
+                 }
+                 
+                </span>
+              ) : (
+                <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                   { setMessageStatus("Sent")}
+                { messageStatus
+                 }
+                </span>
+              )*/}
+                  </span>
+
+                </Grid>
+              </Grid>
+          );
+        })}
+      </>
+    );
+    const MessageFilterDetails = (props) => {
+      console.log("allMessagesss", props)
+      const filterMessage = props.selectedPlaceholder
+
+      filterMessageDetails = filterMessage
+
+      return (
         <Grid
           container
           direction="row"
           style={{
-            width: props.hideStats ? "90%" : "70%",
-            padding: 16,
+            border: "1px solid #d2d2d2",
+            borderRadius: 4,
+            marginTop: 16,
+            height: "auto",
           }}
         >
-
-          {filterMessage?.media?.urls && placeholderContainer(filterMessage?.media)}
-          {/* </Grid> */}
-          {/* <Grid item md={8} xs={8}> */}
+          {/* <Grid item md={4} xs={4}> */}
           <div
             style={{
-              marginLeft: 16,
-              width: "50%",
+              borderRight: "1px solid #d2d2d2",
+              width: "5%",
             }}
           >
-            <p
+            <Grid container direction="row" justify="center">
+              {props.hideCheckBox === null && (
+                <Checkbox
+                  color={"primary"}
+                  checked={
+                    selectedMessages.indexOf(filterMessage?.id) > -1
+                  }
+                  onChange={(e) => {
+                    makeMessageSelected(filterMessage?.id);
+                  }}
+                ></Checkbox>
+              )}
+            </Grid>
+          </div>
+          <Grid
+            container
+            direction="row"
+            style={{
+              width: props.hideStats ? "90%" : "70%",
+              padding: 16,
+            }}
+          >
+
+            {filterMessage?.media?.urls && placeholderContainer(filterMessage?.media)}
+            {/* </Grid> */}
+            {/* <Grid item md={8} xs={8}> */}
+            <div
               style={{
-                fontWeight: "bold",
-                fontSize: 20,
-                marginBottom: 0,
+                marginLeft: 16,
+                width: "50%",
               }}
             >
-              {filterMessage?.media?.name && filterMessage?.media?.name}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Message Status:
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  marginBottom: 0,
+                }}
+              >
+                {filterMessage?.media?.name && filterMessage?.media?.name}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Message Status:
 
 
-              <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                {filterMessage?.status && filterMessage.status}
-              </span>
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  {filterMessage?.status && filterMessage.status}
+                </span>
 
 
 
 
 
 
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Send As:
-              <strong className={classes.mdMargin}>{filterMessage?.platform?.name}</strong>
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Sender:
-              <strong className={classes.mdMargin}>{filterMessage?.sender?.first_name + " " + filterMessage.sender?.last_name}</strong>{" "}
-              {filterMessage.sender?.phone ? formatPhoneNumber(filterMessage.sender?.phone) : ''}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Recepient:
-              <strong className={classes.mdMargin}>
-                {filterMessage?.recipients?.count}
-              </strong>
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Send As:
+                <strong className={classes.mdMargin}>{filterMessage?.platform?.name}</strong>
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Sender:
+                <strong className={classes.mdMargin}>{filterMessage?.sender?.first_name + " " + filterMessage.sender?.last_name}</strong>{" "}
+                {filterMessage.sender?.phone ? formatPhoneNumber(filterMessage.sender?.phone) : ''}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Recepient:
+                <strong className={classes.mdMargin}>
+                  {filterMessage?.recipients?.count}
+                </strong>
 
-            </p>
+              </p>
 
-            <p class className={classes.messageDetailsHeading}>
-              Start Sending at:
-              <strong className={classes.mdMargin}>
-                {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
-              </strong>{" "}
-            </p>
+              <p class className={classes.messageDetailsHeading}>
+                Start Sending at:
+                <strong className={classes.mdMargin}>
+                  {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
+                </strong>{" "}
+              </p>
 
 
-            {/*    <Grid
+              {/*    <Grid
               container
               direction="row"
               className={classes.messageDetailsHeading}
@@ -2098,78 +2186,78 @@ function MessageCreate(props) {
    </div>
    
               </Grid>*/}
-            <p class className={classes.messageDetailsHeading}>
-              Message Text :
-            </p>
-            <p
-              class
-              className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500 }}
-            >
-              {filterMessage?.body}
-            </p>
-          </div>
+              <p class className={classes.messageDetailsHeading}>
+                Message Text :
+              </p>
+              <p
+                class
+                className={classes.messageDetailsHeading}
+                style={{ color: "black", fontWeight: 500 }}
+              >
+                {filterMessage?.body}
+              </p>
+            </div>
 
-        </Grid>
-        {props.hideStats === null && (
-          <div
-            style={{
-              borderLeft: "1px solid #d2d2d2",
-              width: "25%",
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
+          </Grid>
+          {props.hideStats === null && (
+            <div
               style={{
-                height: "15%",
-                borderBottom: "1px solid #d2d2d2",
+                borderLeft: "1px solid #d2d2d2",
+                width: "25%",
               }}
             >
-              <p
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "15%",
+                  borderBottom: "1px solid #d2d2d2",
+                }}
+              >
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Message Stats
+                </p>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "60%",
+                  borderBottom: "1px solid #d2d2d2",
+                }}
+              >   <p
                 style={{
                   fontWeight: "bold",
-                  fontSize: 18,
+                  fontSize: 26,
                   margin: 0,
-                  height: 30,
+                  width: "100%",
+                  textAlign: "center",
                 }}
               >
-                Message Stats
-              </p>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "60%",
-                borderBottom: "1px solid #d2d2d2",
-              }}
-            >   <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 26,
-                margin: 0,
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
 
-                {((filterMessageDetails.recipients?.status_counts?.sent / filterMessageDetails.recipients?.count) * 100).toFixed(2) + "%"}
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  margin: 0,
-                  height: 30,
-                }}
-              >
-                Delivery Rate ({filterMessageDetails.recipients?.status_counts?.sent + "/" + filterMessageDetails.recipients?.count})
-              </p>
-              {/* <p
+                  {((filterMessageDetails.recipients?.status_counts?.sent / filterMessageDetails.recipients?.count) * 100).toFixed(2) + "%"}
+                </p>
+                <p
+                  style={{
+                    fontSize: 12,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Delivery Rate ({filterMessageDetails.recipients?.status_counts?.sent + "/" + filterMessageDetails.recipients?.count})
+                </p>
+                {/* <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -2208,81 +2296,81 @@ function MessageCreate(props) {
               >
                 Opt out Rate (286/300)
               </p>*/}
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "25%",
-                // borderBottom: "1px solid #d2d2d2",
-              }}
-              onClick={() => {
-                if (messageSelected.length > 0) {
-                  console.log("SAdasd", messageSelected);
-                  setMessageDetails(true);
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "25%",
+                  // borderBottom: "1px solid #d2d2d2",
+                }}
+                onClick={() => {
+                  if (messageSelected.length > 0) {
+                    console.log("SAdasd", messageSelected);
+                    setMessageDetails(true);
 
-                  setIsMesasgeStatusClick(false);
-                  //setMessageStatus("Drafts");
+                    setIsMesasgeStatusClick(false);
+                    //setMessageStatus("Drafts");
 
-                  console.log("ASd");
-                  setMessageSelected([]);
+                    console.log("ASd");
+                    setMessageSelected([]);
 
-                } else {
-                  setMessageDetails(null);
-                  filterMessageDetails = filterMessage
-                  setMessagePreview(null);
-                  console.log("ASd");
-                  setMessageSelected([{}]);
+                  } else {
+                    setMessageDetails(null);
+                    filterMessageDetails = filterMessage
+                    setMessagePreview(null);
+                    console.log("ASd");
+                    setMessageSelected([{}]);
 
-                }
-              }}
-            >
-              <IconTextField
-                background={messageSelected.length && "rgb(58, 114, 217)"}
-                text="Delivery Details"
-                width={180}
-                textColor={messageSelected.length && "white"}
-                onClick={() => { }}
-                icon={
-                  <Search
-                    style={{
-                      color: messageSelected.length ? "white" : "#0091ff",
-                      marginRight: 8,
-                    }}
-                  ></Search>
-                }
-              ></IconTextField>
-            </Grid>
-          </div>
-        )}
-      </Grid>
-    );
-  };
+                  }
+                }}
+              >
+                <IconTextField
+                  background={messageSelected.length && "rgb(58, 114, 217)"}
+                  text="Delivery Details"
+                  width={180}
+                  textColor={messageSelected.length && "white"}
+                  onClick={() => { }}
+                  icon={
+                    <Search
+                      style={{
+                        color: messageSelected.length ? "white" : "#0091ff",
+                        marginRight: 8,
+                      }}
+                    ></Search>
+                  }
+                ></IconTextField>
+              </Grid>
+            </div>
+          )}
+        </Grid>
+      );
+    };
 
-  const SelectedMessageDetails = (props) => {
-    console.log("messageCreatepropss", filterMessageDetails)
-    {/*const [count,setCount] = useState()
+    const SelectedMessageDetails = (props) => {
+      console.log("messageCreatepropss", filterMessageDetails)
+      {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
             totalcount+=  saveMessage.contact_ids.map(m =>m.length)
             setCount(totalcount)
     console.log("totalcount",count)*/}
 
-    return (
-      <Grid
-        container
-        direction="row"
-        style={{
-          border: "1px solid #d2d2d2",
-          borderRadius: 4,
-          marginTop: 16,
-          height: "auto",
-        }}
-      >
-        {/* <Grid item md={4} xs={4}> */}
-        {/*<div
+      return (
+        <Grid
+          container
+          direction="row"
+          style={{
+            border: "1px solid #d2d2d2",
+            borderRadius: 4,
+            marginTop: 16,
+            height: "auto",
+          }}
+        >
+          {/* <Grid item md={4} xs={4}> */}
+          {/*<div
           style={{
             borderRight: "1px solid #d2d2d2",
             width: "5%",
@@ -2302,40 +2390,40 @@ function MessageCreate(props) {
             )}
           </Grid>
         </div>*/}
-        <Grid
-          container
-          direction="row"
-          style={{
-            width: props.hideStats ? "90%" : "70%",
-            padding: 16,
-          }}
-        >
-
-          {filterMessageDetails?.media?.urls && placeholderContainer(filterMessageDetails?.media)}
-          {/* </Grid> */}
-          {/* <Grid item md={8} xs={8}> */}
-          <div
+          <Grid
+            container
+            direction="row"
             style={{
-              marginLeft: 16,
-              width: "50%",
+              width: props.hideStats ? "90%" : "70%",
+              padding: 16,
             }}
           >
-            <p
+
+            {filterMessageDetails?.media?.urls && placeholderContainer(filterMessageDetails?.media)}
+            {/* </Grid> */}
+            {/* <Grid item md={8} xs={8}> */}
+            <div
               style={{
-                fontWeight: "bold",
-                fontSize: 20,
-                marginBottom: 0,
+                marginLeft: 16,
+                width: "50%",
               }}
             >
-              {filterMessageDetails.media && filterMessageDetails.media.name}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Message Status:
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  marginBottom: 0,
+                }}
+              >
+                {filterMessageDetails.media && filterMessageDetails.media.name}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Message Status:
 
-              <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                {filterMessageDetails.status}
-              </span>
-              {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  {filterMessageDetails.status}
+                </span>
+                {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
                   Drafts
                 </span>
@@ -2354,154 +2442,148 @@ function MessageCreate(props) {
 
 
 
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Send As:
-              <strong className={classes.mdMargin}>{filterMessageDetails.platform?.name}</strong>
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Sender:
-              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
-              {formatPhoneNumber(JSON.parse(localStorage.getItem("user")).phone)}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Recepient:
-              <strong className={classes?.mdMargin}>
-                {filterMessageDetails?.recipients?.count}
-              </strong>
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Pending:
-              <strong className={classes.mdMargin}>
-                {filterMessageDetails.recipients?.status_counts.pending}
-              </strong>
-
-            </p>
-            <p class className={classes?.messageDetailsHeading}>
-              Sent:
-              <strong className={classes.mdMargin}>
-                {filterMessageDetails?.recipients?.status_counts?.sent}
-              </strong>
-
-            </p>
-            {saveMessage.contact_ids.status === "Scheduled" ? (
+              </p>
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
+                Send As:
+                <strong className={classes.mdMargin}>{filterMessageDetails.platform?.name}</strong>
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Sender:
+                <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
+                {formatPhoneNumber(JSON.parse(localStorage.getItem("user")).phone)}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Recepient:
+                <strong className={classes?.mdMargin}>
+                  {filterMessageDetails?.recipients?.count}
+                </strong>
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Pending:
                 <strong className={classes.mdMargin}>
+                  {filterMessageDetails.recipients?.status_counts.pending}
+                </strong>
 
-                </strong>{" "}
-                <span
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
-                  onClick={() => {
-                    setMessageStatus("Drafts");
-                    setMessageCreated(false);
+              </p>
+
+              {saveMessage.contact_ids.status === "Scheduled" ? (
+                <p class className={classes.messageDetailsHeading}>
+                  Start Sending at:
+                  <strong className={classes.mdMargin}>
+
+                  </strong>{" "}
+                  <span
+                    style={{ textDecoration: "underline", cursor: "pointer" }}
+                    onClick={() => {
+                      setMessageStatus("Drafts");
+                      setMessageCreated(false);
+                    }}
+                  >
+                    (Unschedule & more to drafts)
+                  </span>
+                </p>
+              ) : (
+                <p class className={classes.messageDetailsHeading}>
+                  Start Sending at:
+                  <strong className={classes.mdMargin}>
+                    {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
+                  </strong>{" "}
+                </p>
+              )}
+
+              <Grid
+                container
+                direction="row"
+                className={classes.messageDetailsHeading}
+              >
+                Tags:
+                {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
+                  style={{
+                    border: "1px solid #0091ff",
+                    color: "#0091ff",
+                    padding: 4,
+                    fontSize: 10,
+                    borderRadius: 4,
+                    marginLeft: 16,
                   }}
                 >
-                  (Unschedule & more to drafts)
-                </span>
-              </p>
-            ) : (
+                  {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
+                </div>}
+
+              </Grid>
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
-                <strong className={classes.mdMargin}>
-                  {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
-                </strong>{" "}
+                Message Text :
               </p>
-            )}
-
-            <Grid
-              container
-              direction="row"
-              className={classes.messageDetailsHeading}
-            >
-              Tags:
-              {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
-                style={{
-                  border: "1px solid #0091ff",
-                  color: "#0091ff",
-                  padding: 4,
-                  fontSize: 10,
-                  borderRadius: 4,
-                  marginLeft: 16,
-                }}
+              <p
+                class
+                className={classes.messageDetailsHeading}
+                style={{ color: "black", fontWeight: 500, width: 200 }}
               >
-                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
-              </div>}
+                {filterMessageDetails.body}
+              </p>
+            </div>
 
-            </Grid>
-            <p class className={classes.messageDetailsHeading}>
-              Message Text :
-            </p>
-            <p
-              class
-              className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500 }}
-            >
-              {filterMessageDetails.body}
-            </p>
-          </div>
-
-        </Grid>
-        {props.hideStats === null && (
-          <div
-            style={{
-              borderLeft: "1px solid #d2d2d2",
-              width: "25%",
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
+          </Grid>
+          {props.hideStats === null && (
+            <div
               style={{
-                height: "15%",
-                borderBottom: "1px solid #d2d2d2",
+                borderLeft: "1px solid #d2d2d2",
+                width: "25%",
               }}
             >
-              <p
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
                 style={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  margin: 0,
-                  height: 30,
+                  height: "15%",
+                  borderBottom: "1px solid #d2d2d2",
                 }}
               >
-                Message Stats
-              </p>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "60%",
-                borderBottom: "1px solid #d2d2d2",
-              }}
-            >
-              <p
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Message Stats
+                </p>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
                 style={{
-                  fontWeight: "bold",
-                  fontSize: 26,
-                  margin: 0,
-                  width: "100%",
-                  textAlign: "center",
+                  height: "60%",
+                  borderBottom: "1px solid #d2d2d2",
                 }}
               >
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 26,
+                    margin: 0,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
 
-                {((filterMessageDetails.recipients.status_counts.sent / filterMessageDetails.recipients.count) * 100).toFixed(2) + "%"}
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  margin: 0,
-                  height: 30,
-                }}
-              >
-                Delivery Rate ({filterMessageDetails.recipients.status_counts.sent + "/" + filterMessageDetails.recipients.count})
-              </p>
-              {/*  <p
+                  {((filterMessageDetails.recipients.status_counts.sent / filterMessageDetails.recipients.count) * 100).toFixed(2) + "%"}
+                </p>
+                <p
+                  style={{
+                    fontSize: 12,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Delivery Rate ({filterMessageDetails.recipients.status_counts.sent + "/" + filterMessageDetails.recipients.count})
+                </p>
+                {/*  <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -2540,134 +2622,135 @@ function MessageCreate(props) {
               >
                 Opt out Rate (286/300)
               </p>*/}
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "25%",
-                // borderBottom: "1px solid #d2d2d2",
-              }}
-              onClick={() => {
-                if (messageSelected.length > 0) {
-                  console.log("SAdasd", messageSelected);
-                  setMessageDetails(true);
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "25%",
+                  // borderBottom: "1px solid #d2d2d2",
+                }}
+                onClick={() => {
+                  if (messageSelected.length > 0) {
+                    console.log("SAdasd", messageSelected);
+                    setMessageDetails(true);
 
-                  setIsMesasgeStatusClick(false);
-                  setMessageStatus("Drafts");
+                    setIsMesasgeStatusClick(false);
+                    setMessageStatus("Drafts");
 
-                  console.log("ASd");
-                  setMessageSelected([]);
-                } else {
+                    console.log("ASd");
+                    setMessageSelected([]);
+                  } else {
 
-                  setMessageDetails(null);
-                  setMessagePreview(null);
-                  console.log("ASd");
-                  setMessageSelected([{}]);
-                }
-              }}
-            >
-              <IconTextField
-                background={messageSelected.length && "rgb(58, 114, 217)"}
-                text="Delivery Details"
-                width={180}
-                textColor={messageSelected.length && "white"}
-                onClick={() => { }}
-                icon={
-                  <Search
-                    style={{
-                      color: messageSelected.length ? "white" : "#0091ff",
-                      marginRight: 8,
-                    }}
-                  ></Search>
-                }
-              ></IconTextField>
-            </Grid>
-          </div>
-        )}
-      </Grid>
-    );
-  };
+                    setMessageDetails(null);
+                    setMessagePreview(null);
+                    console.log("ASd");
+                    setMessageSelected([{}]);
+                  }
+                }}
+              >
+                <IconTextField
+                  background={messageSelected.length && "rgb(58, 114, 217)"}
+                  text="Delivery Details"
+                  width={180}
+                  textColor={messageSelected.length && "white"}
+                  onClick={() => { }}
+                  icon={
+                    <Search
+                      style={{
+                        color: messageSelected.length ? "white" : "#0091ff",
+                        marginRight: 8,
+                      }}
+                    ></Search>
+                  }
+                ></IconTextField>
+              </Grid>
+            </div>
+          )}
+        </Grid>
+      );
+    };
 
-  const MessageDetailsCard = (props) => {
-    console.log("messageprops", props)
-    {/*const [count,setCount] = useState()
+    const MessageDetailsCard = (props) => {
+      console.log("messageprops", saveMessage)
+      {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
             totalcount+=  saveMessage.contact_ids.map(m =>m.length)
             setCount(totalcount)
     console.log("totalcount",count)*/}
-    let count = 0
-    saveMessage?.filter_ids?.map((m) => m.contacts.profile_images ? count += m.contacts.profile_images.length : 0)
-    count = count + saveMessage.contact_ids.length
-    return (
-      <Grid
-        container
-        direction="row"
-        style={{
-          border: "1px solid #d2d2d2",
-          borderRadius: 4,
-          marginTop: 16,
-          height: "auto",
-        }}
-      >
-        {/* <Grid item md={4} xs={4}> */}
-        <div
-          style={{
-            borderRight: "1px solid #d2d2d2",
-            width: "5%",
-          }}
-        >
-          <Grid container direction="row" justify="center">
-            {props.hideCheckBox === null && (
-              <Checkbox
-                color={"primary"}
-                checked={
-                  selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
-                }
-                onChange={(e) => {
-                  makeMessageSelected(props.selectedPlaceholder.id);
-                }}
-              ></Checkbox>
-            )}
-          </Grid>
-        </div>
+      let count = 0
+
+      saveMessage?.filter_ids?.map((m) => m.contacts?.profile_images ? count += m.contacts.profile_images.length : 0)
+      count = count + saveMessage.contact_ids?.length
+      return (
         <Grid
           container
           direction="row"
           style={{
-            width: props.hideStats ? "90%" : "70%",
-            padding: 16,
+            border: "1px solid #d2d2d2",
+            borderRadius: 4,
+            marginTop: 16,
+            height: "auto",
           }}
         >
-
-          {saveMessage?.media_placeholder_id && placeholderContainer(saveMessage?.media_placeholder_id)}
-          {/* </Grid> */}
-          {/* <Grid item md={8} xs={8}> */}
+          {/* <Grid item md={4} xs={4}> */}
           <div
             style={{
-              marginLeft: 16,
-              width: "50%",
+              borderRight: "1px solid #d2d2d2",
+              width: "5%",
             }}
           >
-            <p
+            <Grid container direction="row" justify="center">
+              {props.hideCheckBox === null && (
+                <Checkbox
+                  color={"primary"}
+                  checked={
+                    selectedMessages.indexOf(props.selectedPlaceholder.id) > -1
+                  }
+                  onChange={(e) => {
+                    makeMessageSelected(props.selectedPlaceholder.id);
+                  }}
+                ></Checkbox>
+              )}
+            </Grid>
+          </div>
+          <Grid
+            container
+            direction="row"
+            style={{
+              width: props.hideStats ? "90%" : "70%",
+              padding: 16,
+            }}
+          >
+
+            {saveMessage?.media_placeholder_id && placeholderContainer(saveMessage?.media_placeholder_id)}
+            {/* </Grid> */}
+            {/* <Grid item md={8} xs={8}> */}
+            <div
               style={{
-                fontWeight: "bold",
-                fontSize: 20,
-                marginBottom: 0,
+                marginLeft: 16,
+                width: "50%",
               }}
             >
-              {saveMessage.media_placeholder_id && saveMessage.media_placeholder_id.file_name}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Message Status:
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  marginBottom: 0,
+                }}
+              >
+                {saveMessage.media_placeholder_id && saveMessage.media_placeholder_id.file_name}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Message Status:
 
-              <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                Drafts
-              </span>
-              {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                  Drafts
+                </span>
+                {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
                   Drafts
                 </span>
@@ -2686,542 +2769,463 @@ function MessageCreate(props) {
 
 
 
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Send As:
-              <strong className={classes.mdMargin}>{saveMessage?.platform}</strong>
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Sender:
-              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
-              {JSON.parse(localStorage.getItem("user")).phone}
-            </p>
-            <p class className={classes.messageDetailsHeading}>
-              Recepient:
-              <strong className={classes.mdMargin}>
-                {count}
-              </strong>
-
-            </p>
-            {saveMessage.contact_ids.status === "Scheduled" ? (
+              </p>
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
+                Send As:
+                <strong className={classes.mdMargin}>{saveMessage?.platform}</strong>
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Sender:
+                <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
+                {JSON.parse(localStorage.getItem("user")).phone}
+              </p>
+              <p class className={classes.messageDetailsHeading}>
+                Recepient:
                 <strong className={classes.mdMargin}>
+                  {count}
+                </strong>
 
-                </strong>{" "}
-                <span
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
-                  onClick={() => {
-                    setMessageStatus("Drafts");
-                    setMessageCreated(false);
+              </p>
+              {saveMessage.contact_ids.status === "Scheduled" ? (
+                <p class className={classes.messageDetailsHeading}>
+                  Start Sending at:
+                  <strong className={classes.mdMargin}>
+
+                  </strong>{" "}
+                  <span
+                    style={{ textDecoration: "underline", cursor: "pointer" }}
+                    onClick={() => {
+                      setMessageStatus("Drafts");
+                      setMessageCreated(false);
+                    }}
+                  >
+                    (Unschedule & more to drafts)
+                  </span>
+                </p>
+              ) : (
+                <p class className={classes.messageDetailsHeading}>
+                  Start Sending at:
+                  <strong className={classes.mdMargin}>
+                    {moment(date).format(" MM/DD/YYYY h:mm a")}
+                  </strong>{" "}
+                </p>
+              )}
+
+              <Grid
+                container
+                direction="row"
+                className={classes.messageDetailsHeading}
+              >
+                Tags:
+                {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
+                  style={{
+                    border: "1px solid #0091ff",
+                    color: "#0091ff",
+                    padding: 4,
+                    fontSize: 10,
+                    borderRadius: 4,
+                    marginLeft: 16,
                   }}
                 >
-                  (Unschedule & more to drafts)
-                </span>
-              </p>
-            ) : (
+                  {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
+                </div>}
+
+              </Grid>
               <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
-                <strong className={classes.mdMargin}>
-                  {moment(date).format(" MM/DD/YYYY h:mm a")}
-                </strong>{" "}
-              </p>
-            )}
-
-            <Grid
-              container
-              direction="row"
-              className={classes.messageDetailsHeading}
-            >
-              Tags:
-              {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
-                style={{
-                  border: "1px solid #0091ff",
-                  color: "#0091ff",
-                  padding: 4,
-                  fontSize: 10,
-                  borderRadius: 4,
-                  marginLeft: 16,
-                }}
-              >
-                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
-              </div>}
-
-            </Grid>
-            <p class className={classes.messageDetailsHeading}>
-              Message Text :
-            </p>
-            <p
-              class
-              className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500 }}
-            >
-              {saveMessage.body}
-            </p>
-          </div>
-
-        </Grid>
-        {props.hideStats === null && (
-          <div
-            style={{
-              borderLeft: "1px solid #d2d2d2",
-              width: "25%",
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "15%",
-                borderBottom: "1px solid #d2d2d2",
-              }}
-            >
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  margin: 0,
-                  height: 30,
-                }}
-              >
-                Message Stats
-              </p>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "60%",
-                borderBottom: "1px solid #d2d2d2",
-              }}
-            >
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 26,
-                  margin: 0,
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                95%
+                Message Text :
               </p>
               <p
-                style={{
-                  fontSize: 12,
-                  margin: 0,
-                  height: 30,
-                }}
+                class
+                className={classes.messageDetailsHeading}
+                style={{ color: "black", fontWeight: 500 }}
               >
-                Delivery Rate (286/300)
+                {saveMessage.body}
               </p>
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 26,
-                  margin: 0,
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                95%
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  margin: 0,
-                }}
-              >
-                Response Rate (286/300)
-              </p>
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 26,
-                  margin: 0,
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                95%
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  margin: 0,
-                  height: 30,
-                }}
-              >
-                Opt out Rate (286/300)
-              </p>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                height: "25%",
-                // borderBottom: "1px solid #d2d2d2",
-              }}
-              onClick={() => {
-                if (messageSelected.length > 0) {
-                  console.log("SAdasd", messageSelected);
-                  setMessageDetails(!messageDetails);
+            </div>
 
-                  setIsMesasgeStatusClick(false);
-                  setMessageStatus("Drafts");
-
-                  console.log("ASd");
-                  setMessageSelected([]);
-                } else {
-
-                  setMessageDetails(null);
-                  setMessagePreview(null);
-                  console.log("ASd");
-                  setMessageSelected([{}]);
-                }
-              }}
-            >
-              <IconTextField
-                background={messageSelected.length && "rgb(58, 114, 217)"}
-                text="Delivery Details"
-                width={180}
-                textColor={messageSelected.length && "white"}
-                onClick={() => { }}
-                icon={
-                  <Search
-                    style={{
-                      color: messageSelected.length ? "white" : "#0091ff",
-                      marginRight: 8,
-                    }}
-                  ></Search>
-                }
-              ></IconTextField>
-            </Grid>
-          </div>
-        )}
-      </Grid>
-    );
-  };
-
-  const RenderSelectedMessage = (props) => {
-    console.log('selectedmessage', props)
-
-
-
-    return (
-      <div
-        style={{
-          width: showSideFilters === true ? "85%" : "100%",
-          height: "100%",
-          background: "white",
-          borderRadius: 5,
-          padding: 16,
-          paddingLeft: 30,
-          paddingRight: 30,
-        }}
-      >
-        {" "}
-        <Grid container direction="row">
-          <Grid item md={4} sm={4}>
-            <KeyboardArrowLeftIcon
-              onClick={(e) => {
-                setMessageDetails(true);
-                setMessageStatus("Drafts");
-                setIsMesasgeStatusClick(false);
-                setMessagePreview(null);
-                setMessageSelected([]);
-
-              }}
-              style={{ cursor: "pointer", fontSize: 30, fontWeight: "bold" }}
-            ></KeyboardArrowLeftIcon>
-
-            <span
-              style={{
-                padding: 16,
-                fontWeight: "bold",
-                // marginLeft: 20,
-                fontSize: 20,
-              }}
-            >
-              Message Details
-            </span>
           </Grid>
-
-          <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              {showActionButton()}
-              {showScheduleButton()}
-            </Grid>
-          </Grid>
-
-          <div
-            style={{
-              width: "100%",
-              maxHeight: 330,
-              //  minWidth: 1110
-            }}
-            className="hideScrollBar"
-            id={"messageDetailScrollPublished"}
-            onScroll={() => {
-              var scroll = document.getElementById(
-                "messageDetailScrollPublished"
-              );
-              if (scroll) {
-                scrollPosition = scroll?.scrollTop;
-                // console.log("THis is scroll", scrollPosition);
-              }
-            }}
-          >
-            {placeholders &&
-              placeholders?.map((selectedPlaceholder, index) => {
-                if (index < 1) {
-                  return (
-                    <SelectedMessageDetails
-                      hideCheckBox={false}
-                      hideStats={null}
-                      selectedPlaceholder={selectedPlaceholder}
-                    ></SelectedMessageDetails>
-
-                  );
-                }
-              })}
-          </div>
-          <div
-            style={{
-              marginTop: 10,
-              width: "100%",
-              minHeight: "calc(100vh - 520px )",
-            }}
-          >
-            {selectedMessageStatusTable(filterMessageDetails?.recipients)}
-          </div>
-        </Grid>
-      </div>
-    );
-  };
-
-  const MessageDetails = (props) => {
-    // const [filter, setFilterMessage] = useState([])
-    const firstname = JSON.parse(localStorage.getItem("user")).first_name.trim()
-    const lastname = JSON.parse(localStorage.getItem("user")).last_name.trim()
-    console.log("fistandlastnamee", firstname, lastname)
-    console.log("itemboards", filter)
-    let startIndex = 0;
-    let endIndex = 99;
-
-    filterMessage = allMessages?.slice(0, 99)
-    console.log("filtering", filterMessage)
-
-    {
-      filter.map((boardname) => {
-
-        if (boardname === "AllMessages") {
-          filterMessage.push(allMessages)
-        } else if (boardname === "Archived") {
-          filterMessage?.push(allMessages?.filter(m => m.status === "Archived"))
-        }
-        else if (boardname === "Finished") {
-          filterMessage?.push(allMessages?.filter(m => m.status === "Sent"));
-        }
-        else if (boardname === "In Progress") {
-          filterMessage?.push(allMessages?.filter(m => m.status === "In Progress"));
-        }
-        else if (boardname === "Scheduled") {
-          filterMessage?.push(allMessages?.filter(m => m.status === "Scheduled"));
-        }
-        else if (boardname === firstname + " " + lastname) {
-          filterMessage?.push(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname));
-        }
-
-
-
-
-
-
-      })
-
-
-    }
-    console.log("filterMessages", filterMessage)
-    return (
-      <div
-        style={{
-          width: showSideFilters === true ? "85%" : "100%",
-          height: "100%",
-          background: "white",
-          borderRadius: 5,
-          padding: 16,
-          paddingLeft: 30,
-          paddingRight: 30,
-        }}
-      >
-
-
-        {" "}
-        <Grid container direction="row" style={{ marginTop: 10 }}>
-          {filter.length != 0 &&
-            filter.map((fil, index) => {
-              return (
-                <div
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justify="center"
-                  className={classes.tags}
+          {props.hideStats === null && (
+            <div
+              style={{
+                borderLeft: "1px solid #d2d2d2",
+                width: "25%",
+              }}
+            >
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "15%",
+                  borderBottom: "1px solid #d2d2d2",
+                }}
+              >
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    margin: 0,
+                    height: 30,
+                  }}
                 >
-                  <Grid
-                    style={{ height: 40 }}
-                    container
-                    direction="row"
-                    alignItems="center"
-                  >
-                    {fil}
-                    <ClearIcon
-                      onClick={() => {
-                        removeDataFromFilter(index);
-                        // setMessageDetails(true)
-                      }}
+                  Message Stats
+                </p>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "60%",
+                  borderBottom: "1px solid #d2d2d2",
+                }}
+              >
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 26,
+                    margin: 0,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  95%
+                </p>
+                <p
+                  style={{
+                    fontSize: 12,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Delivery Rate (286/300)
+                </p>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 26,
+                    margin: 0,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  95%
+                </p>
+                <p
+                  style={{
+                    fontSize: 12,
+                    margin: 0,
+                  }}
+                >
+                  Response Rate (286/300)
+                </p>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 26,
+                    margin: 0,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  95%
+                </p>
+                <p
+                  style={{
+                    fontSize: 12,
+                    margin: 0,
+                    height: 30,
+                  }}
+                >
+                  Opt out Rate (286/300)
+                </p>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  height: "25%",
+                  // borderBottom: "1px solid #d2d2d2",
+                }}
+                onClick={() => {
+                  if (messageSelected.length > 0) {
+                    console.log("SAdasd", messageSelected);
+                    setMessageDetails(!messageDetails);
+
+                    setIsMesasgeStatusClick(false);
+                    setMessageStatus("Drafts");
+
+                    console.log("ASd");
+                    setMessageSelected([]);
+                  } else {
+
+                    setMessageDetails(null);
+                    setMessagePreview(null);
+                    console.log("ASd");
+                    setMessageSelected([{}]);
+                  }
+                }}
+              >
+                <IconTextField
+                  background={messageSelected.length && "rgb(58, 114, 217)"}
+                  text="Delivery Details"
+                  width={180}
+                  textColor={messageSelected.length && "white"}
+                  onClick={() => { }}
+                  icon={
+                    <Search
                       style={{
-                        color: "red",
-                        fontSize: 17,
-                        cursor: "pointer",
-                        marginLeft: 8,
+                        color: messageSelected.length ? "white" : "#0091ff",
+                        marginRight: 8,
                       }}
-                    ></ClearIcon>{" "}
-                  </Grid>
-
-                </div>
-              );
-            })}
-        </Grid>
-        <Grid container direction="row">
-          <Grid item md={4} sm={4}>
-
-
-            <img src={AmimatedBurger} onClick={(e) => {
-              setshowSideFilters(!showSideFilters);
-            }}
-              style={{ cursor: "pointer", width: 40 }}></img>
-
-            <span
-              style={{
-                padding: 16,
-                fontWeight: "bold",
-                // marginLeft: 20,
-                fontSize: 20,
-              }}
-            >
-              Messages
-            </span>
-          </Grid>
-
-          <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              {showActionButton()}
-              {showFilterButton()}
-            </Grid>
-          </Grid>
-
-
-
-          <div
-            style={{
-              width: "100%",
-              border: "1px solid #f8f8f8",
-              marginTop: 10,
-            }}
-          ></div>
-          {showMessageFiltersRow === true ? (
-            renderMessageFilters()
-          ) : (
-            <div></div>
+                    ></Search>
+                  }
+                ></IconTextField>
+              </Grid>
+            </div>
           )}
-
-          <div
-            style={{
-              width: "100%",
-              maxHeight: 330,
-              //  minWidth: 1110
-            }}
-
-            className="fullHeightCreateMessageDetails hideScrollBar"
-            id={"messageDetailScrollPublished"}
-            onScroll={() => {
-              var scroll = document.getElementById(
-                "messageDetailScrollPublished"
-              );
-              if (scroll) {
-                scrollPosition = scroll.scrollTop;
-                // console.log("THis is scroll", scrollPosition);
-              }
-            }}
-          >
-
-            {filterMessage &&
-              filterMessage.map((selectedPlaceholder, index) => {
-                if (index <= filterMessage.length) {
-                  return (
-                    <MessageFilterDetails
-                      hideCheckBox={null}
-                      hideStats={null}
-                      selectedPlaceholder={selectedPlaceholder}
-                    ></MessageFilterDetails>
-                  );
-                }
-              })}
-          </div>
         </Grid>
-      </div>
-    );
-  };
+      );
+    };
+
+    const RenderSelectedMessage = (props) => {
+      console.log('selectedmessage', props)
 
 
-  const MessagePreview = () => {
-    return (
-      <div
-        style={{
-          width: showSideFilters === true ? "85%" : "100%",
-          height: "100%",
-          background: "white",
-          borderRadius: 5,
-          padding: 16,
-          paddingLeft: 30,
-          paddingRight: 30,
-        }}
-      >
-        {" "}
-        <Grid container direction="row">
-          <Grid item md={4} sm={4}>
 
-            <ArrowBackIosNewIcon style={{ cursor: "pointer" }} onClick={() => {
-              setMessagePreview(false);
-              setSelectedDrafts(false)
-            }} />
+      return (
+        <div
+          style={{
+            width: showSideFilters === true ? "85%" : "100%",
+            height: "100%",
+            background: "white",
+            borderRadius: 5,
+            padding: 16,
+            paddingLeft: 30,
+            paddingRight: 30,
+          }}
+        >
+          {" "}
+          <Grid container direction="row">
+            <Grid item md={4} sm={4}>
+              <KeyboardArrowLeftIcon
+                onClick={(e) => {
+                  setMessageDetails(true);
+                  setMessageStatus("Drafts");
+                  setIsMesasgeStatusClick(false);
+                  setMessagePreview(null);
+                  setMessageSelected([]);
 
-            <span
+                }}
+                style={{ cursor: "pointer", fontSize: 30, fontWeight: "bold" }}
+              ></KeyboardArrowLeftIcon>
+
+              <span
+                style={{
+                  padding: 16,
+                  fontWeight: "bold",
+                  // marginLeft: 20,
+                  fontSize: 20,
+                }}
+              >
+                Message Details
+              </span>
+            </Grid>
+
+            <Grid item md={8} sm={8}>
+              <Grid container direction="row" justify="flex-end">
+                {showActionButton()}
+                {showScheduleButton()}
+              </Grid>
+            </Grid>
+
+            <div
               style={{
-                padding: 16,
-                fontWeight: "bold",
-                // marginLeft: 20,
-                fontSize: 20,
+                width: "100%",
+                maxHeight: 330,
+                //  minWidth: 1110
+              }}
+              className="hideScrollBar"
+              id={"messageDetailScrollPublished"}
+              onScroll={() => {
+                var scroll = document.getElementById(
+                  "messageDetailScrollPublished"
+                );
+                if (scroll) {
+                  scrollPosition = scroll?.scrollTop;
+                  // console.log("THis is scroll", scrollPosition);
+                }
               }}
             >
-              Message Preview
-            </span>
+              {placeholders &&
+                placeholders?.map((selectedPlaceholder, index) => {
+                  if (index < 1) {
+                    return (
+                      <SelectedMessageDetails
+                        hideCheckBox={false}
+                        hideStats={null}
+                        selectedPlaceholder={selectedPlaceholder}
+                      ></SelectedMessageDetails>
+
+                    );
+                  }
+                })}
+            </div>
+            <div
+              style={{
+                marginTop: 10,
+                width: "100%",
+                minHeight: "calc(100vh - 520px )",
+              }}
+            >
+              {selectedMessageStatusTable(filterMessageDetails?.recipients)}
+            </div>
           </Grid>
-          <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
-              {showActionButton()}
-              {showSendButton()}
-            </Grid>
-          </Grid>
-          <Grid container direction="row">
+        </div>
+      );
+    };
+
+    const MessageDetails = (props) => {
+      // const [filter, setFilterMessage] = useState([])
+      const firstname = JSON.parse(localStorage.getItem("user")).first_name.trim()
+      const lastname = JSON.parse(localStorage.getItem("user")).last_name.trim()
+      console.log("fistandlastnamee", firstname, lastname)
+      console.log("itemboard", filter)
+
+
+
+
+      console.log("filtering", filterMessage)
+      let filteredMessage = []
+      if (allMessages) {
+        for (let f of filter) {
+
+          if (f === "AllMessages") {
+            filteredMessage = filteredMessage.concat(allMessages.slice(0, 99))
+            // filterMessage = filterMessage.filter((m)=>m.id.includes())
+          }
+          else if (f === "Archived") {
+            filteredMessage = filteredMessage.concat(allMessages.filter(m => m.status === "Archived").slice(0, 99))
+          }
+          else if (f === "Finished") {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Sent").slice(0, 99));
+          }
+          else if (f === "In Progress") {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "In Progress").slice(0, 99));
+          }
+          else if (f === "Scheduled") {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Scheduled").slice(0, 99));
+          }
+          else if (f === "Draft") {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Draft").slice(0, 99));
+          }
+          else if (f === "Error") {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Error").slice(0, 99));
+          }
+          else if (f === firstname + " " + lastname) {
+            filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname).slice(0, 99));
+          }
+
+          else if (f === teamContacts.map((m) => m.first_name + " " + m.last_name)) {
+            filterMessage = filterMessage.concat(allMessages?.filter(m =>
+              m.sender.first_name + " " + m.sender.last_name === f)).slice(0, 99);
+          }
+          else if (f === allPlatforms.map((m) => m.name)) {
+            filterMessage = filterMessage.concat(allMessages?.filter(m => m.platform?.name === f)).slice(0, 99);
+          }
+          else if (f === statusses.map((m) => m)) {
+            filterMessage = filterMessage.concat(allMessages?.filter(m => m.status === f)).slice(0, 99);
+          }
+          else if (allTags !== null) {
+            filterMessage = filterMessage.concat(allMessages?.filter(m => m.tags === f));
+          }
+
+          filteredMessage = [...new Set(filteredMessage.filter(item => item.id))];
+          const filteredArr = filteredMessage.filter((item, index) => {
+            return filteredMessage.indexOf(item) === index;
+          })
+          console.log(filteredMessage, "filteredarra")
+
+
+          //const fil = [...new Set(filterMessage) ]
+          console.log(f, "filtermessagesanddata", filteredMessage, filteredArr)
+
+
+        }
+
+
+      }
+
+      {/*filter.map ((boardname) =>{
+      
+      if(boardname==="AllMessages"){
+        filterMessage=filterMessage
+      } else if(boardname==="Archived")
+      {
+        filterMessage=filterMessage.concat( allMessages?.filter(m => m.status === "Archived"))
+      }
+      else if(boardname==="Finished")
+      {
+       filterMessage=filterMessage.concat( allMessages?.filter(m => m.status === "Sent"));
+      }
+      else if(boardname==="In Progress")
+      {
+         filterMessage=filterMessage.concat(allMessages?.filter(m => m.status === "In Progress"));
+      }
+      else if(boardname==="Scheduled")
+      {
+         filterMessage=filterMessage.concat(allMessages?.filter(m => m.status === "Scheduled"));
+      }
+      else if(boardname===firstname+" "+lastname)
+      {
+        filterMessage=filterMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname));
+      }
+      else if(allPlatforms!==null)
+      {
+        filterMessage=(allMessages?.filter(m => m.platform === boardname));
+      }
+      else if(allStatuses!==null)
+      {
+        filterMessage=(allMessages?.filter(m => m.status === boardname));
+      }
+      else if(allTags!==null)
+      {
+        filterMessage=(allMessages?.filter(m => m.tags === boardname));
+      }
+
+     
+          
+           
+     
+    })       
+      
+      
+  */ }
+
+
+
+      console.log("filterMessages", filterMessage)
+
+      return (
+        <div
+          style={{
+            width: showSideFilters === true ? "85%" : "100%",
+            height: "100%",
+            background: "white",
+            borderRadius: 5,
+            padding: 16,
+            paddingLeft: 30,
+            paddingRight: 30,
+          }}
+        >
+
+
+          {" "}
+          <Grid container direction="row" style={{ marginTop: 10 }}>
             {filter.length != 0 &&
               filter.map((fil, index) => {
                 return (
@@ -3242,6 +3246,7 @@ function MessageCreate(props) {
                       <ClearIcon
                         onClick={() => {
                           removeDataFromFilter(index);
+                          // setMessageDetails(true)
                         }}
                         style={{
                           color: "red",
@@ -3251,283 +3256,509 @@ function MessageCreate(props) {
                         }}
                       ></ClearIcon>{" "}
                     </Grid>
+
                   </div>
                 );
               })}
           </Grid>
-
-          <div
-            style={{
-              width: "100%",
-              border: "1px solid #f8f8f8",
-              marginTop: 10,
-            }}
-          ></div>
-          <div
-            style={{
-              width: "100%",
-              maxHeight: 330,
-              //  minWidth: 1110
-            }}
-            className="fullHeightCreateMessagePreview"
-          >
-            {placeholders && (
-              <MessageDetailsCard
-                hideCheckBox
-                hideStats
-                selectedPlaceholder={placeholders[0]}
-                messageStatus={messageStatus}
-              ></MessageDetailsCard>
-            )}
-            {messageStatusTable()}
-          </div>
-        </Grid>
-      </div>
-    );
-  };
-
-  if (localStorage.getItem("user")) {
-  } else {
-    window.location.href = "/";
-  }
-
-  const addDataToFilter = (value, type) => {
-    console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
-    if (filter.includes(value)) {
-
-      var temp = filter;
-      if (temp.length === 1) {
-        setFilter(temp);
-      } else {
-        temp.splice(value, 1);
-        // console.log("This is temp", temp);
-        setFilter(temp);
-      }
-    } else {
-      var temp = filter;
-      var tempType = filterType;
-      temp.push(value);
-      tempType.push(type);
-      setFilterType(tempType);
-      setFilter(temp);
-      setuseLessState(uselessState + 1);
-    }
-  };
+          <Grid container direction="row">
+            <Grid item md={4} sm={4}>
 
 
 
-  const addDataToReceivers = (value, type) => {
-    if (messageReceiver.includes(value)) {
-      var temp = [];
-      messageReceiver.map((item) => {
-        if (value != item) {
-          temp.push(item);
-        }
-      });
-      setMessageReceiver(temp);
-      setRecieve(temp)
-      // console.log("This is temp", temp);
-      setuseLessState(uselessState + 1);
-    } else {
-      var temp = messageReceiver;
-      temp.push(value);
-      setMessageReceiver(temp);
-      setRecieve(temp)
-      // console.log("This is temp", temp);
-      setuseLessState(uselessState + 1);
-    }
-  };
+              {
+                showDrawer ?
+                  <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(false);
+                    setShowAnimation(true);
+                    handleAnimation();
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>
+                  :
+                  <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                    setshowSideFilters(!showSideFilters);
+                    setShowDrawer(true);
+                    setShowAnimation(true);
+                    handleAnimation();
 
-  const removeDataFromFilter = (index) => {
-    var temp = filter;
-    var tempType = filterType;
-    temp.splice(index, 1);
-    tempType.splice(index, 1);
-    var newArray = temp;
-    let deletedboard;
-    filter.map((board) => {
-      filter.map((name) => {
-        if (board.includes(name)) { } else {
-          deletedboard = name
-        }
-      })
-    })
-    console.log("deleteMessageDetails", deletedboard)
+                  }}
+                    style={{ cursor: "pointer", width: 40 }}></img>}
 
+              <span
+                style={{
+                  padding: 16,
+                  fontWeight: "bold",
+                  // marginLeft: 20,
+                  fontSize: 20,
+                }}
+              >
+                Messages
+              </span>
+            </Grid>
 
-    deletedboard = filterMessage.indexOf(deletedboard)
-    console.log("deleteMessageDetails", deletedboard)
-    filterMessage.splice(index, 1)
-    console.log("deleteMessageDetails", filterMessage)
+            <Grid item md={8} sm={8}>
+              <Grid container direction="row" justify="flex-end">
+                {showActionButton()}
+                {showFilterButton()}
+              </Grid>
+            </Grid>
 
 
 
-
-
-
-
-
-
-
-
-
-    setFilter(newArray);
-    setFilterType(tempType);
-    setuseLessState(uselessState - 1);
-  };
-  useEffect(() => {
-    if (localStorage.getItem("user")) {
-      if (localStorage.getItem("selectedMedia")) {
-
-        setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
-      }
-      getMyPlaceholders();
-      // getMyContactsSearch()
-      getMyMedia();
-      getMyTeamContacts();
-      getAllBoards();
-      // setTimeout()
-      // getCreateSearch();
-    } else {
-      window.location.href = "/";
-    }
-  }, [messagePreview]);
-
-  // console.log("THis is great message type", messageType);
-
-  const renderMessageReceiver = (messageType) => {
-    console.log("messageType", messageType)
-    return messageType.map((item) => {
-
-      return (
-        <div
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-          className={classes.tags}
-          style={{ paddingLeft: 0, marginBottom: 6, marginLeft: 16 }}
-        >
-          <Grid
-            style={{ height: 40 }}
-            container
-            direction="row"
-            alignItems="center"
-          >
-            {messageType.icon}
-            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item?.first_name ? item.first_name + " " + item.last_name : item.name}</p>
-            <ClearIcon
-              onClick={() => {
-                addDataToReceivers(item);
-              }}
+            <div
               style={{
-                color: "red",
-                fontSize: 17,
-                cursor: "pointer",
-                marginLeft: 8,
+                width: "100%",
+                border: "1px solid #f8f8f8",
+                marginTop: 10,
               }}
-            ></ClearIcon>{" "}
+            ></div>
+            {showMessageFiltersRow === true ? (
+              renderMessageFilters()
+            ) : (
+              <div></div>
+            )}
+
+            <div
+              style={{
+                width: "100%",
+                maxHeight: 330,
+                //  minWidth: 1110
+              }}
+
+              className="fullHeightCreateMessageDetails hideScrollBar"
+              id={"messageDetailScrollPublished"}
+              onScroll={() => {
+                var scroll = document.getElementById(
+                  "messageDetailScrollPublished"
+                );
+                if (scroll) {
+                  scrollPosition = scroll.scrollTop;
+                  // console.log("THis is scroll", scrollPosition);
+                }
+              }}
+            >
+
+              {filteredMessage &&
+                filteredMessage.map((selectedPlaceholder, index) => {
+                  if (index <= filteredMessage.length) {
+                    return (
+                      <MessageFilterDetails
+                        hideCheckBox={null}
+                        hideStats={null}
+                        selectedPlaceholder={selectedPlaceholder}
+                      ></MessageFilterDetails>
+                    );
+                  }
+                })}
+            </div>
           </Grid>
         </div>
       );
-    });
-  };
 
-  const renderMessageSenderTag = (sender) => {
-    console.log("sendertag", sender)
-    return (
-      <Grid container direction="row" style={{ width: '80%' }}>
-        {
-          fromAreaCoach && <div
-
-          >
-            <Grid
-              className="d-flex align-items-center"
-              style={{ height: 40 }}
-              container
-              direction="row"
-              alignItems="center"
-            >
-              <div
+    };
 
 
-                container
-                direction="row"
-                alignItems="center"
-                justify="center"
-                className={classes.tags}
-                style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
+    const MessagePreview = () => {
+      return (
+        <div
+          style={{
+            width: showSideFilters === true ? "85%" : "100%",
+            height: "100%",
+            background: "white",
+            borderRadius: 5,
+            padding: 16,
+            paddingLeft: 30,
+            paddingRight: 30,
+          }}
+        >
+          {" "}
+          <Grid container direction="row">
+            <Grid item md={4} sm={4}>
+
+              <ArrowBackIosNewIcon style={{ cursor: "pointer" }} onClick={() => {
+                setMessagePreview(false);
+                setSelectedDrafts(false)
+              }} />
+
+              <span
+                style={{
+                  padding: 16,
+                  fontWeight: "bold",
+                  // marginLeft: 20,
+                  fontSize: 20,
+                }}
               >
-
-
-                <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontWeight: 600,
-                      marginLeft: 16,
-                    }}
-                  >
-                    Area Coach
-                  </p>
-                </p>
-                <ClearIcon
-                  onClick={() => {
-                    setFromAreaCoach(false)
-                  }}
-                  className={classes.tagCross}
-                ></ClearIcon>{" "}
-              </div>
-              <p className=" m-0 mr-4 ">OR</p>
+                Message Preview
+              </span>
+            </Grid>
+            <Grid item md={8} sm={8}>
+              <Grid container direction="row" justify="flex-end">
+                {showActionButton()}
+                {showSendButton()}
+              </Grid>
+            </Grid>
+            <Grid container direction="row">
+              {filter.length != 0 &&
+                filter.map((fil, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.tags}
+                    >
+                      <Grid
+                        style={{ height: 40 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {fil}
+                        <ClearIcon
+                          onClick={() => {
+                            removeDataFromFilter(index);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                            marginLeft: 8,
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
             </Grid>
 
-          </div >
+            <div
+              style={{
+                width: "100%",
+                border: "1px solid #f8f8f8",
+                marginTop: 10,
+              }}
+            ></div>
+            <div
+              style={{
+                width: "100%",
+                maxHeight: 330,
+                //  minWidth: 1110
+              }}
+              className="fullHeightCreateMessagePreview"
+            >
+              {placeholders && (
+                <MessageDetailsCard
+                  hideCheckBox
+                  hideStats
+                  selectedPlaceholder={placeholders[0]}
+                  messageStatus={messageStatus}
+                ></MessageDetailsCard>
+              )}
+              {messageStatusTable()}
+            </div>
+          </Grid>
+        </div>
+      );
+    };
+
+    if (localStorage.getItem("user")) {
+    } else {
+      window.location.href = "/";
+    }
+
+    const addDataToFilter = (value, type) => {
+      console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
+      if (filter.includes(value)) {
+
+        var temp = filter;
+        if (temp.length === 1) {
+          setFilter(temp);
+        } else {
+          temp.splice(value, 1);
+          // console.log("This is temp", temp);
+          setFilter(temp);
         }
+      } else {
+        var temp = filter;
+        var tempType = filterType;
+        temp.push(value);
+        tempType.push(type);
+        setFilterType(tempType);
+        setFilter(temp);
+        setuseLessState(uselessState + 1);
+      }
+    };
 
-        {
-          fromPositionCoach && <div
 
+
+    const addDataToReceivers = (value, type) => {
+      if (messageReceiver.includes(value)) {
+        var temp = [];
+        messageReceiver.map((item) => {
+          if (value != item) {
+            temp.push(item);
+          }
+        });
+        setMessageReceiver(temp);
+        setRecieve(temp)
+        // console.log("This is temp", temp);
+        setuseLessState(uselessState + 1);
+      } else {
+        var temp = messageReceiver;
+        temp.push(value);
+        setMessageReceiver(temp);
+        setRecieve(temp)
+        // console.log("This is temp", temp);
+        setuseLessState(uselessState + 1);
+      }
+    };
+
+    const removeDataFromFilter = (index) => {
+      var temp = filter;
+      var tempType = filterType;
+      temp.splice(index, 1);
+      tempType.splice(index, 1);
+      var newArray = temp;
+      let deletedboard;
+      filter.map((board) => {
+        filter.map((name) => {
+          if (board.includes(name)) { } else {
+            deletedboard = name
+          }
+        })
+      })
+      console.log("deleteMessageDetails", deletedboard)
+
+
+      deletedboard = filterMessage.indexOf(deletedboard)
+      console.log("deleteMessageDetails", deletedboard)
+      filterMessage.splice(index, 1)
+      console.log("deleteMessageDetails", filterMessage)
+
+
+
+
+
+
+
+
+
+
+
+
+      setFilter(newArray);
+      setFilterType(tempType);
+      setuseLessState(uselessState - 1);
+    };
+    useEffect(() => {
+      if (localStorage.getItem("user")) {
+        if (localStorage.getItem("selectedMedia")) {
+
+          setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
+        }
+        getMyPlaceholders();
+        // getMyContactsSearch()
+        getMyMedia();
+        getMyTeamContacts();
+        getAllBoards();
+        // setTimeout()
+        // getCreateSearch();
+      } else {
+        window.location.href = "/";
+      }
+    }, [messagePreview]);
+
+    // console.log("THis is great message type", messageType);
+
+    const renderMessageReceiver = (messageType) => {
+      console.log("messageType", messageType)
+      return messageType.map((item) => {
+
+        return (
+          <div
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            className={classes.tags}
+            style={{ paddingLeft: 0, marginBottom: 6, marginLeft: 16 }}
           >
             <Grid
               style={{ height: 40 }}
               container
               direction="row"
               alignItems="center"
-              className="d-flex align-items-center"
-
             >
-              <div
-                container
-                direction="row"
-                alignItems="center"
-                justify="center"
-                className={classes.tags}
-                style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
-              >
-                <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontWeight: 600,
-                      marginLeft: 16,
-                    }}
-                  >
-                    Position Coach
-                  </p>
-                </p>
-                <ClearIcon
-                  onClick={() => {
-                    setFromPositinCoach(false)
-                  }}
-                  className={classes.tagCross}
-                ></ClearIcon>{" "}
-              </div>
-              <p className=" m-0 mr-4 ">OR</p>
-
+              {messageType.icon}
+              <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item?.first_name ? item.first_name + " " + item.last_name : item.name}</p>
+              <ClearIcon
+                onClick={() => {
+                  addDataToReceivers(item);
+                }}
+                style={{
+                  color: "red",
+                  fontSize: 17,
+                  cursor: "pointer",
+                  marginLeft: 8,
+                }}
+              ></ClearIcon>{" "}
             </Grid>
           </div>
-        }
+        );
+      });
+    };
 
+    const renderMessageSenderTag = (sender) => {
+      console.log("sendertag", sender)
+      return (
+        <Grid container direction="row" style={{ width: '80%' }}>
+          {
+            fromAreaCoach && <div
+
+            >
+              <Grid
+                className="d-flex align-items-center"
+                style={{ height: 40 }}
+                container
+                direction="row"
+                alignItems="center"
+              >
+                <div
+
+
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="center"
+                  className={classes.tags}
+                  style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
+                >
+
+
+                  <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontWeight: 600,
+                        marginLeft: 16,
+                      }}
+                    >
+                      Area Coach
+                    </p>
+                  </p>
+                  <ClearIcon
+                    onClick={() => {
+                      setFromAreaCoach(false)
+                    }}
+                    className={classes.tagCross}
+                  ></ClearIcon>{" "}
+                </div>
+                <p className=" m-0 mr-4 ">OR</p>
+              </Grid>
+
+            </div >
+          }
+
+          {
+            fromPositionCoach && <div
+
+            >
+              <Grid
+                style={{ height: 40 }}
+                container
+                direction="row"
+                alignItems="center"
+                className="d-flex align-items-center"
+
+              >
+                <div
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="center"
+                  className={classes.tags}
+                  style={{ paddingLeft: 0, alignItems: 'center', display: 'flex' }}
+                >
+                  <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontWeight: 600,
+                        marginLeft: 16,
+                      }}
+                    >
+                      Position Coach
+                    </p>
+                  </p>
+                  <ClearIcon
+                    onClick={() => {
+                      setFromPositinCoach(false)
+                    }}
+                    className={classes.tagCross}
+                  ></ClearIcon>{" "}
+                </div>
+                <p className=" m-0 mr-4 ">OR</p>
+
+              </Grid>
+            </div>
+          }
+
+          <div
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+            className={classes.tags}
+            style={{ paddingLeft: 0 }}
+          >
+            <Grid
+              style={{ height: 40 }}
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <img
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 20,
+                  marginLeft: 16,
+                }}
+                src={sender.twitter_profile && sender.twitter_profile.profile_image}
+              ></img>
+              <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 600,
+                    marginLeft: 16,
+                  }}
+                >
+                  {sender.twitter_profile && sender.twitter_profile.screen_name}
+                </p>
+              </p>
+              <ClearIcon
+                onClick={() => {
+                  setMessageSender(null);
+                }}
+                className={classes.tagCross}
+              ></ClearIcon>{" "}
+            </Grid>
+          </div>
+        </Grid >
+
+      );
+    };
+
+    const renderMessageTypeTag = (messageType) => {
+      console.log('===========renderMessageTypeTag=========================', messageType);
+      console.log(messageType, "title");
+      console.log(messageType.icon, "icon");
+
+      console.log('======================renderMessageTypeTag==============');
+      return (
         <div
           container
           direction="row"
@@ -3542,386 +3773,389 @@ function MessageCreate(props) {
             direction="row"
             alignItems="center"
           >
-            <img
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 20,
-                marginLeft: 16,
-              }}
-              src={sender.twitter_profile && sender.twitter_profile.profile_image}
-            ></img>
-            <p style={{ margin: 0, marginLeft: 5, marginRight: 16 }}>
-              <p
-                style={{
-                  margin: 0,
-                  fontWeight: 600,
-                  marginLeft: 16,
-                }}
-              >
-                {sender.twitter_profile && sender.twitter_profile.screen_name}
-              </p>
+            {messageType[0].icon}
+
+            <p style={{ margin: 0, marginLeft: 5, marginRight: 5 }}>
+              {messageType[0].title}
             </p>
             <ClearIcon
               onClick={() => {
-                setMessageSender(null);
+                setMessageType(null);
               }}
-              className={classes.tagCross}
+              style={{
+                color: "red",
+                fontSize: 17,
+                cursor: "pointer",
+                marginLeft: 8,
+              }}
             ></ClearIcon>{" "}
           </Grid>
         </div>
-      </Grid >
+      );
+    };
 
-    );
-  };
+    const handleSendMessage = async () => {
 
-  const renderMessageTypeTag = (messageType) => {
-    console.log('===========renderMessageTypeTag=========================', messageType);
-    console.log(messageType, "title");
-    console.log(messageType.icon, "icon");
+      setMessagePreview(true);
+      console.log("recieve", recieve)
+      let count = 0;
+      const contactsId = messageSender ? messageSender.id : null
+      let contactsdata = []
+      contactsdata = recieve.filter(m => m.first_name ? recieve : null).join(",")
+      //const contactsids=contactsdata?.map((id)=>id.id)
+      const filtersdata = recieve.filter(m => m.name ? recieve : null)
+      const data = {
+        message: {
+          platform: messageType[0].title,
+          media_placeholder_id: media && media[0] ? media[0].id : null,
+          filter_ids: "yBgMwvsbRmGa",
+          send_at: date,
+          body: messageText,
+          contact_ids: contactsdata,
+          user_id: JSON.parse(localStorage.getItem("user")).id,
+        }
+      }
 
-    console.log('======================renderMessageTypeTag==============');
-    return (
-      <div
-        container
-        direction="row"
-        alignItems="center"
-        justify="center"
-        className={classes.tags}
-        style={{ paddingLeft: 0 }}
-      >
-        <Grid
-          style={{ height: 40 }}
-          container
-          direction="row"
-          alignItems="center"
-        >
-          {messageType[0].icon}
 
-          <p style={{ margin: 0, marginLeft: 5, marginRight: 5 }}>
-            {messageType[0].title}
-          </p>
-          <ClearIcon
-            onClick={() => {
-              setMessageType(null);
-            }}
-            style={{
-              color: "red",
-              fontSize: 17,
-              cursor: "pointer",
-              marginLeft: 8,
-            }}
-          ></ClearIcon>{" "}
-        </Grid>
-      </div>
-    );
-  };
+      const promises = [];
+      //let filtercontacts = [];
+      for (let data of filtersdata) {
+        promises.push(getBoardFiltersById(data.id));
+      }
 
-  const handleSendMessage = async () => {
+      console.log("promised  = ", promises)
 
-    setMessagePreview(true);
-    console.log("recieve", recieve)
-    let count = 0;
-    const contactsId = messageSender ? messageSender.id : null
-    const contactsdata = recieve.filter(m => m.first_name ? recieve : null)
-    const filtersdata = recieve.filter(m => m.name ? recieve : null)
-    const data = {
-      message: {
+      let tmpFilterContacts = []
+
+      Promise.all(promises).then((response) => {
+        console.log(response)
+        console.log("response = ", response.map((data) => data.data))
+
+        let filtercontacts = response.map((d) => d.data)
+        tmpFilterContacts.concat(filtercontacts)
+        let temp = Object.assign([], tmpFilterContacts)
+
+        // tempUploadStatus[index] = "success"
+        // temp2[index] = "success"
+        // setUploadStatus(temp2)
+
+        // console.log('typeof filterContacts ' + )
+        setBoardsId(temp)
+        setCount(counts + 1)
+
+        console.log("filterscontacts", temp)
+      }).catch((err) => {
+        console.log("err = ", err)
+
+      })
+
+
+      console.log("boardsdata", boardsId)
+      const save = {
+
         platform: messageType[0].title,
-        media_placeholder_id: media && media[0] ? media[0].id : null,
-        filter_ids: filtersdata.map((filterid) => filterid.id).join(","),
+        media_placeholder_id: media && media[0] ? media[0] : null,
+        filter_ids: boardsId,
         send_at: date,
         body: messageText,
         contact_ids: contactsdata,
         user_id: JSON.parse(localStorage.getItem("user")).id,
+
       }
+      //contactsdata+=filtercontacts
+      const recievedata = boardsId.concat(contactsdata)
+      console.log("recievedata", recievedata)
+      setTableData(recievedata);
+
+      setSaveMessage(save)
+      console.log("saveMessage", saveMessage)
+      setMessageCreated(true)
+      //const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
+
+      console.log('handleSendMessage = ', data)
+
+
+      try {
+        const response = await createMessage(data);
+        console.log('create message = ', response);
+      } catch (e) {
+        console.log('create message error = ', e)
+      }
+
+      //  postMessage(data)
+
     }
 
+    const name = JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name
+    const [item, setItem] = useState()
+    console.log("date", date)
+    return (
+      <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}
 
+      >
+        {showTimePicker && (
+          <TimePicker
+            open={showTimePicker}
+            onClose={() => setShowTimePicker(false)}
+            onTimeChange={(time) => {
+              setTime(time);
+            }}
+            onDateChange={(time) => {
+              setDate(time);
+            }}
+          ></TimePicker>
+        )}
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={openSnakBar}
+          autoHideDuration={2000}
+          onClose={handleClose}
 
-    const save = {
+        >
+          <Alert onClose={handleClose} severity="success">
+            {selectedCheckBoxes.length + " "} contacts have been tagged!
+          </Alert>
+        </Snackbar>
 
-      platform: messageType[0].title,
-      media_placeholder_id: media && media[0] ? media[0] : null,
-      filter_ids: filtersdata,
-      send_at: date,
-      body: messageText,
-      contact_ids: contactsdata,
-      user_id: JSON.parse(localStorage.getItem("user")).id,
-
-    }
-    const saverecieve = save.filter_ids + save.contacts_ids
-    setTableData(recieve);
-
-    setSaveMessage(save)
-    console.log("saveMessage", saveMessage)
-    setMessageCreated(true)
-    const filterName = save.filter_ids?.filter((filterid) => filterid?.name).map((filter) => filter.name)
-    { filterName && getBoardsFilterById(save.filter_ids[0].id) }
-    console.log('handleSendMessage = ', data)
-
-
-    try {
-      const response = await createMessage(data);
-      console.log('create message = ', response);
-    } catch (e) {
-      console.log('create message = ', e)
-    }
-
-    //  postMessage(data)
-
-  }
-
-  const name = JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name
-  const [item, setItem] = useState()
-  console.log("date", date)
-  return (
-    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}
-
-    >
-      {showTimePicker && (
-        <TimePicker
-          open={showTimePicker}
-          onClose={() => setShowTimePicker(false)}
-          onTimeChange={(time) => {
-            setTime(time);
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={messageCreated}
+          autoHideDuration={2000}
+          onClose={() => {
+            setMessageCreated(false);
+            setMessageDeleted(false)
           }}
-          onDateChange={(time) => {
-            setDate(time);
+        >
+
+          <Alert onClose={() => {
+            setMessageCreated(false);
+          }} severity="success">
+            Message Preview And Send !
+          </Alert>
+
+
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={sendMessage}
+          autoHideDuration={2000}
+          onClose={() => {
+            setSendMessage(false);
+
           }}
-        ></TimePicker>
-      )}
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openSnakBar}
-        autoHideDuration={2000}
-        onClose={handleClose}
+        >
 
-      >
-        <Alert onClose={handleClose} severity="success">
-          {selectedCheckBoxes.length + " "} contacts have been tagged!
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={messageCreated}
-        autoHideDuration={2000}
-        onClose={() => {
-          setMessageCreated(false);
-          setMessageDeleted(false)
-        }}
-      >
-
-        <Alert onClose={() => {
-          setMessageCreated(false);
-        }} severity="success">
-          Message Preview And Send !
-        </Alert>
+          <Alert onClose={() => {
+            setSendMessage(false);
+          }} severity="success">
+            Message Sent !
+          </Alert>
 
 
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={sendMessage}
-        autoHideDuration={2000}
-        onClose={() => {
-          setSendMessage(false);
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={scheduleMessage}
+          autoHideDuration={2000}
+          onClose={() => {
+            setScheduleMessage(false)
+          }}
+        >
 
-        }}
-      >
-
-        <Alert onClose={() => {
-          setSendMessage(false);
-        }} severity="success">
-          Message Sent !
-        </Alert>
-
-
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={scheduleMessage}
-        autoHideDuration={2000}
-        onClose={() => {
-          setScheduleMessage(false)
-        }}
-      >
-
-        <Alert onClose={() => {
-          setScheduleMessage(false);
-        }} severity="success">
-          Message Scheduled!
-        </Alert>
+          <Alert onClose={() => {
+            setScheduleMessage(false);
+          }} severity="success">
+            Message Scheduled!
+          </Alert>
 
 
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={messageDeleted}
-        autoHideDuration={2000}
-        onClose={() => {
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={messageDeleted}
+          autoHideDuration={2000}
+          onClose={() => {
 
-          setMessageDeleted(false)
-        }}
-      >
-        <Alert onClose={() => {
-          setMessageDeleted(false);
-        }} severity="error">
-          Message Removed
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={saveDraft}
-        autoHideDuration={2000}
-        onClose={() => {
+            setMessageDeleted(false)
+          }}
+        >
+          <Alert onClose={() => {
+            setMessageDeleted(false);
+          }} severity="error">
+            Message Removed
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={saveDraft}
+          autoHideDuration={2000}
+          onClose={() => {
 
-          setSaveDraft(false)
-        }}
-      >
-        <Alert onClose={() => {
-          setSaveDraft(false);
-        }} severity="info">
-          Message Saved As Drafts
-        </Alert>
-      </Snackbar>
+            setSaveDraft(false)
+          }}
+        >
+          <Alert onClose={() => {
+            setSaveDraft(false);
+          }} severity="info">
+            Message Saved As Drafts
+          </Alert>
+        </Snackbar>
 
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={messageNotCreated}
-        autoHideDuration={2000}
-        onClose={() => {
-          setMessageNotCreated(false);
-        }}
-      >
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={messageNotCreated}
+          autoHideDuration={2000}
+          onClose={() => {
+            setMessageNotCreated(false);
+          }}
+        >
 
-        <Alert onClose={() => {
-          setMessageNotCreated(false);
-        }} severity="error">
-          <strong>Fill  all the required fields</strong>
-        </Alert>
+          <Alert onClose={() => {
+            setMessageNotCreated(false);
+          }} severity="error">
+            <strong>Fill  all the required fields</strong>
+          </Alert>
 
 
-      </Snackbar>
+        </Snackbar>
 
-      <Grid container direction="row">
-        {showSideFilters === true && (
-          <div style={{ width: "15%" }}>
-            <p
-              style={{
-                // padding: 5,
-                fontWeight: "bold",
-                fontSize: 20,
-                paddingBottom: 0,
-                marginBottom: 0,
-              }}
-            >
+        <Grid container direction="row">
+          {showSideFilters === true && (
+            <div style={{ width: "15%" }}>
+              <p
+                style={{
+                  // padding: 5,
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  paddingBottom: 0,
+                  marginBottom: 0,
+                }}
+              >
 
 
 
-              {/* <FormatAlignLeftIcon
+                {/* <FormatAlignLeftIcon
                
               ></FormatAlignLeftIcon> */}
 
 
 
-              Create Message
-            </p>
-            <p className={props.sideFilterClass}>
-              Drafts{" "}
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
-              <div>
-                {[name].map((item) => {
-                  return (
-                    <p
-                      className={classes.sideSubFilter}
-                      onClick={() => {
-                        addDataToFilter(item, "Message");
-                        setMessageDetails(true)
-                      }}
-                    >
-                      {item}
-                    </p>
-                  );
-                })}
-              </div>
-            </p>
-            <p
-              className={props.sideFilterClass}
-              onClick={() => {
-                // setshowBoardFilters(!showBoardFilters);
-                addDataToFilter("AllMessages", "Users")
-                setMessageDetails(true);
-
-              }}
-            >
-              Messages
-              <ArrowForwardIosIcon
-                style={{ fontSize: 12 }}
-              ></ArrowForwardIosIcon>
-            </p>
-            {showBoardFilters === true && (
-              <div>
-                {["Scheduled", "In Progress", "Finished", "Archived"].map(
-                  (item) => {
+                Create Message
+              </p>
+              <p className={props.sideFilterClass}>
+                Drafts{" "}
+                <ArrowForwardIosIcon
+                  style={{ fontSize: 12 }}
+                ></ArrowForwardIosIcon>
+                <div>
+                  {[name].map((item) => {
                     return (
                       <p
                         className={classes.sideSubFilter}
                         onClick={() => {
-                          setMessageDetails(true);
-                          setItem(item)
-                          //setFilter(item)
-                          addDataToFilter(item, "Board");
+                          addDataToFilter(item, "Message");
+                          setMessageDetails(true)
                         }}
                       >
                         {item}
                       </p>
                     );
-                  }
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        {addMedia ? (
-          // <div></div>
-          // renderAddMedia()
-          <MediaComponnet
-            showSideFilters={true}
-            // setshowSideFilters={setshowSideFilters}
-            addMedia={addMedia}
-            setAddMedia={handleAddMedia}
-            setMedia={handleMedia}
-            filter={filter}
-            addDataToFilter={addDataToFilter}
-            message
-            makeMediaSelected={makeMediaSelected}
-          ></MediaComponnet>
-        ) : messageDetails ? (
-          <MessageDetails item={item} />
-          //   <MessageDetails />
-        ) : messagePreview ? (
-          <MessagePreview />
-        ) : messageSelected.length ? (
-          <RenderSelectedMessage item={item} />
-        ) : (
-          <div
-            style={{
-              width: showSideFilters === true ? "85%" : "100%",
-              height: "100%",
-              background: "white",
-              borderRadius: 5,
-              padding: 16,
-              paddingLeft: 30,
-              paddingRight: 30,
-              paddingTop: 0
-            }}
-          >
+                  })}
+                </div>
+              </p>
+              <p
+                className={props.sideFilterClass}
+                onClick={() => {
+                  // setshowBoardFilters(!showBoardFilters);
+                  //addDataToFilter("AllMessages","Users")
+                  setMessageDetails(true);
 
-            {/*<Grid container direction="row">
+                  if (filter.includes("AllMessages")) {
+
+                    var temp = filter;
+                    if (temp.length === 1) {
+                      setFilter(temp);
+                    } else {
+                      temp.splice("AllMessages", 1);
+                      // console.log("This is temp", temp);
+                      setFilter(temp);
+                    }
+                  } else {
+                    var temp = filter;
+                    var tempType = filterType;
+                    temp.push("AllMessages");
+                    tempType.push("Messages");
+                    setFilterType(tempType);
+                    setFilter(temp);
+                    setuseLessState(uselessState + 1);
+                  }
+
+                }}
+              >
+                Messages
+                <ArrowForwardIosIcon
+                  style={{ fontSize: 12 }}
+                ></ArrowForwardIosIcon>
+              </p>
+              {showBoardFilters === true && (
+                <div>
+                  {["Scheduled", "In Progress", "Finished", "Archived"].map(
+                    (item) => {
+                      return (
+                        <p
+                          className={classes.sideSubFilter}
+                          onClick={() => {
+                            setMessageDetails(true);
+                            setItem(item)
+                            //setFilter(item)
+                            addDataToFilter(item, "Board");
+                          }}
+                        >
+                          {item}
+                        </p>
+                      );
+                    }
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          {addMedia ? (
+            // <div></div>
+            // renderAddMedia()
+            <MediaComponnet
+              showSideFilters={true}
+              // setshowSideFilters={setshowSideFilters}
+              addMedia={addMedia}
+              setAddMedia={handleAddMedia}
+              setMedia={handleMedia}
+              filter={filter}
+              addDataToFilter={addDataToFilter}
+              message
+              makeMediaSelected={makeMediaSelected}
+            ></MediaComponnet>
+          ) : messageDetails ? (
+            <MessageDetails item={item} />
+            //   <MessageDetails />
+          ) : messagePreview ? (
+            <MessagePreview />
+          ) : messageSelected.length ? (
+            <RenderSelectedMessage item={item} />
+          ) : (
+            <div
+              style={{
+                width: showSideFilters === true ? "85%" : "100%",
+                height: "100%",
+                background: "white",
+                borderRadius: 5,
+                padding: 16,
+                paddingLeft: 30,
+                paddingRight: 30,
+                paddingTop: 0
+              }}
+            >
+
+              {/*<Grid container direction="row">
               {filter.length != 0 &&
                 filter.map((fil, index) => {
                   return (
@@ -3956,52 +4190,52 @@ function MessageCreate(props) {
                 })}
             </Grid>*/}
 
-            <div
-              style={{
-                width: "100%",
-                border: "1px solid #f8f8f8",
-                // marginTop: 16,
-              }}
-            ></div>
-            {/* <Grid container direction="row" alignItems="center"></Grid> */}
-            <div style={{
-              width: "100%", overflowX: "hide",
-            }}>
-              <Grid container direction="row">
-                {displaySendTo ? (
-                  <Grid item md={4} xs={4} style={{ borderRight: '1px solid rgb(216, 216, 216)' }}>
-                    <Grid container direction="row" justify="flex-start">
+              <div
+                style={{
+                  width: "100%",
+                  border: "1px solid #f8f8f8",
+                  // marginTop: 16,
+                }}
+              ></div>
+              {/* <Grid container direction="row" alignItems="center"></Grid> */}
+              <div style={{
+                width: "100%", overflowX: "hide",
+              }}>
+                <Grid container direction="row">
+                  {displaySendTo ? (
+                    <Grid item md={4} xs={4} style={{ borderRight: '1px solid rgb(216, 216, 216)' }}>
+                      <Grid container direction="row" justify="flex-start">
 
 
-                      {
-                        showDrawer ?
-                          <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
-                            setshowSideFilters(!showSideFilters);
-                            setShowDrawer(false);
-                            setShowAnimation(true);
-                            handleAnimation();
+                        {
+                          showDrawer ?
+                            <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                              setshowSideFilters(!showSideFilters);
+                              setShowDrawer(false);
+                              setShowAnimation(true);
+                              handleAnimation();
+                            }}
+                              style={{ cursor: "pointer", width: 40 }}></img>
+                            :
+                            <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                              setshowSideFilters(!showSideFilters);
+                              setShowDrawer(true);
+                              setShowAnimation(true);
+                              handleAnimation();
+
+                            }}
+                              style={{ cursor: "pointer", width: 40 }}></img>}
+
+                        <div
+                          style={{
+                            // background: "#edeef2",
+                            width: "97%",
+                            // height: 40,
+                            borderRadius: 4,
                           }}
-                            style={{ cursor: "pointer", width: 40 }}></img>
-                          :
-                          <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                            setshowSideFilters(!showSideFilters);
-                            setShowDrawer(true);
-                            setShowAnimation(true);
-                            handleAnimation();
-
-                          }}
-                            style={{ cursor: "pointer", width: 40 }}></img>}
-
-                      <div
-                        style={{
-                          // background: "#edeef2",
-                          width: "97%",
-                          // height: 40,
-                          borderRadius: 4,
-                        }}
-                      >
-                        <Grid className="mt-3 mb-3" container direction="row">
-                          {/* <Grid item md={4} xs={4}>
+                        >
+                          <Grid className="mt-3 mb-3" container direction="row">
+                            {/* <Grid item md={4} xs={4}>
                             <button className={classes.blueButton}>
                               My Boards
                             </button>
@@ -4016,20 +4250,20 @@ function MessageCreate(props) {
                               Individuals
                             </button>
                           </Grid> */}
-                          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="My Boards" {...a11yProps(0)} />
-                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Team Boards" {...a11yProps(1)} />
-                            <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Individuals" {...a11yProps(2)} />
-                          </Tabs>
+                            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                              <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="My Boards" {...a11yProps(0)} />
+                              <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Team Boards" {...a11yProps(1)} />
+                              <Tab style={{ background: '#edeef2', border: 'none', color: "#b5b9c0", height: '40px', borderRadius: "4px" }} label="Individuals" {...a11yProps(2)} />
+                            </Tabs>
 
-                          <TabPanel value={value} index={0}>
-                            <Grid container direction="row" justify="center">
-                              {/* /////////////Tab panel for My boards//////////// */}
+                            <TabPanel value={value} index={0}>
+                              <Grid container direction="row" justify="center">
+                                {/* /////////////Tab panel for My boards//////////// */}
 
-                              <div className="form-group has-search w-100 mt-3">
-                                {/* <span className="fa fa-search form-control-feedback"></span> */}
+                                <div className="form-group has-search w-100 mt-3">
+                                  {/* <span className="fa fa-search form-control-feedback"></span> */}
 
-                                {/* <input
+                                  {/* <input
                                   style={{
                                     width: "100%",
                                     border: "1px solid rgb(216, 216, 216)",
@@ -4039,264 +4273,264 @@ function MessageCreate(props) {
                                     background: '#edeef2'
                                   }}
                                   type="text" className="form-control w-100" placeholder="Search Board" /> */}
-                                <SearchBar
+                                  <SearchBar
+                                    style={{
+                                      boxShadow: 'none',
+                                      width: "100%",
+                                      // border: "1px solid rgb(216, 216, 216)",
+                                      borderRadius: 4,
+                                      height: 40,
+                                      color: '#888',
+                                      background: '#edeef2'
+                                    }}
+                                    placeholder="Search My boards"
+                                    value={searched}
+                                    onChange={(searchVal) => requestSearch(searchVal)}
+                                    onCancelSearch={() => cancelSearch()}
+                                  />
+                                </div>
+                              </Grid>
+                              <Grid container style={{ marginTop: 10 }}>
+                                <div
                                   style={{
-                                    boxShadow: 'none',
                                     width: "100%",
-                                    // border: "1px solid rgb(216, 216, 216)",
-                                    borderRadius: 4,
-                                    height: 40,
-                                    color: '#888',
-                                    background: '#edeef2'
+                                    maxHeight: 330,
+                                    //  minWidth: 1110
                                   }}
-                                  placeholder="Search My boards"
-                                  value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
-                                  onCancelSearch={() => cancelSearch()}
-                                />
-                              </div>
-                            </Grid>
-                            <Grid container style={{ marginTop: 10 }}>
-                              <div
-                                style={{
-                                  width: "100%",
-                                  maxHeight: 330,
-                                  //  minWidth: 1110
-                                }}
-                                className="fullHeightCreateMessageSide"
-                              >
-                                {rows &&
-                                  rows.map((boards) => {
-                                    return (
-                                      boards.is_shared === false ? <>
+                                  className="fullHeightCreateMessageSide"
+                                >
+                                  {rows &&
+                                    rows.map((boards) => {
+                                      return (
+                                        boards.is_shared === false ? <>
+                                          <div
+                                            style={{
+                                              borderTop: "1px solid #edeef2",
+                                              width: "100%",
+                                              height: 100,
+                                              color: "#9e9e9e",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() => {
+                                              addDataToReceivers(boards);
+
+                                              // setMessageReceiver();
+                                              // setMessageReceiver(temp);
+
+                                            }}
+                                          >
+                                            {boards.name}
+
+                                            <Grid container direction="row">
+                                              {boards?.contacts?.profile_images?.map(
+                                                (image, index) => {
+                                                  if (index < 8) {
+                                                    return (
+                                                      <img
+                                                        src={image || AvatarImg}
+                                                        style={{
+                                                          width: 35,
+                                                          height: 35,
+                                                          borderRadius: 20,
+                                                          marginTop: 5,
+                                                          marginLeft:
+                                                            index != 0 ? -10 : 0,
+                                                        }}
+                                                      ></img>
+                                                    );
+                                                  }
+                                                }
+                                              )}
+                                              <img></img>
+                                            </Grid>
+                                            <p style={{ color: "#3871da" }}>
+                                              {boards?.athletes?.profile_images?.length}{" "}
+                                              contacts
+                                            </p>
+                                          </div>
+                                        </>
+                                          :
+                                          null
+                                      );
+
+                                    })}
+                                </div>
+                              </Grid>
+
+                            </TabPanel>
+                            <TabPanel className="" value={value} index={1}>
+
+                              <Grid container direction="row" justify="center">
+                                {/* /////////////Tab panel for Teams boards//////////// */}
+
+                                <div className="form-group has-search w-100 mt-3">
+
+
+                                  <SearchBar
+                                    style={{
+                                      boxShadow: 'none',
+                                      width: "100%",
+                                      // border: "1px solid rgb(216, 216, 216)",
+                                      borderRadius: 4,
+                                      height: 40,
+                                      color: '#888',
+                                      background: '#edeef2'
+                                    }}
+                                    placeholder="Search Team boards"
+                                    value={searched}
+                                    onChange={(searchVal) => requestSearch(searchVal)}
+                                    onCancelSearch={() => cancelSearch()}
+                                  />
+                                </div>
+                              </Grid>
+                              <Grid container style={{ marginTop: 10 }}>
+                                <div
+                                  style={{
+                                    width: "100%",
+                                    maxHeight: 330,
+                                    //  minWidth: 1110
+                                  }}
+                                  className="fullHeightCreateMessageSide"
+                                >
+                                  {rows &&
+                                    rows.map((boards) => {
+                                      return (
+                                        boards.is_shared === true ? <>
+                                          <div
+                                            style={{
+                                              borderTop: "1px solid #edeef2",
+                                              width: "100%",
+                                              height: 100,
+                                              color: "#9e9e9e",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() => {
+                                              addDataToReceivers(boards);
+
+                                              // setMessageReceiver();
+                                            }}
+                                          >
+                                            {boards.name}
+
+                                            <Grid container direction="row">
+                                              {boards?.contacts?.profile_images?.map(
+                                                (image, index) => {
+                                                  if (index < 8) {
+                                                    return (
+                                                      <img
+                                                        src={image || AvatarImg}
+                                                        style={{
+                                                          width: 35,
+                                                          height: 35,
+                                                          borderRadius: 20,
+                                                          marginTop: 5,
+                                                          marginLeft:
+                                                            index != 0 ? -10 : 0,
+                                                        }}
+                                                      ></img>
+                                                    );
+                                                  }
+                                                }
+                                              )}
+                                              <img></img>
+                                            </Grid>
+                                            <p style={{ color: "#3871da" }}>
+                                              {boards?.athletes?.profile_images?.length}{" "}
+                                              contacts
+                                            </p>
+                                          </div>
+                                        </>
+                                          :
+                                          null
+                                      );
+
+                                    })}
+                                </div>
+                              </Grid>
+                            </TabPanel>
+                            <TabPanel value={value} index={2}>
+                              <Grid container direction="row" justify="center">
+                                {/* /////////////Tab panel for Teams Indvidual//////////// */}
+
+                                <div className="form-group has-search w-100 mt-3">
+
+                                  <SearchBar
+                                    style={{
+                                      boxShadow: 'none',
+                                      width: "100%",
+                                      // border: "1px solid rgb(216, 216, 216)",
+                                      borderRadius: 4,
+                                      height: 40,
+                                      color: '#888',
+                                      background: '#edeef2'
+                                    }}
+                                    placeholder="Search Individual boards"
+                                    value={searched}
+                                    onChange={(searchVal) => requestSearch(searchVal)}
+                                    onCancelSearch={() => cancelSearch()}
+                                  />
+                                </div>
+                              </Grid>
+                              <Grid container style={{ marginTop: 10 }}>
+                                <div
+                                  style={{
+                                    width: "100%",
+                                    maxHeight: 330,
+                                    //  minWidth: 1110
+                                  }}
+                                  className="fullHeightCreateMessageSide"
+                                >
+                                  {individualrows &&
+                                    individualrows.map((indv, ind) => {
+
+
+                                      return (
+
                                         <div
+                                          key={ind}
                                           style={{
+
                                             borderTop: "1px solid #edeef2",
                                             width: "100%",
-                                            height: 100,
+                                            height: 60,
                                             color: "#9e9e9e",
                                             cursor: "pointer",
                                           }}
                                           onClick={() => {
-                                            addDataToReceivers(boards);
+                                            // const full_name=indv.first_name {indv.last_name}
+                                            // const m =(indv.first_name,indv.last_name)
+                                            addDataToReceivers(indv);
 
-                                            // setMessageReceiver();
-                                            // setMessageReceiver(temp);
-
-                                          }}
-                                        >
-                                          {boards.name}
-
-                                          <Grid container direction="row">
-                                            {boards?.contacts?.profile_images?.map(
-                                              (image, index) => {
-                                                if (index < 8) {
-                                                  return (
-                                                    <img
-                                                      src={image || AvatarImg}
-                                                      style={{
-                                                        width: 35,
-                                                        height: 35,
-                                                        borderRadius: 20,
-                                                        marginTop: 5,
-                                                        marginLeft:
-                                                          index != 0 ? -10 : 0,
-                                                      }}
-                                                    ></img>
-                                                  );
-                                                }
-                                              }
-                                            )}
-                                            <img></img>
-                                          </Grid>
-                                          <p style={{ color: "#3871da" }}>
-                                            {boards?.athletes?.profile_images?.length}{" "}
-                                            contacts
-                                          </p>
-                                        </div>
-                                      </>
-                                        :
-                                        null
-                                    );
-
-                                  })}
-                              </div>
-                            </Grid>
-
-                          </TabPanel>
-                          <TabPanel className="" value={value} index={1}>
-
-                            <Grid container direction="row" justify="center">
-                              {/* /////////////Tab panel for Teams boards//////////// */}
-
-                              <div className="form-group has-search w-100 mt-3">
-
-
-                                <SearchBar
-                                  style={{
-                                    boxShadow: 'none',
-                                    width: "100%",
-                                    // border: "1px solid rgb(216, 216, 216)",
-                                    borderRadius: 4,
-                                    height: 40,
-                                    color: '#888',
-                                    background: '#edeef2'
-                                  }}
-                                  placeholder="Search Team boards"
-                                  value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
-                                  onCancelSearch={() => cancelSearch()}
-                                />
-                              </div>
-                            </Grid>
-                            <Grid container style={{ marginTop: 10 }}>
-                              <div
-                                style={{
-                                  width: "100%",
-                                  maxHeight: 330,
-                                  //  minWidth: 1110
-                                }}
-                                className="fullHeightCreateMessageSide"
-                              >
-                                {rows &&
-                                  rows.map((boards) => {
-                                    return (
-                                      boards.is_shared === true ? <>
-                                        <div
-                                          style={{
-                                            borderTop: "1px solid #edeef2",
-                                            width: "100%",
-                                            height: 100,
-                                            color: "#9e9e9e",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() => {
-                                            addDataToReceivers(boards);
+                                            // setMessageReceiver( indv.first_name,indv.last_name);
 
                                             // setMessageReceiver();
                                           }}
+                                          className="d-flex align-items-center"
                                         >
-                                          {boards.name}
-
-                                          <Grid container direction="row">
-                                            {boards?.contacts?.profile_images?.map(
-                                              (image, index) => {
-                                                if (index < 8) {
-                                                  return (
-                                                    <img
-                                                      src={image || AvatarImg}
-                                                      style={{
-                                                        width: 35,
-                                                        height: 35,
-                                                        borderRadius: 20,
-                                                        marginTop: 5,
-                                                        marginLeft:
-                                                          index != 0 ? -10 : 0,
-                                                      }}
-                                                    ></img>
-                                                  );
-                                                }
-                                              }
-                                            )}
-                                            <img></img>
-                                          </Grid>
-                                          <p style={{ color: "#3871da" }}>
-                                            {boards?.athletes?.profile_images?.length}{" "}
-                                            contacts
-                                          </p>
-                                        </div>
-                                      </>
-                                        :
-                                        null
-                                    );
-
-                                  })}
-                              </div>
-                            </Grid>
-                          </TabPanel>
-                          <TabPanel value={value} index={2}>
-                            <Grid container direction="row" justify="center">
-                              {/* /////////////Tab panel for Teams Indvidual//////////// */}
-
-                              <div className="form-group has-search w-100 mt-3">
-
-                                <SearchBar
-                                  style={{
-                                    boxShadow: 'none',
-                                    width: "100%",
-                                    // border: "1px solid rgb(216, 216, 216)",
-                                    borderRadius: 4,
-                                    height: 40,
-                                    color: '#888',
-                                    background: '#edeef2'
-                                  }}
-                                  placeholder="Search Individual boards"
-                                  value={searched}
-                                  onChange={(searchVal) => requestSearch(searchVal)}
-                                  onCancelSearch={() => cancelSearch()}
-                                />
-                              </div>
-                            </Grid>
-                            <Grid container style={{ marginTop: 10 }}>
-                              <div
-                                style={{
-                                  width: "100%",
-                                  maxHeight: 330,
-                                  //  minWidth: 1110
-                                }}
-                                className="fullHeightCreateMessageSide"
-                              >
-                                {individualrows &&
-                                  individualrows.map((indv, ind) => {
-
-
-                                    return (
-
-                                      <div
-                                        key={ind}
-                                        style={{
-
-                                          borderTop: "1px solid #edeef2",
-                                          width: "100%",
-                                          height: 60,
-                                          color: "#9e9e9e",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() => {
-                                          // const full_name=indv.first_name {indv.last_name}
-                                          // const m =(indv.first_name,indv.last_name)
-                                          addDataToReceivers(indv);
-
-                                          // setMessageReceiver( indv.first_name,indv.last_name);
-
-                                          // setMessageReceiver();
-                                        }}
-                                        className="d-flex align-items-center"
-                                      >
-                                        {/* {indv?.contacts?.profile_images?.map((image,index)=>{
+                                          {/* {indv?.contacts?.profile_images?.map((image,index)=>{
                                             return( */}
 
 
-                                        <div className="mr-4" >
-                                          <img
-                                            alt={indv?.first_name}
-                                            src={indv.twitter_profile.profile_image || AvatarImg}
-                                            style={{
-                                              width: 35,
-                                              height: 35,
-                                              borderRadius: 20,
-                                              // marginTop: 5,
+                                          <div className="mr-4" >
+                                            <img
+                                              alt={indv?.first_name}
+                                              src={indv.twitter_profile.profile_image || AvatarImg}
+                                              style={{
+                                                width: 35,
+                                                height: 35,
+                                                borderRadius: 20,
+                                                // marginTop: 5,
 
-                                            }}
-                                          ></img>
+                                              }}
+                                            ></img>
 
-                                        </div>
-                                        {/* )
+                                          </div>
+                                          {/* )
                                           })} */}
 
-                                        {indv.first_name} {indv.last_name}
+                                          {indv.first_name} {indv.last_name}
 
-                                        {/* {boards?.contacts?.profile_images?.map(
+                                          {/* {boards?.contacts?.profile_images?.map(
                                             (image, index) => {
                                               if (index < 8) {
                                               return (
@@ -4314,70 +4548,70 @@ function MessageCreate(props) {
                                             }
                                             }
                                           )} */}
-                                        {/* <img></img> */}
-                                        {/* <p style={{ color: "#3871da" }}>
+                                          {/* <img></img> */}
+                                          {/* <p style={{ color: "#3871da" }}>
             {boards?.athletes?.profile_images?.length}{" "}
             contacts
           </p> */}
-                                      </div>
+                                        </div>
 
 
-                                    );
+                                      );
 
-                                  })}
-                              </div>
-                            </Grid>
-                          </TabPanel>
-                        </Grid>
+                                    })}
+                                </div>
+                              </Grid>
+                            </TabPanel>
+                          </Grid>
 
-                      </div>
+                        </div>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                ) : (
-                  <div></div>
-                )}
+                  ) : (
+                    <div></div>
+                  )}
 
-                <Grid
-                  item
-                  md={displaySendTo ? 8 : 12}
-                  xs={displaySendTo ? 8 : 12}
-                >
                   <Grid
-                    className="mb-3"
-                    container
-                    direction="row"
-                    // alignItems="center"
-                    style={{
-                      // background: "#f5f6f9",
-                      width: "100%",
-                      // minWidth: 1110,
-
-
-                      height: 70,
-                    }}
-
-
+                    item
+                    md={displaySendTo ? 8 : 12}
+                    xs={displaySendTo ? 8 : 12}
                   >
-
-                    <div className="d-flex justify-content-between align-items-center w-100">
-                      <span
-
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 20,
-
-                          padding: '16px'
-                        }}
-                      >
-                        <strong>
-                          Create Message
+                    <Grid
+                      className="mb-3"
+                      container
+                      direction="row"
+                      // alignItems="center"
+                      style={{
+                        // background: "#f5f6f9",
+                        width: "100%",
+                        // minWidth: 1110,
 
 
-                        </strong>
-                      </span>
+                        height: 70,
+                      }}
 
-                      <div className="d-flex ">
-                        {/*               <IconTextField
+
+                    >
+
+                      <div className="d-flex justify-content-between align-items-center w-100">
+                        <span
+
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 20,
+
+                            padding: '16px'
+                          }}
+                        >
+                          <strong>
+                            Create Message
+
+
+                          </strong>
+                        </span>
+
+                        <div className="d-flex ">
+                          {/*               <IconTextField
                           width={100}
                           text="More"
                           textColor="#3871DA"
@@ -4396,130 +4630,134 @@ function MessageCreate(props) {
                           }}
                           icon={<Check style={{ color: "#3871DA" }}></Check>}
                         ></IconTextField>*/}
-                        <IconButton
-                          text="Preview and Send"
-                          textColor="#fff"
-                          width={200}
-                          background='#3871DA'
+                          <IconButton
+                            text="Preview and Send"
+                            textColor="#fff"
+                            width={200}
+                            background='#3871DA'
 
 
-                          onClick={() => {
+                            onClick={() => {
 
 
-                            { messageType && messageReceiver && (messageText || media) && messageSender ? handleSendMessage() : setMessageNotCreated(true) }
-                          }}
-                          icon={<Send style={{ color: "#fff" }}></Send>}
-                        ></IconButton>
+                              {
+                                messageType && messageReceiver && (messageText || media) && messageSender ?
+
+                                handleSendMessage() : setMessageNotCreated(true)
+                              }
+                            }}
+                            icon={<Send style={{ color: "#fff" }}></Send>}
+                          ></IconButton>
+                        </div>
                       </div>
-                    </div>
 
 
 
-                  </Grid>
+                    </Grid>
 
-                  <div
-                    style={{
-                      width: "100%",
-                      maxHeight: 330,
-                      marginLeft: '10px'
-                      //  minWidth: 1110
-                    }}
-                    className="fullHeightCreateMessage hideScrollBar"
-                  >
-
-
-                    <Grid
-                      container
-                      direction="row"
-                      // alignItems="center"
+                    <div
                       style={{
-                        // background: "#f5f6f9",
                         width: "100%",
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        height: 70,
-                        // paddingTop: 16,
+                        maxHeight: 330,
+                        marginLeft: '10px'
+                        //  minWidth: 1110
                       }}
-                      className="hoverHighlight d-flex align-items-center"
-                      onMouseEnter={() => {
-                        setDisplayCreateMessage(false);
-                        setDisplayMessageSenders(false);
-                      }}
+                      className="fullHeightCreateMessage hideScrollBar"
                     >
 
-                      {/* <Grid
+
+                      <Grid
+                        container
+                        direction="row"
+                        // alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+                          width: "100%",
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          height: 70,
+                          // paddingTop: 16,
+                        }}
+                        className="hoverHighlight d-flex align-items-center"
+                        onMouseEnter={() => {
+                          setDisplayCreateMessage(false);
+                          setDisplayMessageSenders(false);
+                        }}
+                      >
+
+                        {/* <Grid
                         item
                         md={displaySendTo ? 2 : 1}
                         xs={displaySendTo ? 2 : 1}
                       > */}
-                      <p
-                        style={{
-                          margin: 0,
-                          marginLeft: 16,
-                          marginRight: 16,
-                          width: 90,
-                        }}
-                      >
-                        Send As:
-                      </p>
+                        <p
+                          style={{
+                            margin: 0,
+                            marginLeft: 16,
+                            marginRight: 16,
+                            width: 90,
+                          }}
+                        >
+                          Send As:
+                        </p>
 
 
-                      {messageType ? (
-                        renderMessageTypeTag(messageType)
-                      ) : (
-                        <div class="dropdown">
-                          <IconTextField
-                            width={170}
-                            background={
-                              displayCreateMessage ? "#3871da" : "white"
-                            }
-                            text={
-                              <p
-                                style={{
-                                  margin: 0,
-                                  color: displayCreateMessage
-                                    ? "white"
-                                    : "black",
-                                }}
-                              >
-                                Message Type
-                              </p>
-                            }
-                            icon={
-                              <ExpandMoreOutlinedIcon
-                                style={{
-                                  color: displayCreateMessage
-                                    ? "white"
-                                    : "black",
-                                }}
-                              ></ExpandMoreOutlinedIcon>
-                            }
-                            // onMouseEnter={() => {
-                            //   setDisplayCreateMessage(true);
-                            //   setDisplayMessageSenders(false);
+                        {messageType ? (
+                          renderMessageTypeTag(messageType)
+                        ) : (
+                          <div class="dropdown">
+                            <IconTextField
+                              width={170}
+                              background={
+                                displayCreateMessage ? "#3871da" : "white"
+                              }
+                              text={
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    color: displayCreateMessage
+                                      ? "white"
+                                      : "black",
+                                  }}
+                                >
+                                  Message Type
+                                </p>
+                              }
+                              icon={
+                                <ExpandMoreOutlinedIcon
+                                  style={{
+                                    color: displayCreateMessage
+                                      ? "white"
+                                      : "black",
+                                  }}
+                                ></ExpandMoreOutlinedIcon>
+                              }
+                              // onMouseEnter={() => {
+                              //   setDisplayCreateMessage(true);
+                              //   setDisplayMessageSenders(false);
 
-                            // }}
-                            onClick={() => {
-                              setDisplayCreateMessage(true);
-                              setDisplayMessageSenders(false);
+                              // }}
+                              onClick={() => {
+                                setDisplayCreateMessage(true);
+                                setDisplayMessageSenders(false);
 
-                            }}
-                          ></IconTextField>
-                          <div
-                            // class="dropdown-content"
-                            className={classes.dropdownHidden}
-                            style={{
-                              marginLeft: 180,
-                              marginTop: -40,
-                              display: displayCreateMessage === false ? 'none' : 'block',
-                            }}
-                            onMouseLeave={() => {
-                              setDisplayCreateMessage(false);
-                            }}
-                          >
+                              }}
+                            ></IconTextField>
+                            <div
+                              // class="dropdown-content"
+                              className={classes.dropdownHidden}
+                              style={{
+                                marginLeft: 180,
+                                marginTop: -40,
+                                display: displayCreateMessage === false ? 'none' : 'block',
+                              }}
+                              onMouseLeave={() => {
+                                setDisplayCreateMessage(false);
+                              }}
+                            >
 
-                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}  >
+                              {/* <Grid container alignItems="center" className={classes.messagetypeGrid}  >
 
                               <Favorite className={classes.messageTypeIcon}
                                 style={{ fontSize: 16 }}
@@ -4542,7 +4780,7 @@ function MessageCreate(props) {
                                 Set Preffered Channel
                               </p> <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
                             </Grid> */}
-                            {/* <Grid container alignItems="center" className={classes.messagetypeGrid}>
+                              {/* <Grid container alignItems="center" className={classes.messagetypeGrid}>
 
 
                               <p
@@ -4559,7 +4797,7 @@ function MessageCreate(props) {
                               </p>
                             </Grid> */}
 
-                            {/* {[
+                              {/* {[
                               {
                                 title: "Twitter DM",
                                 icon: (
@@ -4617,228 +4855,228 @@ function MessageCreate(props) {
                               })} */}
 
 
-                            {/* ///////////Twitter Dm section////////////// */}
-                            {twitterDm === false ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  settwitterDm(true)
-                                  setPersonalText(false)
-                                  setrsText(false)
-                                  setMessageType([{
-                                    title: ' Twitter Dm',
-                                    icon: (<FaTwitter
-                                      className={classes.messageTypeIcon}
-                                    ></FaTwitter>)
-                                  }])
-                                  // setMessageType([{
-                                  //   title: 'Twitter DM',
-                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
-                                  // }])
+                              {/* ///////////Twitter Dm section////////////// */}
+                              {twitterDm === false ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    settwitterDm(true)
+                                    setPersonalText(false)
+                                    setrsText(false)
+                                    setMessageType([{
+                                      title: ' Twitter Dm',
+                                      icon: (<FaTwitter
+                                        className={classes.messageTypeIcon}
+                                      ></FaTwitter>)
+                                    }])
+                                    // setMessageType([{
+                                    //   title: 'Twitter DM',
+                                    //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+                                    // }])
 
-                                }}
-                              >
-                                <FaTwitter
-                                  className={classes.messageTypeIcon}
-                                ></FaTwitter>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
                                   }}
                                 >
-                                  Twitter DM
-                                </p>
-                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                              </Grid>
-                            </> : twitterDm === true ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                style={{
-
-
-                                }}
-                                onClick={() => {
-                                  settwitterDm(false)
-                                  setPersonalText(false)
-                                  setrsText(false)
-                                  setMessageType([{
-                                    title: ' Twitter Dm',
-                                    icon: (<FaTwitter
-                                      className={classes.messageTypeIcon}
-                                    ></FaTwitter>)
-                                  }])
-
-                                  // setMessageType([{
-                                  //   title: 'Twitter DM',
-                                  //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
-
-                                  // }])
-                                }}
-                              >
-                                <FaTwitter
-                                  className={classes.messageTypeIcon}
-                                ></FaTwitter>
-                                <p
+                                  <FaTwitter
+                                    className={classes.messageTypeIcon}
+                                  ></FaTwitter>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Twitter DM
+                                  </p>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                </Grid>
+                              </> : twitterDm === true ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
                                   style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
+
+
+                                  }}
+                                  onClick={() => {
+                                    settwitterDm(false)
+                                    setPersonalText(false)
+                                    setrsText(false)
+                                    setMessageType([{
+                                      title: ' Twitter Dm',
+                                      icon: (<FaTwitter
+                                        className={classes.messageTypeIcon}
+                                      ></FaTwitter>)
+                                    }])
+
+                                    // setMessageType([{
+                                    //   title: 'Twitter DM',
+                                    //   icon: (<FaTwitter className={classes.messageTypeIcon} ></FaTwitter>)
+
+                                    // }])
                                   }}
                                 >
-                                  Twitter DM
-                                </p>
-                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
-                              </Grid>
+                                  <FaTwitter
+                                    className={classes.messageTypeIcon}
+                                  ></FaTwitter>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Twitter DM
+                                  </p>
+                                  <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                                </Grid>
 
-                            </> : null}
+                              </> : null}
 
-                            {/* ///////////Personal Text section////////////// */}
+                              {/* ///////////Personal Text section////////////// */}
 
-                            {personalText === false ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  settwitterDm(false)
-                                  setPersonalText(true)
-                                  setrsText(false)
-                                  setMessageType([{
-                                    title: ' Personal Text',
-                                    icon: (<FaPhone
-                                      className={classes.messageTypeIcon}
-                                    ></FaPhone>)
-                                  }])
-                                }}
-                              >
-                                <FaPhone
-                                  className={classes.messageTypeIcon}
-                                ></FaPhone>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
+                              {personalText === false ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    settwitterDm(false)
+                                    setPersonalText(true)
+                                    setrsText(false)
+                                    setMessageType([{
+                                      title: ' Personal Text',
+                                      icon: (<FaPhone
+                                        className={classes.messageTypeIcon}
+                                      ></FaPhone>)
+                                    }])
                                   }}
                                 >
-                                  Personal Text
-                                </p>
-                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                              </Grid>
-                            </> : personalText === true ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  settwitterDm(false)
-                                  setPersonalText(false)
-                                  setrsText(false)
-                                  setMessageType([{
-                                    title: ' Personal Text',
-                                    icon: (<BiSave
-                                      className={classes.messageTypeIcon}
-                                    ></BiSave>)
-                                  }])
+                                  <FaPhone
+                                    className={classes.messageTypeIcon}
+                                  ></FaPhone>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Personal Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                </Grid>
+                              </> : personalText === true ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    settwitterDm(false)
+                                    setPersonalText(false)
+                                    setrsText(false)
+                                    setMessageType([{
+                                      title: ' Personal Text',
+                                      icon: (<BiSave
+                                        className={classes.messageTypeIcon}
+                                      ></BiSave>)
+                                    }])
 
-                                }}
-                              >
-                                <FaPhone
-                                  className={classes.messageTypeIcon}
-                                ></FaPhone>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
                                   }}
                                 >
-                                  Personal Text
-                                </p>
-                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
-                              </Grid>
+                                  <FaPhone
+                                    className={classes.messageTypeIcon}
+                                  ></FaPhone>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Personal Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                                </Grid>
 
-                            </> : null}
-                            {/* ///////////Rs Text section////////////// */}
+                              </> : null}
+                              {/* ///////////Rs Text section////////////// */}
 
-                            {rsText === false ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  settwitterDm(false)
-                                  setPersonalText(false)
-                                  setrsText(true)
+                              {rsText === false ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    settwitterDm(false)
+                                    setPersonalText(false)
+                                    setrsText(true)
 
-                                  setMessageType([{
-                                    title: ' Rs Text',
-                                    icon: (<FaComment
-                                      className={classes.messageTypeIcon}
-                                    ></FaComment>)
-                                  }])
-                                }}
-                              >
-                                <FaComment
-                                  className={classes.messageTypeIcon}
-                                ></FaComment>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
+                                    setMessageType([{
+                                      title: ' Rs Text',
+                                      icon: (<FaComment
+                                        className={classes.messageTypeIcon}
+                                      ></FaComment>)
+                                    }])
                                   }}
                                 >
-                                  Rs Text
-                                </p>
-                                <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
-                              </Grid>
-                            </> : rsText === true ? <>
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={() => {
-                                  settwitterDm(false)
-                                  setPersonalText(false)
-                                  setrsText(false)
-                                  setMessageType([{
-                                    title: ' Rs Text',
-                                    icon: (<FaComment
-                                      className={classes.messageTypeIcon}
-                                    ></FaComment>)
-                                  }])
+                                  <FaComment
+                                    className={classes.messageTypeIcon}
+                                  ></FaComment>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Rs Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'gray', fontSize: 18 }}></CheckCircle>
+                                </Grid>
+                              </> : rsText === true ? <>
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={() => {
+                                    settwitterDm(false)
+                                    setPersonalText(false)
+                                    setrsText(false)
+                                    setMessageType([{
+                                      title: ' Rs Text',
+                                      icon: (<FaComment
+                                        className={classes.messageTypeIcon}
+                                      ></FaComment>)
+                                    }])
 
-                                }}
-                              >
-                                <FaComment
-                                  className={classes.messageTypeIcon}
-                                ></FaComment>
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
-                                    width: "65%"
                                   }}
                                 >
-                                  Rs Text
-                                </p>
-                                <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
-                              </Grid>
+                                  <FaComment
+                                    className={classes.messageTypeIcon}
+                                  ></FaComment>
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                      width: "65%"
+                                    }}
+                                  >
+                                    Rs Text
+                                  </p>
+                                  <CheckCircle style={{ color: 'green', fontSize: 18 }}></CheckCircle>
+                                </Grid>
 
-                            </> : null}
+                              </> : null}
 
 
 
@@ -4846,306 +5084,347 @@ function MessageCreate(props) {
 
 
 
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {/* </Grid> */}
-                    </Grid>
+                        {/* </Grid> */}
+                      </Grid>
 
-                    <Grid
+                      <Grid
 
-                      container
-                      direction="row"
-                      // alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-                        width: "100%",
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        height: 70,
-                        marginTop: 16,
-                      }}
-                      className="hoverHighlight d-flex align-items-center"
-                    >
-                      {/* <Grid
+                        container
+                        direction="row"
+                        // alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+                          width: "100%",
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          height: 70,
+                          marginTop: 16,
+                        }}
+                        className="hoverHighlight d-flex align-items-center"
+                      >
+                        {/* <Grid
                         item
                         md={displaySendTo ? 2 : 2}
                         xs={displaySendTo ? 2 : 2}
                       > */}
-                      <p
-                        style={{
-                          margin: 0,
-                          marginLeft: 16,
-                          marginRight: 16,
-                          width: 90,
-                        }}
-                      >
-                        Send From:
-                      </p>
-                      {/* </Grid>
-                      <Grid item md={10} xs={10}> */}
-                      {messageSender ? (
-                        renderMessageSenderTag(messageSender)
-                      ) : (
-                        <div class="dropdown">
-                          <IconTextField
-                            width={170}
-                            background={
-                              displayMessageSenders ? "#3871da" : "white"
-                            }
-                            text={
-                              <p
-                                style={{
-                                  margin: 0,
-                                  color: displayMessageSenders
-                                    ? "white"
-                                    : "black",
-                                }}
-                              >
-                                Add Sender
-                              </p>
-                            }
-                            iconStart={
-                              <FaPlus
-                                style={{
-                                  color: displayMessageSenders
-                                    ? "white"
-                                    : "#3871da",
-                                }}
-                              ></FaPlus>
-                            }
-                            onClick={() => {
-                              setDisplayCreateMessage(false);
-                              setDisplayMessageSenders(true);
-                            }}
-                          ></IconTextField>
-                          <div
-                            // class="dropdown-content"
-                            className={classes.dropdownHidden}
-                            style={{
-                              marginLeft: 180,
-                              marginTop: -40,
-                              display: displayMessageSenders ? "block" : "none",
-                            }}
-                            onMouseLeave={() => {
-                              setDisplayMessageSenders(false);
-                              setDisplayCreateMessage(false)
-                            }}
-                          >
-                            <p
-                              style={{
-                                color: "black",
-                                padding: 8,
-                                marginBottom: 0,
-                                background: "#3871da",
-                                color: "white",
-                                fontWeight: 600,
-                              }}
-                            >
-                              Send on the behalf of
-                            </p>
-                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
-                              <p
-                                onClick={
-                                  () => {
-                                    setFromPositinCoach(false)
-                                    setFromAreaCoach(true)
-                                  }
-                                }
-                                style={{ width: '80%', margin: 0 }}
-                              >
-                                Area Recruiting Coach
-
-                              </p>
-                              {
-                                fromAreaCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
-                              }
-
-                            </Grid>
-
-                            <div
-                              style={{
-                                width: "100%",
-                                border: "1px solid #d8d8d8",
-                              }}
-                            ></div>
-                            <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
-                              <p
-                                style={{ width: '80%', margin: 0 }}
-
-                                onClick={
-                                  () => {
-                                    setFromPositinCoach(true)
-                                    setFromAreaCoach(false)
-                                  }
-                                }
-                              >
-                                Position Coach
-                              </p>
-                              {
-                                fromPositionCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
-                              }
-                            </Grid>
-
-                            <div
-                              style={{
-                                width: "100%",
-                                border: "1px solid #d8d8d8",
-                              }}
-                            ></div>
-                            <p
-                              style={{
-                                color: "gray",
-                                fontSize: 11,
-                                width: 200,
-                                marginLeft: 16,
-                              }}
-                            >
-                              ** select a default send account if recruite do
-                              not have a coach assigned
-                            </p>
-                            {
-                              teamContacts &&
-                              teamContacts.map((type) => {
-                                return (
-                                  <Grid
-                                    container
-                                    alignItems="center"
-                                    // style={{
-                                    //   height: 50,
-                                    //   marginLeft: 0,
-                                    //   marginTop: -12,
-                                    //   cursor: "pointer",
-                                    // }}
-                                    className={classes.sendAsP}
-                                    onClick={() => {
-                                      setMessageSender(type);
-                                    }}
-                                  >
-                                    <img
-                                      style={{
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 20,
-                                        marginLeft: 16,
-                                      }}
-                                      src={
-                                        type.twitter_profile &&
-                                        type.twitter_profile.profile_image
-                                      }
-                                    ></img>
-                                    {JSON.parse(localStorage.getItem("user"))
-                                      .id === type.id ? (
-                                      <p
-                                        style={{
-                                          margin: 0,
-                                          fontWeight: 600,
-                                          marginLeft: 8,
-                                        }}
-                                      >
-                                        {type.twitter_profile &&
-                                          "You @" +
-                                          type.twitter_profile.screen_name +
-                                          ""}
-                                      </p>
-                                    ) : (
-                                      <p
-                                        style={{
-                                          margin: 0,
-                                          fontWeight: 600,
-                                          marginLeft: 16,
-                                        }}
-                                      >
-                                        {type.twitter_profile &&
-                                          " @" +
-                                          type.twitter_profile.screen_name +
-                                          " "}
-                                      </p>
-                                    )}
-                                  </Grid>
-                                );
-                              })
-                            }
-                          </div>
-                        </div>
-                      )}
-                      {/* </Grid> */}
-                    </Grid>
-
-
-                    <Grid
-                      container
-                      direction="row"
-                      // alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-                        width: "100%",
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        minHeight: 70,
-                        marginTop: 16,
-                        padding: 16,
-                        paddingLeft: 0,
-                      }}
-                      className="hoverHighlight d-flex align-items-center"
-                      onMouseEnter={() => {
-                        setDisplayCreateMessage(false);
-                        setDisplayMessageSenders(false);
-                      }}
-                    >
-                      {/* <Grid item md={1} xs={1}> */}
-                      <p
-                        style={{
-                          margin: 0,
-                          marginLeft: 16,
-                          marginRight: 16,
-                          width: 90,
-                        }}
-                      >
-                        Send To:
-                      </p>
-                      {/* </Grid> */}
-                      {/* <Grid item md={11} xs={11}> */}
-
-                      {messageReceiver.length > 0 ? (
-                        <Grid
-                          container
-                          direction="row"
-                          style={{ width: "80%" }}
+                        <p
+                          style={{
+                            margin: 0,
+                            marginLeft: 16,
+                            marginRight: 16,
+                            width: 90,
+                          }}
                         >
-                          {displaySendTo ? (
+                          Send From:
+                        </p>
+                        {/* </Grid>
+                      <Grid item md={10} xs={10}> */}
+                        {messageSender ? (
+                          renderMessageSenderTag(messageSender)
+                        ) : (
+                          <div class="dropdown">
                             <IconTextField
                               width={170}
-                              background={"#3871da"}
+                              background={
+                                displayMessageSenders ? "#3871da" : "white"
+                              }
                               text={
                                 <p
                                   style={{
                                     margin: 0,
-                                    color: "white",
+                                    color: displayMessageSenders
+                                      ? "white"
+                                      : "black",
                                   }}
                                 >
-                                  Done Adding
+                                  Add Sender
                                 </p>
                               }
                               iconStart={
-                                <ArrowForwardIosIcon
+                                <FaPlus
                                   style={{
-                                    color: "white",
+                                    color: displayMessageSenders
+                                      ? "white"
+                                      : "#3871da",
                                   }}
-                                ></ArrowForwardIosIcon>
+                                ></FaPlus>
                               }
-                              onMouseEnter={() => {
-                                setDisplayCreateMessage(false);
-                                setDisplayMessageSenders(false);
-                              }}
                               onClick={() => {
-                                setDisplaySendTo(false);
+                                setDisplayCreateMessage(false);
+                                setDisplayMessageSenders(true);
                               }}
                             ></IconTextField>
-                          ) : (
+                            <div
+                              // class="dropdown-content"
+                              className={classes.dropdownHidden}
+                              style={{
+                                marginLeft: 180,
+                                marginTop: -40,
+                                display: displayMessageSenders ? "block" : "none",
+                              }}
+                              onMouseLeave={() => {
+                                setDisplayMessageSenders(false);
+                                setDisplayCreateMessage(false)
+                              }}
+                            >
+                              <p
+                                style={{
+                                  color: "black",
+                                  padding: 8,
+                                  marginBottom: 0,
+                                  background: "#3871da",
+                                  color: "white",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Send on the behalf of
+                              </p>
+                              <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                                <p
+                                  onClick={
+                                    () => {
+                                      setFromPositinCoach(false)
+                                      setFromAreaCoach(true)
+                                    }
+                                  }
+                                  style={{ width: '80%', margin: 0 }}
+                                >
+                                  Area Recruiting Coach
+
+                                </p>
+                                {
+                                  fromAreaCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                                }
+
+                              </Grid>
+
+                              <div
+                                style={{
+                                  width: "100%",
+                                  border: "1px solid #d8d8d8",
+                                }}
+                              ></div>
+                              <Grid container direction="row" alignItems="center" className={classes.sendAsP}>
+                                <p
+                                  style={{ width: '80%', margin: 0 }}
+
+                                  onClick={
+                                    () => {
+                                      setFromPositinCoach(true)
+                                      setFromAreaCoach(false)
+                                    }
+                                  }
+                                >
+                                  Position Coach
+                                </p>
+                                {
+                                  fromPositionCoach && <CheckCircle style={{ color: '#2a6447', fontSize: 18 }}></CheckCircle>
+                                }
+                              </Grid>
+
+                              <div
+                                style={{
+                                  width: "100%",
+                                  border: "1px solid #d8d8d8",
+                                }}
+                              ></div>
+                              <p
+                                style={{
+                                  color: "gray",
+                                  fontSize: 11,
+                                  width: 200,
+                                  marginLeft: 16,
+                                }}
+                              >
+                                ** select a default send account if recruite do
+                                not have a coach assigned
+                              </p>
+                              {
+                                teamContacts &&
+                                teamContacts.map((type) => {
+                                  return (
+                                    <Grid
+                                      container
+                                      alignItems="center"
+                                      // style={{
+                                      //   height: 50,
+                                      //   marginLeft: 0,
+                                      //   marginTop: -12,
+                                      //   cursor: "pointer",
+                                      // }}
+                                      className={classes.sendAsP}
+                                      onClick={() => {
+                                        setMessageSender(type);
+                                      }}
+                                    >
+                                      <img
+                                        style={{
+                                          width: 30,
+                                          height: 30,
+                                          borderRadius: 20,
+                                          marginLeft: 16,
+                                        }}
+                                        src={
+                                          type.twitter_profile &&
+                                          type.twitter_profile.profile_image
+                                        }
+                                      ></img>
+                                      {JSON.parse(localStorage.getItem("user"))
+                                        .id === type.id ? (
+                                        <p
+                                          style={{
+                                            margin: 0,
+                                            fontWeight: 600,
+                                            marginLeft: 8,
+                                          }}
+                                        >
+                                          {type.twitter_profile &&
+                                            "You @" +
+                                            type.twitter_profile.screen_name +
+                                            ""}
+                                        </p>
+                                      ) : (
+                                        <p
+                                          style={{
+                                            margin: 0,
+                                            fontWeight: 600,
+                                            marginLeft: 16,
+                                          }}
+                                        >
+                                          {type.twitter_profile &&
+                                            " @" +
+                                            type.twitter_profile.screen_name +
+                                            " "}
+                                        </p>
+                                      )}
+                                    </Grid>
+                                  );
+                                })
+                              }
+                            </div>
+                          </div>
+                        )}
+                        {/* </Grid> */}
+                      </Grid>
+
+
+                      <Grid
+                        container
+                        direction="row"
+                        // alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+                          width: "100%",
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          minHeight: 70,
+                          marginTop: 16,
+                          padding: 16,
+                          paddingLeft: 0,
+                        }}
+                        className="hoverHighlight d-flex align-items-center"
+                        onMouseEnter={() => {
+                          setDisplayCreateMessage(false);
+                          setDisplayMessageSenders(false);
+                        }}
+                      >
+                        {/* <Grid item md={1} xs={1}> */}
+                        <p
+                          style={{
+                            margin: 0,
+                            marginLeft: 16,
+                            marginRight: 16,
+                            width: 90,
+                          }}
+                        >
+                          Send To:
+                        </p>
+                        {/* </Grid> */}
+                        {/* <Grid item md={11} xs={11}> */}
+
+                        {messageReceiver.length > 0 ? (
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ width: "80%" }}
+                          >
+                            {displaySendTo ? (
+                              <IconTextField
+                                width={170}
+                                background={"#3871da"}
+                                text={
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      color: "white",
+                                    }}
+                                  >
+                                    Done Adding
+                                  </p>
+                                }
+                                iconStart={
+                                  <ArrowForwardIosIcon
+                                    style={{
+                                      color: "white",
+                                    }}
+                                  ></ArrowForwardIosIcon>
+                                }
+                                onMouseEnter={() => {
+                                  setDisplayCreateMessage(false);
+                                  setDisplayMessageSenders(false);
+                                }}
+                                onClick={() => {
+                                  setDisplaySendTo(false);
+                                }}
+                              ></IconTextField>
+                            ) : (
+                              <IconTextField
+                                width={170}
+                                background={
+                                  displayMessageReceivers ? "#3871da" : "white"
+                                }
+                                text={
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      color: displayMessageReceivers
+                                        ? "white"
+                                        : "black",
+                                    }}
+                                  >
+                                    Add Contacts
+                                  </p>
+                                }
+                                iconStart={
+                                  <FaPlus
+                                    style={{
+                                      color: displayMessageReceivers
+                                        ? "white"
+                                        : "#3871da",
+                                    }}
+                                  ></FaPlus>
+                                }
+                                // onMouseEnter={() => {
+                                //   setDisplayCreateMessage(false);
+                                //   setDisplayMessageSenders(false);
+                                // }}
+                                onClick={() => {
+                                  setDisplaySendTo(true);
+
+
+                                }}
+                              ></IconTextField>
+                            )}
+                            {renderMessageReceiver(messageReceiver)}
+                          </Grid>
+                        ) : (
+                          <div class="dropdown">
                             <IconTextField
                               width={170}
                               background={
@@ -5177,18 +5456,39 @@ function MessageCreate(props) {
                               //   setDisplayMessageSenders(false);
                               // }}
                               onClick={() => {
-                                setDisplaySendTo(true);
-
-
+                                // setDisplaySendTo(true);
+                                { displaySendTo === true ? setDisplaySendTo(false) : displaySendTo === false ? setDisplaySendTo(true) : null }
                               }}
                             ></IconTextField>
-                          )}
-                          {renderMessageReceiver(messageReceiver)}
-                        </Grid>
-                      ) : (
+                          </div>
+                        )}
+                        {/* </Grid> */}
+                      </Grid>
+                      <Grid
+                        container
+                        direction="row"
+                        // alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+                          width: "100%",
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          height: 70,
+                          marginTop: 16,
+                          // paddingTop: 16,
+                        }}
+                        className="hoverHighlight d-flex align-items-center"
+                      >
+                        {/* <Grid item md={2} xs={2}> */}
+                        <p style={{ margin: 0, marginLeft: 16, width: 140 }}>
+                          Begin Sending At:
+                        </p>
+                        {/* </Grid> */}
+                        {/* <Grid item md={10} xs={10}> */}
                         <div class="dropdown">
                           <IconTextField
-                            width={170}
+                            width={time ? 220 : 170}
                             background={
                               displayMessageReceivers ? "#3871da" : "white"
                             }
@@ -5196,583 +5496,521 @@ function MessageCreate(props) {
                               <p
                                 style={{
                                   margin: 0,
+                                  marginLeft: time ? -28 : 0,
                                   color: displayMessageReceivers
                                     ? "white"
                                     : "black",
+                                  fontWeight: 400,
                                 }}
                               >
-                                Add Contacts
+                                {time
+                                  ? moment(date).format('MM/DD/YYYY h:mm a')
+                                  : "ASAP"}
                               </p>
                             }
                             iconStart={
-                              <FaPlus
+                              <FaCalendarAlt
                                 style={{
                                   color: displayMessageReceivers
                                     ? "white"
                                     : "#3871da",
                                 }}
-                              ></FaPlus>
+                              ></FaCalendarAlt>
                             }
-                            // onMouseEnter={() => {
-                            //   setDisplayCreateMessage(false);
-                            //   setDisplayMessageSenders(false);
-                            // }}
                             onClick={() => {
-                              // setDisplaySendTo(true);
-                              { displaySendTo === true ? setDisplaySendTo(false) : displaySendTo === false ? setDisplaySendTo(true) : null }
+                              setShowTimePicker(true);
+                            }}
+                            onMouseEnter={() => {
+                              setDisplayCreateMessage(false);
+                              setDisplayMessageSenders(false);
                             }}
                           ></IconTextField>
                         </div>
-                      )}
-                      {/* </Grid> */}
-                    </Grid>
-                    <Grid
-                      container
-                      direction="row"
-                      // alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-                        width: "100%",
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        height: 70,
-                        marginTop: 16,
-                        // paddingTop: 16,
-                      }}
-                      className="hoverHighlight d-flex align-items-center"
-                    >
-                      {/* <Grid item md={2} xs={2}> */}
-                      <p style={{ margin: 0, marginLeft: 16, width: 140 }}>
-                        Begin Sending At:
-                      </p>
-                      {/* </Grid> */}
-                      {/* <Grid item md={10} xs={10}> */}
-                      <div class="dropdown">
-                        <IconTextField
-                          width={time ? 220 : 170}
-                          background={
-                            displayMessageReceivers ? "#3871da" : "white"
-                          }
-                          text={
-                            <p
-                              style={{
-                                margin: 0,
-                                marginLeft: time ? -28 : 0,
-                                color: displayMessageReceivers
-                                  ? "white"
-                                  : "black",
-                                fontWeight: 400,
-                              }}
-                            >
-                              {time
-                                ? moment(date).format('MM/DD/YYYY h:mm a')
-                                : "ASAP"}
-                            </p>
-                          }
-                          iconStart={
-                            <FaCalendarAlt
-                              style={{
-                                color: displayMessageReceivers
-                                  ? "white"
-                                  : "#3871da",
-                              }}
-                            ></FaCalendarAlt>
-                          }
-                          onClick={() => {
-                            setShowTimePicker(true);
-                          }}
-                          onMouseEnter={() => {
-                            setDisplayCreateMessage(false);
-                            setDisplayMessageSenders(false);
-                          }}
-                        ></IconTextField>
-                      </div>
-                      {/* </Grid> */}
-                    </Grid>
-
-                    <Grid
-                      container
-                      direction="row"
-                      // alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-                        width: "100%",
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        minHeight: 170,
-                        marginTop: 16,
-                        paddingTop: 16,
-                        paddingBottom: 16,
-                      }}
-                      className="hoverHighlight"
-                    >
-                      <Grid item md={2} xs={2}>
-
-                        <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
+                        {/* </Grid> */}
                       </Grid>
 
-                      {media &&
-                        /* media.map((m) => {
-                           return mediaContainer(media[0]);
-                         })*/
-                        mediaContainer(media[0])
+                      <Grid
+                        container
+                        direction="row"
+                        // alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+                          width: "100%",
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          minHeight: 170,
+                          marginTop: 16,
+                          paddingTop: 16,
+                          paddingBottom: 16,
+                        }}
+                        className="hoverHighlight"
+                      >
+                        <Grid item md={2} xs={2}>
 
-                      }
-                      <Grid item container md={10} xs={10}>
+                          <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
+                        </Grid>
 
-                        {media ?
-                          <div></div>
-                          :
-                          <Grid item xs={2.5} md={2.5}
-                            container
-                            direction="row"
+                        {media &&
+                          /* media.map((m) => {
+                             return mediaContainer(media[0]);
+                           })*/
+                          mediaContainer(media[0])
+
+                        }
+                        <Grid item container md={10} xs={10}>
+
+                          {media ?
+                            <div></div>
+                            :
+                            <Grid item xs={2.5} md={2.5}
+                              container
+                              direction="row"
+                              style={{
+                                marginLeft: 10,
+                                border: "1px solid #d8d8d8",
+                                height: 150,
+                                width: 150,
+                                cursor: "pointer",
+                                borderRadius: 4,
+                              }}
+                              onClick={() => {
+                                setAddMedia(true);
+                              }}
+                              alignItems="center"
+                              justify="center"
+                            >
+                              {" "}
+                              <FaPlus
+                                style={{
+                                  // color: displayMessageSenders ? "white" : "#3871da",
+                                  color: "#3871da",
+                                }}
+                              ></FaPlus>{" "}
+                              Add Media
+                            </Grid>}
+                          {" "}
+                        </Grid>
+
+                      </Grid>
+
+
+
+
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        style={{
+                          // background: "#f5f6f9",
+
+                          // minWidth: 1110,
+                          border: "1px solid #d8d8d8",
+                          borderRadius: 4,
+                          height: 100,
+                          marginTop: 16,
+                          paddingTop: 16,
+                        }}
+                        className="hoverHighlight focusHighlight"
+                        onMouseEnter={() => {
+                          setDisplaySnippets(false);
+                          setDisplayTextPlaceholders(false);
+                        }}
+                      >
+                        {/* <Grid item md={2} xs={2}> */}
+                        <p style={{ marginBottom: 40, marginLeft: 10 }}>
+                          Message Text:
+                        </p>
+                        <div class="dropdown">
+
+                          <textarea
+                            type="text"
+                            id={"textArea"}
                             style={{
-                              marginLeft: 10,
-                              border: "1px solid #d8d8d8",
-                              height: 150,
-                              width: 150,
-                              cursor: "pointer",
+                              border: "none",
+                              outline: "none",
+                              marginBottom: 10,
+                              width: "510%",
+                              height: "100%",
                               borderRadius: 4,
+                              paddingLeft: 12,
+                              resize: "none",
+                              overflow: "hidden"
                             }}
-                            onClick={() => {
-                              setAddMedia(true);
+                            value={messageText}
+                            onChange={(e) => {
+                              setMessageText(e.target.value);
                             }}
-                            alignItems="center"
-                            justify="center"
+                            placeholder="Type message"
+                          ></textarea>
+
+                        </div>
+                        {/* </Grid> */}
+                        <Grid item md={12} xs={12} direction >
+
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" alignItems="center">
+                        <div class="dropdown" style={{ marginLeft: 0 }}>
+                          <IconTextField
+                            width={170}
+                            marginTop={16}
+                            marginLeft={1}
+                            background={
+                              displayTextPlaceholders ? "#3871da" : "white"
+                            }
+                            text={
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: displayTextPlaceholders
+                                    ? "white"
+                                    : "black",
+                                }}
+                              >
+                                Text Placeholder
+                              </p>
+                            }
+                            icon={
+                              <ExpandLessOutlinedIcon
+                                style={{
+                                  color: displayTextPlaceholders
+                                    ? "white"
+                                    : "#3871da",
+                                }}
+                              ></ExpandLessOutlinedIcon>
+                            }
+                            onMouseEnter={() => {
+                              setDisplayTextPlaceholders(true);
+                              setDisplaySnippets(false);
+                              setDisplayMessageSenders(false);
+                              setDisplayEmojiSelect(false);
+                            }}
+                          ></IconTextField>
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 180,
+                              marginTop: -200,
+                              maxHeight: 200,
+                              display: displayTextPlaceholders ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplayTextPlaceholders(false);
+                            }}
                           >
-                            {" "}
-                            <FaPlus
-                              style={{
-                                // color: displayMessageSenders ? "white" : "#3871da",
-                                color: "#3871da",
-                              }}
-                            ></FaPlus>{" "}
-                            Add Media
-                          </Grid>}
-                        {" "}
-                      </Grid>
-
-                    </Grid>
-
-
-
-
-                    <Grid
-                      container
-                      direction="row"
-                      alignItems="center"
-                      style={{
-                        // background: "#f5f6f9",
-
-                        // minWidth: 1110,
-                        border: "1px solid #d8d8d8",
-                        borderRadius: 4,
-                        height: 100,
-                        marginTop: 16,
-                        paddingTop: 16,
-                      }}
-                      className="hoverHighlight focusHighlight"
-                      onMouseEnter={() => {
-                        setDisplaySnippets(false);
-                        setDisplayTextPlaceholders(false);
-                      }}
-                    >
-                      {/* <Grid item md={2} xs={2}> */}
-                      <p style={{ marginBottom: 40, marginLeft: 10 }}>
-                        Message Text:
-                      </p>
-                      <div class="dropdown">
-
-                        <textarea
-                          type="text"
-                          id={"textArea"}
-                          style={{
-                            border: "none",
-                            outline: "none",
-                            marginBottom: 10,
-                            width: "510%",
-                            height: "100%",
-                            borderRadius: 4,
-                            paddingLeft: 12,
-                            resize: "none",
-                            overflow: "hidden"
-                          }}
-                          value={messageText}
-                          onChange={(e) => {
-                            setMessageText(e.target.value);
-                          }}
-                          placeholder="Type message"
-                        ></textarea>
-
-                      </div>
-                      {/* </Grid> */}
-                      <Grid item md={12} xs={12} direction >
-
-                      </Grid>
-                    </Grid>
-                    <Grid container direction="row" alignItems="center">
-                      <div class="dropdown" style={{ marginLeft: 0 }}>
-                        <IconTextField
-                          width={170}
-                          marginTop={16}
-                          marginLeft={1}
-                          background={
-                            displayTextPlaceholders ? "#3871da" : "white"
-                          }
-                          text={
                             <p
                               style={{
-                                margin: 0,
-                                color: displayTextPlaceholders
-                                  ? "white"
-                                  : "black",
+                                color: "black",
+                                padding: 16,
+                                background: "#3871da",
+                                color: "white",
+                                fontWeight: 600,
+                                marginBottom: -4,
                               }}
                             >
-                              Text Placeholder
+                              Text Placeholders
                             </p>
-                          }
-                          icon={
-                            <ExpandLessOutlinedIcon
-                              style={{
-                                color: displayTextPlaceholders
-                                  ? "white"
-                                  : "#3871da",
-                              }}
-                            ></ExpandLessOutlinedIcon>
-                          }
-                          onMouseEnter={() => {
-                            setDisplayTextPlaceholders(true);
-                            setDisplaySnippets(false);
-                            setDisplayMessageSenders(false);
-                            setDisplayEmojiSelect(false);
-                          }}
-                        ></IconTextField>
-                        <div
-                          // class="dropdown-content"
-                          className={classes.dropdownHidden}
-                          style={{
-                            marginLeft: 180,
-                            marginTop: -200,
-                            maxHeight: 200,
-                            display: displayTextPlaceholders ? "block" : "none",
-                          }}
-                          onMouseLeave={() => {
-                            setDisplayTextPlaceholders(false);
-                          }}
-                        >
-                          <p
-                            style={{
-                              color: "black",
-                              padding: 16,
-                              background: "#3871da",
-                              color: "white",
-                              fontWeight: 600,
-                              marginBottom: -4,
-                            }}
-                          >
-                            Text Placeholders
-                          </p>
-                          <p
-                            style={{
-                              color: "black",
-                              padding: 16,
-                              // background: "#3871da",
-                              // color: "white",
-                              fontWeight: "bold",
-                              marginBottom: -4,
-                            }}
-                          >
-                            Contact Details
-                          </p>
-                          {[
-                            {
-                              title: "[First_Name]",
-                            },
-                            {
-                              title: "[Last_Name]",
-                            },
-                            {
-                              title: "[Nick_Name]",
-                            },
-                            {
-                              title: "[State]",
-                            },
-                            {
-                              title: "[HighSchool]",
-                            },
-                          ].map((type) => {
-                            return (
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={(e) => {
-                                  var newVal = "";
-                                  if (
-                                    document.getElementById("textArea")
-                                      .selectionStart === messageText.length
-                                  ) {
-                                    setMessageText(messageText + type.title);
-                                  } else {
-                                    for (
-                                      var i = 0;
-                                      i < messageText.length;
-                                      i++
-                                    ) {
-                                      newVal = newVal + messageText[i];
-                                      if (
-                                        i ===
-                                        document.getElementById("textArea")
-                                          .selectionStart
-                                      ) {
-                                        newVal = newVal + type.title;
-                                      }
-                                    }
-                                    setMessageText(newVal);
-                                  }
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 500,
-                                    marginLeft: 16,
-                                  }}
-                                >
-                                  {type.title}
-                                </p>
-                              </Grid>
-                            );
-                          })}
-                          <p
-                            style={{
-                              color: "black",
-                              padding: 16,
-                              // background: "#3871da",
-                              // color: "white",
-                              fontWeight: "bold",
-                              marginBottom: -4,
-                            }}
-                          >
-                            Contact Relationships
-                          </p>
-                          {[
-                            {
-                              title: "[Mother_Name]",
-                            },
-                            {
-                              title: "[Father_Name]",
-                            },
-                          ].map((type) => {
-                            return (
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={(e) => {
-                                  var newVal = "";
-                                  if (
-                                    document.getElementById("textArea")
-                                      .selectionStart === messageText.length
-                                  ) {
-                                    setMessageText(messageText + type.title);
-                                  } else {
-                                    for (
-                                      var i = 0;
-                                      i < messageText.length;
-                                      i++
-                                    ) {
-                                      newVal = newVal + messageText[i];
-                                      if (
-                                        i ===
-                                        document.getElementById("textArea")
-                                          .selectionStart
-                                      ) {
-                                        newVal = newVal + type.title;
-                                      }
-                                    }
-                                    setMessageText(newVal);
-                                  }
-                                  setMessageText(newVal);
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 500,
-                                    marginLeft: 16,
-                                  }}
-                                >
-                                  {type.title}
-                                </p>
-                              </Grid>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div class="dropdown" style={{ marginLeft: 20 }}>
-                        <IconTextField
-                          width={170}
-                          marginTop={16}
-                          marginLeft={1}
-                          background={displaySnippets ? "#3871da" : "white"}
-                          text={
                             <p
                               style={{
-                                margin: 0,
-                                color: displaySnippets ? "white" : "black",
+                                color: "black",
+                                padding: 16,
+                                // background: "#3871da",
+                                // color: "white",
+                                fontWeight: "bold",
+                                marginBottom: -4,
+                              }}
+                            >
+                              Contact Details
+                            </p>
+                            {[
+                              {
+                                title: "[First_Name]",
+                              },
+                              {
+                                title: "[Last_Name]",
+                              },
+                              {
+                                title: "[Nick_Name]",
+                              },
+                              {
+                                title: "[State]",
+                              },
+                              {
+                                title: "[HighSchool]",
+                              },
+                            ].map((type) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={(e) => {
+                                    var newVal = "";
+                                    if (
+                                      document.getElementById("textArea")
+                                        .selectionStart === messageText.length
+                                    ) {
+                                      setMessageText(messageText + type.title);
+                                    } else {
+                                      for (
+                                        var i = 0;
+                                        i < messageText.length;
+                                        i++
+                                      ) {
+                                        newVal = newVal + messageText[i];
+                                        if (
+                                          i ===
+                                          document.getElementById("textArea")
+                                            .selectionStart
+                                        ) {
+                                          newVal = newVal + type.title;
+                                        }
+                                      }
+                                      setMessageText(newVal);
+                                    }
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 500,
+                                      marginLeft: 16,
+                                    }}
+                                  >
+                                    {type.title}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 16,
+                                // background: "#3871da",
+                                // color: "white",
+                                fontWeight: "bold",
+                                marginBottom: -4,
+                              }}
+                            >
+                              Contact Relationships
+                            </p>
+                            {[
+                              {
+                                title: "[Mother_Name]",
+                              },
+                              {
+                                title: "[Father_Name]",
+                              },
+                            ].map((type) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={(e) => {
+                                    var newVal = "";
+                                    if (
+                                      document.getElementById("textArea")
+                                        .selectionStart === messageText.length
+                                    ) {
+                                      setMessageText(messageText + type.title);
+                                    } else {
+                                      for (
+                                        var i = 0;
+                                        i < messageText.length;
+                                        i++
+                                      ) {
+                                        newVal = newVal + messageText[i];
+                                        if (
+                                          i ===
+                                          document.getElementById("textArea")
+                                            .selectionStart
+                                        ) {
+                                          newVal = newVal + type.title;
+                                        }
+                                      }
+                                      setMessageText(newVal);
+                                    }
+                                    setMessageText(newVal);
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 500,
+                                      marginLeft: 16,
+                                    }}
+                                  >
+                                    {type.title}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div class="dropdown" style={{ marginLeft: 20 }}>
+                          <IconTextField
+                            width={170}
+                            marginTop={16}
+                            marginLeft={1}
+                            background={displaySnippets ? "#3871da" : "white"}
+                            text={
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: displaySnippets ? "white" : "black",
+                                }}
+                              >
+                                Snippets
+                              </p>
+                            }
+                            icon={
+                              <ExpandLessOutlinedIcon
+                                style={{
+                                  color: displaySnippets ? "white" : "#3871da",
+                                }}
+                              ></ExpandLessOutlinedIcon>
+                            }
+                            onMouseEnter={() => {
+                              setDisplaySnippets(true);
+                              setDisplayMessageSenders(false);
+                              setDisplayEmojiSelect(false);
+                            }}
+                          ></IconTextField>
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 180,
+                              marginTop: -200,
+                              display: displaySnippets ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplaySnippets(false);
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: "black",
+                                padding: 16,
+                                background: "#3871da",
+                                color: "white",
+                                fontWeight: 600,
+                                marginBottom: -4,
                               }}
                             >
                               Snippets
                             </p>
-                          }
-                          icon={
-                            <ExpandLessOutlinedIcon
-                              style={{
-                                color: displaySnippets ? "white" : "#3871da",
-                              }}
-                            ></ExpandLessOutlinedIcon>
-                          }
-                          onMouseEnter={() => {
-                            setDisplaySnippets(true);
-                            setDisplayMessageSenders(false);
-                            setDisplayEmojiSelect(false);
-                          }}
-                        ></IconTextField>
-                        <div
-                          // class="dropdown-content"
-                          className={classes.dropdownHidden}
-                          style={{
-                            marginLeft: 180,
-                            marginTop: -200,
-                            display: displaySnippets ? "block" : "none",
-                          }}
-                          onMouseLeave={() => {
-                            setDisplaySnippets(false);
-                          }}
-                        >
-                          <p
-                            style={{
-                              color: "black",
-                              padding: 16,
-                              background: "#3871da",
-                              color: "white",
-                              fontWeight: 600,
-                              marginBottom: -4,
-                            }}
-                          >
-                            Snippets
-                          </p>
-                          {(snippets).map((type) => {
-                            return (
-                              <Grid
-                                container
-                                alignItems="center"
-                                className={classes.messagetypeGrid}
-                                onClick={(e) => {
-                                  var newVal = "";
-                                  if (
-                                    document.getElementById("textArea")
-                                      .selectionStart === messageText.length
-                                  ) {
-                                    setMessageText(messageText + type.content);
-                                  } else {
-                                    for (
-                                      var i = 0;
-                                      i < messageText.length;
-                                      i++
+                            {(snippets).map((type) => {
+                              return (
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  className={classes.messagetypeGrid}
+                                  onClick={(e) => {
+                                    var newVal = "";
+                                    if (
+                                      document.getElementById("textArea")
+                                        .selectionStart === messageText.length
                                     ) {
-                                      newVal = newVal + messageText[i];
-                                      if (
-                                        i ===
-                                        document.getElementById("textArea")
-                                          .selectionStart
+                                      setMessageText(messageText + type.content);
+                                    } else {
+                                      for (
+                                        var i = 0;
+                                        i < messageText.length;
+                                        i++
                                       ) {
-                                        newVal = newVal + type.content;
+                                        newVal = newVal + messageText[i];
+                                        if (
+                                          i ===
+                                          document.getElementById("textArea")
+                                            .selectionStart
+                                        ) {
+                                          newVal = newVal + type.content;
+                                        }
                                       }
+                                      setMessageText(newVal);
                                     }
-                                    setMessageText(newVal);
-                                  }
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    margin: 0,
-                                    fontWeight: 600,
-                                    marginLeft: 16,
                                   }}
                                 >
-                                  {type.content}
-                                </p>
-                              </Grid>
-                            );
-                          })}
+                                  <p
+                                    style={{
+                                      margin: 0,
+                                      fontWeight: 600,
+                                      marginLeft: 16,
+                                    }}
+                                  >
+                                    {type.content}
+                                  </p>
+                                </Grid>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                      {/* <div className="partialOveride" style={{ width: 20 }}> */}
-                      {/* </div> */}
+                        {/* <div className="partialOveride" style={{ width: 20 }}> */}
+                        {/* </div> */}
 
-                      <div class="dropdown" style={{ marginLeft: 20 }}>
-                        <div
-                          onClick={() => {
-                            setDisplayEmojiSelect(true);
-                          }}
-                          style={{
-                            fontSize: 30,
-                            marginLeft: 20,
-                            marginTop: 16,
-                            cursor: "pointer",
-                          }}
-                        >
-                          😀
-                        </div>{" "}
-                        <div
-                          // class="dropdown-content"
-                          className={classes.dropdownHidden}
-                          style={{
-                            marginLeft: 50,
-                            marginTop: -450,
-                            display: displayEmojiSelect ? "block" : "none",
-                          }}
-                          onMouseLeave={() => {
-                            setDisplayEmojiSelect(false);
-                          }}
-                        >
-                          <Picker
-                            set="apple"
-                            // onSelect={(e) => {
-                            //   console.log("This si ", e.native);
-                            //   setMessageText(messageText + e.native);
-                            // }}
-                            onSelect={(e) => {
-                              var newVal = "";
-                              if (
-                                document.getElementById("textArea")
-                                  .selectionStart === messageText.length
-                              ) {
-                                setMessageText(messageText + e.native);
-                              } else {
-                                for (var i = 0; i < messageText.length; i++) {
-                                  newVal = newVal + messageText[i];
-                                  if (
-                                    i ===
-                                    document.getElementById("textArea")
-                                      .selectionStart
-                                  ) {
-                                    newVal = newVal + e.native;
-                                  }
-                                }
-                                setMessageText(newVal);
-                              }
+                        <div class="dropdown" style={{ marginLeft: 20 }}>
+                          <div
+                            onClick={() => {
+                              setDisplayEmojiSelect(true);
                             }}
-                          />
+                            style={{
+                              fontSize: 30,
+                              marginLeft: 20,
+                              marginTop: 16,
+                              cursor: "pointer",
+                            }}
+                          >
+                            😀
+                          </div>{" "}
+                          <div
+                            // class="dropdown-content"
+                            className={classes.dropdownHidden}
+                            style={{
+                              marginLeft: 50,
+                              marginTop: -450,
+                              display: displayEmojiSelect ? "block" : "none",
+                            }}
+                            onMouseLeave={() => {
+                              setDisplayEmojiSelect(false);
+                            }}
+                          >
+                            <Picker
+                              set="apple"
+                              // onSelect={(e) => {
+                              //   console.log("This si ", e.native);
+                              //   setMessageText(messageText + e.native);
+                              // }}
+                              onSelect={(e) => {
+                                var newVal = "";
+                                if (
+                                  document.getElementById("textArea")
+                                    .selectionStart === messageText.length
+                                ) {
+                                  setMessageText(messageText + e.native);
+                                } else {
+                                  for (var i = 0; i < messageText.length; i++) {
+                                    newVal = newVal + messageText[i];
+                                    if (
+                                      i ===
+                                      document.getElementById("textArea")
+                                        .selectionStart
+                                    ) {
+                                      newVal = newVal + e.native;
+                                    }
+                                  }
+                                  setMessageText(newVal);
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      {/* <div
+                        {/* <div
                         onClick={() => {
                           var emojiVar = document.getElementsByClassName(
                             "react-input-emoji--button"
@@ -5788,125 +6026,128 @@ function MessageCreate(props) {
                       >
                         😀
                       </div> */}
-                    </Grid>
-                    {/* <div style={{ height: 200, width: "100%" }}></div> */}
-                  </div>
+                      </Grid>
+                      {/* <div style={{ height: 200, width: "100%" }}></div> */}
+                    </div>
+                  </Grid>
                 </Grid>
+              </div>
+              <Grid container direction="row" alignItems="center"></Grid>
+            </div>
+          )}
+        </Grid>
+        <DialogBox
+          // title={"POST"}
+          maxWidth="sm"
+          open={showTagsDialog}
+          message={
+            <div>
+              <p
+                style={{
+                  fontSize: 22,
+                  color: "black",
+                  marginTop: 0,
+                  marginBottom: 0,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: -25,
+                }}
+              >
+                Tags
+              </p>
+              <Grid container direction="row" justify="center">
+                <input
+                  type="text"
+                  style={{
+                    width: "100%",
+                    border: "1px solid #ebebeb",
+                    borderRadius: 4,
+                    height: 40,
+                  }}
+                  placeholder="Search Tag Name"
+                  value={tagSearch}
+                  onChange={(e) => {
+                    setTagSearch(e.target.value);
+                  }}
+                ></input>
+              </Grid>
+              <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
+                {allTags &&
+                  allTags.map((tags) => {
+                    if (tags.label.indexOf(tagSearch) > -1) {
+                      return (
+                        <Grid
+                          container
+                          direction="row"
+                          alignItems="center"
+                          style={{
+                            borderBottom: "1px solid #d8d8d8",
+                            paddingTop: 4,
+                            paddingBottom: 4,
+                          }}
+                        >
+                          <Grid item md={3} sm={3}>
+                            <Checkbox
+                              color="primary"
+                              onChange={() => {
+                                makeMessageSelected(tags.id);
+                              }}
+                              style={{ marginTop: 1, marginBottom: 1 }}
+                            ></Checkbox>
+                          </Grid>
+                          <Grid item md={9} sm={9}>
+                            {tags.label}
+                          </Grid>
+                        </Grid>
+                      );
+                    }
+                  })}
+              </div>
+              <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                style={{ marginTop: 20, marginBottom: 5 }}
+              >
+                <HollowWhiteButton
+                  width={100}
+                  onClick={() => {
+                    setShowTagsDialog(true);
+                  }}
+                  text="Cancel"
+                  textColor="#3871DA"
+                  background="white"
+                ></HollowWhiteButton>
+                <IconTextField
+                  width={100}
+                  onClick={() => {
+                    setShowTagsDialog(false);
+                    setOpenSnackBar(true);
+                  }}
+                  text="Tag"
+                  textColor="white"
+                  background="#3871DA"
+                  icon={
+                    <LocalOfferOutlinedIcon
+                      style={{ color: "white" }}
+                    ></LocalOfferOutlinedIcon>
+                  }
+                ></IconTextField>
               </Grid>
             </div>
-            <Grid container direction="row" alignItems="center"></Grid>
-          </div>
-        )}
-      </Grid>
-      <DialogBox
-        // title={"POST"}
-        maxWidth="sm"
-        open={showTagsDialog}
-        message={
-          <div>
-            <p
-              style={{
-                fontSize: 22,
-                color: "black",
-                marginTop: 0,
-                marginBottom: 0,
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop: -25,
-              }}
-            >
-              Tags
-            </p>
-            <Grid container direction="row" justify="center">
-              <input
-                type="text"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ebebeb",
-                  borderRadius: 4,
-                  height: 40,
-                }}
-                placeholder="Search Tag Name"
-                value={tagSearch}
-                onChange={(e) => {
-                  setTagSearch(e.target.value);
-                }}
-              ></input>
-            </Grid>
-            <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {allTags &&
-                allTags.map((tags) => {
-                  if (tags.label.indexOf(tagSearch) > -1) {
-                    return (
-                      <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        style={{
-                          borderBottom: "1px solid #d8d8d8",
-                          paddingTop: 4,
-                          paddingBottom: 4,
-                        }}
-                      >
-                        <Grid item md={3} sm={3}>
-                          <Checkbox
-                            color="primary"
-                            onChange={() => {
-                              makeMessageSelected(tags.id);
-                            }}
-                            style={{ marginTop: 1, marginBottom: 1 }}
-                          ></Checkbox>
-                        </Grid>
-                        <Grid item md={9} sm={9}>
-                          {tags.label}
-                        </Grid>
-                      </Grid>
-                    );
-                  }
-                })}
-            </div>
-            <Grid
-              container
-              direction="row"
-              justify="flex-end"
-              style={{ marginTop: 20, marginBottom: 5 }}
-            >
-              <HollowWhiteButton
-                width={100}
-                onClick={() => {
-                  setShowTagsDialog(true);
-                }}
-                text="Cancel"
-                textColor="#3871DA"
-                background="white"
-              ></HollowWhiteButton>
-              <IconTextField
-                width={100}
-                onClick={() => {
-                  setShowTagsDialog(false);
-                  setOpenSnackBar(true);
-                }}
-                text="Tag"
-                textColor="white"
-                background="#3871DA"
-                icon={
-                  <LocalOfferOutlinedIcon
-                    style={{ color: "white" }}
-                  ></LocalOfferOutlinedIcon>
-                }
-              ></IconTextField>
-            </Grid>
-          </div>
-        }
-        // applyForm={() => dispatch(hidePost())}
-        cancelForm={() => {
-          setShowTagsDialog(false);
-        }}
-        hideActions={true}
-      />
-    </DarkContainer>
-  );
+          }
+          // applyForm={() => dispatch(hidePost())}
+          cancelForm={() => {
+            setShowTagsDialog(false);
+          }}
+          hideActions={true}
+        />
+      </DarkContainer>
+    );
+  }
+
 }
+
 const useStyles = makeStyles({
   tableHeading: {
     fontWeight: 700,
@@ -6048,5 +6289,6 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
+
 export { useStyles };
 export default MessageCreate;
