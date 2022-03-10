@@ -3845,21 +3845,32 @@ const addDataToFilter = (value, type) => {
 
    
      const promises=[];
-     let filtercontacts=[];
+     //let filtercontacts = [];
     for(let data of filtersdata){
       promises.push(getBoardFiltersById(data.id));
     }
 
     console.log("promised  = ",promises)
+
+    let tmpFilterContacts = []
+
     Promise.all(promises).then((response)=>{
-      console.log("response = ",response.map((data)=>data.data))
-      filtercontacts=response.map((d)=>d.data)
+      console.log(response)
+      console.log("response = ", response.map((data) => data.data))
+
+      let filtercontacts = response.map((d) => d.data)
+      tmpFilterContacts.concat(filtercontacts)
+      let temp = Object.assign([], tmpFilterContacts)
+
+      // tempUploadStatus[index] = "success"
+      // temp2[index] = "success"
+      // setUploadStatus(temp2)
       
-     
-     
-      setBoardsId(filtercontacts)
+      // console.log('typeof filterContacts ' + )
+      setBoardsId(temp)
       setCount(counts+1)
-      console.log("filterscontacts",filtercontacts)
+
+      console.log("filterscontacts", temp)
     }).catch((err)=>{
       console.log("err = ",err)
 
@@ -6300,5 +6311,6 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
+
 export { useStyles };
 export default MessageCreate;
