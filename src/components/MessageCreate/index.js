@@ -1114,9 +1114,9 @@ console.log("boardID",id)
   const mediaContainer = (m) => {
     //alert('ok')
     
-    console.log("THis is container ", media);
-    return (
-      <Badge
+    console.log("THis is container ", m);
+     return (
+    <Badge
         badgeContent={
           <ClearIcon
             style={{ height: 10, width: 10, cursor: "pointer" }}
@@ -1178,7 +1178,7 @@ console.log("boardID",id)
           >
             <img
               style={{ width: "100%", height: 150, objectFit: "contain" }}
-              src={m.urls && m.urls.original}
+              src={m?.urls && m?.urls?.original}
             ></img>
           </Grid>
           <Grid
@@ -1229,7 +1229,7 @@ console.log("boardID",id)
           </Grid>
         </div>
       </Badge>
-    );
+            );
   };
 
   const renderMessageFilters = () => {
