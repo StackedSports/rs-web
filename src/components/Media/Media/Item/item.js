@@ -16,9 +16,22 @@ const MediaItem = (props) => {
     const m = props.item;
 
 
+    if(props.isPlaceHolder)
     console.log('media contains = ', m)
-    
 
+    let assetUrl={
+        medium:null,
+        orignal:null
+    };
+
+    if(props.isPlaceHolder){
+       assetUrl.medium=m.media && m.media.length>0 && m.media[0].urls && m.media[0].urls.medium;
+       assetUrl.original=m.media && m.media.length>0 && m.media[0].urls && m.media[0].urls.original;
+    }else {
+        assetUrl.medium=m.urls.medium;
+        assetUrl.original=m.urls.original;
+
+    }
     return (
         <div
             style={{
@@ -40,13 +53,9 @@ const MediaItem = (props) => {
 
 
                 onMouseEnter={() => {
-                    if (m.urls) {
-                        props.setMediaHover(m.urls.medium);
+                    if(assetUrl){
+                        props.setPlacehoderHover(assetUrl.medium);
                         props.setDisplayAction(false);
-                    } else if (m.media_preview) {
-                        props.setPlacehoderHover(m.media_preview);
-                        props.setDisplayAction(false);
-
                     }
                 }}
                 onMouseLeave={() => {
@@ -55,13 +64,19 @@ const MediaItem = (props) => {
                 }}
             >
                 {
+<<<<<<< HEAD
                     (m.urls && props.placeholderHover === m.media) ||
                     props.selectedCheckBoxes.indexOf(m.media) > -1 ? (
+=======
+                    (props.placeholderHover === (assetUrl.medium)) ||
+                    props.selectedCheckBoxes.indexOf(assetUrl.medium) > -1 ? (
+>>>>>>> 1b33e0be800f99aea81326ac9660f89f8c4b5dc8
                             props.showHover ?
                                 <HoverItem
                                     isPlaceHolder={props.isPlaceHolder}
                                     makeMediaSelected={props.makeMediaSelected}
                                     item={m}
+                                    assetUrl={assetUrl}
                                     makeCheckBoxSelected={props.makeCheckBoxSelected}
                                     setLightboxVideo={props.setLightboxVideo}
                                     setLightboxPicture={props.setLightboxPicture}
@@ -71,13 +86,14 @@ const MediaItem = (props) => {
                         )
 
                         :
-                        (m.urls && props.mediaHover === m.urls.medium) ||
+                        (m.urls && props.mediaHover === assetUrl.medium) ||
                         (props.selectedCheckBoxes).indexOf(props.isPlaceHolder ? m.id : m.hashid) > -1 ? (
                             props.showHover ?
                                 <HoverItem
                                     isPlaceHolder={props.isPlaceHolder}
                                     makeMediaSelected={props.makeMediaSelected}
                                     item={m}
+                                    assetUrl={assetUrl}
                                     makeCheckBoxSelected={props.makeCheckBoxSelected}
                                     setLightboxVideo={props.setLightboxVideo}
                                     setLightboxPicture={props.setLightboxPicture}
@@ -118,9 +134,9 @@ const MediaItem = (props) => {
                 {
                     props.isPlaceHolder ?
                         (
-                            m.media_preview ? isImage(m.media_preview) ? (
+                            m.media_preview ? isImage(assetUrl.medium) ? (
                                     <FaImage></FaImage>
-                                ) : isVideo(m.media_preview) > -1 ? (
+                                ) : isVideo(assetUrl.medium) > -1 ? (
                                     <FaVideo style={{color: "black", fontSize: 20, zIndex: 100}}></FaVideo>
                                 ) : (
                                     <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
