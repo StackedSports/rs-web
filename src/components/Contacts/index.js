@@ -17,6 +17,8 @@ import BackIcon from '../../images/back.png';
 import DrawerIcon from '../../images/drawer_contact.png';
 
 
+import { NavLink, Redirect } from "react-router-dom";
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
@@ -165,9 +167,20 @@ function Home(props) {
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
-
-
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  // Pagination
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    itemsPerPage: 0,
+    totalPages: 0,
+    currentPage: 0
+  })
+
+  // Redirect
+  const [redirect, setRedirect] = useState("")
+
+
   const totalContacts = 0
   const columnNames = [
     {
@@ -283,6 +296,18 @@ function Home(props) {
         if (res.statusText === "OK") {
             var temp = Object.assign([], contacts);
             temp = temp.concat(res.data);
+
+            console.log("*********** CONTACTS **********")
+            console.log(res)
+            console.log("*********** CONTACTS **********")
+
+
+            setPagination({
+              totalItems: res.headers['total-count'],
+              itemsPerPage: res.headers['page-items'],
+              totalPages: res.headers['total-pages'],
+              currentPage: res.headers['current-page']
+            })
 
             // temp.push(res.data);
             setContacts(temp);
@@ -954,6 +979,9 @@ function Home(props) {
     }
   }
 
+  // if(redirect !== '')
+  //   return <Redirect to={redirect}/>
+
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
       <Snackbar
@@ -1191,8 +1219,8 @@ function Home(props) {
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? contacts.length : ""} </span>{" "}
-                  contacts in the system
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? pagination.totalItems : 0} </span>{" "} contacts
+                  {/* {" "} contacts in the system */}
                 </span>
               )}
             </Grid>
@@ -1376,8 +1404,8 @@ function Home(props) {
                               "CONTACT_DATA",
                               JSON.stringify(item)
                             );
-
-                            window.location.href = "/contact-profile";
+                            //setRedirect(`/contact-profile/${item.id}`)
+                            // window.location.href = "/contact-profile/" + item.id;
                           }
 
                         }}
@@ -1430,10 +1458,14 @@ function Home(props) {
                             ></img>
                           )}
                         </Grid>
+
+                        {/* <NavLink>
+                          
+                        </NavLink> */}
                         <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
+                          <NavLink style={{ color: 'inherit'}}to={"contact-profile/" + item.id} className={classes.tableFields}>
                             {item.first_name}
-                          </span>
+                          </NavLink>
                         </Grid>
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>

@@ -426,6 +426,9 @@ function MediaComponent(props) {
         try {
             const res = await getMedia();
             if (res.statusText === "OK") {
+                console.log("*********** MEDIA **********")
+                console.log(res)
+                console.log("*********** MEDIA **********")
                 const media = (res.data).map((item) => {
                     item.type = "media";
                     return item;

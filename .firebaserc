@@ -1,8 +1,5 @@
 {
   "projects": {
-    "default": "recurit-3397b",
-    "recruit": "recruit-suite-149f6",
-    "a": "twitterstream-e3ca2"
-  },
-  "targets": {}
+    "default": "stacked-messenger"
+  }
 }

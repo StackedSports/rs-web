@@ -5,6 +5,8 @@ import Dashboard from "./components/dashboard/index";
 import Contacts from "./Pages/Contacts";
 import Chat from "./Pages/Chat";
 
+import Test from './Pages/Test'
+
 import Media from "./Pages/Media";
 import MessageCreate from "./Pages/MessageCreate";
 import UserProfile from "./Pages/UserProfile";
@@ -37,12 +39,14 @@ function App() {
           <Route path="/media" exact component={Media} />
           <Route path="/tweet-create" exact component={TweetCreate} />
 
-          <Route path="/contact-profile" exact component={UserProfile} />
+          <Route path="/contact-profile/:id" exact component={UserProfile} />
           <Route path="/message-create" exact component={MessageCreate} />
           <Route path="/team-settings" exact component={TeamSettings} />
           <Route path="/team-settings/:userID" exact component={TeamSettings} />
           <Route path="/twitter-stream" exact component={TwitterStream}/>
           <Route path="/Media-component" exact component={MediaC}/>
+
+          <Route path='/test' component={Test}/>
         </Switch>
       </Router>
     </div>

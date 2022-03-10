@@ -459,25 +459,79 @@ export const addTag = () => {
 
 //*************************************************/
 
+const AXIOS = (method, url, body) => {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify(body);
+
+        axios({
+                method: method,
+                url: URL + url,
+                headers: {
+                    Accept: "application/json; version=1",
+                    "Content-Type": "application/json",
+                    Authorization:
+                        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                    "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                    Cookie:
+                        "ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+                },
+                data
+            })
+            .then(res => {
+                if (res.statusText === "OK") {
+                    resolve(res.data)
+                } else {
+                    reject(res)
+                }
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
+export const getContact = (id) => {
+    return AXIOS('get', `contacts/${id}`)
+}
+
+export const updateContact = (id, update) => {
+    const body = { contact: update }
+    console.log(body)
+    return AXIOS('put', `contacts/${id}`, body)
+}
+
+export const getRanksNew = () => {
+    return AXIOS('get', `team/ranks`)
+};
+
 export const getAssociatedContactByFileName = (fileName) => {
     return new Promise((resolve, reject) => {
         const nameParts = fileName.split(".")
 
-        getSearchedContacts(nameParts[0]).then(
-            (res) => {
+        getSearchedContacts(nameParts[0])
+            .then((res) => {
                 if(res.statusText === "OK") {
                     if(res.data.length == 1)
                         resolve(res.data[0])
-                    else if(res.data.length > 1)
+                    else if(res.data.length > 1) {
+                        let filteredData = []
                         reject("found multiple contacts")
-                    else
+
+                        res.data.forEach(contact => {
+                            if(contact.first_name + " " + contact.last_name === nameParts[0])
+                                filteredData.push(contact)
+                        })
+
+                        if(filteredData.length == 1)
+                            resolve(filteredData[0])
+                        else
+                            reject("found multiple contacts")
+                    } else
                         reject("could not find contacts")
                 }
-            },
-            (error) => {
+            }).catch((error) => {
                 reject(error)
-            }
-        )
+            })
     })
 }
 
@@ -504,7 +558,7 @@ export const getAllContacts = (page) => {
 };
 
 
-export const getSearchedContacts = (search) => {
+export const getSearchedContacts = (search) => { // search=tagsclients
     return axios({
         method: "get",
         url:
@@ -673,7 +727,7 @@ export const getBoardFilters = () => {
 export const getMedia = () => {
     return axios({
         method: "get",
-        url: URL + `media`,
+        url: URL + `media?per_page=25&page=1`,
         headers: {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
@@ -771,6 +825,22 @@ export const createMessage = (body) => {
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
         data: data,
+    });
+};
+
+export const getContactMessages = (contactId) => {
+    return axios({
+        method: "get",
+        url: URL + `messages?=false`,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmhlbmRlcnNvbkBzdGFja2Vkc3BvcnRzLmNvbSIsImV4cCI6MTY0MDAxMTUwN30.vokiYw0OZMPWeSiRAOGDaDwZ8PWDL057YJn7AFS1RT0",
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be0280ec4-d74-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
     });
 };
 
