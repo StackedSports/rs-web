@@ -1540,12 +1540,12 @@ function MediaComponent(props) {
             console.log("addTags",addTags)
             console.log("addOwner",addOwner)
             try{
-              // const res= await postTag(addTags);
+               const res= await postTag(addTags);
 
                
-              // console.log("addtags",res)
-              const res= await updateMedia(addOwner)
-                console.log("addOwner",res)
+               console.log("addtags",res)
+             // const ress= await updateMedia(addOwner)
+            //    console.log("addOwner",ress)
             }
             catch(e){
                 console.log("erroraddtags",e)

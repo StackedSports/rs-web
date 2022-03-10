@@ -26,6 +26,7 @@ function Media() {
        </Grid>
             </Grid>
             </DarkContainer>
+        
         </div>
     )
 }
