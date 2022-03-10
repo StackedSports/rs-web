@@ -190,7 +190,7 @@ const [handlescroll,sethandlescroll]=useState(true)
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
-  //const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  const [openSnakBar, setOpenSnackBar] = React.useState(false);
 
   // Pagination
   const [pagination, setPagination] = useState({

@@ -444,13 +444,13 @@ const Sidebar = (props) => {
 
   let teamLogo = DashboardLogo
 
-  if(user) {
+  if(user && user.team) {
     teamLogo = user.team.org.logo.thumb
-    teamLogo = user.team.org.logo.original
-    teamLogo = user.team.org.logo.medium
-    teamLogo = user.team.org.logo.large
-    console.log("AAAAAAAAAAAAAAAAA")
-    console.log(teamLogo)
+    // teamLogo = user.team.org.logo.original
+    // teamLogo = user.team.org.logo.medium
+    // teamLogo = user.team.org.logo.large
+    // console.log("AAAAAAAAAAAAAAAAA")
+    // console.log(teamLogo)
   }
   //console.log(user.team.org.logo)
 
