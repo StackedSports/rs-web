@@ -2366,6 +2366,7 @@ console.log("boardID",id)
 
   const SelectedMessageDetails = (props) => {
     console.log("messageCreatepropss",filterMessageDetails)
+    console.log("filterMessagesDetailsprops",props)
     {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
@@ -3126,41 +3127,48 @@ console.log("boardID",id)
           }
           else if(f==="Archived")
       {
-        filteredMessage=filteredMessage.concat( allMessages.filter(m => m.status === "Archived").slice(0,99))
+        filteredMessage=filteredMessage.concat( allMessages.filter(m => m.status === "Archived"))
+        filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f==="Finished")
       {
-       filteredMessage=filteredMessage.concat( allMessages?.filter(m => m.status === "Sent").slice(0,99));
+       filteredMessage=filteredMessage.concat( allMessages?.filter(m => m.status === "Sent"));
+       filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f==="In Progress")
       {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "In Progress").slice(0,99));
+         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "In Progress"));
+         filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f==="Scheduled")
       {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Scheduled").slice(0,99));
+         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Scheduled"));
+          filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f==="Draft")
       {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Draft").slice(0,99));
+         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Draft"));
+         filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f==="Error")
       {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Error").slice(0,99));
+         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Error"));
+         filteredMessage = filteredMessage.slice(0,99)
       }
       else if(f===firstname+" "+lastname)
       {
-        filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname).slice(0,99));
+        filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname));
+        filteredMessage = filteredMessage.slice(0,99)
       }
 
       else if(f===teamContacts.map((m)=>m.first_name+" "+m.last_name))
       {
        filterMessage=filterMessage.concat( allMessages?.filter(m => 
-        m.sender.first_name+" "+m.sender.last_name === f)).slice(0,99);
+        m.sender.first_name+" "+m.sender.last_name === f));
       }
       else if(f===allPlatforms.map((m)=>m.name))
       {
-        filterMessage=filterMessage.concat(allMessages?.filter(m => m.platform?.name === f)).slice(0,99);
+        filterMessage=filterMessage.concat(allMessages?.filter(m => m.platform?.name === f)).slice(500,600);
       }
       else if(f===statusses.map((m)=>m))
       {
@@ -3829,8 +3837,8 @@ const addDataToFilter = (value, type) => {
      let count = 0;
     const contactsId = messageSender?messageSender.id:null
     let contactsdata=[]
-    contactsdata=recieve.filter(m=>m.first_name?recieve:null).join(",")
-    //const contactsids=contactsdata?.map((id)=>id.id)
+    contactsdata=recieve.filter(m=>m.first_name?recieve:null)
+    //const contactsids=contactsdata?.map((id)=>id.id).join(",")
      const filtersdata=recieve.filter(m=>m.name?recieve:null)
     const data = {
       message:{
