@@ -17,6 +17,8 @@ import BackIcon from '../../images/back.png';
 import DrawerIcon from '../../images/drawer_contact.png';
 
 
+import { NavLink, Redirect } from "react-router-dom";
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
@@ -188,8 +190,19 @@ function Home(props) {
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
-
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  // Pagination
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    itemsPerPage: 0,
+    totalPages: 0,
+    currentPage: 0
+  })
+
+  // Redirect
+  const [redirect, setRedirect] = useState("")
+
   const totalContacts = 0
   const columnNames = [
     {
@@ -328,32 +341,48 @@ function Home(props) {
       (res) => {
         console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-     
-          if (page > 1) {
+          var temp = Object.assign([], contacts);
+          temp = temp.concat(res.data);
 
-            var temp = contacts;
-            temp = temp.concat(res.data);
-
-            // temp.push(res.data);
-            setContacts(temp);
-            // setCopyContacts(temp);
-            setuseLessState(uselessState + 1);
-            console.log("These are all new contacts", contacts);
+          console.log("*********** CONTACTS **********")
+          console.log(res)
+          console.log("*********** CONTACTS **********")
 
 
-            // document.getElementById("infinit").scrollTop = 0;
-            setFetching(false);
-          } else {
+          setPagination({
+            totalItems: res.headers['total-count'],
+            itemsPerPage: res.headers['page-items'],
+            totalPages: res.headers['total-pages'],
+            currentPage: res.headers['current-page']
+          })
 
-            setContacts(res.data);
-            // setCopyContacts(res.data);
-            if (document.getElementById("infinit")) {
-              document.getElementById("infinit").scrollTop = 0;
-            }
+          // temp.push(res.data);
+          setContacts(temp);
+          // setCopyContacts(temp);
+          setuseLessState(uselessState + 1);
+          console.log("These are all new contacts", contacts);
 
-            console.log("These are all contacts", contacts);
-            setFetching(false);
+
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        } else {
+
+          //console.log("These are all contacts", res.data);
+
+          //setContacts(res.data);
+          //setCopyContacts(res.data);
+
+          if (document.getElementById("infinit")) {
+            document.getElementById("infinit").scrollTop = 0;
           }
+
+          console.log("These are all contacts", contacts);
+          setFetching(false);
+          // if (page > 1) {
+
+          // } else {
+
+          // }
         }
       },
       (error) => {
@@ -543,19 +572,20 @@ function Home(props) {
       (res) => {
         console.log("THis is all boards by id", res);
         if (res.statusText === "OK") {
+          var temp = Object.assign([], copyContacts);
+          temp = temp.concat(res.data);
 
+          // var temp = con;
+          // console.log(temp, 'just test temp')
+          // // var newtemp = temp?.concat(res?.data?.contacts?.list);
+          // var newval = [temp, [...res?.data?.contacts?.list]]
+          // setCopyContacts(newval);
 
-          var temp = copyContacts;
-          console.log(temp, 'just test temp')
-          // var newtemp = temp?.concat(res?.data?.contacts?.list);
-          var newval = [temp, [...res?.data?.contacts?.list]]
-          setCopyContacts(newval);
-
-          setContacts(newval);
+          setContacts(temp);
           setuseLessState(uselessState + 1);
           setBordsById(res.data)
-          console.log("These are all board contacts", res.data.contacts.list);
-          console.log("thi si state", newval);
+          console.log("These are all board contacts", res?.data?.contacts?.list);
+
 
 
 
@@ -1066,7 +1096,7 @@ function Home(props) {
           style={filtesSpacingStyle}
         >
           {positions &&
-            console.log(positions, "position ok"),
+            //console.log(positions, "position ok"),
             positions.map((option, ind) => (
               <Dropdown.Item
                 key={ind}
@@ -1266,7 +1296,7 @@ function Home(props) {
     }
     // console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
-  var totalcount=0
+  var totalcount = 0
   const removeDataFromFilter = (index) => {
     var temp = filter;
     var tempType = filterType;
@@ -1277,7 +1307,7 @@ function Home(props) {
     setFilterType(tempType);
     setuseLessState(uselessState + 1);
     // sethandlescroll(true)
-    getMyContacts()
+    // getMyContacts()
     // alert("sdfasd")
   };
   useEffect(() => {
@@ -1306,13 +1336,13 @@ function Home(props) {
 
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
-    
-if(totalcount<50){
-  // setContacts(allcontacts)
-  // setPage(page+1)
-  // setFetching(true)
 
-}
+    if (totalcount < 50) {
+      // setContacts(allcontacts)
+      // setPage(page+1)
+      // setFetching(true)
+
+    }
 
     var isValid = false;
     if (filter.length != 0) {
@@ -1321,7 +1351,7 @@ if(totalcount<50){
         if (filterType[index] === "status") {
 
           if (item?.status != null && item?.status.status === filt) {
-           
+
             isValid = true;
             return;
 
@@ -1445,14 +1475,17 @@ if(totalcount<50){
       visibleHeight
     );
     // if (position + visibleHeight === scrollableHeight) {
-      // alert("We are in the endgaem now");
-      if (!fetching) {
-        getMyContacts(page + 1);
-        setPage(page + 1);
-      }
-      // agreement.scrollTop = 0;
+    // alert("We are in the endgaem now");
+    if (!fetching) {
+      getMyContacts(page + 1);
+      setPage(page + 1);
+    }
+    // agreement.scrollTop = 0;
     // }
   }
+
+  // if(redirect !== '')
+  //   return <Redirect to={redirect}/>
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
@@ -1736,8 +1769,8 @@ if(totalcount<50){
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? contacts.length : ""} </span>{" "}
-                  contacts in the system
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? pagination.totalItems : 0} </span>{" "} contacts
+                  {/* {" "} contacts in the system */}
                 </span>
               )}
             </Grid>
@@ -1912,12 +1945,12 @@ if(totalcount<50){
 
               {contacts ? (
                 contacts.map((item, index) => {
-                  
+
                   // console.log(item,'===============contacts====================='),
                   // console.log(isBoardContact, '<<<<<<<<<<===contacts=<<<<<<<'),
                   console.log(checkFilters(item), '<<<<==<<<<<==============contacts====================');
                   if (checkFilters(item) === true) {
-                               
+
                     totalcount++
                     return (
                       <Grid
@@ -1932,8 +1965,8 @@ if(totalcount<50){
                               "CONTACT_DATA",
                               JSON.stringify(item)
                             );
-
-                            window.location.href = "/contact-profile";
+                            //setRedirect(`/contact-profile/${item.id}`)
+                            // window.location.href = "/contact-profile/" + item.id;
                           }
 
                         }}
@@ -1986,10 +2019,14 @@ if(totalcount<50){
                             ></img>
                           )}
                         </Grid>
+
+                        {/* <NavLink>
+                          
+                        </NavLink> */}
                         <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
+                          <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
                             {item.first_name}
-                          </span>
+                          </NavLink>
                         </Grid>
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
@@ -2017,8 +2054,8 @@ if(totalcount<50){
                             {item.state}
                           </span>
                         </Grid>
-                        
-                        
+
+
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
                             {item.grad_year

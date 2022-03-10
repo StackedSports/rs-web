@@ -24,7 +24,6 @@ import MediaComponnet from "./MediaComponent";
 
 import SidebarComponent from './Sidebar/';
 
-
 import {
     getAllContacts,
     getMedia,

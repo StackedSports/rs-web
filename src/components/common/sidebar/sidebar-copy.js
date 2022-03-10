@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { SidebarData } from "./sidebarData";
@@ -73,12 +73,6 @@ import SearchableOptions, {
   SearchableOptionDropdown,
   SearchableOptionListItem
 } from 'UI/Forms/Inputs/SearchableOptions'
-
-import MediaInputTitle from 'UI/Forms/Inputs/MediaInputTitle'
-
-import useAlerts from 'Hooks/AlertHooks'
-
-import { useUser } from 'Api/Hooks'
 
 const options = [
   {
@@ -387,80 +381,47 @@ const useStyles = makeStyles({
 });
 
 const dummyFiles = [
-  // {
-  //   name: "file1.png"
-  // },
-  // {
-  //   name: "test.png"
-  // },
-  // {
-  //   name: "test2.png"
-  // },
-  // {
-  //   name: "test3.png"
-  // },
-  // {
-  //   name: "test4.png"
-  // }
+  {
+    name: "file1.png"
+  },
+  {
+    name: "test.png"
+  },
+  {
+    name: "test2.png"
+  },
+  {
+    name: "test3.png"
+  },
+  {
+    name: "test4.png"
+  }
 ]
 
 const dummyAssociatedPeople = [
-  // { first_name: "Ben", last_name: "Graves"},
-  // null,
-  // null,
-  // null,
-  // null
+  "loading",
+  null,
+  null,
+  null,
+  null
 ]
 
 const dummyUploadProgress = [
-  // "none",
-  // "ready",
-  // "uploading",
-  // "success",
-  // "failed",
-  // "failed",
-  // "failed",
-  // "failed",
-  // "failed"   
+  "none",
+  "ready",
+  "uploading",
+  "success",
+  "failed"  
 ]
-
-// email: "non.admin@stackedsports.com"
-// first_name: "John"
-// id: "kXzLvByimLQK"
-// last_name: "Henderson"
-// phone: "16154825646"
-// role: "Admin"
-// sms_number: 16152058201
-// status: "Active"
-// token: "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwiZW1haWwiOiJub24uYWRtaW5Ac3RhY2tlZHNwb3J0cy5jb20iLCJleHAiOjE2NDgwNDQ0NjV9.94huIU1kn5s2QBsm2PblLH3lab44LOc-_cDzsEUv5BE"
-// twitter_profile: {screen_name: 'adamstewps', profile_image: 'https://pbs.twimg.com/profile_images/1090332239542607872/CIunXcpv_normal.jpg'}
-// url: "https://api.recruitsuite.co/api/team/members/kXzLvByimLQK.json"
 
 const Sidebar = (props) => {
   let history = useHistory();
-
-  // User
-  const user = useUser()
-
-  let teamLogo = DashboardLogo
-
-  if(user && user.team) {
-    teamLogo = user.team.org.logo.thumb
-    // teamLogo = user.team.org.logo.original
-    // teamLogo = user.team.org.logo.medium
-    // teamLogo = user.team.org.logo.large
-    // console.log("AAAAAAAAAAAAAAAAA")
-    // console.log(teamLogo)
-  }
-  //console.log(user.team.org.logo)
-
-  
 
   const [sidebar, setSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [addContact, setAddContact] = useState(false);
   const [addCsv, setAddCsv] = useState(false);
-  const [addMedia, setAddMedia] = useState(false);
+  const [addMedia, setAddMedia] = useState(true);
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [filter, setFilter] = useState([]);
   const [tagFilter, setTagFilter] = useState([]);
@@ -474,6 +435,7 @@ const Sidebar = (props) => {
   const [associatedPeople, setAssociatedPeople] = useState(dummyAssociatedPeople);
   const [associatedPeopleIndex, setAssociatedPeopleIndex] = useState([]);
   const [displayAssociate, setDisplayAssociate] = useState(null);
+  const [dropFiles, setDropFiles] = useState(dummyFiles);
   const [activeTabCSV, setActiveTabCSV] = useState(1);
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchTags, setSearchTags] = useState("");
@@ -492,674 +454,18 @@ const Sidebar = (props) => {
   const [searchTeamContact, setSearchTeamContact] = useState("")
   const [uploadStatus, setUploadStatus] = useState(dummyUploadProgress)
   const [uploadingMedia, setUploadingMedia] = useState(false)
-  //const [mediaAlert, setMediaAlert] = useState({ message: "", visible: false })
-
-  // Owners
-  const [searchedTeamMembers, setSearchedTeamMembers] = useState([])
+  const [mediaAlert, setMediaAlert] = useState({ message: "", visible: false })
 
   // Tags
   const [searchedTags, setSearchedTags] = useState([])
-
-  // Placeholders
-  const [searchedPlaceholders, setSearchedPlaceholders] = useState([])
-
-  // Media
-  const [dropFiles, setDropFiles] = useState(dummyFiles);
-  const contactSearchLast = useRef(0)
-  const contactSearchTimeout = useRef(null)
-
+  
   // Upload Process
-  const [uploadStatusCount, setUploadStatusCount] = useState({ success: 13, failed: 5, total: 18 })
+  const [uploadStatusCount, setUploadStatusCount] = useState({ success: 0, failed: 0 })
   const [uploadFinished, setUploadFinished] = useState(false)
   const [failedUploads, setFailedUploads] = useState([])
 
-  // Alerts
-  const [alerts, setAlerts] = useAlerts()
 
-  //console.log("alerts ")
-  //console.log(alerts)
-	const getTeamMembers = () => {
-		getTeamContacts().then(
-			(res) => {
-				// console.log("THis is all contacts res", res);
-				if (res.statusText === "OK") {
-					setTeamMembers(res.data);
-					console.log("******************") 
-					console.log(res)
-					console.log("******************") 
-				}
-			},
-			(error) => {}
-		);
-	};
-
-	const getAllTags = () => {
-		getTags().then(
-			(res) => {
-				// console.log("THis is all tags", res);
-				var TAGS = [];
-
-				if (res.statusText === "OK") {
-					console.log("These are all tags", res.data);
-					setAllTags(res.data);
-				}
-			},
-			(error) => {
-				console.log("get all tags error: ", error);
-			}
-		);
-	};
-
-  {/*****************************************************************/}
-                      {/********************* SIDE PANEL START **************************/}
-                      {/*****************************************************************/}
-
-	const getAllPlaceholders = () => {
-		getPlaceholder().then(
-			(res) => {
-				if (res.statusText === "OK") {
-					console.log("These are all placeholders", res.data);
-					setAllPlaceholders(res.data);
-				}
-			},
-			(error) => {
-				console.log("get all placeholders error: ", error)
-			}
-		)
-	}
-
-	useEffect(() => {
-		if (localStorage.getItem("user")) {
-			getTeamMembers();
-			getAllTags();
-			getAllPlaceholders();
-		} else {
-			window.location.href = "/";
-		}
-	}, []);
-
-  const addMemberToOwners = member => {
-		// add member to owners if it member
-		// is not an owner yet
-
-		let duplicate = false
-
-		for(let i in owners) {
-			//console.log(owner)
-			if(owners[i].id == member.id) {
-				duplicate = true
-				break
-			}
-		}
-
-		if(!duplicate) {
-			let newOwners = Object.assign([], owners)
-			newOwners.push(member)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setOwners(newOwners)
-		}
-  	};
-
-  	const removeMemberFromOwners = member => {
-      let newOwners = owners.filter(owner => owner.id !== member.id)
-      setOwners(newOwners)
-  	}
-
-    const onOwnerInputChange = ownerInput => {
-      let searched = []
-
-      teamMembers.forEach(owner => {
-        let name = owner.first_name + ' ' + owner.last_name
-        if(name.toLowerCase().includes(ownerInput.toLowerCase()))
-          searched.push(owner)
-      })
-  
-      setSearchedTeamMembers(searched)
-    }
-
-
-
-	// Add Tag to Tags list
-	const addTagToTags = tag => {
-		let duplicate = false
-
-		for(let i in tags) {
-			//console.log(owner)
-			if(tags[i].id == tag.id) {
-				duplicate = true
-				break
-			}
-		}
-
-		if(!duplicate) {
-			let newTags = Object.assign([], tags)
-			newTags.push(tag)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setTags(newTags)
-		}
-	}
-
-	const removeTagFromTags = tag => {
-		let newTags = tags.filter(tg => tg.id !== tag.id)
-		setTags(newTags)
-  	}
-
-	const onTagInputChange = (tagInput) => {
-		// setTagInput(e.target.value)
-
-    let searched = []
-
-    allTags.forEach(tag => {
-      if(tag.name.toLowerCase().includes(tagInput.toLowerCase()))
-        searched.push(tag)
-    })
-
-    setSearchedTags(searched)
-	}
-
-	const onTagInputPressEnter = (tagInput) => {
-		let newTag = {
-      id: "new-" + Date.now(),
-      name: tagInput
-    }
-    addTagToTags(newTag)
-    setTagInput("")
-	}
-
-	const addPlaceholderToPlaceholders = (placeholder) => {
-		let duplicate = false
-
-		for(let i in placeholders) {
-			//console.log(owner)
-			if(placeholders[i].id == placeholder.id) {
-				duplicate = true
-				break
-			}
-		}
-
-		if(!duplicate) {
-			let newPlaceholders = Object.assign([], placeholders)
-			newPlaceholders.push(placeholder)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setPlaceholders(newPlaceholders)
-		}
-	}
-
-	const removePlaceholderFromPlaceholders = (placeholder) => {
-		let newPlaceholders = placeholders.filter(ph => ph.id !== placeholder.id)
-		setPlaceholders(newPlaceholders)
-	}
-
-	const onPlaceholderInputChange = placeholderInput => {
-		// setPlaceholderInput(e.target.value)
-
-    let searched = []
-
-    allPlaceholders.forEach(placeholder => {
-      if(placeholder.name.toLowerCase().includes(placeholderInput.toLowerCase()))
-        searched.push(placeholder)
-    })
-
-    setSearchedPlaceholders(searched)
-	}
-
-	const onPlaceholderInputKeyPress = placeholderInput => {
-		let newPlaceholder = {
-      id: "new-" + Date.now(),
-      name: placeholderInput
-    }
-
-    addPlaceholderToPlaceholders(newPlaceholder)
-	}
-
-  const onContactSearchTermChange = (contactSearchInput) => {
-    // const now = Date.now()
-
-    // Clear last timeout
-    clearTimeout(contactSearchTimeout.current)
-
-    // Start new timeout
-    contactSearchTimeout.current = setTimeout(() => {
-      //console.log("this should be seem once")
-      getSearchedContacts(contactSearchInput)
-        .then((res) => {
-          if (res.statusText === "OK") {
-            //console.log("These are all team contacts from search ", res.data);
-            setTeamContacts(res.data);
-          }
-        })
-        .catch((error) => {
-          //console.log("search contacts error " + error)
-        })
-    }, 200)
-
-    // contactSearchLast.current
-    
-    
-    
-  }
-
-  const onSearchTeamContactKeyPress = (e) => {
-    // search input change
-
-    // let searched = []
-
-    // allPlaceholders.forEach(placeholder => {
-    //   if(placeholder.name.toLowerCase().includes(placeholderInput.toLowerCase()))
-    //     searched.push(placeholder)
-    // })
-
-    // setSearchedPlaceholders(searched)
-    
-
-    // search key enter
-
-    if(e.key === "Enter") {
-      
-    }
-  }
-
-  
-
-	const addTagToFilter = (value, type) => {
-		if (tagFilter.includes(value)) {
-			var temp = [];
-			tagFilter.map((item) => {
-				if (item != value) {
-				temp.push(item);
-				}
-			});
-			setTagFilter(temp);
-			setuseLessState(uselessState + 1);
-		} else {
-			var temp = tagFilter;
-			temp.push(value);
-			setTagFilter(temp);
-			setuseLessState(uselessState + 1);
-		}
-	};
-
-	
-	// console.log("These are associated people", associatedPeople);
-	// console.log("These are associated people index", associatedPeopleIndex);
-
-  // let file = {
-  //   lastModified: 1640966381181
-  //   lastModifiedDate: Fri Dec 31 2021 12:59:41 GMT-0300 (Horário Padrão de Brasília) {}
-  //   name: "Beautifying.pptx"
-  //   size: 4438537
-  //   type: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-  //   webkitRelativePath: ""
-  // }
-
-  const onMediaAlertClose = (index) => {
-    setAlerts.remove(index)
-  }
-
-  const handleAssociateContactToFile = (files, associated, uploadStatus) => {
-    return new Promise((resolve, reject) => {
-
-      let count = files.length
-
-      //console.log("start count " + count)
-
-      files.forEach((file, index) => {
-        getAssociatedContactByFileName(file.name)
-            .then(contact => {
-              associated[index] = contact
-
-              //console.log("return " + index)
-              //console.log(associated)
-            })
-            .catch(error => {
-              //console.log("error " + error)
-              associated[index] = null
-
-              //console.log(associated)
-
-              if(error === "found multiple contacts") {
-                // TODO: alert user that could not auto associate
-                // due to search returning multiple contacts
-                //console.log("contact " + index + "error 1")
-
-                // using timeout so state can be updated before next setAlerts call
-                setTimeout(() => {
-                  setAlerts.push("One or more files were not associated to a contact based on their file name because the search for contact returned with multiple contacts")
-
-                }, 200 * index)
-
-                // setMediaAlert({
-                //   message: ,
-                //   visible: true
-                // })
-              } else if (error === "could not find contacts") {
-                // TODO: alert user that could not auto associate
-                // due to search not finding any contacts
-
-                // using timeout so state can be updated before next setAlerts call
-                //setTimeout(() => {
-                //  setAlerts.push("One or more files were not associated to a contact based on their file name because no contacts were found")
-
-                //}, 50 * index)
-
-                // setMediaAlert({
-                //   message: ,
-                //   visible: true
-                // })
-              } else {
-                // TODO: handle axios/server error
-              }
-            })
-            .finally(() => {
-              uploadStatus[index] = "ready"
-
-              count--
-
-              //console.log("finally " + count)
-              //console.log(associated)
-
-              if(count == 0) {
-                resolve([files, associated])
-              }
-            })
-      })
-    })
-  }
-
-  const handleImportFiles = (files) => {
-    let tempFiles = []
-    let tempAssociated = []
-    let tempUploadStatus = []
-
-    let pushedCount = 0
-
-    for (let i = 0; i < files.length; i++) {
-      let file = files[i]
-
-      //console.log(file)
-
-      if(((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) { 
-        // 5MB for images and 15MB for videos
-
-        //console.log(file.name + "*")
-
-        tempFiles.push(file)
-        tempAssociated.push("loading")
-        tempUploadStatus.push("none")
-      }
-    }
-
-    if(files.length != tempFiles.length) {
-      setAlerts.push("One or more files were not added since they do not match the file upload criteria")
-      
-      // setMediaAlert({
-      //   message: ,
-      //   visible: true
-      // })
-    }
-
-    const initialAssociated = Object.assign([], associatedPeople)
-    const initialUploadStatus = Object.assign([], uploadStatus)
-
-    handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
-      .then(() => {
-        //console.log("**************************")
-        //console.log("result")
-        //console.log("**************************")
-
-        //console.log(tempFiles)
-        //console.log(tempAssociated)
-
-        setAssociatedPeople(initialAssociated.concat(tempAssociated))
-        setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
-        // setDropFiles(dropFiles.concat(tempFiles));
-      })
-
-    //console.log("Droped files ", tempFiles);
-    setAssociatedPeople(associatedPeople.concat(tempAssociated))
-    setDropFiles(dropFiles.concat(tempFiles));
-    setUploadStatus(uploadStatus.concat(tempUploadStatus))
-    // setAssociatedPeople(associated)
-    // setDropFiles(tempFiles);
-  }
-
-  const handleFileChange = (e) => {
-    //console.log(e)
-    handleImportFiles(e.target.files)
-    return
-    // var tempFiles = [];
-    // for (var i = 0; i < e.target.files.length; i++) {
-    //   tempFiles.push(e.target.files[i]);
-    // }
-    // console.log("These aree files ", tempFiles);
-    // var temp = dropFiles;
-    // var temp2 = temp.concat(tempFiles);
-    // setDropFiles(temp2);
-  }
-
-  const drop = (ev) => {
-    ev.preventDefault();
-    handleImportFiles(ev.dataTransfer.files)
-    // let tempFiles = Object.assign([], dropFiles)
-    // let associated = Object.assign([], associatedPeople)
-  
-  };
-
-  const deleteMedia = (index) => {
-    let tempFiles = Object.assign([], dropFiles)
-    let tempAssociated = Object.assign([], associatedPeople)
-    let tempUploadStatus = Object.assign([], uploadStatus)
-
-    tempFiles.splice(index, 1)
-    tempAssociated.splice(index, 1)
-    tempUploadStatus.splice(index, 1)
-
-    setDropFiles(tempFiles)
-    setAssociatedPeople(tempAssociated)
-    setUploadStatus(tempUploadStatus)
-  }
-
-  const onUploadMedia = () => {
-
-    if(uploadFinished) {
-      // do something else
-      close()
-      return
-    }
-
-    if(dropFiles.length == 0) {
-      setAlerts.push("You forgot to import media files to upload")
-
-      // setMediaAlert({
-      //   message: "You forgot to import media files to upload",
-      //   visible: true
-      // })
-
-      return
-    }
-
-    // uploadingMedia
-    // associatedPeople
-    // uploadProgress
-    // dropFiles
-
-    // placeholders[0]
-    // tags
-    // owners[0]
-
-    setUploadingMedia(true)
-
-    let tempUploadStatus = Object.assign([], uploadStatus)
-
-    let count = dropFiles.length
-
-    let failedCount = 0
-    let successCount = 0
-
-    dropFiles.forEach((file, index) => {
-      let media = {
-        file,
-        owner: owners[0]?.id.toString(),
-        placeholder: placeholders[0]?.id.toString(),
-        contact: associatedPeople[index]?.id.toString(),
-        tags: tags
-      }
-
-      //console.log("upload " + index)
-      //console.log(media)     
-
-      //return
-
-      tempUploadStatus[index] = "uploading"
-      setUploadStatus(tempUploadStatus)
-
-      // TODO: create new placeholder if placeholders id contains 'new-'
-
-      uploadMedia(media)
-        .then(res => {
-          //console.log(res)
-
-          let mediaRes = res
-
-          let temp2 = Object.assign([], tempUploadStatus)
-          tempUploadStatus[index] = "success"
-          temp2[index] = "success"
-          setUploadStatus(temp2)
-          //console.log(temp2)
-
-          successCount++
-
-          tags.forEach(tag => {
-            //if(typeof tag.id == "string" && tag.id.includes("new-")) {
-              addTagToMedia(mediaRes.id, tag.name)
-                .then(res => {
-                  //console.log(res)
-                })
-                .catch(error => {
-                  //console.log(error)
-                })
-            //}
-          })
-
-          // last id 314852
-        })
-        .catch(error => {
-          //console.log(error)
-
-          let temp2 = Object.assign([], tempUploadStatus)
-          temp2[index] = "failed"
-          tempUploadStatus[index] = "failed"
-          setUploadStatus(temp2)
-          //console.log(temp2)
-
-          failedCount++
-
-          //tempUploadStatus[index] = "failed"
-          //setUploadStatus(tempUploadStatus)
-        })
-        .finally(() => {
-          //setUploadStatus(tempUploadStatus)
-          count--
-
-          if(count == 0){
-            setUploadingMedia(false)
-            onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
-          }
-        })
-    })
-  }
-
-  const onUploadFinished = (tempUploadStatus, successCount, failedCount, totalCount) => {
-    let tmp = []
-
-    tempUploadStatus.forEach((status, index) => {
-      if(status === 'failed')
-        tmp.push(dropFiles[index])
-    })
-
-    setFailedUploads(tmp)
-    setUploadStatusCount({ success: successCount, failed: failedCount, total: totalCount })
-    setUploadFinished(true)
-  }
-  
-
-  const onCloseMedia = () => {
-    if(!uploadFinished)
-      setAddMedia(false)
-    
-    clearAllFields()
-  }
-
-  const close = () => {
-    setAddMedia(false)
-    clearAllFields()
-  }
-
-  const clearAllFields = () => {
-    setDropFiles([])
-    setAssociatedPeople([])
-    setUploadStatus([])
-    setOwners([])
-    setPlaceholders([])
-    setTags([])
-    setUploadFinished(false)
-  }
-
-  const associateContactToMedia = (teamContact, index) => {
-    // console.log("This is the contact ", teamContact, index);
-
-    let temp = Object.assign([], associatedPeople)
-    temp[index] = teamContact
-    setAssociatedPeople(temp)
-    
-  }
-
-  const removeContactFromMedia = (index) => {
-    //console.log("on remove contact from media")
-    let temp = Object.assign([], associatedPeople)
-    temp[index] = null
-    //console.log(temp)
-    setAssociatedPeople(temp)
-  }
-
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackBar(false);
-  };
-  // console.log("THis is display tags", displayTags);
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const setOpen = (a) => {
-    setShowModal(a);
-  };
-
-  const showSidebar = () => setSidebar(!sidebar);
-
-  // console.log("This is props contacts", props.contacts);
-
-  // console.log("displayAssociate = " + displayAssociate)
-
-  // console.log("**************************")
-  // console.log("tags")
-  // console.log(tags)
-
-  const files = uploadFinished ? failedUploads : dropFiles
-
+  //const []
   const TagsDropDown = () => {
     return (
       <div class="dropdownMedia">
@@ -1274,12 +580,11 @@ const Sidebar = (props) => {
           borderRadius: 4,
           border: "1px dotted gray",
           padding: 16,
-          ...props.style
         }}
         onDragOver={(e) => {
           e.preventDefault();
           // alert("This is alert");
-          //console.log("This is great");
+          console.log("This is great");
         }}
         onDrop={drop}
       >
@@ -1318,6 +623,588 @@ const Sidebar = (props) => {
     );
   };
 
+  const searchForContactsssss = () => {
+    // try to search for Aaron Becker
+    // Andy Rondeau
+    // @a_savaiinaea
+    // a_savaiinaea
+    // +1 (555) 666-7777
+    // let params = [
+    //   "Andy Rondeau", // yes
+    //   "Andy_Rondeau", // no
+    //   "andy_rondeau", // no
+    //   "@a_savaiinaea",
+    //   "a_savaiinaea", // yes
+    //   "+1 (555) 666-7777", // yes
+    // ]
+
+    // params.forEach(param => {
+    //   getSearchedContacts(param).then(
+    //     (res) => {
+    //       console.log("searched for " + param)
+    //       console.log(res.data)
+    //     },
+    //     (error) => {
+    //       console.log("searched for " + param)
+    //       console.log(error)
+    //     }
+    //   )
+    // })
+
+    getAllContacts2()
+    
+  }
+
+	const getTeamMembers = () => {
+		getTeamContacts().then(
+			(res) => {
+				// console.log("THis is all contacts res", res);
+				if (res.statusText === "OK") {
+					setTeamMembers(res.data);
+					// console.log("******************") 
+					// console.log(res.data)
+					// console.log("******************") 
+				}
+			},
+			(error) => {}
+		);
+	};
+
+	const getAllTags = () => {
+		getTags().then(
+			(res) => {
+				// console.log("THis is all tags", res);
+				var TAGS = [];
+
+				if (res.statusText === "OK") {
+					console.log("These are all tags", res.data);
+					setAllTags(res.data);
+				}
+			},
+			(error) => {
+				console.log("get all tags error: ", error);
+			}
+		);
+	};
+
+	const getAllPlaceholders = () => {
+		getPlaceholder().then(
+			(res) => {
+				if (res.statusText === "OK") {
+					console.log("These are all placeholders", res.data);
+					setAllPlaceholders(res.data);
+				}
+			},
+			(error) => {
+				console.log("get all placeholders error: ", error)
+			}
+		)
+	}
+
+	useEffect(() => {
+		if (localStorage.getItem("user")) {
+			getTeamMembers();
+			getAllTags();
+			getAllPlaceholders();
+		} else {
+			window.location.href = "/";
+		}
+	}, []);
+
+  const addMemberToOwners = member => {
+		// add member to owners if it member
+		// is not an owner yet
+
+		let duplicate = false
+
+		for(let i in owners) {
+			//console.log(owner)
+			if(owners[i].id == member.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newOwners = Object.assign([], owners)
+			newOwners.push(member)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setOwners(newOwners)
+		}
+  	};
+
+  	const removeMemberFromOwners = member => {
+      let newOwners = owners.filter(owner => owner.id !== member.id)
+      setOwners(newOwners)
+  	}
+
+	// Add Tag to Tags list
+	const addTagToTags = tag => {
+		let duplicate = false
+
+		for(let i in tags) {
+			//console.log(owner)
+			if(tags[i].id == tag.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newTags = Object.assign([], tags)
+			newTags.push(tag)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setTags(newTags)
+		}
+	}
+
+	const removeTagFromTags = tag => {
+		let newTags = tags.filter(tg => tg.id !== tag.id)
+		setTags(newTags)
+  	}
+
+	const onTagInputChange = (tagInput) => {
+		// setTagInput(e.target.value)
+
+    let searched = []
+
+    allTags.forEach(tag => {
+      if(tag.name.toLowerCase().includes(tagInput.toLowerCase()))
+        searched.push(tag)
+    })
+
+    setSearchedTags(searched)
+	}
+
+	const onTagInputPressEnter = (tagInput) => {
+		let newTag = {
+      id: "new-" + Date.now(),
+      name: tagInput
+    }
+    addTagToTags(newTag)
+    setTagInput("")
+	}
+
+	const addPlaceholderToPlaceholders = (placeholder) => {
+		let duplicate = false
+
+		for(let i in placeholders) {
+			//console.log(owner)
+			if(placeholders[i].id == placeholder.id) {
+				duplicate = true
+				break
+			}
+		}
+
+		if(!duplicate) {
+			let newPlaceholders = Object.assign([], placeholders)
+			newPlaceholders.push(placeholder)
+			// console.log("****************************")
+			// console.log(newOwners)
+			// console.log("****************************")
+			setPlaceholders(newPlaceholders)
+		}
+	}
+
+	const removePlaceholderFromPlaceholders = (placeholder) => {
+		let newPlaceholders = placeholders.filter(ph => ph.id !== placeholder.id)
+		setPlaceholders(newPlaceholders)
+	}
+
+	const onPlaceholderInputChange = e => {
+		setPlaceholderInput(e.target.value)
+	}
+
+	const onPlaceholderInputKeyPress = e => {
+		if(e.key === "Enter") {
+			let newPlaceholder = {
+				id: "new-" + Date.now(),
+				name: placeholderInput
+			}
+			addPlaceholderToPlaceholders(newPlaceholder)
+			setPlaceholderInput("")
+		}
+	}
+
+  const onSearchTeamContactKeyPress = (e) => {
+    if(e.key === "Enter") {
+      getSearchedContacts(searchTeamContact).then(
+        (res) => {
+          if (res.statusText === "OK") {
+            console.log("These are all team contacts from search ", res.data);
+            setTeamContacts(res.data);
+          }
+        },
+        (error) => {
+          console.log("search contacts error " + error)
+        }
+      )
+    }
+  }
+
+  
+
+	const addTagToFilter = (value, type) => {
+		if (tagFilter.includes(value)) {
+			var temp = [];
+			tagFilter.map((item) => {
+				if (item != value) {
+				temp.push(item);
+				}
+			});
+			setTagFilter(temp);
+			setuseLessState(uselessState + 1);
+		} else {
+			var temp = tagFilter;
+			temp.push(value);
+			setTagFilter(temp);
+			setuseLessState(uselessState + 1);
+		}
+	};
+
+	
+	// console.log("These are associated people", associatedPeople);
+	// console.log("These are associated people index", associatedPeopleIndex);
+
+  // let file = {
+  //   lastModified: 1640966381181
+  //   lastModifiedDate: Fri Dec 31 2021 12:59:41 GMT-0300 (Horário Padrão de Brasília) {}
+  //   name: "Beautifying.pptx"
+  //   size: 4438537
+  //   type: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  //   webkitRelativePath: ""
+  // }
+
+  const onMediaAlertClose = (e) => {
+    setMediaAlert({
+      message: "",
+      visible: false
+    })
+  }
+
+  const handleAssociateContactToFile = (files, associated, uploadStatus) => {
+    return new Promise((resolve, reject) => {
+
+      let count = files.length
+
+      console.log("start count " + count)
+
+      files.forEach((file, index) => {
+        getAssociatedContactByFileName(file.name)
+            .then(contact => {
+              associated[index] = contact
+
+              console.log("return " + index)
+              console.log(associated)
+            })
+            .catch(error => {
+              console.log("error " + error)
+              associated[index] = null
+
+              console.log(associated)
+              if(error === "found multiple contacts") {
+                // TODO: alert user that could not auto associate
+                // due to search returning multiple contacts
+              } else if (error === "could not find contacts") {
+                // TODO: alert user that could not auto associate
+                // due to search not finding any contacts
+              } else {
+                // TODO: handle axios/server error
+              }
+            })
+            .finally(() => {
+              uploadStatus[index] = "ready"
+
+              count--
+
+              console.log("finally " + count)
+              console.log(associated)
+
+              if(count == 0) {
+                resolve([files, associated])
+              }
+            })
+      })
+    })
+  }
+
+  const handleImportFiles = (files) => {
+    let tempFiles = []
+    let tempAssociated = []
+    let tempUploadStatus = []
+
+    let pushedCount = 0
+
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i]
+
+      console.log(file)
+
+      if(((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
+        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) { 
+        // 5MB for images and 15MB for videos
+
+        console.log(file.name + "*")
+
+        tempFiles.push(file)
+        tempAssociated.push("loading")
+        tempUploadStatus.push("none")
+      }
+    }
+
+    if(files.length != tempFiles.length) {
+      setMediaAlert({
+        message: "One or more files were not added since they do not match the file upload criteria",
+        visible: true
+      })
+    }
+
+    const initialAssociated = Object.assign([], associatedPeople)
+    const initialUploadStatus = Object.assign([], uploadStatus)
+
+    handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+      .then(() => {
+        console.log("**************************")
+        console.log("result")
+        console.log("**************************")
+
+        console.log(tempFiles)
+        console.log(tempAssociated)
+
+        setAssociatedPeople(initialAssociated.concat(tempAssociated))
+        setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
+        // setDropFiles(dropFiles.concat(tempFiles));
+      })
+
+    console.log("Droped files ", tempFiles);
+    setAssociatedPeople(associatedPeople.concat(tempAssociated))
+    setDropFiles(dropFiles.concat(tempFiles));
+    setUploadStatus(uploadStatus.concat(tempUploadStatus))
+    // setAssociatedPeople(associated)
+    // setDropFiles(tempFiles);
+  }
+
+  const handleFileChange = (e) => {
+    console.log(e)
+    handleImportFiles(e.target.files)
+    return
+    // var tempFiles = [];
+    // for (var i = 0; i < e.target.files.length; i++) {
+    //   tempFiles.push(e.target.files[i]);
+    // }
+    // console.log("These aree files ", tempFiles);
+    // var temp = dropFiles;
+    // var temp2 = temp.concat(tempFiles);
+    // setDropFiles(temp2);
+  }
+
+  const drop = (ev) => {
+    ev.preventDefault();
+    handleImportFiles(ev.dataTransfer.files)
+    // let tempFiles = Object.assign([], dropFiles)
+    // let associated = Object.assign([], associatedPeople)
+
+    
+    
+  };
+
+  const deleteMedia = (index) => {
+    let tempFiles = Object.assign([], dropFiles)
+    let tempAssociated = Object.assign([], associatedPeople)
+    let tempUploadStatus = Object.assign([], uploadStatus)
+
+    tempFiles.splice(index, 1)
+    tempAssociated.splice(index, 1)
+    tempUploadStatus.splice(index, 1)
+
+    setDropFiles(tempFiles)
+    setAssociatedPeople(tempAssociated)
+    setUploadStatus(tempUploadStatus)
+  }
+
+  const onUploadMedia = () => {
+
+    // uploadingMedia
+    // associatedPeople
+    // uploadProgress
+    // dropFiles
+
+    // placeholders[0]
+    // tags
+    // owners[0]
+
+    setUploadingMedia(true)
+
+    let tempUploadStatus = Object.assign([], uploadStatus)
+
+    let count = dropFiles.length
+
+    let failedCount = 0
+    let successCount = 0
+
+    dropFiles.forEach((file, index) => {
+      let media = {
+        file,
+        owner: owners[0]?.id.toString(),
+        placeholder: placeholders[0]?.id.toString(),
+        contact: associatedPeople[index]?.id.toString(),
+        tags: tags
+      }
+
+      console.log("upload " + index)
+      console.log(media)     
+
+      //return
+
+      tempUploadStatus[index] = "uploading"
+      setUploadStatus(tempUploadStatus)
+
+      uploadMedia(media)
+        .then(res => {
+          console.log(res)
+
+          let mediaRes = res
+
+          let temp2 = Object.assign([], tempUploadStatus)
+          tempUploadStatus[index] = "success"
+          temp2[index] = "success"
+          setUploadStatus(temp2)
+          console.log(temp2)
+
+          successCount++
+
+          tags.forEach(tag => {
+            //if(typeof tag.id == "string" && tag.id.includes("new-")) {
+              addTagToMedia(mediaRes.id, tag.name)
+                .then(res => {
+                  console.log(res)
+                })
+                .catch(error => {
+                  console.log(error)
+                })
+            //}
+          })
+
+          // last id 314852
+        })
+        .catch(error => {
+          console.log(error)
+
+          let temp2 = Object.assign([], tempUploadStatus)
+          temp2[index] = "failed"
+          tempUploadStatus[index] = "failed"
+          setUploadStatus(temp2)
+          console.log(temp2)
+
+          failledCount++
+
+          //tempUploadStatus[index] = "failed"
+          //setUploadStatus(tempUploadStatus)
+        })
+        .finally(() => {
+          //setUploadStatus(tempUploadStatus)
+          count--
+
+          if(count == 0){
+            setUploadingMedia(false)
+            onUploadFinished(tempUploadStatus, successCount, failedCount)
+          }
+        })
+    })
+  }
+
+  const onUploadFinished = (tempUploadStatus, successCount, failedCount) => {
+    let tmp = []
+
+    tempUploadStatus.forEach((status, index) => {
+      if(status === 'failed')
+        tmp.push(dropFiles[index])
+    })
+
+    setFailedUploads(tmp)
+    setUploadStatusCount({ success: successCount, failed: failedCount })
+    setUploadFinished(true)
+  }
+  
+
+  const onCloseMedia = () => {
+    setAddMedia(false)
+    setDropFiles([])
+    setAssociatedPeople([])
+    setUploadStatus([])
+    setOwners([])
+    setPlaceholders([])
+    setTags([])
+  }
+
+  
+
+  const addPlaceholderToFilter = (value, type) => {
+    if (placeholderFilter.includes(value)) {
+      var temp = [];
+      placeholderFilter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setPlaceholderFilter(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = placeholderFilter;
+      temp.push(value);
+      setPlaceholderFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
+  const associateContactToMedia = (teamContact, index) => {
+    console.log("This is the contact ", teamContact, index);
+
+    let temp = Object.assign([], associatedPeople)
+    temp[index] = teamContact
+    setAssociatedPeople(temp)
+    
+  }
+
+  const removeContactFromMedia = (index) => {
+    let temp = Object.assign([], associatedPeople)
+    temp[index] = null
+    setAssociatedPeople(temp)
+  }
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+  console.log("THis is display tags", displayTags);
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const setOpen = (a) => {
+    setShowModal(a);
+  };
+
+  const showSidebar = () => setSidebar(!sidebar);
+
+  console.log("This is props contacts", props.contacts);
+
+  console.log("displayAssociate = " + displayAssociate)
+
+  console.log("**************************")
+  console.log("tags")
+  console.log(tags)
+
   return (
     <>
       <Link id="userSettings" to="/dashboard/user-settings"></Link>
@@ -1354,7 +1241,7 @@ const Sidebar = (props) => {
           setAddCsv(false);
         }}
         onClick={(e) => {
-          //console.log("THis is id", e.target.id);
+          console.log("THis is id", e.target.id);
           if (e.target.id != "tagButton" && e.target.id != "searchtags") {
             setDisplayTags(false);
           }
@@ -1911,8 +1798,8 @@ const Sidebar = (props) => {
           // setDisplayOwner(false);
         }}
         onClick={(e) => {
-			  //console.log("my on click " + e.target.id)
-        //console.log("my on click " + displayAssociate)
+			  console.log("my on click " + e.target.id)
+        console.log("my on click " + displayAssociate)
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
@@ -1925,134 +1812,495 @@ const Sidebar = (props) => {
           if (e.target.id != displayAssociate) {
             //console.log("This is id", e.target.id, displayAssociate);
             // alert("This will be null");
-            
+            setDisplayAssociate(null);
           }
-
-          setDisplayAssociate(null);
         }}
       >
         <Grid container direction="row" style={{ maxWidth: 1300, padding: 20 }}>
           <InsertDriveFileIcon
             style={{ color: "#3871da" }}
-          />
-
+          ></InsertDriveFileIcon>
           <p style={{ width: "90%", fontWeight: 700, marginLeft: 5 }}>
-            Create Placeholder & Upload Media
+            Create Placeholder & upload media
           </p>
-
-          {uploadFinished &&
+          <Grid item md={12} xs={12}>
+            <p style={{ color: "#b5bccd", fontSize: 17, fontWeight: 500 }}>
+              Owner
+            </p>
             <Grid
               container
+              direction="row"
               alignItems="center"
-              justifyContent="center"
-              direction="column"
-              style={{ padding: 50 }}
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
             >
-              <MediaInputTitle title="Upload Complete" style={{ fontWeight: 700, fontSize: 30 }}/>
-              <MediaInputTitle title={`${uploadStatusCount.success} of ${uploadStatusCount.total} files uploaded successfully`} style={{ marginTop: 0, fontSize: 20 }}/>
-              <MediaInputTitle title={`${uploadStatusCount.failed} files failed to upload`} style={{ marginTop: 0, fontSize: 20 }}/>
+              {owners.length != 0 &&
+                owners.map((owner, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.sTags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {owner.first_name + " " + owner.last_name}
+                        <ClearIcon
+                          onClick={() => {
+                          //console.log("my Clear Team Member filter")
+                          removeMemberFromOwners(owner)
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                            marginLeft: 8,
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+              })}
+              {owners.length == 0 &&
+                <div class="dropdownMedia">
+                  <input
+                    type="text"
+                    style={{
+                      height: 60,
+                      flex: "auto",
+                      border: "none",
+                      padding: 16,
+                    }}
+                    id="owner"
+                    onClick={(e) => {
+                      //console.log("This is ", e.target.id);
+                      setDisplayOwner(true);
+                    }}
+                    placeholder="+ Add Owner"
+                  ></input>
+                  <div
+                    className={classes.dropdownHidden}
+                    style={{
+                      display: displayOwner ? "block" : "none",
+                    }}
+                  >
+                    {teamMembers &&
+                      teamMembers.map((teamMember, index) => {
+                        return (
+                          <Grid
+                            container
+                            alignItems="center"
+                            style={{
+                              height: 60,
+                              marginLeft: 0,
+                              marginTop: -12,
+                              cursor: "pointer",
+                            }}
+                            className={classes.hoverGrid}
+                            onClick={() => {
+                              if (teamMember.twitter_profile) {
+                  addMemberToOwners(teamMember);
+                              }
+                            }}
+                            // className={classes.sendAsP}
+                          >
+                            <img
+                              style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 20,
+                                marginLeft: 12,
+                              }}
+                              src={
+                  teamMember.twitter_profile &&
+                  teamMember.twitter_profile.profile_image
+                              }
+                            ></img>
+
+                            <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                            >
+                              {teamMember.first_name + " " + teamMember.last_name}
+                            </p>
+                          </Grid>
+                        );
+                      })}
+                  </div>{" "}
+                </div>
+              }
+              
             </Grid>
-          }
 
-          {!uploadFinished &&
-            <>
-              <Grid item md={12} xs={12}>
-                <MediaInputTitle title="Owner"/>
+            {/* <InputGroup className="mb-3">
 
-                <SearchableOptions
-                  canSelectMoreOptions={owners.length < 1}
-                  selection={owners}
-                  selectedNameDef={['first_name', 'last_name']}
-                  selectedImgDef={'twitter_profile.profile_image'}
-                  optionNameDef={['first_name', 'last_name']}
-                  optionImgDef={'twitter_profile.profile_image'}
-                  placeholder='+ Add Owner'
-                  showDropDown={displayOwner}
-                  options={teamMembers}
-                  search={searchedTeamMembers}
-                  onInputChange={onOwnerInputChange}
-                  onInputPressEnter={() => {}}
-                  onOptionSelected={(owner, index) => addMemberToOwners(owner)}
-                  onRemoveSelected={(owner, index) =>  removeMemberFromOwners(owner)}
-                  onShowDropDown={() => setDisplayOwner(true)}
-                />
-
-              </Grid>
-              <Grid item md={12} xs={12}>
-                <MediaInputTitle title="Tags"/>
-
-                <SearchableOptions
-                  canSelectMoreOptions={true}
-                  selection={tags}
-                  selectedNameDef={'name'}
-                  optionNameDef={'name'}
-                  placeholder='+ Add Tag'
-                  showDropDown={displayTags}
-                  options={allTags}
-                  search={searchedTags}
-                  onInputChange={onTagInputChange}
-                  onInputPressEnter={onTagInputPressEnter}
-                  onOptionSelected={(tag, index) => addTagToTags(tag)}
-                  onRemoveSelected={(tag, index) =>  removeTagFromTags(tag)}
-                  onShowDropDown={() => setDisplayTags(true)}
-                />
-              </Grid>
-
-              <Grid item md={12} xs={12}>
-                <MediaInputTitle title="Associate to placeholder or create new"/>
-
-                <SearchableOptions
-                  canSelectMoreOptions={placeholders.length < 1}
-                  selection={placeholders}
-                  selectedNameDef={'name'}
-                  optionNameDef={'name'}
-                  placeholder='+ Add Media Placeholder'
-                  showDropDown={displayPlaceholder}
-                  options={allPlaceholders}
-                  search={searchedPlaceholders}
-                  onInputChange={onPlaceholderInputChange}
-                  onInputPressEnter={onPlaceholderInputKeyPress}
-                  onOptionSelected={(placeholder, index) => addPlaceholderToPlaceholders(placeholder)}
-                  onRemoveSelected={(placeholder, index) =>  removePlaceholderFromPlaceholders(placeholder)}
-                  onShowDropDown={() => setDisplayPlaceholder(true)}
-                />
-
-              </Grid>
-            </>
-          }
-
-          {/* {dropFiles.length < 1 && <FileDropZone/>} */}
-
-          {alerts.length > 0 &&
-            <div
+              <FormControl
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                
+              />
+            </InputGroup> */}
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p
               style={{
-                // marginTop: 16,
-                transform: "translateY(15px)",
-                marginBottom: 0,
-                width: "100%",
-                border: "1px solid #dbe2ed",
-                borderRadius: 4,
+                color: "#b5bccd",
+                fontSize: 17,
+                fontWeight: 500,
+                marginTop: 16,
               }}
             >
-                {alerts.map((alert, index) => (
-                  <Alert key={alert.id}
-                    style={{ boxShadow: "0 0 transparent"}}
-                    variant="standard"
-                    severity="warning"
-                    onClose={() => onMediaAlertClose(index)}
+              Tags
+            </p>
+
+            <SearchableOptions
+              canSelectMoreOptions={true}
+              selection={tags}
+              selectedNameDef={'name'}
+              optionNameDef={'name'}
+              placeholder='+ Add Tag'
+              showDropDown={displayTags}
+              options={allTags}
+              search={searchedTags}
+              onInputChange={onTagInputChange}
+              onInputPressEnter={onTagInputPressEnter}
+              onOptionSelected={(tag, index) => addTagToTags(tag)}
+              onRemoveSelected={(tag, index) =>  removeTagFromTags(tag)}
+              onShowDropDown={() => setDisplayTags(true)}
+            />
+
+            {/* <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+            >
+              {tags.length != 0 &&
+                tags.map((tag, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.tags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {tag.name}
+                        <ClearIcon
+                          onClick={() => {
+                            removeTagFromTags(tag);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                            marginLeft: 8,
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+                })}
+              <div class="dropdownMedia">
+                <input
+                  type="text"
+                  style={{
+                    height: 60,
+                    flex: "auto",
+                    border: "none",
+                    padding: 16,
+                  }}
+                  id="tags"
+				  name="tag"
+				  value={tagInput}
+				  onChange={onTagInputChange}
+				  onKeyPress={onTagInputKeyPress}
+                  onClick={(e) => {
+                    //console.log("This is ", e.target.id);
+					//getAllTags()
+                    setDisplayTags(true);
+                  }}
+                  placeholder="+ Add Tag"
+                ></input>
+                <div
+                  className={classes.dropdownHidden}
+                  style={{
+                    display: displayTags ? "block" : "none",
+                  }}
+                >
+                  <Grid container direction="row" justify="center">
+                    <input
+                      type="text"
+                      style={{
+                        width: "90%",
+                        border: "1px solid #ebebeb",
+                        borderRadius: 4,
+                        marginTop: 8,
+                      }}
+                      id="searchtags"
+                      placeholder="Search Tags"
+                      value={searchTags}
+                      onChange={(e) => {
+                        setSearchTags(e.target.value);
+                        setDisplayTags(true);
+                      }}
+                      onClick={(e) => {
+                        setDisplayTags(true);
+                      }}
+                    ></input>
+                  </Grid>
+                  {allTags &&
+                    allTags.map((item, index) => {
+                      // console.log("This is item", item);
+                      if (searchTags != "") {
+                        if (item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1) {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                                height: 50,
+                                marginLeft: 0,
+
+                                cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                              onClick={() => {
+                                addTagToTags(item);
+                              }}
+                              // className={classes.sendAsP}
+                            >
+                              <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                              >
+                                {item.name}
+                              </p>
+                            </Grid>
+                          );
+                        }
+                      } else {
+                        return (
+                          <Grid
+                            container
+                            alignItems="center"
+                            style={{
+                              height: 50,
+                              marginLeft: 0,
+                              marginTop: 0,
+                              cursor: "pointer",
+                            }}
+                            className={classes.hoverGrid}
+                            onClick={() => {
+								addTagToTags(item);
+                            }}
+                            // className={classes.sendAsP}
+                          >
+                            <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                            >
+                              {item.name}
+                            </p>
+                          </Grid>
+                        );
+                      }
+                    })}
+                </div>{" "}
+              </div>
+            </Grid> */}
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <p
+              style={{
+                color: "#b5bccd",
+                fontSize: 17,
+                fontWeight: 500,
+                marginTop: 16,
+              }}
+            >
+              Associate to placeholder or create new
+            </p>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ border: "1px solid #b5bccd", borderRadius: 4 }}
+            >
+              {placeholders.length != 0 &&
+                placeholders.map((placeholder, index) => {
+                  return (
+                    <div
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="center"
+                      className={classes.sTags}
+                    >
+                      <Grid
+                        style={{ height: 50 }}
+                        container
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {placeholder.name}
+                        <ClearIcon
+                          onClick={() => {
+                            removePlaceholderFromPlaceholders(placeholder);
+                          }}
+                          style={{
+                            color: "red",
+                            fontSize: 17,
+                            cursor: "pointer",
+                            marginLeft: 8,
+                          }}
+                        ></ClearIcon>{" "}
+                      </Grid>
+                    </div>
+                  );
+              })}
+              {placeholders.length == 0 &&
+                <div class="dropdownMedia">
+                  <input
+                    type="text"
+                    style={{
+                      height: 60,
+                      flex: "auto",
+                      border: "none",
+                      padding: 16,
+                    }}
+                    id="placeholder"
+                    value={placeholderInput}
+                    onChange={onPlaceholderInputChange}
+                    onKeyPress={onPlaceholderInputKeyPress}
+                    onClick={(e) => {
+                      setDisplayPlaceholder(true);
+                    }}
+                    placeholder="+ Add Media Placeholder"
+                  ></input>
+                  <div
+                    className={classes.dropdownHidden}
+                    style={{
+                      display: displayPlaceholder ? "block" : "none",
+                    }}
                   >
-                    {alert.message}
-                  </Alert>
-                ))}
-            </div>
-                
+                    <Grid container direction="row" justify="center">
+                      <input
+                        type="text"
+                        style={{
+                          width: "90%",
+                          border: "1px solid #ebebeb",
+                          borderRadius: 4,
+                          marginTop: 8,
+                        }}
+                        id="searchplaceholder"
+                        placeholder="Search Placeholder"
+                        value={searchPlaceholder}
+                        onChange={(e) => {
+                          setSearchPlaceholder(e.target.value);
+                          setDisplayPlaceholder(true);
+                        }}
+                        onClick={(e) => {
+                          setDisplayPlaceholder(true);
+                        }}
+                      ></input>
+                    </Grid>
+                    {allPlaceholders &&
+                      allPlaceholders.map((placeholder, index) => {
+                        if(searchPlaceholder != "") {
+                          if (placeholder.name.toLowerCase().indexOf(searchPlaceholder.toLowerCase()) > -1) {
+                            return (
+                              <Grid
+                                container
+                                alignItems="center"
+                                style={{
+                                height: 50,
+                                marginLeft: 0,
+                                cursor: "pointer",
+                                }}
+                                className={classes.hoverGrid}
+                                onClick={() => {
+                                  //console.log(placeholder)
+                                addPlaceholderToPlaceholders(placeholder);
+                                }}
+                                // className={classes.sendAsP}
+                              >
+                                <p
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
+                                >
+                                {placeholder.name}
+                                </p>
+                              </Grid>
+                              );
+                          }
+                        } else {
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              style={{
+                              height: 50,
+                              marginLeft: 0,
+                              cursor: "pointer",
+                              }}
+                              className={classes.hoverGrid}
+                              onClick={() => {
+                              //console.log(type)
+                                addPlaceholderToPlaceholders(placeholder);
+                              }}
+                              // className={classes.sendAsP}
+                            >
+                              <p
+                              style={{
+                                margin: 0,
+                                fontWeight: 600,
+                                marginLeft: 12,
+                              }}
+                              >
+                              {placeholder.name}
+                              </p>
+                            </Grid>
+                            );
+                        }
+                      })}
+                  </div>{" "}
+                </div>
               }
+            </Grid>
+          </Grid>
+
+          {dropFiles.length < 1 && <FileDropZone/>}
           
-          {files.length > 0 &&
+          {dropFiles.length > 0 &&
             <div
               style={{
-                marginTop: 32,
-                marginBottom: 0,
+                marginTop: 16,
+                marginBottom: 64,
                 width: "100%",
                 border: "1px solid #dbe2ed",
                 borderRadius: 4,
@@ -2060,7 +2308,7 @@ const Sidebar = (props) => {
             >
               <MediaUploadHeader/>
 
-              {/* {mediaAlert.visible &&
+              {mediaAlert.visible &&
                 <Alert 
                   style={{ boxShadow: "0 0 transparent"}}
                   variant="standard"
@@ -2069,18 +2317,15 @@ const Sidebar = (props) => {
                 >
                   {mediaAlert.message}
                 </Alert>
-              } */}
-
-              {files.map((item, index) => {
+              }
+              {dropFiles.map((item, index) => {
                 return (
                   <MediaUploadItem
-                    id={index}
-                    disableAssociateInput={uploadFinished}
                     item={item}
-                    showContactDropDown={displayAssociate === index}
-                    onShowContactDropDown={(id) => setDisplayAssociate(index)}
+                    display={displayAssociate}
+                    setDisplay={(id) => setDisplayAssociate(id)}
                     searchTerm={searchTeamContact}
-                    onSearchTermChange={onContactSearchTermChange}
+                    onSearchTermChange={setSearchTeamContact}
                     onSearchTermKeyPress={onSearchTeamContactKeyPress}
                     searchOptions={teamContacts}
                     optionImgDef={'twitter_profile.profile_image'}
@@ -2088,30 +2333,26 @@ const Sidebar = (props) => {
                     onOptionSelected={(option) => associateContactToMedia(option, index)}
                     optionSelected={associatedPeople[index]}
                     optionSelectedNameDef={['first_name', 'last_name']}
-                    onRemoveOptionSelected={() => removeContactFromMedia(index)}
+                    onRemoveOptionSelected={removeContactFromMedia}
                     itemUploadStatus={uploadStatus[index]}
-                    onDeleteMedia={() => deleteMedia(index)}
+                    onDeleteMedia={deleteMedia}
                   />
                 )
               })}
+              
+              <FileDropZone></FileDropZone>
             </div>
           }
 
-          {!uploadFinished &&
-            <FileDropZone
-              style={{ marginTop: dropFiles.length == 0 ? 30 : 0}}  
-            />
-          }
-
           <Grid item md={5} xs={5}></Grid>
-          <Grid item md={7} xs={7} style={{ marginTop: 30 }}>
+          <Grid item md={7} xs={7}>
             <Grid container direction="row" justify="flex-end">
               <MuiButton
                 onClick={() => {
                   onCloseMedia();
                 }}
                 style={{
-                  minWidth: 120,
+                  width: 120,
                   fontWeight: "bold",
                   textTransform: "capitalize",
                   marginRight: 10
@@ -2121,23 +2362,23 @@ const Sidebar = (props) => {
                 // border
                 // background={"#3871da"}
               >
-                {uploadFinished ? "Upload More" : "Cancel"}
+                Cancel
               </MuiButton>
 
               <LoadingButton
                 style={{
-                  minWidth: 120,
-                  backgroundColor: "#3871da",
-                  fontWeight: "bold",
-                  textTransform: "capitalize"
+                    width: 120,
+                    backgroundColor: "#3871da",
+                    fontWeight: "bold",
+                    textTransform: "capitalize"
                 }}
                 onClick={onUploadMedia}
                 loading={uploadingMedia}
-                endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }}/> }
+                endIcon={uploadingMedia ? <span></span> : <CloudUploadIcon style={{ color: "white" }}/> }
                 disableElevation
                 // color="#3871da"
                 variant="contained">
-                {uploadFinished ? "OK" : "Upload"}
+                Upload
               </LoadingButton>
               
             </Grid>
@@ -2184,11 +2425,11 @@ const Sidebar = (props) => {
                 props.messageCreate === true ||
                 props.TweetCreate === true ? (
                     <LogoContainer style={{ width: 60 }}>
-                        <NavLogo src={teamLogo}  />
+                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50,height:50 }} />
                     </LogoContainer>
                 ) : (
                     <LogoContainer>
-                        <NavLogo src={teamLogo}/>
+                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} />
                     </LogoContainer>
                 )}
                 {props.contacts === true ? (
@@ -2264,7 +2505,7 @@ const Sidebar = (props) => {
                         autoComplete
                         onChange={
                             (e)=>{
-                                //console.log("This is the great",e)
+                                console.log("This is the great",e)
                                 setSearchValue(e)
                             }
                         }

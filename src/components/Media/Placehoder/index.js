@@ -8,7 +8,7 @@ import PlaceholderItem from "../Media/TableList/item";
 
 
 const Placeholder = (props) => {
-    console.log('placeholders = ', props.placeholders)
+    //console.log('placeholders = ', props.placeholders)
 
     let placeholders = null;
     if (props.showlistView && props.placeholders) {
@@ -31,7 +31,8 @@ const Placeholder = (props) => {
                 return placeholder;
             })
     }
-    console.log('placeholders = ', props)
+    
+    //console.log('placeholders = ', props.showlistView)
 
 
     return (
