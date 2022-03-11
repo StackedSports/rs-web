@@ -4,20 +4,9 @@ import moment from "moment";
 //const URL = "https://prod.recruitsuite.co/api/";
 const URL = "https://api.recruitsuite.co/api/";
 
-export const registerUser = (email, password) => {
-    var data = JSON.stringify({
-        user: {
-            email: email,
-            password: password,
-            password_confirmation: password,
-            name: email.substring(0, 4),
-            phone: "",
-        },
-    });
-
-
+const GET = (data) => {
     return axios({
-        method: "post",
+        method: "get",
         url: URL + "users",
         headers: {
             Accept: "application/json; version=1",
@@ -29,6 +18,34 @@ export const registerUser = (email, password) => {
         },
         data: data,
     });
+}
+
+export const registerUser = (email, password) => {
+    var data = JSON.stringify({
+        user: {
+            email: email,
+            password: password,
+            password_confirmation: password,
+            name: email.substring(0, 4),
+            phone: "",
+        },
+    });
+
+    return GET(data)
+
+    // return axios({
+    //     method: "post",
+    //     url: URL + "users",
+    //     headers: {
+    //         Accept: "application/json; version=1",
+    //         "Content-Type": "application/json",
+    //         Authorization:
+    //             "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+    //         Cookie:
+    //             "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    //     },
+    //     data: data,
+    // });
 };
 
 export const loginUser = (email, password) => {
@@ -311,6 +328,228 @@ export const getLast30Stats = () => {
     });
 };
 
+//*************************************************/
+
+const getHeaders = () => {
+    let headers = new Headers();
+    headers.append("Accept", "application/json; version=1");
+    headers.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
+    headers.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
+
+    return headers
+}
+
+export const uploadMedia = (media) => {
+    return new Promise((resolve, reject) => {
+        let myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json; version=1");
+        myHeaders.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
+        myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
+
+        console.log("upload file name = " + media.file.name + "*")
+        
+        let formdata = new FormData();
+        formdata.append("files[]", media.file, media.file.name);
+        formdata.append("name", media.file.name);
+
+        if(media.contact)
+            formdata.append("team_contact_id", media.contact)
+        if(media.placeholder)
+            formdata.append("media_placeholder_id", media.placeholder);
+        if(media.owner)
+            formdata.append("owner", media.owner);
+
+        let requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch(URL + "media/upload", requestOptions)
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(error => reject(error))
+    })
+}
+
+export const addTagToMedia = (mediaId, tag) => {
+    return new Promise((resolve, reject) => {
+        let headers = getHeaders()
+
+        let formdata = new FormData();
+        formdata.append("media[tag]", tag);
+
+        let requestOptions = {
+            method: 'POST',
+            headers: headers,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch(URL + "media/" + mediaId +"/add_tag", requestOptions)
+            //.then(response => response.json())
+            .then(result => resolve(result))
+            .catch(error => reject(error));
+    })
+}
+
+export const getAllContacts2 = (page) => {
+    // try to search for Aaron Becker
+    // Andy Rondeau
+    // @a_savaiinaea
+    // a_savaiinaea
+    // +1 (555) 666-7777
+    return new Promise((resolve, reject) => {
+        axios({
+            method: "get",
+            url:
+                URL + `contacts?page=1&per_page=50&sort_column=first_name`,
+            headers: {
+                Accept: "application/json; version=1",
+                "Content-Type": "application/json",
+                Authorization:
+                    "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                Cookie:
+                    "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+            },
+        }).then(
+            (res) => {
+                console.log(res)
+                resolve(res)
+            },
+            (error) => {
+                reject(error)
+            }
+        )
+    })
+    
+};
+
+export const addTag = () => {
+    // return axios({
+        //     method: "post",
+        //     url: URL + "users",
+        //     headers: {
+        //         Accept: "application/json; version=1",
+        //         "Content-Type": "application/json",
+        //         Authorization:
+        //             "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        //         Cookie:
+        //             "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        //     },
+        //     data: data,
+        // });
+    return new Promise((resolve, reject) => {
+        let data = {
+            name: "Test Tag"
+        }
+
+        axios({
+            method: "post",
+            url:
+                URL + "tags/add_tag",
+            headers: {
+                Accept: "application/json; version=1",
+                "Content-Type": "application/json",
+                Authorization:
+                    "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                Cookie:
+                    "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+            },
+            data
+        }).then(
+            (res) => {
+                console.log(res)
+                resolve(res)
+            },
+            (error) => {
+                reject(error)
+            }
+        )
+    })
+}
+
+//*************************************************/
+
+const AXIOS = (method, url, body) => {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify(body);
+
+        axios({
+                method: method,
+                url: URL + url,
+                headers: {
+                    Accept: "application/json; version=1",
+                    "Content-Type": "application/json",
+                    Authorization:
+                        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                    "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                    Cookie:
+                        "ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+                },
+                data
+            })
+            .then(res => {
+                if (res.statusText === "OK") {
+                    resolve(res.data)
+                } else {
+                    reject(res)
+                }
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
+export const getContact = (id) => {
+    return AXIOS('get', `contacts/${id}`)
+}
+
+export const updateContact = (id, update) => {
+    const body = { contact: update }
+    console.log(body)
+    return AXIOS('put', `contacts/${id}`, body)
+}
+
+export const getRanksNew = () => {
+    return AXIOS('get', `team/ranks`)
+};
+
+export const getAssociatedContactByFileName = (fileName) => {
+    return new Promise((resolve, reject) => {
+        const nameParts = fileName.split(".")
+
+        getSearchedContacts(nameParts[0])
+            .then((res) => {
+                if(res.statusText === "OK") {
+                    if(res.data.length == 1)
+                        resolve(res.data[0])
+                    else if(res.data.length > 1) {
+                        let filteredData = []
+                        reject("found multiple contacts")
+
+                        res.data.forEach(contact => {
+                            if(contact.first_name + " " + contact.last_name === nameParts[0])
+                                filteredData.push(contact)
+                        })
+
+                        if(filteredData.length == 1)
+                            resolve(filteredData[0])
+                        else
+                            reject("found multiple contacts")
+                    } else
+                        reject("could not find contacts")
+                }
+            }).catch((error) => {
+                reject(error)
+            })
+    })
+}
+
 export const getAllContacts = (page) => {
     var page = page || 1;
     var pageCount = page || 1;
@@ -334,7 +573,7 @@ export const getAllContacts = (page) => {
 };
 
 
-export const getSearchedContacts = (search) => {
+export const getSearchedContacts = (search) => { // search=tagsclients
     return axios({
         method: "get",
         url:
@@ -570,7 +809,7 @@ export const getBoardFiltersById = (id) => {
 export const getMedia = () => {
     return axios({
         method: "get",
-        url: URL + `media`,
+        url: URL + `media?per_page=25&page=1`,
         headers: {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
@@ -583,6 +822,7 @@ export const getMedia = () => {
     });
 };
 
+// should be getPlaceholders?
 export const getPlaceholder = () => {
     return axios({
         method: "get",
@@ -668,6 +908,22 @@ export const createMessage = (body) => {
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
         data: data,
+    });
+};
+
+export const getContactMessages = (contactId) => {
+    return axios({
+        method: "get",
+        url: URL + `messages?=false`,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmhlbmRlcnNvbkBzdGFja2Vkc3BvcnRzLmNvbSIsImV4cCI6MTY0MDAxMTUwN30.vokiYw0OZMPWeSiRAOGDaDwZ8PWDL057YJn7AFS1RT0",
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be0280ec4-d74-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
     });
 };
 

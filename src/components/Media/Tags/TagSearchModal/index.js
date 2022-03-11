@@ -14,16 +14,16 @@ const TagSearchModal =(props)=>{
          try{
             const result=await getTags();
                 setTags(result.data);
-            console.log("alltags",result)
+            //console.log("alltags",result)
          }catch(e){
-            console.log("error",e)
+           // console.log("error",e)
          }
         })();
 
     }, []);
     const allTags=props.allTags;
 
-    console.log('alltags = ',allTags)
+    //console.log('alltags = ',allTags)
     return(
         <DialogBox
             // title={"POST"}

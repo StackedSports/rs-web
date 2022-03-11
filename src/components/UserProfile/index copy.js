@@ -34,7 +34,7 @@ import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 
 import AccordionContactDetails from 'UI/Forms/Inputs/AccordionContactDetails'
-import SearchableOptions from 'UI/Forms/Inputs/SearchableOptions'
+
 import {
   getContact,
   getAllContacts,
@@ -56,17 +56,9 @@ import {
   getRanksNew
 } from "../../ApiHelper";
 
-import { 
-  useContact,
-  useTeamMembers,
-  useRanks
-} from 'Api/Hooks'
-
 import {
   formatPhoneNumber
 } from 'utils/Parser'
-
-import useArray from 'Hooks/ArrayHooks'
 
 import { SelectAll } from "@material-ui/icons";
 function Alert(props) {
@@ -293,7 +285,7 @@ function ContactProfile(props) {
   const contactId = useRef(props.match.params.id)
 
   // Contact
-  const contact = useContact(contactId.current)
+  const [contact, setContact] = useState(null)
   const [contactGeneral, setContactGeneral] = useState(null)
   const [contactGeneralSaved, setContactGeneralSaved] = useState(false)
   const [contactDetails, setContactDetails] = useState(null)
@@ -305,22 +297,7 @@ function ContactProfile(props) {
   const [contactTags, setContactTags] = useState(null)
 
   // Details
-  const [teamMembers] = useTeamMembers()  
-  const ranks = useRanks()
-
-  // Details Inputs
-  const [positionCoach, setPositionCoach] = useArray()
-  const [searchedPositionCoaches, setSearchedPositionCoaches] = useArray(teamMembers)
-  const [areaCoach, setAreaCoach] = useArray()
-  const [searchedAreaCoaches, setSearchedAreaCoaches] = useArray(teamMembers)
-  const [coordinator, setCoordinator] = useArray()
-  const [searchedCoordinator, setSearchedCoordinator] = useArray(teamMembers)
-
-
-
-  // Visibility 
-  const [areaCoachDropdownVisible, setAreaCoachDropdownVisible] = useState(false)
-  const [coordinatorDropdownVisible, setCoordinatorDropdownVisible] = useState(false)
+  const [ranks, setRanks] = useState(null)
 
   // Messaging
   const [platforms, setPlatforms] = useState([])
@@ -329,18 +306,44 @@ function ContactProfile(props) {
 
 
   // console.log("This is logged in user", localStorage.getItem("user"));
+  const [filter, setFilter] = useState([]);
+  const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  const [uselessState, setuseLessState] = useState(0);
+  const [showFiltersRow, setShowFiltersRow] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
+  const [showSideFilters, setshowSideFilters] = useState(false);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [tagSearch, setTagSearch] = useState("");
+  const [doughnutChartData, setDoughnutChatData] = useState(null);
+  const [showBoardFilters, setshowBoardFilters] = useState(false);
+  const [showSideSubFilters, setshowSubSideFilters] = useState(false);
+  const [filterBar, setFilterBar] = useState("This Month");
+  const [stateSearch, setStateSearch] = useState("");
   const [loggedInUserStats, setLoggedInUserStats] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [rankFilter, setRankFilter] = useState(null);
+  const [gradeYearFilter, setGradeYearFilter] = useState(null);
+  const [timeZoneFilter, setTimeZoneFilter] = useState(null);
+  const [stateFilter, setStateFilter] = useState(null);
+  const [positionFilter, setPositionFilter] = useState(null);
+  const [coachFilter, setCoachFilter] = useState(null);
+  const [tagFilter, setTagFilter] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currency, setCurrency] = React.useState("This Month");
   const [contacts, setContacts] = useState(null);
+  const [copyContacts, setCopyContacts] = useState(null);
   const [messageText, setMessageText] = useState("");
+  const [allColumns, setAllColumns] = useState(null);
+  const [allStatuses, setAllStatuses] = useState(null);
+  const [allGradYears, setAllGraderYears] = useState(null);
 
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
   const [allBoards, setAllBoards] = useState(null);
   const [positions, setAllPositions] = useState(null);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
 
@@ -377,81 +380,298 @@ function ContactProfile(props) {
     },
   ];
 
+  // use effect
   useEffect(() => {
-    if(!contact)
-      return
+    // get contact
 
     const getPlatforms = (contact) => {
-        let plat = []
-  
-        if(contact.twitter_profile && contact.twitter_profile.screen_name)
-          plat.push(all_platforms[0])
-        
-        if(contact.phone) {
-          plat.push(all_platforms[1])
-          plat.push(all_platforms[2])
-        }
-  
-        return plat
+      let plat = []
+
+      if(contact.twitter_profile && contact.twitter_profile.screen_name)
+        plat.push(all_platforms[0])
+      
+      if(contact.phone) {
+        plat.push(all_platforms[1])
+        plat.push(all_platforms[2])
+      }
+
+      return plat
     }
-  
+
     const setContactEdit = (contact) => {
-      console.log(contact)
-        setContactGeneral({
-          first_name: contact.first_name,
-          last_name: contact.last_name,
-          nick_name: contact.nick_name,
-          phone: contact.phone,
-          email: contact.email,
-          twitter_handle: contact.twitter_profile?.screen_name
-        })
-  
-        setContactDetails({
-          graduation_year: contact.grad_year,
-          high_school: contact.high_school,
-          state: contact.state,
-          status: contact.status,
-          rank: contact.rank,
-          // timezone: contact.timezone,
-        })
-  
-        setContactCoaches({
-          area_coach: contact.area_coach,
-          position_coach: contact.position_coach,
-        })
-  
-        setContactPositions({
-          positions: contact.positions,
-        })
-  
-        setContactRelationships({
-          relationships: contact.relationships
-        })
-  
-        setContactOpponents({
-          opponents: contact.opponents
-        })
-  
-        setContactExternal({
-          hudl: contact.hudl,
-          // armsid: contact.armsid
-        })
-        
-        setContactTags({
-          tags: contact.tags
-        })
+      setContactGeneral({
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        nick_name: contact.nick_name,
+        phone: contact.phone,
+        email: contact.email
+      })
+
+      setContactDetails({
+        graduation_year: contact.grad_year,
+        high_school: contact.high_school,
+        state: contact.state,
+        status_id: contact.status?.id,
+        rank_id: contact.rank?.id,
+        // timezone: contact.timezone,
+      })
+
+      setContactCoaches({
+        area_coach: contact.area_coach,
+        position_coach: contact.position_coach,
+      })
+
+      setContactPositions({
+        positions: contact.positions,
+      })
+
+      setContactRelationships({
+        relationships: contact.relationships
+      })
+
+      setContactOpponents({
+        opponents: contact.opponents
+      })
+
+      setContactExternal({
+        hudl: contact.hudl,
+        // armsid: contact.armsid
+      })
+      
+      setContactTags({
+        tags: contact.tags
+      })
     }
 
-    setContactEdit(contact)
+    // const [contactGeneral, setContactGeneral] = useState(null)
+    // const [contactDetails, setContactDetails] = useState(null)
+    // const [contactCoaches, setContactCoaches] = useState(null)
+    // const [contactPositions, setContactPositions] = useState(null)
+    // const [contactFamily, setContactFamily] = useState(null)
+    // const [contactOpponents, setContactOpponents] = useState(null)
+    // const [contactExternal, setContactExternal] = useState(null)
+    // const [contactTags, setContactTags] = useState(null)
 
-    let platforms = getPlatforms(contact)
+    getContact(contactId.current)
+      .then(contact => {
+        console.log(contact)
+        setContact(contact)
+        // setContactEdit(contact)
 
-    setPlatforms(platforms)
-    setPlatformSelected(platforms[0])
+        setContactEdit(contact)
 
-  }, [contact])
+        let platforms = getPlatforms(contact)
 
-  
+        setPlatforms(platforms)
+        setPlatformSelected(platforms[0])
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, [])
+
+  const handleClick = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+
+  const getMyContacts = (page) => {
+    // setLoading(true);
+    setFetching(true);
+    console.log("This is the date", page);
+    // || "2020-12-13"
+    getAllContacts(page).then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          if (page > 1) {
+            var temp = contacts;
+            temp = temp.concat(res.data);
+            // temp.push(res.data);
+            setContacts(temp);
+            setCopyContacts(temp);
+            setuseLessState(uselessState + 1);
+            console.log("These are all new contacts", temp);
+            // document.getElementById("infinit").scrollTop = 0;
+            setFetching(false);
+          } else {
+            console.log("These are all contacts", res.data);
+            setContacts(res.data);
+            setCopyContacts(res.data);
+            // document.getElementById("infinit").scrollTop = 0;
+            setFetching(false);
+          }
+        }
+      },
+      (error) => {
+        // getMyContacts(1);
+        document.getElementById("infinit").scrollTop = 0;
+        setPage(1);
+        console.log("this is error all contacts", error);
+      }
+    );
+  };
+
+  const getAllGradeYears = () => {
+    getGradeYears().then(
+      (res) => {
+        // console.log("THis is all grade Years", res);
+        var gradYears = [];
+        if (res.statusText === "OK") {
+          // console.log("These are all contacts", res.data);
+          res.data.map((item) => {
+            gradYears.push({
+              value: item,
+              label: item,
+            });
+          });
+          setAllGraderYears(gradYears);
+        }
+      },
+      (error) => {
+        console.log("this is error all grad year", error);
+      }
+    );
+  };
+
+  const getAllBoards = () => {
+    getBoardFilters().then(
+      (res) => {
+        console.log("THis is all boards", res);
+        var gradYears = [];
+        if (res.statusText === "OK") {
+          console.log("These are all boards", res.data);
+          setAllBoards(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all grad year", error);
+      }
+    );
+  };
+
+  const getAllTags = () => {
+    getTags().then(
+      (res) => {
+        // console.log("THis is all tags", res);
+        var TAGS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all tags", res.data);
+          res.data.map((item) => {
+            TAGS.push({
+              value: item.name,
+              label: item.name,
+            });
+          });
+          setAllTags(TAGS);
+        }
+      },
+      (error) => {
+        console.log("this is error all tags", error);
+      }
+    );
+  };
+
+  const getAllStatuses = () => {
+    getStatuses().then(
+      (res) => {
+        // console.log("THis is all statuses", res);
+        var STATUSES = [];
+        if (res.statusText === "OK") {
+          // console.log("These are all statuses", res.data);
+          res.data.map((item) => {
+            STATUSES.push({
+              value: item.status,
+              label: item.status,
+            });
+          });
+          setAllStatuses(STATUSES);
+        }
+      },
+      (error) => {
+        console.log("this is error all statuses", error);
+      }
+    );
+  };
+
+  const getAllPositions = () => {
+    getPositions().then(
+      (res) => {
+        // console.log("THis is all ranks", res);
+        var POSITIONS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all positions", res.data);
+          res.data.map((item) => {
+            POSITIONS.push({
+              value: item.name,
+              label: item.name,
+            });
+          });
+          setAllPositions(POSITIONS);
+        }
+      },
+      (error) => {
+        console.log("this is error all poistion", error);
+      }
+    );
+  };
+  const getColumns = () => {
+    getAllColumns().then(
+      (res) => {
+        // console.log("THis is all ranks", res);
+        var POSITIONS = [];
+        if (res.statusText === "OK") {
+          console.log("These are all cols", res.data);
+          // res.data.map((item) => {
+          //   POSITIONS.push({
+          //     value: item.name,
+          //     label: item.name,
+          //   });
+          // });
+          setAllColumns(res.data);
+        }
+      },
+      (error) => {
+        console.log("this is error all poistion", error);
+      }
+    );
+  };
+  const getAllRanks = () => {
+    getRanksNew()
+      .then(res => {
+        console.log(res)
+        setRanks(res.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    // getRanks().then(
+    //   (res) => {
+    //     // console.log("THis is all ranks", res);
+    //     var RANKS = [];
+    //     if (res.statusText === "OK") {
+    //       // console.log("These are all ranks", res.data);
+    //       res.data.map((item) => {
+    //         RANKS.push({
+    //           value: item.rank,
+    //           label: item.rank,
+    //         });
+    //       });
+    //       setAllRanks(RANKS);
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("this is error all ranks", error);
+    //   }
+    // );
+  };
 
   const myMonthlyStats = () => {
     // || "2020-12-13"
@@ -634,6 +854,13 @@ function ContactProfile(props) {
     );
   };
 
+  const onContactGeneralChange = (e) => {
+    setContactGeneral({
+      ...contactGeneral,
+      [e.target.name]: e.target.value
+    })
+  }
+
   const onContactInfoChange = (type, e) => {
     let info, set;
 
@@ -708,16 +935,6 @@ function ContactProfile(props) {
         break
     }
 
-    if(type === 'details') {
-      info = {
-        graduation_year: info.graduation_year,
-        // // high_school: info.high_school,
-        // // state: info.state,
-        // // status_id: contactDetails.status.id,
-        // rank_id: parseInt(info.rank)
-      }
-    }
-
     updateContact(contact.id, info)
       .then(res => {
         console.log("update contact " + type + " success")
@@ -730,91 +947,489 @@ function ContactProfile(props) {
       })
   }
 
-  const onCoachInputChange = (input, type) => {
-    const filterFunc = (member) => {
-      console.log(member)
-      console.log(input)
-      return member.first_name.includes(input)
-    }
-    //const filterFunc = (member) => (`${member.first_name} ${member.last_name}`).includes(input)
+  const statuses = [
+    {
+      value: "1",
+      label: "Offer Hold",
+    },
+    {
+      value: "1",
+      label: "Offer Take",
+    },
+    {
+      value: "1",
+      label: "Off Board",
+    },
+    {
+      value: "1",
+      label: "Not Good Enough",
+    },
+  ];
+  const states = [
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    " New Mexico",
+    " New York",
+    " North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    " Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming",
+  ];
 
-    if(type === 'position') {
-      //console.log('filtering ' + input)
-      setSearchedPositionCoaches.filter(filterFunc)
-    } else if(type === 'area') {
-      //console.log('filtering ' + input)
-      searchedAreaCoaches.filter(filterFunc)
-    } else if(type === 'coordinator') {
-      //console.log('filtering ' + input)
-      searchedCoordinator.filter(filterFunc)
-    }
-  }
+  const filtesSpacingStyle = {
+    marginRight: 5,
+  };
+  const renderFilters = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        spacing={1}
+        style={{
+          marginTop: 25,
+          borderBottom: "1px solid #f8f8f8",
+          paddingBottom: 20,
+        }}
+      >
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={statusFilter || "Status"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {allStatuses &&
+            allStatuses.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    statusFilter === option.label ? "#348ef7" : "white",
+                  color: statusFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (statusFilter === option.label) {
+                    setStatusFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "status");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
 
-  const onCoachOptionSelected = (coach, type) => {
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={rankFilter || "Rank"}
+          drop={"down"}
+          style={filtesSpacingStyle}
+        >
+          {allRanks &&
+            allRanks.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background: rankFilter === option.label ? "#348ef7" : "white",
+                  color: rankFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (rankFilter === option.label) {
+                    setRankFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "ranks");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={gradeYearFilter || "Grade Year"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {allGradYears &&
+            allGradYears.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    gradeYearFilter === option.label ? "#348ef7" : "white",
+                  color: gradeYearFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (rankFilter === option.label) {
+                    setGradeYearFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "gradeYear");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={timeZoneFilter || "Time Zone"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background:
+                  timeZoneFilter === option.label ? "#348ef7" : "white",
+                color: timeZoneFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setTimeZoneFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={stateFilter || "State"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          <div>
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "90%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                }}
+                placeholder="Search States"
+                value={stateSearch}
+                onChange={(e) => {
+                  setStateSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
 
-
-    let info = {}
-    let set = () => {}
-
-    if(type === 'position') {
-      info = {
-        position_coach_id: coach.id
-      }
-      set = setPositionCoach
-    } else if(type === 'area') {
-      info = {
-        area_coach_id: coach.id
-      }
-      set = setAreaCoach
-    } else if(type === 'coordinator') {
-      info = {
-        coordinator_id: coach.id
-      }
-      set = setAreaCoach
-    }
-
-    console.log(info)
-
-    updateContact(contact.id, info)
-      .then(res => {
-        console.log("update contact " + type + " success")
-        console.log(res)
-
-        set.all([coach])
-        //setContactGeneralSaved(true)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-
-
+            {states.map((option) => {
+              if (stateSearch != "") {
+                if (
+                  option.toLowerCase().indexOf(stateSearch.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background:
+                          stateFilter === option ? "#348ef7" : "white",
+                        color: stateFilter === option ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        addDataToFilter(option, "State");
+                      }}
+                    >
+                      {option}
+                    </Dropdown.Item>
+                  );
+                }
+              } else {
+                return (
+                  <Dropdown.Item
+                    style={{
+                      background: stateFilter === option ? "#348ef7" : "white",
+                      color: stateFilter === option ? "white" : "black",
+                    }}
+                    onClick={() => {
+                      addDataToFilter(option, "State");
+                    }}
+                  >
+                    {option}
+                  </Dropdown.Item>
+                );
+              }
+            })}
+          </div>
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={positionFilter || "Position"}
+          drop={"down"}
+          style={filtesSpacingStyle}
+        >
+          {positions &&
+            positions.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background:
+                    positionFilter === option.label ? "#348ef7" : "white",
+                  color: positionFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  addDataToFilter(option, "Position");
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={coachFilter || "Coach"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {statuses.map((option) => (
+            <Dropdown.Item
+              style={{
+                background: coachFilter === option.label ? "#348ef7" : "white",
+                color: coachFilter === option.label ? "white" : "black",
+              }}
+              onClick={() => {
+                setCoachFilter(option.label);
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={tagFilter || "Tag"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {allTags &&
+            allTags.map((option) => (
+              <Dropdown.Item
+                style={{
+                  background: tagFilter === option.label ? "#348ef7" : "white",
+                  color: tagFilter === option.label ? "white" : "black",
+                }}
+                onClick={() => {
+                  if (rankFilter === option.label) {
+                    setTagFilter(null);
+                    addDataToFilter(option.label);
+                  } else {
+                    addDataToFilter(option.label, "Tag");
+                  }
+                }}
+              >
+                {option.label}
+              </Dropdown.Item>
+            ))}
+        </DropdownButton>
+      </Grid>
+    );
+  };
 
   if (localStorage.getItem("user")) {
   } else {
     window.location.href = "/";
   }
+  const addDataToFilter = (value, type) => {
+    if (filter.includes(value)) {
+      var temp = filter;
+      if (temp.length === 1) {
+        setFilter(temp);
+      } else {
+        temp.splice(value, 1);
+        console.log("This is temp", temp);
+        setFilter(temp);
+      }
+    } else {
+      var temp = filter;
+      var tempType = filterType;
+      temp.push(value);
+      tempType.push(type);
+      setFilterType(tempType);
+      setFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
+  const makeCheckBoxSelected = (index) => {
+    if (selectedCheckBoxes.indexOf(index) > -1) {
+      var temp = [];
+      selectedCheckBoxes.map((item) => {
+        if (index != item) {
+          temp.push(item);
+        }
+      });
+      console.log("This is temp", temp);
+      // console.log("This is index", index);
+      // var other = temp.splice(index, 1);
+      // console.log("This is other", other);
+      // var newArray = temp;
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedCheckBoxes;
+      temp.push(index);
+      setSelectedCheckboxes(temp);
+      setuseLessState(uselessState + 1);
+    }
+    // console.log("THis is selected Checkbox", selectedCheckBoxes);
+  };
+
+  const removeDataFromFilter = (index) => {
+    var temp = filter;
+    var tempType = filterType;
+    temp.splice(index, 1);
+    tempType.splice(index, 1);
+    var newArray = temp;
+    setFilter(newArray);
+    setFilterType(tempType);
+    setuseLessState(uselessState + 1);
+  };
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      getMyContacts();
+      getAllGradeYears();
+      getAllRanks();
+      getAllStatuses();
+      getAllTags();
+      getAllBoards();
+      getAllPositions();
+      getColumns();
+      myMonthlyStats();
+      // setupPage();
+    } else {
+      //window.location.href = "/";
+    }
+  }, []);
+
+  // console.log("This is filter bar", filter, filterType);
+
+  const isSelectedCheckbox = (index) => {
+    console.log("This is great", selectedCheckBoxes.indexOf(index) > -1);
+  };
+
+  const checkFilters = (item) => {
+    // console.log("These are tags for all", item.tags);
+    var isValid = false;
+    if (filter.length != 0) {
+      filter.map((filt, index) => {
+        if (filterType[index] === "status") {
+          if (item.status != null && item.status.status === filt) {
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "ranks") {
+          if (item.rank != null && item.rank.rank === filt) {
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "gradeYear") {
+          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+            console.log(
+              "This is inseide grader",
+              moment(item.grad_year).format("YYYY"),
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+        if (filterType[index] === "Tag") {
+          if (Number(moment(item.grad_year).format("YYYY")) === filt) {
+            console.log(
+              "This is inseide grader",
+              moment(item.grad_year).format("YYYY"),
+              filt
+            );
+            isValid = true;
+            return;
+          }
+        }
+      });
+    } else {
+      isValid = true;
+    }
+    return isValid;
+  };
+
+  function handleScroll() {
+    var agreement = document.getElementById("infinit");
+    var visibleHeight = agreement.clientHeight;
+    var scrollableHeight = agreement.scrollHeight;
+    var position = agreement.scrollTop;
+    // console.log(
+    //   "This is poistion",
+    //   position,
+    //   "This is scrollable",
+    //   scrollableHeight,
+    //   "This is visible height",
+    //   visibleHeight
+    // );
+    if (position + visibleHeight == scrollableHeight) {
+      // alert("We are in the endgaem now");
+      if (!fetching) {
+        getMyContacts(page + 1);
+        setPage(page + 1);
+      }
+      // agreement.scrollTop = 0;
+    }
+  }
+
   
 
   const onPlatformClick = (platformIndex) => {
     setPlatformSelected(platforms[platformIndex])
   }  
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackBar(false);
-  };
-
-  let coachesAccordionHeight = null
-
-  // areaCoachDropdownVisible coordinatorDropdownVisible
-  if(areaCoachDropdownVisible) coachesAccordionHeight = 420
-  if(coordinatorDropdownVisible) coachesAccordionHeight = 520
-
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
@@ -833,10 +1448,66 @@ function ContactProfile(props) {
       </Snackbar>
 
       <Grid container direction="row">
+        {showSideFilters && (
+          <div style={{ width: "15%" }}>
+            <p
+              style={{
+                padding: 5,
+                fontWeight: "bold",
+                fontSize: 20,
+                paddingBottom: 0,
+                marginBottom: 0,
+              }}
+            >
+              Contacts
+            </p>
+            <p className={props.sideFilterClass}>
+              All Contacts{" "}
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            <p
+              className={props.sideFilterClass}
+              onClick={() => {
+                setshowBoardFilters(!showBoardFilters);
+              }}
+            >
+              My Boards
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+            {showBoardFilters === true && (
+              <div>
+                {allBoards &&
+                  allBoards.map((board) => {
+                    return (
+                      <p
+                        className={classes.sideSubFilter}
+                        onClick={() => {
+                          addDataToFilter(board.name, "Board");
+                        }}
+                      >
+                        {board.name}
+                      </p>
+                    );
+                  })}
+              </div>
+            )}
+
+            <p className={props.sideFilterClass}>
+              All Contacts{" "}
+              <ArrowForwardIosIcon
+                style={{ fontSize: 12 }}
+              ></ArrowForwardIosIcon>
+            </p>
+          </div>
+        )}
 
         <div
           style={{
-            width: "100%",
+            width: showSideFilters === true ? "85%" : "100%",
             height: "100%",
             background: "white",
             borderRadius: 5,
@@ -845,6 +1516,41 @@ function ContactProfile(props) {
             // paddingRight: 30,
           }}
         >
+          <Grid container direction="row">
+            {filter.length != 0 &&
+              filter.map((fil, index) => {
+                return (
+                  <div
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    className={classes.tags}
+                  >
+                    <Grid
+                      style={{ height: 40 }}
+                      container
+                      direction="row"
+                      alignItems="center"
+                    >
+                      {fil}
+                      <ClearIcon
+                        onClick={() => {
+                          removeDataFromFilter(index);
+                        }}
+                        style={{
+                          color: "red",
+                          fontSize: 17,
+                          cursor: "pointer",
+                          marginLeft: 8,
+                        }}
+                      ></ClearIcon>{" "}
+                    </Grid>
+                  </div>
+                );
+              })}
+          </Grid>
+
           <div
             style={{
               width: "100%",
@@ -852,6 +1558,7 @@ function ContactProfile(props) {
               marginTop: 10,
             }}
           ></div>
+          {showFiltersRow === true ? renderFilters() : <div></div>}
 
           <div style={{ width: "100%", overflowX: "scroll", marginTop: 10 }}>
             <Grid
@@ -893,9 +1600,7 @@ function ContactProfile(props) {
                       >
 
                         <img src={AmimatedBurger} onClick={(e) => {
-                          //setshowSideFilters(!showSideFilters);
-                          // TODO: go back
-                          props.history.goBack()
+                          setshowSideFilters(!showSideFilters);
                         }}
                           style={{ cursor: "pointer", width: 40 }}></img>
 
@@ -905,7 +1610,7 @@ function ContactProfile(props) {
                       {/********************* SIDE PANEL START **************************/}
                       {/*****************************************************************/}
 
-                      {/* <Grid
+                      <Grid
                         container
                         direction="row"
                         alignItems="center"
@@ -922,10 +1627,10 @@ function ContactProfile(props) {
                         >
                           Notes
                         </p>
-                      </Grid> */}
+                      </Grid>
 
                       <Accordion
-                        style={{ width: "100%", marginTop: 5, marginLeft: 0, marginRight: 0 }}
+                        style={{ width: "100%", marginTop: 5 }}
                       >
                         <AccordionContactDetails
                           eventKey='101'
@@ -936,7 +1641,6 @@ function ContactProfile(props) {
                             { label: 'Nick Name', name: 'nick_name', value: contactGeneral?.nick_name },
                             { label: 'Phone Number', name: 'phone', value: contactGeneral?.phone },
                             { label: 'Email', name: 'email', value: contactGeneral?.email },
-                            { label: 'Twitter Handle', name: 'twitter_handle', value: contactGeneral?.email },
                           ]}
                           onChange={(e) => onContactInfoChange('general', e)}
                           onSave={() => onSaveContactInfo('general')}
@@ -950,8 +1654,8 @@ function ContactProfile(props) {
                             { label: 'High School', name: 'high_school', value: contactDetails?.high_school },
                             { label: 'State', name: 'state', value: contactDetails?.state },
                             // { label: 'Status', name: 'state', value: contactDetails?.state },
-                            { label: 'Status', name: 'status', value: contactDetails?.status?.status },
-                            { label: 'Rank', name: 'rank', value: contactDetails?.rank?.rank },
+                            { label: 'Status', name: 'status_id', value: contactDetails?.status },
+                            { label: 'Rank', name: 'rank_id', value: contactDetails?.rank },
                             // { label: 'Timezone', name: 'timezone', value: contactDetails?.timezone },
                           ]}
                           onChange={(e) => onContactInfoChange('details', e)}
@@ -959,145 +1663,119 @@ function ContactProfile(props) {
                           saved={contactGeneralSaved}
                         />
                         <AccordionContactDetails
-                          height={coachesAccordionHeight}
                           eventKey='103'
                           label='Coaches'
-                          onChange={(e) => onContactInfoChange('coaches', e)}
-                          onSave={() => onSaveContactInfo('coaches')}
-                          saved={contactGeneralSaved}
-                        >
-                          <AccordionContactDetails.Label label='Position Coach'/>
-                          
-                          <SearchableOptions  noBorderOnSelected
-                            canSelectMoreOptions={positionCoach.length < 1}
-                            selection={positionCoach}
-                            selectedNameDef={['first_name', 'last_name']}
-                            selectedImgDef={'twitter_profile.profile_image'}
-                            optionNameDef={['first_name', 'last_name']}
-                            optionImgDef={'twitter_profile.profile_image'}
-                            placeholder='+ Add Position Coach'
-                            options={teamMembers}
-                            search={searchedPositionCoaches}
-                            onInputChange={(input) => onCoachInputChange(input, 'position')}
-                            onInputPressEnter={() => {}}
-                            onOptionSelected={(coach, index) => onCoachOptionSelected(coach, 'position')}
-                            onRemoveSelected={(coach, index) =>  setPositionCoach.clear()}
-                          />
-
-                          <div style={{marginBottom: 20}}></div>
-
-                          <AccordionContactDetails.Label label='Area Coach'/>
-                          
-                          <SearchableOptions  noBorderOnSelected
-                            canSelectMoreOptions={areaCoach.length < 1}
-                            selection={areaCoach}
-                            selectedNameDef={['first_name', 'last_name']}
-                            selectedImgDef={'twitter_profile.profile_image'}
-                            optionNameDef={['first_name', 'last_name']}
-                            optionImgDef={'twitter_profile.profile_image'}
-                            placeholder='+ Add Area Coach'
-                            options={teamMembers}
-                            search={searchedAreaCoaches}
-                            onInputChange={(input) => onCoachInputChange(input, 'area')}
-                            onInputPressEnter={() => {}}
-                            onOptionSelected={(coach, index) => onCoachOptionSelected(coach, 'area')}
-                            onRemoveSelected={(owner, index) =>  setAreaCoach.clear()}
-                            onDropDownVisibilityChange={(visible) => setAreaCoachDropdownVisible(visible)}
-                            // onShowDropDown={() => setDisplayPositionCoach(true)}
-                          />
-
-                          <div style={{marginBottom: 20}}></div>
-
-                          <AccordionContactDetails.Label label='Coordinator'/>
-                          
-                          <SearchableOptions
-                            noBorderOnSelected
-                            canSelectMoreOptions={coordinator.length < 1}
-                            selection={coordinator}
-                            selectedNameDef={['first_name', 'last_name']}
-                            selectedImgDef={'twitter_profile.profile_image'}
-                            optionNameDef={['first_name', 'last_name']}
-                            optionImgDef={'twitter_profile.profile_image'}
-                            placeholder='+ Add Coordinator'
-                            options={teamMembers}
-                            search={searchedCoordinator}
-                            onInputChange={(input) => onCoachInputChange(input, 'coordinator')}
-                            onInputPressEnter={() => {}}
-                            onOptionSelected={(coach, index) => onCoachOptionSelected(coach, 'coordinator')}
-                            onRemoveSelected={(coach, index) =>  setCoordinator.clear()}
-                            onDropDownVisibilityChange={(visible) => setCoordinatorDropdownVisible(visible)}
-                            // onShowDropDown={() => setDisplayPositionCoach(true)}
-                          />
-                        </AccordionContactDetails>
-
-                        <AccordionContactDetails
-                          eventKey='104'
-                          label='Positions'
                           items={[
-                            { label: 'Offense', name: 'offense', value: '' },
-                            { label: 'Defense', name: 'defense', value: '' },
-                          ]}
-                          onChange={(e) => onContactInfoChange('positions', e)}
-                          onSave={() => onSaveContactInfo('positions')}
-                          saved={contactGeneralSaved}
-                        />
-
-                        <AccordionContactDetails
-                          eventKey='105'
-                          label='Family & Relationships'
-                          items={[
-                            { label: 'People', name: 'relationships', value: '' },
-                          ]}
-                          onChange={(e) => onContactInfoChange('relationships', e)}
-                          onSave={() => onSaveContactInfo('relationships')}
-                          saved={contactGeneralSaved}
-                        />
-
-                        <AccordionContactDetails
-                          eventKey='106'
-                          label='Opponents'
-                          items={[
-                            { label: 'Opponents', name: 'opponents', value: '' },
-                          ]}
-                          onChange={(e) => onContactInfoChange('opponents', e)}
-                          onSave={() => onSaveContactInfo('opponents')}
-                          saved={contactGeneralSaved}
-                        />
-
-                        <AccordionContactDetails
-                          eventKey='107'
-                          label='External Profiles'
-                          items={[
-                            { label: 'Hudl', name: 'hudl', value: contactExternal?.hudl },
-                            { label: 'ARMS ID', name: 'arms_id', value: '' }
-                          ]}
-                          onChange={(e) => onContactInfoChange('external', e)}
-                          onSave={() => onSaveContactInfo('external')}
-                          saved={contactGeneralSaved}
-                        />
-
-                        <AccordionContactDetails
-                          eventKey='109'
-                          label='Tags'
-                          items={[
-                            { label: 'Tags', name: 'tags', value: '' },
-                          ]}
-                          onChange={(e) => onContactInfoChange('tags', e)}
-                          onSave={() => onSaveContactInfo('tags')}
-                          saved={contactGeneralSaved}
-                        />
-
-                        <AccordionContactDetails
-                          eventKey='110'
-                          label='Actions'
-                          items={[
-                            { label: 'Archive', name: 'opponents', value: '' },
+                            { label: 'Position Coach', name: 'area_coach', value: contactCoaches?.area_coach?.full_name },
+                            { label: 'Area Coach', name: 'position_coach', value: contactCoaches?.position_coach?.full_name },
                           ]}
                           onChange={(e) => onContactInfoChange('coaches', e)}
                           onSave={() => onSaveContactInfo('coaches')}
                           saved={contactGeneralSaved}
                         />
 
+                        <Card>
+                          <Accordion.Toggle as={Card.Header} eventKey="3">
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.accordionGridHeight}
+                            >
+                              <p className={classes.accordionP}>
+                                Family Relationships{" "}
+                                {/* <span className={classes.accordionGray}>
+                                3/6 complete
+                              </span> */}
+                              </p>{" "}
+                              <ArrowForwardIosIcon
+                                style={{ fontSize: 15, marginLeft: 20 }}
+                              ></ArrowForwardIosIcon>
+                            </Grid>
+                          </Accordion.Toggle>
+                          <Accordion.Collapse eventKey="3">
+                            <Card.Body></Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                        <Card>
+                          <Accordion.Toggle as={Card.Header} eventKey="4">
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.accordionGridHeight}
+                            >
+                              <p className={classes.accordionP}>
+                                Opponents{" "}
+                                <span className={classes.accordionGray}>
+                                  3/6 complete
+                                </span>
+                              </p>{" "}
+                              <ArrowForwardIosIcon
+                                style={{ fontSize: 15, marginLeft: 20 }}
+                              ></ArrowForwardIosIcon>
+                            </Grid>
+                          </Accordion.Toggle>
+                          <Accordion.Collapse eventKey="4">
+                            <Card.Body></Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                        <Card>
+                          <Accordion.Toggle as={Card.Header} eventKey="5">
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.accordionGridHeight}
+                            >
+                              <p className={classes.accordionP}>
+                                External Profiles{" "}
+                                <span className={classes.accordionGray}>
+                                  3/6 complete
+                                </span>
+                              </p>{" "}
+                              <ArrowForwardIosIcon
+                                style={{ fontSize: 15, marginLeft: 20 }}
+                              ></ArrowForwardIosIcon>
+                            </Grid>
+                          </Accordion.Toggle>
+                          <Accordion.Collapse eventKey="5">
+                            <Card.Body></Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                        <Card>
+                          <Accordion.Toggle as={Card.Header} eventKey="7">
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.accordionGridHeight}
+                            >
+                              <p className={classes.accordionP}>Tags </p>{" "}
+                              <ArrowForwardIosIcon
+                                style={{ fontSize: 15, marginLeft: 20 }}
+                              ></ArrowForwardIosIcon>
+                            </Grid>
+                          </Accordion.Toggle>
+                          <Accordion.Collapse eventKey="7">
+                            <Card.Body></Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                        <Card>
+                          <Accordion.Toggle as={Card.Header} eventKey="8">
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.accordionGridHeight}
+                            >
+                              <p className={classes.accordionP}>Actions </p>{" "}
+                              <ArrowForwardIosIcon
+                                style={{ fontSize: 15, marginLeft: 20 }}
+                              ></ArrowForwardIosIcon>
+                            </Grid>
+                          </Accordion.Toggle>
+                        </Card>
                       </Accordion>
 
                       {/*****************************************************************/}
@@ -1142,7 +1820,6 @@ function ContactProfile(props) {
                               <p style={{ color: "black", margin: 0 }}>
                                 {contact && (contact.first_name + " " + contact.last_name)}
                                 <span style={{ color: "gray", marginLeft: 10 }}>
-                                  {platforms.length == 0 && 'Contact has no messaging platform'}
                                   {contact && platformSelected && getContactHandle(contact, platformSelected.id)}
                                 </span>
                               </p>
@@ -1152,20 +1829,59 @@ function ContactProfile(props) {
                             <ExpandMoreOutlinedIcon></ExpandMoreOutlinedIcon>
                           }
                         ></IconTextField>
-                        {platforms.length > 0 && 
-                          <div class="dropdown-contact-profile">
-                            {platforms.map((platform, index) => {
+                        <div class="dropdown-contact-profile">
+                          {platforms.map((platform, index) => {
+                            return (
+                              <p key={platform.id}
+                                style={{ color: "black", margin: 12 }}
+                                onClick={() => onPlatformClick(index)}  
+                              >
+                                {platform.name}
+                              </p>
+                            )
+                          })}
+                          {/* {allColumns &&
+                            allColumns.map((item) => {
                               return (
-                                <p key={platform.id}
-                                  style={{ color: "black", margin: 12 }}
-                                  onClick={() => onPlatformClick(index)}  
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  style={{
+                                    height: item.Heading ? 60 : 30,
+                                    marginLeft: item.sub ? 35 : 0,
+                                  }}
                                 >
-                                  {platform.name}
-                                </p>
-                              )
-                            })}
-                          </div>
-                        }
+                                  {item.Heading && (
+                                    <p
+                                      style={{
+                                        marginTop: 10,
+                                        marginBottom: 0,
+                                        width: "100%",
+                                        paddingLeft: 4,
+                                        fontWeight: 600,
+                                      }}
+                                    >
+                                      {item.Heading}
+                                    </p>
+                                  )}
+                                  <Checkbox color="primary"></Checkbox>
+                                  /* {item.icon}
+                                  /* <i
+                              class="fa fa-user-circle"
+                              style={{ color: "#dadada", marginRight: 10 }}
+                            ></i>
+                                  <i
+                                    class={item.fa_classes}
+                                    style={{
+                                      color: "#dadada",
+                                      marginRight: 10,
+                                    }}
+                                  ></i>
+                                  <p style={{ margin: 0 }}>{item.name}</p>
+                                </Grid>
+                              );
+                            })} */}
+                        </div>
                       </div>
                     </div>
 

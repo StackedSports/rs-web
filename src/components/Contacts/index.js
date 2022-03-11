@@ -17,6 +17,8 @@ import BackIcon from '../../images/back.png';
 import DrawerIcon from '../../images/drawer_contact.png';
 
 
+import { NavLink, Redirect } from "react-router-dom";
+
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
@@ -188,8 +190,19 @@ const [handlescroll,sethandlescroll]=useState(true)
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
-
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+
+  // Pagination
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    itemsPerPage: 0,
+    totalPages: 0,
+    currentPage: 0
+  })
+
+  // Redirect
+  const [redirect, setRedirect] = useState("")
+
   const totalContacts = 0
   const columnNames = [
     {
@@ -328,9 +341,20 @@ const [handlescroll,sethandlescroll]=useState(true)
       (res) => {
         console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-          if (page > 1) {
-            var temp = contacts;
+            var temp = Object.assign([], contacts);
             temp = temp.concat(res.data);
+
+            console.log("*********** CONTACTS **********")
+            console.log(res)
+            console.log("*********** CONTACTS **********")
+
+
+            setPagination({
+              totalItems: res.headers['total-count'],
+              itemsPerPage: res.headers['page-items'],
+              totalPages: res.headers['total-pages'],
+              currentPage: res.headers['current-page']
+            })
 
             // temp.push(res.data);
             setContacts(temp);
@@ -343,15 +367,22 @@ const [handlescroll,sethandlescroll]=useState(true)
             setFetching(false);
           } else {
 
-            setContacts(res.data);
-            setCopyContacts(res.data);
+            //console.log("These are all contacts", res.data);
+
+            //setContacts(res.data);
+            //setCopyContacts(res.data);
+
             if (document.getElementById("infinit")) {
               document.getElementById("infinit").scrollTop = 0;
             }
 
             console.log("These are all contacts", contacts);
             setFetching(false);
-          }
+          // if (page > 1) {
+            
+          // } else {
+            
+          // }
         }
       },
       (error) => {
@@ -1062,7 +1093,7 @@ setContacts(res.data.contacts.list)
           style={filtesSpacingStyle}
         >
           {positions &&
-            console.log(positions, "position ok"),
+            //console.log(positions, "position ok"),
             positions.map((option, ind) => (
               <Dropdown.Item
                 key={ind}
@@ -1441,6 +1472,9 @@ setContacts(res.data.contacts.list)
     }
   }
 
+  // if(redirect !== '')
+  //   return <Redirect to={redirect}/>
+
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
       <Snackbar
@@ -1719,8 +1753,8 @@ setContacts(res.data.contacts.list)
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? contacts.length : ""} </span>{" "}
-                  contacts in the system
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? pagination.totalItems : 0} </span>{" "} contacts
+                  {/* {" "} contacts in the system */}
                 </span>
               )}
             </Grid>
@@ -1916,8 +1950,8 @@ setContacts(res.data.contacts.list)
                               "CONTACT_DATA",
                               JSON.stringify(item)
                             );
-
-                            window.location.href = "/contact-profile";
+                            //setRedirect(`/contact-profile/${item.id}`)
+                            // window.location.href = "/contact-profile/" + item.id;
                           }
 
                         }}
@@ -1970,10 +2004,14 @@ setContacts(res.data.contacts.list)
                             ></img>
                           )}
                         </Grid>
+
+                        {/* <NavLink>
+                          
+                        </NavLink> */}
                         <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
+                          <NavLink style={{ color: 'inherit'}}to={"contact-profile/" + item.id} className={classes.tableFields}>
                             {item.first_name}
-                          </span>
+                          </NavLink>
                         </Grid>
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>

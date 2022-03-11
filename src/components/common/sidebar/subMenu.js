@@ -59,12 +59,12 @@ const LabelContainer = styled.div`
 const ImgIcon = styled.img``;
 
 const SubMenu = ({ item, contacts, index, selectedTab }) => {
-  console.log("keykey", index, selectedTab);
+  //console.log("keykey", index, selectedTab);
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
   // console.log("THis is path", item.path);
-    console.log('sidebar = ',item, contacts, index, selectedTab);
+    //console.log('sidebar = ',item, contacts, index, selectedTab);
   return (
     <>
       <div

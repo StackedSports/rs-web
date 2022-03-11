@@ -90,7 +90,7 @@ const DropDownButton = (props) => {
 
     const Icon = props.Icon;
 
-    console.log('icon = ', Icon)
+    //console.log('icon = ', Icon)
     return (
         <div className="dropdown">
             {props.haveLink && props.Link}

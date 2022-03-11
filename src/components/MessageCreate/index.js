@@ -401,6 +401,7 @@ console.log("SaveMessage",saveMessage)
     setRows(allBoards)
   }, [allBoards])
  
+ 
   
   useEffect(
     (data) => {
@@ -1542,8 +1543,9 @@ console.log("boardID",id)
     );
   };
   const selectedMessageStatusTable = (props) => (
-   
+ 
     <>
+       { console.log("selectedMessagetablelist",props)}
       <Grid
         container
         direction="row"
@@ -1604,7 +1606,7 @@ console.log("boardID",id)
           md={2}
           xs={2}
           onClick={() => {
-            let data = props.contact_list.sort((a, b) =>
+            let data = props.contact_list?.sort((a, b) =>
             a.phone? ( a.phone > b.phone
                 ? 1
                 : b.phoneNumber > a.phoneNumber
@@ -1660,7 +1662,7 @@ console.log("boardID",id)
         </Grid>
       </Grid>
 
-      {props.contact_list && props.contact_list.map((item, index) => {
+      {props.contact_list.length>0 && props.contact_list.map((item, index) => {
        
    
     
@@ -2176,7 +2178,7 @@ console.log("boardID",id)
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
+                {moment(filterMessage?.send_at).format(" MM/DD/YYYY h:mm a")}
                 </strong>{" "}
               </p>
           
@@ -2482,30 +2484,14 @@ console.log("boardID",id)
             
             </p>
            
-            {saveMessage.contact_ids.status === "Scheduled" ? (
-              <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
-                <strong className={classes.mdMargin}>
-                
-                </strong>{" "}
-                <span
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
-                  onClick={() => {
-                    setMessageStatus("Drafts");
-                    setMessageCreated(false);
-                  }}
-                >
-                  (Unschedule & more to drafts)
-                </span>
-              </p>
-            ) : (
+            
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
                 {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
                 </strong>{" "}
               </p>
-            )}
+            
 
             <Grid
               container
@@ -2691,6 +2677,7 @@ console.log("boardID",id)
 
   const MessageDetailsCard = (props) => {
     console.log("messageprops",saveMessage)
+    console.log("MesagedETAILS",filterMessageDetails)
     {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
@@ -3787,6 +3774,7 @@ const addDataToFilter = (value, type) => {
 
     );
   };
+  let filtercontacts =[];
   
   const renderMessageTypeTag = (messageType) => {
     console.log('===========renderMessageTypeTag=========================',messageType);
@@ -3829,9 +3817,53 @@ const addDataToFilter = (value, type) => {
       </div>
     );
   };
+  const getboardscontacts = async () => {
+    const filtersdata=recieve.filter(m=>m.name?recieve:null)
+    const promises=[];
+    //let filtercontacts = [];
+   for(let data of filtersdata){
+     promises.push(getBoardFiltersById(data.id));
+   }
 
+   console.log("promised  = ",promises)
+
+   //let tmpFilterContacts = []
+
+   Promise.all(promises).then((response)=>{
+     console.log(response)
+     console.log("response = ", response.map((data) => data.data))
+
+      filtercontacts = response.map((d) => d.data)
+    
+     
+     let temp = Object.assign( [] , filtercontacts)
+
+     // tempUploadStatus[index] = "success"
+     // temp2[index] = "success"
+     // setUploadStatus(temp2)
+     
+     // console.log('typeof filterContacts ' + )
+     setBoardsId(temp)
+     
+     
+     console.log("filterscontacts", temp)
+   }).catch((err)=>{
+     console.log("err = ",err)
+
+   })
+  }
+  useEffect(() => {
+ setTableData(d=>[...d,...boardsId])
+  }, [boardsId])
+  
+ 
  const handleSendMessage = async () => {
-
+  
+  getboardscontacts()
+ 
+    setCount(counts+1)
+    console.log("counts", counts)
+    
     setMessagePreview(true);
     console.log("recieve",recieve)
      let count = 0;
@@ -3839,7 +3871,7 @@ const addDataToFilter = (value, type) => {
     let contactsdata=[]
     contactsdata=recieve.filter(m=>m.first_name?recieve:null)
     //const contactsids=contactsdata?.map((id)=>id.id).join(",")
-     const filtersdata=recieve.filter(m=>m.name?recieve:null)
+     
     const data = {
       message:{
       platform: messageType[0].title,
@@ -3852,26 +3884,7 @@ const addDataToFilter = (value, type) => {
      } }
 
    
-     const promises=[];
-     let filtercontacts=[];
-    for(let data of filtersdata){
-      promises.push(getBoardFiltersById(data.id));
-    }
-
-    console.log("promised  = ",promises)
-    Promise.all(promises).then((response)=>{
-      console.log("response = ",response.map((data)=>data.data))
-      filtercontacts=response.map((d)=>d.data)
-      
-     
-     
-      setBoardsId(filtercontacts)
-      setCount(counts+1)
-      console.log("filterscontacts",filtercontacts)
-    }).catch((err)=>{
-      console.log("err = ",err)
-
-    })
+  
   
 
      console.log("boardsdata",boardsId)
@@ -6308,5 +6321,6 @@ const useStyles = makeStyles({
     color: "black",
   },
 });
+
 export { useStyles };
 export default MessageCreate;
