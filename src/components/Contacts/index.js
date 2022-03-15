@@ -184,7 +184,7 @@ function Home(props) {
   const [allBoards, setAllBoards] = useState(null);
   const [allTeamContacts, setTeamContacts] = useState(null);
 
-const [handlescroll,sethandlescroll]=useState(true)
+  const [handlescroll, sethandlescroll] = useState(true)
   const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
@@ -341,47 +341,47 @@ const [handlescroll,sethandlescroll]=useState(true)
       (res) => {
         console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
-            var temp = Object.assign([], contacts);
-            temp = temp.concat(res.data);
+          var temp = Object.assign([], contacts);
+          temp = temp.concat(res.data);
 
-            console.log("*********** CONTACTS **********")
-            console.log(res)
-            console.log("*********** CONTACTS **********")
-
-
-            setPagination({
-              totalItems: res.headers['total-count'],
-              itemsPerPage: res.headers['page-items'],
-              totalPages: res.headers['total-pages'],
-              currentPage: res.headers['current-page']
-            })
-
-            // temp.push(res.data);
-            setContacts(temp);
-            setCopyContacts(temp);
-            setuseLessState(uselessState + 1);
-            console.log("These are all new contacts", contacts);
+          console.log("*********** CONTACTS **********")
+          console.log(res)
+          console.log("*********** CONTACTS **********")
 
 
-            // document.getElementById("infinit").scrollTop = 0;
-            setFetching(false);
-          } else {
+          setPagination({
+            totalItems: res.headers['total-count'],
+            itemsPerPage: res.headers['page-items'],
+            totalPages: res.headers['total-pages'],
+            currentPage: res.headers['current-page']
+          })
 
-            //console.log("These are all contacts", res.data);
+          // temp.push(res.data);
+          setContacts(temp);
+          // setCopyContacts(temp);
+          setuseLessState(uselessState + 1);
+          console.log("These are all new contacts", contacts);
 
-            //setContacts(res.data);
-            //setCopyContacts(res.data);
 
-            if (document.getElementById("infinit")) {
-              document.getElementById("infinit").scrollTop = 0;
-            }
+          // document.getElementById("infinit").scrollTop = 0;
+          setFetching(false);
+        } else {
 
-            console.log("These are all contacts", contacts);
-            setFetching(false);
+          //console.log("These are all contacts", res.data);
+
+          //setContacts(res.data);
+          //setCopyContacts(res.data);
+
+          if (document.getElementById("infinit")) {
+            document.getElementById("infinit").scrollTop = 0;
+          }
+
+          console.log("These are all contacts", contacts);
+          setFetching(false);
           // if (page > 1) {
-            
+
           // } else {
-            
+
           // }
         }
       },
@@ -564,7 +564,7 @@ const [handlescroll,sethandlescroll]=useState(true)
   const getBoardsFilterById = (id) => {
     // setLoading(true);
     setFetching(true);
-    sethandlescroll(false)
+    // sethandlescroll(false)
     // setContacts(null)
     console.log("This is board id", id);
     // || "2020-12-13"
@@ -572,17 +572,20 @@ const [handlescroll,sethandlescroll]=useState(true)
       (res) => {
         console.log("THis is all boards by id", res);
         if (res.statusText === "OK") {
-          // var temp ;
-          // temp = temp.concat(res.data.contacts.list);
-setContacts(res.data.contacts.list)
-          // temp.push(res.data);
+          var temp = Object.assign([], copyContacts);
+          temp = temp.concat(res.data);
+
+          // var temp = con;
+          // console.log(temp, 'just test temp')
+          // // var newtemp = temp?.concat(res?.data?.contacts?.list);
+          // var newval = [temp, [...res?.data?.contacts?.list]]
+          // setCopyContacts(newval);
+
+          setContacts(temp);
+          setuseLessState(uselessState + 1);
           setBordsById(res.data)
-          // setContacts(res.data.contacts.list);
-          // checkFilters(true)
-          // setCopyContacts(temp);
-          // setuseLessState(uselessState + 1);
-          console.log("These are all board contacts", res.data.contacts.list);
-          console.log("thi si state", contacts);
+          console.log("These are all board contacts", res?.data?.contacts?.list);
+
 
 
 
@@ -1293,7 +1296,7 @@ setContacts(res.data.contacts.list)
     }
     // console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
-
+  var totalcount = 0
   const removeDataFromFilter = (index) => {
     var temp = filter;
     var tempType = filterType;
@@ -1303,8 +1306,8 @@ setContacts(res.data.contacts.list)
     setFilter(newArray);
     setFilterType(tempType);
     setuseLessState(uselessState + 1);
-    sethandlescroll(true)
-    getMyContacts()
+    // sethandlescroll(true)
+    // getMyContacts()
     // alert("sdfasd")
   };
   useEffect(() => {
@@ -1333,17 +1336,25 @@ setContacts(res.data.contacts.list)
 
   const checkFilters = (item) => {
     // console.log("These are tags for all", item.tags);
-    var isValid = false;
 
-    // console.log(item, boardsById, "<<<<<<<<<<<<<---------status check filter--------->>>>>>>>>>>>>>", filter);
+    if (totalcount < 50) {
+      // setContacts(allcontacts)
+      // setPage(page+1)
+      // setFetching(true)
+
+    }
+
+    var isValid = false;
     if (filter.length != 0) {
       filter.map((filt, index) => {
         console.log(item != null && boardsById?.name === filt, 'cheking')
         if (filterType[index] === "status") {
 
           if (item?.status != null && item?.status.status === filt) {
+
             isValid = true;
             return;
+
           }
           // alert("ok")
 
@@ -1351,12 +1362,13 @@ setContacts(res.data.contacts.list)
 
         if (filterType[index] === "boards") {
 
-       
+          //  setContacts(null)
           if (item != null && boardsById?.name === filt) {
+
             // console.log(boardsById?.contacts?.list?.map((el) => el?.id.includes(contacts?.map((el) => el?.id))) , 'new checking', contacts?.map((el) => el?.id))
             // if (boardsById?.contacts?.list?.map((el) => el?.id) === contacts?.map((el) => el?.id)) {
-              isValid = true;
-              return;
+            isValid = true;
+            return;
 
             // }
             // setContacts(null)
@@ -1454,22 +1466,22 @@ setContacts(res.data.contacts.list)
     var visibleHeight = agreement.clientHeight;
     var scrollableHeight = agreement.scrollHeight;
     var position = agreement.scrollTop;
-    // console.log(
-    //   "This is poistion",
-    //   position,
-    //   "This is scrollable",
-    //   scrollableHeight,
-    //   "This is visible height",
-    //   visibleHeight
-    // );
-    if (position + visibleHeight == scrollableHeight) {
-      // alert("We are in the endgaem now");
-      if (!fetching) {
-        getMyContacts(page + 1);
-        setPage(page + 1);
-      }
-      // agreement.scrollTop = 0;
+    console.log(
+      "This is poistion",
+      fetching,
+      "This is scrollable",
+      scrollableHeight,
+      "This is visible height",
+      visibleHeight
+    );
+    // if (position + visibleHeight === scrollableHeight) {
+    // alert("We are in the endgaem now");
+    if (!fetching) {
+      getMyContacts(page + 1);
+      setPage(page + 1);
     }
+    // agreement.scrollTop = 0;
+    // }
   }
 
   // if(redirect !== '')
@@ -1532,18 +1544,20 @@ setContacts(res.data.contacts.list)
                         //   addDataToFilter(board.name,'boards');
                         // }}
                         onClick={() => {
+                          // setContacts(null)
+                          // alert("ok")
                           getBoardsFilterById(board.id)
-                          
+
                           if (boardFilter === board.name) {
                             // removeDataFromFilter
                             setBoardFilter(null);
-                            addDataToFilter(board.name,"boards");
+                            addDataToFilter(board.name, "boards");
                             // setAllContacts(...contacts)
-                          } 
-                          
+                          }
+
                           else {
                             addDataToFilter(board.name, "boards");
-                            
+
                           }
                         }}
                       >
@@ -1647,7 +1661,9 @@ setContacts(res.data.contacts.list)
                     width={120}
                     onClick={() => {
                       setShowFiltersRow(!showFiltersRow);
+                      // setContacts(allcontacts)
                     }}
+
                     textColor={showFiltersRow === false ? "black" : "white"}
                     background={
                       showFiltersRow === false ? "transparent" : "#3871DA"
@@ -1916,27 +1932,26 @@ setContacts(res.data.contacts.list)
               style={{ width: "100%", maxHeight: 330, minWidth: 1110 }}
               className="fullHeightContacts"
               id="infinit"
-              
-              onScroll={() => {
-                if(handlescroll){
 
-                  handleScroll();
-                }
-               
+              onScroll={() => {
+                // if(handlescroll){
+
+                handleScroll();
+                // }
+
               }}
             >
 
 
               {contacts ? (
                 contacts.map((item, index) => {
+
                   // console.log(item,'===============contacts====================='),
                   // console.log(isBoardContact, '<<<<<<<<<<===contacts=<<<<<<<'),
                   console.log(checkFilters(item), '<<<<==<<<<<==============contacts====================');
                   if (checkFilters(item) === true) {
-                    console.log(
-                      "This is filter funtion",
-                      item
-                    );
+
+                    totalcount++
                     return (
                       <Grid
                         key={index}
@@ -2009,7 +2024,7 @@ setContacts(res.data.contacts.list)
                           
                         </NavLink> */}
                         <Grid item md={1} xs={1}>
-                          <NavLink style={{ color: 'inherit'}}to={"contact-profile/" + item.id} className={classes.tableFields}>
+                          <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
                             {item.first_name}
                           </NavLink>
                         </Grid>
@@ -2039,6 +2054,8 @@ setContacts(res.data.contacts.list)
                             {item.state}
                           </span>
                         </Grid>
+
+
                         <Grid item md={1} xs={1}>
                           <span className={classes.tableFields}>
                             {item.grad_year

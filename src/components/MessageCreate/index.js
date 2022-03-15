@@ -11,7 +11,14 @@ import SelectSearch from "react-select-search";
 import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import SendIcon from '@mui/icons-material/Send';
-
+import {useMessages, 
+  useSnippets,
+  useBoards, 
+  useBoard,
+  useTags,
+  useTagsWithContacts,
+  usePlatform
+} from '../../Api/Hooks'
 import PhotoIcon from "@material-ui/icons/Photo";
 import GifIcon from "@material-ui/icons/Gif";
 
@@ -52,19 +59,18 @@ import TimePicker from "../DateTimePicker/index";
 import MediaComponnet from "../Media/MediaComponent";
 import {
   getAllContactsWithSearch,
-  getBoardFilters,
+ 
   getMedia,
   getTeamContacts,
   getPlaceholder,
   getMessage,
   createMessage,
-  getMessages,
+ 
   getBoardFiltersById,
-  getSnippets,
+ 
   getPlatform,
-  getTagsWithMessages,
-  getTags,
-  getStatuses
+ 
+ 
 } from "../../ApiHelper";
 // import SearchBar from "material-ui-search-bar";
 
@@ -131,110 +137,41 @@ function MessageCreate(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+ 
   const [showModal, setShowModal] = useState(true);
-  const [snippets, setSnippets] = useState([]);
+  
   const [statusses, setStatuses] = useState(["Draft","Scheduled","In Progress","Finished","Archived","Error"]);
-  const [messagesTags, setMessagesTags] = useState([]);
-  const [allPlatforms,setPlatforms] = useState([]);
+
   const [startIndex,setStartIndex] = useState(0)
   const [endIndex,setEndIndex] = useState(99)
-  const [allMessages,setAllMessages] = useState();
+  
   //const [allTags, setAllTags] = useState(null);
-  console.log("AllMessages",allMessages)
-  const getAllMessages = () => {
-    getMessages().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-       
-        if (res.statusText === "OK") {
-          console.log("These are all message", res.data);
-          setAllMessages(res.data)
-         
-           }
-        },
-        (error) => {
-          console.log("this is error all message", error);
-        }
-      );
-    };
-    const getAllSnippets = () => {
-      getSnippets().then(
-        (res) => {
-          // console.log("THis is all ranks", res);
-          
-          if (res.statusText === "OK") {
-            console.log("These are all Snippets", res.data);
-             }
-             setSnippets(res.data)
-          },
-          (error) => {
-            console.log("this is error all Snippets", error);
-          }
-        );
-      };
+  
+  const allMessages = useMessages()
+  const snippets = useSnippets()
+  const allBoards = useBoards()
+  const boardContacts = useBoard("xGABNSeXmDOW")
+  const messagesTags = useTags()
+  const tags = useTagsWithContacts()
+  const allPlatforms = usePlatform()
+    console.log("snippetsandmessages",allPlatforms)
 
      
 
-      const getMessagesTags = () => {
-        getTagsWithMessages().then(
-          (res) => {
-            // console.log("THis is all ranks", res);
-            
-            if (res.statusText === "OK") {
-              console.log("These are all messagesTags", res.data);
-               }
-              // setMessagesTags(res.data)
-            },
-            (error) => {
-              console.log("this is error all messageTags", error);
-            }
-          );
-        };
-        const getAllTags = () => {
-          getTags().then(
-            (res) => {
-              // console.log("THis is all ranks", res);
-              
-              if (res.statusText === "OK") {
-                console.log("These are all Tags", res.data);
-                 }
-                 setMessagesTags(res.data)
-              },
-              (error) => {
-                console.log("this is error all Tags", error);
-              }
-            );
-          };
+    
+      
 
-      const getAllPlatforms = () => {
-        getPlatform().then(
-          (res) => {
-            // console.log("THis is all ranks", res);
-            
-            if (res.statusText === "OK") {
-              console.log("These are all platform", res.data);
-               }
-               setPlatforms(res.data)
-            },
-            (error) => {
-              console.log("this is error all Platforms", error);
-            }
-          );
-        };
-  
+   
 
-  
+      
 
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
     handleAnimation();
-    getAllSnippets();
-    getAllMessages();
-    getAllPlatforms();
-    getAllTags();
-
-    getMessagesTags();
+    
+  
+    
   }, []);
   
 
@@ -319,7 +256,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
-  const [allBoards, setAllBoards] = useState(null);
+ // const [allBoards, setAllBoards] = useState(null);
   const [allindividualBoards, setAllindividualBoards] = useState(null);
   const [saveMessage,setSaveMessage] = useState([]);
   const [AllSearchBoards, setAllSearchBoards] = useState(null);
@@ -345,6 +282,7 @@ console.log("SaveMessage",saveMessage)
   console.log("selectedcheckbox",media)
   console.log(allBoards, "All Boards")
   const [tableData, setTableData] = React.useState([ ]);
+  
   function showStatus(){
   
   //   setTimeout(()=>{
@@ -1022,37 +960,8 @@ console.log("SaveMessage",saveMessage)
   //   );
   // }
   console.log(boardsId, "boardsById")
-const getBoardsFilterById=(id)=>{
-console.log("boardID",id)
-  getBoardFiltersById(id).then(
-    (res)=>{
-      if(res.statusText==="OK"){
-        console.log(res.data, "boardsId")
-        
-        setBoardsId([...boardsId,res.data])
-      }
-    }, (error) => {
-      console.log("this is error all grad year", error);
-    }
-  );
-}
-  const getAllBoards = () => {
-    getBoardFilters().then(
-      (res) => {
-        // console.log("THis is all boards", res);
-        var gradYears = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all boards", res.data);
-          setAllBoards(res.data);
-          console.log(res.data, "all boards")
 
-        }
-      },
-      (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
+  
 
  
   const states = [
@@ -1541,10 +1450,13 @@ console.log("boardID",id)
         </Grid>
       </div>
     );
+
   };
+
   const selectedMessageStatusTable = (props) => (
  
     <>
+    
        { console.log("selectedMessagetablelist",props)}
       <Grid
         container
@@ -1661,12 +1573,11 @@ console.log("boardID",id)
           </Grid>
         </Grid>
       </Grid>
-
-      {props.contact_list.length>0 && props.contact_list.map((item, index) => {
+        
+      {
+      
+      props.contact_list.length>0 ? props.contact_list.map((item) => { 
        
-   
-    
-
         return (
           <Grid
             container
@@ -1755,7 +1666,105 @@ console.log("boardID",id)
             </Grid>
           </Grid>
         );
-      })}
+      }): //props.filter_list.map((filter)=>
+      //{
+        props.filter_list[0]?.contacts.map((item) => {
+          
+          return (
+        
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                border: "1px solid #d8d8d8",
+                borderBottom: "none",
+                borderRadius: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                minWidth: 1025,
+              }}
+            >
+     
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  color="primary"
+                  onChange={() => {
+                 //   makeDraftSelected(item);
+                  }}
+              //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                  style={{ marginTop: 1, marginBottom: 1 }}
+                  onMouseLeave={() => {
+                    setHoveredIndex(null);
+                  }}
+                ></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                {item.first_name?item.first_name+" "+item.last_name:
+               ""}</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableFields}>
+                {filter.name}
+                </span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields} >
+                  {formatPhoneNumber(item.phone&& item.phone)}
+                </span>
+              </Grid>
+  
+              <Grid item md={2} xs={2}>
+                <span >{item.first_name&&item.first_name}</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {/*isMesasgeStatusClick
+                    ? "-"
+                    : moment(date).format("MM/DD/YYYY  h:mm a")*/}
+                </span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                
+                  <span >
+                    <Info style={{ color: item?.status==="pending"?"#f0ad24": 
+                    item?.status==="sent"?"#54a300": item?.status==="error"?"red":"#8bb14c", fontSize: 16 }}></Info>{" "}
+                      <span  >
+                  
+                  { item?.status
+                   }
+                  </span>
+                     {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                  <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                   { setMessageStatus("Drafts")}
+                  { messageStatus
+                   }
+                  </span>
+                ) : moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY")  ? (
+                  <span className={classes.mdMargin} style={{ marginLeft:5 }} >
+                     { setMessageStatus("In Progress")}
+                  { messageStatus
+                   }
+                   
+                  </span>
+                ) : (
+                  <span className={classes.mdMargin} style={{ marginLeft:5 }}>
+                     { setMessageStatus("Sent")}
+                  { messageStatus
+                   }
+                  </span>
+                )*/}
+                 </span>
+            
+              </Grid>
+            </Grid>
+          );
+        })
+
+
+      }
+      
     </>
   );
 
@@ -1890,10 +1899,13 @@ console.log("boardID",id)
 {console.log("tabledata",tableData)}
       {tableData && tableData.map((item, index) => {
         console.log("date",date,item)
-    
+        
+       
 
         return (
           item.name?
+         
+         
           item.contacts.list.map((contact)=>{
   {           console.log("VONTACTS",contact)}
   return(         
@@ -2519,7 +2531,7 @@ console.log("boardID",id)
             <p
               class
               className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500,width:200 }}
+              style={{ color: "black", fontWeight: 500,width:"70%" }}
             >
               {filterMessageDetails.body }   
             </p>
@@ -2686,7 +2698,7 @@ console.log("boardID",id)
     console.log("totalcount",count)*/}
     let count = 0
 
-    saveMessage?.filter_ids?.map((m)=>m.contacts?.profile_images?count+=m.contacts.profile_images.length:0)
+    boardsId?.map((m)=>m.contacts?count+=m.contacts.count:0)
     count = count + saveMessage.contact_ids?.length
     return (
       <Grid
@@ -2840,7 +2852,7 @@ console.log("boardID",id)
             <p
               class
               className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500 }}
+              style={{ color: "black", fontWeight: 500,width:200 }}
             >
               {saveMessage.body }   
             </p>
@@ -3585,7 +3597,7 @@ const addDataToFilter = (value, type) => {
       // getMyContactsSearch()
       getMyMedia();
       getMyTeamContacts();
-      getAllBoards();
+     
      // setTimeout()
       // getCreateSearch();
     } else {
@@ -3832,31 +3844,21 @@ const addDataToFilter = (value, type) => {
    Promise.all(promises).then((response)=>{
      console.log(response)
      console.log("response = ", response.map((data) => data.data))
-
       filtercontacts = response.map((d) => d.data)
-    
-     
      let temp = Object.assign( [] , filtercontacts)
-
-     // tempUploadStatus[index] = "success"
-     // temp2[index] = "success"
-     // setUploadStatus(temp2)
-     
-     // console.log('typeof filterContacts ' + )
      setBoardsId(temp)
-     
-     
      console.log("filterscontacts", temp)
    }).catch((err)=>{
      console.log("err = ",err)
 
    })
   }
+  let contactsdata=[]
   useEffect(() => {
- setTableData(d=>[...d,...boardsId])
+ setTableData(d=>[...contactsdata,...boardsId])
   }, [boardsId])
   
- 
+ console.log("handlesendmessage")
  const handleSendMessage = async () => {
   
   getboardscontacts()
@@ -3868,7 +3870,7 @@ const addDataToFilter = (value, type) => {
     console.log("recieve",recieve)
      let count = 0;
     const contactsId = messageSender?messageSender.id:null
-    let contactsdata=[]
+    
     contactsdata=recieve.filter(m=>m.first_name?recieve:null)
     //const contactsids=contactsdata?.map((id)=>id.id).join(",")
      
@@ -3880,7 +3882,7 @@ const addDataToFilter = (value, type) => {
       send_at: date,
       body:  messageText,
       contact_ids: contactsdata,
-      user_id: JSON.parse(localStorage.getItem("user")).id,
+     user_id: JSON.parse(localStorage.getItem("user")).id,
      } }
 
    
@@ -3910,14 +3912,14 @@ const addDataToFilter = (value, type) => {
    //const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
  
     console.log('handleSendMessage = ', data)
-
-
-    try {
-      const response = await createMessage(data);
-      console.log('create message = ', response);
-    } catch (e) {
-      console.log('create message error = ', e)
-    }
+try {
+  const res =await createMessage(data)
+}catch(e)
+{
+  console.log("MessageError",e)
+}
+    //addUser(data)
+   
 
     //  postMessage(data)
 
@@ -5939,7 +5941,7 @@ const addDataToFilter = (value, type) => {
                           >
                             Snippets
                           </p>
-                          {(snippets).map((type) => {
+                          {snippets?.map((type) => {
                             return (
                               <Grid
                                 container

@@ -5,8 +5,18 @@ import {
     getTags,
     getContact,
     getRanks,
-    getTeamMembers
+    getTeamMembers,
+    getBoard,
+    getMessages,
+    CreateUser,
+    getSnippets,
+    getBoards,
+    getTagsWithMessages,
+    getPlatform,
+    getMedia
 } from 'Api/Endpoints'
+
+
 
 export const useUser = () => {
     const [user, setUser] = useState(null)
@@ -23,15 +33,135 @@ export const useUser = () => {
 
     return user
 }
+export const useBoards = () => {
+     const [boards, setBoards] = useState(null)
+ 
+     useEffect(() => {
+         getBoards()
+             .then(([board]) => {
+                 console.log('ApiHooks: getBoards -----')
+                 console.log(board)
+                setBoards(board)
+             })
+             .catch(error => console.log(error))
+     }, [])
+ 
+     return boards
+ }
+export const useMedia = () => {
+    const [media, setMedia] = useState(null)
 
+    useEffect(() => {
+        getMedia()
+            .then(([m]) => {
+                console.log('ApiHooks: getBoards -----')
+                console.log(m)
+               setMedia(m)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    return media
+}
+export const usePlatform = () => {
+    const [platform, setPlatform] = useState(null)
+
+    useEffect(() => {
+        getBoards()
+            .then(([platforms]) => {
+                console.log('ApiHooks: getPlatform -----')
+                console.log(platforms)
+               setPlatform(platforms)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    return platform
+}
+export const useTagsWithContacts = () => {
+    const [tags, setTags] = useState(null)
+
+    useEffect(() => {
+        getTagsWithMessages()
+            .then(([tag]) => {
+                console.log('ApiHooks: getTagsWithContacts -----')
+                console.log(tag)
+               setTags(tag)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    return tags
+}
+export const useBoard = (id) => {
+    const [boardContacts, setBoardContacts] = useState(null)
+
+    useEffect(() => {
+        getBoard(id)
+            .then(([contacts]) => {
+                console.log('ApiHooks: getBoardByid -----')
+                console.log(contacts)
+                setBoardContacts(contacts)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    return boardContacts
+}
+export const useMessages = () => {
+     const [message, setMessage] = useState(null)
+ 
+     useEffect(() => {
+         getMessages()
+             .then(([message]) => {
+                 console.log('ApiHooks: getMessages -----',message)
+               setMessage(message)
+               
+             })
+             .catch(error => console.log('ApiHooks: getMessages -----',error))
+     }, [])
+ 
+     return message
+ }
+export const useSnippets = () => {
+    const [snippet, setSnippet] = useState(null)
+
+    useEffect(() => {
+        getSnippets()
+            .then(([snippets]) => {
+                console.log('ApiHooks: getMessages -----',snippets)
+              setSnippet(snippets)
+              
+            })
+            .catch(error => console.log('ApiHooks: getMessages -----',error))
+    }, [])
+
+    return snippet
+}
+ export const addUser  = (body) => {
+    const [user, setUser] = useState(null)
+    
+ 
+      const createUser =()=>{
+        CreateUser(body)
+            .then((res) => {
+           // const response = await CreateUser(body);
+            //const json = await response.json()
+            console.log('ApiHooks: CreateUser -----',res)
+         //   setUser(res.data)
+            })
+           .catch (e => console.log('ApiHooks: CreateUser ----- error', e))           
+        }
+     return user
+ }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
 
     useEffect(() => {
         getTags()
             .then(([tags]) => {
-                //console.log('ApiHooks: getTags -----')
-                //console.log(tags)
+                console.log('ApiHooks: getTags -----')
+                console.log(tags)
                 setTags(tags)
             })
             .catch(error => {
@@ -41,7 +171,6 @@ export const useTags = () => {
 
     return tags
 }
-
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
     
@@ -59,7 +188,6 @@ export const useContact = (id) => {
 
     return contact
 }
-
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState(null)
     
@@ -83,7 +211,6 @@ export const useTeamMembers = () => {
 
     return [teamMembers, filter]
 }
-
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
 
@@ -101,7 +228,6 @@ export const useRanks = () => {
 
     return ranks
 }
-
 export const useCoaches = () => {
     // const [ranks, setRanks] = useState(null)
 

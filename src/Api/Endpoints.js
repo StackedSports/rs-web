@@ -47,35 +47,46 @@ const AXIOS = (method, url, body) => {
             })
     })
 }
-
 export const getContact = (id) => {
     return AXIOS('get', `contacts/${id}`)
 }
-
+export const getMedia = () => {
+    return AXIOS('get', `media?per_page=25&page=1`)
+}
+export const getPlatform = () => {
+    return AXIOS('get', `team/platforms`)
+}
 export const getTeamMembers = () => {
     return AXIOS('get', `team/members?per_page=100&only_active=true`)
 }
-
 export const getTags = () => {
     return AXIOS('get', `tags`)
 }
-
+export const getTagsWithMessages = () => {
+    return AXIOS('get', `tags/with_messages`)
+}
 export const getRanks = () => {
     return AXIOS('get', `team/ranks`)
 }
-
 export const getBoards = () => {
     return AXIOS('get', `filters`)
 }
-
 export const getBoard = (id) => {
     return AXIOS('get', `filters/${id}`)
 }
-
 export const getUser = () => {
     return AXIOS('get', 'me')
 }
-
+export const CreateUser = (body) =>{
+    //const data = JSON.stringify(body);
+    return AXIOS('post' , `messages`,body)
+}
+export const getMessages = () =>{
+    return AXIOS('get','messages?include_all=true')
+}
+export const getSnippets = () => {
+    return AXIOS('get','team/snippets')
+}
 export const filterContacts = () => {
     // let data = filter
     let data = {
