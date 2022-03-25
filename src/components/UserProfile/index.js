@@ -308,6 +308,8 @@ function ContactProfile(props) {
   const [teamMembers] = useTeamMembers()  
   const ranks = useRanks()
 
+  console.log(ranks)
+
   // Details Inputs
   const [positionCoach, setPositionCoach] = useArray()
   const [searchedPositionCoaches, setSearchedPositionCoaches] = useArray(teamMembers)
@@ -708,15 +710,24 @@ function ContactProfile(props) {
         break
     }
 
-    if(type === 'details') {
-      info = {
-        graduation_year: info.graduation_year,
+    //if(type === 'details') {
+    info = {
+        first_name: info.first_name,
+        last_name: info.last_name,
+        // nick_name: info.nick_name
+        // graduation_year: info.graduation_year,
         // // high_school: info.high_school,
         // // state: info.state,
         // // status_id: contactDetails.status.id,
-        // rank_id: parseInt(info.rank)
-      }
+        //rank_id: parseInt(info.rank)
+        // rank: rank value
     }
+   // }
+
+    //  {id: 29, rank: '1'}
+    //  {id: 30, rank: '2'}
+    //  {id: 110, rank: '3'}
+    //  {id: 111, rank: '4'}
 
     updateContact(contact.id, info)
       .then(res => {
@@ -761,11 +772,13 @@ function ContactProfile(props) {
         position_coach_id: coach.id
       }
       set = setPositionCoach
+
     } else if(type === 'area') {
       info = {
-        area_coach_id: coach.id
+        recruiting_coach_id: coach.id
       }
       set = setAreaCoach
+
     } else if(type === 'coordinator') {
       info = {
         coordinator_id: coach.id
@@ -936,7 +949,7 @@ function ContactProfile(props) {
                             { label: 'Nick Name', name: 'nick_name', value: contactGeneral?.nick_name },
                             { label: 'Phone Number', name: 'phone', value: contactGeneral?.phone },
                             { label: 'Email', name: 'email', value: contactGeneral?.email },
-                            { label: 'Twitter Handle', name: 'twitter_handle', value: contactGeneral?.email },
+                            { label: 'Twitter Handle', name: 'twitter_handle', value: contactGeneral?.twitter_handle },
                           ]}
                           onChange={(e) => onContactInfoChange('general', e)}
                           onSave={() => onSaveContactInfo('general')}
@@ -946,8 +959,8 @@ function ContactProfile(props) {
                           eventKey='102'
                           label='Details'
                           items={[
-                            { label: 'Graduation Year', name: 'graduation_year', value: contactDetails?.grad_year },
-                            { label: 'High School', name: 'high_school', value: contactDetails?.high_school },
+                            { label: 'Graduation Year', name: 'graduation_year', value: contactDetails?.graduation_year },
+                            { label: 'Current School', name: 'high_school', value: contactDetails?.high_school },
                             { label: 'State', name: 'state', value: contactDetails?.state },
                             // { label: 'Status', name: 'state', value: contactDetails?.state },
                             { label: 'Status', name: 'status', value: contactDetails?.status?.status },

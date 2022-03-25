@@ -427,6 +427,7 @@ console.log("SaveMessage",saveMessage)
   console.log('============selectedMedia========================');
   console.log(selectedMedia);
   console.log('=======================selectedMedia=============');
+
   const CalendarFilter = () => {
     return (
       <div class="dropdown">
@@ -1054,58 +1055,7 @@ console.log("boardID",id)
   };
 
  
-  const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
+  
 
   const filtesSpacingStyle = {
     marginRight: 5,
@@ -1888,14 +1838,12 @@ console.log("boardID",id)
 {console.log("tabledata",tableData)}
       {tableData && tableData.map((item, index) => {
         console.log("date",date,item)
-    
-
         return (
           item.name?
           item.contacts.list.map((contact)=>{
-  {           console.log("VONTACTS",contact)}
-  return(         
-  <Grid
+          {           console.log("VONTACTS",contact)}
+          return(         
+          <Grid
             container
             direction="row"
             alignItems="center"
@@ -3822,7 +3770,26 @@ const addDataToFilter = (value, type) => {
     );
   };
 
- const handleSendMessage = async () => {
+  const handleSendMessage = async () => {
+    console.log("****** Message Send ******")
+    console.log(messageType)
+    console.log(messageSender)
+    console.log(messageReceiver)
+    console.log(date)
+    console.log(time)
+    console.log(media)
+    console.log(messageText)
+    console.log("**************************")
+
+
+    return
+
+    if(!(messageType && messageReceiver && (messageText||media) && messageSender)) {
+      setMessageNotCreated(true)
+      return
+    }
+
+   
 
     setMessagePreview(true);
     console.log("recieve",recieve)
@@ -3916,10 +3883,13 @@ const addDataToFilter = (value, type) => {
   const name=JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name
   const [item,setItem] = useState() 
   console.log("date",date)
+
+
+
+
+
   return (
-    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}
-   
-    >
+    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
       {showTimePicker && (
         <TimePicker
           open={showTimePicker}
@@ -4046,7 +4016,12 @@ const addDataToFilter = (value, type) => {
 
       </Snackbar>
 
+      
+
       <Grid container direction="row">
+
+        {/** ************************** Media Filters Start ************************************ */}
+
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
             <p
@@ -4147,6 +4122,9 @@ const addDataToFilter = (value, type) => {
             )}
           </div>
         )}
+
+        {/** ************************** Media Panel Start ************************************ */}
+
         {addMedia ? (
           // <div></div>
           // renderAddMedia()
@@ -4225,9 +4203,15 @@ const addDataToFilter = (value, type) => {
               }}
             ></div>
             {/* <Grid container direction="row" alignItems="center"></Grid> */}
+
+
+            
+
             <div style={{
               width: "100%", overflowX: "hide",
             }}>
+              {/** ************************** Media Contacts Board Start ************************************ */}
+
               <Grid container direction="row">
                 {displaySendTo ? (
                   <Grid item md={4} xs={4} style={{ borderRight: '1px solid rgb(216, 216, 216)' }}>
@@ -4598,11 +4582,14 @@ const addDataToFilter = (value, type) => {
                   <div></div>
                 )}
 
+                {/** ************************** Media Create Form Header ************************************ */}
+
                 <Grid
                   item
                   md={displaySendTo ? 8 : 12}
                   xs={displaySendTo ? 8 : 12}
                 >
+                  
                   <Grid
                     className="mb-3"
                     container
@@ -4664,13 +4651,7 @@ const addDataToFilter = (value, type) => {
                           background='#3871DA'
 
 
-                          onClick={() => {
-               
-                              
-                           { messageType && messageReceiver && (messageText||media) && messageSender  ? 
-                          
-                            handleSendMessage():setMessageNotCreated(true) } 
-                          }}
+                          onClick={handleSendMessage}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
                       </div>
@@ -4679,6 +4660,8 @@ const addDataToFilter = (value, type) => {
 
 
                   </Grid>
+
+                  {/** ************************** Media Create Form Start ************************************ */}
 
                   <div
                     style={{
@@ -5572,7 +5555,6 @@ const addDataToFilter = (value, type) => {
                       className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
-                     
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 
