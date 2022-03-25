@@ -3878,6 +3878,7 @@ function MessageCreate(props) {
       try {
         const response = await createMessage(data);
         console.log('create message = ', response);
+        
       } catch (e) {
         console.log('create message error = ', e)
       }
@@ -4643,7 +4644,7 @@ function MessageCreate(props) {
                               {
                                 messageType && messageReceiver && (messageText || media) && messageSender ?
 
-                                handleSendMessage() : setMessageNotCreated(true)
+                                  handleSendMessage() : setMessageNotCreated(true)
                               }
                             }}
                             icon={<Send style={{ color: "#fff" }}></Send>}

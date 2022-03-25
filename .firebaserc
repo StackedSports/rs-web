@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "stacked-messenger"
-  }
+    "default": "recurit-3397b",
+    "rs": "recurit-3397b"
+  },
+  "targets": {}
 }
