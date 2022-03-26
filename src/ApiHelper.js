@@ -78,8 +78,8 @@ export const filterContacts = (body) => {
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
             Accept: "application/json; version=1",
-            "X-Auth-Token":
-                "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMjc2fQ.y4IqaYFOmbhXxC2RL4rvqVVY3ePvmlcpUA2tzRXkatI",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },

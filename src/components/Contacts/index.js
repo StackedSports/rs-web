@@ -128,7 +128,7 @@ function Home(props) {
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
   const [selectedCheckBoxesForTags, setselectedCheckBoxesForTags] = useState([]);
   const [alertValue, setalertValue] = useState('');
-   const [uselessState, setuseLessState] = useState(0);
+  const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(true);
@@ -314,18 +314,18 @@ function Home(props) {
     setOpenSnackBar(true);
 
   }
-  const getContactsByid= async()=>{
+  const getContactsByid = async () => {
     setFetching(true)
     selectedCheckBoxes.map((id) => {
       getContact(id).then((res) => {
-        
+
         setcontacttags(res.tags)
 
         console.log(res, 'response with contacts by id')
-    
-  
-    setFetching(false)
-        
+
+
+        setFetching(false)
+
 
 
       }, (error) => {
@@ -371,8 +371,8 @@ function Home(props) {
     // var tagsid={
     //   tag_ids:selectedCheckBoxesForTags
     // }
-    
-    
+
+
 
   }
 
@@ -440,16 +440,16 @@ function Home(props) {
       }
     );
   };
-  
+
   const AddFilterContacts = async () => {
-   
-    var criteria={
-                      tags:["miami"]
+
+    var criteria = {
+      tags: ["miami"]
     }
-   
+
     try {
-      let res = await filterContacts(criteria) ;
-console.log(res,"res for contacts")
+      let res = await filterContacts(criteria);
+      console.log(res, "res for contacts")
     }
     catch (e) {
       console.log("error filter contact", e)
@@ -569,7 +569,7 @@ console.log(res,"res for contacts")
         }
       },
       (error) => {
-    
+
         console.log("this is error all contacts", error);
       }
     );
@@ -878,15 +878,15 @@ console.log(res,"res for contacts")
                   color: statusFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
-                  
+
                   if (statusFilter === option.label) {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
-                    
+
                   } else {
                     addDataToFilter(option.label, "status");
-                 
-                    
+
+
                   }
                 }}
               >
@@ -1397,14 +1397,14 @@ console.log(res,"res for contacts")
       filter.map((filt, index) => {
         console.log(filterType[index], 'cheking')
         if (filterType[index] === "status") {
-          console.log(item?.status, '<==== : item?.status:: filt:====>',filt)
+          console.log(item?.status, '<==== : item?.status:: filt:====>', filt)
 
           // if (item?.status != null && item?.status.status === filt) {
-            // alert("acha hy na")
-            //  AddFilterContacts()
+          // alert("acha hy na")
+          //  AddFilterContacts()
 
 
-           
+
 
           // }
 
@@ -1896,17 +1896,17 @@ console.log(res,"res for contacts")
                         // onClick={removeTags}
                         onClick={() => {
                           // if (selectedCheckBoxes.length > 0) {
-                            // removeTags()
-                            getContactsByid()
-                            if(contacttags.length>0){
-                              setshowRemoveTagsDialog(true);
+                          // removeTags()
+                          getContactsByid()
+                          if (contacttags.length > 0) {
+                            setshowRemoveTagsDialog(true);
 
-                            }
-else{
-  alert("No tag found ")
-  return false 
-}
-      
+                          }
+                          else {
+                            alert("No tag found ")
+                            return false
+                          }
+
                           // }
                         }}
                       >
@@ -2120,143 +2120,143 @@ else{
                   console.log(checkFilters(item), '<<<<==<<<<<==============contacts====================');
                   // if (checkFilters(item) === true) {
 
-                    // totalcount++
-                    return (
-                      <Grid
-                        key={index}
-                        container
-                        direction="row"
-                        alignItems="center"
-                        className={classes.contactsRow}
-                        onClick={() => {
-                          if (hoveredIndex === null) {
-                            localStorage.setItem(
-                              "CONTACT_DATA",
-                              JSON.stringify(item)
-                            );
-                            //setRedirect(`/contact-profile/${item.id}`)
-                            // window.location.href = "/contact-profile/" + item.id;
-                          }
+                  // totalcount++
+                  return (
+                    <Grid
+                      key={index}
+                      container
+                      direction="row"
+                      alignItems="center"
+                      className={classes.contactsRow}
+                      onClick={() => {
+                        if (hoveredIndex === null) {
+                          localStorage.setItem(
+                            "CONTACT_DATA",
+                            JSON.stringify(item)
+                          );
+                          //setRedirect(`/contact-profile/${item.id}`)
+                          // window.location.href = "/contact-profile/" + item.id;
+                        }
 
-                        }}
-                      >
-                        <Grid item md={1} xs={1}>
-                          {hoveredIndex === index ? (
-                            <Checkbox
-                              color="primary"
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
-                          ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
-                            <Checkbox
-                              color="primary"
-                              checked={true}
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
-                          ) : (
-                            <img
-                              onMouseEnter={() => {
-                                setHoveredIndex(index);
-                              }}
-                              src={
-                                item.twitter_profile &&
-                                  item.twitter_profile.profile_image.includes(
-                                    "contact-missing-image"
-                                  ) == false
-                                  ? item.twitter_profile.profile_image
-                                  : AvatarImg
-                              }
-                              style={{
-                                width: 35,
-                                height: 35,
-                                borderRadius: "50%",
-                                marginLeft: 5,
-                                marginTop: 5,
-                                marginBottom: 5,
-                              }}
-                            ></img>
-                          )}
-                        </Grid>
-
-                        {/* <NavLink>
-                          
-                        </NavLink> */}
-                        <Grid item md={1} xs={1}>
-                          <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
-                            {item.first_name}
-                          </NavLink>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.last_name}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.twitter_profile &&
-                              item.twitter_profile.screen_name
-                              ? "@" + item.twitter_profile.screen_name
-                              : ""}
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span
-                            className={classes.tableFields}
-                            style={{ marginLeft: 40 }}
-                          >
-                            {formatPhoneNumber(item.phone)}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.state}
-                          </span>
-                        </Grid>
-
-
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.grad_year
+                      }}
+                    >
+                      <Grid item md={1} xs={1}>
+                        {hoveredIndex === index ? (
+                          <Checkbox
+                            color="primary"
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
+                          <Checkbox
+                            color="primary"
+                            checked={true}
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : (
+                          <img
+                            onMouseEnter={() => {
+                              setHoveredIndex(index);
+                            }}
+                            src={
+                              item.twitter_profile &&
+                                item.twitter_profile.profile_image.includes(
+                                  "contact-missing-image"
+                                ) == false
+                                ? item.twitter_profile.profile_image
+                                : AvatarImg
                             }
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span className={classes.tableFields}>
-                            {item.high_school}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.status &&
-                              new moment(item.status.created_at).fromNow()}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {" "}
-                            {item.status && item.status.status}
-                          </span>
-                        </Grid>
-                        {index === contacts.length - 1 && (
-                          <Grid item md={12} xs={12}>
-                            <Grid container direction="row" justify="center">
-                              <CircularProgress />
-                            </Grid>
-                          </Grid>
+                            style={{
+                              width: 35,
+                              height: 35,
+                              borderRadius: "50%",
+                              marginLeft: 5,
+                              marginTop: 5,
+                              marginBottom: 5,
+                            }}
+                          ></img>
                         )}
                       </Grid>
-                    );
+
+                      {/* <NavLink>
+                          
+                        </NavLink> */}
+                      <Grid item md={1} xs={1}>
+                        <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
+                          {item.first_name}
+                        </NavLink>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.last_name}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.twitter_profile &&
+                            item.twitter_profile.screen_name
+                            ? "@" + item.twitter_profile.screen_name
+                            : ""}
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span
+                          className={classes.tableFields}
+                          style={{ marginLeft: 40 }}
+                        >
+                          {formatPhoneNumber(item.phone)}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.state}
+                        </span>
+                      </Grid>
+
+
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.grad_year
+                          }
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span className={classes.tableFields}>
+                          {item.high_school}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.status &&
+                            new moment(item.status.created_at).fromNow()}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {" "}
+                          {item.status && item.status.status}
+                        </span>
+                      </Grid>
+                      {index === contacts.length - 1 && (
+                        <Grid item md={12} xs={12}>
+                          <Grid container direction="row" justify="center">
+                            <CircularProgress />
+                          </Grid>
+                        </Grid>
+                      )}
+                    </Grid>
+                  );
                   // }
                 })
               ) : (
@@ -2388,7 +2388,7 @@ else{
         }}
         hideActions={true}
       />
-        <DialogBox
+      <DialogBox
         // title={"POST"}
         maxWidth="sm"
         open={showRemoveTagsDialog}
@@ -2425,7 +2425,7 @@ else{
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
               {contacttags &&
-              
+
                 contacttags.map((tags) => {
                   console.log(tags, 'This is tag map ')
                   if (tags.name.indexOf(tagSearch) > -1) {
@@ -2486,7 +2486,7 @@ else{
                 onClick={() => {
                   setshowRemoveTagsDialog(false);
                   // TagstoContacts()
-                            removeTags()
+                  removeTags()
 
 
                   console.log(selectedCheckBoxesForTags, 'selectedCheckBoxesForTags for tags')

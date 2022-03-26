@@ -46,7 +46,7 @@ import ClearIcon from "@material-ui/icons/Clear"; // ----
 import IconTextField from "../../common/Fields/IconTextField";
 import {Button as MuiButton } from '@mui/material';
 
-import LoadingButton from '@mui/lab/LoadingButton';
+import { LoadingButton } from '@mui/lab';
 
 import { 
   getTags,
