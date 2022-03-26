@@ -442,18 +442,17 @@ function Home(props) {
   };
   
   const AddFilterContacts = async () => {
-    var critr={
-      criteria:{
+   
+    var criteria={
                       tags:["miami"]
     }
-    }
+   
     try {
-      let res = await filterContacts(critr) ;
+      let res = await filterContacts(criteria) ;
 console.log(res,"res for contacts")
-console.log(critr)
     }
     catch (e) {
-      console.log("error filter contact", e,critr)
+      console.log("error filter contact", e)
     }
     setOpenSnackBar(true);
 
@@ -839,6 +838,7 @@ console.log(critr)
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
+    AddFilterContacts()
     handleAnimation();
   }, []);
 
