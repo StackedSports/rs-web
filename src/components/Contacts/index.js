@@ -441,20 +441,19 @@ function Home(props) {
     );
   };
 
-  const AddFilterContacts = async () => {
+  const AddFilterContacts = async (obj) => {
 
-    var criteria = {
-      tags: ["miami"]
-    }
+
 
     try {
-      let res = await filterContacts(criteria);
-      console.log(res, "res for contacts")
+      let res = await filterContacts(obj);
+      console.log(res, "res filter contacts")
+      setContacts(res.data)
     }
     catch (e) {
-      console.log("error filter contact", e)
+      console.log("res filter contact", e)
+      setOpenSnackBar(true);
     }
-    setOpenSnackBar(true);
 
   }
   var TeamContacts = useTeamContact()
@@ -838,7 +837,6 @@ function Home(props) {
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
-    AddFilterContacts()
     handleAnimation();
   }, []);
 
@@ -883,9 +881,26 @@ function Home(props) {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
 
+                    var obj = {
+                      criteria: {
+                        status: filter
+
+                      }
+                    }
+                    // AddFilterContacts(obj)
+                    console.log(obj, "filter object", filter)
+
                   } else {
                     addDataToFilter(option.label, "status");
+                    var obj = {
+                      criteria: {
+                        status: filter
 
+                      }
+                    }
+                    // AddFilterContacts(obj)
+
+                    console.log(obj, "filter object")
 
                   }
                 }}
@@ -1304,7 +1319,6 @@ function Home(props) {
       setuseLessState(uselessState + 1);
     }
   };
-
   const makeCheckBoxSelected = (index) => {
     if (selectedCheckBoxes.indexOf(index) > -1) {
       var temp = [];
@@ -1389,9 +1403,7 @@ function Home(props) {
       // setContacts(allcontacts)
       // setPage(page+1)
       // setFetching(true)
-
     }
-
     var isValid = false;
     if (filter.length != 0) {
       filter.map((filt, index) => {
@@ -1401,7 +1413,8 @@ function Home(props) {
 
           // if (item?.status != null && item?.status.status === filt) {
           // alert("acha hy na")
-          //  AddFilterContacts()
+
+
 
 
 
