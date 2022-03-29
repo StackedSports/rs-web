@@ -1,0 +1,145 @@
+.MessageInput {
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    min-height: 70px;
+    margin-top: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.MessageInput:hover {
+    border: 1px solid #3871da !important;
+}
+
+.MessageInput.Large {
+    /* align-items: flex-start; */
+    /* padding-top: 20px; */
+}
+
+.MessageInput .Label {
+    /* margin: 0; */
+    /* flex: 1 */
+    width: 180px;
+}
+
+.MessageInput .Label p {
+    margin: 0;
+}
+
+.MessageInput.Large .Label p {
+    /* margin-top: 10px; */
+}
+
+.MessageInput .Input {
+    /* margin: 0; */
+    /* flex: 1 */
+}
+
+.MessageInput .Input.Flex1 {
+    flex: 1;
+}
+
+.MessageInput .Input .Container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid #d8d8d8;
+    height: 40px;
+    /* width: 100px; */
+    font-weight: 600;
+    border-radius: 4px;
+    margin-right: 16px;
+    padding: 8px 16px;
+}
+
+
+.MessageInput .Row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.MessageInput .Or {
+    margin: 0;
+    margin-right: 16px;
+    font-weight: 600;
+}
+
+.MessageInput .Input .Container:hover {
+    cursor: pointer;
+}
+
+.MessageInput .Input .Container.Large {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    /* padding: 0; */
+}
+
+.MessageInput .Input .Container.Large.Media {
+    position: relative;
+    padding: 0;
+
+}
+
+.MessageInput .Input .MediaSelected {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.MessageInput .Input .Icon {
+    color: #3871da;
+    margin-right: 20px;
+}
+
+.MessageInput .Input .Clear {
+    color: red;
+    margin-left: 20px;
+    width: 18px;
+    height: 18px;
+}
+
+.MessageInput .Input .Clear.MediaSelected {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    color: red;
+    width: 18px;
+    height: 18px;
+}
+
+.MessageInput .Input .Clear:hover {
+    cursor: pointer;
+}
+
+.MessageInput .Input .Image {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    border-radius: 15px;
+}
+
+.MessageInput .Input .TextArea {
+    width: 100%;
+    /* flex: 1; */
+    resize: none;
+    border: 0px solid transparent;
+    outline: 0px solid transparent;
+    min-height: 300px;
+    margin-top: 20px;
+    /* background-color: #d8d8d8; */
+}
+
+.MessageInput .Input .EmojiPicker-Container {
+    position: relative;
+}
+
+.MessageInput .Input .EmojiPicker-Picker {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

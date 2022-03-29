@@ -1,0 +1,63 @@
+.MediaGrid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 450px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#MediaGrid-Container {
+    position: relative;
+}
+
+#MediaGrid-Container .LoadingContainer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.MediaGrid-Item {
+    width: 200px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.MediaGrid-Item .CheckItem {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 16px;
+    height: 16px;
+}
+
+.MediaGrid-Item img {
+    /* width: 195px;
+    height: 200px; */
+    background-color: #efefef;
+    object-fit: contain; /* contain cover */
+}
+
+.MediaGrid-Item h2 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 15px;
+    margin: 2.5px
+}
+
+.MediaGrid-Item p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 15px;
+    margin: 2.5px
+}

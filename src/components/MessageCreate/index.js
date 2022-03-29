@@ -366,6 +366,7 @@ console.log("SaveMessage",saveMessage)
   console.log('============selectedMedia========================');
   console.log(selectedMedia);
   console.log('=======================selectedMedia=============');
+
   const CalendarFilter = () => {
     return (
       <div class="dropdown">
@@ -964,58 +965,7 @@ console.log("SaveMessage",saveMessage)
   
 
  
-  const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
+  
 
   const filtesSpacingStyle = {
     marginRight: 5,
@@ -1907,9 +1857,9 @@ console.log("SaveMessage",saveMessage)
          
          
           item.contacts.list.map((contact)=>{
-  {           console.log("VONTACTS",contact)}
-  return(         
-  <Grid
+          {           console.log("VONTACTS",contact)}
+          return(         
+          <Grid
             container
             direction="row"
             alignItems="center"
@@ -3928,10 +3878,13 @@ try {
   const name=JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name
   const [item,setItem] = useState() 
   console.log("date",date)
+
+
+
+
+
   return (
-    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}
-   
-    >
+    <DarkContainer contacts style={{ padding: 16, marginLeft: 60 }}>
       {showTimePicker && (
         <TimePicker
           open={showTimePicker}
@@ -4058,7 +4011,12 @@ try {
 
       </Snackbar>
 
+      
+
       <Grid container direction="row">
+
+        {/** ************************** Media Filters Start ************************************ */}
+
         {showSideFilters === true && (
           <div style={{ width: "15%" }}>
             <p
@@ -4159,6 +4117,9 @@ try {
             )}
           </div>
         )}
+
+        {/** ************************** Media Panel Start ************************************ */}
+
         {addMedia ? (
           // <div></div>
           // renderAddMedia()
@@ -4237,9 +4198,15 @@ try {
               }}
             ></div>
             {/* <Grid container direction="row" alignItems="center"></Grid> */}
+
+
+            
+
             <div style={{
               width: "100%", overflowX: "hide",
             }}>
+              {/** ************************** Media Contacts Board Start ************************************ */}
+
               <Grid container direction="row">
                 {displaySendTo ? (
                   <Grid item md={4} xs={4} style={{ borderRight: '1px solid rgb(216, 216, 216)' }}>
@@ -4610,11 +4577,14 @@ try {
                   <div></div>
                 )}
 
+                {/** ************************** Media Create Form Header ************************************ */}
+
                 <Grid
                   item
                   md={displaySendTo ? 8 : 12}
                   xs={displaySendTo ? 8 : 12}
                 >
+                  
                   <Grid
                     className="mb-3"
                     container
@@ -4676,13 +4646,7 @@ try {
                           background='#3871DA'
 
 
-                          onClick={() => {
-               
-                              
-                           { messageType && messageReceiver && (messageText||media) && messageSender  ? 
-                          
-                            handleSendMessage():setMessageNotCreated(true) } 
-                          }}
+                          onClick={handleSendMessage}
                           icon={<Send style={{ color: "#fff" }}></Send>}
                         ></IconButton>
                       </div>
@@ -4691,6 +4655,8 @@ try {
 
 
                   </Grid>
+
+                  {/** ************************** Media Create Form Start ************************************ */}
 
                   <div
                     style={{
@@ -5584,7 +5550,6 @@ try {
                       className="hoverHighlight"
                     >
                       <Grid item md={2} xs={2}>
-                     
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 

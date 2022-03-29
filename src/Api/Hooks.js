@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { 
     getUser,
     getTags,
     getContact,
+    getContacts,
     getRanks,
     getTeamMembers,
     getBoard,
-    getMessages,
     CreateUser,
-    getSnippets,
-    getBoards,
     getTagsWithMessages,
     getPlatform,
-    getMedia
+    getMedia,
+    getBoards,
+    getPlaceholders,
+    getSnippets,
+    getTextPlaceholders,
+    getMessage,
+    getMessages
 } from 'Api/Endpoints'
 
-
+import { usePagination } from './Pagination'
 
 export const useUser = () => {
     const [user, setUser] = useState(null)
@@ -24,8 +28,8 @@ export const useUser = () => {
     useEffect(() => {
         getUser()
             .then(([user]) => {
-                console.log('ApiHooks: getUser -----')
-                console.log(user)
+                // console.log('ApiHooks: getUser -----')
+                // console.log(user)
                 setUser(user)
             })
             .catch(error => console.log(error))
@@ -33,36 +37,8 @@ export const useUser = () => {
 
     return user
 }
-export const useBoards = () => {
-     const [boards, setBoards] = useState(null)
- 
-     useEffect(() => {
-         getBoards()
-             .then(([board]) => {
-                 console.log('ApiHooks: getBoards -----')
-                 console.log(board)
-                setBoards(board)
-             })
-             .catch(error => console.log(error))
-     }, [])
- 
-     return boards
- }
-export const useMedia = () => {
-    const [media, setMedia] = useState(null)
 
-    useEffect(() => {
-        getMedia()
-            .then(([m]) => {
-                console.log('ApiHooks: getBoards -----')
-                console.log(m)
-               setMedia(m)
-            })
-            .catch(error => console.log(error))
-    }, [])
 
-    return media
-}
 export const usePlatform = () => {
     const [platform, setPlatform] = useState(null)
 
@@ -108,37 +84,9 @@ export const useBoard = (id) => {
 
     return boardContacts
 }
-export const useMessages = () => {
-     const [message, setMessage] = useState(null)
- 
-     useEffect(() => {
-         getMessages()
-             .then(([message]) => {
-                 console.log('ApiHooks: getMessages -----',message)
-               setMessage(message)
-               
-             })
-             .catch(error => console.log('ApiHooks: getMessages -----',error))
-     }, [])
- 
-     return message
- }
-export const useSnippets = () => {
-    const [snippet, setSnippet] = useState(null)
 
-    useEffect(() => {
-        getSnippets()
-            .then(([snippets]) => {
-                console.log('ApiHooks: getMessages -----',snippets)
-              setSnippet(snippets)
-              
-            })
-            .catch(error => console.log('ApiHooks: getMessages -----',error))
-    }, [])
 
-    return snippet
-}
- export const addUser  = (body) => {
+export const addUser  = (body) => {
     const [user, setUser] = useState(null)
     
  
@@ -188,14 +136,70 @@ export const useContact = (id) => {
 
     return contact
 }
+
+
+
+export const useContacts = (initialConfig) => {
+    const [loading, setLoading] = useState(true)
+    const [contacts, setContacts] = useState(null)
+    //const pagination = usePagination(null)
+    const [pagination, setPagination] = useState({
+        currentPage: initialConfig ? initialConfig.currentPage : 1,
+        itemsPerPage: initialConfig ? initialConfig.itemsPerPage : 50,
+        totalItems: 0,
+        totalPages: 0,
+    })
+    // const lastUpdate = useRef(pagination.shouldUpdate)
+    const lastPage = useRef(initialConfig ? initialConfig.currentPage : -1)
+
+    useEffect(() => {
+        if(lastPage.current === pagination.currentPage)
+            return
+        
+        // lastUpdate.current = pagination.shouldUpdate
+        lastPage.current = pagination.currentPage
+
+        // console.log('fetching contacts')
+
+        setLoading(true)
+
+        getContacts(pagination.currentPage, 50)
+            .then(([contacts, pag]) => {
+                //console.log('ApiHooks: getContact -----')
+                //console.log(contact)
+                setContacts(contacts)
+                // pagination.updateResult(pag.totalItems, pag.totalPages)
+                // pagination.setTotalPages(pag.totalPages)
+                setPagination(pag)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+
+    }, [pagination.currentPage]) // [pagination.shouldUpdate])
+
+    const getPage = (page) => {
+        setPagination({
+            ...pagination,
+            currentPage: page
+        })
+
+    }
+
+    return [contacts, {...pagination, getPage}, loading]
+}
+
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState(null)
     
     useEffect(() => {
         getTeamMembers()
             .then(([members, pagination]) => {
-                //console.log('ApiHooks: getTeamMembers')
-                //console.log(members)
+                // console.log('ApiHooks: getTeamMembers')
+                // console.log(members)
                 //console.log(pagination)
                 setTeamMembers(members)
             })
@@ -228,6 +232,182 @@ export const useRanks = () => {
 
     return ranks
 }
+
+export const useBoards = () => {
+    const [boards, setBoards] = useState(null)
+
+    useEffect(() => {
+        getBoards()
+            .then(([boards]) => {
+                //console.log('ApiHooks: getRanks -----')
+                //console.log(ranks)
+                setBoards(boards)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return boards
+}
+
+export const useTextPlaceholders = () => {
+    const [placeholders, setPlaceholders] = useState(null)
+
+    useEffect(() => {
+        getTextPlaceholders()
+            .then(([placeholders]) => {
+                //console.log('ApiHooks: getRanks -----')
+                //console.log(ranks)
+                setPlaceholders(placeholders)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return placeholders
+}
+
+export const useSnippets = () => {
+    const [snippets, setSnippets] = useState(null)
+
+    useEffect(() => {
+        getSnippets()
+            .then(([snippets]) => {
+                //console.log('ApiHooks: getRanks -----')
+                //console.log(ranks)
+                setSnippets(snippets)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return snippets
+}
+
+export const usePlaceholders = (currentPage, itemsPerPage) => {
+    const [loading, setLoading] = useState(true)
+    const [placeholders, setPlaceholders] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
+    
+    useEffect(() => {
+        setLoading(true)
+
+        getPlaceholders(pagination.currentPage, pagination.itemsPerPage)
+            .then(([placeholders, pagination]) => {
+                //console.log('ApiHooks: getContact -----')
+                // console.log(pagination)
+                setPlaceholders(placeholders)
+                setPagination(pagination)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [pagination.currentPage])
+
+    return {
+        items: placeholders,
+        pagination,//: {...pagination, getPage: paginationUtils.getPage },
+        loading
+    }
+}
+
+export const useMedia = (currentPage, itemsPerPage) => {
+    const [loading, setLoading] = useState(true)
+    const [media, setMedia] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
+    
+    useEffect(() => {
+        setLoading(true)
+
+        getMedia(pagination.currentPage, pagination.itemsPerPage)
+            .then(([media, pagination]) => {
+                //console.log('ApiHooks: getContact -----')
+                // console.log(pagination)
+                setMedia(media)
+                setPagination(pagination)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [pagination.currentPage])
+
+    return {
+        items: media,
+        pagination,//: {...pagination, getPage: paginationUtils.getPage },
+        loading
+    }
+}
+
+
+// getMessage
+
+export const useMessage = (id, refresh) => {
+    const [message, setMessage] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    // console.log(refresh)
+
+    useEffect(() => {
+        console.log('getting message')
+        setLoading(true)
+
+        getMessage(id)
+            .then(([message]) => {
+                //console.log('ApiHooks: getMessage -----')
+                //console.log(message)
+                setMessage(message)
+                setLoading(false)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [id, refresh])
+
+    return {
+        item: message,
+        loading
+    }
+}
+
+// getMessages
+
+export const useMessages = (currentPage, itemsPerPage) => {
+    const [loading, setLoading] = useState(true)
+    const [messages, setMessages] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
+    
+    useEffect(() => {
+        setLoading(true)
+
+        getMessages(pagination.currentPage, pagination.itemsPerPage)
+            .then(([messages, pagination]) => {
+                //console.log('ApiHooks: getContact -----')
+                // console.log(pagination)
+                setMessages(messages)
+                setPagination(pagination)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [pagination.currentPage])
+
+    return {
+        items: messages,
+        pagination,//: {...pagination, getPage: paginationUtils.getPage },
+        loading
+    }
+}
+
 export const useCoaches = () => {
     // const [ranks, setRanks] = useState(null)
 

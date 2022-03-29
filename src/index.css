@@ -20,6 +20,10 @@ code {
     monospace;
 }
 
+* {
+  /* transition: all 300ms cubic-bezier(1, 0, 0, 1); */
+}
+
 @font-face {
   font-family: "ProximaNovaRegular";
   src: local("ProximaNovaRegular"),

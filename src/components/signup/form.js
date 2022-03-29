@@ -51,8 +51,8 @@ export default function Signin() {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("Non.admin@stackedsports.com");
-  const [password, setPassword] = useState("e7$%0V366KIC");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCheckboxChange = (event) => {
