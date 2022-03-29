@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 
-
 export default function useArray(initialState) {
     const [a, set] = useState(initialState ? initialState : [])
 
@@ -26,10 +25,32 @@ export default function useArray(initialState) {
         set(tmp)
     }
 
+    const put = (item, index) => {
+        let tmp = Object.assign([], a)
+        tmp[index] = item
+        set(tmp)
+    }
+
+    const unshift = (item) => {
+        let tmp = Object.assign([], a)
+        tmp.unshift(item)
+        set(tmp)
+    }
+
     const remove = (index) => {
         let tmp = Object.assign([], a)
         tmp.splice(index, 1)
         set(tmp)
+    }
+
+    const removeById = (id) => {
+        let index = a.findIndex(item => item.id === id)
+
+        if(index >= 0) {    
+            let tmp = Object.assign([], a)
+            tmp.splice(index, 1)
+            set(tmp)
+        }
     }
 
     const clear = () => {
@@ -42,7 +63,7 @@ export default function useArray(initialState) {
     }
 
     const utils = {
-        all, push, remove, clear, filter
+        all, push, put, unshift, remove, removeById, clear, filter
     }
 
     return [ a, utils ]

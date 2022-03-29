@@ -426,9 +426,9 @@ function MediaComponent(props) {
         try {
             const res = await getMedia();
             if (res.statusText === "OK") {
-                console.log("*********** MEDIA **********")
-                console.log(res)
-                console.log("*********** MEDIA **********")
+                //console.log("*********** MEDIA **********")
+                //console.log(res)
+                //console.log("*********** MEDIA **********")
                 const media = (res.data).map((item) => {
                     item.type = "media";
                     return item;
@@ -446,14 +446,14 @@ function MediaComponent(props) {
     const getMediaTags = () => {
         getMediaTag().then(
             (res) => {
-                // console.log("THis is all contacts res", res);
+                // //console.log("THis is all contacts res", res);
                 if (res.statusText === "OK") {
-                    console.log("These are all media tags", res.data);
+                    //console.log("These are all media tags", res.data);
                     setTaggedMedia(res.data);
                 }
             },
             (error) => {
-                console.log("this is error all media", error);
+                //console.log("this is error all media", error);
             }
         );
     };
@@ -1185,7 +1185,7 @@ function MediaComponent(props) {
 
 
         setMediaHistory(mediaHistory);
-        console.log('media history handleSelectedPlaceHolder = ',mediaHistory)
+        //console.log('media history handleSelectedPlaceHolder = ',mediaHistory)
 
     }
 
@@ -1259,7 +1259,7 @@ function MediaComponent(props) {
             }
         }
 
-        console.log('media history handleSelectedPlaceHolderListView = ',mediaHistory)
+        //console.log('media history handleSelectedPlaceHolderListView = ',mediaHistory)
 
     }
 
@@ -1277,7 +1277,7 @@ function MediaComponent(props) {
         //props.history.push("?id=" + listView.id + "&type=" + listView.type);
 
 
-        console.log('media history handleSetPlaceholderDetailsListView = ',mediaHistory)
+        //console.log('media history handleSetPlaceholderDetailsListView = ',mediaHistory)
 
     }
 
@@ -1302,7 +1302,7 @@ function MediaComponent(props) {
 
         setMediaHistory(mediaHistory);
 
-        console.log('media history handleSuggestionPlaceholder = ',mediaHistory)
+        //console.log('media history handleSuggestionPlaceholder = ',mediaHistory)
 
 
     }
@@ -1314,7 +1314,7 @@ function MediaComponent(props) {
         mediaHistory.push({...displayListContainer, selectedPlaceholder: m})
 
         setMediaHistory(mediaHistory);
-        console.log('media history handlePlaceholderClick = ',mediaHistory)
+        //console.log('media history handlePlaceholderClick = ',mediaHistory)
 
     }
 
@@ -1531,24 +1531,24 @@ function MediaComponent(props) {
                 setMedia(media);
 
             }
-            console.log("selectedMedia",selectedMedia)
+            //console.log("selectedMedia",selectedMedia)
           
             const filterTags=selectedMedia.tags.map(tags => tags.id)
             const addTags={id:selectedMedia.id,media:{tag:filterTags}};
             const addOwner={id:selectedMedia.id,media:{name:selectedMedia.name,team_contact_id:selectedMedia.contact.id,
                 media_placeholder_id:selectedMedia.media_placeholder_id,owner:selectedMedia.owner.id,archive:true}}
-            console.log("addTags",addTags)
-            console.log("addOwner",addOwner)
+            //console.log("addTags",addTags)
+            //console.log("addOwner",addOwner)
             try{
                const res= await postTag(addTags);
 
                
-               console.log("addtags",res)
+               //console.log("addtags",res)
              // const ress= await updateMedia(addOwner)
-            //    console.log("addOwner",ress)
+            //    //console.log("addOwner",ress)
             }
             catch(e){
-                console.log("erroraddtags",e)
+                //console.log("erroraddtags",e)
             }
         }
 
@@ -1619,7 +1619,7 @@ function MediaComponent(props) {
         }
     }
 
-    console.log("addmediaaa",props.addMedia)
+    //console.log("addmediaaa",props.addMedia)
     return (
         <div
             style={{
