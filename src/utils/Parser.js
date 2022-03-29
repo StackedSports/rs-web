@@ -90,6 +90,12 @@ export const deconstructDate = (date) => {
 
 export const getFullName = (contact) => `${contact.first_name} ${contact.last_name}`
 
+export const getMessageStatusLabel = (status) => {
+	if(status === 'Pending')
+		return 'Scheduled'
+	else
+		return status
+}
 export const getMessagePlatformLabel = (platform) => {
 	if(!platform)
 		return '--'

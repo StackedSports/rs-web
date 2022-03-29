@@ -10,7 +10,7 @@ import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
 
 import { useMessage } from 'Api/Hooks'
-import { sendMessage, filterContacts } from 'Api/Endpoints'
+import { sendMessage, filterContacts, deleteMessage, archiveMessage } from 'Api/Endpoints'
 
 import { messageRoutes } from 'Routes/Routes'
 
@@ -39,6 +39,8 @@ const MessageDetailsPage = (props) => {
     const [panelActions, setPanelActions] = useState([])
 
     const refreshOnce = useRef(false)
+
+    console.log(message.item)
     
     useEffect(() => {
         if(message.loading || !message.item)
@@ -67,25 +69,81 @@ const MessageDetailsPage = (props) => {
 
     const onActionClick = () => {}
 
-    const onEditClick = () => {
-        let data = {
-            criteria: {
-                tags: [
-                    'miami'
-                ]
-            }
-        }
+    const onEditMessageClick = () => {
+        console.log('edit message')
 
-        filterContacts(data)
+        setRedirect(`${messageRoutes.edit}/${message.item.id}`)
+
+        // let data = {
+        //     criteria: {
+        //         tags: [
+        //             'miami'
+        //         ]
+        //     }
+        // }
+
+        // filterContacts(data)
+        //     .then(res => {
+        //         console.log(res)
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
+    }
+
+    const onSaveMessageAndExitClick = () => {
+        console.log('save and exit')
+
+        setRedirect(`${messageRoutes.all}`)
+    }
+
+    const onDeleteMessageClick = () => {
+        console.log('delete message')
+
+        console.log(message.item.id)
+
+        // return
+
+        deleteMessage(message.item.id)
             .then(res => {
                 console.log(res)
+                // setRedirect(`${messageRoutes.all}`)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+    } 
+    
+    const onArchiveMessageClick = () => {
+        console.log('archive message')
+
+        
+        console.log(message.item.id)
+
+        // return
+
+        archiveMessage(message.item.id)
+            .then(res => {
+                console.log(res)
+                setRedirect(`${messageRoutes.all}`)
+                // TODO: add success alert
             })
             .catch(error => {
                 console.log(error)
             })
     }
 
-    const onSendClick = () => {
+    const onUnarchiveMessageClick = () => {
+        console.log('unarchive')
+    }
+    
+    const onTagMessageClick = () => {
+        console.log('tag message')
+
+    }
+
+    const onSendMessageClick = () => {
         console.log('send')
 
         sendMessage(message.item.id)
@@ -98,7 +156,7 @@ const MessageDetailsPage = (props) => {
             .finally(() => refreshMessage())
     }
 
-    const onScheduleClick = () => {
+    const onScheduleMessageClick = () => {
         console.log('schedule')
 
         
@@ -126,27 +184,50 @@ const MessageDetailsPage = (props) => {
     
     let actions = []
 
+    // We should move this to a useEffect so it doenst run on every re-render
     if(message.item) {
         let now = new Date(Date.now())
         let sendDate = new Date(message.item.send_at)
+
+        let options = []
+
+        const draftOptions = [
+            { name: 'Edit', onClick: onEditMessageClick },
+            { name: 'Save As Draft & Exit', onClick: onSaveMessageAndExitClick },
+            { name: 'Delete Message', color: 'red', onClick: onDeleteMessageClick } 
+        ]
+
+        const sentOptions = [
+            { name: 'Tag', onClick: onTagMessageClick },
+            { name: 'Archive', onClick: onArchiveMessageClick }
+        ]
+
+        const archivedOptions = [
+            { name: 'Tag', onClick: onTagMessageClick },
+            { name: 'Unarchive', onClick: onUnarchiveMessageClick }
+        ]
+        
+        // const options = message.item.status === 'Draft' ? draftOptions : sentOptions
+
+        switch(message.item.status) {
+            case 'Draft': options = draftOptions; break;
+            case 'Sent': options = sentOptions; break;
+            case 'Archived': options = archivedOptions; break;
+        }
     
         actions = [
-            { name: 'Refresh', type:'icon', icon: RefreshIcon, onClick: refreshMessage },
+            { name: 'Refresh', variant: 'text', icon: RefreshIcon, onClick: refreshMessage }, // type: icon
             { 
                 name: 'Action', type: 'dropdown', variant: 'outlined', icon: AutoFixHighIcon,
-                options: [
-                    { name: 'Edit', onClick: onEditClick },
-                    { name: 'Save As Draft & Exit', onClick: () => console.log('Option click') },
-                    { name: 'Delete Message', color: 'red', onClick: () => console.log('Option click') }
-                ]
+                options
             },
         ]
     
         if(message.item.status === 'Draft') {
             if(now.getTime() > sendDate.getTime()) {
-                actions.push({ name: 'Send', variant: 'contained', icon: SendIcon, onClick: onSendClick })
+                actions.push({ name: 'Send', variant: 'contained', icon: SendIcon, onClick: onSendMessageClick })
             } else {
-                actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: onScheduleClick })
+                actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: onScheduleMessageClick })
             }
         }
         

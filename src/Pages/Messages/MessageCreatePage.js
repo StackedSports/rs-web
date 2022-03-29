@@ -16,7 +16,7 @@ import useArray from 'Hooks/ArrayHooks'
 
 
 import { useUser, useTeamMembers, useTextPlaceholders, useSnippets } from 'Api/Hooks'
-import { getBoards, getBoard, filterContacts, createMessage } from 'Api/Endpoints'
+import { getBoards, getBoard, filterContacts, createMessage, updateMessage } from 'Api/Endpoints'
 import { updateContact } from 'ApiHelper'
 
 import { 
@@ -44,16 +44,26 @@ const filters = [
     }
 ]
 
-export default function MessageCreatePage() {
+export default function MessageCreatePage(props) {
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
     // const ranks = useRanks()
+
+    // TODO: user should be coming from user context, not from
+    // fetching the api
+    // const user = useUser()
+
     const [teamMembers] = useTeamMembers()
     // const tags = useTags()
     // const contact = useContact('mkjXBTMWnmPX')
 
     // Platform
-    const [platformSelected, setPlatformSelected] = useState(null)
+    const [platforms, setPlatforms] = useState({
+        // twitter: true,
+        // rs: true
+    })
+
+    const [platformSelected, setPlatformSelected] = useState(props.platformSelected || null)
 
     // Sender
     const [sendContacts, setSendContacts] = useState(null)
@@ -72,13 +82,13 @@ export default function MessageCreatePage() {
     const [showTimePicker, setShowTimePicker] = useState(false)
 
     // Media
-    const [showMediaDialog, setShowMediaDialog] = useState(false)
     const [mediaSelected, setMediaSelected] = useState(null)
     const [mediaRemoved, setMediaRemoved] = useState(null)
+    const [showMediaDialog, setShowMediaDialog] = useState(false)
 
     // TextArea
     // const textArea = useRef(null)
-    const [message, setMessage] = useState('')
+    const [textMessage, setTextMessage] = useState('')
     const snippets = useSnippets()
     const textPlaceholders = useTextPlaceholders()
 
@@ -90,16 +100,100 @@ export default function MessageCreatePage() {
 
     const [redirect, setRedirect] = useState('')
 
+    useEffect(() => {
+        if(props.platformSelected)
+            setPlatformSelected(props.platformSelected)
+
+    }, [props.platformSelected])
+
+    useEffect(() => {
+        if(props.senderSelected)
+            setSenderSelected.all(props.senderSelected)
+            
+    }, [props.senderSelected])
+
+    // Recipients from Props
+    useEffect(() => {
+        console.log(props.recipientSelected)
+
+        if(props.recipientSelected)
+            setRecipientSelected(props.recipientSelected)
+            
+    }, [props.recipientSelected])
+
+    useEffect(() => {
+        if(props.sendAt)
+            setSendAt(props.sendAt)
+            
+    }, [props.sendAt])
+
+    // Media from Props
+    useEffect(() => {
+        if(props.mediaSelected)
+            setMediaSelected(props.mediaSelected)
+            
+    }, [props.mediaSelected])
+
+    useEffect(() => {
+        if(props.textMessage)
+            setTextMessage(props.textMessage)
+            
+    }, [props.textMessage])
+
     // console.log(snippets)
     // console.log(textPlaceholders)
 
+    // useEffect(() => {
+    //     if(!user)
+    //         return
+
+    //     setPlatformsForUser()
+
+    // }, [user])
+
     useEffect(() => {
+        // console.log(teamMembers)
+
         if(!teamMembers)
             return
         
         setSendContacts(coachTypes.concat(teamMembers))
 
     }, [teamMembers])
+
+    const setPlatformsForUser = () => {
+        // if(!user)
+        //     return
+        console.log('set platforms for user')
+        
+        let platforms = {
+            twitter: true,
+            text: true
+        }
+        
+        // if(user) {
+        //     platforms['twitter'] = true
+        // }
+        // if(user) {
+        //     platforms['text'] = true
+        // }
+
+        setPlatforms(platforms)
+        
+    }
+
+    const setPlatformsForTeamMember = (teamMember) => {
+        let platforms = {}
+        
+        if(teamMember.twitter_profile && teamMember.twitter_profile.screen_name) {
+            platforms['twitter'] = true
+        }
+        if(teamMember.sms_number) {
+            platforms['rs'] = true
+        }
+
+        setPlatforms(platforms)
+    }
 
     // console.log(teamMembers)
 
@@ -122,7 +216,76 @@ export default function MessageCreatePage() {
         setPlatformSelected(null)
     }
 
+    const clearPlatforms = () => {
+        setPlatforms({})
+
+        if(platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
+            setPlatformSelected(null)
+
+        // platformSelected(null)
+    }
+
+    const validatePlatform = (sender) => {
+        // We need to validate available platforms for the message
+        // based on sender selection.
+
+        // If the user selects a team members as the sender, we need to
+        // check the team member properties to see if they have a twitter
+        // account to send Twitter Dms, and a phone number to send Personal
+        // Texts, and SMS phone for Rs Text.
+
+        // Further, depending on wether or not the sender selection
+        // already contains a Coach, we need to merge both possible platforms
+        // to accomodate for the coache's possible message types.
+
+        // If only selection is a coach type, we need to clear the available platforms
+        // and inform the user
+        if(senderSelected.length === 0 && typeof sender === 'string') {
+            clearPlatforms()
+
+            if(platformSelected) {
+                //setPlatformSelected(null)
+                //showErrorMessage('You must select a Platform')
+            }
+
+            return
+        }
+
+        // If selected is a team member, we need to validate the platforms based on
+        // its properties
+        if(typeof sender !== 'string') {
+            setPlatformsForTeamMember(sender)
+        }
+
+        if(senderSelected.length > 0) {
+            if(typeof senderSelected[0] === 'string') {
+                // Sender at position 0 is a Coach, so we need to merge platforms
+                // availble with coache's platforms.
+            }
+        }
+    }
+
     const onSenderSelected = (sender) => {
+
+        console.log(sender)
+
+        validatePlatform(sender)
+
+        // const getCoachIndex = () => {
+        //     let index = -1
+
+        //     senderSelected.every((selected, i) => {
+        //         if(isSelectedCoachType(selected)) {
+        //             index = i
+        //             return false
+        //         }
+
+        //         return true
+        //     })
+
+        //     return index
+        // }
+
         if(typeof sender == 'string') {
             // console.log('sender = ' + sender)
 
@@ -130,6 +293,7 @@ export default function MessageCreatePage() {
                 return setSenderSelected.push(sender)
             else {
                 let index = -1
+                // let index = getCoachIndex()
 
                 senderSelected.every((selected, i) => {
                     if(isSelectedCoachType(selected)) {
@@ -152,9 +316,10 @@ export default function MessageCreatePage() {
             // console.log('sender id = ' + sender.id)
 
             if(senderSelected.length == 0)
-                return setSenderSelected.push(sender)
+                setSenderSelected.push(sender)
             else {
                 let index = -1
+                // let index = getCoachIndex()
 
                 senderSelected.every((selected, i) => {
                     if(!isSelectedCoachType(selected)) {
@@ -173,10 +338,24 @@ export default function MessageCreatePage() {
                     setSenderSelected.put(sender, index)
                 
             }
+
+            // console.log(sender)
+
+            
         }
     }
 
     const onSenderRemove = (index) => {
+        console.log('Sender Remove')
+        console.log(senderSelected.length)
+
+        // If we are removing a team member from the selection, we need
+        // to reset the available platforms
+        if(typeof senderSelected[index] !== 'string') {
+            clearPlatforms()
+            // console.log(platformSelected)
+        }
+
         setSenderSelected.remove(index)
     }
 
@@ -242,15 +421,28 @@ export default function MessageCreatePage() {
     }
 
     const onTextAreaChange = (value) => {
-        setMessage(value)
+        setTextMessage(value)
     }
 
     const onSaveCloseClick = () => {
         console.log('save and close')
+
+        onCreateMessage('save')
     }
 
     const onPreviewSendClick = () => {
         console.log('preview and send')
+
+        onCreateMessage('preview')
+    }
+
+    const onCreateMessage = (control) => {
+        console.log('create message: ' + control)
+
+        if(control !== 'save' && control !== 'preview')
+            return
+
+        const save = control === 'save'
 
         // let send = new Date(Date.now() + 1000 * 60 * 60)
         // console.log(send)
@@ -259,8 +451,10 @@ export default function MessageCreatePage() {
         // console.log(senderSelected)
         // console.log(recipientSelected)
         // console.log(message)
-        // console.log(mediaSelected)
+        console.log(mediaSelected)
         // console.log(sendAt)
+
+        // return
 
         let messageData = {}
 
@@ -272,7 +466,7 @@ export default function MessageCreatePage() {
         }
 
         if(senderSelected && senderSelected.length > 0) {
-            // Sender is optional. If no sender is selected, message will be sent as current user.
+            // Sender is optional in the api. If no sender is selected, message will be sent as current user.
             // On the other hand, sender can be set to a coach type or team member id. Coach selected
             // will always be at senderSelected index 0. So we can test to see if the item at index
             // 0 is of type string. If so, we need to add send_as_coach to messageData, interpolating
@@ -280,6 +474,10 @@ export default function MessageCreatePage() {
             //
             // If senderSelected index 1 contains a team member obj, then we need to also add a
             // user_id field to messageData with the selected team member id.
+
+            if(senderSelected.length === 1 && typeof senderSelected[0] === 'string') {
+                return showErrorMessage('You must add a Sender in case the selected Coach is not available')
+            }
 
             if(typeof senderSelected[0] === 'string') {
                 // This selection is a type of coach. Add coach value to messageData
@@ -298,7 +496,8 @@ export default function MessageCreatePage() {
         } else {
             // We are requiring this field so it becomes more clear to the user who is being set
             // as the sender of the message
-            return showErrorMessage('You must add a Sender')
+            if(!save)
+                return showErrorMessage('You must add a Sender')
         }
 
         if(recipientSelected) {
@@ -339,12 +538,12 @@ export default function MessageCreatePage() {
         }
 
         // Message requires either a body or media attachment. They can't be both empty
-        if(message === '' && !mediaSelected)
+        if(textMessage === '' && !mediaSelected)
             return showErrorMessage('Message must either have a Text Message or a Media attachment')
         
-        if(message !== '') {
+        if(textMessage !== '') {
             // Adds message as body to messageData
-            messageData['body'] = message
+            messageData['body'] = textMessage
         }
 
         if(mediaSelected) {
@@ -358,22 +557,64 @@ export default function MessageCreatePage() {
         }
 
         console.log(messageData)
+
+        if(save && Object.keys(messageData).length === 0)
+            return showErrorMessage(`Can't save an empty message`)
         
         setLoading(true)
 
-        createMessage(messageData)
-            .then(result => {
-                console.log(result)
-                let message = result.data
-                setRedirect(`${messageRoutes.details}/${message.id}`)
+        // const endpoint = props.edit ? updateMessage : createMessage
 
-                // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
-            })
-            .catch(error => {
-                console.log(error)
-                showErrorMessage('Something went wrong. We could not create your message')
-            })
-            .finally(() => setLoading(false))
+        if(props.edit) {
+            console.log('Update Message')
+            // return
+            updateMessage(props.messageId, messageData)
+                .then(result => {
+                    console.log(result)
+                    let message = result.data
+                    
+                    if(save)
+                        setRedirect(`${messageRoutes.all}`)
+                    else
+                        setRedirect(`${messageRoutes.details}/${props.messageId}`)
+
+                    // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
+                })
+                .catch(error => {
+                    console.log(error)
+
+                    if(save)
+                        showErrorMessage('We could not update your message')
+                    else
+                        showErrorMessage('Something went wrong. We could not update your message')
+                })
+                .finally(() => setLoading(false))
+
+        } else {
+            console.log('Create Message')
+            return
+            createMessage(messageData)
+                .then(result => {
+                    console.log(result)
+                    let message = result.data
+                    
+                    if(save)
+                        setRedirect(`${messageRoutes.all}`)
+                    else
+                        setRedirect(`${messageRoutes.details}/${message.id}`)
+
+                    // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
+                })
+                .catch(error => {
+                    console.log(error)
+
+                    if(save)
+                        showErrorMessage('We could not save your message')
+                    else
+                        showErrorMessage('Something went wrong. We could not create your message')
+                })
+                .finally(() => setLoading(false))
+        }
     }
 
     const showErrorMessage = (message) => {
@@ -408,7 +649,7 @@ export default function MessageCreatePage() {
           filters={filters}
           actions={panelActions}
           redirect={redirect}
-          loading={loading}
+          loading={loading || props.loading}
           onFilterSelected={onFilterSelected}
         >
             <Snackbar
@@ -445,6 +686,7 @@ export default function MessageCreatePage() {
             <MessageInput
               type='platform'
               label='Send as:'
+              platforms={platforms}
               selected={platformSelected}
               onSelected={onPlatformSelected}
               onRemove={onPlatformRemove}
@@ -492,7 +734,7 @@ export default function MessageCreatePage() {
               placeholder='Type your message here'
               snippets={snippets}
               textPlaceholders={textPlaceholders}
-              value={message}
+              value={textMessage}
               onChange={onTextAreaChange}
               />
             

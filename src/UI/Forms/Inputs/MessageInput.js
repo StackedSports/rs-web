@@ -88,8 +88,36 @@ const InputSelected = (props) => {
     )
 }
 
+// const platforms = [
+//     { name: 'Twitter Dm', icon: FaTwitter },
+//     { name: 'Personal Text', icon: FaPhone },
+//     { name: 'Rs Text', icon: FaComment }
+// ]
+
 const InputPlatform = (props) => {
     let selectedPlatform = {}
+
+    const [availablePlatforms, setAvailablePlatforms] = useState([])
+
+    useEffect(() => {
+        let tmp = []
+
+        if(props.platforms) {
+            if(props.platforms.twitter) {
+                tmp.push(platforms[0])
+            }
+
+            tmp.push(platforms[1])
+            
+            if(props.platforms.rs) {
+                tmp.push(platforms[2])
+            }
+        }
+        
+        // tmp.push(platforms[2])
+
+        setAvailablePlatforms(tmp)
+    }, [props.platforms])
 
     if(props.selected) {
         selectedPlatform = platforms.find(plat => plat.name === props.selected)
@@ -103,7 +131,7 @@ const InputPlatform = (props) => {
 
     const content = () => (
         <Dropdown.List>
-            {platforms.map((platform, index) => (
+            {availablePlatforms.map((platform, index) => (
                 <SearchableOptionListItem
                   key={platform.name}
                   item={platform.name}
@@ -119,6 +147,7 @@ const InputPlatform = (props) => {
         <Dropdown
           header={header}
           content={content}
+          contentStyle={{ minHeight: 0, overflowY: 'auto' }}
           disabled={props.selected ? true : false}
         />
     )
@@ -383,9 +412,13 @@ const EmojiPicker = (props) => {
 }
 
 const InputText = (props) => {
+    const maxLength = 280
     const textArea = useRef()
 
     const onChange = (e) => {
+        if(e.target.value.length > maxLength)
+            return
+
         props.onChange(e.target.value)
     }
 
@@ -431,6 +464,14 @@ const InputText = (props) => {
               value={props.value}
               onChange={onChange}
             />
+            <span 
+              style={{ 
+                color: props.value.length >= maxLength ? 'red' : '#bbb',
+                fontSize: 14
+              }}
+            >
+                Message length {props.value.length}/{maxLength}
+            </span>
         </div>
     )
 }

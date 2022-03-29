@@ -39,6 +39,15 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    /* inline-size: 300px;
+    overflow-wrap: break-word; */
+}
+
+.MessagePreview-DetailsPanel .MessageDetailTextArea {
+    font-weight: bold;
+    overflow-wrap: break-word;
+    inline-size: 500px;
+    hyphens: auto;
 }
 
 .MessagePreview-DetailsPanel .MessageDetailValue.Draft {
@@ -47,6 +56,10 @@
 
 .MessagePreview-DetailsPanel .MessageDetailValue.InProgress {
     color: #3871DA
+}
+
+.MessagePreview-DetailsPanel .MessageDetailValue.Scheduled {
+    color: purple
 }
 
 .MessagePreview-DetailsPanel .MessageDetailValue.Sent {

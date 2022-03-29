@@ -262,5 +262,14 @@ export const sendMessage = (messageId) => {
     return updateMessage(messageId, { status: 'Pending' })
 }
 
+export const deleteMessage = (messageId) => {
+    return DELETE(`messages/${messageId}`)
+}
 
+export const archiveMessage = (messageId) => {
+    return DELETE(`messages/${messageId}?message[status]=archived`)
+
+    //return DELETE(`messages/${messageId}`, { message: { status: 'archived'} })
+    
+}
 

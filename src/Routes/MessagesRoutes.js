@@ -7,6 +7,7 @@ import { Route } from 'react-router-dom'
 
 import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 import MessageDetailsPage from 'Pages/Messages/MessageDetailsPage'
+import MessageEditPage from 'Pages/Messages/MessageEditPage'
 import MessagesPage from 'Pages/Messages/MessagesPage'
 
 import { messageRoutes } from './Routes'
@@ -22,6 +23,11 @@ const MessagesRoutes = (props) => (
           exact
           path={`${messageRoutes.details}/:id`}
           component={MessageDetailsPage}
+        />
+        <Route
+          exact
+          path={`${messageRoutes.edit}/:id`}
+          component={MessageEditPage}
         />
         <Route
           exact

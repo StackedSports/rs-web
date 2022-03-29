@@ -46,7 +46,7 @@ export const routes = {
 
 export const messageRoutes = {
     create: '/messages/create',
-    // draft: '/messages/draft',
+    edit: '/messages/edit',
     details: '/messages/details',
     all: '/messages'
 }
