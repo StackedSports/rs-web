@@ -17,8 +17,20 @@ import {
     getSnippets,
     getTextPlaceholders,
     getMessage,
-    getMessages
+    getMessages,
+    getAllColumns,
+    getAllContactsEnd,
+    getAllStatus,
+    getGradeYears,
+    getPositions,
+    getBoardFiltersById,
+    getTeamContacts,
+    getTagsWithContacts,
+    archiveContacts,
 } from 'Api/Endpoints'
+
+import {  
+    } from './Endpoints'
 
 import { usePagination } from './Pagination'
 
@@ -38,7 +50,6 @@ export const useUser = () => {
     return user
 }
 
-
 export const usePlatform = () => {
     const [platform, setPlatform] = useState(null)
 
@@ -47,7 +58,7 @@ export const usePlatform = () => {
             .then(([platforms]) => {
                 console.log('ApiHooks: getPlatform -----')
                 console.log(platforms)
-               setPlatform(platforms)
+                setPlatform(platforms)
             })
             .catch(error => console.log(error))
     }, [])
@@ -62,7 +73,7 @@ export const useTagsWithContacts = () => {
             .then(([tag]) => {
                 console.log('ApiHooks: getTagsWithContacts -----')
                 console.log(tag)
-               setTags(tag)
+                setTags(tag)
             })
             .catch(error => console.log(error))
     }, [])
@@ -88,20 +99,20 @@ export const useBoard = (id) => {
 
 export const addUser  = (body) => {
     const [user, setUser] = useState(null)
-    
- 
-      const createUser =()=>{
+
+
+    const createUser = () => {
         CreateUser(body)
             .then((res) => {
-           // const response = await CreateUser(body);
-            //const json = await response.json()
-            console.log('ApiHooks: CreateUser -----',res)
-         //   setUser(res.data)
+                // const response = await CreateUser(body);
+                //const json = await response.json()
+                console.log('ApiHooks: CreateUser -----', res)
+                //   setUser(res.data)
             })
-           .catch (e => console.log('ApiHooks: CreateUser ----- error', e))           
-        }
-     return user
- }
+            .catch(e => console.log('ApiHooks: CreateUser ----- error', e))
+    }
+    return user
+}
 export const useTags = () => {
     const [tags, setTags] = useState(null)
 
@@ -121,7 +132,7 @@ export const useTags = () => {
 }
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
-    
+
     useEffect(() => {
         getContact(id)
             .then(([contact]) => {
@@ -136,8 +147,6 @@ export const useContact = (id) => {
 
     return contact
 }
-
-
 
 export const useContacts = (initialConfig) => {
     const [loading, setLoading] = useState(true)
@@ -192,9 +201,28 @@ export const useContacts = (initialConfig) => {
     return [contacts, {...pagination, getPage}, loading]
 }
 
+// TODO: this should not be a hook
+export const usearchiveContacts = (id) => {
+    const [archivecontact, setarchiveContact] = useState(null)
+
+
+    archiveContacts(id)
+        .then(([archivecontact]) => {
+            console.log('ApiHooks: archivecontact -----')
+            console.log(archivecontact)
+            setarchiveContact(archivecontact)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+
+
+    return archivecontact
+}
+
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState(null)
-    
+
     useEffect(() => {
         getTeamMembers()
             .then(([members, pagination]) => {
@@ -222,8 +250,11 @@ export const useRanks = () => {
         getRanks()
             .then(([ranks]) => {
                 //console.log('ApiHooks: getRanks -----')
+                if (ranks) {
+
+                    setRanks(ranks)
+                }
                 //console.log(ranks)
-                setRanks(ranks)
             })
             .catch(error => {
                 console.log(error)
@@ -231,6 +262,72 @@ export const useRanks = () => {
     }, [])
 
     return ranks
+}
+
+// TODO: what is this?
+export const useAllColumns = () => {
+    const [Columns, setColumns] = useState(null)
+
+    useEffect(() => {
+        getAllColumns()
+            .then(([Columns]) => {
+                //console.log('ApiHooks: getColumns -----')
+                if (Columns) {
+
+                    setColumns(Columns)
+                }
+                //console.log(Columns)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return Columns
+}
+
+// TODO: what is this?
+export const useTagWithContact = () => {
+    const [Contacts, setContacts] = useState(null)
+
+    useEffect(() => {
+        getTagsWithContacts()
+            .then(([Contacts]) => {
+                //console.log('ApiHooks: getContacts -----')
+
+
+                setContacts(Contacts)
+
+                //console.log(Contacts)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return Contacts
+}
+
+// TODO: is this getting contacts?
+export const useTeamContact = () => {
+    const [Contacts, setContacts] = useState(null)
+
+    useEffect(() => {
+        getTeamContacts()
+            .then(([Contacts]) => {
+                //console.log('ApiHooks: getContacts -----')
+                if (Contacts) {
+
+                    setContacts(Contacts)
+                }
+                //console.log(Contacts)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return Contacts
 }
 
 export const useBoards = () => {
@@ -251,6 +348,64 @@ export const useBoards = () => {
     return boards
 }
 
+// Get filters by id
+// TODO: is this useBoard?
+export const useBoardById = (id) => {
+    const [board, setBoard] = useState(null)
+
+    useEffect(() => {
+        getBoardFiltersById(id)
+            .then(([board]) => {
+                //console.log('ApiHooks: getboard -----')
+                //console.log(board)
+                setBoard(board)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [id])
+
+    return board
+}
+
+// TODO:
+export const useStatus = () => {
+    const [status, setstatus] = useState(null)
+
+    useEffect(() => {
+        getAllStatus()
+            .then(([status]) => {
+                //console.log('ApiHooks: getstatus -----')
+                //console.log(status)
+                setstatus(status)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return status
+}
+
+// TODO:
+export const useGradeYears = () => {
+    const [GradeYears, setGradeYears] = useState(null)
+
+    useEffect(() => {
+        getGradeYears()
+            .then(([GradeYears]) => {
+                //console.log('ApiHooks: getGradeYears -----')
+                //console.log(GradeYears)
+                setGradeYears(GradeYears)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return GradeYears
+}
+
 export const useTextPlaceholders = () => {
     const [placeholders, setPlaceholders] = useState(null)
 
@@ -267,6 +422,25 @@ export const useTextPlaceholders = () => {
     }, [])
 
     return placeholders
+}
+
+// TODO:
+export const usePositions = () => {
+    const [Positions, setPositions] = useState(null)
+
+    useEffect(() => {
+        getPositions()
+            .then(([Positions]) => {
+                //console.log('ApiHooks: getPositions -----')
+                //console.log(Positions)
+                setPositions(Positions)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return Positions
 }
 
 export const useSnippets = () => {
@@ -426,6 +600,55 @@ export const useCoaches = () => {
     // return ranks
 }
 
+
+
+
+// TODO:
+
+///////////////////////*********************/////////////////
+//                          Contact Page 
+///////////////////////*********************/////////////////
+export const useMyContacts = (page) => {
+
+
+    const [contacts, setContacts] = useState(null)
+
+    useEffect(() => {
+        getAllContactsEnd(page)
+            .then(([contacts]) => {
+
+                var temp = Object.assign([], contacts);
+                temp = temp.concat(contacts);
+
+                console.log("*********** CONTACTS **********")
+                console.log(res)
+                console.log("*********** CONTACTS **********")
+
+
+
+
+                setContacts(temp);
+                setuseLessState(uselessState + 1);
+                console.log("These are all new contacts", contacts);
+                setFetching(false);
+
+                //console.log('ApiHooks: getContact -----')
+                //console.log(contact)
+                // setContact(contact)
+            })
+            .catch(error => {
+                console.log(error)
+
+
+
+
+            })
+    }, [])
+
+    return contacts
+}
+
+
 // export const usePeople = () => {
 //     const [ranks, setRanks] = useState(null)
 
@@ -472,9 +695,9 @@ export const useCoaches = () => {
 
 
 // curl -X PUT "https://api.recruitsuite.co/api/contacts/APKlNTjoAegv"
-// -H "Content-Type:application/json" 
-// -H "Accept:application/json; version=1" 
-// -H "Authorization:RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452" 
-// -H "X-Auth-Token:eyJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwiZW1haWwiOiJub24uYWRtaW5Ac3RhY2tlZHNwb3J0cy5jb20iLCJleHAiOjE2NDc5NTU1MjN9.1PFhMdX2qz2-T5d88sP2q069oTG7ktdl-db7ZJZE8pI" 
+// -H "Content-Type:application/json"
+// -H "Accept:application/json; version=1"
+// -H "Authorization:RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452"
+// -H "X-Auth-Token:eyJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwiZW1haWwiOiJub24uYWRtaW5Ac3RhY2tlZHNwb3J0cy5jb20iLCJleHAiOjE2NDc5NTU1MjN9.1PFhMdX2qz2-T5d88sP2q069oTG7ktdl-db7ZJZE8pI"
 // -H "Cookie:ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6"
 // --data '{"contact":{"graduation_year":2022}}'

@@ -71,6 +71,24 @@ export const loginUser = (email, password) => {
         data: data,
     });
 };
+export const filterContacts = (body) => {
+    // var data = JSON.stringify(body);
+
+    return axios({
+        method: "post",
+        url: URL + "contacts/filter",
+        headers: {
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            Accept: "application/json; version=1",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+        data: body,
+    });
+};
 
 export const getUserAccountInformation = () => {
     console.log(JSON.parse(localStorage.getItem("user")));
@@ -190,20 +208,20 @@ export const getThisQuarterStats = () => {
 export const getLastQuarterStats = () => {
     var quarterAdjustment = (moment().month() % 3) + 1;
     var lastQuarterEndDate = moment()
-        .subtract({months: quarterAdjustment})
+        .subtract({ months: quarterAdjustment })
         .endOf("month");
     var lastQuarterStartDate = lastQuarterEndDate
         .clone()
-        .subtract({months: 3})
+        .subtract({ months: 3 })
         .startOf("month");
 
     var start = lastQuarterEndDate
         .clone()
-        .subtract({months: 3})
+        .subtract({ months: 3 })
         .startOf("month")
         .format("YYYY-MM-DD");
     var end = moment()
-        .subtract({months: quarterAdjustment})
+        .subtract({ months: quarterAdjustment })
         .endOf("month")
         .format("YYYY-MM-DD");
     // console.log("This is start", start);
@@ -249,13 +267,13 @@ export const getLastYearStats = () => {
     var start = new moment()
         .startOf("year")
         .clone()
-        .subtract({years: 1})
+        .subtract({ years: 1 })
         .startOf("year")
         .format("YYYY-MM-DD");
     var end = new moment()
         .endOf("year")
         .clone()
-        .subtract({years: 1})
+        .subtract({ years: 1 })
         .endOf("year")
         .format("YYYY-MM-DD");
     console.log("This is start", start);
@@ -280,13 +298,13 @@ export const getLastMonthStats = () => {
     var start = new moment()
         .startOf("month")
         .clone()
-        .subtract({months: 1})
+        .subtract({ months: 1 })
         .startOf("month")
         .format("YYYY-MM-DD");
     var end = new moment()
         .endOf("month")
         .clone()
-        .subtract({months: 1})
+        .subtract({ months: 1 })
         .endOf("month")
         .format("YYYY-MM-DD");
     // console.log("This is start of last month", start);
@@ -311,7 +329,7 @@ export const getLastMonthStats = () => {
 };
 
 export const getLast30Stats = () => {
-    var start = new moment().clone().subtract({days: 30}).format("YYYY-MM-DD");
+    var start = new moment().clone().subtract({ days: 30 }).format("YYYY-MM-DD");
     var end = new moment().format("YYYY-MM-DD");
     // console.log("This is start", start);
     // console.log("This is end", end);
@@ -350,16 +368,16 @@ export const uploadMedia = (media) => {
         myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
 
         console.log("upload file name = " + media.file.name + "*")
-        
+
         let formdata = new FormData();
         formdata.append("files[]", media.file, media.file.name);
         formdata.append("name", media.file.name);
 
-        if(media.contact)
+        if (media.contact)
             formdata.append("team_contact_id", media.contact)
-        if(media.placeholder)
+        if (media.placeholder)
             formdata.append("media_placeholder_id", media.placeholder);
-        if(media.owner)
+        if (media.owner)
             formdata.append("owner", media.owner);
 
         let requestOptions = {
@@ -390,7 +408,7 @@ export const addTagToMedia = (mediaId, tag) => {
             redirect: 'follow'
         };
 
-        fetch(URL + "media/" + mediaId +"/add_tag", requestOptions)
+        fetch(URL + "media/" + mediaId + "/add_tag", requestOptions)
             //.then(response => response.json())
             .then(result => resolve(result))
             .catch(error => reject(error));
@@ -427,23 +445,23 @@ export const getAllContacts2 = (page) => {
             }
         )
     })
-    
+
 };
 
 export const addTag = () => {
     // return axios({
-        //     method: "post",
-        //     url: URL + "users",
-        //     headers: {
-        //         Accept: "application/json; version=1",
-        //         "Content-Type": "application/json",
-        //         Authorization:
-        //             "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-        //         Cookie:
-        //             "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
-        //     },
-        //     data: data,
-        // });
+    //     method: "post",
+    //     url: URL + "users",
+    //     headers: {
+    //         Accept: "application/json; version=1",
+    //         "Content-Type": "application/json",
+    //         Authorization:
+    //             "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+    //         Cookie:
+    //             "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+    //     },
+    //     data: data,
+    // });
     return new Promise((resolve, reject) => {
         let data = {
             name: "Test Tag"
@@ -533,19 +551,19 @@ export const getAssociatedContactByFileName = (fileName) => {
 
         getSearchedContacts(nameParts[0])
             .then((res) => {
-                if(res.statusText === "OK") {
-                    if(res.data.length == 1)
+                if (res.statusText === "OK") {
+                    if (res.data.length == 1)
                         resolve(res.data[0])
-                    else if(res.data.length > 1) {
+                    else if (res.data.length > 1) {
                         let filteredData = []
                         reject("found multiple contacts")
 
                         res.data.forEach(contact => {
-                            if(contact.first_name + " " + contact.last_name === nameParts[0])
+                            if (contact.first_name + " " + contact.last_name === nameParts[0])
                                 filteredData.push(contact)
                         })
 
-                        if(filteredData.length == 1)
+                        if (filteredData.length == 1)
                             resolve(filteredData[0])
                         else
                             reject("found multiple contacts")
@@ -598,24 +616,24 @@ export const getSearchedContacts = (search) => { // search=tagsclients
     });
 };
 export const getAllContactsWithSearch = (page) => {
-  // console.log("This is start", start);
-  // console.log("This is end", end);
-  // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
+    // console.log("This is start", start);
+    // console.log("This is end", end);
+    // console.log("This is ", URL + `stats?start_date=${start}&end_date=${end}`);
 
-  return axios({
-    method: "get",
-    url:
-      URL + `contacts?&sort_column=first_name`,
-    headers: {
-      Accept: "application/json; version=1",
-      "Content-Type": "application/json",
-      Authorization:
-        "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-      "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
-      Cookie:
-        "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
-    },
-  });
+    return axios({
+        method: "get",
+        url:
+            URL + `contacts?&sort_column=first_name`,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+    });
 };
 
 export const getTeamContacts = () => {
@@ -779,7 +797,46 @@ export const getPositions = () => {
         },
     });
 };
+export const addTagstoContacts = (contactid, body) => {
+    // const data = JSON.stringify(body);
+    console.log(body, 'tags body indide api helper file', body)
+    return axios({
+        method: "post",
+        url: URL + `contacts/${contactid}/add_tags`,
+        data: body,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
 
+    });
+};
+export const removeTagsFromContacts = (contactid, body) => {
+    // const data = JSON.stringify(body);
+    console.log(body, 'tags body indide api helper file', body)
+    return axios({
+        method: "delete",
+        url: URL + `contacts/${contactid}/remove_tags`,
+        data: body,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+
+    });
+};
+
+// /contacts/:id/remove_tags
 export const getBoardFilters = () => {
     return axios({
         method: "get",
@@ -811,7 +868,21 @@ export const getBoardFiltersById = (id) => {
         },
     });
 };
-
+export const archiveContactEnd = (id) => {
+    return axios({
+        method: "delete",
+        url: URL + `contacts/${id}`,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+    });
+};
 
 
 export const getMedia = () => {
@@ -881,7 +952,7 @@ export const getMediaUsers = () => {
 export const updateMedia = (body) => {
 
     const data = JSON.stringify(body);
-    console.log("mediaURL",URL + `media/${body.id}`)
+    console.log("mediaURL", URL + `media/${body.id}`)
     return axios({
         method: "put",
         url: URL + `media/${body.id}`,
@@ -891,7 +962,7 @@ export const updateMedia = (body) => {
             "Content-Type": "application/json",
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
@@ -911,7 +982,7 @@ export const createMessage = (body) => {
             "Content-Type": "application/json",
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
@@ -936,9 +1007,9 @@ export const getContactMessages = (contactId) => {
 };
 
 export const getMessages = () => {
-   
+
     return axios({
-       
+
         method: "get",
         url: URL + `messages?include_all=true`,
         headers: {
@@ -946,7 +1017,7 @@ export const getMessages = () => {
             "Content-Type": "application/json",
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be0280ec4-d74-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
@@ -1018,7 +1089,7 @@ export const postTag = (body) => {
 
     const data = JSON.stringify(body);
 
-console.log("URL", URL + `media/${body.id}`)
+    console.log("URL", URL + `media/${body.id}`)
     return axios({
         method: "post",
         url: URL + "media/" + body.id + "/add_tags",
@@ -1027,8 +1098,8 @@ console.log("URL", URL + `media/${body.id}`)
             "Content-Type": "application/json",
             Authorization:
                 "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
-            },
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+        },
         data: data,
     });
 };

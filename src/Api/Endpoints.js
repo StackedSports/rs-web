@@ -56,10 +56,6 @@ const AXIOS = (method, url, body) => {
     })
 }
 
-export const getPlatform = () => {
-    return AXIOS('get', `team/platforms`)
-}
-
 const DELETE = (url) => {
     return new Promise((resolve, reject) => {
 
@@ -143,6 +139,10 @@ const PUT = (url, body) => {
     })
 }
 
+export const getPlatform = () => {
+    return AXIOS('get', `team/platforms`)
+}
+
 export const getContact = (id) => {
     return AXIOS('get', `contacts/${id}`)
 }
@@ -185,6 +185,10 @@ export const archiveContacts = (ids) => {
     })
 }
 
+export const getAllStatus = () => {
+    return AXIOS('get', `team/statuses`)
+}
+
 export const getContacts = (page, perPage) => {
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}`)
 }
@@ -205,9 +209,31 @@ export const getTagsWithMessages = () => {
 export const getRanks = () => {
     return AXIOS('get', `team/ranks`)
 }
+export const getGradeYears = () => {
+    return AXIOS('get', `team/grad_years`)
+}
+
+
 export const getBoards = () => {
     return AXIOS('get', `filters`)
 }
+export const getPositions = () => {
+    return AXIOS('get', `team/positions`)
+}
+export const getAllColumns = () => {
+    return AXIOS('get', `team/available_columns`)
+}
+export const getBoardFiltersById = (id) => {
+    return AXIOS('get', `filters/${id}`)
+}
+export const getTeamContacts = () => {
+    return AXIOS('get', `team/members?only_active=true`)
+}
+export const getTagsWithContacts = () => {
+    return AXIOS('get', `tags/with_contacts`)
+}
+
+
 export const getBoard = (id) => {
     return AXIOS('get', `filters/${id}`)
 }
@@ -280,4 +306,16 @@ export const CreateUser = (body) =>{
     //const data = JSON.stringify(body);
     return AXIOS('post' , `messages`,body)
 }
+
+export const getAllContactsEnd = (page) => {
+    var page = page || 1;
+    var pageCount = page || 1;
+    // console.log("THis is page count", pageCount, "this is page", page);
+    var perPage = 50;
+    // console.log("This is perpage", perPage);
+    return AXIOS('get', `contacts?page=${page}&per_page=${perPage}&sort_column=first_name`)
+    // contacts?page=${page}&per_page=${perPage}&sort_column=first_name
+}
+
+
 

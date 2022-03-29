@@ -15,11 +15,7 @@ import DrawerAnimation from '../../images/drawer_animation.gif';
 import BackAnimation from '../../images/back_animation.gif';
 import BackIcon from '../../images/back.png';
 import DrawerIcon from '../../images/drawer_contact.png';
-
-
 import { NavLink, Redirect } from "react-router-dom";
-
-import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
 import SendIcon from "@material-ui/icons/Send";
 import RowingIcon from "@material-ui/icons/Rowing";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
@@ -45,20 +41,16 @@ import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import {
+  addTagstoContacts,
+  archiveContactEnd,
+  filterContacts,
   getAllContacts,
-  getTags,
-  getRanks,
-  getStatuses,
-  getGradeYears,
-  getBoardFilters,
-  getPositions,
-  getAllColumns,
-  getAllContactsWithSearch,
   getBoardFiltersById,
-  getTeamContacts,
-  getTagsWithContacts,
+  getContact,
+  removeTagsFromContacts,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
+import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags } from "../../Api/Hooks";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -131,34 +123,27 @@ const useStyles = makeStyles({
 
 function Home(props) {
   const classes = useStyles();
-  // console.log("This is logged in user", localStorage.getItem("user"));
   const [filter, setFilter] = useState([]);
   const [filterType, setFilterType] = useState([]);
   const [selectedCheckBoxes, setSelectedCheckboxes] = useState([]);
+  const [selectedCheckBoxesForTags, setselectedCheckBoxesForTags] = useState([]);
+  const [alertValue, setalertValue] = useState('');
   const [uselessState, setuseLessState] = useState(0);
   const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [showSideFilters, setshowSideFilters] = useState(true);
   const [showTagsDialog, setShowTagsDialog] = useState(false);
+  const [showRemoveTagsDialog, setshowRemoveTagsDialog] = useState(false);
   const [fetching, setFetching] = useState(false);
-  // const [tagSearch, setTagSearch] = useState("");
   const [boardsById, setBordsById] = useState();
-
-
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [showSideSubFilters, setshowSubSideFilters] = useState(false);
   const [filterBar, setFilterBar] = useState("This Month");
   const [stateSearch, setStateSearch] = useState("");
   const [tagSearch, setTagSearch] = useState("");
   const [isBoardContact, setIsBoardContact] = useState(false);
-
-
-
-
+  const [contacttags, setcontacttags] = useState(false);
   const [statusFilter, setStatusFilter] = useState(null);
-  // const [statusFilter, setStatusFilter] = useState(null);
-
-
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
@@ -166,32 +151,19 @@ function Home(props) {
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
   const [boardFilter, setBoardFilter] = useState(null);
-
   const [tagFilter, setTagFilter] = useState(null);
+  const [dobFilter, setDobFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
   const [contacts, setContacts] = useState(null);
-  // const [contacts, setBordsById] = useState(null);
-
   const [allcontacts, setAllContacts] = useState(null);
-
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
-  const [allStatuses, setAllStatuses] = useState(null);
-  const [allGradYears, setAllGraderYears] = useState(null);
-  const [allTags, setAllTags] = useState(null);
-  const [allRanks, setAllRanks] = useState(null);
-  const [allBoards, setAllBoards] = useState(null);
-  const [allTeamContacts, setTeamContacts] = useState(null);
-
   const [handlescroll, sethandlescroll] = useState(true)
-  const [positions, setAllPositions] = useState(null);
   const [page, setPage] = useState(1);
   const [showDrawer, setShowDrawer] = useState(true);
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
-
   // Pagination
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -199,10 +171,8 @@ function Home(props) {
     totalPages: 0,
     currentPage: 0
   })
-
-  // Redirect
-  const [redirect, setRedirect] = useState("")
-
+  const mycode = useMyContacts(page)
+  console.log(mycode, 'mycode')
   const totalContacts = 0
   const columnNames = [
     {
@@ -234,6 +204,8 @@ function Home(props) {
       icon: <FaLocationArrow className={classes.icons}></FaLocationArrow>,
     },
     { name: "Grad Year" },
+
+
     { name: "Position" },
     { name: "Area Coach" },
     { name: "Recruiting Coach" },
@@ -278,11 +250,9 @@ function Home(props) {
     { name: "Game Results", sub: true },
     { name: "Game Notes", sub: true },
   ];
-
   const handleClick = () => {
     setOpenSnackBar(true);
   };
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -306,31 +276,108 @@ function Home(props) {
 
     return null;
   };
-  const getMyContactsSearch = (page) => {
-    // setLoading(true);
-    setFetching(true);
-    console.log("This is the date", page);
-    // || "2020-12-13"
-    getAllContactsWithSearch(page).then(
-      (res) => {
-        // console.log("THis is all contacts res", res);
-        if (res.statusText === "OK") {
-          console.log("These are all contacts", res.data);
-          setAllContacts(res.data);
-          // setAllBoards(res.data);
-          // setCopyContacts(res.data);
-          // document.getElementById("infinit").scrollTop = 0;
-          setFetching(false);
-        }
-      },
-      (error) => {
-        getMyContactsSearch(1);
-        setPage(1);
-        console.log("this is error all contacts", error);
+
+  const TagstoContacts = async () => {
+    setalertValue('tagged')
+
+    // var tagsid={
+    //   tag_ids:selectedCheckBoxesForTags
+    // }
+    var tagsid = {
+      "contact": {
+        tag_ids: selectedCheckBoxesForTags
       }
-    );
-    // setLoading(false)
-  };
+    }
+    try {
+
+      let res = await selectedCheckBoxes.map((id) => { addTagstoContacts(id, tagsid) });
+      console.log(selectedCheckBoxesForTags, 'id,selectedCheckBoxesForTags')
+      console.log("addtags", res)
+
+      setOpenSnackBar(true);
+
+
+      // const ress= await updateMedia(addOwner)
+      //    console.log("addOwner",ress)
+    }
+    catch (e) {
+      console.log("erroraddtags", e)
+      setOpenSnackBar(true);
+
+    }
+
+    //setShowBackButton(false);
+    //handleSelectedPlaceHolder(null, false, false, true);
+    //setShowMediaStats(false);
+    //props.history.push('/media');
+    //notify("Media saved successfully")
+    setOpenSnackBar(true);
+
+  }
+  const getContactsByid = async () => {
+    setFetching(true)
+    selectedCheckBoxes.map((id) => {
+      getContact(id).then((res) => {
+
+        setcontacttags(res.tags)
+
+        console.log(res, 'response with contacts by id')
+
+
+        setFetching(false)
+
+
+
+      }, (error) => {
+        console.log("this is error get contact by id", error);
+      })
+    });
+  }
+  const removeTags = async () => {
+    setalertValue('un tagged')
+
+    // var tagsid={
+    //   tag_ids:selectedCheckBoxesForTags
+    // }
+    var tagsid = {
+      "contact": {
+        tag_ids: selectedCheckBoxesForTags
+      }
+    }
+    try {
+
+      let res = await selectedCheckBoxes.map((id) => { removeTagsFromContacts(id, tagsid) });
+      console.log(selectedCheckBoxesForTags, 'id,selectedCheckBoxesForTags')
+      console.log("addtags", res)
+
+      setOpenSnackBar(true);
+
+
+      // const ress= await updateMedia(addOwner)
+      //    console.log("addOwner",ress)
+    }
+    catch (e) {
+      console.log("erroraddtags", e)
+      setOpenSnackBar(true);
+
+    }
+
+    //setShowBackButton(false);
+    //handleSelectedPlaceHolder(null, false, false, true);
+    //setShowMediaStats(false);
+    //props.history.push('/media');
+    //notify("Media saved successfully")
+    setOpenSnackBar(true);
+    // var tagsid={
+    //   tag_ids:selectedCheckBoxesForTags
+    // }
+
+
+
+  }
+
+  const alltags = useTags()
+
   const getMyContacts = (page) => {
     // setLoading(true);
     setFetching(true);
@@ -394,230 +441,138 @@ function Home(props) {
     );
   };
 
-  const getAllGradeYears = () => {
-    getGradeYears().then(
-      (res) => {
-        console.log("THis is all grade Years", res);
-        var gradYears = [];
-        if (res.statusText === "OK") {
-          // console.log("These are all contacts", res.data);
-          res.data.map((item) => {
-            gradYears.push({
-              value: item,
-              label: item,
-            });
-          });
-          setAllGraderYears(gradYears);
-        }
-      },
-      (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
-  const getAllBoards = () => {
-    getBoardFilters().then(
-      (res) => {
-        console.log("THis is all boards", res);
-        var gradYears = [];
-        if (res.statusText === "OK") {
-          console.log("These are all boards", res.data);
-          setAllBoards(res.data);
-        }
-      },
-      (error) => {
-        console.log("this is error all grad year", error);
-      }
-    );
-  };
-  const getAllTeamContacts = () => {
-    getTeamContacts().then(
-      (res) => {
-        // console.log("THis is all statuses", res);
-        var COACH = [];
-        if (res.statusText === "OK") {
-          console.log("These are all COACH", res.data);
-          res.data.map((item) => {
+  const AddFilterContacts = async (obj) => {
 
-            COACH.push({
-              value: `${item.first_name} ${item.last_name}`,
-              label: `${item.first_name} ${item.last_name}`,
-            });
-          });
-          setTeamContacts(COACH);
-        }
-      },
-      (error) => {
-        console.log("this is error all statuses", error);
-      }
-    );
-  };
-  const getAllTags = () => {
-    getTagsWithContacts().then(
-      (res) => {
-        // console.log("THis is all tags", res);
-        var TAGS = [];
-        if (res.statusText === "OK") {
-          console.log("These are allcontacts tags", res.data);
-          res?.data?.map((item) => {
-            TAGS.push({
-              value: item.name,
-              label: item.name,
-            });
-          });
-          setAllTags(TAGS);
-        }
-      },
-      (error) => {
-        console.log("this is error all tags", error);
-      }
-    );
-  };
-  const getAllStatuses = () => {
-    getStatuses().then(
-      (res) => {
-        // console.log("THis is all statuses", res);
-        var STATUSES = [];
-        if (res.statusText === "OK") {
-          console.log("These are all statuses", res.data);
-          res.data.map((item) => {
 
-            STATUSES.push({
-              value: item.status,
-              label: item.status,
-            });
-          });
-          setAllStatuses(STATUSES);
-        }
-      },
-      (error) => {
-        console.log("this is error all statuses", error);
-      }
-    );
-  };
-  const getAllPositions = () => {
-    getPositions().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-        var POSITIONS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all positions", res.data);
-          res.data.map((item) => {
-            console.log("These are all item inside map", item.name);
 
-            POSITIONS.push({
-              value: item,
-              label: item.name,
-            });
-          });
-          setAllPositions(POSITIONS);
-        }
-      },
-      (error) => {
-        console.log("this is error all poistion", error);
-      }
-    );
-  };
+    try {
+      let res = await filterContacts(obj);
+      console.log(res, "res filter contacts")
+      setContacts(res.data)
+    }
+    catch (e) {
+      console.log("res filter contact", e)
+      setOpenSnackBar(true);
+    }
+
+  }
+  var TeamContacts = useTeamContact()
+  var COACH = []
+  TeamContacts?.map((item) => {
+
+    COACH.push({
+      value: `${item.first_name} ${item.last_name}`,
+      label: `${item.first_name} ${item.last_name}`,
+    });
+  });
+  var allTeamContacts = COACH;
+  var gettags = useTagWithContact()
+  var TAGS = [];
+  console.log("These are allcontacts tags", gettags);
+  gettags?.map((item) => {
+    TAGS.push({
+      value: item.name,
+      label: item.name,
+      id: item.id
+    });
+  });
+  var allTags = TAGS
+  var Columns = useAllColumns()
   const getColumns = () => {
-    getAllColumns().then(
-      (res) => {
-        // console.log("THis is all ranks", res);
-        var POSITIONS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all cols", res.data);
-          // res.data.map((item) => {
-          //   POSITIONS.push({
-          //     value: item.name,
-          //     label: item.name,
-          //   });
-          // });
-          setAllColumns(res.data);
-          setShowFilterButton(true)
-        }
-      },
-      (error) => {
-        console.log("this is error all poistion", error);
-      }
-    );
+    setShowFilterButton(true)
+    setAllColumns(Columns)
   };
-  const getAllRanks = () => {
-    getRanks().then(
-      (res) => {
-        console.log("THis is all ranks", res);
-        var RANKS = [];
-        if (res.statusText === "OK") {
-          console.log("These are all ranks", res.data);
-          res.data.map((item) => {
-            RANKS.push({
-              value: item.rank,
-              label: item.rank,
-            });
-          });
-          setAllRanks(RANKS);
-        }
-      },
-      (error) => {
-        console.log("this is error all ranks", error);
-      }
-    );
-  };
-  const getBoardsFilterById = (id) => {
-    // setLoading(true);
+  const allpositions = usePositions()
+  console.log('positions', allpositions)
+  var POSITIONS = [];
+  allpositions?.map((item) => {
+    POSITIONS.push({
+      value: item,
+      label: item.name,
+    });
+  });
+  console.log(POSITIONS, "POSITIONS")
+  var positions = POSITIONS
+  const ranks = useRanks()
+  console.log('Ranks', ranks)
+  var RANKS = [];
+  ranks?.map((item) => {
+    RANKS.push({
+      value: item.rank,
+      label: item.rank,
+    });
+  });
+  console.log(RANKS, "RANKS")
+  var allRanks = RANKS
+  const status = useStatus()
+  console.log('Status', status)
+  var STATUS = [];
+  status?.map((item) => {
+    STATUS.push({
+      value: item.status,
+      label: item.status,
+    });
+  });
+  console.log(STATUS, "STATUS")
+  var allStatuses = STATUS
+  const GradeYears = useGradeYears()
+  console.log('GradeYears', GradeYears)
+  var GRADYEAR = [];
+  GradeYears?.map((item) => {
+    GRADYEAR.push({
+      value: item,
+      label: item,
+    });
+  });
+  console.log(GRADYEAR, "GRADYEAR")
+  var allGradYears = GRADYEAR
+  var allBoards = useBoards()
+  console.log('allBoards', allBoards)
+  const ArchiveContact = () => {
+    setalertValue('Archived')
     setFetching(true);
-    // sethandlescroll(false)
-    // setContacts(null)
+    selectedCheckBoxes.map((id) => {
+      return (
+        archiveContactEnd(id).then(
+          (res) => {
+            setOpenSnackBar(true);
+            console.log("THis is res", res);
+            if (res.status === (202 || 201 || 204)) {
+              console.log(res, 'res for archive contact')
+              setFetching(false);
+            }
+          },
+          (error) => {
+            console.log("this is error all contacts", error);
+          }
+        )
+      )
+    })
+
+
+  }
+  const getBoardsFilterById = (id) => {
+    setFetching(true);
     console.log("This is board id", id);
-    // || "2020-12-13"
     getBoardFiltersById(id).then(
       (res) => {
         console.log("THis is all boards by id", res);
         if (res.statusText === "OK") {
           var temp = Object.assign([], copyContacts);
           temp = temp.concat(res.data);
-
-          // var temp = con;
-          // console.log(temp, 'just test temp')
-          // // var newtemp = temp?.concat(res?.data?.contacts?.list);
-          // var newval = [temp, [...res?.data?.contacts?.list]]
-          // setCopyContacts(newval);
-
           setContacts(temp);
           setuseLessState(uselessState + 1);
           setBordsById(res.data)
           console.log("These are all board contacts", res?.data?.contacts?.list);
-
-
-
-
-          // document.getElementById("infinit").scrollTop = 0;
           setFetching(false);
         }
       },
       (error) => {
-        // getMyContacts(1);
-        // document.getElementById("infinit").scrollTop = 0;
-        // setPage(1);
+
         console.log("this is error all contacts", error);
       }
     );
   };
-  // const getBoardsFilterById=(id)=>{
-  //   console.log("boardID",id)
-  //     getBoardFiltersById(id).then(
-  //       (res)=>{
-  //         if(res.statusText==="OK"){
-  //           setBordsById(res.data)
-  //           setContacts(res.data.contacts.list)
-  //           console.log(res.data.contacts.list, "boardsById")
-  //           console.log(contacts, "inside board filter")
-
-
-  //         }
-  //       }, (error) => {
-  //         console.log("this is error all grad year", error);
-  //       }
-  //     );
-  //   }
   const statuses = [
     {
       value: "1",
@@ -869,7 +824,6 @@ function Home(props) {
       name: "Wisconsin",
       abbreviation: "WI"
     }]
-
   const usTimezone = [
     { value: "America/Puerto_Rico", name: "Atlantic" },
     { value: "America/New_York", name: "Eastern" },
@@ -880,16 +834,13 @@ function Home(props) {
     { value: "America/Anchorage", name: "Alaska" },
     { value: "Pacific/Honolulu", name: "Hawaii" }
   ]
-
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
     handleAnimation();
-
   }, []);
 
   const handleAnimation = () => {
-    //setShowDrawer(true);
     setTimeout(() => {
       setShowAnimation(false);
     }, 500)
@@ -925,11 +876,32 @@ function Home(props) {
                   color: statusFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
+
                   if (statusFilter === option.label) {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
+
+                    var obj = {
+                      criteria: {
+                        status: filter
+
+                      }
+                    }
+                    // AddFilterContacts(obj)
+                    console.log(obj, "filter object", filter)
+
                   } else {
                     addDataToFilter(option.label, "status");
+                    var obj = {
+                      criteria: {
+                        status: filter
+
+                      }
+                    }
+                    // AddFilterContacts(obj)
+
+                    console.log(obj, "filter object")
+
                   }
                 }}
               >
@@ -1247,6 +1219,65 @@ function Home(props) {
               // </Dropdown.Item>
             })}
         </DropdownButton>
+
+
+
+
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={dobFilter || "DOB"}
+          drop={"down"}
+          placeholder="DOB"
+          style={filtesSpacingStyle}
+        >
+
+          {allTags &&
+            allTags.map((option, ind) => {
+
+              if (tagSearch != "") {
+                if (
+                  option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
+                ) {
+                  return (
+                    <Dropdown.Item
+                      style={{
+                        background: tagFilter === option.label ? "#348ef7" : "white",
+                        color: tagFilter === option.label ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        if (rankFilter === option.label) {
+                          setTagFilter(null);
+                          addDataToFilter(option.label);
+                        } else {
+                          addDataToFilter(option.label, "Tag");
+                        }
+                      }}
+                    >
+                      {option.label}
+                    </Dropdown.Item>
+                  );
+                }
+              } else {
+                return (
+
+                  <Dropdown.Item
+                    style={{
+                      background: tagFilter === option.label ? "#348ef7" : "white",
+                      color: tagFilter === option.label ? "white" : "black",
+                    }}
+                    onClick={() => {
+
+                      addDataToFilter(option.label, "Tag");
+
+                    }}
+                  >
+                    {option.label}
+                  </Dropdown.Item>
+                );
+              }
+
+            })}
+        </DropdownButton>
       </Grid>
     );
   };
@@ -1256,15 +1287,23 @@ function Home(props) {
     window.location.href = "/";
   }
   const addDataToFilter = (value, type) => {
-    console.log(value, 'Add data to filter function', type);
+    console.log(value, 'Add data to filter function', type, filter);
     if (filter.includes(value)) {
       var temp = filter;
       if (temp.length === 1) {
-        setFilter(temp);
+        var data = {
+          typefilter,
+        }
+        console.log(data, 'Data of filter')
+        // setFilter(temp);
       } else {
         temp.splice(value, 1);
         console.log("This is temp", temp);
-        setFilter(temp);
+        var data = {
+          type: filter,
+        }
+        console.log(data, 'Data of filter')
+        // setFilter(temp);
       }
     } else {
       var temp = filter;
@@ -1272,11 +1311,14 @@ function Home(props) {
       temp.push(value);
       tempType.push(type);
       setFilterType(tempType);
-      setFilter(temp);
+      // setFilter(temp);
+      var data = {
+        type: filter,
+      }
+      console.log(data, 'Data of filter')
       setuseLessState(uselessState + 1);
     }
   };
-
   const makeCheckBoxSelected = (index) => {
     if (selectedCheckBoxes.indexOf(index) > -1) {
       var temp = [];
@@ -1294,8 +1336,28 @@ function Home(props) {
       setSelectedCheckboxes(temp);
       setuseLessState(uselessState + 1);
     }
-    // console.log("THis is selected Checkbox", selectedCheckBoxes);
+    console.log("THis is selected Checkbox", selectedCheckBoxes);
   };
+  const makeCheckBoxSelectedForTags = (index) => {
+    if (selectedCheckBoxesForTags.indexOf(index) > -1) {
+      var temp = [];
+      selectedCheckBoxesForTags.map((item) => {
+        if (index != item) {
+          temp.push(item);
+        }
+      });
+      console.log("This is temp", temp);
+      setselectedCheckBoxesForTags(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = selectedCheckBoxesForTags;
+      temp.push(index);
+      setselectedCheckBoxesForTags(temp);
+      setuseLessState(uselessState + 1);
+    }
+    console.log("THis is selected Checkbox", selectedCheckBoxesForTags);
+  };
+
   var totalcount = 0
   const removeDataFromFilter = (index) => {
     var temp = filter;
@@ -1313,15 +1375,15 @@ function Home(props) {
   useEffect(() => {
     if (localStorage.getItem("user")) {
       getMyContacts();
-      getAllGradeYears();
-      getAllRanks();
-      getAllStatuses();
-      getAllTags();
-      getAllBoards();
-      getAllTeamContacts()
-      getAllPositions();
+      // getAllGradeYears();
+      // getAllRanks();
+      // getAllStatuses();
+      // getAllTags();
+      // getAllBoards();
+      // getAllTeamContacts()
+      // getAllPositions();
       getColumns();
-      getMyContactsSearch();
+      // getMyContactsSearch();
       // setupPage();
     } else {
       window.location.href = "/";
@@ -1341,22 +1403,23 @@ function Home(props) {
       // setContacts(allcontacts)
       // setPage(page+1)
       // setFetching(true)
-
     }
-
     var isValid = false;
     if (filter.length != 0) {
       filter.map((filt, index) => {
-        console.log(item != null && boardsById?.name === filt, 'cheking')
+        console.log(filterType[index], 'cheking')
         if (filterType[index] === "status") {
+          console.log(item?.status, '<==== : item?.status:: filt:====>', filt)
 
-          if (item?.status != null && item?.status.status === filt) {
+          // if (item?.status != null && item?.status.status === filt) {
+          // alert("acha hy na")
 
-            isValid = true;
-            return;
 
-          }
-          // alert("ok")
+
+
+
+
+          // }
 
         }
 
@@ -1489,14 +1552,16 @@ function Home(props) {
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
+
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openSnakBar}
         autoHideDuration={2000}
         onClose={handleClose}
       >
+
         <Alert onClose={handleClose} severity="success">
-          {selectedCheckBoxes.length + " "} contacts have been tagged!
+          {selectedCheckBoxes.length + " "} contacts have been {alertValue}
         </Alert>
       </Snackbar>
       <Grid container direction="row">
@@ -1784,27 +1849,144 @@ function Home(props) {
             </Grid>
             <Grid item md={6} sm={6}>
               <Grid container direction="row" justify="flex-end">
-                <IconTextField
+                {/* <IconTextField
                   // width={180}
                   width={100}
                   text="Action"
                   textColor="gray"
                   icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
-                ></IconTextField>
+                ></IconTextField> */}
+                <div class="dropdown">
+                  <IconTextField
+                    width={100}
+                    text="Action"
+
+                    icon={<FaMagic style={{ color: "#3871DA" }}></FaMagic>}
+                  ></IconTextField>
+                  <div class="dropdown-content">
+
+
+                    <Grid
+                      container
+                      alignItems="left"
+                      className="p-3"
+                    // className="ml-auto"
+                    // style={{
+                    //   height: item.Heading ? 60 : 30,
+                    //   marginLeft: item.sub ? 35 : 0,
+                    // }}
+                    >
+
+                      <p
+                        style={{
+                          // marginTop: 10,
+                          marginBottom: 0,
+                          width: "100%",
+                          paddingLeft: 4,
+                          fontWeight: 600,
+                          textAlign: 'end',
+                          cursor: 'pointer'
+
+                        }}
+                      // className="ml-auto"
+
+                      >
+
+                        Edit
+                      </p>
+                      <p
+                        style={{
+                          marginTop: 10,
+                          marginBottom: 0,
+                          width: "100%",
+                          paddingLeft: 4,
+                          fontWeight: 600,
+                          textAlign: 'end',
+                          cursor: 'pointer'
+
+                        }}
+                        // className="ml-auto"
+                        // onClick={removeTags}
+                        onClick={() => {
+                          // if (selectedCheckBoxes.length > 0) {
+                          // removeTags()
+                          getContactsByid()
+                          if (contacttags.length > 0) {
+                            setshowRemoveTagsDialog(true);
+
+                          }
+                          else {
+                            alert("No tag found ")
+                            return false
+                          }
+
+                          // }
+                        }}
+                      >
+
+                        Remove Tag
+                      </p>
+                      <p
+                        style={{
+                          marginTop: 10,
+                          marginBottom: 0,
+                          width: "100%",
+                          paddingLeft: 4,
+                          fontWeight: 600,
+                          textAlign: 'end',
+                          cursor: 'pointer'
+                        }}
+                        // className="ml-auto"
+                        onClick={() => { ArchiveContact() }}
+                      >
+
+                        Archive Contact
+                      </p>
+                      <p
+                        style={{
+                          marginTop: 10,
+                          marginBottom: 0,
+                          width: "100%",
+                          paddingLeft: 4,
+                          fontWeight: 600,
+                          textAlign: 'end',
+                          cursor: 'pointer'
+
+                        }}
+                      // className="ml-auto"
+
+                      >
+
+                        Delete Contact
+                      </p>
+
+                      {/* {item.icon} */}
+                      {/* <i
+                              class="fa fa-user-circle"
+                              style={{ color: "#dadada", marginRight: 10 }}
+                            ></i> */}
+
+
+
+                    </Grid>
+
+                  </div>
+                </div>
                 <IconTextField
                   width={100}
                   onClick={() => {
                     if (selectedCheckBoxes.length > 0) {
                       setShowTagsDialog(true);
+
                     }
                   }}
                   text="Tag"
-                  textColor={selectedCheckBoxes.length <= 0 ? "gray" : "black"}
+                  textColor={selectedCheckBoxesForTags.length <= 0 ? "gray" : "black"}
                   icon={
                     <LocalOfferOutlinedIcon
                       style={{
                         color:
-                          selectedCheckBoxes.length <= 0 ? "gray" : "#3871DA",
+                          selectedCheckBoxesForTags.length <= 0 ? "gray" : "#3871DA",
                       }}
                     ></LocalOfferOutlinedIcon>
                   }
@@ -1949,146 +2131,146 @@ function Home(props) {
                   // console.log(item,'===============contacts====================='),
                   // console.log(isBoardContact, '<<<<<<<<<<===contacts=<<<<<<<'),
                   console.log(checkFilters(item), '<<<<==<<<<<==============contacts====================');
-                  if (checkFilters(item) === true) {
+                  // if (checkFilters(item) === true) {
 
-                    totalcount++
-                    return (
-                      <Grid
-                        key={index}
-                        container
-                        direction="row"
-                        alignItems="center"
-                        className={classes.contactsRow}
-                        onClick={() => {
-                          if (hoveredIndex === null) {
-                            localStorage.setItem(
-                              "CONTACT_DATA",
-                              JSON.stringify(item)
-                            );
-                            //setRedirect(`/contact-profile/${item.id}`)
-                            // window.location.href = "/contact-profile/" + item.id;
-                          }
+                  // totalcount++
+                  return (
+                    <Grid
+                      key={index}
+                      container
+                      direction="row"
+                      alignItems="center"
+                      className={classes.contactsRow}
+                      onClick={() => {
+                        if (hoveredIndex === null) {
+                          localStorage.setItem(
+                            "CONTACT_DATA",
+                            JSON.stringify(item)
+                          );
+                          //setRedirect(`/contact-profile/${item.id}`)
+                          // window.location.href = "/contact-profile/" + item.id;
+                        }
 
-                        }}
-                      >
-                        <Grid item md={1} xs={1}>
-                          {hoveredIndex === index ? (
-                            <Checkbox
-                              color="primary"
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
-                          ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
-                            <Checkbox
-                              color="primary"
-                              checked={true}
-                              onChange={() => {
-                                makeCheckBoxSelected(item.id);
-                              }}
-                              style={{ marginTop: 1, marginBottom: 1 }}
-                              onMouseLeave={() => {
-                                setHoveredIndex(null);
-                              }}
-                            ></Checkbox>
-                          ) : (
-                            <img
-                              onMouseEnter={() => {
-                                setHoveredIndex(index);
-                              }}
-                              src={
-                                item.twitter_profile &&
-                                  item.twitter_profile.profile_image.includes(
-                                    "contact-missing-image"
-                                  ) == false
-                                  ? item.twitter_profile.profile_image
-                                  : AvatarImg
-                              }
-                              style={{
-                                width: 35,
-                                height: 35,
-                                borderRadius: "50%",
-                                marginLeft: 5,
-                                marginTop: 5,
-                                marginBottom: 5,
-                              }}
-                            ></img>
-                          )}
-                        </Grid>
-
-                        {/* <NavLink>
-                          
-                        </NavLink> */}
-                        <Grid item md={1} xs={1}>
-                          <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
-                            {item.first_name}
-                          </NavLink>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.last_name}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.twitter_profile &&
-                              item.twitter_profile.screen_name
-                              ? "@" + item.twitter_profile.screen_name
-                              : ""}
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span
-                            className={classes.tableFields}
-                            style={{ marginLeft: 40 }}
-                          >
-                            {formatPhoneNumber(item.phone)}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.state}
-                          </span>
-                        </Grid>
-
-
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.grad_year
+                      }}
+                    >
+                      <Grid item md={1} xs={1}>
+                        {hoveredIndex === index ? (
+                          <Checkbox
+                            color="primary"
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : selectedCheckBoxes.indexOf(item.id) > -1 ? (
+                          <Checkbox
+                            color="primary"
+                            checked={true}
+                            onChange={() => {
+                              makeCheckBoxSelected(item.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                            onMouseLeave={() => {
+                              setHoveredIndex(null);
+                            }}
+                          ></Checkbox>
+                        ) : (
+                          <img
+                            onMouseEnter={() => {
+                              setHoveredIndex(index);
+                            }}
+                            src={
+                              item.twitter_profile &&
+                                item.twitter_profile.profile_image.includes(
+                                  "contact-missing-image"
+                                ) == false
+                                ? item.twitter_profile.profile_image
+                                : AvatarImg
                             }
-                          </span>
-                        </Grid>
-                        <Grid item md={2} xs={2}>
-                          <span className={classes.tableFields}>
-                            {item.high_school}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {item.status &&
-                              new moment(item.status.created_at).fromNow()}
-                          </span>
-                        </Grid>
-                        <Grid item md={1} xs={1}>
-                          <span className={classes.tableFields}>
-                            {" "}
-                            {item.status && item.status.status}
-                          </span>
-                        </Grid>
-                        {index === contacts.length - 1 && (
-                          <Grid item md={12} xs={12}>
-                            <Grid container direction="row" justify="center">
-                              <CircularProgress />
-                            </Grid>
-                          </Grid>
+                            style={{
+                              width: 35,
+                              height: 35,
+                              borderRadius: "50%",
+                              marginLeft: 5,
+                              marginTop: 5,
+                              marginBottom: 5,
+                            }}
+                          ></img>
                         )}
                       </Grid>
-                    );
-                  }
+
+                      {/* <NavLink>
+                          
+                        </NavLink> */}
+                      <Grid item md={1} xs={1}>
+                        <NavLink style={{ color: 'inherit' }} to={"contact-profile/" + item.id} className={classes.tableFields}>
+                          {item.first_name}
+                        </NavLink>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.last_name}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.twitter_profile &&
+                            item.twitter_profile.screen_name
+                            ? "@" + item.twitter_profile.screen_name
+                            : ""}
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span
+                          className={classes.tableFields}
+                          style={{ marginLeft: 40 }}
+                        >
+                          {formatPhoneNumber(item.phone)}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.state}
+                        </span>
+                      </Grid>
+
+
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.grad_year
+                          }
+                        </span>
+                      </Grid>
+                      <Grid item md={2} xs={2}>
+                        <span className={classes.tableFields}>
+                          {item.high_school}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {item.status &&
+                            new moment(item.status.created_at).fromNow()}
+                        </span>
+                      </Grid>
+                      <Grid item md={1} xs={1}>
+                        <span className={classes.tableFields}>
+                          {" "}
+                          {item.status && item.status.status}
+                        </span>
+                      </Grid>
+                      {index === contacts.length - 1 && (
+                        <Grid item md={12} xs={12}>
+                          <Grid container direction="row" justify="center">
+                            <CircularProgress />
+                          </Grid>
+                        </Grid>
+                      )}
+                    </Grid>
+                  );
+                  // }
                 })
               ) : (
                 <Grid
@@ -2145,9 +2327,10 @@ function Home(props) {
               ></input>
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {allTags &&
-                allTags.map((tags) => {
-                  if (tags.label.indexOf(tagSearch) > -1) {
+              {alltags &&
+                alltags.map((tags) => {
+                  console.log(tags, 'This is tag map ')
+                  if (tags.name.indexOf(tagSearch) > -1) {
                     return (
                       <Grid
                         container
@@ -2163,13 +2346,13 @@ function Home(props) {
                           <Checkbox
                             color="primary"
                             onChange={() => {
-                              // makeCheckBoxSelected(item.id);
+                              makeCheckBoxSelectedForTags(tags.id);
                             }}
                             style={{ marginTop: 1, marginBottom: 1 }}
                           ></Checkbox>
                         </Grid>
                         <Grid item md={9} sm={9}>
-                          {tags.label}
+                          {tags.name}
                         </Grid>
                       </Grid>
                     );
@@ -2193,11 +2376,8 @@ function Home(props) {
               ></HollowWhiteButton>
               <IconTextField
                 width={100}
-                onClick={() => {
-                  setShowTagsDialog(false);
-                  setOpenSnackBar(true);
-                }}
-                text="Tag"
+
+                text="Tag "
                 textColor="white"
                 background="#3871DA"
                 icon={
@@ -2205,6 +2385,12 @@ function Home(props) {
                     style={{ color: "white" }}
                   ></LocalOfferOutlinedIcon>
                 }
+                onClick={() => {
+                  setShowTagsDialog(false);
+                  TagstoContacts()
+
+                  console.log(selectedCheckBoxesForTags, 'selectedCheckBoxesForTags for tags')
+                }}
               ></IconTextField>
             </Grid>
           </div>
@@ -2212,6 +2398,119 @@ function Home(props) {
         // applyForm={() => dispatch(hidePost())}
         cancelForm={() => {
           setShowTagsDialog(false);
+        }}
+        hideActions={true}
+      />
+      <DialogBox
+        // title={"POST"}
+        maxWidth="sm"
+        open={showRemoveTagsDialog}
+        message={
+          <div>
+            <p
+              style={{
+                fontSize: 22,
+                color: "black",
+                marginTop: 0,
+                marginBottom: 0,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: -25,
+              }}
+            >
+              Remove Tags
+            </p>
+            <Grid container direction="row" justify="center">
+              <input
+                type="text"
+                style={{
+                  width: "100%",
+                  border: "1px solid #ebebeb",
+                  borderRadius: 4,
+                  height: 40,
+                }}
+                placeholder="Search Tag Name"
+                value={tagSearch}
+                onChange={(e) => {
+                  setTagSearch(e.target.value);
+                }}
+              ></input>
+            </Grid>
+            <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
+              {contacttags &&
+
+                contacttags.map((tags) => {
+                  console.log(tags, 'This is tag map ')
+                  if (tags.name.indexOf(tagSearch) > -1) {
+                    return (
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        style={{
+                          borderBottom: "1px solid #d8d8d8",
+                          paddingTop: 4,
+                          paddingBottom: 4,
+                        }}
+                      >
+                        <Grid item md={3} sm={3}>
+                          <Checkbox
+                            color="primary"
+                            onChange={() => {
+                              makeCheckBoxSelectedForTags(tags.id);
+                            }}
+                            style={{ marginTop: 1, marginBottom: 1 }}
+                          ></Checkbox>
+                        </Grid>
+                        <Grid item md={9} sm={9}>
+                          {tags.name}
+                        </Grid>
+                      </Grid>
+                    );
+                  }
+                })}
+            </div>
+            <Grid
+              container
+              direction="row"
+              justify="flex-end"
+              style={{ marginTop: 20, marginBottom: 5 }}
+            >
+              <HollowWhiteButton
+                width={100}
+                onClick={() => {
+                  setshowRemoveTagsDialog(false);
+                }}
+                text="Cancel"
+                textColor="#3871DA"
+                background="white"
+              ></HollowWhiteButton>
+              <IconTextField
+                // width={100}
+
+                text="Remove Tag "
+                textColor="white"
+                background="#3871DA"
+                icon={
+                  <LocalOfferOutlinedIcon
+                    style={{ color: "white" }}
+                  ></LocalOfferOutlinedIcon>
+                }
+                onClick={() => {
+                  setshowRemoveTagsDialog(false);
+                  // TagstoContacts()
+                  removeTags()
+
+
+                  console.log(selectedCheckBoxesForTags, 'selectedCheckBoxesForTags for tags')
+                }}
+              ></IconTextField>
+            </Grid>
+          </div>
+        }
+        // applyForm={() => dispatch(hidePost())}
+        cancelForm={() => {
+          setshowRemoveTagsDialog(false);
         }}
         hideActions={true}
       />
