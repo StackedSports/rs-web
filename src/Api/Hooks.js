@@ -69,9 +69,9 @@ export const useTagsWithContacts = () => {
     const [tags, setTags] = useState(null)
 
     useEffect(() => {
-        getTagsWithMessages()
+        getTagsWithContacts()
             .then(([tag]) => {
-                console.log('ApiHooks: getTagsWithContacts -----')
+                console.log('ApiHooks: getTagsWithContacts -----',tag)
                 console.log(tag)
                 setTags(tag)
             })

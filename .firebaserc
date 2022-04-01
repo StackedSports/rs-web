@@ -1,15 +1,5 @@
 {
   "projects": {
-<<<<<<< HEAD
-    "default": "recurit-3397b",
-    "rs": "recurit-3397b"
-  },
-  "targets": {}
+    "default": "recurit-3397b"
+  }
 }
-=======
-    "default": "stacked-messenger",
-    "rec": "recruit-suite-149f6"
-  },
-  "targets": {}
-}
->>>>>>> 2aaf210bdac1b37c9b020a96c59ddeffd2fdb6c7

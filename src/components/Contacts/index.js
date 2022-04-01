@@ -8,6 +8,13 @@ import {
   Snackbar,
   CircularProgress,
 } from "@material-ui/core";
+import { addDays } from "date-fns";
+
+import DatePicker from "react-date-picker";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import { DateRangePicker } from "react-date-range";
+
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AmimatedBurger from '../../images/animated_burger.gif';
@@ -50,7 +57,7 @@ import {
   removeTagsFromContacts,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
-import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags } from "../../Api/Hooks";
+import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags, useTagsWithContacts } from "../../Api/Hooks";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -148,8 +155,17 @@ function Home(props) {
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
+  const [dobstate, setdobstate] = useState(null);
+  const [boardCount, setboardCount] = useState(0);
+
+
+
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
+  const [areacoachFilter, setareacoachFilter] = useState(null);
+  const [status_2Filter, setstatus_2Filter] = useState(null);
+
+
   const [boardFilter, setBoardFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
   const [dobFilter, setDobFilter] = useState(null);
@@ -164,6 +180,17 @@ function Home(props) {
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  const [openerrSnakBar, setopenerrSnakBar] = React.useState(false);
+
+  const [value, onChange] = useState(new Date());
+  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
   // Pagination
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -253,11 +280,13 @@ function Home(props) {
   const handleClick = () => {
     setOpenSnackBar(true);
   };
+
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
+    setopenerrSnakBar(false)
     setOpenSnackBar(false);
   };
   let formatPhoneNumber = (str) => {
@@ -302,7 +331,7 @@ function Home(props) {
     }
     catch (e) {
       console.log("erroraddtags", e)
-      setOpenSnackBar(true);
+      openerrSnakBar(true);
 
     }
 
@@ -314,25 +343,25 @@ function Home(props) {
     setOpenSnackBar(true);
 
   }
-  const getContactsByid = async () => {
-    setFetching(true)
-    selectedCheckBoxes.map((id) => {
-      getContact(id).then((res) => {
+  // const getContactsByid = async () => {
+  //   setFetching(true)
+  //   selectedCheckBoxes.map((id) => {
+  //     getContact(id).then((res) => {
 
-        setcontacttags(res.tags)
+  //       setcontacttags(res.tags)
 
-        console.log(res, 'response with contacts by id')
-
-
-        setFetching(false)
+  //       console.log(res, 'response with contacts by id')
 
 
+  //       setFetching(false)
 
-      }, (error) => {
-        console.log("this is error get contact by id", error);
-      })
-    });
-  }
+
+
+  //     }, (error) => {
+  //       console.log("this is error get contact by id", error);
+  //     })
+  //   });
+  // }
   const removeTags = async () => {
     setalertValue('un tagged')
 
@@ -375,19 +404,141 @@ function Home(props) {
 
 
   }
+  const CalendarFilter = () => {
+    return (
+      <div class="dropdown" onMouseLeave={() => {
+        setDisplayRageCalendar(false);
 
-  const alltags = useTags()
+      }}>
+        <Grid
+          container
+          direction={"row"}
+          alignItems="center"
+          justify="space-between"
+          style={{
+            border: "1px solid #dadada",
+            width: "max-content",
+            borderRadius: 4,
+            height: 40,
+            color: displayRangeCalendar === false ? "black" : "white",
+            background:
+              displayRangeCalendar === false ? "transparent" : "#3871DA",
+          }}
+          onClick={(e) => {
+            setDisplayRageCalendar(true);
+            e.stopPropagation()
+          }}
+
+        >
+          <ArrowBackwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowBackwardIosIcon>
+          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+          <p
+            style={{
+              fontWeight: "bold",
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 4,
+            }}
+          >
+            {new moment(state[0].startDate).format("MM-DD-YYYY") +
+              "-" +
+              new moment(state[0].endDate).format("MM-DD-YYYY")}
+          </p>
+          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+          <ArrowForwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowForwardIosIcon>
+        </Grid>
+
+        <div
+          // class="dropdown-content"
+          className={classes.dropdownHidden}
+          style={{
+            marginLeft: 0,
+            marginTop: 0,
+            display: displayRangeCalendar ? "block" : "none",
+          }}
+
+        // setDisplayRageCalendar(false);
+
+        >
+          <Grid style={{}}>
+            {/* <DateRange
+      minDate={addDays(new Date(), -30)}
+      maxDate={addDays(new Date(), 30)}
+    ></DateRange> */}
+            <DateRangePicker
+              onChange={(item) => {
+                setState([item.selection])
+
+                const value = new moment(item.startDate).format("MM-DD-YYYY")
+                  + ',' +
+                  new moment(item.endDate).format("MM-DD-YYYY");
+
+                addDataToFilter(value, "dob", item.selection)
+                AddFilterContacts(value, item.selection)
+
+                // if (dobFilter === 'dob') {
+                //   setDobFilter(null);
+                //   addDataToFilter(option.label);
+
+
+                //   filter.map((filt, index) => {
+
+
+                //     AddFilterContacts( filter)
+                //     console.log(filter, "filter object 2", filterType[index])
+
+                //   })
+
+
+
+                // } else {
+                //   addDataToFilter(option.label, "status");
+
+                //   filter.map((filt, index) => {
+                //     console.log(filter, "filter object 2", filterType)
+                //     if (filterType[index] === 'status') {
+
+                //       AddFilterContacts()
+                //     }
+                //   })
+
+
+
+                // }
+
+              }}
+              months={1}
+              minDate={addDays(new Date(), -30)}
+              maxDate={addDays(new Date(), 30)}
+              direction="horizontal"
+              // scroll={{ enabled: true }}
+              ranges={state}
+            />
+          </Grid>
+        </div>
+      </div>
+    );
+  };
 
   const getMyContacts = (page) => {
     // setLoading(true);
+    // if(!pagination.currentPage===pagination.totalPages){}
     setFetching(true);
     // setContacts(null)
     console.log("This is the date", page);
     // || "2020-12-13"
     getAllContacts(page).then(
       (res) => {
-        console.log("THis is all contacts res", res);
+        console.log(res.headers['current-page'], "THis is all contacts res", res.headers['total-pages'], res);
+
         if (res.statusText === "OK") {
+          if (res.headers.currentPage === res.headers.totalPages) {
+            setFetching(false)
+          }
           var temp = Object.assign([], contacts);
           temp = temp.concat(res.data);
 
@@ -441,21 +592,106 @@ function Home(props) {
     );
   };
 
-  const AddFilterContacts = async (obj) => {
+  const AddFilterContacts = async () => {
+    var obj = {
+      criteria: {
+        status: [],
+        ranks: [],
+        years: [],
+        states: [],
+        positions: [],
+        timezones: [],
+        tags: [],
+        area_coaches: [],
+        position_coaches: [],
+        status_2: [],
+        dob: []
+      }
+    }
+    for (let i = 0; i < filterType.length; i++) {
+
+      // console.log(filttype[i], "filter object with i", filter[i])  
+      if (filterType[i] === 'status') {
+
+
+        obj.criteria.status.push(filter[i])
+
+      }
+      else if (filterType[i] === 'ranks') {
+        obj.criteria.ranks.push(filter[i])
+
+      }
+      else if (filterType[i] === 'gradeYear') {
+        obj.criteria.years.push(filter[i])
+
+      }
+      else if (filterType[i] === 'State') {
+        obj.criteria.states.push(filter[i])
+
+      }
+      else if (filterType[i] === 'Position') {
+        obj.criteria.positions.push(filter[i])
+
+      }
+      else if (filterType[i] === 'timezones') {
+        obj.criteria.timezones.push(filter[i])
+
+      }
+      else if (filterType[i] === 'Tag') {
+        obj.criteria.tags.push(filter[i])
+
+      }
+
+      else if (filterType[i] === 'area_coaches') {
+        obj.criteria.area_coaches.push(filter[i])
+
+      }
+      else if (filterType[i] === 'position_coaches') {
+        obj.criteria.position_coaches.push(filter[i])
+
+      }
+      else if (filterType[i] === 'status_2') {
+        obj.criteria.status_2.push(filter[i])
+
+      }
+      else if (filterType[i] === 'dob') {
+        console.log(filter[i].split(","), "filter[i]")
+        var temp = filter[i].split(",")
+        for (let i = 0; i < temp.length; i++) {
+
+          obj.criteria.dob.push(temp[i])
+        }
+
+      }
+
+    }
+    console.log(obj, "filter object")
+
+
 
 
 
     try {
       let res = await filterContacts(obj);
       console.log(res, "res filter contacts")
+      setPagination({
+        totalItems: res.headers['total-count'],
+        itemsPerPage: res.headers['page-items'],
+        totalPages: res.headers['total-pages'],
+        currentPage: res.headers['current-page']
+      })
+      // setPagination({totalItems:res?.data?.contacts?.count})
+
       setContacts(res.data)
     }
     catch (e) {
       console.log("res filter contact", e)
-      setOpenSnackBar(true);
+      setopenerrSnakBar(true);
     }
 
   }
+  let getTagsWithContacts = useTagsWithContacts()
+  console.log(getTagsWithContacts, "getTagsWithContacts")
   var TeamContacts = useTeamContact()
   var COACH = []
   TeamContacts?.map((item) => {
@@ -465,10 +701,14 @@ function Home(props) {
       label: `${item.first_name} ${item.last_name}`,
     });
   });
+  const usetags = useTags()
+  console.log("These are all tags", usetags)
   var allTeamContacts = COACH;
   var gettags = useTagWithContact()
   var TAGS = [];
-  console.log("These are allcontacts tags", gettags);
+  console.log("These are useTagWithContact tags", gettags);
+
+  console.log("These are allTeamContacts tags", allTeamContacts);
   gettags?.map((item) => {
     TAGS.push({
       value: item.name,
@@ -558,8 +798,9 @@ function Home(props) {
       (res) => {
         console.log("THis is all boards by id", res);
         if (res.statusText === "OK") {
+          setPagination({ totalItems: res?.data?.contacts?.count })
           var temp = Object.assign([], copyContacts);
-          temp = temp.concat(res.data);
+          temp = temp.concat(res?.data?.contacts?.list);
           setContacts(temp);
           setuseLessState(uselessState + 1);
           setBordsById(res.data)
@@ -839,6 +1080,15 @@ function Home(props) {
     setShowAnimation(true);
     handleAnimation();
   }, []);
+  // const getData = () => {
+  //   setboardCount(1)
+  // }
+  // const getRemoveData =  (newCount) => {
+  //   // alert(newCount)
+  //    setboardCount(newCount)
+  // }
+
+
 
   const handleAnimation = () => {
     setTimeout(() => {
@@ -881,26 +1131,29 @@ function Home(props) {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
 
-                    var obj = {
-                      criteria: {
-                        status: filter
 
-                      }
-                    }
-                    // AddFilterContacts(obj)
-                    console.log(obj, "filter object", filter)
+                    filter.map((filt, index) => {
+
+
+                      AddFilterContacts()
+                      console.log(filter, "filter object 2", filterType[index])
+
+                    })
+
+
 
                   } else {
                     addDataToFilter(option.label, "status");
-                    var obj = {
-                      criteria: {
-                        status: filter
 
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'status') {
+
+                        AddFilterContacts()
                       }
-                    }
-                    // AddFilterContacts(obj)
+                    })
 
-                    console.log(obj, "filter object")
+
 
                   }
                 }}
@@ -924,13 +1177,27 @@ function Home(props) {
                   color: rankFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
-                  // alert("ok")
+                  // 
                   // setContacts(allcontacts)
                   if (rankFilter === option.label) {
                     setRankFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'ranks') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.label, "ranks");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'ranks') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -957,8 +1224,22 @@ function Home(props) {
                   if (rankFilter === option.label) {
                     setGradeYearFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'gradeYear') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.label, "gradeYear");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'gradeYear') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -981,16 +1262,29 @@ function Home(props) {
                 color: timeZoneFilter === option.name ? "white" : "black",
               }}
               onClick={() => {
-                setTimeZoneFilter(option.name);
+
+                if (timeZoneFilter === option.name) {
+                  settimeZoneFilter(null);
+                  addDataToFilter(option.name);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'timezones') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                } else {
+                  addDataToFilter(option.name, "timezones");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'timezones') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+
               }}
-            // onClick={() => {
-            //   if (timeZoneFilter === option.name) {
-            //     setTimeZoneFilter(null);
-            //     addDataToFilter(option.name);
-            //   } else {
-            //     addDataToFilter(option.name, "ustimezones");
-            //   }
-            // }}
             >
               {option.name}
             </Dropdown.Item>
@@ -1000,7 +1294,7 @@ function Home(props) {
           id="dropdown-basic-button"
           title={stateFilter || "State"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="State"
           style={filtesSpacingStyle}
         >
           <div>
@@ -1037,6 +1331,13 @@ function Home(props) {
                       onClick={() => {
 
                         addDataToFilter(option.abbreviation, "State");
+                        filter.map((filt, index) => {
+                          console.log(filter, "filter object 2", filterType)
+                          if (filterType[index] === 'State') {
+
+                            AddFilterContacts()
+                          }
+                        })
                       }}
                     >
                       {option.name}
@@ -1052,6 +1353,13 @@ function Home(props) {
                     }}
                     onClick={() => {
                       addDataToFilter(option.abbreviation, "State");
+                      filter.map((filt, index) => {
+                        console.log(filter, "filter object 2", filterType)
+                        if (filterType[index] === 'State') {
+
+                          AddFilterContacts()
+                        }
+                      })
                     }}
                   >
                     {option.name}
@@ -1084,8 +1392,22 @@ function Home(props) {
                   if (positionFilter === option.value.abbreviation) {
                     setPositionFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'Position') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.value.abbreviation, "Position");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'Position') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -1095,16 +1417,19 @@ function Home(props) {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={coachFilter || "Coach"}
+          title={coachFilter || "Position Coach"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="position_coaches"
           style={filtesSpacingStyle}
         >
+          {/* area_coaches */}
           {allTeamContacts.map((option) => (
             <Dropdown.Item
               style={{
                 background: coachFilter === option.label ? "#348ef7" : "white",
                 color: coachFilter === option.label ? "white" : "black",
+
+
               }}
               // onClick={() => {
               //   setCoachFilter(option.label);
@@ -1113,8 +1438,119 @@ function Home(props) {
                 if (coachFilter === option.label) {
                   setCoachFilter(null);
                   addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'position_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
                 } else {
-                  addDataToFilter(option.label, "Coach");
+                  addDataToFilter(option.label, "position_coaches");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'position_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={areacoachFilter || "Area Coach"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {/* area_coaches */}
+          {allTeamContacts.map((option) => (
+            <Dropdown.Item
+
+              style={{
+                background: areacoachFilter === option.label ? "#348ef7" : "white",
+                color: areacoachFilter === option.label ? "white" : "black",
+
+              }}
+              // onClick={() => {
+              //   setareacoachFilter(option.label);
+              // }}
+              onClick={() => {
+                if (areacoachFilter === option.label) {
+                  setareacoachFilter(null);
+                  addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'area_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
+                } else {
+                  addDataToFilter(option.label, "area_coaches");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'area_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        {/* boardsById */}
+
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={status_2Filter || "Status 2"}
+          drop={"down"}
+          placeholder="Status 2"
+          style={filtesSpacingStyle}
+        >
+          {/* area_coaches */}
+          {allTeamContacts.map((option) => (
+            <Dropdown.Item
+
+              style={{
+                background: status_2Filter === option.label ? "#348ef7" : "white",
+                color: status_2Filter === option.label ? "white" : "black",
+
+              }}
+              // onClick={() => {
+              //   setstatus_2Filter(option.label);
+              // }}
+              onClick={() => {
+                if (status_2Filter === option.label) {
+                  setstatus_2Filter(null);
+                  addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'status_2') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
+                } else {
+                  addDataToFilter(option.label, "status_2");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'status_2') {
+
+                      AddFilterContacts()
+                    }
+                  })
                 }
               }}
             >
@@ -1123,13 +1559,12 @@ function Home(props) {
           ))}
         </DropdownButton>
 
-        {/* boardsById */}
 
         <DropdownButton
           id="dropdown-basic-button"
           title={tagFilter || "Tag"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="Tag"
           style={filtesSpacingStyle}
         >
           <Grid container direction="row" justify="center">
@@ -1149,43 +1584,50 @@ function Home(props) {
           </Grid>
           {allTags &&
             allTags.map((option, ind) => {
-
+              console.log(allTags, "all TAGS")
               if (tagSearch != "") {
                 if (
                   option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
                 ) {
-                  return (
+                  (
                     <Dropdown.Item
                       style={{
                         background: tagFilter === option.label ? "#348ef7" : "white",
                         color: tagFilter === option.label ? "white" : "black",
                       }}
                       onClick={() => {
-                        if (rankFilter === option.label) {
+
+
+                        if (tagFilter === option.label) {
                           setTagFilter(null);
                           addDataToFilter(option.label);
+                          filter.map((filt, index) => {
+                            console.log(filter, "filter object 2", filterType)
+                            if (filterType[index] === 'Tag') {
+
+                              AddFilterContacts()
+                            }
+                          })
                         } else {
+
                           addDataToFilter(option.label, "Tag");
+                          console.log(filter, "filter object 2", filterType)
+                          filter.map((filt, index) => {
+                            if (filterType[index] === 'Tag') {
+
+                              AddFilterContacts()
+                            }
+                          })
                         }
                       }}
                     >
                       {option.label}
                     </Dropdown.Item>
+
                   );
                 }
               } else {
                 return (
-                  // <Dropdown.Item
-                  //   style={{
-                  //     background: stateFilter === option.abbreviation ? "#348ef7" : "white",
-                  //     color: stateFilter === option.abbreviation ? "white" : "black",
-                  //   }}
-                  //   onClick={() => {
-                  //     addDataToFilter(option.abbreviation, "State");
-                  //   }}
-                  // >
-                  //   {option.abbreviation}
-                  // </Dropdown.Item>
                   <Dropdown.Item
                     style={{
                       background: tagFilter === option.label ? "#348ef7" : "white",
@@ -1193,82 +1635,28 @@ function Home(props) {
                     }}
                     onClick={() => {
 
-                      addDataToFilter(option.label, "Tag");
 
-                    }}
-                  >
-                    {option.label}
-                  </Dropdown.Item>
-                );
-              }
-              // <Dropdown.Item
-              //   style={{
-              //     background: tagFilter === option.label ? "#348ef7" : "white",
-              //     color: tagFilter === option.label ? "white" : "black",
-              //   }}
-              //   onClick={() => {
-              //     if (rankFilter === option.label) {
-              //       setTagFilter(null);
-              //       addDataToFilter(option.label);
-              //     } else {
-              //       addDataToFilter(option.label, "Tag");
-              //     }
-              //   }}
-              // >
-              //   {option.label}
-              // </Dropdown.Item>
-            })}
-        </DropdownButton>
+                      if (tagFilter === option.label) {
+                        setTagFilter(null);
+                        addDataToFilter(option.label);
+                        filter.map((filt, index) => {
+                          console.log(filter, "filter object 2", filterType)
+                          if (filterType[index] === 'Tag') {
 
+                            AddFilterContacts()
+                          }
+                        })
+                      } else {
 
+                        addDataToFilter(option.label, "Tag");
+                        console.log(filter, "filter object 2", filterType)
+                        filter.map((filt, index) => {
+                          if (filterType[index] === 'Tag') {
 
-
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={dobFilter || "DOB"}
-          drop={"down"}
-          placeholder="DOB"
-          style={filtesSpacingStyle}
-        >
-
-          {allTags &&
-            allTags.map((option, ind) => {
-
-              if (tagSearch != "") {
-                if (
-                  option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
-                ) {
-                  return (
-                    <Dropdown.Item
-                      style={{
-                        background: tagFilter === option.label ? "#348ef7" : "white",
-                        color: tagFilter === option.label ? "white" : "black",
-                      }}
-                      onClick={() => {
-                        if (rankFilter === option.label) {
-                          setTagFilter(null);
-                          addDataToFilter(option.label);
-                        } else {
-                          addDataToFilter(option.label, "Tag");
-                        }
-                      }}
-                    >
-                      {option.label}
-                    </Dropdown.Item>
-                  );
-                }
-              } else {
-                return (
-
-                  <Dropdown.Item
-                    style={{
-                      background: tagFilter === option.label ? "#348ef7" : "white",
-                      color: tagFilter === option.label ? "white" : "black",
-                    }}
-                    onClick={() => {
-
-                      addDataToFilter(option.label, "Tag");
-
+                            AddFilterContacts()
+                          }
+                        })
+                      }
                     }}
                   >
                     {option.label}
@@ -1278,6 +1666,7 @@ function Home(props) {
 
             })}
         </DropdownButton>
+        <CalendarFilter></CalendarFilter>
       </Grid>
     );
   };
@@ -1288,11 +1677,15 @@ function Home(props) {
   }
   const addDataToFilter = (value, type) => {
     console.log(value, 'Add data to filter function', type, filter);
-    if (filter.includes(value)) {
+    if (type === 'boards') {
+      setFilter([value])
+      setFilterType([type])
+    }
+    else if (filter.includes(value)) {
       var temp = filter;
       if (temp.length === 1) {
         var data = {
-          typefilter,
+          type: filter,
         }
         console.log(data, 'Data of filter')
         // setFilter(temp);
@@ -1308,6 +1701,9 @@ function Home(props) {
     } else {
       var temp = filter;
       var tempType = filterType;
+      // if(temp==='boards'){
+
+      // }
       temp.push(value);
       tempType.push(type);
       setFilterType(tempType);
@@ -1360,6 +1756,14 @@ function Home(props) {
 
   var totalcount = 0
   const removeDataFromFilter = (index) => {
+    // setboardCount(0)
+
+    const newCount = 0;
+    console.log('newCount', newCount)
+    setboardCount(0)
+
+
+    // getRemoveData(newCount);
     var temp = filter;
     var tempType = filterType;
     temp.splice(index, 1);
@@ -1368,13 +1772,37 @@ function Home(props) {
     setFilter(newArray);
     setFilterType(tempType);
     setuseLessState(uselessState + 1);
+    if (filter && filter.length > 0) {
+      filter.map((filt, index) => {
+        // setboardCount(1)
+        AddFilterContacts(filter)
+        console.log(filter, "filter object remove 2", filterType[index])
+      })
+
+    } else {
+
+      if (filter.length === 0 && boardCount === 0) {
+        console.log(filter.length, 'filter.length === 0')
+
+        getMyContacts();
+      }
+
+    }
+
+    console.log(filter, "filter object remove filter", newArray)
+
+
     // sethandlescroll(true)
-    // getMyContacts()
     // alert("sdfasd")
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      getMyContacts();
+      console.log(filter.length, 'THis is all contacts res')
+      if (filter.length === 0 && boardCount === 0) {
+
+
+        getMyContacts();
+      }
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -1424,12 +1852,13 @@ function Home(props) {
         }
 
         if (filterType[index] === "boards") {
-
           //  setContacts(null)
+
+          console.log('boards zain', filterType[index])
+
           if (item != null && boardsById?.name === filt) {
 
-            // console.log(boardsById?.contacts?.list?.map((el) => el?.id.includes(contacts?.map((el) => el?.id))) , 'new checking', contacts?.map((el) => el?.id))
-            // if (boardsById?.contacts?.list?.map((el) => el?.id) === contacts?.map((el) => el?.id)) {
+
             isValid = true;
             return;
 
@@ -1523,6 +1952,29 @@ function Home(props) {
     return isValid;
   };
 
+  const handleBoardClick = (board, index) => {
+    setboardCount(1)
+
+
+
+    getBoardsFilterById(board.id)
+
+    if (boardFilter === board.name) {
+
+
+      addDataToFilter(board.name, "boards");
+    }
+
+    else {
+
+      setBoardFilter(null);
+      addDataToFilter(board.name, "boards");
+      // var ind = 1
+      // removeDataFromFilter(ind);
+
+    }
+  }
+
   function handleScroll() {
     // if(handlescroll){
     var agreement = document.getElementById("infinit");
@@ -1540,8 +1992,12 @@ function Home(props) {
     // if (position + visibleHeight === scrollableHeight) {
     // alert("We are in the endgaem now");
     if (!fetching) {
-      getMyContacts(page + 1);
-      setPage(page + 1);
+      if (filter.length === 0 && boardCount === 0) {
+
+        getMyContacts(page + 1);
+        setPage(page + 1);
+      }
+
     }
     // agreement.scrollTop = 0;
     // }
@@ -1549,6 +2005,8 @@ function Home(props) {
 
   // if(redirect !== '')
   //   return <Redirect to={redirect}/>
+  // console.log(boardCount,'setboardCount')
+  console.log('setboardCount', boardCount)
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
@@ -1562,6 +2020,17 @@ function Home(props) {
 
         <Alert onClose={handleClose} severity="success">
           {selectedCheckBoxes.length + " "} contacts have been {alertValue}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openerrSnakBar}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+
+        <Alert onClose={handleClose} severity="error">
+          Something went wrong please try again!
         </Alert>
       </Snackbar>
       <Grid container direction="row">
@@ -1598,7 +2067,7 @@ function Home(props) {
             {showBoardFilters === true && (
               <div>
                 {allBoards &&
-                  allBoards.map((board) => {
+                  allBoards.map((board, index) => {
                     return (
                       <p
                         className={classes.sideSubFilter}
@@ -1608,23 +2077,7 @@ function Home(props) {
 
                         //   addDataToFilter(board.name,'boards');
                         // }}
-                        onClick={() => {
-                          // setContacts(null)
-                          // alert("ok")
-                          getBoardsFilterById(board.id)
-
-                          if (boardFilter === board.name) {
-                            // removeDataFromFilter
-                            setBoardFilter(null);
-                            addDataToFilter(board.name, "boards");
-                            // setAllContacts(...contacts)
-                          }
-
-                          else {
-                            addDataToFilter(board.name, "boards");
-
-                          }
-                        }}
+                        onClick={() => handleBoardClick(board, index)}
                       >
                         {board.name}
                       </p>
@@ -1767,6 +2220,7 @@ function Home(props) {
                       <ClearIcon
                         onClick={() => {
                           removeDataFromFilter(index);
+
                         }}
                         style={{
                           color: "red",
@@ -1834,7 +2288,7 @@ function Home(props) {
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? pagination.totalItems : 0} </span>{" "} contacts
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null && contacts.length > 0 ? pagination.totalItems : 0} </span>{" "} contacts
                   {/* {" "} contacts in the system */}
                 </span>
               )}
@@ -1910,15 +2364,15 @@ function Home(props) {
                         onClick={() => {
                           // if (selectedCheckBoxes.length > 0) {
                           // removeTags()
-                          getContactsByid()
-                          if (contacttags.length > 0) {
-                            setshowRemoveTagsDialog(true);
+                          // getContactsByid()
+                          // if (contacttags.length > 0) {
+                          setshowRemoveTagsDialog(true);
 
-                          }
-                          else {
-                            alert("No tag found ")
-                            return false
-                          }
+                          // }
+                          // else {
+                          // alert("No tag found ")
+                          // return false
+                          // }
 
                           // }
                         }}
@@ -2261,13 +2715,21 @@ function Home(props) {
                           {item.status && item.status.status}
                         </span>
                       </Grid>
-                      {index === contacts.length - 1 && (
+                      {/* // {pagination.totalPages===pagination.currentPage} */}
+                      {console.log((pagination.totalPages !== pagination.currentPage), 'THis is all contacts res')}
+
+                      {index === contacts.length - 1 && pagination.totalPages !== pagination.currentPage && (
+
                         <Grid item md={12} xs={12}>
                           <Grid container direction="row" justify="center">
+                            {/* {console.log(":adfsad")} */}
                             <CircularProgress />
                           </Grid>
                         </Grid>
                       )}
+
+
+
                     </Grid>
                   );
                   // }
@@ -2327,8 +2789,8 @@ function Home(props) {
               ></input>
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {alltags &&
-                alltags.map((tags) => {
+              {usetags &&
+                usetags.map((tags) => {
                   console.log(tags, 'This is tag map ')
                   if (tags.name.indexOf(tagSearch) > -1) {
                     return (
@@ -2437,9 +2899,9 @@ function Home(props) {
               ></input>
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {contacttags &&
+              {getTagsWithContacts &&
 
-                contacttags.map((tags) => {
+                getTagsWithContacts.map((tags) => {
                   console.log(tags, 'This is tag map ')
                   if (tags.name.indexOf(tagSearch) > -1) {
                     return (
