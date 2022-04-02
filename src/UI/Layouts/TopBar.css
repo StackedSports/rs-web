@@ -1,0 +1,80 @@
+.TopBar {
+    background-color: white;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 2;
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(233, 234, 239);
+    border-bottom-style: solid;
+}
+
+.TopBar .TeamLogo {
+    width: 60px;
+    height: 70px;
+    border-right-width: 2px;
+    border-right-color: rgb(233, 234, 239);
+    border-right-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.TopBar .Button {
+    border-radius: 5px;
+    background: #3871da;
+    white-space: nowrap;
+    padding: 0.5em;
+    width: 220px;
+    margin: 20px;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+    /* outtion: all 0.2s ease-in-out; */
+    /* @medialine: none; */
+    border: none;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+    align-items: center;
+    /* transi screen and (max-width: 1000px) { */
+        /* width: 180px; */
+    /* } */
+}
+
+.TopBar .Button:hover {
+    opacity: 0.8;
+}
+
+.TopBar .FlexRight {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.TopBar .Logo {
+    height: 38px;
+    margin: 0 44px 0 44px;
+}
+
+.TopBar .IconBtn {
+    color: rgb(113, 115, 118);
+    height: 24px;
+    width: 24px;
+    margin: 0 20px;
+}
+
+.TopBar .IconBtn:hover {
+    cursor: pointer;
+    opacity: 0.3;
+}

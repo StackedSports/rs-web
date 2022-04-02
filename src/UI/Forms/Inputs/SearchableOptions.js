@@ -55,6 +55,9 @@ const useStyles = makeStyles({
         "&>p": {
           color: "white",
         },
+		"&>svg": {
+			color: "white"
+		}
       },
     },
     tableP: { margin: 0, marginLeft: 12, fontSize: 16, fontWeight: 600 },
@@ -101,6 +104,10 @@ const useStyles = makeStyles({
 
 
 export const constructProperty = (item, def) => {
+	if(typeof item == 'string') {
+		return item
+	}
+
 	if(typeof def == 'string' && def.includes('.')) {
 		let parts = def.split('.')
 
@@ -149,7 +156,7 @@ export const SearchableOptionListItem = (props) => {
 		  className={classes.hoverGrid}
 		  onClick={props.onSelected}
 		>
-			{props.imgDef &&
+			{props.imgDef && !props.icon &&
 				<img
 				  style={{
 					width: 30,
@@ -158,6 +165,17 @@ export const SearchableOptionListItem = (props) => {
 					marginLeft: 12,
 				  }}
 				  src={constructProperty(props.item, props.imgDef)}
+				/>
+			}
+
+			{!props.imgDef && props.icon &&
+				<props.icon
+				  style={{
+					width: props.iconSize ? props.iconSize : 30,
+					height: props.iconSize ? props.iconSize : 30,
+					marginLeft: 12,
+					// color: props.iconColor ? props.iconColor : '#3871da' 
+				  }}
 				/>
 			}
 

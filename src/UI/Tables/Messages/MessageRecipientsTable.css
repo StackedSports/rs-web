@@ -1,0 +1,23 @@
+.MessageDetailValue {
+    /* font-weight: bold; */
+}
+
+.MessageDetailValue.Draft {
+    color: orange
+}
+
+.MessageDetailValue.InProgress {
+    color: #3871DA
+}
+
+.MessageDetailValue.Sent {
+    color: green
+}
+
+.MessageDetailValue.Error {
+    color: red
+}
+
+.MessageDetailValue.Pending {
+    color: #ccc
+}
