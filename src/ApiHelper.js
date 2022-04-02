@@ -789,6 +789,25 @@ export const getPositions = () => {
         },
     });
 };
+export const createBoardFilter = (body) => {
+    // const data = JSON.stringify(body);
+    console.log(body, 'tags body indide api helper file', body)
+    return axios({
+        method: "post",
+        url: URL + `api/filters`,
+        data: body,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+
+    });
+};
 export const addTagstoContacts = (contactid, body) => {
     // const data = JSON.stringify(body);
     console.log(body, 'tags body indide api helper file', body)

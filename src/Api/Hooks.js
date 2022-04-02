@@ -71,7 +71,7 @@ export const useTagsWithContacts = () => {
     useEffect(() => {
         getTagsWithContacts()
             .then(([tag]) => {
-                console.log('ApiHooks: getTagsWithContacts -----',tag)
+                console.log('ApiHooks: getTagsWithContacts -----', tag)
                 console.log(tag)
                 setTags(tag)
             })
@@ -143,7 +143,6 @@ export const addUser = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
-
     useEffect(() => {
         getTags()
             .then(([tags]) => {
@@ -155,7 +154,6 @@ export const useTags = () => {
                 console.log(error)
             })
     }, [])
-
     return tags
 }
 export const useContact = (id) => {
@@ -175,7 +173,6 @@ export const useContact = (id) => {
 
     return contact
 }
-
 
 export const usearchiveContacts = (id) => {
     const [archivecontact, setarchiveContact] = useState(null)

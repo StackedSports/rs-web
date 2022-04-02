@@ -30,6 +30,7 @@
     "email-validator": "^2.0.4",
     "emoji-mart": "^3.0.1",
     "express": "^4.17.1",
+    "formik": "^2.2.9",
     "heroku": "^7.59.2",
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.29.1",
@@ -54,7 +55,8 @@
     "recharts": "^2.1.4",
     "redux-persist-transform-encrypt": "^2.0.1",
     "styled-components": "^5.2.1",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

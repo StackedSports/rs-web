@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
 import {
   makeStyles,
   Grid,
@@ -7,13 +8,29 @@ import {
   TextField,
   Snackbar,
   CircularProgress,
+  Card,
+  CardContent,
+  MenuItem,
+  InputLabel,
+  Form,
+  Select,
+  CardActions,
+  Button,
+  CardHeader,
+  FormControl
 } from "@material-ui/core";
 import { addDays } from "date-fns";
+
+
+// import { Formik, Form, Field } from "formik";
+// import * as Yup from "yup";
 
 import DatePicker from "react-date-picker";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import { DateRangePicker } from "react-date-range";
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
 
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
@@ -42,14 +59,23 @@ import {
   FaMapMarker,
   FaLocationArrow,
 } from "react-icons/fa";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import DialogBox from "../common/Dialogs";
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import {
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup
+} from "@material-ui/core";
+import {
   addTagstoContacts,
   archiveContactEnd,
+  createBoardFilter,
   filterContacts,
   getAllContacts,
   getBoardFiltersById,
@@ -61,7 +87,17 @@ import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoard
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+//Data
+const initialValues = {
+  boardName: "",
+  isShared: ""
+};
+const validationSchema = yup.object({
+  boardName: yup
+    .string("Enter Board name")
+    .required("Board Name is required"),
 
+});
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
 //     width: "100%",
@@ -70,7 +106,15 @@ function Alert(props) {
 //     },
 //   },
 // }));
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    // padding: theme.spacing(4),
+    outline: "none"
+  },
   tableHeading: {
     fontWeight: 700,
     fontSize: 15,
@@ -125,8 +169,15 @@ const useStyles = makeStyles({
     color: '#3871DA'
     // },
 
+  },
+  padding: {
+    padding: theme.spacing(3)
+  },
+  button: {
+    margin: theme.spacing(1)
   }
-});
+}));
+
 
 function Home(props) {
   const classes = useStyles();
@@ -154,12 +205,13 @@ function Home(props) {
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
+  const [FilterObj, setFilterObj] = useState(null);
+
+
   const [stateFilter, setStateFilter] = useState(null);
   const [dobstate, setdobstate] = useState(null);
   const [boardCount, setboardCount] = useState(0);
-
-
-
+  const [modalData, setData] = useState();
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
   const [areacoachFilter, setareacoachFilter] = useState(null);
@@ -181,6 +233,9 @@ function Home(props) {
   const [showFilterButton, setShowFilterButton] = useState(false)
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
   const [openerrSnakBar, setopenerrSnakBar] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = useState(getModalStyle);
 
   const [value, onChange] = useState(new Date());
   const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
@@ -277,11 +332,27 @@ function Home(props) {
     { name: "Game Results", sub: true },
     { name: "Game Notes", sub: true },
   ];
+
+  const history = useHistory()
+
+
+
   const handleClick = () => {
     setOpenSnackBar(true);
   };
+  function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
+  function getModalStyle() {
+    const top = 50 + rand();
+    const left = 50 + rand();
 
-
+    return {
+      top: `${top}%`,
+      left: `50%`,
+      transform: `translate(-${top}%, -50%)`
+    };
+  }
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -307,7 +378,7 @@ function Home(props) {
   };
 
   const TagstoContacts = async () => {
-    setalertValue('tagged')
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been tagged`)
 
     // var tagsid={
     //   tag_ids:selectedCheckBoxesForTags
@@ -331,14 +402,14 @@ function Home(props) {
     }
     catch (e) {
       console.log("erroraddtags", e)
-      openerrSnakBar(true);
+      setopenerrSnakBar(true)
 
     }
 
     //setShowBackButton(false);
     //handleSelectedPlaceHolder(null, false, false, true);
     //setShowMediaStats(false);
-    //props.history.push('/media');
+    //props.props.history.push('/media');
     //notify("Media saved successfully")
     setOpenSnackBar(true);
 
@@ -362,8 +433,12 @@ function Home(props) {
   //     })
   //   });
   // }
+
+
   const removeTags = async () => {
-    setalertValue('un tagged')
+    // setalertValue('')
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been un tagged`)
+
 
     // var tagsid={
     //   tag_ids:selectedCheckBoxesForTags
@@ -387,14 +462,14 @@ function Home(props) {
     }
     catch (e) {
       console.log("erroraddtags", e)
-      setOpenSnackBar(true);
+      setopenerrSnakBar(true);
 
     }
 
     //setShowBackButton(false);
     //handleSelectedPlaceHolder(null, false, false, true);
     //setShowMediaStats(false);
-    //props.history.push('/media');
+    //props.props.history.push('/media');
     //notify("Media saved successfully")
     setOpenSnackBar(true);
     // var tagsid={
@@ -404,6 +479,8 @@ function Home(props) {
 
 
   }
+
+  // Date picker for filter 
   const CalendarFilter = () => {
     return (
       <div class="dropdown" onMouseLeave={() => {
@@ -523,7 +600,224 @@ function Home(props) {
       </div>
     );
   };
+  // save as Board Modal
+  const SaveBoardModal = () => {
+    const formik = useFormik({
+      initialValues: {
+        boardName: "",
+        // password: "",
+        isshared: false
+      },
+      validationSchema: validationSchema,
+      onSubmit: async (values) => {
+        setalertValue(`Board has been Created`)
 
+        var obj = {
+          "filter": {
+            name: values.boardName,
+            is_shared: values.isshared,
+            criteria: FilterObj.criteria,
+
+          }
+        }
+
+        // createBoardFilter
+        // setalertValue('un tagged')
+
+        // var tagsid={
+        //   tag_ids:selectedCheckBoxesForTags
+        // }
+
+        try {
+
+          let res = await createBoardFilter(obj);
+
+
+
+          // const ress= await updateMedia(addOwner)
+          console.log("addOwner", res)
+        }
+        catch (e) {
+          console.log("erroraddtags", e)
+          setopenerrSnakBar(true);
+
+        }
+
+        //setShowBackButton(false);
+        //handleSelectedPlaceHolder(null, false, false, true);
+        //setShowMediaStats(false);
+        //props.props.history.push('/media');
+        //notify("Media saved successfully")
+        setOpenSnackBar(true);
+        // var tagsid={
+        //   tag_ids:selectedCheckBoxesForTags
+        // }
+
+        // var temp = []
+        // temp.push(values)
+        // // var arr = [...temp, ...FilterObj]
+        // var arr = values.concat(FilterObj)
+        // // arr.push(values)
+        // // arr.push(FilterObj)
+        console.log("value of form and contacts", obj)
+
+
+        handleCloseModal()
+      }
+    });
+    return (
+
+
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={handleCloseModal}
+      >
+        <div style={modalStyle} className={classes.paper}>
+
+          <div className={classes.padding}>
+            <CardHeader title="Create Board"></CardHeader>
+
+
+            <div>
+              <form onSubmit={formik.handleSubmit}>
+                <TextField
+                  fullWidth
+                  id="boardName"
+                  name="boardName"
+                  variant="outlined"
+                  label="Board Name"
+                  style={{ marginBottom: "1rem" }}
+                  value={formik.values.boardName}
+                  onChange={formik.handleChange}
+                  error={formik.touched.boardName && Boolean(formik.errors.boardName)}
+                  helperText={formik.touched.boardName && formik.errors.boardName}
+                />
+
+                <FormLabel component="legend">Is Shared</FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue='false'
+                  value={formik.values.isShared}
+                  onChange={formik.handleChange}
+                >
+                  <FormControlLabel value="false" control={<Radio />} label="No" />
+                  <FormControlLabel value="true" control={<Radio />} label="Yes" />
+                </RadioGroup>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Button color="primary" variant="contained" type="submit">
+                    Submit
+                  </Button>
+                  <Button onClick={handleCloseModal} color="danger" variant="contained" >
+                    Cancel
+                  </Button>
+                </div>
+
+
+              </form>
+            </div>
+          </div>
+
+
+
+
+          {/* <Grid >
+            <div className={classes.padding}>
+              <CardHeader title="Create Board"></CardHeader>
+              <Form
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+
+
+                <CardContent>
+                  <Grid item container spacing={1} justify="center">
+                    <Grid
+
+                      item xs={12} sm={12} md={12}>
+                      <Field
+                        // height={40}
+                        label="Board Name"
+                        variant="outlined"
+                        fullWidth
+                        name="boardName"
+                        onChange={handleChange=()=>{e.target.value}}
+                        value={values.boardName}
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      <div id="my-radio-group">is Shared</div>
+                      <div role="group" aria-labelledby="my-radio-group">
+                        <label className="mr-5">
+                          <Field type="radio" name="isShared" value="true" />
+                          yes
+                        </label>
+                        <label >
+                          <Field
+                            type="radio"
+                            name="isShared"
+                            value="false"
+                            checked
+                          />
+                          no
+                        </label>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <CardActions>
+                  <div className="w-100">
+
+                    <div className="d-flex justify-content-between align-items-center">
+
+                      <IconTextField
+                        // width={50}
+
+                        text="Cancel "
+                        textColor="white"
+                        background="#FF0000"
+
+                        onClick={() => {
+                          setOpen(false)
+                        }}
+                      ></IconTextField>
+                      <div>
+                        <Button
+                          variant="contained"
+                          // color="primary"
+                          type="Submit"
+                          className={classes.button}
+                        >
+                          Create Board
+                        </Button>
+                      </div>
+
+
+
+
+
+
+                    </div>
+                  </div>
+
+                </CardActions>
+
+              </Form>
+            </div>
+          </Grid> */}
+
+
+          {/* <SimpleModal /> */}
+        </div>
+      </Modal>
+    )
+
+
+  };
   const getMyContacts = (page) => {
     // setLoading(true);
     // if(!pagination.currentPage===pagination.totalPages){}
@@ -592,6 +886,14 @@ function Home(props) {
     );
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+
+  };
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+  // Filter Contacts
   const AddFilterContacts = async () => {
     var obj = {
       criteria: {
@@ -668,7 +970,7 @@ function Home(props) {
     console.log(obj, "filter object")
 
 
-
+    setFilterObj(obj)
 
 
     try {
@@ -690,6 +992,15 @@ function Home(props) {
     }
 
   }
+
+  const onSubmit = (values) => {
+    console.log(values, 'submit form values', contacts);
+
+  };
+
+
+
+
   let getTagsWithContacts = useTagsWithContacts()
   console.log(getTagsWithContacts, "getTagsWithContacts")
   var TeamContacts = useTeamContact()
@@ -769,7 +1080,9 @@ function Home(props) {
   var allBoards = useBoards()
   console.log('allBoards', allBoards)
   const ArchiveContact = () => {
-    setalertValue('Archived')
+
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been Archived`)
+
     setFetching(true);
     selectedCheckBoxes.map((id) => {
       return (
@@ -1757,12 +2070,23 @@ function Home(props) {
   var totalcount = 0
   const removeDataFromFilter = (index) => {
     // setboardCount(0)
-
     const newCount = 0;
-    console.log('newCount', newCount)
+    console.log('filtertype', boardCount === 1, filter.length === 1)
     setboardCount(0)
+    window.history.pushState("", "", `/contacts`);
 
+    if (filterType.includes('boards') && filter.length === 1 && boardCount === 1) {
 
+      getMyContacts();
+      var temp = filter;
+      var tempType = filterType;
+      temp.splice(index, 1);
+      tempType.splice(index, 1);
+      var newArray = temp;
+      setFilter(newArray);
+      setFilterType(tempType);
+      setuseLessState(uselessState + 1);
+    }
     // getRemoveData(newCount);
     var temp = filter;
     var tempType = filterType;
@@ -1838,22 +2162,8 @@ function Home(props) {
         console.log(filterType[index], 'cheking')
         if (filterType[index] === "status") {
           console.log(item?.status, '<==== : item?.status:: filt:====>', filt)
-
-          // if (item?.status != null && item?.status.status === filt) {
-          // alert("acha hy na")
-
-
-
-
-
-
-          // }
-
         }
-
         if (filterType[index] === "boards") {
-          //  setContacts(null)
-
           console.log('boards zain', filterType[index])
 
           if (item != null && boardsById?.name === filt) {
@@ -1951,8 +2261,9 @@ function Home(props) {
     }
     return isValid;
   };
-
   const handleBoardClick = (board, index) => {
+    // history?.push('contacts/board/yBgMwvsbRmGa')
+    window.history.pushState("", "", `/contacts/board/${board.id}`);
     setboardCount(1)
 
 
@@ -1963,11 +2274,14 @@ function Home(props) {
 
 
       addDataToFilter(board.name, "boards");
+
     }
 
     else {
 
       setBoardFilter(null);
+
+
       addDataToFilter(board.name, "boards");
       // var ind = 1
       // removeDataFromFilter(ind);
@@ -2019,7 +2333,7 @@ function Home(props) {
       >
 
         <Alert onClose={handleClose} severity="success">
-          {selectedCheckBoxes.length + " "} contacts have been {alertValue}
+          {alertValue}
         </Alert>
       </Snackbar>
       <Snackbar
@@ -2167,6 +2481,11 @@ function Home(props) {
                   width={180}
                   text="Save as Board"
                   textColor="gray"
+                  onClick={() => {
+                    // setShowFiltersRow(!showFiltersRow);
+                    handleOpen();
+                    // setContacts(allcontacts)
+                  }}
                   icon={
                     <AccountBoxIcon
                       style={{ color: "#3871DA" }}
@@ -2976,6 +3295,7 @@ function Home(props) {
         }}
         hideActions={true}
       />
+      <SaveBoardModal />
     </DarkContainer>
   );
 }
