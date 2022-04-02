@@ -638,8 +638,8 @@ function Home(props) {
           console.log("addOwner", res)
         }
         catch (e) {
-          console.log("erroraddtags", e)
           setopenerrSnakBar(true);
+          console.log("erroraddtags", e)
 
         }
 

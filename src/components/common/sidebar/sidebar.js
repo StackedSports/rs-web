@@ -57,7 +57,8 @@ import {
   addTag,
   getAssociatedContactByFileName,
   uploadMedia,
-  addTagToMedia
+  addTagToMedia,
+  createContacts
 } from "../../../ApiHelper";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -515,6 +516,15 @@ const Sidebar = (props) => {
 
   // Alerts
   const [alerts, setAlerts] = useAlerts()
+
+  const [TwitterName, setTwitterName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [phoneNumber, setphoneNumber] = useState('')
+
+
+
+
 
   //console.log("alerts ")
   //console.log(alerts)
@@ -1786,7 +1796,11 @@ const Sidebar = (props) => {
               </InputGroup.Prepend> */}
               <FormControl
                 placeholder="+ Add Name"
-                required
+                // required
+
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60, width: "99%", marginRight: "2%" }}
@@ -1804,6 +1818,10 @@ const Sidebar = (props) => {
               <FormControl
                 placeholder="+ Add Name"
                 aria-label="Username"
+
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
                 aria-describedby="basic-addon1"
                 style={{ height: 60, width: "99%" }}
               />
@@ -1822,6 +1840,10 @@ const Sidebar = (props) => {
               </InputGroup.Prepend>
               <FormControl
                 placeholder="+ Add Twitter Handle"
+
+                onChange={(e) => {
+                  setTwitterName(e.target.value);
+                }}
                 aria-label="Username"
                 aria-describedby="basic-addon1"
                 style={{ height: 60 }}
@@ -1841,6 +1863,11 @@ const Sidebar = (props) => {
               <FormControl
                 placeholder="+ Add Phone Number"
                 aria-label="Username"
+
+                onChange={(e) => {
+                  setphoneNumber(e.target.value);
+                }}
+
                 aria-describedby="basic-addon1"
                 style={{ height: 60 }}
               />
@@ -1880,13 +1907,49 @@ const Sidebar = (props) => {
               ></IconTextField>
               <IconTextField
                 width={160}
-                onClick={() => {
-                  setAddContact(false);
-                  setOpenSnackBar(true);
+                onClick={async () => {
+
+                  if (firstName && lastName && (phoneNumber || TwitterName)) {
+                    console.log(firstName, lastName, phoneNumber, TwitterName, " TwitterName")
+                    try {
+                      var obj = {
+                        "contact": {
+                          first_name: firstName,
+                          last_name: lastName,
+                          phone: phoneNumber,
+                          twitter_handle: TwitterName
+                        }
+                      }
+                      let res = await createContacts(obj);
+
+
+                      setOpenSnackBar(true);
+
+                      // const ress= await updateMedia(addOwner)
+                      console.log("addOwner", res)
+                    }
+                    catch (e) {
+                      // setopenerrSnakBar(true);
+                      setTimeout(() => {
+                        setAlerts.push("Something went wrong please try again!")
+
+                      }, 200 * index)
+
+                      console.log("erroraddtags", e)
+
+                    }
+                    setAddContact(false);
+                    // setOpenSnackBar(true);
+                    setTwitterName('')
+                    setFirstName('')
+                    setLastName('')
+                    setphoneNumber('')
+                  }
                 }}
                 text="Create Profile"
                 textColor={"white"}
                 background={"#3871da"}
+
                 icon={
                   <PermIdentityIcon
                     style={{ color: "white" }}
