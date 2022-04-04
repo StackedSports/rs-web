@@ -75,6 +75,7 @@ const renderActions = (actions) => {
                       variant={action.variant} 
                       endIcon={<action.icon/>}
                       onClick={action.onClick}
+                      disabled={action.disabled}
                     />
                 )
         })

@@ -4,6 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 import { columnsMini, columnsFull } from './DataGridConfig';
+import { de } from "date-fns/locale";
 
 export default function ContactsTable(props) {
     const columns = props.mini ? columnsMini : columnsFull
