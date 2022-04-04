@@ -197,25 +197,9 @@ export const useContact = (id) => {
 export const useContacts = (initialConfig) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
-    //const pagination = usePagination(null)
-    const [pagination, setPagination] = useState({
-        currentPage: initialConfig ? initialConfig.currentPage : 1,
-        itemsPerPage: initialConfig ? initialConfig.itemsPerPage : 50,
-        totalItems: 0,
-        totalPages: 0,
-    })
-    // const lastUpdate = useRef(pagination.shouldUpdate)
-    const lastPage = useRef(initialConfig ? initialConfig.currentPage : -1)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
 
     useEffect(() => {
-        if(lastPage.current === pagination.currentPage)
-            return
-        
-        // lastUpdate.current = pagination.shouldUpdate
-        lastPage.current = pagination.currentPage
-
-        // console.log('fetching contacts')
-
         setLoading(true)
 
         getContacts(pagination.currentPage, 50)
@@ -223,8 +207,6 @@ export const useContacts = (initialConfig) => {
                 //console.log('ApiHooks: getContact -----')
                 //console.log(contact)
                 setContacts(contacts)
-                // pagination.updateResult(pag.totalItems, pag.totalPages)
-                // pagination.setTotalPages(pag.totalPages)
                 setPagination(pag)
             })
             .catch(error => {
@@ -234,17 +216,13 @@ export const useContacts = (initialConfig) => {
                 setLoading(false)
             })
 
-    }, [pagination.currentPage]) // [pagination.shouldUpdate])
+    }, [pagination.currentPage])
 
-    const getPage = (page) => {
-        setPagination({
-            ...pagination,
-            currentPage: page
-        })
-
+    return {
+        items: contacts,
+        pagination,
+        loading
     }
-
-    return [contacts, {...pagination, getPage}, loading]
 }
 
 // TODO: this should not be a hook

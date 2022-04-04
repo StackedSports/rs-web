@@ -61,7 +61,7 @@ const getSelectionLabel = (privateCount, teamCount, contactCount) => {
 
 export default function ReceiverSelectDialog(props) {
     // Contacts
-    const [contacts, pagination, contactsLoading] = useContacts()
+    const contacts = useContacts()
     const [selectedContacts, setSelectedContacts] = useState([])
     // When Contacts page change, we need to store the selected contacts data
     // and the current selection somehow. We also need to keep track of each
@@ -69,7 +69,7 @@ export default function ReceiverSelectDialog(props) {
     // having to iterate over selected ids for contacts we already retrieved
     // the data from. So here's a hook for that!
     // 
-    const [mpSelection, mpSelectedCount, mpUtils] = useMultiPageSelection(pagination.currentPage)
+    const [mpSelection, mpSelectedCount, mpUtils] = useMultiPageSelection(contacts.pagination.currentPage)
     //
 
     // Boards
@@ -174,7 +174,7 @@ export default function ReceiverSelectDialog(props) {
         // mpSelection, mpSelectedCount, mpUtils
         mpUtils.saveData(contacts)
 
-        pagination.getPage(page)
+        contacts.pagination.getPage(page)
 
     }
 
@@ -226,9 +226,9 @@ export default function ReceiverSelectDialog(props) {
             </TabPanel>
             <TabPanel value={2} index={2}> 
                 <ContactsTable mini
-                    contacts={contacts}
-                    pagination={pagination}
-                    loading={contactsLoading}
+                    contacts={contacts.items}
+                    pagination={contacts.pagination}
+                    loading={contacts.loading}
                     selection={mpSelection} // selectedContacts
                     onSelectionChange={onContactsSelectionChange}
                     onPageChange={onContactsPageChange}/>

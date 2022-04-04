@@ -6,9 +6,13 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 
 export default function ContactsPage(props) {
-    const [contacts, pagination, contactsLoading] = useContacts()
+    const contacts = useContacts()
 
-    console.log(contacts)
+    useEffect(() => {
+        
+    }, [])
+
+    // console.log(contacts)
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -44,9 +48,9 @@ export default function ContactsPage(props) {
           onFilterSelected={onFilterSelected}
         >
             <ContactsTable
-              contacts={contacts}
-              pagination={pagination}
-              loading={contactsLoading}/>
+              contacts={contacts.items}
+              pagination={contacts.pagination}
+              loading={contacts.loading}/>
         </MainLayout>
     )
 }
