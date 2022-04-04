@@ -469,8 +469,8 @@ const MessageDetailsPage = (props) => {
     }
 
         // setPanelActions(actions)
-    const hasMedia = message.item.media && Object.keys(message.item.media).length > 0
-    const hasMediaPlaceholder = message.item.media_placeholder && Object.keys(message.item.media_placeholder).length > 0
+    const hasMedia = message.item?.media && Object.keys(message.item?.media).length > 0
+    const hasMediaPlaceholder = message.item?.media_placeholder && Object.keys(message.item?.media_placeholder).length > 0
 
     console.log(hasMedia)
     console.log(hasMediaPlaceholder)
@@ -498,6 +498,7 @@ const MessageDetailsPage = (props) => {
               message={message.item} 
               style={{ marginBottom: 20 }}
             />
+
             <MessageRecipientsTable 
               selection={selectedRecipients}
               onSelectionChange={onSelectedRecipientsChange}

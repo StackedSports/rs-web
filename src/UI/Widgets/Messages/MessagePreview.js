@@ -63,10 +63,10 @@ const MessagePreview = ({ message, mini = false, style, link = false }) => {
 
         let { recipients } = message
 
-        let total = recipients.count || 0
-        let sent = recipients.status_counts.sent || 0
-        let error = recipients.status_counts.error || 0
-        let pending = recipients.status_counts.pending || 0
+        let total = recipients?.count || 0
+        let sent = recipients?.status_counts.sent || 0
+        let error = recipients?.status_counts.error || 0
+        let pending = recipients?.status_counts.pending || 0
 
         console.log('sent = ' + sent)
         console.log('total = ' + total)

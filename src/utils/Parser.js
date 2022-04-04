@@ -158,16 +158,19 @@ export const getMessageRecipientsLabel = (recipients) => {
 }
 
 export const getMessageRecipientsLabelArray = (recipients) => {
+	if(!recipients)
+		return ['--']
+
 	let list = []
 	let array = []
 
-	if(recipients.filter_list) {
+	if(recipients.filter_list && recipients.filter_list) {
 		recipients.filter_list.forEach(filter => {
 			list.push(filter.name)
 		})
 	}
 
-	if(recipients.contact_list) {
+	if(recipients.contact_list && recipients.contact_list) {
 		recipients.contact_list.forEach(contact => {
 			list.push(getFullName(contact))
 		})

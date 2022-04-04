@@ -79,20 +79,22 @@ export const useTagsWithContacts = () => {
 
     return tags
 }
+
+// Custom Hook
 export const useBoard = (id) => {
-    const [boardContacts, setBoardContacts] = useState(null)
+    const [board, setBoard] = useState(null)
 
     useEffect(() => {
         getBoard(id)
-            .then(([contacts]) => {
+            .then(([board]) => {
                 console.log('ApiHooks: getBoardByid -----')
-                console.log(contacts)
-                setBoardContacts(contacts)
+                console.log(board)
+                setBoard(board)
             })
             .catch(error => console.log(error))
     }, [])
 
-    return boardContacts
+    return board
 }
 
 
@@ -194,7 +196,7 @@ export const useContact = (id) => {
     return contact
 }
 
-export const useContacts = (initialConfig) => {
+export const useContacts = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
