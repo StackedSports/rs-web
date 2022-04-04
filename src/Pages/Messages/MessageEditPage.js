@@ -29,7 +29,7 @@ const MessageEditPage = (props) => {
 
     // Platform
     useEffect(() => {
-        if(!message.item)
+        if(!message.item || !message.item.platform)
             return
         
         console.log(message.item)

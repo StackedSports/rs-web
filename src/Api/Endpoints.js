@@ -3,7 +3,7 @@ import moment from "moment";
 
 import curlirize from 'axios-curlirize';
 // initializing axios-curlirize with your axios instance
-// curlirize(axios);
+// curlirize(axios);    
 
 //const URL = "https://prod.recruitsuite.co/api/";
 const URL = "https://api.recruitsuite.co/api/";
@@ -35,7 +35,7 @@ const AXIOS = (method, url, body) => {
                 data
             })
             .then(res => {
-                //console.log(res)
+                // console.log(res)
                 if (res.status === 200) {
 
                     let pagination = {
@@ -253,6 +253,10 @@ export const getFilters = () => {
     return AXIOS('get', 'filters?is_shared=false')
 }
 
+export const getPlaceholder = (id) => {
+    return AXIOS('get', `media/placeholder/${id}`)
+}
+
 export const getPlaceholders = (page, perPage) => {
     return AXIOS('get', `media/placeholders?page=${page}&per_page=${perPage}`)
 }
@@ -274,6 +278,11 @@ export const createMessage = (data) => {
     let body = { 
         message: {...data}
     }
+
+    // if(user_id)
+    //     body['user_id'] = user_id
+
+    // {"errors":[{"code":"active_record/invalid_foreign_key","message":"PG::ForeignKeyViolation: ERROR:  insert or update on table \"messages\" violates foreign key constraint \"messages_user_id_fkey\"\nDETAIL:  Key (user_id)=(0) is not present in table \"users\".\n"}]}
 
     return POST('messages', body)
 }
@@ -298,7 +307,65 @@ export const archiveMessage = (messageId) => {
     return DELETE(`messages/${messageId}?message[status]=archived`)
 
     //return DELETE(`messages/${messageId}`, { message: { status: 'archived'} })
-    
+}
+
+export const addTagsToMessage = (tagIds, messageId) => {
+    let body = {
+        message: {
+            tag_ids: tagIds
+        }
+    }
+
+    return POST(`messages/${messageId}/add_tags`, body)
+}
+
+export const addTagsToContact = (tagIds, contactId) => {
+    let body = {
+        contact: {
+            tag_ids: tagIds
+        }
+    }
+
+    return POST(`contacts/${contactId}/add_tags`, body)
+}
+
+export const addTagsToContacts = (tagIds, contactIds) => {
+    return new Promise((resolve, reject) => {
+        let total = contactIds.length
+        let success = 0
+        let error = 0
+
+        let errors = []
+        let failedIds = []
+
+        let count = contactIds.length
+
+        contactIds.forEach(contactId => {
+            addTagsToContact(tagIds, contactId)
+                .then(res => {
+                    console.log(res)
+                    success++
+                })
+                .catch(error => {
+                    console.log(error)
+                    errors.push(error)
+                    failedIds.push(contactId)
+                    error++
+                })
+                .finally(() => {
+                    count--
+
+                    if(count === 0)
+                        resolve({
+                            total,
+                            success,
+                            error,
+                            errors,
+                            failedIds
+                        })
+                })
+        })
+    })
 }
 
 // TODO: what is this function?

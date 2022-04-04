@@ -88,7 +88,12 @@ export const deconstructDate = (date) => {
 	}
 }
 
-export const getFullName = (contact) => `${contact.first_name} ${contact.last_name}`
+export const getFullName = (contact) => {
+	if(!contact)
+		return ''
+
+	return `${contact.first_name || ''} ${contact.last_name || ''}`
+}
 
 export const getMessageStatusLabel = (status) => {
 	if(status === 'Pending')
@@ -109,7 +114,7 @@ export const getMessageSenderPlatformLabel = (message) => {
 	if(!message.platform)
 		return ''
 
-	console.log(`--${message.platform.name}--`)
+	//console.log(`--${message.platform.name}--`)
 	switch(message.platform.name) {
 		case 'Twitter': return `(@${message.sender.twitter_profile.screen_name})`
 		default: return `(${formatPhoneNumber(message.sender.phone)})`
@@ -181,6 +186,13 @@ export const getMessageRecipientsLabelArray = (recipients) => {
 	})
 
 	return array
+}
+
+export const getMessageRecipientResponseLabel = (response) => {
+	if(response === 'You cannot send messages to this user.')
+		return 'You cannot send messages to this user - Check follow status'
+	else 
+		return response
 }
 
 export const formatDate = (date, dateStyle, timeStyle) => {

@@ -29,6 +29,7 @@ import {
 import { formatDate } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
+import { SelectAllOutlined } from '@material-ui/icons';
 
 const filters = [
     { // Category
@@ -48,6 +49,9 @@ export default function MessageCreatePage(props) {
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
     // const ranks = useRanks()
+
+    const fromContactsId = useRef(props.match.params.contacts)
+    
 
     // TODO: user should be coming from user context, not from
     // fetching the api
@@ -101,6 +105,35 @@ export default function MessageCreatePage(props) {
     const [redirect, setRedirect] = useState('')
 
     useEffect(() => {
+        if(!fromContactsId.current)
+            return
+
+        // console.log(fromContactsId.current)
+        let parts = fromContactsId.current.split('-')
+        // console.log(parts)
+
+        if(parts[1]) {
+            let selection = JSON.parse(localStorage.getItem(`new-message-contact-${parts[1]}`))
+            console.log(selection)
+
+            selection.forEach((id, index) => {
+                selection[index] = { id, first_name: 'Selected', last_name: 'Recipient' }
+            })
+
+            console.log(selection)
+            console.log(recipientSelected)
+
+            setRecipientSelected({
+                privateBoards: recipientSelected?.privateBoards || [],
+                teamBoards: recipientSelected?.teamBoards || [],
+                contacts: recipientSelected?.contacts || [],
+                recipients: selection
+            })
+        }
+
+    }, [fromContactsId.current])
+
+    useEffect(() => {
         if(props.platformSelected)
             setPlatformSelected(props.platformSelected)
 
@@ -114,7 +147,7 @@ export default function MessageCreatePage(props) {
 
     // Recipients from Props
     useEffect(() => {
-        console.log(props.recipientSelected)
+        // console.log(props.recipientSelected)
 
         if(props.recipientSelected)
             setRecipientSelected(props.recipientSelected)
@@ -360,16 +393,22 @@ export default function MessageCreatePage(props) {
     }
 
     const onReceiverSelected = (selectedPrivateBoards, selectedTeamBoards, selectedContacts) => {
+        console.log(selectedContacts)
         setRecipientSelected({
             privateBoards: selectedPrivateBoards,
             teamBoards: selectedTeamBoards,
-            contacts: selectedContacts
+            contacts: selectedContacts,
+            recipients: recipientSelected?.recipients || []
         })
         setShowReceiverDialog(false)
     }
 
     const onReceiverSelectedClick = (index, type) => {
         console.log('Clicked on ' + index + ' from ' + type)
+
+        if(type === 'recipients')
+            return
+
         setReceiverDialogTab(receiverDialogTabs[type])
         setShowReceiverDialog(true)
     }
@@ -391,6 +430,8 @@ export default function MessageCreatePage(props) {
             // We can just use the index and type to remove the item from the recipientSelected object 
             tmp[type].splice(index, 1)
         }
+
+        console.log(tmp)
         
         setRecipientSelected(tmp)
     }
@@ -458,8 +499,20 @@ export default function MessageCreatePage(props) {
 
         let messageData = {}
 
+        // Twitter, SMS, Personal Text
+
         if(platformSelected) {
-            messageData['platform'] = platformSelected
+            
+            const getPlatf = (plat) => {
+                switch(plat) {
+                    case 'Twitter Dm': return 'Twitter'
+                    case 'SMS/MMS': return 'SMS'
+                    default: return plat
+                }
+            }
+
+
+            messageData['platform'] = getPlatf(platformSelected)
         } else {
             // throw error
             return showErrorMessage('You must select a Platform')
@@ -556,7 +609,11 @@ export default function MessageCreatePage(props) {
                 messageData['media_placeholder_id'] = mediaSelected.item.id
         }
 
+        // delete messageData.user_id
+
         console.log(messageData)
+
+        // return
 
         if(save && Object.keys(messageData).length === 0)
             return showErrorMessage(`Can't save an empty message`)
@@ -592,7 +649,7 @@ export default function MessageCreatePage(props) {
 
         } else {
             console.log('Create Message')
-            return
+            // return
             createMessage(messageData)
                 .then(result => {
                     console.log(result)
@@ -684,14 +741,6 @@ export default function MessageCreatePage(props) {
             />
 
             <MessageInput
-              type='platform'
-              label='Send as:'
-              platforms={platforms}
-              selected={platformSelected}
-              onSelected={onPlatformSelected}
-              onRemove={onPlatformRemove}
-            />
-            <MessageInput
               type='sender'
               label='Send from:'
               name='Add Sender'
@@ -711,6 +760,18 @@ export default function MessageCreatePage(props) {
               onRemove={onRemoveReceiver}
               onClick={() => setShowReceiverDialog(true)}
             />
+
+            <MessageInput
+              type='platform'
+              label='Send as:'
+              platforms={platforms}
+              selected={platformSelected}
+              onSelected={onPlatformSelected}
+              onRemove={onPlatformRemove}
+            />
+            
+
+            
 
             <MessageInput
               type='time'

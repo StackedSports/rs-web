@@ -445,14 +445,15 @@ const Sidebar = (props) => {
   let teamLogo = DashboardLogo
 
   if(user && user.team) {
-    teamLogo = user.team.org.logo.thumb
+    console.log(user)
+    teamLogo = user.team.org.logo.original
     // teamLogo = user.team.org.logo.original
     // teamLogo = user.team.org.logo.medium
     // teamLogo = user.team.org.logo.large
-    // console.log("AAAAAAAAAAAAAAAAA")
-    // console.log(teamLogo)
+    // ////console.log("AAAAAAAAAAAAAAAAA")
+    // ////console.log(teamLogo)
   }
-  //console.log(user.team.org.logo)
+  //////console.log(user.team.org.logo)
 
   
 
@@ -516,17 +517,17 @@ const Sidebar = (props) => {
   // Alerts
   const [alerts, setAlerts] = useAlerts()
 
-  //console.log("alerts ")
-  //console.log(alerts)
+  //////console.log("alerts ")
+  //////console.log(alerts)
 	const getTeamMembers = () => {
 		getTeamContacts().then(
 			(res) => {
-				// console.log("THis is all contacts res", res);
+				// ////console.log("THis is all contacts res", res);
 				if (res.statusText === "OK") {
 					setTeamMembers(res.data);
-					console.log("******************") 
-					console.log(res)
-					console.log("******************") 
+					//////console.log("******************") 
+					//////console.log(res)
+					//////console.log("******************") 
 				}
 			},
 			(error) => {}
@@ -536,16 +537,16 @@ const Sidebar = (props) => {
 	const getAllTags = () => {
 		getTags().then(
 			(res) => {
-				// console.log("THis is all tags", res);
+				// //////console.log("THis is all tags", res);
 				var TAGS = [];
 
 				if (res.statusText === "OK") {
-					console.log("These are all tags", res.data);
+					//////console.log("These are all tags", res.data);
 					setAllTags(res.data);
 				}
 			},
 			(error) => {
-				console.log("get all tags error: ", error);
+				//////console.log("get all tags error: ", error);
 			}
 		);
 	};
@@ -558,12 +559,12 @@ const Sidebar = (props) => {
 		getPlaceholder().then(
 			(res) => {
 				if (res.statusText === "OK") {
-					console.log("These are all placeholders", res.data);
+					//////console.log("These are all placeholders", res.data);
 					setAllPlaceholders(res.data);
 				}
 			},
 			(error) => {
-				console.log("get all placeholders error: ", error)
+				//////console.log("get all placeholders error: ", error)
 			}
 		)
 	}
@@ -585,7 +586,7 @@ const Sidebar = (props) => {
 		let duplicate = false
 
 		for(let i in owners) {
-			//console.log(owner)
+			////////console.log(owner)
 			if(owners[i].id == member.id) {
 				duplicate = true
 				break
@@ -595,9 +596,9 @@ const Sidebar = (props) => {
 		if(!duplicate) {
 			let newOwners = Object.assign([], owners)
 			newOwners.push(member)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
+			// //////console.log("****************************")
+			// ////console.log(newOwners)
+			// ////console.log("****************************")
 			setOwners(newOwners)
 		}
   	};
@@ -626,7 +627,7 @@ const Sidebar = (props) => {
 		let duplicate = false
 
 		for(let i in tags) {
-			//console.log(owner)
+			//////console.log(owner)
 			if(tags[i].id == tag.id) {
 				duplicate = true
 				break
@@ -636,9 +637,9 @@ const Sidebar = (props) => {
 		if(!duplicate) {
 			let newTags = Object.assign([], tags)
 			newTags.push(tag)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
+			// ////console.log("****************************")
+			// ////console.log(newOwners)
+			// ////console.log("****************************")
 			setTags(newTags)
 		}
 	}
@@ -674,7 +675,7 @@ const Sidebar = (props) => {
 		let duplicate = false
 
 		for(let i in placeholders) {
-			//console.log(owner)
+			//////console.log(owner)
 			if(placeholders[i].id == placeholder.id) {
 				duplicate = true
 				break
@@ -684,9 +685,9 @@ const Sidebar = (props) => {
 		if(!duplicate) {
 			let newPlaceholders = Object.assign([], placeholders)
 			newPlaceholders.push(placeholder)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
+			// ////console.log("****************************")
+			// ////console.log(newOwners)
+			// ////console.log("****************************")
 			setPlaceholders(newPlaceholders)
 		}
 	}
@@ -726,16 +727,16 @@ const Sidebar = (props) => {
 
     // Start new timeout
     contactSearchTimeout.current = setTimeout(() => {
-      //console.log("this should be seem once")
+      //////console.log("this should be seem once")
       getSearchedContacts(contactSearchInput)
         .then((res) => {
           if (res.statusText === "OK") {
-            //console.log("These are all team contacts from search ", res.data);
+            //////console.log("These are all team contacts from search ", res.data);
             setTeamContacts(res.data);
           }
         })
         .catch((error) => {
-          //console.log("search contacts error " + error)
+          //////console.log("search contacts error " + error)
         })
     }, 200)
 
@@ -786,8 +787,8 @@ const Sidebar = (props) => {
 	};
 
 	
-	// console.log("These are associated people", associatedPeople);
-	// console.log("These are associated people index", associatedPeopleIndex);
+	// ////console.log("These are associated people", associatedPeople);
+	// ////console.log("These are associated people index", associatedPeopleIndex);
 
   // let file = {
   //   lastModified: 1640966381181
@@ -807,26 +808,26 @@ const Sidebar = (props) => {
 
       let count = files.length
 
-      //console.log("start count " + count)
+      //////console.log("start count " + count)
 
       files.forEach((file, index) => {
         getAssociatedContactByFileName(file.name)
             .then(contact => {
               associated[index] = contact
 
-              //console.log("return " + index)
-              //console.log(associated)
+              //////console.log("return " + index)
+              //////console.log(associated)
             })
             .catch(error => {
-              //console.log("error " + error)
+              //////console.log("error " + error)
               associated[index] = null
 
-              //console.log(associated)
+              //////console.log(associated)
 
               if(error === "found multiple contacts") {
                 // TODO: alert user that could not auto associate
                 // due to search returning multiple contacts
-                //console.log("contact " + index + "error 1")
+                //////console.log("contact " + index + "error 1")
 
                 // using timeout so state can be updated before next setAlerts call
                 setTimeout(() => {
@@ -861,8 +862,8 @@ const Sidebar = (props) => {
 
               count--
 
-              //console.log("finally " + count)
-              //console.log(associated)
+              //////console.log("finally " + count)
+              //////console.log(associated)
 
               if(count == 0) {
                 resolve([files, associated])
@@ -882,13 +883,13 @@ const Sidebar = (props) => {
     for (let i = 0; i < files.length; i++) {
       let file = files[i]
 
-      //console.log(file)
+      //////console.log(file)
 
       if(((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
         || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) { 
         // 5MB for images and 15MB for videos
 
-        //console.log(file.name + "*")
+        //////console.log(file.name + "*")
 
         tempFiles.push(file)
         tempAssociated.push("loading")
@@ -910,19 +911,19 @@ const Sidebar = (props) => {
 
     handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
       .then(() => {
-        //console.log("**************************")
-        //console.log("result")
-        //console.log("**************************")
+        //////console.log("**************************")
+        //////console.log("result")
+        //////console.log("**************************")
 
-        //console.log(tempFiles)
-        //console.log(tempAssociated)
+        //////console.log(tempFiles)
+        //////console.log(tempAssociated)
 
         setAssociatedPeople(initialAssociated.concat(tempAssociated))
         setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
         // setDropFiles(dropFiles.concat(tempFiles));
       })
 
-    //console.log("Droped files ", tempFiles);
+    //////console.log("Droped files ", tempFiles);
     setAssociatedPeople(associatedPeople.concat(tempAssociated))
     setDropFiles(dropFiles.concat(tempFiles));
     setUploadStatus(uploadStatus.concat(tempUploadStatus))
@@ -931,14 +932,14 @@ const Sidebar = (props) => {
   }
 
   const handleFileChange = (e) => {
-    //console.log(e)
+    //////console.log(e)
     handleImportFiles(e.target.files)
     return
     // var tempFiles = [];
     // for (var i = 0; i < e.target.files.length; i++) {
     //   tempFiles.push(e.target.files[i]);
     // }
-    // console.log("These aree files ", tempFiles);
+    // ////console.log("These aree files ", tempFiles);
     // var temp = dropFiles;
     // var temp2 = temp.concat(tempFiles);
     // setDropFiles(temp2);
@@ -1012,8 +1013,8 @@ const Sidebar = (props) => {
         tags: tags
       }
 
-      //console.log("upload " + index)
-      //console.log(media)     
+      //////console.log("upload " + index)
+      //////console.log(media)     
 
       //return
 
@@ -1024,7 +1025,7 @@ const Sidebar = (props) => {
 
       uploadMedia(media)
         .then(res => {
-          //console.log(res)
+          //////console.log(res)
 
           let mediaRes = res
 
@@ -1032,7 +1033,7 @@ const Sidebar = (props) => {
           tempUploadStatus[index] = "success"
           temp2[index] = "success"
           setUploadStatus(temp2)
-          //console.log(temp2)
+          //////console.log(temp2)
 
           successCount++
 
@@ -1040,10 +1041,10 @@ const Sidebar = (props) => {
             //if(typeof tag.id == "string" && tag.id.includes("new-")) {
               addTagToMedia(mediaRes.id, tag.name)
                 .then(res => {
-                  //console.log(res)
+                  //////console.log(res)
                 })
                 .catch(error => {
-                  //console.log(error)
+                  //////console.log(error)
                 })
             //}
           })
@@ -1051,13 +1052,13 @@ const Sidebar = (props) => {
           // last id 314852
         })
         .catch(error => {
-          //console.log(error)
+          //////console.log(error)
 
           let temp2 = Object.assign([], tempUploadStatus)
           temp2[index] = "failed"
           tempUploadStatus[index] = "failed"
           setUploadStatus(temp2)
-          //console.log(temp2)
+          //////console.log(temp2)
 
           failedCount++
 
@@ -1113,7 +1114,7 @@ const Sidebar = (props) => {
   }
 
   const associateContactToMedia = (teamContact, index) => {
-    // console.log("This is the contact ", teamContact, index);
+    // ////console.log("This is the contact ", teamContact, index);
 
     let temp = Object.assign([], associatedPeople)
     temp[index] = teamContact
@@ -1122,10 +1123,10 @@ const Sidebar = (props) => {
   }
 
   const removeContactFromMedia = (index) => {
-    //console.log("on remove contact from media")
+    //////console.log("on remove contact from media")
     let temp = Object.assign([], associatedPeople)
     temp[index] = null
-    //console.log(temp)
+    //////console.log(temp)
     setAssociatedPeople(temp)
   }
 
@@ -1139,7 +1140,7 @@ const Sidebar = (props) => {
 
     setOpenSnackBar(false);
   };
-  // console.log("THis is display tags", displayTags);
+  // ////console.log("THis is display tags", displayTags);
   const openModal = () => {
     setShowModal(true);
   };
@@ -1150,13 +1151,13 @@ const Sidebar = (props) => {
 
   const showSidebar = () => setSidebar(!sidebar);
 
-  // console.log("This is props contacts", props.contacts);
+  // ////console.log("This is props contacts", props.contacts);
 
-  // console.log("displayAssociate = " + displayAssociate)
+  // ////console.log("displayAssociate = " + displayAssociate)
 
-  // console.log("**************************")
-  // console.log("tags")
-  // console.log(tags)
+  // ////console.log("**************************")
+  // ////console.log("tags")
+  // ////console.log(tags)
 
   const files = uploadFinished ? failedUploads : dropFiles
 
@@ -1192,7 +1193,7 @@ const Sidebar = (props) => {
           </Grid>
           {allTags &&
             allTags.map((item, index) => {
-              // console.log("This is item", item);
+              // ////console.log("This is item", item);
               if (searchTags != "") {
                 if (item.name.toLowerCase().indexOf(searchTags.toLowerCase()) > -1) {
                   return (
@@ -1279,7 +1280,7 @@ const Sidebar = (props) => {
         onDragOver={(e) => {
           e.preventDefault();
           // alert("This is alert");
-          //console.log("This is great");
+          //////console.log("This is great");
         }}
         onDrop={drop}
       >
@@ -1354,7 +1355,7 @@ const Sidebar = (props) => {
           setAddCsv(false);
         }}
         onClick={(e) => {
-          //console.log("THis is id", e.target.id);
+          //////console.log("THis is id", e.target.id);
           if (e.target.id != "tagButton" && e.target.id != "searchtags") {
             setDisplayTags(false);
           }
@@ -1911,8 +1912,8 @@ const Sidebar = (props) => {
           // setDisplayOwner(false);
         }}
         onClick={(e) => {
-			  //console.log("my on click " + e.target.id)
-        //console.log("my on click " + displayAssociate)
+			  //////console.log("my on click " + e.target.id)
+        //////console.log("my on click " + displayAssociate)
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
@@ -1923,7 +1924,7 @@ const Sidebar = (props) => {
             setDisplayPlaceholder(false);
           }
           if (e.target.id != displayAssociate) {
-            //console.log("This is id", e.target.id, displayAssociate);
+            //////console.log("This is id", e.target.id, displayAssociate);
             // alert("This will be null");
             
           }
@@ -2264,7 +2265,7 @@ const Sidebar = (props) => {
                         autoComplete
                         onChange={
                             (e)=>{
-                                //console.log("This is the great",e)
+                                //////console.log("This is the great",e)
                                 setSearchValue(e)
                             }
                         }

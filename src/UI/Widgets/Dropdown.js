@@ -15,7 +15,7 @@ const Dropdown = (props) => {
 
     const onHeaderBlur = (e) => {
         if(props.dismissOnClick)
-            setTimeout(() => setDisplayContent(false), 100)
+            setTimeout(() => setDisplayContent(false), props.dismissDelay || 200)
         // console.log('drop on blur')
     }
 
@@ -30,7 +30,7 @@ const Dropdown = (props) => {
 
 
     return (
-        <div className='DropDown' onMouseLeave={onMouseLeave}>
+        <div className='DropDown' onMouseLeave={onMouseLeave} style={props.style}>
             <div tabIndex={0}
               className='DropDown-Header'
               onClick={onHeaderClick}

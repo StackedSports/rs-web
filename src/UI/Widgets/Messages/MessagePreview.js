@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Grid } from "@material-ui/core"
 
+import MediaPreview from 'UI/Widgets/Media/MediaPreview'
+import Typography from 'UI/Widgets/Typography'
+
 import {
     getFullName,
     getMessageStatusLabel,
@@ -52,36 +55,78 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
 const MessagePreview = ({ message, mini = false, style, link = false }) => {
     if(!message) return <></>
 
-    console.log(message.media)
+    const [messageStats, setMessageStats] = useState(null)
 
-    const hasMedia = (message.media && Object.keys(message.media).length > 0)
-        || message.media_placeholder && Object.keys(message.media_placeholder).length > 0
+    useEffect(() => {
+        if(!message)
+            return
+
+        let { recipients } = message
+
+        let total = recipients.count || 0
+        let sent = recipients.status_counts.sent || 0
+        let error = recipients.status_counts.error || 0
+        let pending = recipients.status_counts.pending || 0
+
+        console.log('sent = ' + sent)
+        console.log('total = ' + total)
+
+        setMessageStats({
+            delivery: sent === 0 ? 0 : Math.round(sent / total * 100),
+            total,
+            sent,
+            error,
+            pending,
+        })
+    }, [message])
+
+    // console.log(message.media)
+
+    const hasMedia = message.media && Object.keys(message.media).length > 0
+    const hasMediaPlaceholder = message.media_placeholder && Object.keys(message.media_placeholder).length > 0
+
+    const showMedia = hasMedia || hasMediaPlaceholder
 
     return (
         <Grid className="MessagePreview-Container" container direction="column" style={style}>
             <Grid container direction="row" style={{ marginBottom: 20 }}>
-                {hasMedia && (
+                {showMedia && (
                     <div className="MessagePreview-MediaPanel">
-                    
+                        <MediaPreview
+                          containerStyle={{ marginLeft: 15, marginRight: 15 }}
+                          type={hasMedia ? 'media' : 'placeholder'}
+                          media={hasMedia ? message.media : message.media_placeholder}/>
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
                     <h3>Message Details</h3>
 
                     <Details
-                      label="Message Status"
+                      label="Status"
                       value={getMessageStatusLabel(message.status)}
                       status={getMessageStatusLabel(message.status)}
                     />
-                    <Details label="Send As" value={getMessagePlatformLabel(message.platform)}/>
                     <Details label="Sender" value={getMessageSenderLabel(message)}/>
                     <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(message.recipients)}/>
+                    <Details label="Send As" value={getMessagePlatformLabel(message.platform)}/>
                     <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')}/>
                     <Details label="Tags" value={message.tags || '--'}/>
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }}/>
                 </div>
-                {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
+                <Grid item direction="column">
+                    <h3>Message Stats</h3>
+
+                    {messageStats && (
+                        <Grid container direction="column" alignItems="center" style={{ marginTop: 10, marginBottom: 30 }}>
+                            <Typography size={26} weight="bold" text={`${messageStats.delivery}%`}/>
+                            <Typography text={`Delivery Rate (${messageStats.sent}/${messageStats.total})`}/>
+                        </Grid>
+                    )}
+                    
+                    
+                    {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
+                </Grid>
             </Grid>
             
             {!mini && <Label label={`Queud by ${getFullName(message.sender)} at ${formatDate(message.created_at, 'medium', 'short')}`}/>}

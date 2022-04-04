@@ -15,17 +15,22 @@ import { messageRoutes } from './Routes'
 const MessagesRoutes = (props) => (
     <>
         <Route
-          exact
-          path={messageRoutes.create}
+          // exact
+          path={`${messageRoutes.create}/:contacts`}
           component={MessageCreatePage}
         />
         <Route
-          exact
+          // exact
+          path={`${messageRoutes.create}`}
+          component={MessageCreatePage}
+        />
+        <Route
+          // exact
           path={`${messageRoutes.details}/:id`}
           component={MessageDetailsPage}
         />
         <Route
-          exact
+          // exact
           path={`${messageRoutes.edit}/:id`}
           component={MessageEditPage}
         />

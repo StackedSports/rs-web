@@ -5,7 +5,8 @@ import { useState } from 'react'
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 function Category(props) {
-    const [collapsed, setCollapsed] = useState(props.collapsed)
+    // TODO: change to expanded
+    const [collapsed, setCollapsed] = useState(true)//)
 
     const onHeaderClick = (e) => {
         setCollapsed(!collapsed)

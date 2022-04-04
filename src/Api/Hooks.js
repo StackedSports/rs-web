@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
 
 import { 
     getUser,
@@ -13,6 +13,7 @@ import {
     getPlatform,
     getMedia,
     getBoards,
+    getPlaceholder,
     getPlaceholders,
     getSnippets,
     getTextPlaceholders,
@@ -29,8 +30,6 @@ import {
     archiveContacts,
 } from 'Api/Endpoints'
 
-import {  
-    } from './Endpoints'
 
 import { usePagination } from './Pagination'
 
@@ -115,7 +114,7 @@ export const addUser  = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
-
+    
     useEffect(() => {
         getTags()
             .then(([tags]) => {
@@ -130,6 +129,53 @@ export const useTags = () => {
 
     return tags
 }
+
+export const useTags2 = () => {
+    const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    const tagsRes = useRef()
+
+    useEffect(() => {
+        setLoading(true)
+
+        getTags()
+            .then(([tags, pagination]) => {
+                // console.log('ApiHooks: getTags -----')
+                // console.log(tags)
+                // console.log(pagination)
+                setTags(tags)
+                tagsRes.current = tags
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [])
+
+    const search = (value) => {
+        let tmp = []
+
+        tagsRes.current.forEach(tag => {
+            if(tag.name.toLowerCase().includes(value.toLowerCase()))
+                tmp.push(tag)
+        })
+
+        setTags(tmp)
+    }
+
+    const clearSearch = () => {
+        setTags(tagsRes.current)
+    }
+
+    return {
+        items: tags,
+        loading,
+        search,
+        clearSearch
+    }
+}
+
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
 
@@ -461,6 +507,31 @@ export const useSnippets = () => {
     return snippets
 }
 
+export const usePlaceholder = (id) => {
+    const [placeholder, setPlaceholder] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getPlaceholder(id)
+            .then(([placeholder, pagination]) => {
+                console.log('API placeholder')
+                console.log(placeholder)
+                setPlaceholder(placeholder)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id])
+
+    return {
+        item: placeholder,
+        loading
+    }
+}
+
 export const usePlaceholders = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [placeholders, setPlaceholders] = useState(null)
@@ -528,7 +599,7 @@ export const useMessage = (id, refresh) => {
     // console.log(refresh)
 
     useEffect(() => {
-        console.log('getting message')
+        // console.log('getting message')
         setLoading(true)
 
         getMessage(id)

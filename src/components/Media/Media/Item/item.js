@@ -127,32 +127,32 @@ const MediaItem = (props) => {
                 alignItems="center"
             >
                 {
-                    props.isPlaceHolder ?
-                        (
-                            m.media_preview ? isImage(assetUrl.medium) ? (
-                                    <FaImage></FaImage>
-                                ) : isVideo(assetUrl.medium) > -1 ? (
-                                    <FaVideo style={{color: "black", fontSize: 20, zIndex: 100}}></FaVideo>
-                                ) : (
-                                    <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
-                                ) :
-                                <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
+                    // props.isPlaceHolder ?
+                    //     (
+                    //         m.media_preview ? isImage(assetUrl.original) ? (
+                    //                 <FaImage></FaImage>
+                    //             ) : isVideo(assetUrl.original) > -1 ? (
+                    //                 <FaVideo style={{color: "black", fontSize: 20, zIndex: 100}}></FaVideo>
+                    //             ) : (
+                    //                 <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
+                    //             ) :
+                    //             <FaFilePdf style={{color: "black", fontSize: 20}}></FaFilePdf>
 
 
-                        )
-                        :
-                        m.file_type?
-                         (
-                             m.file_type === "image/gif") ? (
-                            <GifIcon></GifIcon>
-                        ) : m.file_type.indexOf("video") > -1 ? (
-                            <FaVideo style={{color: "#141414", fontSize: 20, zIndex: 100}}></FaVideo>
-                        ) : m.file_type.indexOf("image") > -1 ? (
-                            <FaImage></FaImage>
-                        ) : (
-                            <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
-                        ):
-                            <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                    //     )
+                    //     :
+                    //     m.file_type?
+                    //      (
+                    //          m.file_type === "image/gif") ? (
+                    //         <GifIcon></GifIcon>
+                    //     ) : m.file_type.indexOf("video") > -1 ? (
+                    //         <FaVideo style={{color: "#141414", fontSize: 20, zIndex: 100}}></FaVideo>
+                    //     ) : m.file_type.indexOf("image") > -1 ? (
+                    //         <FaImage></FaImage>
+                    //     ) : (
+                    //         <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
+                    //     ):
+                    //         <FaFilePdf style={{color: "#3871da", fontSize: 20}}></FaFilePdf>
 
                 }
                 <p
@@ -165,16 +165,17 @@ const MediaItem = (props) => {
                         cursor: 'pointer'
                     }}
                 >
-                    {props.isPlaceHolder ?
+                    {
+                    props.isPlaceHolder ?
                         (
-                            m.name.length > 17
-                                ? m.name.substring(0, 17) + " ..."
+                            m.name?.length > 17
+                                ? m.name?.substring(0, 17) + " ..."
                                 : m.name
                         )
                         :
                         (
-                            m.file_name.length > 17
-                                ? m.file_name.substring(0, 17) + " ..."
+                            m.file_name?.length > 17
+                                ? m.file_name?.substring(0, 17) + " ..."
                                 : m.file_name
                         )
                     }

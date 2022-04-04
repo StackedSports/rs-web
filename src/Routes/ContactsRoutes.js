@@ -8,7 +8,7 @@ const ContactsRoutes = (props) => (
     <>
         <Route
           exact
-          path={routes.contacts.path}
+          path={routes.contacts.path  + '/2'}
           component={ContactsPage}
         />
         {/* <Route

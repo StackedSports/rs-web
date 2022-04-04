@@ -119,6 +119,9 @@ export const getRecipientSelectedBoards = (selection) => {
 }
 
 export const getRecipientSelectedContacts = (selection) => {
-    return getStringListOfIds(selection.contacts || [])
+    let contacts = selection.contacts || []
+    let recipients = selection.recipients || []
+
+    return getStringListOfIds(contacts.concat(recipients))
 }
 
