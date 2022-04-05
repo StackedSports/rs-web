@@ -1,6 +1,6 @@
 import './MessagePreview.css'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Grid } from "@material-ui/core"
 
@@ -17,6 +17,7 @@ import {
     formatDate,
     removeSpaces
 } from 'utils/Parser'
+import { objectNotNull } from 'utils/Validation'
 
 import { messageRoutes } from 'Routes/Routes'
 
@@ -80,8 +81,8 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
     // console.log(message.media)
 
-    const hasMedia = message.media && Object.keys(message.media).length > 0
-    const hasMediaPlaceholder = message.media_placeholder && Object.keys(message.media_placeholder).length > 0
+    const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
+    const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
 
     const showMedia = hasMedia || hasMediaPlaceholder
 

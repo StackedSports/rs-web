@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
@@ -24,6 +24,7 @@ import {
 import { messageRoutes } from 'Routes/Routes'
 
 import { getStringListOfIds } from 'utils/Helper'
+import { objectNotNull } from 'utils/Validation'
 
 const filters = [
     { // Category
@@ -376,9 +377,11 @@ const MessageDetailsPage = (props) => {
         setRedirect(`${messageRoutes.create}/contacts-${now}`)
     }
 
-    let actions = []
+    const mainActions = useMemo(() => {
+        let actions = []
 
-    if(message.item) {
+        if(!message.item)
+            return actions
 
         let now = new Date(Date.now())
         let sendDate = new Date(message.item.send_at)
@@ -469,15 +472,16 @@ const MessageDetailsPage = (props) => {
                 ]
             })
         }
-    }
 
-        // setPanelActions(actions)
-    const hasMedia = message.item?.media && Object.keys(message.item?.media).length > 0
-    const hasMediaPlaceholder = message.item?.media_placeholder && Object.keys(message.item?.media_placeholder).length > 0
+        return actions
+    }, [message.item])
 
-    console.log(hasMedia)
-    console.log(hasMediaPlaceholder)
-    console.log(hasMedia || hasMediaPlaceholder)
+    const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
+    const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
+
+    // console.log(hasMedia)
+    // console.log(hasMediaPlaceholder)
+    // console.log(hasMedia || hasMediaPlaceholder)
 
     return (
         <MainLayout
@@ -486,7 +490,7 @@ const MessageDetailsPage = (props) => {
           onTopActionClick={onTopActionClick}
           filters={filters}
           alert={alert}
-          actions={actions}
+          actions={mainActions}
           loading={message.loading || loading}
           redirect={redirect}
           onFilterSelected={onFilterSelected}
@@ -507,7 +511,7 @@ const MessageDetailsPage = (props) => {
               selection={selectedRecipients}
               onSelectionChange={onSelectedRecipientsChange}
               platform={message.item?.platform}
-              recipients={recipients?.items}
+              recipients={recipients.items}
               hasCoach={message.item?.send_as_coach}
               hasMedia={hasMedia || hasMediaPlaceholder}
             />
