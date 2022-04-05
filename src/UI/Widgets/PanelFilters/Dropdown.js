@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Menu, MenuItem, Button } from '@mui/material'
-import {ExpandMore} from '@material-ui/icons'
+import { ExpandMore, ExpandLess } from '@material-ui/icons'
 
-export const FiltersItem = ({ title }) => {
+export const DropDown = ({ label, options, onOptionSelected }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -13,6 +13,11 @@ export const FiltersItem = ({ title }) => {
         setAnchorEl(null);
     };
 
+    const handleClickItem = (item) => {
+        onOptionSelected(item)
+        handleClose()
+    }
+
     return (
         <>
             <Button
@@ -21,26 +26,29 @@ export const FiltersItem = ({ title }) => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                endIcon={<ExpandMore />}
+                endIcon={open ? <ExpandLess /> : <ExpandMore />}
             >
-                {title}
+                {label}
             </Button>
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                PaperProps={{
+                    style: {
+                        maxHeight: 48 * 5,
+                        minWidth: '10ch',
+                    },
                 }}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                {options.map(option => (
+                    <MenuItem key={option.name} onClick={()=>handleClickItem(option)}>
+                        {option.name}
+                    </MenuItem>
+                ))}
             </Menu>
         </>
 
     )
 }
-
-export default FiltersItem
