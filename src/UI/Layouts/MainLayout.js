@@ -15,26 +15,27 @@ export default function MainLayout(props) {
 
     return (
         <Page>
-            <TopBar actionTitle={props.topActionName} onActionClick={props.onTopActionClick}/>
-            <SideBar/>
+            <TopBar actionTitle={props.topActionName} onActionClick={props.onTopActionClick} />
+            <SideBar />
             <Content>
                 <SideFilter
-                  visible={displayFilters}
-                  title={props.title}
-                  filters={props.filters}
-                  onFilterSelected={props.onFilterSelected}
+                    visible={displayFilters}
+                    title={props.title}
+                    filters={props.filters}
+                    onFilterSelected={props.onFilterSelected}
                 />
                 <Panel
-                  title={props.title}
-                  actions={props.actions}
-                  menuOpen={displayFilters}
-                  onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    title={props.title}
+                    actions={props.actions}
+                    menuOpen={displayFilters}
+                    onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    propsPanelFilters={props.propsPanelFilters}
                 >
-                    {props.redirect && props.redirect !== '' && <Redirect push to={props.redirect}/>}
-                    {props.loading && <LoadingOverlay/>}
+                    {props.redirect && props.redirect !== '' && <Redirect push to={props.redirect} />}
+                    {props.loading && <LoadingOverlay />}
                     {props.children}
                 </Panel>
             </Content>
-        </Page>
+        </Page >
     )
 }

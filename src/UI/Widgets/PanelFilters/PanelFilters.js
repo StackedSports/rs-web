@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import { Collapse, Stack, Box, Typography } from '@mui/material';
-import { DropDown } from './Dropdown';
+import { Collapse, Stack, Box } from '@mui/material';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
 
@@ -35,17 +36,28 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
         })
     }
 
+    const onRemoveFilter = (filterName, filter) => {
+        setSelectedFilters(oldSelectFilters => {
+            const newSelectFilters = { ...oldSelectFilters };
+            newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
+            if (newSelectFilters[filterName].length === 0) {
+                delete newSelectFilters[filterName];
+            }
+            onFilterChange(newSelectFilters);
+            return newSelectFilters;
+        })
+    }
+
 
     return (
         <>
-
-            <Stack direction='row' spacing={2} py={1}>
-                {Object.keys(selectedFilters).map(key => 
+            <Stack direction='row' py={1} flexWrap='wrap'>
+                {Object.keys(selectedFilters).map(key =>
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
-                          key={filter.id}
-                          item={filter.name} 
-                          onRemove={(e) => onRemoveFilter(key, filter, index)} 
+                            key={filter.id}
+                            item={filter.name}
+                            onRemove={(e) => onRemoveFilter(key, filter)}
                         />
                     )))}
             </Stack>
@@ -57,11 +69,26 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
                             const filter = filters[filterName];
                             return (
                                 <Box key={filterName}>
-                                    <DropDown
+                                    {/* <DropDown
                                         label={filter.label}
                                         options={filter.options}
                                         onOptionSelected={(option) => handleOptionsChange(option, filterName)}
-                                    />
+                                    /> */}
+
+                                    <DropdownButton
+                                        id={`dropdown-basic-${filterName}`}
+                                        title={filter.label}
+                                        drop={"down"}
+                                    >
+                                        {filter.options.map(option => (
+                                            <Dropdown.Item
+                                                key={option.id}
+                                                onClick={() => handleOptionsChange(option, filterName)}
+                                            >
+                                                {option.name}
+                                            </Dropdown.Item>
+                                        ))}
+                                    </DropdownButton>
                                 </Box>
                             )
                         })

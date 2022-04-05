@@ -1,10 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Checkbox, FormControlLabel, TextField, Button, Divider, Typography } from '@mui/material';
 import { AccountBox, Tune } from '@material-ui/icons'
-import { PanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
-
-import { Field, Form, Formik } from 'formik';
-import { object, string } from 'yup';
 
 
 import {
@@ -20,13 +15,14 @@ import {
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
+import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
 
 
 export default function ContactsPage(props) {
     const [contacts, pagination, contactsLoading] = useContacts()
     const [openSaveBoardDialog, setOpenSaveBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
-    const [showFilters, setShowFilters] = useState(true)
+    const [showPanelFilters, setShowPanelFilters] = useState(true)
     const [selectedFilters, setSelectedFilters] = useState({})
 
     // handle filters options
@@ -37,9 +33,7 @@ export default function ContactsPage(props) {
     const positions = usePositions() || []
 
 
-
-
-    const getFiltersData = useMemo(() =>
+    const panelFiltersData = useMemo(() =>
     ({
         "status": {
             label: 'Status',
@@ -75,7 +69,7 @@ export default function ContactsPage(props) {
         {
             name: 'Filter',
             icon: Tune,
-            onClick: () => setShowFilters(oldShowFilter => !oldShowFilter),
+            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
             variant: 'contained',
         }
     ]
@@ -103,8 +97,8 @@ export default function ContactsPage(props) {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
-    const onFilter = (filter) => {
-        console.log('Filter selected', filter)
+    const onPanelFilterChange = (filter) => {
+        console.log('Filters selected', filter)
     }
 
     return (
@@ -115,14 +109,12 @@ export default function ContactsPage(props) {
             filters={filters}
             onFilterSelected={onFilterSelected}
             actions={mainActions}
+            propsPanelFilters={{
+                open: showPanelFilters,
+                filters: panelFiltersData,
+                onFilterChange: onPanelFilterChange
+            }}
         >
-
-
-            <PanelFilters
-                open={showFilters}
-                filters={getFiltersData}
-                onFilterChange={onFilter}
-            />
 
             <ContactsTable
                 contacts={contacts}
@@ -131,93 +123,11 @@ export default function ContactsPage(props) {
                 onSelectionChange={(selected) => setSelectedContacts(selected)}
             />
 
-
-            <Dialog
+            <CreateBoardDialog
                 open={openSaveBoardDialog}
                 onClose={() => setOpenSaveBoardDialog(false)}
-                aria-labelledby="form-dialog-save-board"
-            >
-                <DialogTitle
-                    sx={{ textAlign: 'center' }}
-                    fontWeight='bold'
-                >
-                    Create Board
-                </DialogTitle>
-                <Divider />
-                <DialogContent>
-                    <DialogContentText>
-                        To save a new board, please enter a name for the board.
-                    </DialogContentText>
+            />
 
-
-                    <Formik
-                        initialValues={{
-                            name: '',
-                            isShared: false,
-                        }}
-                        validationSchema={object().shape({
-                            name: string().required('Name is required'),
-                        })}
-                        onSubmit={(values) => {
-                            console.log('submit', values)
-                            setOpenSaveBoardDialog(false)
-                        }}
-                    >
-                        {({ isSubmitting, isValid, values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
-                            <Form>
-                                <Field
-                                    name="name"
-                                    label="Name"
-                                    component={TextField}
-                                    variant="outlined"
-                                    margin="normal"
-                                    fullWidth
-
-                                    error={touched.name && errors.name}
-                                    helperText={touched.name && errors.name}
-                                />
-
-                                <Field
-                                    name="isShared"
-                                    label="Shared"
-                                    component={() => (
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={values.isShared}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-
-                                                    color="primary"
-                                                />
-                                            }
-                                            label="Share with Team"
-                                        />
-                                    )}
-                                />
-
-                            </Form>
-                        )}
-                    </Formik>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        onClick={() => setOpenSaveBoardDialog(false)}
-                        color="error"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant='contained'
-                        type='submit'
-                        color="primary"
-                    >
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-        </MainLayout >
+        </MainLayout>
     )
 }
