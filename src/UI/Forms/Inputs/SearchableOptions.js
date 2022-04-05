@@ -104,7 +104,7 @@ const useStyles = makeStyles({
 
 
 export const constructProperty = (item, def) => {
-	if(typeof item == 'string') {
+	if(typeof item == 'string' || !def) {
 		return item
 	}
 

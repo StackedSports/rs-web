@@ -40,9 +40,14 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
         <>
 
             <Stack direction='row' spacing={2} py={1}>
-                <>
-
-                </>
+                {Object.keys(selectedFilters).map(key => 
+                    selectedFilters[key].map((filter, index) => (
+                        <SearchableOptionSelected
+                          key={filter.id}
+                          item={filter.name} 
+                          onRemove={(e) => onRemoveFilter(key, filter, index)} 
+                        />
+                    )))}
             </Stack>
 
             <Collapse in={open}>
