@@ -1,6 +1,10 @@
-import { useState, useEffect, useRef,useCallback } from 'react'
-import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Checkbox, Box, FormControlLabel, TextField, Button, Divider, Typography, Collapse, Stack } from '@mui/material';
+import { useState, useMemo } from 'react'
+import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Checkbox, FormControlLabel, TextField, Button, Divider, Typography } from '@mui/material';
 import { AccountBox, Tune } from '@material-ui/icons'
+import { PanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
+
+import { Field, Form, Formik } from 'formik';
+import { object, string } from 'yup';
 
 
 import {
@@ -9,14 +13,13 @@ import {
     useRanks,
     useGradeYears,
     useBoards,
+    useTags,
     usePositions,
 
 } from 'Api/Hooks'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
-import FiltersItem from './FiltersItem'
-
 
 
 export default function ContactsPage(props) {
@@ -24,41 +27,41 @@ export default function ContactsPage(props) {
     const [openSaveBoardDialog, setOpenSaveBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
     const [showFilters, setShowFilters] = useState(true)
+    const [selectedFilters, setSelectedFilters] = useState({})
 
-    const status = useStatus()
-    const ranks = useRanks()
-    const gradeYears = useGradeYears()
-    const boards = useBoards()
-    const positions = usePositions()
-
-    console.log("Status: ", status)
-
-   const getFiltersData = useCallback(() => {
-        return [
-            {
-                title: "Status",
-                data: status
-            },
-            {
-                title: "Ranks",
-                data: ranks
-            },
-            {
-                title: "Grade Years",
-                data: gradeYears
-            },
-            {
-                title: "Boards",
-                data: boards
-            },
-            {
-                title: "Positions",
-                data: positions
-            }
-        ]
-    }, [status, ranks, gradeYears, boards, positions])
+    // handle filters options
+    const status = useStatus()?.map(item => ({ id: item.id, name: item.status })) || []
+    const ranks = useRanks()?.map(item => ({ id: item.id, name: item.rank })) || []
+    const gradeYears = useGradeYears()?.map((item, index) => ({ id: index, name: item })) || []
+    const tags = useTags() || []
+    const positions = usePositions() || []
 
 
+
+
+    const getFiltersData = useMemo(() =>
+    ({
+        "status": {
+            label: 'Status',
+            options: status,
+        },
+        "rank": {
+            label: 'Rank',
+            options: ranks,
+        },
+        "gradeYear": {
+            label: 'Grade Year',
+            options: gradeYears,
+        },
+        "tags": {
+            label: 'Tags',
+            options: tags,
+        },
+        "position": {
+            label: 'Position',
+            options: positions,
+        },
+    }), [status, ranks, gradeYears, tags, positions])
 
     const mainActions = [
         {
@@ -66,7 +69,7 @@ export default function ContactsPage(props) {
             icon: AccountBox,
             onClick: () => setOpenSaveBoardDialog(true),
             variant: 'outlined',
-            disabled: selectedContacts.length === 0
+            disabled: selectedFilters.length === 0,
         },
         {
             name: 'Filter',
@@ -99,8 +102,9 @@ export default function ContactsPage(props) {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
-
-
+    const onFilter = (filter) => {
+        console.log('Filter selected', filter)
+    }
 
     return (
         <MainLayout
@@ -110,17 +114,14 @@ export default function ContactsPage(props) {
             filters={filters}
             onFilterSelected={onFilterSelected}
             actions={mainActions}
-
         >
 
-            <Collapse in={showFilters}>
-                <Stack my={2}>
-                    <Box>
-                        <FiltersItem title='Status' items={status} />
-                    </Box>
-                </Stack>
-            </Collapse>
 
+            <PanelFilters
+                open={showFilters}
+                filters={getFiltersData}
+                onFilterChange={onFilter}
+            />
 
             <ContactsTable
                 contacts={contacts}
@@ -146,23 +147,59 @@ export default function ContactsPage(props) {
                     <DialogContentText>
                         To save a new board, please enter a name for the board.
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="normal"
-                        id="name"
-                        label="Board Name"
-                        type="text"
-                        fullWidth
-                    />
+
+
+                    <Formik
+                        initialValues={{
+                            name: '',
+                            isShared: false,
+                        }}
+                        validationSchema={object().shape({
+                            name: string().required('Name is required'),
+                        })}
+                        onSubmit={(values) => {
+                            console.log('submit', values)
+                            setOpenSaveBoardDialog(false)
+                        }}
+                    >
+                        {({ isSubmitting, isValid, values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+                            <Form>
+                                <Field
+                                    name="name"
+                                    label="Name"
+                                    component={TextField}
+                                    variant="outlined"
+                                    margin="normal"
+                                    fullWidth
+
+                                    error={touched.name && errors.name}
+                                    helperText={touched.name && errors.name}
+                                />
+
+                                <Field
+                                    name="isShared"
+                                    label="Shared"
+                                    component={() => (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={values.isShared}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Share with Team"
+                                        />
+                                    )}
+                                />
+
+                            </Form>
+                        )}
+                    </Formik>
                 </DialogContent>
                 <DialogActions>
-                    <FormControlLabel
-                        control={<Checkbox value="checkedA" />}
-                        label={<Typography color={"text.secondary"} variant="subtitle2">Share with Team</Typography>}
-                        sx={{
-                            mr: 'auto',
-                        }}
-                    />
                     <Button
                         variant="outlined"
                         onClick={() => setOpenSaveBoardDialog(false)}
@@ -172,7 +209,7 @@ export default function ContactsPage(props) {
                     </Button>
                     <Button
                         variant='contained'
-                        onClick={() => setOpenSaveBoardDialog(false)}
+                        type='submit'
                         color="primary"
                     >
                         Save
@@ -180,6 +217,6 @@ export default function ContactsPage(props) {
                 </DialogActions>
             </Dialog>
 
-        </MainLayout>
+        </MainLayout >
     )
 }
