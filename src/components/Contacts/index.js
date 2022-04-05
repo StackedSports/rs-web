@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
 import {
   makeStyles,
   Grid,
@@ -7,7 +8,30 @@ import {
   TextField,
   Snackbar,
   CircularProgress,
+  Card,
+  CardContent,
+  MenuItem,
+  InputLabel,
+  Form,
+  Select,
+  CardActions,
+  Button,
+  CardHeader,
+  FormControl
 } from "@material-ui/core";
+import { addDays } from "date-fns";
+
+
+// import { Formik, Form, Field } from "formik";
+// import * as Yup from "yup";
+
+import DatePicker from "react-date-picker";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import { DateRangePicker } from "react-date-range";
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
+
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AmimatedBurger from '../../images/animated_burger.gif';
@@ -35,14 +59,23 @@ import {
   FaMapMarker,
   FaLocationArrow,
 } from "react-icons/fa";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import DialogBox from "../common/Dialogs";
 import { DarkContainer } from "../common/Elements/Elements";
 import IconTextField from "../common/Fields/IconTextField";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import IconButton from "../common/Buttons/IconButton";
 import {
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup
+} from "@material-ui/core";
+import {
   addTagstoContacts,
   archiveContactEnd,
+  createBoardFilter,
   filterContacts,
   getAllContacts,
   getBoardFiltersById,
@@ -50,11 +83,21 @@ import {
   removeTagsFromContacts,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
-import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags } from "../../Api/Hooks";
+import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags, useTagsWithContacts } from "../../Api/Hooks";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+//Data
+const initialValues = {
+  boardName: "",
+  isShared: ""
+};
+const validationSchema = yup.object({
+  boardName: yup
+    .string("Enter Board name")
+    .required("Board Name is required"),
 
+});
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
 //     width: "100%",
@@ -63,7 +106,15 @@ function Alert(props) {
 //     },
 //   },
 // }));
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    // padding: theme.spacing(4),
+    outline: "none"
+  },
   tableHeading: {
     fontWeight: 700,
     fontSize: 15,
@@ -118,8 +169,15 @@ const useStyles = makeStyles({
     color: '#3871DA'
     // },
 
+  },
+  padding: {
+    padding: theme.spacing(3)
+  },
+  button: {
+    margin: theme.spacing(1)
   }
-});
+}));
+
 
 function Home(props) {
   const classes = useStyles();
@@ -147,9 +205,19 @@ function Home(props) {
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
   const [timeZoneFilter, setTimeZoneFilter] = useState(null);
+  const [FilterObj, setFilterObj] = useState(null);
+
+
   const [stateFilter, setStateFilter] = useState(null);
+  const [dobstate, setdobstate] = useState(null);
+  const [boardCount, setboardCount] = useState(0);
+  const [modalData, setData] = useState();
   const [positionFilter, setPositionFilter] = useState(null);
   const [coachFilter, setCoachFilter] = useState(null);
+  const [areacoachFilter, setareacoachFilter] = useState(null);
+  const [status_2Filter, setstatus_2Filter] = useState(null);
+
+
   const [boardFilter, setBoardFilter] = useState(null);
   const [tagFilter, setTagFilter] = useState(null);
   const [dobFilter, setDobFilter] = useState(null);
@@ -164,6 +232,20 @@ function Home(props) {
   const [showAnimation, setShowAnimation] = useState(true);
   const [showFilterButton, setShowFilterButton] = useState(false)
   const [openSnakBar, setOpenSnackBar] = React.useState(false);
+  const [openerrSnakBar, setopenerrSnakBar] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = useState(getModalStyle);
+
+  const [value, onChange] = useState(new Date());
+  const [displayRangeCalendar, setDisplayRageCalendar] = useState(false);
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
   // Pagination
   const [pagination, setPagination] = useState({
     totalItems: 0,
@@ -250,14 +332,32 @@ function Home(props) {
     { name: "Game Results", sub: true },
     { name: "Game Notes", sub: true },
   ];
+
+  const history = useHistory()
+
+
+
   const handleClick = () => {
     setOpenSnackBar(true);
   };
+  function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
+  function getModalStyle() {
+    const top = 50 + rand();
+    const left = 50 + rand();
+
+    return {
+      top: `${top}%`,
+      left: `50%`,
+      transform: `translate(-${top}%, -50%)`
+    };
+  }
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
+    setopenerrSnakBar(false)
     setOpenSnackBar(false);
   };
   let formatPhoneNumber = (str) => {
@@ -278,7 +378,7 @@ function Home(props) {
   };
 
   const TagstoContacts = async () => {
-    setalertValue('tagged')
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been tagged`)
 
     // var tagsid={
     //   tag_ids:selectedCheckBoxesForTags
@@ -302,39 +402,43 @@ function Home(props) {
     }
     catch (e) {
       console.log("erroraddtags", e)
-      setOpenSnackBar(true);
+      setopenerrSnakBar(true)
 
     }
 
     //setShowBackButton(false);
     //handleSelectedPlaceHolder(null, false, false, true);
     //setShowMediaStats(false);
-    //props.history.push('/media');
+    //props.props.history.push('/media');
     //notify("Media saved successfully")
     setOpenSnackBar(true);
 
   }
-  const getContactsByid = async () => {
-    setFetching(true)
-    selectedCheckBoxes.map((id) => {
-      getContact(id).then((res) => {
+  // const getContactsByid = async () => {
+  //   setFetching(true)
+  //   selectedCheckBoxes.map((id) => {
+  //     getContact(id).then((res) => {
 
-        setcontacttags(res.tags)
+  //       setcontacttags(res.tags)
 
-        console.log(res, 'response with contacts by id')
-
-
-        setFetching(false)
+  //       console.log(res, 'response with contacts by id')
 
 
+  //       setFetching(false)
 
-      }, (error) => {
-        console.log("this is error get contact by id", error);
-      })
-    });
-  }
+
+
+  //     }, (error) => {
+  //       console.log("this is error get contact by id", error);
+  //     })
+  //   });
+  // }
+
+
   const removeTags = async () => {
-    setalertValue('un tagged')
+    // setalertValue('')
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been un tagged`)
+
 
     // var tagsid={
     //   tag_ids:selectedCheckBoxesForTags
@@ -358,14 +462,14 @@ function Home(props) {
     }
     catch (e) {
       console.log("erroraddtags", e)
-      setOpenSnackBar(true);
+      setopenerrSnakBar(true);
 
     }
 
     //setShowBackButton(false);
     //handleSelectedPlaceHolder(null, false, false, true);
     //setShowMediaStats(false);
-    //props.history.push('/media');
+    //props.props.history.push('/media');
     //notify("Media saved successfully")
     setOpenSnackBar(true);
     // var tagsid={
@@ -376,18 +480,359 @@ function Home(props) {
 
   }
 
-  const alltags = useTags()
+  // Date picker for filter 
+  const CalendarFilter = () => {
+    return (
+      <div class="dropdown" onMouseLeave={() => {
+        setDisplayRageCalendar(false);
 
+      }}>
+        <Grid
+          container
+          direction={"row"}
+          alignItems="center"
+          justify="space-between"
+          style={{
+            border: "1px solid #dadada",
+            width: "max-content",
+            borderRadius: 4,
+            height: 40,
+            color: displayRangeCalendar === false ? "black" : "white",
+            background:
+              displayRangeCalendar === false ? "transparent" : "#3871DA",
+          }}
+          onClick={(e) => {
+            setDisplayRageCalendar(true);
+            e.stopPropagation()
+          }}
+
+        >
+          <ArrowBackwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowBackwardIosIcon>
+          <div style={{ border: "1px solid #dadada", height: 38 }}></div>
+          <p
+            style={{
+              fontWeight: "bold",
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 4,
+            }}
+          >
+            {new moment(state[0].startDate).format("MM-DD-YYYY") +
+              "-" +
+              new moment(state[0].endDate).format("MM-DD-YYYY")}
+          </p>
+          <div style={{ borderLeft: "1px solid #dadada", height: 38 }}></div>
+          <ArrowForwardIosIcon
+            style={{ marginRight: 8, marginLeft: 8, fontSize: 12 }}
+          ></ArrowForwardIosIcon>
+        </Grid>
+
+        <div
+          // class="dropdown-content"
+          className={classes.dropdownHidden}
+          style={{
+            marginLeft: 0,
+            marginTop: 0,
+            display: displayRangeCalendar ? "block" : "none",
+          }}
+
+        // setDisplayRageCalendar(false);
+
+        >
+          <Grid style={{}}>
+            {/* <DateRange
+      minDate={addDays(new Date(), -30)}
+      maxDate={addDays(new Date(), 30)}
+    ></DateRange> */}
+            <DateRangePicker
+              onChange={(item) => {
+                setState([item.selection])
+
+                const value = new moment(item.startDate).format("MM-DD-YYYY")
+                  + ',' +
+                  new moment(item.endDate).format("MM-DD-YYYY");
+
+                addDataToFilter(value, "dob", item.selection)
+                AddFilterContacts(value, item.selection)
+
+                // if (dobFilter === 'dob') {
+                //   setDobFilter(null);
+                //   addDataToFilter(option.label);
+
+
+                //   filter.map((filt, index) => {
+
+
+                //     AddFilterContacts( filter)
+                //     console.log(filter, "filter object 2", filterType[index])
+
+                //   })
+
+
+
+                // } else {
+                //   addDataToFilter(option.label, "status");
+
+                //   filter.map((filt, index) => {
+                //     console.log(filter, "filter object 2", filterType)
+                //     if (filterType[index] === 'status') {
+
+                //       AddFilterContacts()
+                //     }
+                //   })
+
+
+
+                // }
+
+              }}
+              months={1}
+              minDate={addDays(new Date(), -30)}
+              maxDate={addDays(new Date(), 30)}
+              direction="horizontal"
+              // scroll={{ enabled: true }}
+              ranges={state}
+            />
+          </Grid>
+        </div>
+      </div>
+    );
+  };
+  // save as Board Modal
+  const SaveBoardModal = () => {
+    const formik = useFormik({
+      initialValues: {
+        boardName: "",
+        // password: "",
+        isshared: false
+      },
+      validationSchema: validationSchema,
+      onSubmit: async (values) => {
+        setalertValue(`Board has been Created`)
+
+        var obj = {
+          "filter": {
+            name: values.boardName,
+            is_shared: values.isshared,
+            criteria: FilterObj.criteria,
+
+          }
+        }
+
+        // createBoardFilter
+        // setalertValue('un tagged')
+
+        // var tagsid={
+        //   tag_ids:selectedCheckBoxesForTags
+        // }
+
+        try {
+
+          let res = await createBoardFilter(obj);
+
+
+
+          // const ress= await updateMedia(addOwner)
+          console.log("addOwner", res)
+        }
+        catch (e) {
+          setopenerrSnakBar(true);
+          console.log("erroraddtags", e)
+
+        }
+
+        //setShowBackButton(false);
+        //handleSelectedPlaceHolder(null, false, false, true);
+        //setShowMediaStats(false);
+        //props.props.history.push('/media');
+        //notify("Media saved successfully")
+        setOpenSnackBar(true);
+        // var tagsid={
+        //   tag_ids:selectedCheckBoxesForTags
+        // }
+
+        // var temp = []
+        // temp.push(values)
+        // // var arr = [...temp, ...FilterObj]
+        // var arr = values.concat(FilterObj)
+        // // arr.push(values)
+        // // arr.push(FilterObj)
+        console.log("value of form and contacts", obj)
+
+
+        handleCloseModal()
+      }
+    });
+    return (
+
+
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={handleCloseModal}
+      >
+        <div style={modalStyle} className={classes.paper}>
+
+          <div className={classes.padding}>
+            <CardHeader title="Create Board"></CardHeader>
+
+
+            <div>
+              <form onSubmit={formik.handleSubmit}>
+                <TextField
+                  fullWidth
+                  id="boardName"
+                  name="boardName"
+                  variant="outlined"
+                  label="Board Name"
+                  style={{ marginBottom: "1rem" }}
+                  value={formik.values.boardName}
+                  onChange={formik.handleChange}
+                  error={formik.touched.boardName && Boolean(formik.errors.boardName)}
+                  helperText={formik.touched.boardName && formik.errors.boardName}
+                />
+
+                <FormLabel component="legend">Is Shared</FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue='false'
+                  value={formik.values.isShared}
+                  onChange={formik.handleChange}
+                >
+                  <FormControlLabel value="false" control={<Radio />} label="No" />
+                  <FormControlLabel value="true" control={<Radio />} label="Yes" />
+                </RadioGroup>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Button color="primary" variant="contained" type="submit">
+                    Submit
+                  </Button>
+                  <Button onClick={handleCloseModal} color="danger" variant="contained" >
+                    Cancel
+                  </Button>
+                </div>
+
+
+              </form>
+            </div>
+          </div>
+
+
+
+
+          {/* <Grid >
+            <div className={classes.padding}>
+              <CardHeader title="Create Board"></CardHeader>
+              <Form
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+
+
+                <CardContent>
+                  <Grid item container spacing={1} justify="center">
+                    <Grid
+
+                      item xs={12} sm={12} md={12}>
+                      <Field
+                        // height={40}
+                        label="Board Name"
+                        variant="outlined"
+                        fullWidth
+                        name="boardName"
+                        onChange={handleChange=()=>{e.target.value}}
+                        value={values.boardName}
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      <div id="my-radio-group">is Shared</div>
+                      <div role="group" aria-labelledby="my-radio-group">
+                        <label className="mr-5">
+                          <Field type="radio" name="isShared" value="true" />
+                          yes
+                        </label>
+                        <label >
+                          <Field
+                            type="radio"
+                            name="isShared"
+                            value="false"
+                            checked
+                          />
+                          no
+                        </label>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <CardActions>
+                  <div className="w-100">
+
+                    <div className="d-flex justify-content-between align-items-center">
+
+                      <IconTextField
+                        // width={50}
+
+                        text="Cancel "
+                        textColor="white"
+                        background="#FF0000"
+
+                        onClick={() => {
+                          setOpen(false)
+                        }}
+                      ></IconTextField>
+                      <div>
+                        <Button
+                          variant="contained"
+                          // color="primary"
+                          type="Submit"
+                          className={classes.button}
+                        >
+                          Create Board
+                        </Button>
+                      </div>
+
+
+
+
+
+
+                    </div>
+                  </div>
+
+                </CardActions>
+
+              </Form>
+            </div>
+          </Grid> */}
+
+
+          {/* <SimpleModal /> */}
+        </div>
+      </Modal>
+    )
+
+
+  };
   const getMyContacts = (page) => {
     // setLoading(true);
+    // if(!pagination.currentPage===pagination.totalPages){}
     setFetching(true);
     // setContacts(null)
     console.log("This is the date", page);
     // || "2020-12-13"
     getAllContacts(page).then(
       (res) => {
-        console.log("THis is all contacts res", res);
+        console.log(res.headers['current-page'], "THis is all contacts res", res.headers['total-pages'], res);
+
         if (res.statusText === "OK") {
+          if (res.headers.currentPage === res.headers.totalPages) {
+            setFetching(false)
+          }
           var temp = Object.assign([], contacts);
           temp = temp.concat(res.data);
 
@@ -441,21 +886,123 @@ function Home(props) {
     );
   };
 
-  const AddFilterContacts = async (obj) => {
+  const handleOpen = () => {
+    setOpen(true);
 
+  };
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+  // Filter Contacts
+  const AddFilterContacts = async () => {
+    var obj = {
+      criteria: {
+        status: [],
+        ranks: [],
+        years: [],
+        states: [],
+        positions: [],
+        timezones: [],
+        tags: [],
+        area_coaches: [],
+        position_coaches: [],
+        status_2: [],
+        dob: []
+      }
+    }
+    for (let i = 0; i < filterType.length; i++) {
+
+      // console.log(filttype[i], "filter object with i", filter[i])  
+      if (filterType[i] === 'status') {
+
+
+        obj.criteria.status.push(filter[i])
+
+      }
+      else if (filterType[i] === 'ranks') {
+        obj.criteria.ranks.push(filter[i])
+
+      }
+      else if (filterType[i] === 'gradeYear') {
+        obj.criteria.years.push(filter[i])
+
+      }
+      else if (filterType[i] === 'State') {
+        obj.criteria.states.push(filter[i])
+
+      }
+      else if (filterType[i] === 'Position') {
+        obj.criteria.positions.push(filter[i])
+
+      }
+      else if (filterType[i] === 'timezones') {
+        obj.criteria.timezones.push(filter[i])
+
+      }
+      else if (filterType[i] === 'Tag') {
+        obj.criteria.tags.push(filter[i])
+
+      }
+
+      else if (filterType[i] === 'area_coaches') {
+        obj.criteria.area_coaches.push(filter[i])
+
+      }
+      else if (filterType[i] === 'position_coaches') {
+        obj.criteria.position_coaches.push(filter[i])
+
+      }
+      else if (filterType[i] === 'status_2') {
+        obj.criteria.status_2.push(filter[i])
+
+      }
+      else if (filterType[i] === 'dob') {
+        console.log(filter[i].split(","), "filter[i]")
+        var temp = filter[i].split(",")
+        for (let i = 0; i < temp.length; i++) {
+
+          obj.criteria.dob.push(temp[i])
+        }
+
+      }
+
+    }
+    console.log(obj, "filter object")
+
+
+    setFilterObj(obj)
 
 
     try {
       let res = await filterContacts(obj);
       console.log(res, "res filter contacts")
+      setPagination({
+        totalItems: res.headers['total-count'],
+        itemsPerPage: res.headers['page-items'],
+        totalPages: res.headers['total-pages'],
+        currentPage: res.headers['current-page']
+      })
+      // setPagination({totalItems:res?.data?.contacts?.count})
+
       setContacts(res.data)
     }
     catch (e) {
       console.log("res filter contact", e)
-      setOpenSnackBar(true);
+      setopenerrSnakBar(true);
     }
 
   }
+
+  const onSubmit = (values) => {
+    console.log(values, 'submit form values', contacts);
+
+  };
+
+
+
+
+  let getTagsWithContacts = useTagsWithContacts()
+  console.log(getTagsWithContacts, "getTagsWithContacts")
   var TeamContacts = useTeamContact()
   var COACH = []
   TeamContacts?.map((item) => {
@@ -465,10 +1012,14 @@ function Home(props) {
       label: `${item.first_name} ${item.last_name}`,
     });
   });
+  const usetags = useTags()
+  console.log("These are all tags", usetags)
   var allTeamContacts = COACH;
   var gettags = useTagWithContact()
   var TAGS = [];
-  console.log("These are allcontacts tags", gettags);
+  console.log("These are useTagWithContact tags", gettags);
+
+  console.log("These are allTeamContacts tags", allTeamContacts);
   gettags?.map((item) => {
     TAGS.push({
       value: item.name,
@@ -529,7 +1080,9 @@ function Home(props) {
   var allBoards = useBoards()
   console.log('allBoards', allBoards)
   const ArchiveContact = () => {
-    setalertValue('Archived')
+
+    setalertValue(`${selectedCheckBoxes.length + " "} contacts have been Archived`)
+
     setFetching(true);
     selectedCheckBoxes.map((id) => {
       return (
@@ -558,8 +1111,9 @@ function Home(props) {
       (res) => {
         console.log("THis is all boards by id", res);
         if (res.statusText === "OK") {
+          setPagination({ totalItems: res?.data?.contacts?.count })
           var temp = Object.assign([], copyContacts);
-          temp = temp.concat(res.data);
+          temp = temp.concat(res?.data?.contacts?.list);
           setContacts(temp);
           setuseLessState(uselessState + 1);
           setBordsById(res.data)
@@ -839,6 +1393,15 @@ function Home(props) {
     setShowAnimation(true);
     handleAnimation();
   }, []);
+  // const getData = () => {
+  //   setboardCount(1)
+  // }
+  // const getRemoveData =  (newCount) => {
+  //   // alert(newCount)
+  //    setboardCount(newCount)
+  // }
+
+
 
   const handleAnimation = () => {
     setTimeout(() => {
@@ -881,26 +1444,29 @@ function Home(props) {
                     setStatusFilter(null);
                     addDataToFilter(option.label);
 
-                    var obj = {
-                      criteria: {
-                        status: filter
 
-                      }
-                    }
-                    // AddFilterContacts(obj)
-                    console.log(obj, "filter object", filter)
+                    filter.map((filt, index) => {
+
+
+                      AddFilterContacts()
+                      console.log(filter, "filter object 2", filterType[index])
+
+                    })
+
+
 
                   } else {
                     addDataToFilter(option.label, "status");
-                    var obj = {
-                      criteria: {
-                        status: filter
 
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'status') {
+
+                        AddFilterContacts()
                       }
-                    }
-                    // AddFilterContacts(obj)
+                    })
 
-                    console.log(obj, "filter object")
+
 
                   }
                 }}
@@ -924,13 +1490,27 @@ function Home(props) {
                   color: rankFilter === option.label ? "white" : "black",
                 }}
                 onClick={() => {
-                  // alert("ok")
+                  // 
                   // setContacts(allcontacts)
                   if (rankFilter === option.label) {
                     setRankFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'ranks') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.label, "ranks");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'ranks') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -957,8 +1537,22 @@ function Home(props) {
                   if (rankFilter === option.label) {
                     setGradeYearFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'gradeYear') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.label, "gradeYear");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'gradeYear') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -981,16 +1575,29 @@ function Home(props) {
                 color: timeZoneFilter === option.name ? "white" : "black",
               }}
               onClick={() => {
-                setTimeZoneFilter(option.name);
+
+                if (timeZoneFilter === option.name) {
+                  settimeZoneFilter(null);
+                  addDataToFilter(option.name);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'timezones') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                } else {
+                  addDataToFilter(option.name, "timezones");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'timezones') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+
               }}
-            // onClick={() => {
-            //   if (timeZoneFilter === option.name) {
-            //     setTimeZoneFilter(null);
-            //     addDataToFilter(option.name);
-            //   } else {
-            //     addDataToFilter(option.name, "ustimezones");
-            //   }
-            // }}
             >
               {option.name}
             </Dropdown.Item>
@@ -1000,7 +1607,7 @@ function Home(props) {
           id="dropdown-basic-button"
           title={stateFilter || "State"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="State"
           style={filtesSpacingStyle}
         >
           <div>
@@ -1037,6 +1644,13 @@ function Home(props) {
                       onClick={() => {
 
                         addDataToFilter(option.abbreviation, "State");
+                        filter.map((filt, index) => {
+                          console.log(filter, "filter object 2", filterType)
+                          if (filterType[index] === 'State') {
+
+                            AddFilterContacts()
+                          }
+                        })
                       }}
                     >
                       {option.name}
@@ -1052,6 +1666,13 @@ function Home(props) {
                     }}
                     onClick={() => {
                       addDataToFilter(option.abbreviation, "State");
+                      filter.map((filt, index) => {
+                        console.log(filter, "filter object 2", filterType)
+                        if (filterType[index] === 'State') {
+
+                          AddFilterContacts()
+                        }
+                      })
                     }}
                   >
                     {option.name}
@@ -1084,8 +1705,22 @@ function Home(props) {
                   if (positionFilter === option.value.abbreviation) {
                     setPositionFilter(null);
                     addDataToFilter(option.label);
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'Position') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   } else {
                     addDataToFilter(option.value.abbreviation, "Position");
+                    filter.map((filt, index) => {
+                      console.log(filter, "filter object 2", filterType)
+                      if (filterType[index] === 'Position') {
+
+                        AddFilterContacts()
+                      }
+                    })
                   }
                 }}
               >
@@ -1095,16 +1730,19 @@ function Home(props) {
         </DropdownButton>
         <DropdownButton
           id="dropdown-basic-button"
-          title={coachFilter || "Coach"}
+          title={coachFilter || "Position Coach"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="position_coaches"
           style={filtesSpacingStyle}
         >
+          {/* area_coaches */}
           {allTeamContacts.map((option) => (
             <Dropdown.Item
               style={{
                 background: coachFilter === option.label ? "#348ef7" : "white",
                 color: coachFilter === option.label ? "white" : "black",
+
+
               }}
               // onClick={() => {
               //   setCoachFilter(option.label);
@@ -1113,8 +1751,119 @@ function Home(props) {
                 if (coachFilter === option.label) {
                   setCoachFilter(null);
                   addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'position_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
                 } else {
-                  addDataToFilter(option.label, "Coach");
+                  addDataToFilter(option.label, "position_coaches");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'position_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={areacoachFilter || "Area Coach"}
+          drop={"down"}
+          placeholder="Status"
+          style={filtesSpacingStyle}
+        >
+          {/* area_coaches */}
+          {allTeamContacts.map((option) => (
+            <Dropdown.Item
+
+              style={{
+                background: areacoachFilter === option.label ? "#348ef7" : "white",
+                color: areacoachFilter === option.label ? "white" : "black",
+
+              }}
+              // onClick={() => {
+              //   setareacoachFilter(option.label);
+              // }}
+              onClick={() => {
+                if (areacoachFilter === option.label) {
+                  setareacoachFilter(null);
+                  addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'area_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
+                } else {
+                  addDataToFilter(option.label, "area_coaches");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'area_coaches') {
+
+                      AddFilterContacts()
+                    }
+                  })
+                }
+              }}
+            >
+              {option.label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        {/* boardsById */}
+
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={status_2Filter || "Status 2"}
+          drop={"down"}
+          placeholder="Status 2"
+          style={filtesSpacingStyle}
+        >
+          {/* area_coaches */}
+          {allTeamContacts.map((option) => (
+            <Dropdown.Item
+
+              style={{
+                background: status_2Filter === option.label ? "#348ef7" : "white",
+                color: status_2Filter === option.label ? "white" : "black",
+
+              }}
+              // onClick={() => {
+              //   setstatus_2Filter(option.label);
+              // }}
+              onClick={() => {
+                if (status_2Filter === option.label) {
+                  setstatus_2Filter(null);
+                  addDataToFilter(option.label);
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'status_2') {
+
+                      AddFilterContacts()
+                    }
+                  })
+
+                } else {
+                  addDataToFilter(option.label, "status_2");
+                  filter.map((filt, index) => {
+                    console.log(filter, "filter object 2", filterType)
+                    if (filterType[index] === 'status_2') {
+
+                      AddFilterContacts()
+                    }
+                  })
                 }
               }}
             >
@@ -1123,13 +1872,12 @@ function Home(props) {
           ))}
         </DropdownButton>
 
-        {/* boardsById */}
 
         <DropdownButton
           id="dropdown-basic-button"
           title={tagFilter || "Tag"}
           drop={"down"}
-          placeholder="Status"
+          placeholder="Tag"
           style={filtesSpacingStyle}
         >
           <Grid container direction="row" justify="center">
@@ -1149,43 +1897,50 @@ function Home(props) {
           </Grid>
           {allTags &&
             allTags.map((option, ind) => {
-
+              console.log(allTags, "all TAGS")
               if (tagSearch != "") {
                 if (
                   option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
                 ) {
-                  return (
+                  (
                     <Dropdown.Item
                       style={{
                         background: tagFilter === option.label ? "#348ef7" : "white",
                         color: tagFilter === option.label ? "white" : "black",
                       }}
                       onClick={() => {
-                        if (rankFilter === option.label) {
+
+
+                        if (tagFilter === option.label) {
                           setTagFilter(null);
                           addDataToFilter(option.label);
+                          filter.map((filt, index) => {
+                            console.log(filter, "filter object 2", filterType)
+                            if (filterType[index] === 'Tag') {
+
+                              AddFilterContacts()
+                            }
+                          })
                         } else {
+
                           addDataToFilter(option.label, "Tag");
+                          console.log(filter, "filter object 2", filterType)
+                          filter.map((filt, index) => {
+                            if (filterType[index] === 'Tag') {
+
+                              AddFilterContacts()
+                            }
+                          })
                         }
                       }}
                     >
                       {option.label}
                     </Dropdown.Item>
+
                   );
                 }
               } else {
                 return (
-                  // <Dropdown.Item
-                  //   style={{
-                  //     background: stateFilter === option.abbreviation ? "#348ef7" : "white",
-                  //     color: stateFilter === option.abbreviation ? "white" : "black",
-                  //   }}
-                  //   onClick={() => {
-                  //     addDataToFilter(option.abbreviation, "State");
-                  //   }}
-                  // >
-                  //   {option.abbreviation}
-                  // </Dropdown.Item>
                   <Dropdown.Item
                     style={{
                       background: tagFilter === option.label ? "#348ef7" : "white",
@@ -1193,82 +1948,28 @@ function Home(props) {
                     }}
                     onClick={() => {
 
-                      addDataToFilter(option.label, "Tag");
 
-                    }}
-                  >
-                    {option.label}
-                  </Dropdown.Item>
-                );
-              }
-              // <Dropdown.Item
-              //   style={{
-              //     background: tagFilter === option.label ? "#348ef7" : "white",
-              //     color: tagFilter === option.label ? "white" : "black",
-              //   }}
-              //   onClick={() => {
-              //     if (rankFilter === option.label) {
-              //       setTagFilter(null);
-              //       addDataToFilter(option.label);
-              //     } else {
-              //       addDataToFilter(option.label, "Tag");
-              //     }
-              //   }}
-              // >
-              //   {option.label}
-              // </Dropdown.Item>
-            })}
-        </DropdownButton>
+                      if (tagFilter === option.label) {
+                        setTagFilter(null);
+                        addDataToFilter(option.label);
+                        filter.map((filt, index) => {
+                          console.log(filter, "filter object 2", filterType)
+                          if (filterType[index] === 'Tag') {
 
+                            AddFilterContacts()
+                          }
+                        })
+                      } else {
 
+                        addDataToFilter(option.label, "Tag");
+                        console.log(filter, "filter object 2", filterType)
+                        filter.map((filt, index) => {
+                          if (filterType[index] === 'Tag') {
 
-
-        <DropdownButton
-          id="dropdown-basic-button"
-          title={dobFilter || "DOB"}
-          drop={"down"}
-          placeholder="DOB"
-          style={filtesSpacingStyle}
-        >
-
-          {allTags &&
-            allTags.map((option, ind) => {
-
-              if (tagSearch != "") {
-                if (
-                  option?.label?.toLowerCase()?.indexOf(tagSearch?.toLowerCase()) > -1
-                ) {
-                  return (
-                    <Dropdown.Item
-                      style={{
-                        background: tagFilter === option.label ? "#348ef7" : "white",
-                        color: tagFilter === option.label ? "white" : "black",
-                      }}
-                      onClick={() => {
-                        if (rankFilter === option.label) {
-                          setTagFilter(null);
-                          addDataToFilter(option.label);
-                        } else {
-                          addDataToFilter(option.label, "Tag");
-                        }
-                      }}
-                    >
-                      {option.label}
-                    </Dropdown.Item>
-                  );
-                }
-              } else {
-                return (
-
-                  <Dropdown.Item
-                    style={{
-                      background: tagFilter === option.label ? "#348ef7" : "white",
-                      color: tagFilter === option.label ? "white" : "black",
-                    }}
-                    onClick={() => {
-
-                      addDataToFilter(option.label, "Tag");
-
+                            AddFilterContacts()
+                          }
+                        })
+                      }
                     }}
                   >
                     {option.label}
@@ -1278,6 +1979,7 @@ function Home(props) {
 
             })}
         </DropdownButton>
+        <CalendarFilter></CalendarFilter>
       </Grid>
     );
   };
@@ -1288,11 +1990,15 @@ function Home(props) {
   }
   const addDataToFilter = (value, type) => {
     console.log(value, 'Add data to filter function', type, filter);
-    if (filter.includes(value)) {
+    if (type === 'boards') {
+      setFilter([value])
+      setFilterType([type])
+    }
+    else if (filter.includes(value)) {
       var temp = filter;
       if (temp.length === 1) {
         var data = {
-          typefilter,
+          type: filter,
         }
         console.log(data, 'Data of filter')
         // setFilter(temp);
@@ -1308,6 +2014,9 @@ function Home(props) {
     } else {
       var temp = filter;
       var tempType = filterType;
+      // if(temp==='boards'){
+
+      // }
       temp.push(value);
       tempType.push(type);
       setFilterType(tempType);
@@ -1360,6 +2069,25 @@ function Home(props) {
 
   var totalcount = 0
   const removeDataFromFilter = (index) => {
+    // setboardCount(0)
+    const newCount = 0;
+    console.log('filtertype', boardCount === 1, filter.length === 1)
+    setboardCount(0)
+    window.history.pushState("", "", `/contacts`);
+
+    if (filterType.includes('boards') && filter.length === 1 && boardCount === 1) {
+
+      getMyContacts();
+      var temp = filter;
+      var tempType = filterType;
+      temp.splice(index, 1);
+      tempType.splice(index, 1);
+      var newArray = temp;
+      setFilter(newArray);
+      setFilterType(tempType);
+      setuseLessState(uselessState + 1);
+    }
+    // getRemoveData(newCount);
     var temp = filter;
     var tempType = filterType;
     temp.splice(index, 1);
@@ -1368,13 +2096,37 @@ function Home(props) {
     setFilter(newArray);
     setFilterType(tempType);
     setuseLessState(uselessState + 1);
+    if (filter && filter.length > 0) {
+      filter.map((filt, index) => {
+        // setboardCount(1)
+        AddFilterContacts(filter)
+        console.log(filter, "filter object remove 2", filterType[index])
+      })
+
+    } else {
+
+      if (filter.length === 0 && boardCount === 0) {
+        console.log(filter.length, 'filter.length === 0')
+
+        getMyContacts();
+      }
+
+    }
+
+    console.log(filter, "filter object remove filter", newArray)
+
+
     // sethandlescroll(true)
-    // getMyContacts()
     // alert("sdfasd")
   };
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      getMyContacts();
+      console.log(filter.length, 'THis is all contacts res')
+      if (filter.length === 0 && boardCount === 0) {
+
+
+        getMyContacts();
+      }
       // getAllGradeYears();
       // getAllRanks();
       // getAllStatuses();
@@ -1410,26 +2162,13 @@ function Home(props) {
         console.log(filterType[index], 'cheking')
         if (filterType[index] === "status") {
           console.log(item?.status, '<==== : item?.status:: filt:====>', filt)
-
-          // if (item?.status != null && item?.status.status === filt) {
-          // alert("acha hy na")
-
-
-
-
-
-
-          // }
-
         }
-
         if (filterType[index] === "boards") {
+          console.log('boards zain', filterType[index])
 
-          //  setContacts(null)
           if (item != null && boardsById?.name === filt) {
 
-            // console.log(boardsById?.contacts?.list?.map((el) => el?.id.includes(contacts?.map((el) => el?.id))) , 'new checking', contacts?.map((el) => el?.id))
-            // if (boardsById?.contacts?.list?.map((el) => el?.id) === contacts?.map((el) => el?.id)) {
+
             isValid = true;
             return;
 
@@ -1522,6 +2261,33 @@ function Home(props) {
     }
     return isValid;
   };
+  const handleBoardClick = (board, index) => {
+    // history?.push('contacts/board/yBgMwvsbRmGa')
+    window.history.pushState("", "", `/contacts/board/${board.id}`);
+    setboardCount(1)
+
+
+
+    getBoardsFilterById(board.id)
+
+    if (boardFilter === board.name) {
+
+
+      addDataToFilter(board.name, "boards");
+
+    }
+
+    else {
+
+      setBoardFilter(null);
+
+
+      addDataToFilter(board.name, "boards");
+      // var ind = 1
+      // removeDataFromFilter(ind);
+
+    }
+  }
 
   function handleScroll() {
     // if(handlescroll){
@@ -1540,8 +2306,12 @@ function Home(props) {
     // if (position + visibleHeight === scrollableHeight) {
     // alert("We are in the endgaem now");
     if (!fetching) {
-      getMyContacts(page + 1);
-      setPage(page + 1);
+      if (filter.length === 0 && boardCount === 0) {
+
+        getMyContacts(page + 1);
+        setPage(page + 1);
+      }
+
     }
     // agreement.scrollTop = 0;
     // }
@@ -1549,6 +2319,8 @@ function Home(props) {
 
   // if(redirect !== '')
   //   return <Redirect to={redirect}/>
+  // console.log(boardCount,'setboardCount')
+  console.log('setboardCount', boardCount)
 
   return (
     <DarkContainer contacts style={{ padding: 20, marginLeft: 60 }}>
@@ -1561,7 +2333,18 @@ function Home(props) {
       >
 
         <Alert onClose={handleClose} severity="success">
-          {selectedCheckBoxes.length + " "} contacts have been {alertValue}
+          {alertValue}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openerrSnakBar}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+
+        <Alert onClose={handleClose} severity="error">
+          Something went wrong please try again!
         </Alert>
       </Snackbar>
       <Grid container direction="row">
@@ -1598,7 +2381,7 @@ function Home(props) {
             {showBoardFilters === true && (
               <div>
                 {allBoards &&
-                  allBoards.map((board) => {
+                  allBoards.map((board, index) => {
                     return (
                       <p
                         className={classes.sideSubFilter}
@@ -1608,23 +2391,7 @@ function Home(props) {
 
                         //   addDataToFilter(board.name,'boards');
                         // }}
-                        onClick={() => {
-                          // setContacts(null)
-                          // alert("ok")
-                          getBoardsFilterById(board.id)
-
-                          if (boardFilter === board.name) {
-                            // removeDataFromFilter
-                            setBoardFilter(null);
-                            addDataToFilter(board.name, "boards");
-                            // setAllContacts(...contacts)
-                          }
-
-                          else {
-                            addDataToFilter(board.name, "boards");
-
-                          }
-                        }}
+                        onClick={() => handleBoardClick(board, index)}
                       >
                         {board.name}
                       </p>
@@ -1714,6 +2481,11 @@ function Home(props) {
                   width={180}
                   text="Save as Board"
                   textColor="gray"
+                  onClick={() => {
+                    // setShowFiltersRow(!showFiltersRow);
+                    handleOpen();
+                    // setContacts(allcontacts)
+                  }}
                   icon={
                     <AccountBoxIcon
                       style={{ color: "#3871DA" }}
@@ -1767,6 +2539,7 @@ function Home(props) {
                       <ClearIcon
                         onClick={() => {
                           removeDataFromFilter(index);
+
                         }}
                         style={{
                           color: "red",
@@ -1834,7 +2607,7 @@ function Home(props) {
                     width: "100%",
                   }}
                 >
-                  You have <span style={{ color: "#3871DA" }}> {contacts != null ? pagination.totalItems : 0} </span>{" "} contacts
+                  You have <span style={{ color: "#3871DA" }}> {contacts != null && contacts.length > 0 ? pagination.totalItems : 0} </span>{" "} contacts
                   {/* {" "} contacts in the system */}
                 </span>
               )}
@@ -1910,15 +2683,15 @@ function Home(props) {
                         onClick={() => {
                           // if (selectedCheckBoxes.length > 0) {
                           // removeTags()
-                          getContactsByid()
-                          if (contacttags.length > 0) {
-                            setshowRemoveTagsDialog(true);
+                          // getContactsByid()
+                          // if (contacttags.length > 0) {
+                          setshowRemoveTagsDialog(true);
 
-                          }
-                          else {
-                            alert("No tag found ")
-                            return false
-                          }
+                          // }
+                          // else {
+                          // alert("No tag found ")
+                          // return false
+                          // }
 
                           // }
                         }}
@@ -2261,13 +3034,21 @@ function Home(props) {
                           {item.status && item.status.status}
                         </span>
                       </Grid>
-                      {index === contacts.length - 1 && (
+                      {/* // {pagination.totalPages===pagination.currentPage} */}
+                      {console.log((pagination.totalPages !== pagination.currentPage), 'THis is all contacts res')}
+
+                      {index === contacts.length - 1 && pagination.totalPages !== pagination.currentPage && (
+
                         <Grid item md={12} xs={12}>
                           <Grid container direction="row" justify="center">
+                            {/* {console.log(":adfsad")} */}
                             <CircularProgress />
                           </Grid>
                         </Grid>
                       )}
+
+
+
                     </Grid>
                   );
                   // }
@@ -2327,8 +3108,8 @@ function Home(props) {
               ></input>
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {alltags &&
-                alltags.map((tags) => {
+              {usetags &&
+                usetags.map((tags) => {
                   console.log(tags, 'This is tag map ')
                   if (tags.name.indexOf(tagSearch) > -1) {
                     return (
@@ -2437,9 +3218,9 @@ function Home(props) {
               ></input>
             </Grid>
             <div style={{ maxHeight: 400, minHeight: 400, overflow: "scroll" }}>
-              {contacttags &&
+              {getTagsWithContacts &&
 
-                contacttags.map((tags) => {
+                getTagsWithContacts.map((tags) => {
                   console.log(tags, 'This is tag map ')
                   if (tags.name.indexOf(tagSearch) > -1) {
                     return (
@@ -2514,6 +3295,7 @@ function Home(props) {
         }}
         hideActions={true}
       />
+      <SaveBoardModal />
     </DarkContainer>
   );
 }

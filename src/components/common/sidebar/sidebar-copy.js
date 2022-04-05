@@ -44,14 +44,14 @@ import Alert from '@mui/material/Alert';
 import { InputGroup, FormControl } from "react-bootstrap";
 import ClearIcon from "@material-ui/icons/Clear"; // ----
 import IconTextField from "../../common/Fields/IconTextField";
-import {Button as MuiButton } from '@mui/material';
+import { Button as MuiButton } from '@mui/material';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { 
+import {
   getTags,
-  getTeamContacts, 
-  getPlaceholder, 
+  getTeamContacts,
+  getPlaceholder,
   getAllContacts2,
   getSearchedContacts,
   addTag,
@@ -411,7 +411,7 @@ const dummyUploadProgress = [
   "ready",
   "uploading",
   "success",
-  "failed"  
+  "failed"
 ]
 
 const Sidebar = (props) => {
@@ -442,15 +442,15 @@ const Sidebar = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const classes = useStyles();
 
-	// new media upload
+  // new media upload
   const [teamContacts, setTeamContacts] = useState([])
-	const [allPlaceholders, setAllPlaceholders] = useState([])
-	const [owners, setOwners] = useState([])
-	const [tagInput, setTagInput] = useState("")
-	const [tags, setTags] = useState([])
-	const [placeholders, setPlaceholders] = useState([])
-	const [placeholderInput, setPlaceholderInput] = useState("")
-	const [searchPlaceholder, setSearchPlaceholder] = useState("");
+  const [allPlaceholders, setAllPlaceholders] = useState([])
+  const [owners, setOwners] = useState([])
+  const [tagInput, setTagInput] = useState("")
+  const [tags, setTags] = useState([])
+  const [placeholders, setPlaceholders] = useState([])
+  const [placeholderInput, setPlaceholderInput] = useState("")
+  const [searchPlaceholder, setSearchPlaceholder] = useState("");
   const [searchTeamContact, setSearchTeamContact] = useState("")
   const [uploadStatus, setUploadStatus] = useState(dummyUploadProgress)
   const [uploadingMedia, setUploadingMedia] = useState(false)
@@ -458,7 +458,7 @@ const Sidebar = (props) => {
 
   // Tags
   const [searchedTags, setSearchedTags] = useState([])
-  
+
   // Upload Process
   const [uploadStatusCount, setUploadStatusCount] = useState({ success: 0, failed: 0 })
   const [uploadFinished, setUploadFinished] = useState(false)
@@ -515,7 +515,7 @@ const Sidebar = (props) => {
                       onClick={() => {
                         addTagToFilter(item.name);
                       }}
-                      // className={classes.sendAsP}
+                    // className={classes.sendAsP}
                     >
                       <p
                         style={{
@@ -545,7 +545,7 @@ const Sidebar = (props) => {
                       addTagToFilter(item.name);
                     }}
                     id="searchtags"
-                    // className={classes.sendAsP}
+                  // className={classes.sendAsP}
                   >
                     <p
                       style={{
@@ -652,186 +652,186 @@ const Sidebar = (props) => {
     // })
 
     getAllContacts2()
-    
+
   }
 
-	const getTeamMembers = () => {
-		getTeamContacts().then(
-			(res) => {
-				// console.log("THis is all contacts res", res);
-				if (res.statusText === "OK") {
-					setTeamMembers(res.data);
-					// console.log("******************") 
-					// console.log(res.data)
-					// console.log("******************") 
-				}
-			},
-			(error) => {}
-		);
-	};
+  const getTeamMembers = () => {
+    getTeamContacts().then(
+      (res) => {
+        // console.log("THis is all contacts res", res);
+        if (res.statusText === "OK") {
+          setTeamMembers(res.data);
+          // console.log("******************") 
+          // console.log(res.data)
+          // console.log("******************") 
+        }
+      },
+      (error) => { }
+    );
+  };
 
-	const getAllTags = () => {
-		getTags().then(
-			(res) => {
-				// console.log("THis is all tags", res);
-				var TAGS = [];
+  const getAllTags = () => {
+    getTags().then(
+      (res) => {
+        // console.log("THis is all tags", res);
+        var TAGS = [];
 
-				if (res.statusText === "OK") {
-					console.log("These are all tags", res.data);
-					setAllTags(res.data);
-				}
-			},
-			(error) => {
-				console.log("get all tags error: ", error);
-			}
-		);
-	};
+        if (res.statusText === "OK") {
+          console.log("These are all tags", res.data);
+          setAllTags(res.data);
+        }
+      },
+      (error) => {
+        console.log("get all tags error: ", error);
+      }
+    );
+  };
 
-	const getAllPlaceholders = () => {
-		getPlaceholder().then(
-			(res) => {
-				if (res.statusText === "OK") {
-					console.log("These are all placeholders", res.data);
-					setAllPlaceholders(res.data);
-				}
-			},
-			(error) => {
-				console.log("get all placeholders error: ", error)
-			}
-		)
-	}
+  const getAllPlaceholders = () => {
+    getPlaceholder().then(
+      (res) => {
+        if (res.statusText === "OK") {
+          console.log("These are all placeholders", res.data);
+          setAllPlaceholders(res.data);
+        }
+      },
+      (error) => {
+        console.log("get all placeholders error: ", error)
+      }
+    )
+  }
 
-	useEffect(() => {
-		if (localStorage.getItem("user")) {
-			getTeamMembers();
-			getAllTags();
-			getAllPlaceholders();
-		} else {
-			window.location.href = "/";
-		}
-	}, []);
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      getTeamMembers();
+      getAllTags();
+      getAllPlaceholders();
+    } else {
+      window.location.href = "/";
+    }
+  }, []);
 
   const addMemberToOwners = member => {
-		// add member to owners if it member
-		// is not an owner yet
+    // add member to owners if it member
+    // is not an owner yet
 
-		let duplicate = false
+    let duplicate = false
 
-		for(let i in owners) {
-			//console.log(owner)
-			if(owners[i].id == member.id) {
-				duplicate = true
-				break
-			}
-		}
+    for (let i in owners) {
+      //console.log(owner)
+      if (owners[i].id == member.id) {
+        duplicate = true
+        break
+      }
+    }
 
-		if(!duplicate) {
-			let newOwners = Object.assign([], owners)
-			newOwners.push(member)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setOwners(newOwners)
-		}
-  	};
-
-  	const removeMemberFromOwners = member => {
-      let newOwners = owners.filter(owner => owner.id !== member.id)
+    if (!duplicate) {
+      let newOwners = Object.assign([], owners)
+      newOwners.push(member)
+      // console.log("****************************")
+      // console.log(newOwners)
+      // console.log("****************************")
       setOwners(newOwners)
-  	}
+    }
+  };
 
-	// Add Tag to Tags list
-	const addTagToTags = tag => {
-		let duplicate = false
+  const removeMemberFromOwners = member => {
+    let newOwners = owners.filter(owner => owner.id !== member.id)
+    setOwners(newOwners)
+  }
 
-		for(let i in tags) {
-			//console.log(owner)
-			if(tags[i].id == tag.id) {
-				duplicate = true
-				break
-			}
-		}
+  // Add Tag to Tags list
+  const addTagToTags = tag => {
+    let duplicate = false
 
-		if(!duplicate) {
-			let newTags = Object.assign([], tags)
-			newTags.push(tag)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setTags(newTags)
-		}
-	}
+    for (let i in tags) {
+      //console.log(owner)
+      if (tags[i].id == tag.id) {
+        duplicate = true
+        break
+      }
+    }
 
-	const removeTagFromTags = tag => {
-		let newTags = tags.filter(tg => tg.id !== tag.id)
-		setTags(newTags)
-  	}
+    if (!duplicate) {
+      let newTags = Object.assign([], tags)
+      newTags.push(tag)
+      // console.log("****************************")
+      // console.log(newOwners)
+      // console.log("****************************")
+      setTags(newTags)
+    }
+  }
 
-	const onTagInputChange = (tagInput) => {
-		// setTagInput(e.target.value)
+  const removeTagFromTags = tag => {
+    let newTags = tags.filter(tg => tg.id !== tag.id)
+    setTags(newTags)
+  }
+
+  const onTagInputChange = (tagInput) => {
+    // setTagInput(e.target.value)
 
     let searched = []
 
     allTags.forEach(tag => {
-      if(tag.name.toLowerCase().includes(tagInput.toLowerCase()))
+      if (tag.name.toLowerCase().includes(tagInput.toLowerCase()))
         searched.push(tag)
     })
 
     setSearchedTags(searched)
-	}
+  }
 
-	const onTagInputPressEnter = (tagInput) => {
-		let newTag = {
+  const onTagInputPressEnter = (tagInput) => {
+    let newTag = {
       id: "new-" + Date.now(),
       name: tagInput
     }
     addTagToTags(newTag)
     setTagInput("")
-	}
+  }
 
-	const addPlaceholderToPlaceholders = (placeholder) => {
-		let duplicate = false
+  const addPlaceholderToPlaceholders = (placeholder) => {
+    let duplicate = false
 
-		for(let i in placeholders) {
-			//console.log(owner)
-			if(placeholders[i].id == placeholder.id) {
-				duplicate = true
-				break
-			}
-		}
+    for (let i in placeholders) {
+      //console.log(owner)
+      if (placeholders[i].id == placeholder.id) {
+        duplicate = true
+        break
+      }
+    }
 
-		if(!duplicate) {
-			let newPlaceholders = Object.assign([], placeholders)
-			newPlaceholders.push(placeholder)
-			// console.log("****************************")
-			// console.log(newOwners)
-			// console.log("****************************")
-			setPlaceholders(newPlaceholders)
-		}
-	}
+    if (!duplicate) {
+      let newPlaceholders = Object.assign([], placeholders)
+      newPlaceholders.push(placeholder)
+      // console.log("****************************")
+      // console.log(newOwners)
+      // console.log("****************************")
+      setPlaceholders(newPlaceholders)
+    }
+  }
 
-	const removePlaceholderFromPlaceholders = (placeholder) => {
-		let newPlaceholders = placeholders.filter(ph => ph.id !== placeholder.id)
-		setPlaceholders(newPlaceholders)
-	}
+  const removePlaceholderFromPlaceholders = (placeholder) => {
+    let newPlaceholders = placeholders.filter(ph => ph.id !== placeholder.id)
+    setPlaceholders(newPlaceholders)
+  }
 
-	const onPlaceholderInputChange = e => {
-		setPlaceholderInput(e.target.value)
-	}
+  const onPlaceholderInputChange = e => {
+    setPlaceholderInput(e.target.value)
+  }
 
-	const onPlaceholderInputKeyPress = e => {
-		if(e.key === "Enter") {
-			let newPlaceholder = {
-				id: "new-" + Date.now(),
-				name: placeholderInput
-			}
-			addPlaceholderToPlaceholders(newPlaceholder)
-			setPlaceholderInput("")
-		}
-	}
+  const onPlaceholderInputKeyPress = e => {
+    if (e.key === "Enter") {
+      let newPlaceholder = {
+        id: "new-" + Date.now(),
+        name: placeholderInput
+      }
+      addPlaceholderToPlaceholders(newPlaceholder)
+      setPlaceholderInput("")
+    }
+  }
 
   const onSearchTeamContactKeyPress = (e) => {
-    if(e.key === "Enter") {
+    if (e.key === "Enter") {
       getSearchedContacts(searchTeamContact).then(
         (res) => {
           if (res.statusText === "OK") {
@@ -846,29 +846,29 @@ const Sidebar = (props) => {
     }
   }
 
-  
 
-	const addTagToFilter = (value, type) => {
-		if (tagFilter.includes(value)) {
-			var temp = [];
-			tagFilter.map((item) => {
-				if (item != value) {
-				temp.push(item);
-				}
-			});
-			setTagFilter(temp);
-			setuseLessState(uselessState + 1);
-		} else {
-			var temp = tagFilter;
-			temp.push(value);
-			setTagFilter(temp);
-			setuseLessState(uselessState + 1);
-		}
-	};
 
-	
-	// console.log("These are associated people", associatedPeople);
-	// console.log("These are associated people index", associatedPeopleIndex);
+  const addTagToFilter = (value, type) => {
+    if (tagFilter.includes(value)) {
+      var temp = [];
+      tagFilter.map((item) => {
+        if (item != value) {
+          temp.push(item);
+        }
+      });
+      setTagFilter(temp);
+      setuseLessState(uselessState + 1);
+    } else {
+      var temp = tagFilter;
+      temp.push(value);
+      setTagFilter(temp);
+      setuseLessState(uselessState + 1);
+    }
+  };
+
+
+  // console.log("These are associated people", associatedPeople);
+  // console.log("These are associated people index", associatedPeopleIndex);
 
   // let file = {
   //   lastModified: 1640966381181
@@ -895,39 +895,39 @@ const Sidebar = (props) => {
 
       files.forEach((file, index) => {
         getAssociatedContactByFileName(file.name)
-            .then(contact => {
-              associated[index] = contact
+          .then(contact => {
+            associated[index] = contact
 
-              console.log("return " + index)
-              console.log(associated)
-            })
-            .catch(error => {
-              console.log("error " + error)
-              associated[index] = null
+            console.log("return " + index)
+            console.log(associated)
+          })
+          .catch(error => {
+            console.log("error " + error)
+            associated[index] = null
 
-              console.log(associated)
-              if(error === "found multiple contacts") {
-                // TODO: alert user that could not auto associate
-                // due to search returning multiple contacts
-              } else if (error === "could not find contacts") {
-                // TODO: alert user that could not auto associate
-                // due to search not finding any contacts
-              } else {
-                // TODO: handle axios/server error
-              }
-            })
-            .finally(() => {
-              uploadStatus[index] = "ready"
+            console.log(associated)
+            if (error === "found multiple contacts") {
+              // TODO: alert user that could not auto associate
+              // due to search returning multiple contacts
+            } else if (error === "could not find contacts") {
+              // TODO: alert user that could not auto associate
+              // due to search not finding any contacts
+            } else {
+              // TODO: handle axios/server error
+            }
+          })
+          .finally(() => {
+            uploadStatus[index] = "ready"
 
-              count--
+            count--
 
-              console.log("finally " + count)
-              console.log(associated)
+            console.log("finally " + count)
+            console.log(associated)
 
-              if(count == 0) {
-                resolve([files, associated])
-              }
-            })
+            if (count == 0) {
+              resolve([files, associated])
+            }
+          })
       })
     })
   }
@@ -944,8 +944,8 @@ const Sidebar = (props) => {
 
       console.log(file)
 
-      if(((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) { 
+      if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
+        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
         // 5MB for images and 15MB for videos
 
         console.log(file.name + "*")
@@ -956,7 +956,7 @@ const Sidebar = (props) => {
       }
     }
 
-    if(files.length != tempFiles.length) {
+    if (files.length != tempFiles.length) {
       setMediaAlert({
         message: "One or more files were not added since they do not match the file upload criteria",
         visible: true
@@ -1008,8 +1008,8 @@ const Sidebar = (props) => {
     // let tempFiles = Object.assign([], dropFiles)
     // let associated = Object.assign([], associatedPeople)
 
-    
-    
+
+
   };
 
   const deleteMedia = (index) => {
@@ -1056,7 +1056,7 @@ const Sidebar = (props) => {
       }
 
       console.log("upload " + index)
-      console.log(media)     
+      console.log(media)
 
       //return
 
@@ -1079,13 +1079,13 @@ const Sidebar = (props) => {
 
           tags.forEach(tag => {
             //if(typeof tag.id == "string" && tag.id.includes("new-")) {
-              addTagToMedia(mediaRes.id, tag.name)
-                .then(res => {
-                  console.log(res)
-                })
-                .catch(error => {
-                  console.log(error)
-                })
+            addTagToMedia(mediaRes.id, tag.name)
+              .then(res => {
+                console.log(res)
+              })
+              .catch(error => {
+                console.log(error)
+              })
             //}
           })
 
@@ -1109,7 +1109,7 @@ const Sidebar = (props) => {
           //setUploadStatus(tempUploadStatus)
           count--
 
-          if(count == 0){
+          if (count == 0) {
             setUploadingMedia(false)
             onUploadFinished(tempUploadStatus, successCount, failedCount)
           }
@@ -1121,7 +1121,7 @@ const Sidebar = (props) => {
     let tmp = []
 
     tempUploadStatus.forEach((status, index) => {
-      if(status === 'failed')
+      if (status === 'failed')
         tmp.push(dropFiles[index])
     })
 
@@ -1129,7 +1129,7 @@ const Sidebar = (props) => {
     setUploadStatusCount({ success: successCount, failed: failedCount })
     setUploadFinished(true)
   }
-  
+
 
   const onCloseMedia = () => {
     setAddMedia(false)
@@ -1141,7 +1141,7 @@ const Sidebar = (props) => {
     setTags([])
   }
 
-  
+
 
   const addPlaceholderToFilter = (value, type) => {
     if (placeholderFilter.includes(value)) {
@@ -1167,7 +1167,7 @@ const Sidebar = (props) => {
     let temp = Object.assign([], associatedPeople)
     temp[index] = teamContact
     setAssociatedPeople(temp)
-    
+
   }
 
   const removeContactFromMedia = (index) => {
@@ -1269,8 +1269,8 @@ const Sidebar = (props) => {
                 activeTabCSV === 1
                   ? classes.uploadCSVGridActive
                   : activeTabCSV > 1
-                  ? classes.uploadCSVGridDone
-                  : classes.uploadCSVGrid
+                    ? classes.uploadCSVGridDone
+                    : classes.uploadCSVGrid
               }
             >
               1
@@ -1285,8 +1285,8 @@ const Sidebar = (props) => {
                 activeTabCSV === 2
                   ? classes.uploadCSVGridActive
                   : activeTabCSV > 2
-                  ? classes.uploadCSVGridDone
-                  : classes.uploadCSVGrid
+                    ? classes.uploadCSVGridDone
+                    : classes.uploadCSVGrid
               }
             >
               2
@@ -1322,7 +1322,7 @@ const Sidebar = (props) => {
                   <div style={{ width: "100%" }}></div>
                   <IconTextField
                     width={270}
-                    onClick={() => {}}
+                    onClick={() => { }}
                     border="none"
                     text="Download Import Template"
                     textColor={"white"}
@@ -1614,8 +1614,8 @@ const Sidebar = (props) => {
               textAlign="center"
               textWidth="100%"
               textPadding="0px"
-              // border
-              // background={"#3871da"}
+            // border
+            // background={"#3871da"}
             ></IconTextField>
           )}
 
@@ -1761,8 +1761,8 @@ const Sidebar = (props) => {
                 textAlign="center"
                 textWidth="100%"
                 textPadding="0px"
-                // border
-                // background={"#3871da"}
+              // border
+              // background={"#3871da"}
               ></IconTextField>
               <IconTextField
                 width={160}
@@ -1798,8 +1798,8 @@ const Sidebar = (props) => {
           // setDisplayOwner(false);
         }}
         onClick={(e) => {
-			  console.log("my on click " + e.target.id)
-        console.log("my on click " + displayAssociate)
+          console.log("my on click " + e.target.id)
+          console.log("my on click " + displayAssociate)
           if (e.target.id != "owner") {
             setDisplayOwner(false);
           }
@@ -1852,8 +1852,8 @@ const Sidebar = (props) => {
                         {owner.first_name + " " + owner.last_name}
                         <ClearIcon
                           onClick={() => {
-                          //console.log("my Clear Team Member filter")
-                          removeMemberFromOwners(owner)
+                            //console.log("my Clear Team Member filter")
+                            removeMemberFromOwners(owner)
                           }}
                           style={{
                             color: "red",
@@ -1865,7 +1865,7 @@ const Sidebar = (props) => {
                       </Grid>
                     </div>
                   );
-              })}
+                })}
               {owners.length == 0 &&
                 <div class="dropdownMedia">
                   <input
@@ -1904,10 +1904,10 @@ const Sidebar = (props) => {
                             className={classes.hoverGrid}
                             onClick={() => {
                               if (teamMember.twitter_profile) {
-                  addMemberToOwners(teamMember);
+                                addMemberToOwners(teamMember);
                               }
                             }}
-                            // className={classes.sendAsP}
+                          // className={classes.sendAsP}
                           >
                             <img
                               style={{
@@ -1917,8 +1917,8 @@ const Sidebar = (props) => {
                                 marginLeft: 12,
                               }}
                               src={
-                  teamMember.twitter_profile &&
-                  teamMember.twitter_profile.profile_image
+                                teamMember.twitter_profile &&
+                                teamMember.twitter_profile.profile_image
                               }
                             ></img>
 
@@ -1937,7 +1937,7 @@ const Sidebar = (props) => {
                   </div>{" "}
                 </div>
               }
-              
+
             </Grid>
 
             {/* <InputGroup className="mb-3">
@@ -1974,7 +1974,7 @@ const Sidebar = (props) => {
               onInputChange={onTagInputChange}
               onInputPressEnter={onTagInputPressEnter}
               onOptionSelected={(tag, index) => addTagToTags(tag)}
-              onRemoveSelected={(tag, index) =>  removeTagFromTags(tag)}
+              onRemoveSelected={(tag, index) => removeTagFromTags(tag)}
               onShowDropDown={() => setDisplayTags(true)}
             />
 
@@ -2179,7 +2179,7 @@ const Sidebar = (props) => {
                       </Grid>
                     </div>
                   );
-              })}
+                })}
               {placeholders.length == 0 &&
                 <div class="dropdownMedia">
                   <input
@@ -2228,35 +2228,35 @@ const Sidebar = (props) => {
                     </Grid>
                     {allPlaceholders &&
                       allPlaceholders.map((placeholder, index) => {
-                        if(searchPlaceholder != "") {
+                        if (searchPlaceholder != "") {
                           if (placeholder.name.toLowerCase().indexOf(searchPlaceholder.toLowerCase()) > -1) {
                             return (
                               <Grid
                                 container
                                 alignItems="center"
                                 style={{
-                                height: 50,
-                                marginLeft: 0,
-                                cursor: "pointer",
+                                  height: 50,
+                                  marginLeft: 0,
+                                  cursor: "pointer",
                                 }}
                                 className={classes.hoverGrid}
                                 onClick={() => {
                                   //console.log(placeholder)
-                                addPlaceholderToPlaceholders(placeholder);
+                                  addPlaceholderToPlaceholders(placeholder);
                                 }}
-                                // className={classes.sendAsP}
+                              // className={classes.sendAsP}
                               >
                                 <p
-                                style={{
-                                  margin: 0,
-                                  fontWeight: 600,
-                                  marginLeft: 12,
-                                }}
+                                  style={{
+                                    margin: 0,
+                                    fontWeight: 600,
+                                    marginLeft: 12,
+                                  }}
                                 >
-                                {placeholder.name}
+                                  {placeholder.name}
                                 </p>
                               </Grid>
-                              );
+                            );
                           }
                         } else {
                           return (
@@ -2264,28 +2264,28 @@ const Sidebar = (props) => {
                               container
                               alignItems="center"
                               style={{
-                              height: 50,
-                              marginLeft: 0,
-                              cursor: "pointer",
+                                height: 50,
+                                marginLeft: 0,
+                                cursor: "pointer",
                               }}
                               className={classes.hoverGrid}
                               onClick={() => {
-                              //console.log(type)
+                                //console.log(type)
                                 addPlaceholderToPlaceholders(placeholder);
                               }}
-                              // className={classes.sendAsP}
+                            // className={classes.sendAsP}
                             >
                               <p
-                              style={{
-                                margin: 0,
-                                fontWeight: 600,
-                                marginLeft: 12,
-                              }}
+                                style={{
+                                  margin: 0,
+                                  fontWeight: 600,
+                                  marginLeft: 12,
+                                }}
                               >
-                              {placeholder.name}
+                                {placeholder.name}
                               </p>
                             </Grid>
-                            );
+                          );
                         }
                       })}
                   </div>{" "}
@@ -2294,8 +2294,8 @@ const Sidebar = (props) => {
             </Grid>
           </Grid>
 
-          {dropFiles.length < 1 && <FileDropZone/>}
-          
+          {dropFiles.length < 1 && <FileDropZone />}
+
           {dropFiles.length > 0 &&
             <div
               style={{
@@ -2306,11 +2306,11 @@ const Sidebar = (props) => {
                 borderRadius: 4,
               }}
             >
-              <MediaUploadHeader/>
+              <MediaUploadHeader />
 
               {mediaAlert.visible &&
-                <Alert 
-                  style={{ boxShadow: "0 0 transparent"}}
+                <Alert
+                  style={{ boxShadow: "0 0 transparent" }}
                   variant="standard"
                   severity="warning"
                   onClose={onMediaAlertClose}
@@ -2339,7 +2339,7 @@ const Sidebar = (props) => {
                   />
                 )
               })}
-              
+
               <FileDropZone></FileDropZone>
             </div>
           }
@@ -2359,28 +2359,28 @@ const Sidebar = (props) => {
                 }}
                 disableElevation
                 variant="outlined"
-                // border
-                // background={"#3871da"}
+              // border
+              // background={"#3871da"}
               >
                 Cancel
               </MuiButton>
 
               <LoadingButton
                 style={{
-                    width: 120,
-                    backgroundColor: "#3871da",
-                    fontWeight: "bold",
-                    textTransform: "capitalize"
+                  width: 120,
+                  backgroundColor: "#3871da",
+                  fontWeight: "bold",
+                  textTransform: "capitalize"
                 }}
                 onClick={onUploadMedia}
                 loading={uploadingMedia}
-                endIcon={uploadingMedia ? <span></span> : <CloudUploadIcon style={{ color: "white" }}/> }
+                endIcon={uploadingMedia ? <span></span> : <CloudUploadIcon style={{ color: "white" }} />}
                 disableElevation
                 // color="#3871da"
                 variant="contained">
                 Upload
               </LoadingButton>
-              
+
             </Grid>
           </Grid>
         </Grid>
@@ -2389,132 +2389,132 @@ const Sidebar = (props) => {
       {/*********************************************************************************/}
       {/*********************************************************************************/}
 
-        <IconContext.Provider value={{ color: "#fff" }}>
-            <NavResponsive>
-                <IoIosMenu
-                    style={{ color: "rgb(113, 115, 118)", margin: "2rem" }}
-                    size={30}
-                    onClick={showSidebar}
-                />
+      <IconContext.Provider value={{ color: "#fff" }}>
+        <NavResponsive>
+          <IoIosMenu
+            style={{ color: "rgb(113, 115, 118)", margin: "2rem" }}
+            size={30}
+            onClick={showSidebar}
+          />
 
-                <LeftSectionNav>
-                    <BiBell
-                        style={{
-                            color: "#999898",
-                            marginRight: "15px",
-                            marginLeft: "15px",
-                            height: "24.2px",
-                            width: "21.2px",
-                        }}
-                    />
-                    <BiChat
-                        style={{
-                            color: "rgb(113, 115, 118)",
-                            marginRight: "15px",
-                            marginLeft: "15px",
-                            height: "24px",
-                            width: "25px",
-                        }}
-                    />
-                </LeftSectionNav>
-            </NavResponsive>
-            <Nav>
-                {props.contacts === true ||
-                props.media == true ||
-                props.chat == true ||
-                props.messageCreate === true ||
-                props.TweetCreate === true ? (
-                    <LogoContainer style={{ width: 60 }}>
-                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} style={{ width: 50,height:50 }} />
-                    </LogoContainer>
-                ) : (
-                    <LogoContainer>
-                        <NavLogo src={props.TwitterStream? StarLogo : DashboardLogo} />
-                    </LogoContainer>
-                )}
-                {props.contacts === true ? (
-                    <Button onClick={setAddContact}>+ Add Contact</Button>
-                ) : (
-                    <div></div>
-                )}
+          <LeftSectionNav>
+            <BiBell
+              style={{
+                color: "#999898",
+                marginRight: "15px",
+                marginLeft: "15px",
+                height: "24.2px",
+                width: "21.2px",
+              }}
+            />
+            <BiChat
+              style={{
+                color: "rgb(113, 115, 118)",
+                marginRight: "15px",
+                marginLeft: "15px",
+                height: "24px",
+                width: "25px",
+              }}
+            />
+          </LeftSectionNav>
+        </NavResponsive>
+        <Nav>
+          {props.contacts === true ||
+            props.media == true ||
+            props.chat == true ||
+            props.messageCreate === true ||
+            props.TweetCreate === true ? (
+            <LogoContainer style={{ width: 60 }}>
+              <NavLogo src={props.TwitterStream ? StarLogo : DashboardLogo} style={{ width: 50, height: 50 }} />
+            </LogoContainer>
+          ) : (
+            <LogoContainer>
+              <NavLogo src={props.TwitterStream ? StarLogo : DashboardLogo} />
+            </LogoContainer>
+          )}
+          {props.contacts === true ? (
+            <Button onClick={setAddContact}>+ Add Contact</Button>
+          ) : (
+            <div></div>
+          )}
 
-                {props.messageCreate === true ? (
+          {props.messageCreate === true ? (
 
-                    <Button
-                        onClick={() => {
-                            window.location.reload();
-                            localStorage.removeItem("selectedMedia");
-                        }}
-                    >
-                        + New Message
-                    </Button>
-                ) : (
-                    <div></div>
-                )}
+            <Button
+              onClick={() => {
+                window.location.reload();
+                localStorage.removeItem("selectedMedia");
+              }}
+            >
+              + New Message
+            </Button>
+          ) : (
+            <div></div>
+          )}
 
-                {props.chat === true ? (
-                    <Button
-                        style={{ width: 160, textAlign: "center", height: 50 }}
-                        onClick={() => {}}
-                    >
-                        <span style={{ fontSize: 30 }}>+</span>
-                        <span style={{ marginLeft: 16 }}>New Message</span>
-                    </Button>
-                ) : (
-                    <div></div>
-                )}
-                {props.TweetCreate === true ? (
-                    <Button
-                        onClick={() => {
-                            window.location.reload();
-                            localStorage.removeItem("selectedMedia");
-                        }}
-                    >
-                        + New Post
-                    </Button>
-                ) : (
-                    <div></div>
-                )}
+          {props.chat === true ? (
+            <Button
+              style={{ width: 160, textAlign: "center", height: 50 }}
+              onClick={() => { }}
+            >
+              <span style={{ fontSize: 30 }}>+</span>
+              <span style={{ marginLeft: 16 }}>New Message</span>
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          {props.TweetCreate === true ? (
+            <Button
+              onClick={() => {
+                window.location.reload();
+                localStorage.removeItem("selectedMedia");
+              }}
+            >
+              + New Post
+            </Button>
+          ) : (
+            <div></div>
+          )}
 
-                {props.media === true ? (
-                    <Button onClick={setAddMedia}>+ Add Media</Button>
-                ) : (
-                    <div></div>
-                )}
+          {props.media === true ? (
+            <Button onClick={setAddMedia}>+ Add Media</Button>
+          ) : (
+            <div></div>
+          )}
 
-                <div style={{ marginLeft: 25, display: "flex" }}>
-                    <div
-                        style={{
-                            height: 36,
-                            backgroundColor: "rgb(243, 244, 248)",
-                        }}
-                    >
-                        <SearchIcon
-                            style={{
-                                marginLeft: 10,
-                                marginTop: 8,
-                                color: "rgb(136, 136, 141)",
-                            }}
-                        />
-                    </div>
-                    <SelectSearch
-                        search
-                        style={{ backgroundColor: "red", color: "rgb(136, 136, 141)" }}
-                        // closeOnSelect={false}
-                        value={searchValue}
-                        autoComplete
-                        onChange={
-                            (e)=>{
-                                console.log("This is the great",e)
-                                setSearchValue(e)
-                            }
-                        }
-                        options={options}
-                        placeholder="Search for contact,media,team users,setting and chats"
-                    />
-                </div>
+          <div style={{ marginLeft: 25, display: "flex" }}>
+            <div
+              style={{
+                height: 36,
+                backgroundColor: "rgb(243, 244, 248)",
+              }}
+            >
+              <SearchIcon
+                style={{
+                  marginLeft: 10,
+                  marginTop: 8,
+                  color: "rgb(136, 136, 141)",
+                }}
+              />
+            </div>
+            <SelectSearch
+              search
+              style={{ backgroundColor: "red", color: "rgb(136, 136, 141)" }}
+              // closeOnSelect={false}
+              value={searchValue}
+              autoComplete
+              onChange={
+                (e) => {
+                  console.log("This is the great", e)
+                  setSearchValue(e)
+                }
+              }
+              options={options}
+              placeholder="Search for contact,media,team users,setting and chats"
+            />
+          </div>
 
-                {/*
+          {/*
           <FormInputWrap>
             <FiSearch
               style={{
@@ -2530,173 +2530,173 @@ const Sidebar = (props) => {
               placeholder="Search for contacts by name, phone number, Twitter Handle or School"
             ></FormInput>
           </FormInputWrap> */}
-                <LeftSectionNav>
-                    <div
-                        style={{
-                            height: "70px",
-                            width: "1.5px",
-                            background: "rgb(113, 115, 118,0.1)",
-                        }}
-                    ></div>
-                    <BiBell
-                        style={{
-                            color: "rgb(113, 115, 118)",
-                            marginRight: "15px",
-                            marginLeft: "15px",
-                            height: "24.2px",
-                            width: "21.2px",
-                            boxSizing: "border-box",
-                        }}
-                    />
-                    <div
-                        style={{
-                            height: "70px",
-                            width: "1.5px",
-                            background: "rgb(113, 115, 118,0.1)",
-                        }}
-                    ></div>
-                    <BiChat
-                        onClick={() => {
-                            history.push(`/chat`);
-                        }}
-                        style={{
-                            cursor: "pointer",
-                            color: "rgb(113, 115, 118)",
-                            marginRight: "15px",
-                            marginLeft: "15px",
-                            height: "24px",
-                            width: "25px",
-                        }}
-                    />
-                    <div
-                        style={{
-                            height: "70px",
-                            width: "1.5px",
-                            background: "rgb(113, 115, 118,0.1)",
-                        }}
-                    ></div>
-                    {props.TwitterStream?  <Logoimage src={Logo }style={{visibility:'hidden'}}/>
-                        :      <Logoimage src={Logo}></Logoimage>
-                    }   </LeftSectionNav>
-            </Nav>
-            <SidebarNav
-                sidebar={sidebar}
-                style={{
-                    width:
+          <LeftSectionNav>
+            <div
+              style={{
+                height: "70px",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
+              }}
+            ></div>
+            <BiBell
+              style={{
+                color: "rgb(113, 115, 118)",
+                marginRight: "15px",
+                marginLeft: "15px",
+                height: "24.2px",
+                width: "21.2px",
+                boxSizing: "border-box",
+              }}
+            />
+            <div
+              style={{
+                height: "70px",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
+              }}
+            ></div>
+            <BiChat
+              onClick={() => {
+                history.push(`/chat`);
+              }}
+              style={{
+                cursor: "pointer",
+                color: "rgb(113, 115, 118)",
+                marginRight: "15px",
+                marginLeft: "15px",
+                height: "24px",
+                width: "25px",
+              }}
+            />
+            <div
+              style={{
+                height: "70px",
+                width: "1.5px",
+                background: "rgb(113, 115, 118,0.1)",
+              }}
+            ></div>
+            {props.TwitterStream ? <Logoimage src={Logo} style={{ visibility: 'hidden' }} />
+              : <Logoimage src={Logo}></Logoimage>
+            }   </LeftSectionNav>
+        </Nav>
+        <SidebarNav
+          sidebar={sidebar}
+          style={{
+            width:
+              props.contacts ||
+                props.chat ||
+                props.media ||
+                props.messageCreate ||
+                props.TweetCreate
+                ? 60
+                : 250,
+          }}
+        >
+          <Grid container direction="column">
+            <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
+              {props.contacts === true ||
+                props.chat === true ||
+                props.media === true ||
+                props.messageCreate === true ||
+                props.TweetCreate === true ? (
+                <div></div>
+              ) : (
+                <Button onClick={openModal}>+ New</Button>
+              )}
+
+              {SidebarData.map((item, index) => {
+                return (
+                  <div
+                    onClick={() => {
+                      setSelectedTab(() => index);
+                    }}
+                  >
+                    <SubMenu
+                      contacts={
                         props.contacts ||
-                        props.chat ||
+                        props.chat === true ||
                         props.media ||
                         props.messageCreate ||
                         props.TweetCreate
-                            ? 60
-                            : 250,
+                      }
+                      selectedTab={selectedTab}
+                      item={item}
+                      key={index}
+                      index={index}
+                    />
+                  </div>
+                );
+              })}
+            </SidebarWrap>
+
+            {props.chat === false && (
+              <div
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  position: "absolute",
                 }}
-            >
-                <Grid container direction="column">
-                    <SidebarWrap style={{ position: "relative", zIndex: 12 }}>
-                        {props.contacts === true ||
-                        props.chat === true ||
-                        props.media === true ||
-                        props.messageCreate === true ||
-                        props.TweetCreate === true ? (
-                            <div></div>
-                        ) : (
-                            <Button onClick={openModal}>+ New</Button>
-                        )}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="flex-end"
+                  style={{
+                    paddingTop: 0,
+                    paddingBottom: 20,
 
-                        {SidebarData.map((item, index) => {
-                            return (
-                                <div
-                                    onClick={() => {
-                                        setSelectedTab(() => index);
-                                    }}
-                                >
-                                    <SubMenu
-                                        contacts={
-                                            props.contacts ||
-                                            props.chat === true ||
-                                            props.media ||
-                                            props.messageCreate ||
-                                            props.TweetCreate
-                                        }
-                                        selectedTab={selectedTab}
-                                        item={item}
-                                        key={index}
-                                        index={index}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </SidebarWrap>
-
-                    {props.chat === false && (
-                        <div
-                            style={{
-                                height: "100%",
-                                width: "100%",
-                                position: "absolute",
-                            }}
-                        >
-                            <Grid
-                                container
-                                direction="row"
-                                alignItems="flex-end"
-                                style={{
-                                    paddingTop: 0,
-                                    paddingBottom: 20,
-
-                                    height: "90%",
-                                }}
-                                onClick={() => {
-                                    // window.location.href="/dashboard/user-settings"
-                                    document.getElementById("userSettings").click();
-                                }}
-                            >
-                                <Grid item md={4} xs={4} lg={4}>
-                                    <Grid container direction="row" justify="center">
-                                        <img
-                                            style={{ width: 35, height: 35, borderRadius: 17 }}
-                                            src={
-                                                JSON.parse(localStorage.getItem("user"))
-                                                    .twitter_profile.profile_image
-                                            }
-                                        ></img>
-                                    </Grid>
-                                </Grid>
-                                <Grid item md={8} xs={8} lg={8}>
-                                    {props.contacts === true ||
-                                    props.media === true ||
-                                    props.chat === true ||
-                                    props.messageCreate === true ||
-                                    props.TweetCreate === true ? (
-                                        <div></div>
-                                    ) : (
-                                        <Grid container direction="row">
+                    height: "90%",
+                  }}
+                  onClick={() => {
+                    // window.location.href="/dashboard/user-settings"
+                    document.getElementById("userSettings").click();
+                  }}
+                >
+                  <Grid item md={4} xs={4} lg={4}>
+                    <Grid container direction="row" justify="center">
+                      <img
+                        style={{ width: 35, height: 35, borderRadius: 17 }}
+                        src={
+                          JSON.parse(localStorage.getItem("user"))
+                            .twitter_profile.profile_image
+                        }
+                      ></img>
+                    </Grid>
+                  </Grid>
+                  <Grid item md={8} xs={8} lg={8}>
+                    {props.contacts === true ||
+                      props.media === true ||
+                      props.chat === true ||
+                      props.messageCreate === true ||
+                      props.TweetCreate === true ? (
+                      <div></div>
+                    ) : (
+                      <Grid container direction="row">
                         <span style={{ marginTop: -30, fontWeight: "bold" }}>
                           {JSON.parse(localStorage.getItem("user")).first_name +
-                          " " +
-                          JSON.parse(localStorage.getItem("user")).last_name}
+                            " " +
+                            JSON.parse(localStorage.getItem("user")).last_name}
                         </span>
-                                            <span style={{ marginTop: -30 }}>
+                        <span style={{ marginTop: -30 }}>
                           <ExpandMoreIcon
-                              style={{
-                                  color: "black",
-                                  marginLeft: 5,
-                                  fontSize: 30,
-                              }}
+                            style={{
+                              color: "black",
+                              marginLeft: 5,
+                              fontSize: 30,
+                            }}
                           ></ExpandMoreIcon>
                         </span>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </div>
+                      </Grid>
                     )}
+                  </Grid>
                 </Grid>
-            </SidebarNav>
-        </IconContext.Provider>
+              </div>
+            )}
+          </Grid>
+        </SidebarNav>
+      </IconContext.Provider>
     </>
   );
 };
-export {LogoContainer}
+export { LogoContainer }
 export default Sidebar;

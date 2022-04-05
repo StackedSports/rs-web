@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { 
+import {
     getUser,
     getTags,
     getContact,
@@ -69,9 +69,9 @@ export const useTagsWithContacts = () => {
     const [tags, setTags] = useState(null)
 
     useEffect(() => {
-        getTagsWithMessages()
+        getTagsWithContacts()
             .then(([tag]) => {
-                console.log('ApiHooks: getTagsWithContacts -----')
+                console.log('ApiHooks: getTagsWithContacts -----', tag)
                 console.log(tag)
                 setTags(tag)
             })
@@ -99,7 +99,7 @@ export const useBoard = (id) => {
 }
 
 
-export const addUser  = (body) => {
+export const addUser = (body) => {
     const [user, setUser] = useState(null)
 
 
@@ -129,7 +129,6 @@ export const useTags = () => {
                 console.log(error)
             })
     }, [])
-
     return tags
 }
 
@@ -516,8 +515,8 @@ export const usePlaceholder = (id) => {
 export const usePlaceholders = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [placeholders, setPlaceholders] = useState(null)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
-    
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+
     useEffect(() => {
         setLoading(true)
 
@@ -544,8 +543,8 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
 export const useMedia = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [media, setMedia] = useState(null)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
-    
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+
     useEffect(() => {
         setLoading(true)
 
@@ -631,8 +630,8 @@ export const useMessageRecipients = (id, refresh) => {
 export const useMessages = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [messages, setMessages] = useState(null)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
-    
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+
     useEffect(() => {
         setLoading(true)
 

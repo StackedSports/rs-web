@@ -71,6 +71,26 @@ export const loginUser = (email, password) => {
         data: data,
     });
 };
+
+export const createContacts = (body) => {
+    // var data = JSON.stringify(body);
+
+    return axios({
+        method: "post",
+        url: URL + "contacts",
+        headers: {
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            Accept: "application/json; version=1",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+        data: body,
+    });
+};
+
 export const filterContacts = (body) => {
     // var data = JSON.stringify(body);
 
@@ -502,18 +522,18 @@ const AXIOS = (method, url, body) => {
         console.log(data)
 
         axios({
-                method: method,
-                url: URL + url,
-                headers: {
-                    Accept: "application/json; version=1",
-                    "Content-Type": "application/json",
-                    Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                    "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
-                    // Cookie:
-                    //     "_memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
-                },
-                data
-            })
+            method: method,
+            url: URL + url,
+            headers: {
+                Accept: "application/json; version=1",
+                "Content-Type": "application/json",
+                Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                // Cookie:
+                //     "_memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+            },
+            data
+        })
             .then(res => {
                 console.log(res)
 
@@ -795,6 +815,25 @@ export const getPositions = () => {
             Cookie:
                 "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
         },
+    });
+};
+export const createBoardFilter = (body) => {
+    // const data = JSON.stringify(body);
+    console.log(body, 'tags body indide api helper file', body)
+    return axios({
+        method: "post",
+        url: URL + `/filters`,
+        data: body,
+        headers: {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization:
+                "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            Cookie:
+                "ahoy_visitor=9ed0658b-aeb7-4590-b919-6b9e2ac080fe; ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+        },
+
     });
 };
 export const addTagstoContacts = (contactid, body) => {
