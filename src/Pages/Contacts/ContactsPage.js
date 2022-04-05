@@ -44,6 +44,7 @@ export default function ContactsPage(props) {
         "status": {
             label: 'Status',
             options: status,
+            type: 'status'
         },
         "rank": {
             label: 'Rank',
