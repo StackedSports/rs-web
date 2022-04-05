@@ -3,7 +3,7 @@ import moment from "moment";
 
 import curlirize from 'axios-curlirize';
 // initializing axios-curlirize with your axios instance
-// curlirize(axios);    
+curlirize(axios);    
 
 //const URL = "https://prod.recruitsuite.co/api/";
 const URL = "https://api.recruitsuite.co/api/";
@@ -73,6 +73,35 @@ const DELETE = (url) => {
         axios.delete(URL + url, config)
             .then(res => {
                 if(res.status === 204)
+                    resolve(res)
+                else
+                    reject(res)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
+const GET = (url, body) => {
+    return new Promise((resolve, reject) => {
+        //const data = JSON.stringify(body);
+
+        const HEADERS = {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+        }
+
+        const config = {
+            headers: HEADERS,
+            params: body
+        }
+
+        axios.get(URL + url, config)
+            .then(res => {
+                if(res.status === 200 || res.status === 204 || res.status === 201)
                     resolve(res)
                 else
                     reject(res)
@@ -241,12 +270,20 @@ export const getUser = () => {
     return AXIOS('get', 'me')
 }
 
-export const getMessages = () => {
-    return AXIOS('get', 'messages?include_all=true&sort_column=created_at&sort_dir=dsc')
+export const getMessages = (page = 1, perPage = 10) => {
+    let criteria = {
+        include_archived: 'false'
+    }
+    
+    return GET(`messages?page=${page}&per_page=${perPage}`, criteria)
 }
 
 export const getMessage = (id) => {
     return AXIOS('get', `messages/${id}`)
+}
+
+export const getMessageRecipients = (id, page = 1, perPage = 50) => {
+    return AXIOS('get', `messages/${id}/recipients?page=${page}&per_page=${perPage}`)
 }
 
 export const getFilters = () => {

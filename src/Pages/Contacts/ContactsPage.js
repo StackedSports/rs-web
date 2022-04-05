@@ -36,7 +36,17 @@ export default function ContactsPage(props) {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
+    // let contact = {
+    //     name: 'Rodrigo Brasil',
+    //     status: 'Online',
+    //     rank: 'Dev',
+
+    // }
+
     
+    // const panelFilters = [
+    //     { name: 'status', label: 'Status', options: [ { id: 1, label: 'Archived' }]}
+    // ]
     
 
     return (

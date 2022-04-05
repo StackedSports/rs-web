@@ -11,7 +11,7 @@ import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
-import { useMessage } from 'Api/Hooks'
+import { useMessage, useMessageRecipients } from 'Api/Hooks'
 import { 
     sendMessage,
     deleteMessage,
@@ -47,6 +47,8 @@ const MessageDetailsPage = (props) => {
     const [refresh, setRefresh] = useState(false)
     
     const message = useMessage(messageId.current, refresh)
+    const recipients = useMessageRecipients(messageId.current, refresh)
+
     const [selectedRecipients, setSelectedRecipients] = useState([])
 
     const alert = useMainLayoutAlert()
@@ -55,6 +57,7 @@ const MessageDetailsPage = (props) => {
     const [tagging, setTagging] = useState(null)
 
     console.log(message.item)
+    console.log(recipients.items)
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -496,6 +499,7 @@ const MessageDetailsPage = (props) => {
 
             <MessagePreview 
               message={message.item} 
+              recipients={recipients.items}
               style={{ marginBottom: 20 }}
             />
 
@@ -503,7 +507,7 @@ const MessageDetailsPage = (props) => {
               selection={selectedRecipients}
               onSelectionChange={onSelectedRecipientsChange}
               platform={message.item?.platform}
-              recipients={message.item?.recipients}
+              recipients={recipients?.items}
               hasCoach={message.item?.send_as_coach}
               hasMedia={hasMedia || hasMediaPlaceholder}
             />

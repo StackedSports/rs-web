@@ -18,6 +18,7 @@ import {
     getSnippets,
     getTextPlaceholders,
     getMessage,
+    getMessageRecipients,
     getMessages,
     getAllColumns,
     getAllContactsEnd,
@@ -598,6 +599,29 @@ export const useMessage = (id, refresh) => {
 
     return {
         item: message,
+        loading
+    }
+}
+
+export const useMessageRecipients = (id, refresh) => {
+    const [loading, setLoading] = useState(true)
+    const [recipients, setRecipients] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getMessageRecipients(id)
+            .then(([recipients, pagination]) => {
+                setRecipients(recipients)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id, refresh])
+
+    return {
+        items: recipients,
         loading
     }
 }

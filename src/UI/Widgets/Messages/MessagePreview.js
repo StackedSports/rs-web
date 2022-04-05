@@ -52,16 +52,14 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
     )
 }
 
-const MessagePreview = ({ message, mini = false, style, link = false }) => {
+const MessagePreview = ({ message, recipients, mini = false, style, link = false }) => {
     if(!message) return <></>
 
     const [messageStats, setMessageStats] = useState(null)
 
     useEffect(() => {
-        if(!message)
+        if(!recipients)
             return
-
-        let { recipients } = message
 
         let total = recipients?.count || 0
         let sent = recipients?.status_counts.sent || 0
@@ -78,7 +76,7 @@ const MessagePreview = ({ message, mini = false, style, link = false }) => {
             error,
             pending,
         })
-    }, [message])
+    }, [recipients])
 
     // console.log(message.media)
 
@@ -107,7 +105,7 @@ const MessagePreview = ({ message, mini = false, style, link = false }) => {
                       status={getMessageStatusLabel(message.status)}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)}/>
-                    <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(message.recipients)}/>
+                    <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/>
                     <Details label="Send As" value={getMessagePlatformLabel(message.platform)}/>
                     <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')}/>
                     <Details label="Tags" value={message.tags || '--'}/>
