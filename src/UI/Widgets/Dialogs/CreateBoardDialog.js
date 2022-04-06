@@ -3,25 +3,37 @@ import { Dialog, DialogTitle, Stack, DialogContent, DialogContentText, Checkbox,
 import { People } from '@mui/icons-material';
 
 import Button from '../Buttons/Button';
-import { Box } from '@material-ui/core';
 
+/**
+ * 
+ * @param {boolean} open controls the state of the dialog open/close
+ * @param {function} onClose callback function to be called when the dialog is closed
+ * @param {object} selectedFilters Object with the selected filters Object.Keys are the filter names and the values[] are the array with selected filters name
+ * @returns 
+ */
 
-export const CreateBoardDialog = ({ open, onClose }) => {
+export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) => {
     const [submitting, setSubmitting] = useState(false)
+    
+    const handleSubmit = (e) => {
+
+    }    
 
     return (
         <Dialog
+            component="form"
             open={open}
             onClose={onClose}
             aria-labelledby='form-dialog-save-board'
             fullWidth
             maxWidth='sm'
+            onSubmit={handleSubmit}
         >
             <DialogTitle
                 sx={{
                     textAlign: 'center',
+                    fontWeight: 'bold !important',
                 }}
-                fontWeight='700'
             >
                 Create Board
             </DialogTitle>
@@ -42,7 +54,6 @@ export const CreateBoardDialog = ({ open, onClose }) => {
                     InputProps={{
                         sx: {
                             fontSize: '1.2rem',
-                            fontWeight: 'bold',
                         }
                     }}
                     InputLabelProps={{
@@ -55,6 +66,20 @@ export const CreateBoardDialog = ({ open, onClose }) => {
 
                 <Typography py={2} fontWeight='bold' fontSize='12px' color='text.secondary' >
                     Filter Criteria:
+                    {selectedFilters && Object.keys(selectedFilters).map(key => {
+                        const filter = selectedFilters[key];
+                        return (
+                            <Typography
+                                component='span'
+                                color='text.primary'
+                                fontWeight='500 !important'
+                                textTransform='capitalize'
+                            >
+                                {`${key}: ${filter?.map(f => f.name).join(', ')} ;`}
+                            </Typography>
+                        )
+                    })
+                    }
                 </Typography>
                 <Divider
                     sx={{
@@ -70,7 +95,6 @@ export const CreateBoardDialog = ({ open, onClose }) => {
                         }}
                         control={
                             <Checkbox
-                                defaultChecked
                                 name='share'
                                 color='primary'
                             />

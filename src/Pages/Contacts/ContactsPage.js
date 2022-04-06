@@ -129,6 +129,7 @@ export default function ContactsPage(props) {
             <CreateBoardDialog
                 open={openCreateBoardDialog}
                 onClose={() => setOpenCreateBoardDialog(false)}
+                selectedFilters={selectedFilters}
             />
 
         </MainLayout>
