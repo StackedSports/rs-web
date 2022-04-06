@@ -35,7 +35,7 @@
 }
 
 .SideFilter .Category-Header .Icon {
-    font-size: 14px;
+    font-size: 12px;
     margin-left: 0.5em;
     transform: rotate(90deg);
     /* transition: all 300ms cubic-bezier(1, 0, 0, 1); */
@@ -66,6 +66,19 @@
     font-size: 12px;
     padding: 0px;
     margin: 0 0 5px 0;
+}
+
+.SideFilter .Category-Content .link {
+    color: inherit
+}
+
+.SideFilter .Category-Content .link:hover {
+    text-decoration: none;
+}
+
+.SideFilter .Category-Content .linkActive {
+    opacity: 0.3;
+    /* background-color: #999; */
 }
 
 .SideFilter .Category-Content p:hover {

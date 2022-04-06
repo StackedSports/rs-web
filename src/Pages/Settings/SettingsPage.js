@@ -22,7 +22,8 @@ export default function SettingsPage(props) {
             name: 'Team',
             items: [
                 // Filters
-                { id: '0', name: 'Members' },
+                { id: '0', name: 'Members', path:'/settings/members' },
+                { id: '1', name: 'Tags', path: '/settings' },
             ]
         }
     ]
