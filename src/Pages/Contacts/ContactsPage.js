@@ -19,7 +19,7 @@ import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
 
 
 export default function ContactsPage(props) {
-    const [contacts, pagination, contactsLoading] = useContacts()
+    const contacts = useContacts()
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
     const [showPanelFilters, setShowPanelFilters] = useState(true)
@@ -45,7 +45,7 @@ export default function ContactsPage(props) {
             options: ranks,
         },
         "gradeYear": {
-            label: 'Grade Year',
+            label: 'Grad Year',
             options: gradeYears,
         },
         "tags": {
@@ -64,7 +64,7 @@ export default function ContactsPage(props) {
             icon: AccountBox,
             onClick: () => setOpenCreateBoardDialog(true),
             variant: 'outlined',
-            disabled: selectedFilters.length === 0,
+            disabled: Object.keys(selectedFilters).length === 0,
         },
         {
             name: 'Filter',
@@ -73,6 +73,8 @@ export default function ContactsPage(props) {
             variant: 'outlined',
         }
     ]
+
+    console.log(Object.keys(selectedFilters).length === 0)
 
 
     const onTopActionClick = (e) => {
@@ -99,6 +101,7 @@ export default function ContactsPage(props) {
 
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
+        setSelectedFilters(filter)
     }
 
     return (
@@ -117,9 +120,9 @@ export default function ContactsPage(props) {
         >
 
             <ContactsTable
-                contacts={contacts}
-                pagination={pagination}
-                loading={contactsLoading}
+                contacts={contacts.items}
+                pagination={contacts.pagination}
+                loading={contacts.loading}
                 onSelectionChange={(selected) => setSelectedContacts(selected)}
             />
 

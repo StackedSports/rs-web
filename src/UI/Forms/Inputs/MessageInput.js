@@ -35,7 +35,7 @@ import { stringSplice } from 'utils/Helper'
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
     { name: 'Personal Text', icon: FaPhone },
-    { name: 'Rs Text', icon: FaComment }
+    { name: 'SMS/MMS', icon: FaComment }
 ]
 
 const InputSelector = (props) => {
@@ -177,6 +177,10 @@ const InputSenders = (props) => {
                   header={header}
                   content={content}
                   disabled={false}
+                  contentStyle={{
+                      maxHeight: 335,
+                      width: 280
+                  }}
                 />
             )}
             {props.selected && props.selected.length > 0 && (
@@ -231,6 +235,7 @@ const InputReceivers = (props) => {
         let lengths = props.selected.privateBoards.length
             + props.selected.teamBoards.length
             + props.selected.contacts.length
+            + props.selected.recipients.length
 
         if(lengths > 0)
             showMargin = true
@@ -267,6 +272,17 @@ const InputReceivers = (props) => {
                   label='Contacts'
                   type='contacts'
                   imgDef={'twitter_profile.profile_image'}
+                  nameDef={['first_name', 'last_name']}
+                  onSelectedClick={props.onSelectedClick}
+                  onRemove={props.onRemove}
+                />
+            )}
+            {props.selected && (
+                <ReceiverSelectionGroup
+                  selection={props.selected.recipients}
+                  label='Message Recipients'
+                  type='recipients'
+                //   imgDef={'twitter_profile.profile_image'}
                   nameDef={['first_name', 'last_name']}
                   onSelectedClick={props.onSelectedClick}
                   onRemove={props.onRemove}
@@ -339,6 +355,7 @@ const TextPlaceholders = (props) => {
           header={header}
           content={content}
           dismissOnClick
+          dismissDelay={200}
         />
     )
 }
@@ -369,6 +386,7 @@ const Snippets = ({ snippets, onSelected }) => {
           header={header}
           content={content}
           dismissOnClick
+          dismissDelay={200}
         />
     )
 }
@@ -416,8 +434,8 @@ const InputText = (props) => {
     const textArea = useRef()
 
     const onChange = (e) => {
-        if(e.target.value.length > maxLength)
-            return
+        // if(e.target.value.length > maxLength)
+        //     return
 
         props.onChange(e.target.value)
     }

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
 
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+
 // import { ThemeProvider } from '@mui/styles';
 
 import Signup from "./components/signup";
@@ -15,12 +21,8 @@ import MessageCreate from "./Pages/MessageCreate";
 import UserProfile from "./Pages/UserProfile";
 import TweetCreate from "./Pages/TweetCreate";
 import TeamSettings from "./Pages/TeamSettings";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
+
 import TwitterStream from'./components/TwitterStream/TwitterStream'
 import  MediaC from "./components/MediaComponent/Media";
 

@@ -98,12 +98,6 @@ const Test = () => {
           filters={filters}
           onFilterSelected={onFilterSelected}
         >
-            <MessageInput type='platform' placeholder='Send as:'/>
-            <MessageInput type='contact' placeholder='Send from:'/>
-            <MessageInput type='contact' placeholder='Send to:'/>
-            <MessageInput type='time' placeholder='Begin Sending At:'/>
-            <MessageInput type='media' placeholder='Add Media:'/>
-            <MessageInput type='media' placeholder='Message Text:'/>
         </MainLayout>
     )
 }

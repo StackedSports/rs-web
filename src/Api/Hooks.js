@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
 
 import {
     getUser,
@@ -13,10 +13,12 @@ import {
     getPlatform,
     getMedia,
     getBoards,
+    getPlaceholder,
     getPlaceholders,
     getSnippets,
     getTextPlaceholders,
     getMessage,
+    getMessageRecipients,
     getMessages,
     getAllColumns,
     getAllContactsEnd,
@@ -29,8 +31,6 @@ import {
     archiveContacts,
 } from 'Api/Endpoints'
 
-import {
-} from './Endpoints'
 
 import { usePagination } from './Pagination'
 
@@ -80,20 +80,22 @@ export const useTagsWithContacts = () => {
 
     return tags
 }
+
+// Custom Hook
 export const useBoard = (id) => {
-    const [boardContacts, setBoardContacts] = useState(null)
+    const [board, setBoard] = useState(null)
 
     useEffect(() => {
         getBoard(id)
-            .then(([contacts]) => {
+            .then(([board]) => {
                 console.log('ApiHooks: getBoardByid -----')
-                console.log(contacts)
-                setBoardContacts(contacts)
+                console.log(board)
+                setBoard(board)
             })
             .catch(error => console.log(error))
     }, [])
 
-    return boardContacts
+    return board
 }
 
 
@@ -115,6 +117,7 @@ export const addUser = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
+    
     useEffect(() => {
         getTags()
             .then(([tags]) => {
@@ -128,6 +131,53 @@ export const useTags = () => {
     }, [])
     return tags
 }
+
+export const useTags2 = () => {
+    const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    const tagsRes = useRef()
+
+    useEffect(() => {
+        setLoading(true)
+
+        getTags()
+            .then(([tags, pagination]) => {
+                // console.log('ApiHooks: getTags -----')
+                // console.log(tags)
+                // console.log(pagination)
+                setTags(tags)
+                tagsRes.current = tags
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [])
+
+    const search = (value) => {
+        let tmp = []
+
+        tagsRes.current.forEach(tag => {
+            if(tag.name.toLowerCase().includes(value.toLowerCase()))
+                tmp.push(tag)
+        })
+
+        setTags(tmp)
+    }
+
+    const clearSearch = () => {
+        setTags(tagsRes.current)
+    }
+
+    return {
+        items: tags,
+        loading,
+        search,
+        clearSearch
+    }
+}
+
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
 
@@ -146,28 +196,12 @@ export const useContact = (id) => {
     return contact
 }
 
-export const useContacts = (initialConfig) => {
+export const useContacts = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
-    //const pagination = usePagination(null)
-    const [pagination, setPagination] = useState({
-        currentPage: initialConfig ? initialConfig.currentPage : 1,
-        itemsPerPage: initialConfig ? initialConfig.itemsPerPage : 50,
-        totalItems: 0,
-        totalPages: 0,
-    })
-    // const lastUpdate = useRef(pagination.shouldUpdate)
-    const lastPage = useRef(initialConfig ? initialConfig.currentPage : -1)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
 
     useEffect(() => {
-        if (lastPage.current === pagination.currentPage)
-            return
-
-        // lastUpdate.current = pagination.shouldUpdate
-        lastPage.current = pagination.currentPage
-
-        // console.log('fetching contacts')
-
         setLoading(true)
 
         getContacts(pagination.currentPage, 50)
@@ -175,8 +209,6 @@ export const useContacts = (initialConfig) => {
                 //console.log('ApiHooks: getContact -----')
                 //console.log(contact)
                 setContacts(contacts)
-                // pagination.updateResult(pag.totalItems, pag.totalPages)
-                // pagination.setTotalPages(pag.totalPages)
                 setPagination(pag)
             })
             .catch(error => {
@@ -186,17 +218,13 @@ export const useContacts = (initialConfig) => {
                 setLoading(false)
             })
 
-    }, [pagination.currentPage]) // [pagination.shouldUpdate])
+    }, [pagination.currentPage])
 
-    const getPage = (page) => {
-        setPagination({
-            ...pagination,
-            currentPage: page
-        })
-
+    return {
+        items: contacts,
+        pagination,
+        loading
     }
-
-    return [contacts, { ...pagination, getPage }, loading]
 }
 
 // TODO: this should not be a hook
@@ -459,6 +487,31 @@ export const useSnippets = () => {
     return snippets
 }
 
+export const usePlaceholder = (id) => {
+    const [placeholder, setPlaceholder] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getPlaceholder(id)
+            .then(([placeholder, pagination]) => {
+                console.log('API placeholder')
+                console.log(placeholder)
+                setPlaceholder(placeholder)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id])
+
+    return {
+        item: placeholder,
+        loading
+    }
+}
+
 export const usePlaceholders = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [placeholders, setPlaceholders] = useState(null)
@@ -526,7 +579,7 @@ export const useMessage = (id, refresh) => {
     // console.log(refresh)
 
     useEffect(() => {
-        console.log('getting message')
+        // console.log('getting message')
         setLoading(true)
 
         getMessage(id)
@@ -545,6 +598,29 @@ export const useMessage = (id, refresh) => {
 
     return {
         item: message,
+        loading
+    }
+}
+
+export const useMessageRecipients = (id, refresh) => {
+    const [loading, setLoading] = useState(true)
+    const [recipients, setRecipients] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getMessageRecipients(id)
+            .then(([recipients, pagination]) => {
+                setRecipients(recipients)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id, refresh])
+
+    return {
+        items: recipients,
         loading
     }
 }

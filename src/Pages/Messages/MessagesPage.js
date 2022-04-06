@@ -59,7 +59,7 @@ const MessagesPage = (props) => {
           onFilterSelected={onFilterSelected}
         >
             {messages.items && messages.items.map((message, index) => {
-                console.log('rendering message ' + index)
+                // console.log('rendering message ' + index)
                 return (
                     <MessagePreview message={message} mini style={styles.divider} link/>
                 )

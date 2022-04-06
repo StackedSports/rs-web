@@ -15,46 +15,35 @@ const MessageRecipientsTable = (props) => {
     const [columns, setColumns] = useState([])
 
     useEffect(() => {
-        console.log(props.recipients)
         if(!props.recipients)
             return
 
         let tmp = []
+        let hasFilters = false
 
-        if(props.recipients.filter_list) {
+        if(props.recipients.filter_list && props.recipients.filter_list.length > 0) {
+            hasFilters = true
+
             props.recipients.filter_list.forEach(filter => {
-                tmp = tmp.concat(filter.contacts)
+                // tmp = tmp.concat(filter.contacts)
+                filter.contacts.forEach(contact => {
+                    tmp.push({
+                        ...contact,
+                        filterName: filter.name
+                    })
+                })
             })
         }
 
         if(props.recipients.contact_list)
             tmp = tmp.concat(props.recipients.contact_list)
         
-        console.log(tmp)
+        console.log(props.hasMedia)
 
         setContacts(tmp)
-        setColumns(getColumns(props.platform?.name, tmp[0]?.placeholders))
+        setColumns(getColumns(props.platform?.name, tmp[0]?.placeholders, hasFilters, props.hasMedia, props.hasCoach))
 
-    }, [props.recipients, props.platform])
-
-    // useEffect(() => {
-    //     if(!props.platform || !contacts)
-    //         return
-        
-    //     let { platform } = props
-
-    //     console.log(contacts)
-
-    //     if(contacts.placeholders) {
-
-    //     }
-
-    //     if(platform === 'Twitter')
-    //         setColumns(twitterColumns)
-    //     else
-    //         setColumns(phoneColumns)
-
-    // }, [props.platform, contacts])
+    }, [props.recipients, props.platform, props.hasMedia, props.hasCoach])
 
     const onPageChange = (e, page) => {
         console.log(page)
@@ -68,8 +57,8 @@ const MessageRecipientsTable = (props) => {
               rows={contacts}
               columns={columns}
               checkboxSelection
-            //   selectionModel={props.selection}
-            //   onSelectionModelChange={props.onSelectionChange}
+              selectionModel={props.selection}
+              onSelectionModelChange={props.onSelectionChange}
               hideFooter
             //   autoPageSize
               autoHeight

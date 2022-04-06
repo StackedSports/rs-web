@@ -21,6 +21,7 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
         setSelectedFilters(oldSelectFilters => {
             const newSelectFilters = { ...oldSelectFilters };
             newSelectFilters[filterName] || (newSelectFilters[filterName] = []);
+
             if (newSelectFilters[filterName].includes(filter)) {
                 newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
             } else {
@@ -40,10 +41,13 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
         setSelectedFilters(oldSelectFilters => {
             const newSelectFilters = { ...oldSelectFilters };
             newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
+
             if (newSelectFilters[filterName].length === 0) {
                 delete newSelectFilters[filterName];
             }
+
             onFilterChange(newSelectFilters);
+            
             return newSelectFilters;
         })
     }
@@ -56,7 +60,7 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
                             key={filter.id}
-                            item={filter.name}
+                            item={`${filters[key].label}: ${filter.name}`}
                             onRemove={(e) => onRemoveFilter(key, filter)}
                         />
                     )))}

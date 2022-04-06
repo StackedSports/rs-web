@@ -3,7 +3,7 @@ import moment from "moment";
 
 import curlirize from 'axios-curlirize';
 // initializing axios-curlirize with your axios instance
-// curlirize(axios);
+curlirize(axios);    
 
 //const URL = "https://prod.recruitsuite.co/api/";
 const URL = "https://api.recruitsuite.co/api/";
@@ -35,7 +35,7 @@ const AXIOS = (method, url, body) => {
                 data
             })
             .then(res => {
-                //console.log(res)
+                // console.log(res)
                 if (res.status === 200) {
 
                     let pagination = {
@@ -73,6 +73,35 @@ const DELETE = (url) => {
         axios.delete(URL + url, config)
             .then(res => {
                 if(res.status === 204)
+                    resolve(res)
+                else
+                    reject(res)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
+const GET = (url, body) => {
+    return new Promise((resolve, reject) => {
+        //const data = JSON.stringify(body);
+
+        const HEADERS = {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+            "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+        }
+
+        const config = {
+            headers: HEADERS,
+            params: body
+        }
+
+        axios.get(URL + url, config)
+            .then(res => {
+                if(res.status === 200 || res.status === 204 || res.status === 201)
                     resolve(res)
                 else
                     reject(res)
@@ -244,16 +273,28 @@ export const getUser = () => {
     return AXIOS('get', 'me')
 }
 
-export const getMessages = () => {
-    return AXIOS('get', 'messages?include_all=true&sort_column=created_at&sort_dir=dsc')
+export const getMessages = (page = 1, perPage = 10) => {
+    let criteria = {
+        include_archived: 'false'
+    }
+    
+    return GET(`messages?page=${page}&per_page=${perPage}`, criteria)
 }
 
 export const getMessage = (id) => {
     return AXIOS('get', `messages/${id}`)
 }
 
+export const getMessageRecipients = (id, page = 1, perPage = 50) => {
+    return AXIOS('get', `messages/${id}/recipients?page=${page}&per_page=${perPage}`)
+}
+
 export const getFilters = () => {
     return AXIOS('get', 'filters?is_shared=false')
+}
+
+export const getPlaceholder = (id) => {
+    return AXIOS('get', `media/placeholder/${id}`)
 }
 
 export const getPlaceholders = (page, perPage) => {
@@ -278,6 +319,11 @@ export const createMessage = (data) => {
         message: {...data}
     }
 
+    // if(user_id)
+    //     body['user_id'] = user_id
+
+    // {"errors":[{"code":"active_record/invalid_foreign_key","message":"PG::ForeignKeyViolation: ERROR:  insert or update on table \"messages\" violates foreign key constraint \"messages_user_id_fkey\"\nDETAIL:  Key (user_id)=(0) is not present in table \"users\".\n"}]}
+
     return POST('messages', body)
 }
 
@@ -301,7 +347,65 @@ export const archiveMessage = (messageId) => {
     return DELETE(`messages/${messageId}?message[status]=archived`)
 
     //return DELETE(`messages/${messageId}`, { message: { status: 'archived'} })
-    
+}
+
+export const addTagsToMessage = (tagIds, messageId) => {
+    let body = {
+        message: {
+            tag_ids: tagIds
+        }
+    }
+
+    return POST(`messages/${messageId}/add_tags`, body)
+}
+
+export const addTagsToContact = (tagIds, contactId) => {
+    let body = {
+        contact: {
+            tag_ids: tagIds
+        }
+    }
+
+    return POST(`contacts/${contactId}/add_tags`, body)
+}
+
+export const addTagsToContacts = (tagIds, contactIds) => {
+    return new Promise((resolve, reject) => {
+        let total = contactIds.length
+        let success = 0
+        let error = 0
+
+        let errors = []
+        let failedIds = []
+
+        let count = contactIds.length
+
+        contactIds.forEach(contactId => {
+            addTagsToContact(tagIds, contactId)
+                .then(res => {
+                    console.log(res)
+                    success++
+                })
+                .catch(error => {
+                    console.log(error)
+                    errors.push(error)
+                    failedIds.push(contactId)
+                    error++
+                })
+                .finally(() => {
+                    count--
+
+                    if(count === 0)
+                        resolve({
+                            total,
+                            success,
+                            error,
+                            errors,
+                            failedIds
+                        })
+                })
+        })
+    })
 }
 
 // TODO: what is this function?

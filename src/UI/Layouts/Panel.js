@@ -36,11 +36,14 @@ const PanelDropdown = ({ action }) => {
         <Dropdown
           header={header}
           content={content}
+          style={{
+            marginLeft: 10
+          }}
           contentStyle={{
             minHeight: 0,
             right: 0,
             overflowY: 'hidden',
-            minWidth: 170
+            minWidth: 170,
           }}
         />
     )
