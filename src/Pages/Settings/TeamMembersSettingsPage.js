@@ -22,8 +22,8 @@ const TeamMembersSettingsPage = () => {
 
     return (
         <SettingsPage
-          title='Members'
-          topActionName='+ New Member'
+          title='Team Members'
+          topActionName='+ New Team Member'
           onTopActionClick={onTopActionClick}
         >
             <TeamMembersTable
