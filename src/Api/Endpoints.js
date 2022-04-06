@@ -319,6 +319,10 @@ export const getMedia = (page, perPage) => {
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
 }
 
+export const getMediaTypes = () => {
+    return AXIOS('get', 'media/types')
+}
+
 export const getTextPlaceholders = () => {
     return AXIOS('get', `team/placeholders`)
 }

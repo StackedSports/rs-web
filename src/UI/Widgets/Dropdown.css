@@ -52,7 +52,7 @@
     /* background-color: aqua; */
     /* flex: 1; */
     width: 100%;
-    text-align: end;
+    text-align: start;
     display: flex;
     /* justify-content: flex-end; */
     align-items: center;

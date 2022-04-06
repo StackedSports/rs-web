@@ -75,7 +75,7 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
                                 fontWeight='500 !important'
                                 textTransform='capitalize'
                             >
-                                {`${key}: ${filter?.map(f => f.name).join(', ')} ;`}
+                                {`${key}: ${filter?.map(f => f.name).join(', ')}; `}
                             </Typography>
                         )
                     })

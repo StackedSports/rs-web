@@ -239,7 +239,7 @@ select-search {
   color: black !important;
   background-color: white !important;
   border-color: #dadada !important;
-  width: 110px !important;
+  min-width: 110px !important;
   margin: 0px !important;
   height: 40px !important;
   padding: 1px !important;
