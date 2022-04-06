@@ -280,8 +280,11 @@ export const usearchiveContacts = (id) => {
 
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
+
         getTeamMembers()
             .then(([members, pagination]) => {
                 // console.log('ApiHooks: getTeamMembers')
@@ -292,6 +295,7 @@ export const useTeamMembers = () => {
             .catch(error => {
                 console.log(error)
             })
+            .finally(() => setLoading(false))
     }, [])
 
     const filter = (param) => {
@@ -301,6 +305,7 @@ export const useTeamMembers = () => {
 
     return {
         items: teamMembers,
+        loading,
         filter
     }
 }

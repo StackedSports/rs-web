@@ -13,8 +13,6 @@ const TagSettingsPage = () => {
     const [selectedTags, setSelectedTags] = useState([])
     const [tagsSelected, setTagsSelected] = useState([])
 
-    
-
     useEffect(() => {
         if(!tags.items)
             return

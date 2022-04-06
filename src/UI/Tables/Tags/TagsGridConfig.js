@@ -3,7 +3,7 @@
 const name = {
     field: 'name',
     headerName: 'Name',
-    width: 180,
+    width: 250,
 }
 
 export const columns = [
