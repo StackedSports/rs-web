@@ -97,7 +97,7 @@ export const MediaPage = () => {
             label: 'Tag',
             options: tags || [],
         },
-    }), [tags])
+    }), [tags, mediaTypes])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
