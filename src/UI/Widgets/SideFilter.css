@@ -77,8 +77,9 @@
 }
 
 .SideFilter .Category-Content .linkActive {
-    opacity: 0.3;
-    /* background-color: #999; */
+    /* opacity: 0.3; */
+    color: #222;
+    font-weight: bold;
 }
 
 .SideFilter .Category-Content p:hover {
