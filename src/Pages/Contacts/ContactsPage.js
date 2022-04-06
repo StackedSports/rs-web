@@ -64,15 +64,17 @@ export default function ContactsPage(props) {
             icon: AccountBox,
             onClick: () => setOpenCreateBoardDialog(true),
             variant: 'outlined',
-            disabled: selectedFilters.length === 0,
+            disabled: Object.keys(selectedFilters).length === 0,
         },
         {
             name: 'Filter',
             icon: Tune,
             onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-            variant: 'contained',
+            variant: 'outlined',
         }
     ]
+
+    console.log(Object.keys(selectedFilters).length === 0)
 
 
     const onTopActionClick = (e) => {
@@ -99,6 +101,7 @@ export default function ContactsPage(props) {
 
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
+        setSelectedFilters(filter)
     }
 
     return (
