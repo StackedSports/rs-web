@@ -31,6 +31,7 @@ import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 import {
   ContactsRoutes,
   MessagesRoutes,
+  MediaRoutes,
   routes
 } from 'Routes'
 
@@ -60,6 +61,7 @@ function App() {
 
           <Route path={routes.contacts.path} component={ContactsRoutes}/>
           <Route path={routes.messages.path} component={MessagesRoutes}/>
+          <Route path={routes.media.path} component={MediaRoutes}/>
         </Switch>
       </Router>
     </div>
