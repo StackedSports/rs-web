@@ -36,10 +36,7 @@ function Category(props) {
                     if(item.path)
                         return (
                             <NavLink className="link" activeClassName="linkActive" to={item.path}>
-                                <p 
-                                  key={item.id}
-                                  onClick={(e) => onItemClick(e, item, index)}
-                                >
+                                <p key={item.id}>
                                     {item.name}
                                 </p>
                             </NavLink>
@@ -47,8 +44,8 @@ function Category(props) {
                     else
                         return (
                             <p 
-                            key={item.id}
-                            onClick={(e) => onItemClick(e, item, index)}
+                              key={item.id}
+                              onClick={(e) => onItemClick(e, item, index)}
                             >
                                 {item.name}
                             </p>
