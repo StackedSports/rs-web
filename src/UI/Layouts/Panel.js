@@ -77,6 +77,7 @@ const renderActions = (actions) => {
                       endIcon={<action.icon/>}
                       onClick={action.onClick}
                       disabled={action.disabled}
+                      color={action.color}
                     />
                 )
         })
