@@ -15,9 +15,9 @@ export default function Button({ name, style, ...props }) {
         <MuiButton
           style={{
             minWidth: 120,
-            fontWeight: "bold",
-            textTransform: "capitalize",
             padding: '8px 16px',
+            textTransform: 'Capitalize',
+            fontWeight: 'bold',
             ...style
           }}
 		  sx={{
