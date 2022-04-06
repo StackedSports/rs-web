@@ -45,7 +45,7 @@ export default function ContactsPage(props) {
             options: ranks,
         },
         "gradeYear": {
-            label: 'Grade Year',
+            label: 'Grad Year',
             options: gradeYears,
         },
         "tags": {
