@@ -52,7 +52,7 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
     return (
         <>
             <Stack direction='row' py={1} flexWrap='wrap'>
-                {Object.keys(selectedFilters).map(key =>
+                {selectedFilters && Object.keys(selectedFilters).map(key =>
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
                             key={filter.id}
@@ -64,35 +64,33 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
 
             <Collapse in={open}>
                 <Stack direction='row' spacing={2} py={2}>
-                    {
-                        Object.keys(filters).map(filterName => {
-                            const filter = filters[filterName];
-                            return (
-                                <Box key={filterName}>
-                                    {/* <DropDown
-                                        label={filter.label}
-                                        options={filter.options}
-                                        onOptionSelected={(option) => handleOptionsChange(option, filterName)}
-                                    /> */}
+                    {filters && Object.keys(filters).map(filterName => {
+                        const filter = filters[filterName];
+                        return (
+                            <Box key={filterName}>
+                                {/* <DropDown
+                                    label={filter.label}
+                                    options={filter.options}
+                                    onOptionSelected={(option) => handleOptionsChange(option, filterName)}
+                                /> */}
 
-                                    <DropdownButton
-                                        id={`dropdown-basic-${filterName}`}
-                                        title={filter.label}
-                                        drop={"down"}
-                                    >
-                                        {filter.options.map(option => (
-                                            <Dropdown.Item
-                                                key={option.id}
-                                                onClick={() => handleOptionsChange(option, filterName)}
-                                            >
-                                                {option.name}
-                                            </Dropdown.Item>
-                                        ))}
-                                    </DropdownButton>
-                                </Box>
-                            )
-                        })
-                    }
+                                <DropdownButton
+                                    id={`dropdown-basic-${filterName}`}
+                                    title={filter.label}
+                                    drop={"down"}
+                                >
+                                    {filter.options.map(option => (
+                                        <Dropdown.Item
+                                            key={option.id}
+                                            onClick={() => handleOptionsChange(option, filterName)}
+                                        >
+                                            {option.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </Box>
+                        )
+                    })}
                 </Stack>
             </Collapse>
         </>
