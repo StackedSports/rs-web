@@ -7,6 +7,7 @@ import Button from '../Buttons/Button';
 
 export const CreateBoardDialog = ({ open, onClose }) => {
     const [submitting, setSubmitting] = useState(false)
+
     return (
         <Dialog
             open={open}
@@ -53,7 +54,7 @@ export const CreateBoardDialog = ({ open, onClose }) => {
 
                 <Button
                     variant="outlined"
-                    onClick={() => setOpenSaveBoardDialog(false)}
+                    onClick={onClose}
                     name='Cancel'
                 />
                 <Button
