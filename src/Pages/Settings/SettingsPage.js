@@ -2,50 +2,39 @@ import { useState, useMemo, useEffect } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 
+import { settingsRoutes } from 'Routes/Routes'
+
+const filters = [
+    { // Category
+        id: '0',
+        name: 'General',
+        items: [
+            // Filters
+            { id: '0', name: 'Organization', path: settingsRoutes.general.organization },
+        ]
+    },
+    { // Category
+        id: '1',
+        name: 'Team',
+        items: [
+            // Filters
+            { id: '0', name: 'Members', path: settingsRoutes.team.members },
+            { id: '1', name: 'Tags', path: settingsRoutes.team.tags },
+        ]
+    }
+]
+
 export default function SettingsPage(props) {
     
-    const onTopActionClick = (e) => {
-        console.log('top action click')
-    }
-
-    let filters = [
-        { // Category
-            id: '0',
-            name: 'General',
-            items: [
-                // Filters
-                { id: '0', name: 'Organization' },
-            ]
-        },
-        { // Category
-            id: '1',
-            name: 'Team',
-            items: [
-                // Filters
-                { id: '0', name: 'Members', path:'/settings/members' },
-                { id: '1', name: 'Tags', path: '/settings' },
-            ]
-        }
-    ]
-
-    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
-    }
-
-    const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
-        setSelectedFilters(filter)
-
-        contacts.filter(filter)
-    }
+    
 
     return (
         <MainLayout
-            title='Settings'
-            // topActionName='+ New Contact'
-            onTopActionClick={onTopActionClick}
+            title={props.title || 'Settings'}
+            topActionName={props.topActionName || null}
+            onTopActionClick={props.onTopActionClick}
             filters={filters}
-            onFilterSelected={onFilterSelected}
+            // onFilterSelected={onFilterSelected}
         >
             {/* <ContactsTable
                 contacts={contacts.items}
@@ -59,6 +48,8 @@ export default function SettingsPage(props) {
                 onClose={() => setOpenCreateBoardDialog(false)}
                 selectedFilters={selectedFilters}
             /> */}
+
+            {props.children}
 
         </MainLayout>
     )

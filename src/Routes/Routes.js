@@ -62,10 +62,13 @@ export const mediaRoutes = {
 export const settingsRoutes = {
     main: '/settings',
     general: {
-        main: '/settings/general'
+        main: '/settings/general',
+        organization: '/settings/organization',
     },
     team: {
-        main: '/settings/team'
+        main: '/settings/team',
+        members: '/settings/members',
+        tags: '/settings/tags'
     },
 
 }
