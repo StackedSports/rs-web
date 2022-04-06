@@ -2,8 +2,13 @@ import axios from "axios";
 import moment from "moment";
 
 import curlirize from 'axios-curlirize';
+
+
+import { getFilterContactsCriteria } from './Parser'
+
+
 // initializing axios-curlirize with your axios instance
-curlirize(axios);    
+// curlirize(axios);    
 
 //const URL = "https://prod.recruitsuite.co/api/";
 const URL = "https://api.recruitsuite.co/api/";
@@ -36,7 +41,7 @@ const AXIOS = (method, url, body) => {
             })
             .then(res => {
                 // console.log(res)
-                if (res.status === 200) {
+                if (res.status === 200 || res.status === 204 || res.status === 201) {
 
                     let pagination = {
                         currentPage: parseInt(res.headers['current-page']),
@@ -222,8 +227,16 @@ export const getContacts = (page, perPage) => {
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}`)
 }
 
-export const filterContacts = (data) => {
-    return POST('contacts/filter', data)
+export const filterContacts = (page, perPage, filters) => {
+    const data = {
+        page,
+        per_page: perPage,
+        criteria: {...getFilterContactsCriteria(filters)}
+    }
+
+    console.log(data)
+
+    return AXIOS('post', 'contacts/filter', data)
 }
 
 export const getTeamMembers = () => {

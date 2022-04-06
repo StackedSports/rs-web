@@ -29,10 +29,12 @@ import {
     getTeamContacts,
     getTagsWithContacts,
     archiveContacts,
+    filterContacts,
 } from 'Api/Endpoints'
 
-
 import { usePagination } from './Pagination'
+
+import { objectNotNull } from 'utils/Validation'
 
 export const useUser = () => {
     const [user, setUser] = useState(null)
@@ -121,8 +123,8 @@ export const useTags = () => {
     useEffect(() => {
         getTags()
             .then(([tags]) => {
-                console.log('ApiHooks: getTags -----')
-                console.log(tags)
+                // console.log('ApiHooks: getTags -----')
+                // console.log(tags)
                 setTags(tags)
             })
             .catch(error => {
@@ -196,15 +198,20 @@ export const useContact = (id) => {
     return contact
 }
 
-export const useContacts = (currentPage, itemsPerPage) => {
+export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
 
+    // TODO: testing filter
+    const [filters, setFilters] = useState(null)
+
     useEffect(() => {
         setLoading(true)
 
-        getContacts(pagination.currentPage, 50)
+        const get = objectNotNull(filters) ? filterContacts : getContacts
+
+        get(pagination.currentPage, 50, filters)
             .then(([contacts, pag]) => {
                 //console.log('ApiHooks: getContact -----')
                 //console.log(contact)
@@ -218,12 +225,22 @@ export const useContacts = (currentPage, itemsPerPage) => {
                 setLoading(false)
             })
 
-    }, [pagination.currentPage])
+    }, [pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
 
     return {
         items: contacts,
         pagination,
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 
