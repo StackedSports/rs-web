@@ -1,5 +1,8 @@
 import './Panel.css'
 
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+
 // import Button from '@mui/material/Button';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
 import Dropdown from 'UI/Widgets/Dropdown'
@@ -90,21 +93,22 @@ const renderActions = (actions) => {
 
 export default function Panel(props) {
 
-    const Icon = props.menuOpen ? BackIcon : DrawerIcon
+    const Icon = props.menuOpen ? MenuOpenIcon : MenuIcon
 
     return (
         <div className='Panel'>
             <div className='Header'>
-                <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/>
+                {/* <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/> */}
+                <Icon className='Icon' onClick={props.onMenuIconClick}/>
                 <h2 className='Title'>{props.title}</h2>
                 <div className="JustifyRight">
                     {renderActions(props.actions)}
                 </div>
             </div>
             <PanelFilters
-              {  ...props.propsPanelFilters}
+                {...props.propsPanelFilters}
             />
-            {props.children}
+            {props.children}  
         </div>
     )
 }

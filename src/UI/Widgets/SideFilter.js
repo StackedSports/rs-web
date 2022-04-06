@@ -1,6 +1,7 @@
 import './SideFilter.css'
-
 import { useState } from 'react'
+
+import { NavLink } from 'react-router-dom';
 
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
@@ -32,14 +33,26 @@ function Category(props) {
             </div>
             <div className={contentClass}>
                 {props.items.map((item, index) => {
-                    return (
-                        <p 
-                          key={item.id}
-                          onClick={(e) => onItemClick(e, item, index)}
-                        >
-                            {item.name}
-                        </p>
-                    )
+                    if(item.path)
+                        return (
+                            <NavLink className="link" activeClassName="linkActive" to={item.path}>
+                                <p 
+                                  key={item.id}
+                                  onClick={(e) => onItemClick(e, item, index)}
+                                >
+                                    {item.name}
+                                </p>
+                            </NavLink>
+                        )
+                    else
+                        return (
+                            <p 
+                            key={item.id}
+                            onClick={(e) => onItemClick(e, item, index)}
+                            >
+                                {item.name}
+                            </p>
+                        )
                 })}
             </div>
         </div>

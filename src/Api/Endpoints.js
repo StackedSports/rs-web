@@ -106,9 +106,17 @@ const GET = (url, body) => {
 
         axios.get(URL + url, config)
             .then(res => {
-                if(res.status === 200 || res.status === 204 || res.status === 201)
-                    resolve(res)
-                else
+                console.log(res)
+                if(res.status === 200 || res.status === 204 || res.status === 201) {
+                    let pagination = {
+                        currentPage: parseInt(res.headers['current-page']),
+                        totalPages: parseInt(res.headers['total-pages']),
+                        itemsPerPage: parseInt(res.headers['page-items']),
+                        totalItems: parseInt(res.headers['total-count'])
+                    }
+
+                    resolve([res.data, pagination])
+                } else
                     reject(res)
             })
             .catch(error => {
@@ -287,11 +295,13 @@ export const getUser = () => {
 }
 
 export const getMessages = (page = 1, perPage = 10) => {
-    let criteria = {
-        include_archived: 'false'
+    let data = {
+        include_archived: 'false',
+        // criteria: {}
     }
     
-    return GET(`messages?page=${page}&per_page=${perPage}`, criteria)
+    return GET(`messages?page=${page}&per_page=${perPage}`, data)
+    // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)
 }
 
 export const getMessage = (id) => {

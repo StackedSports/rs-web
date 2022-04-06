@@ -12,9 +12,11 @@ export default function TopBar(props) {
             <div className='TeamLogo'>
 
             </div>
-            <div className='Button' onClick={props.onActionClick}>
-                {props.actionTitle}
-            </div>
+            {props.actionTitle && (
+                <div className='Button' onClick={props.onActionClick}>
+                    {props.actionTitle}
+                </div>
+            )}
             <div className='FlexRight'>
                 <SearchBar placeholder='Power search'/>
                 <BiBell className='IconBtn'/>
