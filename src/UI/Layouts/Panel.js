@@ -102,9 +102,9 @@ export default function Panel(props) {
                 </div>
             </div>
             <PanelFilters
-              {  ...props.propsPanelFilters}
+                {...props.propsPanelFilters}
             />
-            {props.children}
+            {props.children}  
         </div>
     )
 }

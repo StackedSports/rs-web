@@ -32,6 +32,7 @@ import {
   ContactsRoutes,
   MessagesRoutes,
   MediaRoutes,
+  SettingsRoutes,
   routes
 } from 'Routes'
 
@@ -62,6 +63,7 @@ function App() {
           <Route path={routes.contacts.path} component={ContactsRoutes}/>
           <Route path={routes.messages.path} component={MessagesRoutes}/>
           <Route path={routes.media.path} component={MediaRoutes}/>
+          <Route path={routes.settings.path} component={SettingsRoutes}/>
         </Switch>
       </Router>
     </div>

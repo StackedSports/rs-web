@@ -39,7 +39,7 @@ export const routes = {
     },
     settings: {
         title: 'Settings',
-        path: '/team-settings', // /settings
+        path: '/settings', // /settings
         icon: SettingsIcon
     },
 }
@@ -57,4 +57,15 @@ export const mediaRoutes = {
     placeholders: '/media/placeholders',
     mediaDetails: '/media/media/details',
     placeholderDetails: '/media/placeholders/details'
+}
+
+export const settingsRoutes = {
+    main: '/settings',
+    general: {
+        main: '/settings/general'
+    },
+    team: {
+        main: '/settings/team'
+    },
+
 }

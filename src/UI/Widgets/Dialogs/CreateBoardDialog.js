@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Dialog, DialogTitle, Stack, DialogContent, DialogContentText, Checkbox, FormControlLabel, TextField, Divider, Typography } from '@mui/material';
 import { People } from '@mui/icons-material';
 
@@ -13,11 +13,20 @@ import Button from '../Buttons/Button';
  */
 
 export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) => {
+    const [boardName, setBoardName] = useState('')
+
     const [submitting, setSubmitting] = useState(false)
+
+    const onBoardNameChange = (e) => {
+        console.log(e.target.value)
+        setBoardName(e.target.value)
+    }
     
     const handleSubmit = (e) => {
 
     }    
+
+    const selectedFiltersKeys = useMemo(() => Object.keys(selectedFilters), [selectedFilters])
 
     return (
         <Dialog
@@ -50,6 +59,8 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
                     id='name'
                     label='Create Board Name'
                     type='text'
+                    value={boardName}
+                    onChange={onBoardNameChange}
                     fullWidth
                     InputProps={{
                         sx: {
@@ -66,16 +77,17 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
 
                 <Typography py={2} fontWeight='bold' fontSize='12px' color='text.secondary' >
                     Filter Criteria:
-                    {selectedFilters && Object.keys(selectedFilters).map(key => {
+                    {selectedFilters && selectedFiltersKeys.map((key, index) => {
                         const filter = selectedFilters[key];
+
                         return (
                             <Typography
                                 component='span'
                                 color='text.primary'
-                                fontWeight='500 !important'
+                                fontWeight='700 !important'
                                 textTransform='capitalize'
                             >
-                                {`${key}: ${filter?.map(f => f.name).join(', ')} ;`}
+                                {`${key}: ${filter?.map(f => f.name).join(', ')}${index === selectedFiltersKeys.length - 1 ? '' : '; '}`}
                             </Typography>
                         )
                     })

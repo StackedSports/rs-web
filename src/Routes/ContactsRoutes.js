@@ -11,21 +11,6 @@ const ContactsRoutes = (props) => (
           path={routes.contacts.path}
           component={ContactsPage}
         />
-        {/* <Route
-          exact
-          path="/auth/login"
-          render={(props) => <LoginPage/>}
-        />
-        <Route
-          exact
-          path="/auth/signup"
-          render={(props) => <SignUpPage/>}
-        />
-        <Route
-          exact
-          path="/auth/password"
-          render={(props) => <PasswordPage/>}
-        /> */}
     </>
 )
 
