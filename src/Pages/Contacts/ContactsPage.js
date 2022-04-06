@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { AccountBox, Tune } from '@material-ui/icons'
-
 
 import {
     useContacts,
@@ -17,9 +16,9 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
 
-
 export default function ContactsPage(props) {
     const contacts = useContacts()
+
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
     const [showPanelFilters, setShowPanelFilters] = useState(true)
@@ -31,6 +30,13 @@ export default function ContactsPage(props) {
     const gradeYears = useGradeYears()?.map((item, index) => ({ id: index, name: item })) || []
     const tags = useTags() || []
     const positions = usePositions() || []
+    
+    useEffect(() => {
+        if(!contacts.items)
+            return
+        
+        console.log(contacts.items)
+    }, [contacts.items])
 
 
     const panelFiltersData = useMemo(() =>
@@ -74,7 +80,7 @@ export default function ContactsPage(props) {
         }
     ]
 
-    console.log(Object.keys(selectedFilters).length === 0)
+    // console.log(Object.keys(selectedFilters).length === 0)
 
 
     const onTopActionClick = (e) => {
@@ -102,6 +108,8 @@ export default function ContactsPage(props) {
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
+
+        contacts.filter(filter)
     }
 
     return (
@@ -118,6 +126,7 @@ export default function ContactsPage(props) {
                 onFilterChange: onPanelFilterChange
             }}
         >
+            <p>You have {contacts.pagination.totalItems} contacts</p>
 
             <ContactsTable
                 contacts={contacts.items}

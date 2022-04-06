@@ -50,3 +50,11 @@ export const messageRoutes = {
     details: '/messages/details',
     all: '/messages'
 }
+
+export const mediaRoutes = {
+    all: '/media',
+    media: '/media/media',
+    placeholders: '/media/placeholders',
+    mediaDetails: '/media/media/details',
+    placeholderDetails: '/media/placeholders/details'
+}
