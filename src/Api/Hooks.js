@@ -299,7 +299,10 @@ export const useTeamMembers = () => {
         setTeamMembers(filtered)
     }
 
-    return [teamMembers, filter]
+    return {
+        items: teamMembers,
+        filter
+    }
 }
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)

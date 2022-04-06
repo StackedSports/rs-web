@@ -57,7 +57,7 @@ export default function MessageCreatePage(props) {
     // fetching the api
     // const user = useUser()
 
-    const [teamMembers] = useTeamMembers()
+    const teamMembers = useTeamMembers()
     // const tags = useTags()
     // const contact = useContact('mkjXBTMWnmPX')
 
@@ -185,14 +185,14 @@ export default function MessageCreatePage(props) {
     // }, [user])
 
     useEffect(() => {
-        // console.log(teamMembers)
+        // console.log(teamMembers.items)
 
-        if(!teamMembers)
+        if(!teamMembers.items)
             return
         
-        setSendContacts(coachTypes.concat(teamMembers))
+        setSendContacts(coachTypes.concat(teamMembers.items))
 
-    }, [teamMembers])
+    }, [teamMembers.items])
 
     const setPlatformsForUser = () => {
         // if(!user)
@@ -228,7 +228,7 @@ export default function MessageCreatePage(props) {
         setPlatforms(platforms)
     }
 
-    // console.log(teamMembers)
+    // console.log(teamMembers.items)
 
     const onTopActionClick = (e) => {
         console.log('top action click')

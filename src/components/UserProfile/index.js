@@ -305,18 +305,18 @@ function ContactProfile(props) {
   const [contactTags, setContactTags] = useState(null)
 
   // Details
-  const [teamMembers] = useTeamMembers()  
+  const teamMembers = useTeamMembers()  
   const ranks = useRanks()
 
   console.log(ranks)
 
   // Details Inputs
   const [positionCoach, setPositionCoach] = useArray()
-  const [searchedPositionCoaches, setSearchedPositionCoaches] = useArray(teamMembers)
+  const [searchedPositionCoaches, setSearchedPositionCoaches] = useArray(teamMembers.items)
   const [areaCoach, setAreaCoach] = useArray()
-  const [searchedAreaCoaches, setSearchedAreaCoaches] = useArray(teamMembers)
+  const [searchedAreaCoaches, setSearchedAreaCoaches] = useArray(teamMembers.items)
   const [coordinator, setCoordinator] = useArray()
-  const [searchedCoordinator, setSearchedCoordinator] = useArray(teamMembers)
+  const [searchedCoordinator, setSearchedCoordinator] = useArray(teamMembers.items)
 
 
 
@@ -989,7 +989,7 @@ function ContactProfile(props) {
                             optionNameDef={['first_name', 'last_name']}
                             optionImgDef={'twitter_profile.profile_image'}
                             placeholder='+ Add Position Coach'
-                            options={teamMembers}
+                            options={teamMembers.items}
                             search={searchedPositionCoaches}
                             onInputChange={(input) => onCoachInputChange(input, 'position')}
                             onInputPressEnter={() => {}}
@@ -1009,7 +1009,7 @@ function ContactProfile(props) {
                             optionNameDef={['first_name', 'last_name']}
                             optionImgDef={'twitter_profile.profile_image'}
                             placeholder='+ Add Area Coach'
-                            options={teamMembers}
+                            options={teamMembers.items}
                             search={searchedAreaCoaches}
                             onInputChange={(input) => onCoachInputChange(input, 'area')}
                             onInputPressEnter={() => {}}
@@ -1032,7 +1032,7 @@ function ContactProfile(props) {
                             optionNameDef={['first_name', 'last_name']}
                             optionImgDef={'twitter_profile.profile_image'}
                             placeholder='+ Add Coordinator'
-                            options={teamMembers}
+                            options={teamMembers.items}
                             search={searchedCoordinator}
                             onInputChange={(input) => onCoachInputChange(input, 'coordinator')}
                             onInputPressEnter={() => {}}
