@@ -20,7 +20,7 @@ import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
 
 export default function ContactsPage(props) {
     const [contacts, pagination, contactsLoading] = useContacts()
-    const [openSaveBoardDialog, setOpenSaveBoardDialog] = useState(false)
+    const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
     const [showPanelFilters, setShowPanelFilters] = useState(true)
     const [selectedFilters, setSelectedFilters] = useState({})
@@ -62,7 +62,7 @@ export default function ContactsPage(props) {
         {
             name: 'Save as Board',
             icon: AccountBox,
-            onClick: () => setOpenSaveBoardDialog(true),
+            onClick: () => setOpenCreateBoardDialog(true),
             variant: 'outlined',
             disabled: selectedFilters.length === 0,
         },
@@ -124,8 +124,8 @@ export default function ContactsPage(props) {
             />
 
             <CreateBoardDialog
-                open={openSaveBoardDialog}
-                onClose={() => setOpenSaveBoardDialog(false)}
+                open={openCreateBoardDialog}
+                onClose={() => setOpenCreateBoardDialog(false)}
             />
 
         </MainLayout>
