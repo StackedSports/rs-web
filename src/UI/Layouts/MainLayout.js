@@ -33,10 +33,11 @@ export default function MainLayout(props) {
                   onFilterSelected={props.onFilterSelected}
                 />
                 <Panel
-                  title={props.title}
-                  actions={props.actions}
-                  menuOpen={displayFilters}
-                  onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    title={props.title}
+                    actions={props.actions}
+                    menuOpen={displayFilters}
+                    onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    propsPanelFilters={props.propsPanelFilters}
                 >
                     {props.alert && (
                         <Snackbar
@@ -62,6 +63,6 @@ export default function MainLayout(props) {
                     {props.children}
                 </Panel>
             </Content>
-        </Page>
+        </Page >
     )
 }

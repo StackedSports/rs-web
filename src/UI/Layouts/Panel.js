@@ -3,6 +3,7 @@ import './Panel.css'
 // import Button from '@mui/material/Button';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
 import Dropdown from 'UI/Widgets/Dropdown'
+import PanelFilters from 'UI/Widgets/PanelFilters';
 
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
@@ -78,6 +79,7 @@ const renderActions = (actions) => {
                       variant={action.variant} 
                       endIcon={<action.icon/>}
                       onClick={action.onClick}
+                      disabled={action.disabled}
                     />
                 )
         })
@@ -98,6 +100,9 @@ export default function Panel(props) {
                     {renderActions(props.actions)}
                 </div>
             </div>
+            <PanelFilters
+              {  ...props.propsPanelFilters}
+            />
             {props.children}
         </div>
     )

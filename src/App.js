@@ -43,7 +43,7 @@ function App() {
           <Route path="/" exact component={Signup} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/dashboard/:user" exact component={Dashboard} />
-          <Route path="/contacts" exact component={Contacts} />
+          <Route path="/oldcontacts" exact component={Contacts} />
           <Route path="/chat" exact component={Chat} />
 
           <Route path="/media" exact component={Media} />
