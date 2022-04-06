@@ -51,7 +51,7 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
 
     return (
         <>
-            <Stack direction='row' py={1} flexWrap='wrap'>
+            <Stack direction='row' flexWrap='wrap'>
                 {selectedFilters && Object.keys(selectedFilters).map(key =>
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
@@ -63,7 +63,7 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
             </Stack>
 
             <Collapse in={open}>
-                <Stack direction='row' spacing={2} py={2}>
+                <Stack direction='row' spacing={2} pb={2}>
                     {filters && Object.keys(filters).map(filterName => {
                         const filter = filters[filterName];
                         return (
