@@ -48,7 +48,7 @@ function App() {
           <Route path="/oldcontacts" exact component={Contacts} />
           <Route path="/chat" exact component={Chat} />
 
-          <Route path="/media" exact component={Media} />
+          <Route path="/oldmedia" exact component={Media} />
           <Route path="/tweet-create" exact component={TweetCreate} />
 
           <Route path="/contact-profile/:id" exact component={UserProfile} />

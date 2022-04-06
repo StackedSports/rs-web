@@ -1,16 +1,16 @@
 import { Route } from 'react-router-dom'
 
-// import MediaPage from 'Pages/Media/MediaPage'
+ import MediaPage from 'Pages/Media/MediaPage'
 
 import { mediaRoutes } from './Routes'
 
 const MediaRoutes = (props) => (
     <>
-        {/* <Route
+        <Route
           exact
           path={mediaRoutes.all}
           component={MediaPage}
-        /> */}
+        />
         {/* <Route
           // exact
           path={`${mediaRoutes.media}`}

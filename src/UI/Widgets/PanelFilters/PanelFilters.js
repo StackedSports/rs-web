@@ -1,10 +1,13 @@
 import { useState } from 'react';
 
 import { Collapse, Stack, Box } from '@mui/material';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { KeyboardArrowDown } from '@mui/icons-material';
+/* import { Dropdown, DropdownButton } from 'react-bootstrap'; */
 
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
+import Dropdown from 'UI/Widgets/Dropdown';
+import Button from '../Buttons/Button';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
@@ -47,15 +50,28 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
             }
 
             onFilterChange(newSelectFilters);
-            
+
             return newSelectFilters;
         })
     }
 
+    const getContent = (options, filterName) => (
+        <Dropdown.List>
+            {options.map((option) => (
+                <Dropdown.Item
+                    key={option.id}
+                    name={option.name}
+                    onClick={() => handleOptionsChange(option, filterName)}
+                />
+            ))}
+        </Dropdown.List>
+    )
+
+    const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
 
     return (
         <>
-            <Stack direction='row' flexWrap='wrap'>
+            <Stack direction='row' flexWrap='wrap' pb={1}>
                 {selectedFilters && Object.keys(selectedFilters).map(key =>
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
@@ -67,31 +83,15 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
             </Stack>
 
             <Collapse in={open}>
-                <Stack direction='row' spacing={2} pb={2}>
+                <Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
                     {filters && Object.keys(filters).map(filterName => {
                         const filter = filters[filterName];
                         return (
                             <Box key={filterName}>
-                                {/* <DropDown
-                                    label={filter.label}
-                                    options={filter.options}
-                                    onOptionSelected={(option) => handleOptionsChange(option, filterName)}
-                                /> */}
-
-                                <DropdownButton
-                                    id={`dropdown-basic-${filterName}`}
-                                    title={filter.label}
-                                    drop={"down"}
-                                >
-                                    {filter.options.map(option => (
-                                        <Dropdown.Item
-                                            key={option.id}
-                                            onClick={() => handleOptionsChange(option, filterName)}
-                                        >
-                                            {option.name}
-                                        </Dropdown.Item>
-                                    ))}
-                                </DropdownButton>
+                                <Dropdown
+                                    header={() => getHeader(filter.label)}
+                                    content={() => getContent(filter.options, filterName)}
+                                />
                             </Box>
                         )
                     })}
