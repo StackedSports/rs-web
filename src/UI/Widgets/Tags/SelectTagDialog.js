@@ -11,12 +11,10 @@ import SearchBar from 'UI/Widgets/SearchBar'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
 import TagsList from 'UI/Widgets/Tags/TagsList'
 
-import { useTags2, useUser, useContact } from 'Api/Hooks'
+import { useTags2 } from 'Api/Hooks'
 
 const SelectTagDialog = (props) => {
     const tags = useTags2()
-    // const user = useUser()
-    // const contact = useContact('jGePvjoTaPWK')
 
     const [selectedTags, setSelectedTags] = useState([])
     const [tagsSelected, setTagsSelected] = useState([])

@@ -28,6 +28,7 @@ import {
     getBoardFiltersById,
     getTeamContacts,
     getTagsWithContacts,
+    getTagsWithMedia,
     archiveContacts,
     filterContacts,
 } from 'Api/Endpoints'
@@ -73,9 +74,23 @@ export const useTagsWithContacts = () => {
     useEffect(() => {
         getTagsWithContacts()
             .then(([tag]) => {
-                console.log('ApiHooks: getTagsWithContacts -----', tag)
-                console.log(tag)
+                // console.log('ApiHooks: getTagsWithContacts -----', tag)
+                // console.log(tag)
                 setTags(tag)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    return tags
+}
+
+export const useTagsWithMedia = () => {
+    const [tags, setTags] = useState(null)
+
+    useEffect(() => {
+        getTagsWithMedia()
+            .then(([tags]) => {
+                setTags(tags)
             })
             .catch(error => console.log(error))
     }, [])

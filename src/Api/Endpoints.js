@@ -256,6 +256,15 @@ export const getTeamMembers = () => {
 export const getTags = () => {
     return AXIOS('get', `tags`)
 }
+
+export const getTagsWithContacts = () => {
+    return AXIOS('get', `tags/with_contacts`)
+}
+
+export const getTagsWithMedia = () => {
+    return AXIOS('get', `tags/with_media`)
+}
+
 export const getTagsWithMessages = () => {
     return AXIOS('get', `tags/with_messages`)
 }
@@ -281,9 +290,6 @@ export const getBoardFiltersById = (id) => {
 }
 export const getTeamContacts = () => {
     return AXIOS('get', `team/members?only_active=true`)
-}
-export const getTagsWithContacts = () => {
-    return AXIOS('get', `tags/with_contacts`)
 }
 
 

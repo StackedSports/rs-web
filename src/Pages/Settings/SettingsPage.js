@@ -25,9 +25,6 @@ const filters = [
 ]
 
 export default function SettingsPage(props) {
-    
-    
-
     return (
         <MainLayout
             title={props.title || 'Settings'}
@@ -36,21 +33,7 @@ export default function SettingsPage(props) {
             filters={filters}
             // onFilterSelected={onFilterSelected}
         >
-            {/* <ContactsTable
-                contacts={contacts.items}
-                pagination={contacts.pagination}
-                loading={contacts.loading}
-                onSelectionChange={(selected) => setSelectedContacts(selected)}
-            />
-
-            <CreateBoardDialog
-                open={openCreateBoardDialog}
-                onClose={() => setOpenCreateBoardDialog(false)}
-                selectedFilters={selectedFilters}
-            /> */}
-
             {props.children}
-
         </MainLayout>
     )
 }
