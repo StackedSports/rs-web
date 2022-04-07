@@ -306,7 +306,7 @@ function ContactProfile(props) {
 
   // Details
   const teamMembers = useTeamMembers()  
-  const ranks = useRanks()
+  const ranks = useRanks().items
 
   console.log(ranks)
 

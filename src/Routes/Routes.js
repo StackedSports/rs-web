@@ -71,6 +71,13 @@ export const settingsRoutes = {
         tags: '/settings/tags',
         gradYears: '/settings/grad-years',
         positions: '/settings/positions',
+        statuses: '/settings/statuses',
+        ranks: '/settings/ranks',
+        snippets: '/settings/snippets',
+        platforms: '/settings/platforms',
+        placeholders: '/settings/placeholders',
+        getSendCoachTypes: '/settings/get_send_as_coaches',
+        peopleTypes: '/settings/people_types',
     },
 
 }

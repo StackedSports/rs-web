@@ -1044,7 +1044,7 @@ function Home(props) {
   });
   console.log(POSITIONS, "POSITIONS")
   var positions = POSITIONS
-  const ranks = useRanks()
+  const ranks = useRanks().items
   console.log('Ranks', ranks)
   var RANKS = [];
   ranks?.map((item) => {
@@ -1066,7 +1066,7 @@ function Home(props) {
   });
   console.log(STATUS, "STATUS")
   var allStatuses = STATUS
-  const GradeYears = useGradeYears()
+  const GradeYears = useGradeYears().items
   console.log('GradeYears', GradeYears)
   var GRADYEAR = [];
   GradeYears?.map((item) => {

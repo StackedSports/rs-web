@@ -16,6 +16,7 @@ import {
     getPlaceholder,
     getPlaceholders,
     getSnippets,
+    getCoachTypes,
     getTextPlaceholders,
     getMessage,
     getMessageRecipients,
@@ -25,6 +26,8 @@ import {
     getAllStatus,
     getGradeYears,
     getPositions,
+    getStatuses,
+    getPeopleTypes,
     getBoardFiltersById,
     getTeamContacts,
     getTagsWithContacts,
@@ -55,8 +58,10 @@ export const useUser = () => {
 
 export const usePlatform = () => {
     const [platform, setPlatform] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getBoards()
             .then(([platforms]) => {
                 console.log('ApiHooks: getPlatform -----')
@@ -64,9 +69,13 @@ export const usePlatform = () => {
                 setPlatform(platforms)
             })
             .catch(error => console.log(error))
+            .finally(() => setLoading(false))
     }, [])
 
-    return platform
+    return {
+        items: platform,
+        loading
+    }
 }
 export const useTagsWithContacts = () => {
     const [tags, setTags] = useState(null)
@@ -134,7 +143,7 @@ export const addUser = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
-    
+
     useEffect(() => {
         getTags()
             .then(([tags]) => {
@@ -177,7 +186,7 @@ export const useTags2 = () => {
         let tmp = []
 
         tagsRes.current.forEach(tag => {
-            if(tag.name.toLowerCase().includes(value.toLowerCase()))
+            if (tag.name.toLowerCase().includes(value.toLowerCase()))
                 tmp.push(tag)
         })
 
@@ -217,7 +226,7 @@ export const useContact = (id) => {
 export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
@@ -312,10 +321,14 @@ export const useTeamMembers = () => {
     }
 }
 
+
+
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getRanks()
             .then(([ranks]) => {
                 //console.log('ApiHooks: getRanks -----')
@@ -323,14 +336,17 @@ export const useRanks = () => {
 
                     setRanks(ranks)
                 }
-                //console.log(ranks)
+                console.log(ranks)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return ranks
+    return {
+        items: ranks,
+        loading,
+    }
 }
 
 // TODO: what is this?
@@ -459,20 +475,26 @@ export const useStatus = () => {
 // TODO:
 export const useGradeYears = () => {
     const [GradeYears, setGradeYears] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getGradeYears()
             .then(([GradeYears]) => {
                 //console.log('ApiHooks: getGradeYears -----')
                 //console.log(GradeYears)
+
                 setGradeYears(GradeYears)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return GradeYears
+    return {
+        items: GradeYears,
+        loading,
+    }
 }
 
 export const useTextPlaceholders = () => {
@@ -496,38 +518,71 @@ export const useTextPlaceholders = () => {
 // TODO:
 export const usePositions = () => {
     const [Positions, setPositions] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getPositions()
             .then(([Positions]) => {
                 //console.log('ApiHooks: getPositions -----')
-                //console.log(Positions)
+                // console.log(Positions)
                 setPositions(Positions)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return Positions
+    return {
+        items: Positions,
+        loading
+    }
+}
+
+export const useStatuses = () => {
+    const [statuses, setStatuses] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+        getStatuses()
+            .then(([statuses]) => {
+                //console.log('ApiHooks: getPositions -----')
+                console.log(statuses)
+                setStatuses(statuses)
+            })
+            .catch(error => {
+                console.log(error)
+            }).finally(() => setLoading(false))
+    }, [])
+
+    return {
+        items: statuses,
+        loading,
+    }
 }
 
 export const useSnippets = () => {
     const [snippets, setSnippets] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getSnippets()
             .then(([snippets]) => {
                 //console.log('ApiHooks: getRanks -----')
-                //console.log(ranks)
+                console.log(setSnippets)
                 setSnippets(snippets)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return snippets
+    return {
+        items: snippets,
+        loading
+    }
 }
 
 export const usePlaceholder = (id) => {
@@ -717,7 +772,60 @@ export const useCoaches = () => {
     // return ranks
 }
 
+export const useCoachesTypes = () => {
+    const [coachesTypes, setCoachesTypes] = useState(null)
+    const [loading, setLoading] = useState(true)
 
+
+    useEffect(() => {
+        setLoading(true)
+
+        getCoachTypes()
+            .then(([coachesTypes]) => {
+                // console.log('ApiHooks: getRanks -----')
+                // console.log(coachesTypes)
+                setCoachesTypes(coachesTypes.types)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    return {
+        items: coachesTypes,
+        loading
+    }
+}
+
+
+export const usePeopleTypes = () => {
+    const [peopleTypes, setPeopleTypes] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+
+    useEffect(() => {
+        setLoading(true)
+
+        getPeopleTypes()
+            .then(([PeopleTypes]) => {
+
+                console.log(PeopleTypes)
+                setPeopleTypes(PeopleTypes)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    return {
+        items: peopleTypes,
+        loading
+    }
+}
 
 
 // TODO:
