@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
 
+import { Stack } from '@mui/material'
 import { Grid } from "@material-ui/core"
 import { DataGrid } from '@mui/x-data-grid'
 import Pagination from '@mui/material/Pagination'
-import Stack from '@mui/material/Stack'
+// import Stack from '@mui/material/Stack'
 
 const DataTable = (props) => {
 
@@ -55,16 +56,15 @@ const DataTable = (props) => {
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
             />
-            {!!props.hidePagination &&
-                (
-                    <Grid container justifyContent="center" alignItems="center">
-                        <Pagination
-                            count={pagination.totalPages}
-                            page={pagination.currentPage}
-                            onChange={onPageChange}
-                            disabled={props.loading} />
-                    </Grid>
-                )}
+            {!props.hidePagination && (
+                <Stack justifyContent="center" alignItems="center">
+                    <Pagination
+                        count={pagination.totalPages}
+                        page={pagination.currentPage}
+                        onChange={onPageChange}
+                        disabled={props.loading} />
+                </Stack>
+            )}
 
         </Stack>
     )

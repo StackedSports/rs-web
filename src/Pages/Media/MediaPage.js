@@ -1,26 +1,36 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { GridView, FormatAlignJustify, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
+import { GridView, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
 import { Stack, Typography, Box } from '@mui/material'
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
+
+import { Link } from 'react-router-dom'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
+import MediaTable from 'UI/Tables/Media/MediaTable'
 
 import { usePlaceholders, useMedia, useTags } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
 
-import { MediaView } from './MediaView'
+// import { MediaView } from './MediaView'
 
+import { mediaRoutes } from 'Routes/Routes';
 
+/**
+ * TODO: delete this
+ * 
+ * Mudanças: MediaTable, MediaTableConfig, Decoupling of MediaView,
+ * set paginated media to 5 items per page 
+ * 
+ */
 
 export const MediaPage = () => {
-
+    const media = useMedia(1, 5)
     const placeholders = usePlaceholders(1, 5)
-
     const tags = useTags()
-    const media = useMedia()
 
-    console.log("placeholders", placeholders)
+    // console.log("placeholders", placeholders)
 
     const [mediaTypes, setMediaTypes] = useState([])
 
@@ -52,7 +62,7 @@ export const MediaPage = () => {
         {
             name: 'Change view',
             type: 'icon',
-            icon: viewGrid ? GridView : FormatAlignJustify,
+            icon: viewGrid ? GridView : FormatListBulletedIcon,
             onClick: () => setViewGrid(!viewGrid)
         },
         {
@@ -126,32 +136,78 @@ export const MediaPage = () => {
 
             <Divider />
 
-            <MediaView
-                isGrid={viewGrid}
-                isLoading={media.loading}
-                items={media.items}
-                title='Quick Access'
+            {/* <MediaView
+              isGrid={viewGrid}
+              isLoading={media.loading}
+              items={media.items}
+              title='Quick Access'
+              disablePagination
+            /> */}
+
+            <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
+                <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+                    Quick Access
+                </Typography>
+                <Box>
+                    <Button
+                      component={Link}
+                      to={mediaRoutes.media}
+                      name='View More'
+                      variant='text'
+                    />
+                </Box>
+            </Stack>
+
+            <MediaTable
+              items={media.items}
+              loading={media.loading}
+              view={viewGrid ? 'grid' : 'list'}
+              type="media"
+              disablePagination
             />
 
-            <MediaView
-                isGrid={viewGrid}
-                isLoading={placeholders.loading}
-                items={placeholders.items}
-                title='Placeholders'
-                type='placeholder'
+            <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
+                <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+                    Placeholders
+                </Typography>
+                <Box>
+                    <Button
+                      component={Link}
+                      to={mediaRoutes.placeholders}
+                      name='View More'
+                      variant='text'
+                    />
+                </Box>
+            </Stack>
+
+            <MediaTable
+              items={placeholders.items}
+              loading={placeholders.loading}
+              view={viewGrid ? 'grid' : 'list'}
+              type="placeholder"
+              disablePagination
             />
+
+            {/* <MediaView
+              isGrid={viewGrid}
+              isLoading={placeholders.loading}
+              items={placeholders.items}
+              title='Placeholders'
+              type='placeholder'
+              disablePagination
+            /> */}
 
             <Box my={2} >
                 <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
-                    <Typography variant='subtitle1' color='text.secondary'>
+                    <Typography variant='subtitle1' style={{ fontWeight: 'bold' }}>
                         Tagged Media
                     </Typography>
                     <Box>
                         <Button
-                            name='Last Modified'
-                            variant='text'
-                            endIcon={<KeyboardArrowDown />}
-                            color='inherit'
+                          name='Last Modified'
+                          variant='text'
+                          endIcon={<KeyboardArrowDown />}
+                          color='inherit'
                         />
                     </Box>
                 </Stack>

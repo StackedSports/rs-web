@@ -12,7 +12,7 @@ import DataTable from 'UI/Tables/DataTable'
 
 import { mediaRoutes } from 'Routes/Routes';
 
-import { columnsMedias, columnsPlaceHolders } from './MediaViewTableConfig'
+import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
 
 /**
  * 
@@ -22,54 +22,13 @@ import { columnsMedias, columnsPlaceHolders } from './MediaViewTableConfig'
  * @param {string} items.type type of the item
  * @returns 
  */
-export const MediaView = ({ items, isLoading = false, isGrid, title, type = 'media', disablePagination = false }) => {
+const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagination = false }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
-    const boxRef = useRef();
-    const [sort, setSort] = useState('createdAt');
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [ItemsLimit, setItemsLimit] = useState(10);
-
-    // const observer = useRef(
-    //     new ResizeObserver(entries => {
-    //         entries.forEach(entry => {
-    //             if (showAll)
-    //                 setItemsLimit(items?.length)
-    //             else
-    //                 setItemsLimit(Math.floor(entry.contentRect.width / 250));
-    //         })
-    //     })
-    // );
-
-    // useEffect(() => {
-    //     if (boxRef.current) {
-    //         observer.current.observe(boxRef.current)
-    //     }
-    //     return () => {
-    //         observer.current.disconnect()
-    //     }
-    // }, [boxRef, observer])
-
-
-    
-
     return (
-        <Box width='100%' pb={2} ref={boxRef}>
+        <Box width='100%' pb={2}>
             <Box >
-                <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
-                    <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
-                        {title}
-                    </Typography>
-                    <Box>
-                        <Button
-                            component={Link}
-                            to={mediaRoutes.media}
-                            name='View More'
-                            variant='text'
-                        />
-                    </Box>
-                </Stack>
-                {isLoading && (
+                {loading && (
                     <Box
                         height='300px'
                         sx={{ display: 'grid', placeItems: 'center' }}
@@ -77,7 +36,7 @@ export const MediaView = ({ items, isLoading = false, isGrid, title, type = 'med
                         <CircularProgress />
                     </Box>
                 )}
-                {!isLoading && (isGrid ? (
+                {!loading && (view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {items && items.map(item => (
                             <MediaPreview
@@ -96,8 +55,9 @@ export const MediaView = ({ items, isLoading = false, isGrid, title, type = 'med
                     />
                 ))}
             </Box>
-
         </Box>
     )
 
 }
+
+export default MediaTable
