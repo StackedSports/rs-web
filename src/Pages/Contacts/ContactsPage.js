@@ -26,7 +26,7 @@ export default function ContactsPage(props) {
 
     // handle filters options
     const status = useStatus()?.map(item => ({ id: item.id, name: item.status })) || []
-    const ranks = useRanks()?.map(item => ({ id: item.id, name: item.rank })) || []
+    const ranks = useRanks().items?.map(item => ({ id: item.id, name: item.rank })) || []
     const gradeYears = useGradeYears().items?.map((item, index) => ({ id: index, name: item })) || []
     const tags = useTags() || []
     const positions = usePositions().items || []

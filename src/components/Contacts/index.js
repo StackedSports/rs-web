@@ -1044,7 +1044,7 @@ function Home(props) {
   });
   console.log(POSITIONS, "POSITIONS")
   var positions = POSITIONS
-  const ranks = useRanks()
+  const ranks = useRanks().items
   console.log('Ranks', ranks)
   var RANKS = [];
   ranks?.map((item) => {

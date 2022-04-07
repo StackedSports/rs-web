@@ -93,7 +93,7 @@ export default function MessageCreatePage(props) {
     // TextArea
     // const textArea = useRef(null)
     const [textMessage, setTextMessage] = useState('')
-    const snippets = useSnippets()
+    const snippets = useSnippets().items
     const textPlaceholders = useTextPlaceholders()
 
     // Error

@@ -23,6 +23,12 @@ const filters = [
             { id: 'grad-years', name: 'Grad Years', path: settingsRoutes.team.gradYears },
             { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
             { id: 'statuses', name: 'Statuses', path: settingsRoutes.team.statuses },
+            { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
+            { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
+            { id: 'platforms', name: 'Platforms', path: settingsRoutes.team.platforms },
+            { id: 'placeholders', name: 'Placeholders', path: settingsRoutes.team.placeholders },
+            { id: 'getSendCoachTypes', name: 'Get Send as Coach Types', path: settingsRoutes.team.getSendCoachTypes },
+            { id: 'peopleTypes', name: 'People Types', path: settingsRoutes.team.peopleTypes },
         ]
     }
 ]
@@ -34,7 +40,7 @@ export default function SettingsPage(props) {
             topActionName={props.topActionName || null}
             onTopActionClick={props.onTopActionClick}
             filters={filters}
-            // onFilterSelected={onFilterSelected}
+        // onFilterSelected={onFilterSelected}
         >
             {props.children}
         </MainLayout>

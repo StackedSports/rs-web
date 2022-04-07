@@ -27,18 +27,18 @@ const AXIOS = (method, url, body) => {
         }
 
         axios({
-                method: method,
-                url: URL + url,
-                headers: {
-                    Accept: "application/json; version=1",
-                    "Content-Type": "application/json",
-                    Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-                    "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
-                    // Cookie:
-                    //     "ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
-                },
-                data
-            })
+            method: method,
+            url: URL + url,
+            headers: {
+                Accept: "application/json; version=1",
+                "Content-Type": "application/json",
+                Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+                "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+                // Cookie:
+                //     "ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
+            },
+            data
+        })
             .then(res => {
                 // console.log(res)
                 if (res.status === 200 || res.status === 204 || res.status === 201) {
@@ -77,7 +77,7 @@ const DELETE = (url) => {
 
         axios.delete(URL + url, config)
             .then(res => {
-                if(res.status === 204)
+                if (res.status === 204)
                     resolve(res)
                 else
                     reject(res)
@@ -107,7 +107,7 @@ const GET = (url, body) => {
         axios.get(URL + url, config)
             .then(res => {
                 console.log(res)
-                if(res.status === 200 || res.status === 204 || res.status === 201) {
+                if (res.status === 200 || res.status === 204 || res.status === 201) {
                     let pagination = {
                         currentPage: parseInt(res.headers['current-page']),
                         totalPages: parseInt(res.headers['total-pages']),
@@ -142,7 +142,7 @@ const POST = (url, body) => {
 
         axios.post(URL + url, data, config)
             .then(res => {
-                if(res.status === 204 || res.status === 201)
+                if (res.status === 204 || res.status === 201)
                     resolve(res)
                 else
                     reject(res)
@@ -170,7 +170,7 @@ const PUT = (url, body) => {
 
         axios.put(URL + url, data, config)
             .then(res => {
-                if(res.status === 204 || res.status === 201)
+                if (res.status === 204 || res.status === 201)
                     resolve(res)
                 else
                     reject(res)
@@ -200,7 +200,7 @@ export const archiveContact = (id) => {
  */
 export const archiveContacts = (ids) => {
     return new Promise((resolve, reject) => {
-        if(!Array.isArray(ids))
+        if (!Array.isArray(ids))
             reject(makeError('C-422', 'ids must be an array'))
 
         let count = ids.length
@@ -219,7 +219,7 @@ export const archiveContacts = (ids) => {
                 .finally(() => {
                     count--
 
-                    if(count <= 0) {
+                    if (count <= 0) {
                         resolve({ successCount, failedCount })
                     }
                 })
@@ -239,7 +239,7 @@ export const filterContacts = (page, perPage, filters) => {
     const data = {
         page,
         per_page: perPage,
-        criteria: {...getFilterContactsCriteria(filters)}
+        criteria: { ...getFilterContactsCriteria(filters) }
     }
 
     console.log(data)
@@ -306,7 +306,7 @@ export const getMessages = (page = 1, perPage = 10) => {
         include_archived: 'false',
         // criteria: {}
     }
-    
+
     return GET(`messages?page=${page}&per_page=${perPage}`, data)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)
 }
@@ -348,9 +348,16 @@ export const getSnippets = () => {
     return AXIOS('get', `team/snippets`)
 }
 
+export const getCoachTypes = () => {
+    return AXIOS('get', `team/send_as_coaches`)
+}
+export const getPeopleTypes = () => {
+    return AXIOS('get', `team/people_types`)
+}
+
 export const createMessage = (data) => {
-    let body = { 
-        message: {...data}
+    let body = {
+        message: { ...data }
     }
 
     // if(user_id)
@@ -363,7 +370,7 @@ export const createMessage = (data) => {
 
 export const updateMessage = (messageId, data) => {
     let body = {
-        message: {...data}
+        message: { ...data }
     }
 
     return PUT(`messages/${messageId}`, body)
@@ -429,7 +436,7 @@ export const addTagsToContacts = (tagIds, contactIds) => {
                 .finally(() => {
                     count--
 
-                    if(count === 0)
+                    if (count === 0)
                         resolve({
                             total,
                             success,
@@ -443,9 +450,9 @@ export const addTagsToContacts = (tagIds, contactIds) => {
 }
 
 // TODO: what is this function?
-export const CreateUser = (body) =>{
+export const CreateUser = (body) => {
     //const data = JSON.stringify(body);
-    return AXIOS('post' , `messages`,body)
+    return AXIOS('post', `messages`, body)
 }
 
 export const getAllContactsEnd = (page) => {
