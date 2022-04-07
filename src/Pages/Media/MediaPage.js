@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { GridView, FormatAlignJustify, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
 import { Stack, Typography, Box } from '@mui/material'
 
@@ -9,16 +9,18 @@ import { Divider } from 'UI'
 import { usePlaceholders, useMedia, useTags } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
 
+import { MediaView } from './MediaView'
+
 
 
 export const MediaPage = () => {
 
-    const placeholders = usePlaceholders(1, 4)
+    const placeholders = usePlaceholders(1, 5)
 
     const tags = useTags()
     const media = useMedia()
 
-    console.log(media)
+    console.log("placeholders", placeholders)
 
     const [mediaTypes, setMediaTypes] = useState([])
 
@@ -124,51 +126,22 @@ export const MediaPage = () => {
 
             <Divider />
 
-            <Box>
-                <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
-                    <Typography variant='subtitle1' color='text.secondary'>
-                        Quick Acess
-                    </Typography>
-                    <Box>
-                        <Button
-                            name='Last Modified'
-                            variant='text'
-                            endIcon={<KeyboardArrowDown />}
-                            color='inherit'
-                        />
-                    </Box>
-                </Stack>
-                <Box textAlign='center'>
-                    <Button
-                        name='Load More'
-                        variant='text'
-                    />
-                </Box>
-            </Box>
+            <MediaView
+                isGrid={viewGrid}
+                isLoading={media.loading}
+                items={media.items}
+                title='Quick Access'
+            />
 
-            <Box my={2}>
-                <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
-                    <Typography variant='subtitle1' color='text.secondary' fontWeight={500} >
-                        Placeholders
-                    </Typography>
-                    <Box>
-                        <Button
-                            name='Last Modified'
-                            variant='text'
-                            endIcon={<KeyboardArrowDown />}
-                            color='inherit'
-                        />
-                    </Box>
-                </Stack>
-                <Box textAlign='center'>
-                    <Button
-                        name='Load More'
-                        variant='text'
-                    />
-                </Box>
-            </Box>
+            <MediaView
+                isGrid={viewGrid}
+                isLoading={placeholders.loading}
+                items={placeholders.items}
+                title='Placeholders'
+                type='placeholder'
+            />
 
-            <Box my={2}>
+            <Box my={2} >
                 <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                     <Typography variant='subtitle1' color='text.secondary'>
                         Tagged Media
