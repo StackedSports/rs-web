@@ -539,16 +539,16 @@ export const usePositions = () => {
 }
 
 export const useStatuses = () => {
-    const [Statuses, setStatuses] = useState(null)
+    const [statuses, setStatuses] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setLoading(true)
         getStatuses()
-            .then(([Statuses]) => {
+            .then(([statuses]) => {
                 //console.log('ApiHooks: getPositions -----')
-                console.log(Statuses)
-                setStatuses(Statuses)
+                console.log(statuses)
+                setStatuses(statuses)
             })
             .catch(error => {
                 console.log(error)
@@ -556,7 +556,7 @@ export const useStatuses = () => {
     }, [])
 
     return {
-        items: Statuses,
+        items: statuses,
         loading,
     }
 }
