@@ -97,7 +97,7 @@ export default function Panel(props) {
 
     return (
         <div className='Panel'>
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 10 }}>
                 <div className='Header'>
                     {/* <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/> */}
                     <Icon className='Icon' onClick={props.onMenuIconClick}/>

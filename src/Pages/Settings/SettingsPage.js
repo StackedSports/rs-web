@@ -18,8 +18,8 @@ const filters = [
         name: 'Team',
         items: [
             // Filters
-            { id: '0', name: 'Team Members', path: settingsRoutes.team.members },
-            { id: '1', name: 'Tags', path: settingsRoutes.team.tags },
+            { id: 'team-members', name: 'Team Members', path: settingsRoutes.team.members },
+            { id: 'tags', name: 'Tags', path: settingsRoutes.team.tags },
         ]
     }
 ]

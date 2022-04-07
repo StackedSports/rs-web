@@ -68,7 +68,9 @@ export const settingsRoutes = {
     team: {
         main: '/settings/team',
         members: '/settings/team-members',
-        tags: '/settings/tags'
+        tags: '/settings/tags',
+        gradYears: '/settings/grad-years',
+        positions: '/settings/positions',
     },
 
 }

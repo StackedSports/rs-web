@@ -23,6 +23,11 @@ const SettingsRoutes = (props) => (
           path={settingsRoutes.team.members}
           component={TeamMembersSettingsPage}
         />
+        <Route
+          exact
+          path={settingsRoutes.team.gradYears}
+          component={TeamMembersSettingsPage}
+        />
     </>
 )
 
