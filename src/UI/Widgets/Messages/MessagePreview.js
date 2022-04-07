@@ -79,12 +79,14 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         })
     }, [recipients])
 
-    // console.log(message.media)
+    console.log(message.media)
 
     const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
 
     const showMedia = hasMedia || hasMediaPlaceholder
+
+    console.log(showMedia)
 
     return (
         <Grid className="MessagePreview-Container" container direction="column" style={style}>

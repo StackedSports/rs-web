@@ -58,7 +58,7 @@ const MediaPreview = ({type, containerStyle, ...props}) => {
                     ) : (
                         <PhotoLibraryIcon style={styles.icon}/>
                     )}
-                    <span style={styles.mediaName}>{props.media.name}</span>
+                    <span style={styles.mediaName}>{props.media?.name}</span>
                 </Grid>
             </Grid>
         </Grid>

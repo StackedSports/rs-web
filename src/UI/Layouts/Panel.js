@@ -97,17 +97,19 @@ export default function Panel(props) {
 
     return (
         <div className='Panel'>
-            <div className='Header'>
-                {/* <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/> */}
-                <Icon className='Icon' onClick={props.onMenuIconClick}/>
-                <h2 className='Title'>{props.title}</h2>
-                <div className="JustifyRight">
-                    {renderActions(props.actions)}
+            <div style={{ marginBottom: 20 }}>
+                <div className='Header'>
+                    {/* <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/> */}
+                    <Icon className='Icon' onClick={props.onMenuIconClick}/>
+                    <h2 className='Title'>{props.title}</h2>
+                    <div className="JustifyRight">
+                        {renderActions(props.actions)}
+                    </div>
                 </div>
+                <PanelFilters
+                    {...props.propsPanelFilters}
+                />
             </div>
-            <PanelFilters
-                {...props.propsPanelFilters}
-            />
             {props.children}  
         </div>
     )
