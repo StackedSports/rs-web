@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import SettingsPage from './SettingsPage'
 
@@ -7,15 +7,18 @@ import CoachTypesTable from 'UI/Tables/CoachTypes/CoachTypesTable'
 import { useCoachesTypes } from 'Api/Hooks'
 
 const SendCoachTypesSettingsPage = () => {
-    const coachesTypes = useCoachesTypes().items?.map((item) => ({ id: item, type: item })) || []
-    const loading = useCoachesTypes()?.loading
+    const coachesTypes = useCoachesTypes()
+    // const loading = useGradeYears().loading
+
+    const [items, setItems] = useState([])
 
     useEffect(() => {
-        if (!coachesTypes)
+        if(!coachesTypes.items)
             return
+        
+        setItems(coachesTypes.items.map((item, index) => ({ id: index, type: item })))
+    }, [coachesTypes.items])
 
-        console.log(coachesTypes)
-    }, [coachesTypes])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -28,8 +31,8 @@ const SendCoachTypesSettingsPage = () => {
             onTopActionClick={onTopActionClick}
         >
             <CoachTypesTable
-                items={coachesTypes}
-                loading={loading}
+                items={items}
+                loading={coachesTypes.loading}
             />
         </SettingsPage>
     )

@@ -3,7 +3,6 @@ import DataTable from 'UI/Tables/DataTable'
 import { columns } from './GradYearsTableConfig'
 
 const GradYearsTable = (props) => {
-
   return (
     <DataTable
       items={props.items}
@@ -12,6 +11,7 @@ const GradYearsTable = (props) => {
       onSelectionModelChange={props.onSelectionChange}
       loading={props.loading}
       checkboxSelection
+      hidePagination
     />
   )
 }

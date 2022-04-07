@@ -1,21 +1,23 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import SettingsPage from './SettingsPage'
 
-import GardYearsTable from 'UI/Tables/GradYears/GradYearsTable'
+import GradYearsTable from 'UI/Tables/GradYears/GradYearsTable'
 
 import { useGradeYears } from 'Api/Hooks'
 
 const GradYearsSettingsPage = () => {
-    const gradYears = useGradeYears().items?.map((item, index) => ({ id: index, year: item })) || []
-    const loading = useGradeYears().loading
+    const gradYears = useGradeYears()
+    // const loading = useGradeYears().loading
+
+    const [items, setItems] = useState([])
 
     useEffect(() => {
-        if(!gradYears)
+        if(!gradYears.items)
             return
         
-        console.log(gradYears)
-    }, [gradYears])
+        setItems(gradYears.items.map((item, index) => ({ id: index, year: item })))
+    }, [gradYears.items])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -27,9 +29,9 @@ const GradYearsSettingsPage = () => {
           topActionName='+ New Grad Year'
           onTopActionClick={onTopActionClick}
         >
-            <GardYearsTable
-              items={gradYears}
-              loading={loading}
+            <GradYearsTable
+              items={items}
+              loading={gradYears.loading}
             />
         </SettingsPage>
     )
