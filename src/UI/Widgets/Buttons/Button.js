@@ -8,7 +8,7 @@ export const IconButton = ({ Icon, color = 'primary', name, ...props }) => (
 	</MuiIconButton>
 )
 
-export default function Button({ name, style, ...props }) {
+export default function Button({ name, style, textColor, ...props }) {
 	const outlined = props.variant === 'outlined'
 
     return (
@@ -23,12 +23,14 @@ export default function Button({ name, style, ...props }) {
 		  sx={{
 			// color: 'text.primary'
 			borderColor: outlined ? '#ddd' : '',
+			borderWidth: '2px',
 			'&:disabled': {
-				opacity: 0.8
+				opacity: 0.8,
+				borderWidth: '2px',
 			},
 			'&:focus': outlined ? ({
 				backgroundColor: 'white',
-				border: '1px solid #ddd'
+				border: '2px solid #ddd'
 			}) : {}
 		  }}
           disableElevation
@@ -38,7 +40,7 @@ export default function Button({ name, style, ...props }) {
 			  style={{
 				fontWeight: "bold",
 				textTransform: "capitalize",
-				color: outlined ? (props.disabled ? '#999' : '#333') : 'inherit'
+				color: textColor || (outlined ? (props.disabled ? '#999' : '#333') : 'inherit')
 			  }}
 			>
 				{name}

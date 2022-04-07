@@ -27,7 +27,8 @@ const profileImg = {
 const fullName = { 
     field: 'fullName',
     headerName: 'Full Name',
-    width: 180,
+    // width: 180,
+    flex: 2,
     resizable: true,
     valueGetter: (params) => {
         let contact = params.row
@@ -39,7 +40,8 @@ const fullName = {
 const twitterName = { 
     field: 'twitter_profile',
     headerName: 'Twitter',
-    width: 130,
+    // width: 130,
+    flex: 1,
     // resizable: true,
     valueGetter: (params) => {
         let contact = params.row
@@ -55,6 +57,7 @@ const phone = {
     field: 'phone',
     headerName: 'Phone',
     width: 150,
+    // flex: 1,
     // resizable: true,
     valueGetter: (params) => formatPhoneNumber(params.row.phone)
 }
@@ -62,25 +65,29 @@ const phone = {
 const state = {
     field: 'state',
     headerName: 'State',
-    width: 60
+    width: 80
+    // flex: 1,
 }
 
 const gradYear = {
     field: 'grad_year',
     headerName: 'Grad Year',
     width: 90
+    // flex: 1,
 }
 
 const school = {
     field: 'high_school',
     headerName: 'School',
-    width: 120
+    // width: 120
+    flex: 1,
 }
 
 const status = {
     field: 'status',
     headerName: 'Status',
-    width: 120,
+    // width: 120,
+    flex: 1,
     valueGetter: (params) => params.row.status? params.row.status.status : ''
 }
 
