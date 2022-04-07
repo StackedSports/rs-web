@@ -326,6 +326,7 @@ export const SearchableOptionSelected = props => {
 			alignItems="center"
 			justify="center"
 			className={classes.tags}
+			style={props.style}
 		>
 			<Grid
 				style={{ height: 50 }}
