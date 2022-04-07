@@ -5,7 +5,7 @@ import curlirize from 'axios-curlirize';
 
 
 import { getFilterContactsCriteria } from './Parser'
-
+import { getPagination } from './Pagination'
 
 // initializing axios-curlirize with your axios instance
 // curlirize(axios);    
@@ -43,12 +43,7 @@ const AXIOS = (method, url, body) => {
                 // console.log(res)
                 if (res.status === 200 || res.status === 204 || res.status === 201) {
 
-                    let pagination = {
-                        currentPage: parseInt(res.headers['current-page']),
-                        totalPages: parseInt(res.headers['total-pages']),
-                        itemsPerPage: parseInt(res.headers['page-items']),
-                        totalItems: parseInt(res.headers['total-count'])
-                    }
+                    let pagination = getPagination(res)
 
                     resolve([res.data, pagination])
                 } else {
@@ -108,13 +103,7 @@ const GET = (url, body) => {
             .then(res => {
                 console.log(res)
                 if(res.status === 200 || res.status === 204 || res.status === 201) {
-                    let pagination = {
-                        currentPage: parseInt(res.headers['current-page']),
-                        totalPages: parseInt(res.headers['total-pages']),
-                        itemsPerPage: parseInt(res.headers['page-items']),
-                        totalItems: parseInt(res.headers['total-count'])
-                    }
-
+                    let pagination = getPagination(res)
                     resolve([res.data, pagination])
                 } else
                     reject(res)
@@ -237,7 +226,7 @@ export const getContacts = (page, perPage) => {
 
 export const filterContacts = (page, perPage, filters) => {
     const data = {
-        page,
+        page: page,
         per_page: perPage,
         criteria: {...getFilterContactsCriteria(filters)}
     }

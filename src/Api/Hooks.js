@@ -244,6 +244,7 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     }, [pagination.currentPage, filters])
 
     const filter = (filters) => {
+        pagination.getPage(1)
         setFilters(filters)
     }
 

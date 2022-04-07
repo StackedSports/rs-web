@@ -35,8 +35,15 @@ export default function ContactsPage(props) {
         if(!contacts.items)
             return
         
-        console.log(contacts.items)
+        //console.log(contacts.items)
     }, [contacts.items])
+
+    useEffect(() => {
+        if(!contacts.pagination)
+            return
+        
+        //console.log(contacts.pagination)
+    }, [contacts.pagination])
 
 
     const panelFiltersData = useMemo(() =>
@@ -126,7 +133,13 @@ export default function ContactsPage(props) {
                 onFilterChange: onPanelFilterChange
             }}
         >
-            <p>You have {contacts.pagination.totalItems} contacts</p>
+            <p style={{ fontWeight: 'bold' }}>
+                You have{' '}
+                <span style={{ color: '#3871DA'}}>
+                    {contacts.pagination.totalItems || 0}
+                </span>
+                {' '}contacts
+            </p>
 
             <ContactsTable
                 contacts={contacts.items}

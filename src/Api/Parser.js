@@ -1,11 +1,37 @@
 export const getFilterContactsCriteria = (filters) => {
     let criteria = {}
 
+    console.log(filters)
+
     if(filters.status) {
         criteria['status'] = []
 
         filters.status.forEach(status => {
             criteria.status.push(status.name)
+        })
+    }
+
+    if(filters.rank) {
+        criteria['ranks'] = []
+
+        filters.rank.forEach(rank => {
+            criteria.ranks.push(rank.name)
+        })
+    }
+
+    if(filters.gradeYear) {
+        criteria['years'] = []
+
+        filters.gradeYear.forEach(year => {
+            criteria.years.push(year.name)
+        })
+    }
+
+    if(filters.tags) {
+        criteria['tags'] = []
+
+        filters.tags.forEach(tag => {
+            criteria.tags.push(tag.name)
         })
     }
 

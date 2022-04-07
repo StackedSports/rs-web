@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
 
+export const getPagination = (res) => {
+    //console.log(res.headers)
+
+    return {
+        currentPage: parseInt(res.headers['current-page'] || '1'),
+        totalPages: parseInt(res.headers['total-pages'] || '0'),
+        itemsPerPage: parseInt(res.headers['page-items'] || '0'),
+        totalItems: parseInt(res.headers['total-count'] || '0')
+    }
+}
+
 export const paginationConfig = (currentPage, itemsPerPage) => ({ currentPage, itemsPerPage })
 
 export const usePagination = (currentPag, itemsPerPag) => {
@@ -26,59 +37,3 @@ export const usePagination = (currentPag, itemsPerPag) => {
         setPagination//{ setPagination, getPage } // utils
     ]
 }
-
-/**
- * 
- * @param {*} config = { number: currentPage, number: itemsPerPage } 
- * @returns 
- */
-//  export const usePagination = (initialConfig) => {
-//     const config = useRef({
-//         currentPage: initialConfig ? initialConfig.currentPage : 1,
-//         itemsPerPage: initialConfig ? initialConfig.itemsPerPage : 50,
-//         totalItems: 0,
-//         totalPages: 0,
-//     })
-//     const [pagination, setPagination] = useState(config.current)
-//     const [shouldUpdate, setShouldUpdate] = useState(false)
-
-//     useEffect(() => {
-//         if(config.current.currentPage != initialConfig?.currentPage
-//           || config.current.itemsPerPage != initialConfig?.itemsPerPage) {
-//             config.current = initialConfig
-//             setPagination(initialConfig)
-//             setShouldUpdate(!shouldUpdate)
-//         }
-//     }, [initialConfig])
-
-//     const getPage = (page) => {
-//         setPagination({
-//             ...pagination,
-//             currentPage: page
-//         })
-//     }
-
-//     const setTotalItems = (total) => {
-//         setPagination({
-//             ...pagination,
-//             totalItems: total
-//         })
-//     }
-
-//     const setTotalPages = (total) => {
-//         setPagination({
-//             ...pagination,
-//             totalPages: total
-//         })
-//     }
-
-//     const updateResult = (totalItems, totalPages) => {
-//         setPagination({
-//             ...pagination,
-//             totalPages,
-//             totalItems
-//         })
-//     }
-
-//     return {...pagination, shouldUpdate, getPage, setTotalItems, setTotalPages, updateResult}
-// }
