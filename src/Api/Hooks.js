@@ -146,6 +146,7 @@ export const useTags = () => {
                 console.log(error)
             })
     }, [])
+
     return tags
 }
 
@@ -309,6 +310,7 @@ export const useTeamMembers = () => {
         filter
     }
 }
+
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
 
