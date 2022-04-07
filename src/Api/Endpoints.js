@@ -280,6 +280,9 @@ export const getBoards = () => {
 export const getPositions = () => {
     return AXIOS('get', `team/positions`)
 }
+export const getStatuses = () => {
+    return AXIOS('get', `team/statuses`)
+}
 export const getAllColumns = () => {
     return AXIOS('get', `team/available_columns`)
 }

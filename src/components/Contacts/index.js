@@ -1066,7 +1066,7 @@ function Home(props) {
   });
   console.log(STATUS, "STATUS")
   var allStatuses = STATUS
-  const GradeYears = useGradeYears()
+  const GradeYears = useGradeYears().items
   console.log('GradeYears', GradeYears)
   var GRADYEAR = [];
   GradeYears?.map((item) => {

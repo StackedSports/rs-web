@@ -71,6 +71,7 @@ export const settingsRoutes = {
         tags: '/settings/tags',
         gradYears: '/settings/grad-years',
         positions: '/settings/positions',
+        statuses: '/settings/statuses',
     },
 
 }

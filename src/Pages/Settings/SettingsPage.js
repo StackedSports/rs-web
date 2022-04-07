@@ -20,6 +20,9 @@ const filters = [
             // Filters
             { id: 'team-members', name: 'Team Members', path: settingsRoutes.team.members },
             { id: 'tags', name: 'Tags', path: settingsRoutes.team.tags },
+            { id: 'grad-years', name: 'Grad Years', path: settingsRoutes.team.gradYears },
+            { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
+            { id: 'statuses', name: 'Statuses', path: settingsRoutes.team.statuses },
         ]
     }
 ]

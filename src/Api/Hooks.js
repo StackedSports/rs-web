@@ -134,7 +134,7 @@ export const addUser = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
-    
+
     useEffect(() => {
         getTags()
             .then(([tags]) => {
@@ -177,7 +177,7 @@ export const useTags2 = () => {
         let tmp = []
 
         tagsRes.current.forEach(tag => {
-            if(tag.name.toLowerCase().includes(value.toLowerCase()))
+            if (tag.name.toLowerCase().includes(value.toLowerCase()))
                 tmp.push(tag)
         })
 
@@ -217,7 +217,7 @@ export const useContact = (id) => {
 export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage) 
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
@@ -310,6 +310,8 @@ export const useTeamMembers = () => {
         filter
     }
 }
+
+
 
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
@@ -458,20 +460,26 @@ export const useStatus = () => {
 // TODO:
 export const useGradeYears = () => {
     const [GradeYears, setGradeYears] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getGradeYears()
             .then(([GradeYears]) => {
                 //console.log('ApiHooks: getGradeYears -----')
                 //console.log(GradeYears)
+
                 setGradeYears(GradeYears)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return GradeYears
+    return {
+        items: GradeYears,
+        loading,
+    }
 }
 
 export const useTextPlaceholders = () => {
@@ -495,20 +503,25 @@ export const useTextPlaceholders = () => {
 // TODO:
 export const usePositions = () => {
     const [Positions, setPositions] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getPositions()
             .then(([Positions]) => {
                 //console.log('ApiHooks: getPositions -----')
-                //console.log(Positions)
+                console.log(Positions)
                 setPositions(Positions)
             })
             .catch(error => {
                 console.log(error)
-            })
+            }).finally(() => setLoading(false))
     }, [])
 
-    return Positions
+    return {
+        items: Positions,
+        loading
+    }
 }
 
 export const useSnippets = () => {
