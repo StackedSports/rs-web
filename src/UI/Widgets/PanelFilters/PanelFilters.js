@@ -75,9 +75,10 @@ export const PanelFilters = ({ open, filters, onFilterChange }) => {
                 {selectedFilters && Object.keys(selectedFilters).map(key =>
                     selectedFilters[key].map((filter, index) => (
                         <SearchableOptionSelected
-                            key={filter.id}
-                            item={`${filters[key].label}: ${filter.name}`}
-                            onRemove={(e) => onRemoveFilter(key, filter)}
+                          style={{marginLeft: 0}}
+                          key={filter.id}
+                          item={`${filters[key].label}: ${filter.name}`}
+                          onRemove={(e) => onRemoveFilter(key, filter)}
                         />
                     )))}
             </Stack>
