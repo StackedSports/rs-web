@@ -27,7 +27,7 @@ const SendCoachTypesSettingsPage = () => {
     return (
         <SettingsPage
             title='Send As Coach Types'
-            topActionName='+ New Rank'
+            topActionName='+ New Coach Type'
             onTopActionClick={onTopActionClick}
         >
             <CoachTypesTable
