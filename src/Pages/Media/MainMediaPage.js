@@ -51,6 +51,8 @@ export const MainMediaPage = (props) => {
         setViewGrid(oldViewGrid => !oldViewGrid)
     }
 
+    
+
     return (
         <MediaPage
           viewGrid={viewGrid}
