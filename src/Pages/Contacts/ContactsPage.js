@@ -91,7 +91,7 @@ export default function ContactsPage(props) {
             name: 'Filter',
             icon: Tune,
             onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-            variant: 'outlined',
+            variant: 'contained',
         }
     ]
 

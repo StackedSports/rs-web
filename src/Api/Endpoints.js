@@ -292,8 +292,10 @@ export const getUser = () => {
 
 export const getMessages = (page = 1, perPage = 10) => {
     let data = {
-        include_archived: 'false',
-        // criteria: {}
+        criteria: {
+            include_archived: 'false',
+            message_status: ['sent', 'in progress', 'error']
+        }
     }
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data)

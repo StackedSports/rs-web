@@ -7,8 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
-import { AppThemeProvider } from './theme';
-
 // import { ThemeProvider } from '@mui/styles';
 
 import Signup from "./components/signup";
@@ -38,10 +36,11 @@ import {
   routes
 } from 'Routes'
 
+import ThemeProvider from 'Theme/ThemeProvider'
 
 function App() {
   return (
-    <AppThemeProvider>
+    <ThemeProvider>
       <div className="body">
         <Router>
           <Switch>
@@ -70,7 +69,7 @@ function App() {
           </Switch>
         </Router>
       </div>
-    </AppThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -9,42 +9,38 @@ export const IconButton = ({ Icon, color = 'primary', name, ...props }) => (
 )
 
 export default function Button({ name, style, textColor, ...props }) {
-	const outlined = props.variant === 'outlined'
+	// if(name === 'Send Message') {
+	// 	console.log('---- Send Message ----')
+	// 	console.log(style)
+	// 	console.log(textColor)
+	// 	console.log(props)
+	// 	console.log('----------------------')
+	// }
+
+	let buttonStyle = {
+		...style
+	}
+
+	if(textColor)
+		buttonStyle['color'] = textColor
 
     return (
         <MuiButton
-          style={{
-            minWidth: 120,
-            padding: '8px 16px',
-            textTransform: 'Capitalize',
-            fontWeight: 'bold',
-            ...style
-          }}
-		  sx={{
-			// color: 'text.primary'
-			borderColor: outlined ? '#ddd' : '',
-			borderWidth: '2px',
-			'&:disabled': {
-				opacity: 0.8,
-				borderWidth: '2px',
-			},
-			'&:focus': outlined ? ({
-				backgroundColor: 'white',
-				border: '2px solid #ddd'
-			}) : {}
-		  }}
+          style={buttonStyle}
           disableElevation
           {...props}
         >
-			<Typography
+			{name}
+			{/* <Typography
 			  style={{
-				fontWeight: "bold",
-				textTransform: "capitalize",
+				// fontWeight: "700",
+				fontFamily: 'ProximaNovaSemibold',
+					textTransform: "capitalize",
 				color: textColor || (outlined ? (props.disabled ? '#999' : '#333') : 'inherit')
 			  }}
 			>
 				{name}
-			</Typography>
+			</Typography> */}
         </MuiButton>
     )
 }
