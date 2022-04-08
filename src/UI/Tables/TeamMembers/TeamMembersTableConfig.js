@@ -7,7 +7,7 @@ const getImg = (profile_image) => {
         profile_image : AvatarImg
 }
 
-const profileImg = { 
+const profileImg = {
     field: 'profile',
     headerName: '',
     width: 50,
@@ -17,14 +17,14 @@ const profileImg = {
         // console.log(params)
         return (
             <img
-              src={getImg(params.value)}
-              style={{ width: 30, height: 30, borderRadius: "50%" }}
+                src={getImg(params.value)}
+                style={{ width: 30, height: 30, borderRadius: "50%" }}
             />
         )
     }
 }
 
-const fullName = { 
+const fullName = {
     field: 'fullName',
     headerName: 'Full Name',
     // width: 250,
@@ -37,7 +37,7 @@ const fullName = {
     }
 }
 
-const twitterName = { 
+const twitterName = {
     field: 'twitter_profile',
     headerName: 'Twitter',
     // width: 180,
@@ -46,14 +46,14 @@ const twitterName = {
     valueGetter: (params) => {
         let contact = params.row
 
-        if(contact.twitter_profile && contact.twitter_profile.screen_name)
+        if (contact.twitter_profile && contact.twitter_profile.screen_name)
             return `@${params.row.twitter_profile?.screen_name}`
         else
             return ''
     }
 }
 
-const phone = { 
+const phone = {
     field: 'phone',
     headerName: 'Phone',
     width: 180,
@@ -63,12 +63,22 @@ const phone = {
 }
 
 
+const smsNumber = {
+    field: 'smsNumber',
+    headerName: 'Sms Number',
+    width: 160,
+    flex: 1,
+    // resizable: true,
+    valueGetter: (params) => params.row.sms_number ? formatPhoneNumber(params.row.sms_number) : ''
+}
+
+
 const status = {
     field: 'status',
     headerName: 'Status',
     width: 120,
     // flex: 1,
-    valueGetter: (params) => params.row.status? params.row.status : ''
+    valueGetter: (params) => params.row.status ? params.row.status : ''
 }
 
 const role = {
@@ -76,7 +86,7 @@ const role = {
     headerName: 'Role',
     width: 120,
     // flex: 1,
-    valueGetter: (params) => params.row.role? params.row.role : ''
+    valueGetter: (params) => params.row.role ? params.row.role : ''
 }
 
 export const columns = [
@@ -84,6 +94,7 @@ export const columns = [
     fullName,
     twitterName,
     phone,
+    smsNumber,
     role,
     status
 ]
