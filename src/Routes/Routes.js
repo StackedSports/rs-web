@@ -75,9 +75,9 @@ export const settingsRoutes = {
         ranks: '/settings/ranks',
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
-        placeholders: '/settings/placeholders',
-        getSendCoachTypes: '/settings/get_send_as_coaches',
-        peopleTypes: '/settings/people_types',
+        // placeholders: '/settings/placeholders',
+        // getSendCoachTypes: '/settings/get_send_as_coaches',
+        // peopleTypes: '/settings/people_types',
     },
 
 }
