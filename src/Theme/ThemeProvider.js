@@ -10,9 +10,6 @@
     CssBaseline
 } from '@mui/material';
 
- /**
-  * Material UI theme "font" colors
-  */
 let theme = createTheme({
     pallete: {
         mode: 'light',
@@ -21,24 +18,23 @@ let theme = createTheme({
             contrastText: '#fff',
         },
         secondary: {
-            main: '#ffb74d', // Orange 300
+            main: '#ffb74d',
             contrastText: '#000',
         },
         info: {
-            main: '#0277bd', // Light Blue 800
+            main: '#0277bd',
             contrastText: '#FFFFFF',
         },
         success: {
-            main: '#2e7d32', // Green 800
+            main: '#2e7d32',
             contrastText: '#FFFFFF',
         },
         warning: {
-            main: '#f9a825', // Yellow 800
-            // contrastText: '#000000',
+            main: '#f9a825',
             contrastText: '#FFFFFF',
         },
         error: {
-            main: '#c62828', // Red 800
+            main: '#c62828',
             contrastText: '#FFFFFF',
         },
     }
@@ -60,7 +56,8 @@ theme = createTheme(theme, {
                     border: '1px solid #ddd',
                     '&:focus': {
                         backgroundColor: 'white',
-                        border: `1px solid ${theme.palette.primary.main}`
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        color: theme.palette.primary.main
                     }
                 },
                 contained: {
