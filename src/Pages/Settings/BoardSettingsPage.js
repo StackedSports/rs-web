@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 
 import SettingsPage from './SettingsPage'
 
-import PlatformTable from 'UI/Tables/Platform/PlatformTable'
+import BoardTable from 'UI/Tables/Board/BoardTable'
 
 import { usePlatform } from 'Api/Hooks'
 
-const PlatformsSettingsPage = () => {
+const BoardSettingsPage = () => {
     const platform = usePlatform()
 
     useEffect(() => {
@@ -22,11 +22,11 @@ const PlatformsSettingsPage = () => {
 
     return (
         <SettingsPage
-            title='Platform'
-            topActionName='+ New Platform'
+            title='Board'
+            topActionName='+ New Board'
             onTopActionClick={onTopActionClick}
         >
-            <PlatformTable
+            <BoardTable
                 items={platform.items}
                 loading={platform.loading}
             />
@@ -34,4 +34,4 @@ const PlatformsSettingsPage = () => {
     )
 }
 
-export default PlatformsSettingsPage
+export default BoardSettingsPage
