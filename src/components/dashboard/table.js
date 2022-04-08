@@ -149,8 +149,8 @@ export default function AcccessibleTable(props) {
                           fontSize: 13,
                         }}
                       >
-                        {(item.recipients.filter_list.length != 0 &&
-                          item.recipients.filter_list[0].name) ||
+                        {(item.recipients?.filter_list?.length != 0 &&
+                          item.recipients?.filter_list[0]?.name) ||
                           "Individuals"}{" "}
                         {item.recipients && "(" + item.recipients.count + ")"}
                       </TableCell>

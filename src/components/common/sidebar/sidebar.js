@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import { SidebarData } from "./sidebarData";
 import SubMenu from "./subMenu";
 import { IconContext } from "react-icons/lib";
-import DashboardLogo from "../../../images/dashboardLogo.png";
+import DashboardLogo from "../../../images/stacked-favicon.png";
 import StarLogo from "../../../images/star.PNG";
 import Upload from "../../../images/Upload.PNG";
 import { FiSearch } from "react-icons/fi";
@@ -219,8 +219,9 @@ const LogoContainer = styled.div`
 `;
 
 const NavLogo = styled.img`
-  height: 37px;
-  width: 60px;
+  height: 40px;
+  width: 40px;
+  object-fill: contain;
   justify-content: center;
   align-items: center;
 `;

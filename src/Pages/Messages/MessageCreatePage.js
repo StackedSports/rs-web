@@ -50,7 +50,7 @@ export default function MessageCreatePage(props) {
     // const contacts = useContacts()
     // const ranks = useRanks()
 
-    const fromContactsId = useRef(props.match.params.contacts)
+    const fromContactsId = useRef(props.match?.params?.contacts)
     
 
     // TODO: user should be coming from user context, not from
@@ -480,6 +480,9 @@ export default function MessageCreatePage(props) {
     const onCreateMessage = (control) => {
         console.log('create message: ' + control)
 
+        if(loading)
+            return
+
         if(control !== 'save' && control !== 'preview')
             return
 
@@ -498,6 +501,39 @@ export default function MessageCreatePage(props) {
         // return
 
         let messageData = {}
+
+        // messageData = {
+        //     contact_ids: ['wjYkOvlTvgVB', 'yBPRjbTGjPMY', 'xMgndzTlZpXK'],
+        //     platform: "Personal Text",
+        //     user_id: "vebEQEiMPqbl",
+        //     body: 'Hey'
+        // }
+
+        // console.log(messageData)
+
+        // createMessage(messageData)
+        //     .then(result => {
+        //         console.log(result)
+        //         let message = result.data
+                
+        //         if(save)
+        //             setRedirect(`${messageRoutes.all}`)
+        //         else
+        //             setRedirect(`${messageRoutes.details}/${message.id}`)
+
+        //         // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+
+        //         if(save)
+        //             showErrorMessage('We could not save your message')
+        //         else
+        //             showErrorMessage('Something went wrong. We could not create your message')
+        //     })
+        //     .finally(() => setLoading(false))
+
+        // return
 
         // Twitter, SMS, Personal Text
 

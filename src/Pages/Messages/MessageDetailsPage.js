@@ -474,7 +474,7 @@ const MessageDetailsPage = (props) => {
         }
 
         return actions
-    }, [message.item])
+    }, [message.item, selectedRecipients])
 
     const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
