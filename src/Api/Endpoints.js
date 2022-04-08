@@ -320,7 +320,11 @@ export const getPlaceholders = (page, perPage) => {
     return AXIOS('get', `media/placeholders?page=${page}&per_page=${perPage}`)
 }
 
-export const getMedia = (page, perPage) => {
+export const getMedia = (id) => {
+    return AXIOS('get', `media/${id}`)
+}
+
+export const getMedias = (page, perPage) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
 }

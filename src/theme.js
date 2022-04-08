@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider, StyledEngineProvider, CssBaseline } from '@
  */
 const FRONT_COLORS = {
   primary: {
-    main: '#3871da', // Green 300
+    main: '#3871da', 
     contrastText: '#000000',
   },
   secondary: {
@@ -36,31 +36,51 @@ const FRONT_COLORS = {
   },
 };
 
+const TYPOGRAPHY = {
+  typography: {
+    fontFamily: [
+      'ProximaNovaRegular',
+      'Arial',
+      'sans-serif',
+    ].join(','),
+    h1: {
+      fontFamily: 'ProximaNovaRegular',
+    },
+    subtitle1: {
+      fontFamily: 'ProximaNovaRegular',
+    },
+    body1: {
+      fontFamily: 'ProximaNovaRegular',
+    },
+    subtitle2: {
+      fontFamily: 'ProximaNovaRegular',
+      fontSize: '50px',
+    },
+    title:{
+      fontFamily: 'ProximaNovaRegular',
+      fontSize: '18px',
+      fontWeight: 700,
+    },
+    title2:{
+      fontFamily: 'ProximaNovaSemibold',
+      fontSize: '16px',
+    }
+  },
+}
+
 /**
  * Material UI theme config for "Light Mode"
  */
 const LIGHT_THEME = {
   palette: {
     mode: 'light',
-    typography: {
-      fontFamily: [
-        'ProximaNovaRegular',
-        'Arial',
-        'sans-serif',
-      ].join(','),
-      h1: {
-        fontFamily: 'ProximaNovaRegular',
-      },
-      subtitle1: {
-        fontFamily: 'ProximaNovaRegular',
-      },
-    },
     background: {
       paper: '#f5f5f5', // Gray 100 - Background of "Paper" based component
       default: '#FFFFFF',
     },
     ...FRONT_COLORS,
   },
+  ...TYPOGRAPHY,
 };
 
 /**
