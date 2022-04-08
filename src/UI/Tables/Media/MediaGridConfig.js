@@ -8,8 +8,6 @@ const name = {
     valueGetter: (params) => params.row.name || params.row.file_name
 }
 
-
-
 const file = {
     field: 'urls',
     headerName: 'File',

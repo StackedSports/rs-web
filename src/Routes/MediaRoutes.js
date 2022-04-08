@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom'
 
- import MediaPage from 'Pages/Media/MediaPage'
+ import MainMediaPage from 'Pages/Media/MainMediaPage'
 
 import { mediaRoutes } from './Routes'
 
@@ -9,7 +9,7 @@ const MediaRoutes = (props) => (
         <Route
           exact
           path={mediaRoutes.all}
-          component={MediaPage}
+          component={MainMediaPage}
         />
         {/* <Route
           // exact
