@@ -26,10 +26,12 @@ import MediaPage from './MediaPage'
  * 
  */
 
-export const MainMediaPage = () => {
+export const MainMediaPage = (props) => {
     const media = useMedia(1, 5)
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
+
+    const [viewGrid, setViewGrid] = useState(true)
 
     // console.log("placeholders", placeholders)
 
@@ -45,10 +47,14 @@ export const MainMediaPage = () => {
         })
     }, [])
 
-    
+    const onSwitchView = () => {
+        setViewGrid(oldViewGrid => !oldViewGrid)
+    }
 
     return (
         <MediaPage
+          viewGrid={viewGrid}
+          onSwitchView={onSwitchView}
             // title='Media'
             // topActionName='+ Add Media'
             // onTopActionClick={onTopActionClick}
@@ -86,7 +92,7 @@ export const MainMediaPage = () => {
             <MediaTable
               items={media.items}
               loading={media.loading}
-              view={props.viewGrid ? 'grid' : 'list'}
+              view={viewGrid ? 'grid' : 'list'}
               type="media"
               disablePagination
             />
@@ -108,7 +114,7 @@ export const MainMediaPage = () => {
             <MediaTable
               items={placeholders.items}
               loading={placeholders.loading}
-              view={props.viewGrid ? 'grid' : 'list'}
+              view={viewGrid ? 'grid' : 'list'}
               type="placeholder"
               disablePagination
             />

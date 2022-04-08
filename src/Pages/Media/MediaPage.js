@@ -1,10 +1,12 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useRef, cloneElement } from 'react'
 import { GridView, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
+
+import { useTags } from 'Api/Hooks'
 
 /**
  * TODO: delete this
@@ -14,14 +16,14 @@ import { Divider } from 'UI'
  * 
  */
 
-export const MediaPage = () => {
+export const MediaPage = (props) => {
     // const media = useMedia(1, 5)
     // const placeholders = usePlaceholders(1, 5)
-    // const tags = useTags()
+    const tags = useTags()
 
     // // console.log("placeholders", placeholders)
 
-    // const [mediaTypes, setMediaTypes] = useState([])
+    const [mediaTypes, setMediaTypes] = useState([])
 
 
     // useEffect(() => {
@@ -33,7 +35,7 @@ export const MediaPage = () => {
     //     })
     // }, [])
 
-    const [viewGrid, setViewGrid] = useState(true)
+    
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     // const [selectedFilters, setSelectedFilters] = useState({})
 
@@ -51,8 +53,8 @@ export const MediaPage = () => {
         {
             name: 'Change view',
             type: 'icon',
-            icon: viewGrid ? GridView : FormatListBulletedIcon,
-            onClick: () => setViewGrid(!viewGrid)
+            icon: props.viewGrid ? GridView : FormatListBulletedIcon,
+            onClick: props.onSwitchView
         },
         {
             name: 'Action',
@@ -109,6 +111,8 @@ export const MediaPage = () => {
         setSelectedFilters(filter)
     }
 
+    
+
     return (
         <MainLayout
             title={props.title || 'Media'}
@@ -122,9 +126,9 @@ export const MediaPage = () => {
                 onFilterChange: onPanelFilterChange
             }}
         >
-
             <Divider />
 
+            {/* {() => cloneElement(props.children, { viewGrid })} */}
             {props.children}
 
         </MainLayout>
