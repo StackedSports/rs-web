@@ -5,22 +5,84 @@ import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import { format } from 'date-fns'
 
-import { usePlaceholder } from 'Api/Hooks'
-
 const Placeholder = (props) => {
-    const placeholder = usePlaceholder(props.placeholder.id)
 
-    console.log(placeholder)
+    const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls.original)
 
     return (
-        <div>
+        <Box
+            width={250}
+            height={250}
+            position='relative'
+            overflow='hidden'
+        >
+            <Box
+                sx={{
+                    position: 'absolute',
+                    width: '50%',
+                    height: '100%',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1,
+                }}
+            >
+                <img
+                    src={images[0]}
+                    alt='placeholder'
+                    height='100%'
+                    width='100%'
+                    style={{ objectFit: 'contain' }}
+                />
+            </Box>
 
-        </div>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    width: '50%',
+                    height: '100%',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-100%, -50%)  scale(0.7)',
+                    zIndex: 0,
+                }}
+            >
+                <img
+                    src={images[1] ? images[1] : images[0]}
+                    alt='placeholder'
+                    height='100%'
+                    width='100%'
+                    style={{ objectFit: 'contain' }}
+                />
+            </Box>
+
+            <Box
+                sx={{
+                    position: 'absolute',
+                    width: '50%',
+                    height: '100%',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(0, -50%) scale(0.7)',
+                    zIndex: 0,
+
+                }}
+            >
+                <img
+                    src={images[2] ? images[2] : images[0]}
+                    alt='placeholder'
+                    height='100%'
+                    width='100%'
+                    style={{ objectFit: 'contain' }}
+                />
+            </Box>
+
+
+        </Box>
     )
 }
 
 const Image = (props) => {
-
 
     return (
         <img
@@ -29,29 +91,36 @@ const Image = (props) => {
                 width: 250,
                 height: 250
             }}
-            src={props.media.urls.original}
+            src={props.media?.urls?.original}
         />
     )
 }
 
-const MediaPreview = ({ type, containerStyle, ...props }) => {
+const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
     // console.log(props.media)
 
     const isMedia = type === 'media'
+
+    const onMediaClick = () => {
+        if (onClick && typeof onClick === 'function') {
+            onClick(props.media)
+        }
+    }
 
     return (
         <Grid
             container
             direction="column"
+            onClick={onMediaClick}
             style={{ ...styles.container, ...containerStyle }}
         >
-            <Grid style={styles.mediaContainer}>
+            <Box style={styles.mediaContainer}>
                 {isMedia ? (
                     <Image media={props.media} />
                 ) : (
                     <Placeholder placeholder={props.media} />
                 )}
-            </Grid>
+            </Box>
             <Box style={{ padding: 10, width: '100%' }}>
                 <Stack direction='row'>
                     {isMedia ? (
@@ -60,7 +129,7 @@ const MediaPreview = ({ type, containerStyle, ...props }) => {
                         <PhotoLibraryIcon style={styles.icon} />
                     )}
 
-                    <Typography noWrap style={styles.mediaName}>{props.media?.name ? props.media?.name : props.media?.file_name }</Typography>
+                    <Typography noWrap style={styles.mediaName}>{props.media?.name ? props.media?.name : props.media?.file_name}</Typography>
                 </Stack>
                 {props.media?.created_at && (
                     <Typography noWrap variant='caption'>Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}</Typography>
