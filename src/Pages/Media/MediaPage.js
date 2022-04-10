@@ -8,14 +8,6 @@ import { Divider } from 'UI'
 
 import { useTags } from 'Api/Hooks'
 
-/**
- * TODO: delete this
- * 
- * Mudanças: MediaTable, MediaTableConfig, Decoupling of MediaView,
- * set paginated media to 5 items per page 
- * 
- */
-
 export const MediaPage = (props) => {
 
     const tags = useTags()
