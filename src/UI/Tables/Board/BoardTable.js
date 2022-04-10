@@ -1,8 +1,8 @@
 import DataTable from 'UI/Tables/DataTable'
 
-import { columns } from './PlatformTableConfig'
+import { columns } from './BoardTableConfig'
 
-const PlatformTable = (props) => {
+const BoardTable = (props) => {
 
   return (
     <DataTable
@@ -16,4 +16,4 @@ const PlatformTable = (props) => {
   )
 }
 
-export default PlatformTable
+export default BoardTable
