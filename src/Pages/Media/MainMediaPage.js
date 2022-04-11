@@ -10,7 +10,6 @@ import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
-import { getMediaTypes } from 'Api/Endpoints'
 
 import { mediaRoutes } from 'Routes/Routes';
 import MediaPage from './MediaPage'
@@ -23,18 +22,6 @@ export const MainMediaPage = (props) => {
     const [viewGrid, setViewGrid] = useState(true)
 
     // console.log("placeholders", placeholders)
-
-    const [mediaTypes, setMediaTypes] = useState([])
-
-
-    useEffect(() => {
-        getMediaTypes().then(res => {
-            setMediaTypes(res[0].map(item => ({
-                id: item.key,
-                name: item.type
-            })))
-        })
-    }, [])
 
     const onSwitchView = () => {
         setViewGrid(oldViewGrid => !oldViewGrid)

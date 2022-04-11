@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
 
 
@@ -7,6 +7,7 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
 
 import { useTags } from 'Api/Hooks'
+import { getMediaTypes } from 'Api/Endpoints'
 
 export const MediaPage = (props) => {
 
@@ -17,6 +18,15 @@ export const MediaPage = (props) => {
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
     // const [selectedFilters, setSelectedFilters] = useState({})
+
+    useEffect(() => {
+        getMediaTypes().then(res => {
+            setMediaTypes(res[0].map(item => ({
+                id: item.key,
+                name: item.type
+            })))
+        })
+    }, [])
 
     const filters = [
         { // Category

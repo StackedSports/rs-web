@@ -42,7 +42,7 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagi
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {items && items.map(item => (
                             <MediaPreview
-                                key={item.id}
+                                key={item.hashid || item.id}
                                 type={type}
                                 media={item}
                                 onClick={onClickItem}
