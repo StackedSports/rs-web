@@ -43,6 +43,22 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
+    if(filters.areaCoach) {
+        criteria['area_coaches'] = []
+
+        filters.areaCoach.forEach(areaCoach => {
+            criteria.area_coaches.push(areaCoach.id)
+        })
+    }
+
+    if(filters.positionCoach) {
+        criteria['position_coaches'] = []
+
+        filters.positionCoach.forEach(positionCoach => {
+            criteria.position_coaches.push(positionCoach.id)
+        })
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags
