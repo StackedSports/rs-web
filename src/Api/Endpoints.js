@@ -4,7 +4,13 @@ import moment from "moment";
 import curlirize from 'axios-curlirize';
 
 
-import { getFilterContactsCriteria } from './Parser'
+import { 
+    getFilterContactsCriteria,
+    getFilterMessagesCriteria 
+} from './Parser'
+
+import { objectNotNull } from 'utils/Validation'
+
 import { getPagination } from './Pagination'
 
 // initializing axios-curlirize with your axios instance
@@ -290,13 +296,15 @@ export const getUser = () => {
     return AXIOS('get', 'me')
 }
 
-export const getMessages = (page = 1, perPage = 10) => {
+export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
-        criteria: {
-            include_archived: 'false',
-            message_status: ['sent', 'in progress', 'error']
-        }
+        criteria: {...getFilterMessagesCriteria(filters)}
     }
+
+    if(!objectNotNull(data.criteria))
+        delete data.criteria
+
+    console.log(data.criteria)
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)
@@ -322,7 +330,11 @@ export const getPlaceholders = (page, perPage) => {
     return AXIOS('get', `media/placeholders?page=${page}&per_page=${perPage}`)
 }
 
-export const getMedia = (page, perPage) => {
+export const getMedia = (id) => {
+    return AXIOS('get', `media/${id}`)
+}
+
+export const getMedias = (page, perPage) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
 }

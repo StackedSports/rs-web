@@ -12,6 +12,7 @@ import {
     getTagsWithMessages,
     getPlatform,
     getMedia,
+    getMedias,
     getBoards,
     getPlaceholder,
     getPlaceholders,
@@ -638,7 +639,32 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
     }
 }
 
-export const useMedia = (currentPage, itemsPerPage) => {
+export const useMedia = (id) => {
+    const [media, setMedia] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getMedia(id)
+            .then(([media, pagination]) => {
+                console.log('API media')
+                console.log(media)
+                setMedia(media)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id])
+
+    return {
+        item: media,
+        loading
+    }
+}
+
+export const useMedias = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [media, setMedia] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
@@ -646,7 +672,7 @@ export const useMedia = (currentPage, itemsPerPage) => {
     useEffect(() => {
         setLoading(true)
 
-        getMedia(pagination.currentPage, pagination.itemsPerPage)
+        getMedias(pagination.currentPage, pagination.itemsPerPage)
             .then(([media, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -725,15 +751,17 @@ export const useMessageRecipients = (id, refresh) => {
 
 // getMessages
 
-export const useMessages = (currentPage, itemsPerPage) => {
+export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
     const [messages, setMessages] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
+    const [filters, setFilters] = useState(initialFilters || null)
+
     useEffect(() => {
         setLoading(true)
 
-        getMessages(pagination.currentPage, pagination.itemsPerPage)
+        getMessages(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([messages, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -745,12 +773,23 @@ export const useMessages = (currentPage, itemsPerPage) => {
             })
             .finally(() => setLoading(false))
 
-    }, [pagination.currentPage])
+    }, [pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
 
     return {
         items: messages,
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 

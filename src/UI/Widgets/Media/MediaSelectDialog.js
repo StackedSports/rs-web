@@ -8,7 +8,7 @@ import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 import MediaGrid from 'UI/Tables/Media/MediaGrid'
 
-import { usePlaceholders, useBoards, useMedia } from 'Api/Hooks'
+import { usePlaceholders, useBoards, useMedias } from 'Api/Hooks'
 
 import useArray from 'Hooks/ArrayHooks';
 
@@ -23,7 +23,7 @@ export default function MediaSelectDialog(props) {
     const placeholders = usePlaceholders(1, 25)
     const [placeholderSelectedId, setPlaceholderSelectedId] = useState('')
     // console.log(paginationConfig(1, 25))
-    const media = useMedia(1, 25)
+    const media = useMedias(1, 25)
     const [mediaSelectedId, setMediaSelectedId] = useState('')
     // console.log(media)
     // console.log(mediaPagination)

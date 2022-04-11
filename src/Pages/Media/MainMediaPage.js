@@ -1,33 +1,22 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
-import { GridView, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
+import { useState, useMemo, useEffect } from 'react'
+import { LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
 import { Stack, Typography, Box } from '@mui/material'
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 
 import { Link } from 'react-router-dom'
 
-import MainLayout from 'UI/Layouts/MainLayout'
+
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
-import { usePlaceholders, useMedia, useTags } from 'Api/Hooks'
+import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
-
-// import { MediaView } from './MediaView'
 
 import { mediaRoutes } from 'Routes/Routes';
 import MediaPage from './MediaPage'
 
-/**
- * TODO: delete this
- * 
- * Mudanças: MediaTable, MediaTableConfig, Decoupling of MediaView,
- * set paginated media to 5 items per page 
- * 
- */
-
 export const MainMediaPage = (props) => {
-    const media = useMedia(1, 5)
+    const media = useMedias(1, 5)
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
 
@@ -57,25 +46,7 @@ export const MainMediaPage = (props) => {
         <MediaPage
           viewGrid={viewGrid}
           onSwitchView={onSwitchView}
-            // title='Media'
-            // topActionName='+ Add Media'
-            // onTopActionClick={onTopActionClick}
-            // filters={filters}
-            // actions={mainActions}
-            // propsPanelFilters={{
-            //     open: showPanelFilters,
-            //     filters: panelFiltersData,
-            //     onFilterChange: onPanelFilterChange
-            // }}
         >
-
-            {/* <MediaView
-              isGrid={viewGrid}
-              isLoading={media.loading}
-              items={media.items}
-              title='Quick Access'
-              disablePagination
-            /> */}
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
@@ -99,6 +70,8 @@ export const MainMediaPage = (props) => {
               disablePagination
             />
 
+            <Divider />
+
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Placeholders
@@ -120,15 +93,6 @@ export const MainMediaPage = (props) => {
               type="placeholder"
               disablePagination
             />
-
-            {/* <MediaView
-              isGrid={viewGrid}
-              isLoading={placeholders.loading}
-              items={placeholders.items}
-              title='Placeholders'
-              type='placeholder'
-              disablePagination
-            /> */}
 
             <Box my={2} >
                 <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>

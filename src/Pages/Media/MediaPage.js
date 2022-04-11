@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef, cloneElement } from 'react'
-import { GridView, AutoFixHigh, Tune, LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
+import { useState, useMemo } from 'react'
+import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
+
 
 
 import MainLayout from 'UI/Layouts/MainLayout'
@@ -8,35 +8,14 @@ import { Divider } from 'UI'
 
 import { useTags } from 'Api/Hooks'
 
-/**
- * TODO: delete this
- * 
- * Mudanças: MediaTable, MediaTableConfig, Decoupling of MediaView,
- * set paginated media to 5 items per page 
- * 
- */
-
 export const MediaPage = (props) => {
-    // const media = useMedia(1, 5)
-    // const placeholders = usePlaceholders(1, 5)
-    const tags = useTags()
 
-    // // console.log("placeholders", placeholders)
+    const tags = useTags()
 
     const [mediaTypes, setMediaTypes] = useState([])
 
-
-    // useEffect(() => {
-    //     getMediaTypes().then(res => {
-    //         setMediaTypes(res[0].map(item => ({
-    //             id: item.key,
-    //             name: item.type
-    //         })))
-    //     })
-    // }, [])
-
-    
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+
     // const [selectedFilters, setSelectedFilters] = useState({})
 
     const filters = [
@@ -53,7 +32,7 @@ export const MediaPage = (props) => {
         {
             name: 'Change view',
             type: 'icon',
-            icon: props.viewGrid ? GridView : FormatListBulletedIcon,
+            icon: props.viewGrid ? GridView : FormatListBulleted,
             onClick: props.onSwitchView
         },
         {
@@ -111,7 +90,7 @@ export const MediaPage = (props) => {
         setSelectedFilters(filter)
     }
 
-    
+
 
     return (
         <MainLayout

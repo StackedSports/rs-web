@@ -48,7 +48,16 @@ export const messageRoutes = {
     create: '/messages/create',
     edit: '/messages/edit',
     details: '/messages/details',
-    all: '/messages'
+    all: '/messages',
+    filters: {
+        main: '/messages/filter',
+        drafts: '/messages/filter/drafts',
+        scheduled: '/messages/filter/pending',
+        inProgress: '/messages/filter/in_progress',
+        finished: '/messages/filter/finished',
+        rejected: '/messages/filter/rejected',
+        archived: '/messages/filter/archived',
+    }
 }
 
 export const mediaRoutes = {

@@ -21,7 +21,8 @@ import {
     useBoards,
     useTags,
     usePositions,
-
+    useTeamMembers,
+    useUser,
 } from 'Api/Hooks'
 
 export default function ContactsPage(props) {
@@ -33,14 +34,15 @@ export default function ContactsPage(props) {
     const [selectedFilters, setSelectedFilters] = useState({})
 
     // handle filters options
-    const status = useStatus()?.map(item => ({ id: item.id, name: item.status })) || []
-    const ranks = useRanks().items?.map(item => ({ id: item.id, name: item.rank })) || []
-    const gradeYears = useGradeYears().items?.map((item, index) => ({ id: index, name: item })) || []
-    const tags = useTags() || []
-    const positions = usePositions().items || []
+    const status = useStatus()?.map(item => ({ id: item.id, name: item.status }))
+    const ranks = useRanks().items?.map(item => ({ id: item.id, name: item.rank }))
+    const gradeYears = useGradeYears().items?.map((item, index) => ({ id: index, name: item }))
+    const tags = useTags()
+    const positions = usePositions().items
+    const teamMembers = useTeamMembers().items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}`}))
     
     useEffect(() => {
-        if(!contacts.items)
+        if(!contacts.items) 
             return
         
         //console.log(contacts.items)
@@ -56,27 +58,35 @@ export default function ContactsPage(props) {
 
     const panelFiltersData = useMemo(() =>
     ({
-        "status": {
+        status: {
             label: 'Status',
-            options: status,
+            options: status || [],
             type: 'status'
         },
-        "rank": {
+        rank: {
             label: 'Rank',
-            options: ranks,
+            options: ranks || [],
         },
-        "gradeYear": {
+        gradeYear: {
             label: 'Grad Year',
-            options: gradeYears,
+            options: gradeYears || [],
         },
-        "tags": {
+        tags: {
             label: 'Tags',
-            options: tags,
+            options: tags || [],
         },
-        "position": {
+        position: {
             label: 'Position',
-            options: positions,
+            options: positions || [],
         },
+        areaCoach: {
+            label: 'Area Coach',
+            options: teamMembers || []
+        },
+        positionCoach: {
+            label: 'Position Coach',
+            options: teamMembers || []
+        }
     }), [status, ranks, gradeYears, tags, positions])
 
     const mainActions = [
