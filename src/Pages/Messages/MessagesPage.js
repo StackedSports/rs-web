@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
+import { useParams } from "react-router-dom"
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 
@@ -16,19 +17,47 @@ const filters = [
         name: 'Messages',
         items: [
             // Filters
-            { id: '0', name: 'Scheduled' },
-            { id: '1', name: 'In Progress' },
-            { id: '2', name: 'Finished' },
-            { id: '3', name: 'Archived' },
+            { id: 'draft', name: 'Drafts', path: messageRoutes.filters.drafts },
+            { id: '0', name: 'Scheduled', path: messageRoutes.filters.scheduled },
+            { id: '1', name: 'In Progress', path: messageRoutes.filters.inProgress },
+            { id: '2', name: 'Finished', path: messageRoutes.filters.finished },
+            { id: '3', name: 'Archived', path: messageRoutes.filters.archived },
         ]
     }
 ]
 
 const MessagesPage = (props) => {
-    const [redirect, setRedirect] = useState('')
+    const { filter } = useParams()
+    const lastFilter = useRef(filter)
 
-    const messages = useMessages(1, 25)
-    console.log(messages.items)
+    const messageFilter = useMemo(() => {
+        if(!filter)
+            return null
+        else
+            return { status: [{ id: filter, name: filter}] }
+    }, [filter])
+
+    const [redirect, setRedirect] = useState('')
+    // console.log(filter)
+    const messages = useMessages(1, 25, messageFilter)
+    // console.log(messages.items)
+
+    useEffect(() => {
+        console.log('on filter')
+
+        console.log(lastFilter.current)
+        console.log(filter)
+
+        if(!filter || lastFilter.current === filter)
+            return
+        
+        console.log('filtering for ' + filter)
+        lastFilter.current = filter
+
+        messages.filter({ status: [{ id: filter, name: filter}] })
+    
+    }, [filter])
+
     const onTopActionClick = (e) => {
         console.log('top action click')
         setRedirect(messageRoutes.create)

@@ -1,3 +1,5 @@
+import { capitalize } from 'utils/Parser'
+
 export const getFilterContactsCriteria = (filters) => {
     let criteria = {}
 
@@ -75,6 +77,43 @@ export const getFilterContactsCriteria = (filters) => {
     //     "advisors": [], //comma delimited list of advisor coach ids
     //     "ranks": [], //comma delimited list of ranks
     //     "timezones":[] //comma delimited list of time zones
+    // }
+
+    return criteria
+}
+
+export const getFilterMessagesCriteria = (filters) => {
+    if(!filters)
+        return null
+    
+    let criteria = {}
+
+    console.log(filters)
+
+    if(filters.status) {
+        criteria['message_status'] = []
+
+        filters.status.forEach(status => {
+            criteria['message_status'].push(status.name)
+        })
+    }
+
+    // {
+    //     "criteria":{
+    //         "include_archived": "false" //Defaults to false
+    //         ,"include_expired": "false" //Defaults to false
+    //         ,"include_team": "false" //Defaults to false, set to true to return all team messages, if user is a team_admin
+    //         ,"message_status": ["draft"] //Array of message statuses, 
+    //              Available options: `Error`, `Preview`, `Deleted`, `In Progress`, `Sent`,
+    //                              `Rejected`, `Archived`, `Completed`, `Cancelled`, `Pending`, `Draft`
+    //         ,"recipient_status": ["pending"] //Array of recipients statuses,
+    //              Available options: `cancelled`, `error`, `ignored`, `skipped`, `sent`, `pending`
+    //         ,"platform": [] //Array of platforms, Available options: `Twitter`, `Personal Text`, `RS Text`
+    //         ,"sender": [] //Array of user ids
+    //         ,"tags": [] //Array of tag names
+    //         ,"send_at_dates": [] // Filter by send at, If passing in send_at_dates, both a start and end date are required
+    //         ,"sent_at_dates": [] //Filter by sent at, If passing in sent_at_dates, both a start and end date are required
+    //     }
     // }
 
     return criteria
