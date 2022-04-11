@@ -172,7 +172,7 @@ export default function ReceiverSelectDialog(props) {
         console.log('onPageChange')
 
         // mpSelection, mpSelectedCount, mpUtils
-        mpUtils.saveData(contacts)
+        mpUtils.saveData(contacts.items)
 
         contacts.pagination.getPage(page)
 
@@ -183,7 +183,7 @@ export default function ReceiverSelectDialog(props) {
         const selectionTeam = findByIds(selectedTeamBoards, teamBoards)
 
         // For the contacts, we need to add the selected contacts from previous pages  
-        mpUtils.saveData(contacts)
+        mpUtils.saveData(contacts.items)
         let selectionContact = mpUtils.getDataSelected()     
 
         // console.log(selectionPrivate)
