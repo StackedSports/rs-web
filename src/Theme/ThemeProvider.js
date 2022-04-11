@@ -3,7 +3,8 @@
  * See for details: https://material-ui.com/customization/default-theme/?expand-path=$.palette
  */
 
- import { 
+
+import {
     createTheme,
     ThemeProvider as MuiThemeProvider,
     StyledEngineProvider,
@@ -37,6 +38,10 @@ let theme = createTheme({
             main: '#c62828',
             contrastText: '#FFFFFF',
         },
+        background: {
+            default: '#FFFFFF',
+            paper: '#fafafa',
+        },
     }
 })
 
@@ -62,26 +67,26 @@ theme = createTheme(theme, {
                 },
                 contained: {
                     color: 'white',
-                    
+
                 },
                 endIcon: ({ ownerState, theme }) => {
                     let color = theme.palette.primary.main
 
-                    if(ownerState.variant === 'contained')
+                    if (ownerState.variant === 'contained')
                         color = 'white'
-                    if(ownerState.disabled)
+                    if (ownerState.disabled)
                         color = 'inherit'
 
                     return {
                         color
                     }
                 }
-                
+
             }
         }
     }
 })
- 
+
 //  /**
 //   * Material UI theme config for "Light Mode"
 //   */
@@ -107,24 +112,24 @@ theme = createTheme(theme, {
 //          },
 //          ...FONT_COLORS,
 //      },
-     
+
 //  };
- 
- /**
-  * Material UI Provider with Light and Dark themes depending on global "state.darkMode"
-  */
- const ThemeProvider = ({ children }) => {
- 
-//    const theme = createTheme(LIGHT_THEME);
- 
-   return (
-     <StyledEngineProvider injectFirst>
-       <MuiThemeProvider theme={theme}>
-         <CssBaseline /* Material UI Styles */ />
-             {children}
-       </MuiThemeProvider>
-     </StyledEngineProvider>
-   );
- };
- 
- export default ThemeProvider
+
+/**
+ * Material UI Provider with Light and Dark themes depending on global "state.darkMode"
+ */
+const ThemeProvider = ({ children }) => {
+
+    //    const theme = createTheme(LIGHT_THEME);
+
+    return (
+        <StyledEngineProvider injectFirst>
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline /* Material UI Styles */ />
+                {children}
+            </MuiThemeProvider>
+        </StyledEngineProvider>
+    );
+};
+
+export default ThemeProvider

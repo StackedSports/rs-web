@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Grid, Typography, Stack, Box } from '@mui/material'
+import { Grid, Typography, Stack, Box, Tooltip } from '@mui/material'
 import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import { format } from 'date-fns'
@@ -128,8 +128,11 @@ const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
                     ) : (
                         <PhotoLibraryIcon style={styles.icon} />
                     )}
-
-                    <Typography noWrap style={styles.mediaName}>{props.media?.name ? props.media?.name : props.media?.file_name}</Typography>
+                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name}>
+                        <Typography noWrap style={styles.mediaName}>
+                            {props.media?.name ? props.media?.name : props.media?.file_name}
+                        </Typography>
+                    </Tooltip>
                 </Stack>
                 {props.media?.created_at && (
                     <Typography noWrap variant='caption'>Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}</Typography>
