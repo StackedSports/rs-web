@@ -11,7 +11,7 @@
 } from '@mui/material';
 
 let theme = createTheme({
-    pallete: {
+    palette: {
         mode: 'light',
         primary: {
             main: '#3871da',

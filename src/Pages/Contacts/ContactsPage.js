@@ -22,6 +22,7 @@ import {
     useTags,
     usePositions,
     useTeamMembers,
+    useUser,
 } from 'Api/Hooks'
 
 export default function ContactsPage(props) {
