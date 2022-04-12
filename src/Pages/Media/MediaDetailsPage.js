@@ -19,7 +19,7 @@ export const MediaDetailsPage = () => {
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
 
-    const { items: contacts, loading: contactsLoading, filter: filterContacts, clearFilter } = useContacts()
+    const contacts = useContacts()
     const { items: teamMenbers, loading: teamMembersLoading } = useTeamMembers()
     const { items: placeholders, loading: placeholdersLoading } = usePlaceholders()
 
@@ -69,11 +69,11 @@ export const MediaDetailsPage = () => {
 
     const handleContactInputSearch = debounce((value) => {
         if (value) {
-            filterContacts({
+            contacts.filter({
                 search: value,
             })
         } else {
-            clearFilter()
+            contacts.clearFilter()
         }
     }, 500)
 
@@ -293,11 +293,11 @@ export const MediaDetailsPage = () => {
                             </Typography>
                             <Autocomplete
                                 multiple
-                                options={contacts || []}
+                                options={contacts.items || []}
                                 selectOnFocus
                                 clearOnBlur
                                 value={itemContact}
-                                loading={contactsLoading}
+                                loading={contacts.loading}
                                 getOptionLabel={(option) => option?.first_name + ' ' + option?.last_name}
                                 onChange={(event, newValue) => {
                                     handleChangeContact(newValue)
