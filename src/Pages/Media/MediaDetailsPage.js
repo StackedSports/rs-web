@@ -113,6 +113,7 @@ export const MediaDetailsPage = () => {
                         <MyMediaPreview
                             item={media}
                             type='media'
+                            onSelected={(checked) => console.log(checked)}
                         />
 
                         <Box

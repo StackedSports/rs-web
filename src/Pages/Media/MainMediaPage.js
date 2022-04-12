@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
-import { LocalOfferOutlined, KeyboardArrowDown,CircularProgress } from '@mui/icons-material'
-import { Stack, Typography, Box } from '@mui/material'
+import { LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
+import { Stack, Typography, Box, CircularProgress } from '@mui/material'
 
 import { Link } from 'react-router-dom'
 
@@ -62,6 +62,7 @@ export const MainMediaPage = (props) => {
                 loading={media.loading}
                 view={viewGrid ? 'grid' : 'list'}
                 type="media"
+                linkTo='/media/media/details/'
                 disablePagination
             />
 
@@ -81,11 +82,19 @@ export const MainMediaPage = (props) => {
                 </Box>
             </Stack>
 
+            {placeholders.loading &&
+                (<Box
+                    height='300px'
+                    sx={{ display: 'grid', placeItems: 'center' }}
+                >
+                    <CircularProgress />
+                </Box>)}
+
             <MediaTable
                 items={placeholders.items}
-                loading={placeholders.loading}
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
+                linkTo='/media/placeholders/details/'
                 disablePagination
             />
 

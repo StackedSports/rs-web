@@ -1,4 +1,4 @@
-import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, styled } from "@mui/material"
+import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, styled } from "@mui/material"
 import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 
@@ -88,19 +88,46 @@ const MediaImage = ({ media }) => {
     )
 }
 
-export const MyMediaPreview = ({ type = 'media', item, href, ...restOfProps }) => {
+export const MyMediaPreview = ({ type = 'media', item, linkTo, onClick, onSelected, ...restOfProps }) => {
 
     const isMedia = type === 'media'
+    const checkBoxOnHover = (onSelected && onSelected instanceof Function) ? true : false
+
+    const cardActionProps = () => {
+        if (linkTo) {
+            return ({
+                component: Link,
+                to: linkTo,
+            })
+        } else {
+            return ({
+                onClick: onClick,
+            })
+        }
+    }
+
+    // return true or false if the item is selected
+    const handleSelectCheckBox = (event) => {
+        onSelected(event.target.checked)
+    }
 
     return (
         <StyledCard variant="outlined" {...restOfProps}>
-            <CardActionArea>
+            <CardActionArea {...cardActionProps()} disableRipple >
                 <CardImage>
                     {isMedia ? (
                         <MediaImage media={item} />
                     ) : (
                         <PlaceholderImage placeholder={item} />
                     )}
+                    {checkBoxOnHover &&
+                        <StyledCheckBox
+                            color="primary"
+                            disableRipple
+                            onChange={(e) => handleSelectCheckBox(e)}
+                            onClick={e => e.stopPropagation()}
+                        />
+                    }
                 </CardImage>
                 <CardContent>
                     <Stack direction='row'>
@@ -138,7 +165,13 @@ const StyledCard = styled(Card)(({ theme, width }) => ({
     '.MuiSvgIcon-root': {
         color: theme.palette.text.secondary,
         marginRight: 10,
-    }
+    },
+
+    'a:hover': {
+        textDecoration: 'none',
+        color: 'inherit',
+    },
+
 }));
 
 const CardImage = styled(Box)(({ theme }) => ({
@@ -150,4 +183,11 @@ const CardImage = styled(Box)(({ theme }) => ({
     backgroundColor: '#efefef',
     position: 'relative',
     overflow: 'hidden',
+}));
+
+const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
 }));

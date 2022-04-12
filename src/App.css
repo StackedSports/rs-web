@@ -543,10 +543,7 @@ select-search {
 button:focus {
   outline: none;
   border: none;
-  color: #eee;
   outline: 0 none -webkit-focus-ring-color !important;
-
-  background-color: #3871da;
 }
 .css-1aquho2-MuiTabs-indicator {
   display: none;
