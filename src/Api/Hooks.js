@@ -751,15 +751,17 @@ export const useMessageRecipients = (id, refresh) => {
 
 // getMessages
 
-export const useMessages = (currentPage, itemsPerPage) => {
+export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
     const [messages, setMessages] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
+    const [filters, setFilters] = useState(initialFilters || null)
+
     useEffect(() => {
         setLoading(true)
 
-        getMessages(pagination.currentPage, pagination.itemsPerPage)
+        getMessages(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([messages, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -771,12 +773,23 @@ export const useMessages = (currentPage, itemsPerPage) => {
             })
             .finally(() => setLoading(false))
 
-    }, [pagination.currentPage])
+    }, [pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
 
     return {
         items: messages,
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 

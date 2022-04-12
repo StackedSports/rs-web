@@ -35,6 +35,11 @@ const MessagesRoutes = (props) => (
           component={MessageEditPage}
         />
         <Route
+          // exact
+          path={`${messageRoutes.filters.main}/:filter`}
+          component={MessagesPage}
+        />
+        <Route
           exact
           path={messageRoutes.all}
           component={MessagesPage}

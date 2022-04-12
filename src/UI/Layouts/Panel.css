@@ -6,6 +6,7 @@
     border-radius: 5px;
     padding: 20px 30px;
     position: relative;
+    /* max-width: 1200px; */
 }
 
 .Panel .Header {

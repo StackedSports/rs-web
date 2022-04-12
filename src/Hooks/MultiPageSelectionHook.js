@@ -26,6 +26,8 @@ export default function useMultiPageSelection(page) {
     }, [page])
 
     const saveData = (data) => {
+        console.log(data)
+        
         if(!selected.current[currentPage])
             return
 
