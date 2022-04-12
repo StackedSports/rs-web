@@ -10,6 +10,9 @@ import Stack from '@mui/material/Stack'
 import { getColumns } from './DataGridConfig'
 
 const MessageRecipientsTable = (props) => {
+    if(!props.recipients || props.recipients.length === 0)
+        return <></>
+
     // const columns = props.mini ? columnsMini : columnsFull
     const [contacts, setContacts] = useState([])
     const [columns, setColumns] = useState([])
