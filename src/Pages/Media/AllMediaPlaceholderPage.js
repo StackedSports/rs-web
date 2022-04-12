@@ -1,17 +1,24 @@
 import { useState } from "react"
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
+import { useHistory } from "react-router-dom"
 
 import { usePlaceholders } from 'Api/Hooks'
 
 export const AllMediaPlaceholderPage = (props) => {
   const [viewGrid, setViewGrid] = useState(true)
-  
-  const { items: placeholders, loading, pagination } = usePlaceholders(1, 25)
+  const history = useHistory()
+
+  const placeholders = usePlaceholders(1, 25)
+  console.log(placeholders.items)
 
   const onSwitchView = () => {
     setViewGrid(oldViewGrid => !oldViewGrid)
-}
+  }
+
+  const onClickItem = (item) => {
+    history.push(`/media/placeholders/details/${item.id}`)
+  }
 
   return (
     <MediaPage
@@ -20,12 +27,12 @@ export const AllMediaPlaceholderPage = (props) => {
       viewGrid={viewGrid}
     >
       <MediaTable
-        items={placeholders}
+        items={placeholders.items}
         type='placeholder'
-        loading={loading}
-        pagination={pagination}
-        view={viewGrid ?'grid':'list'}
-
+        loading={placeholders.loading}
+        pagination={placeholders.pagination}
+        view={viewGrid ? 'grid' : 'list'}
+        onClickItem={onClickItem}
       />
 
     </MediaPage>

@@ -6,14 +6,19 @@ import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } f
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
 
-import { useTags } from 'Api/Hooks'
+import { useTags, useTeamMembers } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
+import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
 
     const tags = useTags()
+    const teamMembers = useTeamMembers()
+
+    console.log(teamMembers.items)
 
     const [mediaTypes, setMediaTypes] = useState([])
+    const [owners, setOwners] = useState([])
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
@@ -27,6 +32,15 @@ export const MediaPage = (props) => {
             })))
         })
     }, [])
+
+    useEffect(() => {
+        if (teamMembers.items?.length > 0)
+            setOwners(teamMembers.items.map(item => ({
+                id: item.id,
+                name: getFullName(item)
+            })))
+    }, [teamMembers.items])
+
 
     const filters = [
         { // Category
@@ -49,6 +63,14 @@ export const MediaPage = (props) => {
             name: 'Action',
             icon: AutoFixHigh,
             variant: 'outlined',
+            type: 'dropdown',
+            options: [
+                { name: 'Send in Message', onClick: () => { console.log("clicked") } },
+                { name: 'Download', onClick: () => { console.log("clicked") } },
+                { name: 'Archive Media', onClick: () => { console.log("clicked") } },
+                { name: 'Untag', onClick: () => { console.log("clicked") } },
+
+            ]
         },
         {
             name: 'Tag',
@@ -75,7 +97,7 @@ export const MediaPage = (props) => {
         },
         "owner": {
             label: 'Owner',
-            options: [],
+            options: owners,
         },
         "associatedTo": {
             label: 'Associated To',

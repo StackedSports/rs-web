@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
+import { LocalOfferOutlined, KeyboardArrowDown,CircularProgress } from '@mui/icons-material'
 import { Stack, Typography, Box } from '@mui/material'
 
 import { Link } from 'react-router-dom'
@@ -27,12 +27,12 @@ export const MainMediaPage = (props) => {
         setViewGrid(oldViewGrid => !oldViewGrid)
     }
 
-    
+
 
     return (
         <MediaPage
-          viewGrid={viewGrid}
-          onSwitchView={onSwitchView}
+            viewGrid={viewGrid}
+            onSwitchView={onSwitchView}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -41,20 +41,28 @@ export const MainMediaPage = (props) => {
                 </Typography>
                 <Box>
                     <Button
-                      component={Link}
-                      to={mediaRoutes.media}
-                      name='View More'
-                      variant='text'
+                        component={Link}
+                        to={mediaRoutes.media}
+                        name='View More'
+                        variant='text'
                     />
                 </Box>
             </Stack>
 
+            {media.loading &&
+                (<Box
+                    height='300px'
+                    sx={{ display: 'grid', placeItems: 'center' }}
+                >
+                    <CircularProgress />
+                </Box>)}
+
             <MediaTable
-              items={media.items}
-              loading={media.loading}
-              view={viewGrid ? 'grid' : 'list'}
-              type="media"
-              disablePagination
+                items={media.items || []}
+                loading={media.loading}
+                view={viewGrid ? 'grid' : 'list'}
+                type="media"
+                disablePagination
             />
 
             <Divider />
@@ -65,20 +73,20 @@ export const MainMediaPage = (props) => {
                 </Typography>
                 <Box>
                     <Button
-                      component={Link}
-                      to={mediaRoutes.placeholders}
-                      name='View More'
-                      variant='text'
+                        component={Link}
+                        to={mediaRoutes.placeholders}
+                        name='View More'
+                        variant='text'
                     />
                 </Box>
             </Stack>
 
             <MediaTable
-              items={placeholders.items}
-              loading={placeholders.loading}
-              view={viewGrid ? 'grid' : 'list'}
-              type="placeholder"
-              disablePagination
+                items={placeholders.items}
+                loading={placeholders.loading}
+                view={viewGrid ? 'grid' : 'list'}
+                type="placeholder"
+                disablePagination
             />
 
             <Box my={2} >
@@ -88,10 +96,10 @@ export const MainMediaPage = (props) => {
                     </Typography>
                     <Box>
                         <Button
-                          name='Last Modified'
-                          variant='text'
-                          endIcon={<KeyboardArrowDown />}
-                          color='inherit'
+                            name='Last Modified'
+                            variant='text'
+                            endIcon={<KeyboardArrowDown />}
+                            color='inherit'
                         />
                     </Box>
                 </Stack>

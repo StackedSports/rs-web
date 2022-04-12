@@ -30,15 +30,15 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagi
     return (
         <Box width='100%' pb={2}>
             <Box >
-                {loading  && (
+                {/* {loading  && (
                     <Box
                         height='300px'
                         sx={{ display: 'grid', placeItems: 'center' }}
                     >
                         <CircularProgress />
                     </Box>
-                )}
-                {!loading && (view === 'grid' ? (
+                )} */}
+                {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {items && items.map(item => (
                             <MediaPreview
@@ -56,7 +56,7 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagi
                         checkboxSelection
                         hidePagination={disablePagination}
                     />
-                ))}
+                )}
             </Box>
         </Box>
     )
