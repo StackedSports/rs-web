@@ -1,11 +1,25 @@
 import SettingsPage from './SettingsPage'
-import BoxFaviconOrganization from './BoxFaviconOrganization'
 import Stack from '@mui/material/Stack'
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField'
+import Avatar from '@mui/material/Avatar'
+import favicon from 'images/stacked-favicon.png'
+import Typography from '@mui/material/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+    textField: {
+        border: "#dadada 1px solid",
+        borderRadius: "5px"
+    },
+}));
 
 const OrganizationSettingsPage = (props) => {
+
+    const classes = useStyles();
 
     const initialValues = {
         organization: "University of Miami",
@@ -22,6 +36,13 @@ const OrganizationSettingsPage = (props) => {
         readOnly: true,
     }
 
+    const onUploadPicture = (e) => {
+        console.log("onUploadPicture")
+    }
+
+    const onRemovePicture = (e) => {
+        console.log("onRemovePicture")
+    }
     return (
         <SettingsPage
             title='Organization'
@@ -38,14 +59,14 @@ const OrganizationSettingsPage = (props) => {
                     alignItems="start" flexWrap="wrap" flex={2} spacing={1}
                 >
                     <Stack style={{
-                        padding: "15px 50px 30px 20px",
+                        padding: "20px",
                         borderBottom: "#dadada  1px solid",
                     }}
                         width="100%" flex={1} direction="row" justifyContent="space-between"
-                        alignItems="start" flexWrap="nowrap">
+                        alignItems="center" flexWrap="nowrap">
 
                         <b>Organization Info</b>
-                        <span style={{ color: '#7F7F7F', width: '65%' }}>Your org information can be edited bellow</span>
+                        <span style={{ color: '#dadada', width: '65%' }}>Your org information can be edited bellow</span>
                     </Stack>
 
                     <Stack
@@ -63,6 +84,7 @@ const OrganizationSettingsPage = (props) => {
                                 <TextField
                                     id="organization"
                                     InputProps={inputProps}
+                                    className={classes.textField}//
                                     defaultValue={initialValues.organization}
                                 />
                                 <FormHelperText id="organization" >Organization</FormHelperText>
@@ -146,10 +168,35 @@ const OrganizationSettingsPage = (props) => {
                         </Stack>
                     </Stack>
                 </Stack>
-                <BoxFaviconOrganization />
+                <Stack flex={1} direction="column"
+                    style={{
+                        height: "40%",
+                        borderRadius: "7px",
+                        justifyContent: "flex-start",
+                        border: "#dadada  1px solid",
+                    }
+                    }>
+                    <Stack flex={3} direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding="20px">
+                        <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1}>
+                            <Typography variant="h6" component="p">Org Favicon Logo</Typography>
+                        </Stack>
+                        <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1}>
+                            <Avatar sx={{ width: "96px", height: "96px", border: "#dadada   1px solid", padding: "15px", }} alt="org favicon" src={favicon} />
+                        </Stack>
+                    </Stack>
+
+                    <Stack flex={1} direction="row" justifyContent="space-evenly" alignItems="center" style={{ borderTop: "#dadada 1px solid", }}>
+                        <input hidden accept="image/*" id="contained-button-file" multiple type="file" />
+                        <Button style={{ fontSize: "12px" }} component="label" htmlFor="contained-button-file" onClick={onUploadPicture}>
+                            UPLOAD PICTURE
+                        </Button>
+                        <Button style={{ fontSize: "12px" }} component="label" onClick={onRemovePicture} disabled={props.image == null}>
+                            REMOVE PICTURE
+                        </Button>
+                    </Stack>
+                </Stack >
             </Stack>
         </SettingsPage>
     )
 }
-
 export default OrganizationSettingsPage

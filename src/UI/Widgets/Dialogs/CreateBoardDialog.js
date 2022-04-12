@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Dialog, DialogTitle, Stack, DialogContent, DialogContentText, Checkbox, FormControlLabel, TextField, Divider, Typography } from '@mui/material';
 import { People } from '@mui/icons-material';
-
 import Button from '../Buttons/Button';
+import { createNewBoard } from 'Api/Endpoints'
 
 /**
  * 
@@ -14,6 +14,7 @@ import Button from '../Buttons/Button';
 
 export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) => {
     const [boardName, setBoardName] = useState('')
+    const [isShared, setIsShared] = useState(false)
 
     const [submitting, setSubmitting] = useState(false)
 
@@ -21,10 +22,21 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
         console.log(e.target.value)
         setBoardName(e.target.value)
     }
-    
-    const handleSubmit = (e) => {
 
-    }    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setSubmitting(true)
+        let data = {
+            name: boardName,
+            is_shared: isShared,
+        }
+        createNewBoard(data, selectedFilters)
+            // .then(() => {
+            //     console.log('New Board Created')
+            // })
+            // .catch(error => console.log(error))
+            // .finally(() => setSubmitting(false))
+    }
 
     const selectedFiltersKeys = useMemo(() => Object.keys(selectedFilters), [selectedFilters])
 
@@ -109,6 +121,8 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
                             <Checkbox
                                 name='share'
                                 color='primary'
+                                checked={isShared}
+                                onChange={() => setIsShared(!isShared)}
                             />
                         }
                         label='Share with team'

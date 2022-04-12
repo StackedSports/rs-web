@@ -4,9 +4,9 @@ import moment from "moment";
 import curlirize from 'axios-curlirize';
 
 
-import { 
+import {
     getFilterContactsCriteria,
-    getFilterMessagesCriteria 
+    getFilterMessagesCriteria
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'
@@ -108,7 +108,7 @@ const GET = (url, body) => {
         axios.get(URL + url, config)
             .then(res => {
                 console.log(res)
-                if(res.status === 200 || res.status === 204 || res.status === 201) {
+                if (res.status === 200 || res.status === 204 || res.status === 201) {
                     let pagination = getPagination(res)
                     resolve([res.data, pagination])
                 } else
@@ -298,10 +298,10 @@ export const getUser = () => {
 
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
-        criteria: {...getFilterMessagesCriteria(filters)}
+        criteria: { ...getFilterMessagesCriteria(filters) }
     }
 
-    if(!objectNotNull(data.criteria))
+    if (!objectNotNull(data.criteria))
         delete data.criteria
 
     console.log(data.criteria)
@@ -456,6 +456,31 @@ export const addTagsToContacts = (tagIds, contactIds) => {
 export const CreateUser = (body) => {
     //const data = JSON.stringify(body);
     return AXIOS('post', `messages`, body)
+}
+
+export const createNewBoard = (data, selectedFilters) => {
+    const filters = {
+        "status": [],
+        "rank": [],
+        "gradeYear": [],
+        "tags": [],
+        "position": [],
+        "areaCoach": [],
+        "positionCoach": [],
+        ...selectedFilters,
+    }
+
+    console.log(getFilterContactsCriteria(filters))
+    const body = {
+        filter: {
+            ...data,
+            criteria: { ...getFilterContactsCriteria(filters) }
+        }
+    }
+    console.log(body)
+    console.log(" createNewBoard body", body)
+
+    // return POST(`api/filters`, body)
 }
 
 export const getAllContactsEnd = (page) => {
