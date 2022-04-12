@@ -5,6 +5,8 @@ import { Grid, Stack, Box, Typography, Paper, styled, TextField, Autocomplete, C
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
+import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
+import { getFullName, formatDate } from 'utils/Parser'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
@@ -20,14 +22,16 @@ export const MediaDetailsPage = () => {
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
 
-    const { items: contacts, loading: contactsLoading, filter: filterContacts, clearFilter } = useContacts()
-    const { items: teamMenbers, loading: teamMembersLoading } = useTeamMembers()
-    const { items: placeholders, loading: placeholdersLoading } = usePlaceholders()
+    const contacts = useContacts()
+    const teamMembers = useTeamMembers()
+
+    // TODO filter placeholders on autocomplete
+    const placeholders = usePlaceholders()
 
     useEffect(() => {
         if (media) {
             setItemTags(media.tags)
-            setItemOwner(oldOwner => [...oldOwner, media.owner])
+            setItemOwner(oldOwner => [...oldOwner, media.owner].slice(-1))
         }
     }, [media])
 
@@ -70,11 +74,11 @@ export const MediaDetailsPage = () => {
 
     const handleContactInputSearch = debounce((value) => {
         if (value) {
-            filterContacts({
+            contacts.filter({
                 search: value,
             })
         } else {
-            clearFilter()
+            contacts.clearFilter()
         }
     }, 500)
 
@@ -101,7 +105,6 @@ export const MediaDetailsPage = () => {
             title="Media Details"
             actions={mainActions}
             loading={loading}
-
         >
 
             <Grid container mt={3}>
@@ -115,13 +118,19 @@ export const MediaDetailsPage = () => {
                             type='media'
                         />
 
+                        <MyMediaPreview
+                            item={media}
+                            type='media'
+                            onSelected={(checked) => console.log(checked)}
+                        />
+
                         <Box
                             flex='1 1 auto'
                             sx={{
                                 color: 'text.secondary',
                             }}
                         >
-                            <Typography variant='subtitle1' fontWeight='bold' textTransform='capitalize' color='text.primary' >
+                            <Typography variant='subtitle1' color='text.primary' >
                                 {media?.name || media?.file_name}
                             </Typography>
 
@@ -129,19 +138,19 @@ export const MediaDetailsPage = () => {
                             
                             <Typography variant="body1">
                                 Uploaded on :
-                                <Typography component="span" fontWeight='bold' >
-                                    {' ' + media?.updated_at}
+                                <Typography component="span" >
+                                    {' ' + formatDate(media?.created_at)}
                                 </Typography>
                             </Typography>
                             <Typography variant="body1">
                                 Uploaded by :
-                                <Typography component="span" fontWeight='bold' >
-                                    {' ' + media?.owner?.first_name + ' ' + media?.owner?.last_name}
+                                <Typography component="span" >
+                                    {' ' + getFullName(media?.owner)}
                                 </Typography>
                             </Typography>
                             <Typography variant="body1">
                                 File Size:
-                                <Typography component="span" fontWeight='bold' >
+                                <Typography component="span" >
                                     {' ' + (media?.size / 1000).toFixed(0) + ' kb'}
                                 </Typography>
                             </Typography>
@@ -158,25 +167,18 @@ export const MediaDetailsPage = () => {
                         </Box>
                     </Stack>
 
-                    <Typography
-                        variant='subtitle1'
-                        fontWeight='bold'
-                        textTransform='capitalize'
-                        color='text.primary'
-
-                    >
+                    <Typography variant='subtitle1' >
                         Owner
                     </Typography>
-                    {/* team mebers substituir */}
                     <Autocomplete
                         multiple
                         selectOnFocus
                         clearOnBlur
                         value={itemOwner}
-                        options={teamMenbers || []}
-                        loading={teamMembersLoading}
-                        getOptionLabel={(option) => option?.first_name + ' ' + option?.last_name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        options={teamMembers.items || []}
+                        loading={teamMembers.loading}
+                        getOptionLabel={(option) => getFullName(option)}
+                        isOptionEqualToValue={(option, value) => option.hashid === value.hashid}
                         onChange={(event, newValue) => {
                             handleChangeOwner(newValue)
                         }}
@@ -192,19 +194,14 @@ export const MediaDetailsPage = () => {
                                 <CustomChip
                                     variant='outlined'
                                     {...getTagProps({ index })}
-                                    label={option?.first_name + ' ' + option?.last_name}
+                                    label={getFullName(option)}
                                     deleteIcon={<Clear />}
                                 />
                             ));
                         }}
                     />
 
-                    <Typography
-                        variant='subtitle1'
-                        fontWeight='bold'
-                        textTransform='capitalize'
-                        color='text.primary'
-                    >
+                    <Typography variant='subtitle1' >
                         Tags
                     </Typography>
                     <Autocomplete
@@ -248,18 +245,12 @@ export const MediaDetailsPage = () => {
 
                         <Box sx={{ flex: '1 1 auto', }} >
 
-                            <Typography
-                                variant='subtitle1'
-                                fontWeight='bold'
-                                textTransform='capitalize'
-                                color='text.primary'
-                                mb={2}
-                            >
+                            <Typography variant='subtitle1' mb={2}  >
                                 Association to Placeholder
                             </Typography>
                             <Autocomplete
-                                options={placeholders || []}
-                                loading={placeholdersLoading}
+                                options={placeholders.items || []}
+                                loading={placeholders.loading}
                                 multiple
                                 selectOnFocus
                                 clearOnBlur
@@ -286,24 +277,17 @@ export const MediaDetailsPage = () => {
 
                         <Box sx={{ flex: '1 1 auto', }} >
 
-                            <Typography
-                                variant='subtitle1'
-                                fontWeight='bold'
-                                textTransform='capitalize'
-                                color='text.primary'
-                                mb={2}
-
-                            >
+                            <Typography variant='subtitle1' mb={2} >
                                 Association to Contact
                             </Typography>
                             <Autocomplete
                                 multiple
-                                options={contacts || []}
+                                options={contacts.items || []}
                                 selectOnFocus
                                 clearOnBlur
                                 value={itemContact}
-                                loading={contactsLoading}
-                                getOptionLabel={(option) => option?.first_name + ' ' + option?.last_name}
+                                loading={contacts.loading}
+                                getOptionLabel={(option) => getFullName(option)}
                                 onChange={(event, newValue) => {
                                     handleChangeContact(newValue)
                                 }}
@@ -318,7 +302,7 @@ export const MediaDetailsPage = () => {
                                         <CustomChip
                                             variant='outlined'
                                             {...getTagProps({ index })}
-                                            label={option?.first_name + ' ' + option?.last_name}
+                                            label={getFullName(option)}
                                             deleteIcon={<Clear />}
                                         />
                                     ));
@@ -326,12 +310,11 @@ export const MediaDetailsPage = () => {
                             />
                         </Box>
                     </Stack>
-
                 </GridItemLeft>
 
                 <GridItemRight item xs={4} xl={3} >
                     <MediaStatsColumn>
-                        <Typography variant='subtitle1' fontWeight='bold'>
+                        <Typography variant='subtitle1'>
                             Media Status
                         </Typography>
                         <Stack>
@@ -342,21 +325,21 @@ export const MediaDetailsPage = () => {
                             />
                         </Stack>
                         <Stack>
-                            <Typography variant='subtitle2' fontWeight='bold' color='text.secondary' gutterBottom >
+                            <Typography variant='subtitle2' gutterBottom >
                                 Media Published in:
                             </Typography>
-                            <Typography variant='subtitle1' fontWeight='bold'>
+                            <Typography variant='subtitle1'>
                                 {media?.activity?.tweets} Tweets
                             </Typography>
                         </Stack>
 
                         <Stack>
-                            <Typography variant='subtitle2' fontWeight='bold' color='text.secondary' gutterBottom >
+                            <Typography variant='subtitle2' gutterBottom >
                                 Messaging Stats:
                             </Typography>
 
                             <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1' fontWeight='bold'>
+                                <Typography variant='subtitle1'>
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
@@ -365,7 +348,7 @@ export const MediaDetailsPage = () => {
                             </Stack>
 
                             <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1' fontWeight='bold'>
+                                <Typography variant='subtitle1'>
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
@@ -375,12 +358,12 @@ export const MediaDetailsPage = () => {
                         </Stack>
 
                         <Stack>
-                            <Typography variant='subtitle2' fontWeight='bold' color='text.secondary' gutterBottom >
+                            <Typography variant='subtitle2' gutterBottom >
                                 Post Stats:
                             </Typography>
 
                             <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1' fontWeight='bold'>
+                                <Typography variant='subtitle1'>
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
@@ -389,7 +372,7 @@ export const MediaDetailsPage = () => {
                             </Stack>
 
                             <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1' fontWeight='bold'>
+                                <Typography variant='subtitle1'>
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
@@ -398,7 +381,7 @@ export const MediaDetailsPage = () => {
                             </Stack>
 
                             <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1' fontWeight='bold'>
+                                <Typography variant='subtitle1'>
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
@@ -414,9 +397,8 @@ export const MediaDetailsPage = () => {
     )
 }
 
-const MediaStatsColumn = styled(Stack)({
+const MediaStatsColumn = styled(Stack)(({ theme }) => ({
     width: '100%',
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
 
@@ -428,11 +410,21 @@ const MediaStatsColumn = styled(Stack)({
         alignItems: 'center',
         padding: 16,
         border: '1px solid #efefef',
-    }
-});
+    },
+
+    '.MuiTypography-subtitle1 , .MuiTypography-subtitle2': {
+        fontWeight: 'bold',
+        textTransform: 'capitalize',
+    },
+
+    '.MuiTypography-subtitle2': {
+        color: theme.palette.text.secondary,
+    },
+}));
 
 const GridItemRight = styled(Grid)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
+    borderLeft: 0,
     borderRadius: theme.shape.borderRadius,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
@@ -447,6 +439,16 @@ const GridItemLeft = styled(Grid)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+
+    '.MuiTypography-subtitle1': {
+        fontWeight: 'bold',
+        textTransform: 'capitalize',
+    },
+
+    'span.MuiTypography-body1': {
+        fontWeight: 'bold',
+        color: theme.palette.text.primary,
+    }
 }));
 
 const TagsInfo = styled('span')(({ theme }) => ({
@@ -479,6 +481,5 @@ const CustomChip = styled(Chip)(({ theme }) => ({
         }
     }
 }));
-
 
 export default MediaDetailsPage
