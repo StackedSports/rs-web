@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, Paper, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
@@ -7,6 +7,7 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
 import { getFullName, formatDate } from 'utils/Parser'
+import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
 
@@ -91,6 +92,13 @@ export const MediaDetailsPage = () => {
         //TODO
     }
 
+    const messagesCountLabel = useMemo(() => {
+        if(!media)
+            return '--'
+        
+        return `${Object.values(media.activity).reduce((acc, item) => acc + item, 0)} Messages`
+    }, [media])
+
 
     return (
         <MainLayout
@@ -125,12 +133,9 @@ export const MediaDetailsPage = () => {
                             <Typography variant='subtitle1' color='text.primary' >
                                 {media?.name || media?.file_name}
                             </Typography>
-                            <Typography variant="body1">
-                                File Type :
-                                <Typography component="span" >
-                                    {' ' + media?.file_type}
-                                </Typography>
-                            </Typography>
+
+                            <DetailsPreview label="File Type:" value={media?.file_type}/>
+                            
                             <Typography variant="body1">
                                 Uploaded on :
                                 <Typography component="span" >
@@ -313,14 +318,11 @@ export const MediaDetailsPage = () => {
                             Media Status
                         </Typography>
                         <Stack>
-                            <Typography variant='subtitle2' gutterBottom >
-                                Media Sent in:
-                            </Typography>
-                            <Typography variant='subtitle1'>
-                                {
-                                    media?.activity && Object.values(media.activity).reduce((acc, item) => acc + item, 0)
-                                } Messages
-                            </Typography>
+                            <DetailsPreview
+                              direction="column"
+                              label="Sent in:"
+                              value={messagesCountLabel}
+                            />
                         </Stack>
                         <Stack>
                             <Typography variant='subtitle2' gutterBottom >

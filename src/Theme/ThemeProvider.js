@@ -9,7 +9,9 @@ import {
     ThemeProvider as MuiThemeProvider,
     StyledEngineProvider,
     CssBaseline
-} from '@mui/material';
+} from '@mui/material'
+
+import typography from './Components/DataDisplay/Typography'
 
 let theme = createTheme({
     palette: {
@@ -42,7 +44,8 @@ let theme = createTheme({
             default: '#FFFFFF',
             paper: '#fafafa',
         },
-    }
+    },
+    typography
 })
 
 theme = createTheme(theme, {

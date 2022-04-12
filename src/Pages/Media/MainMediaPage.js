@@ -19,6 +19,8 @@ export const MainMediaPage = (props) => {
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
 
+    console.log(placeholders?.items)
+
     const [viewGrid, setViewGrid] = useState(true)
 
     // console.log("placeholders", placeholders)
