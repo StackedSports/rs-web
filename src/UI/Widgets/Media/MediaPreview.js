@@ -103,6 +103,8 @@ const Image = (props) => {
 }
 
 const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
+    if(!props.media)
+        return <></>
     // console.log(props.media)
 
     const isMedia = type === 'media'
@@ -134,14 +136,16 @@ const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
                     ) : (
                         <PhotoLibraryIcon style={styles.icon} />
                     )}
-                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name}>
+                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name} arrow>
                         <Typography noWrap style={styles.mediaName}>
                             {props.media?.name ? props.media?.name : props.media?.file_name}
                         </Typography>
                     </Tooltip>
                 </Stack>
                 {props.media?.created_at && (
-                    <Typography noWrap variant='caption'>Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}</Typography>
+                    <Typography noWrap variant='caption'>
+                        Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}
+                    </Typography>
                 )}
             </Box>
         </Grid>

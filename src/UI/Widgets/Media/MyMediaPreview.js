@@ -91,6 +91,8 @@ const MediaImage = ({ media }) => {
 export const MyMediaPreview = ({ type = 'media', item, linkTo, onClick, onSelected, ...restOfProps }) => {
 
     const isMedia = type === 'media'
+
+    // TODO: rename this to "selectable"
     const checkBoxOnHover = (onSelected && onSelected instanceof Function) ? true : false
 
     const cardActionProps = () => {
