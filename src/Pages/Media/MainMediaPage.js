@@ -19,7 +19,7 @@ export const MainMediaPage = (props) => {
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
 
-    console.log(placeholders?.items)
+    // console.log(placeholders?.items)
 
     const [viewGrid, setViewGrid] = useState(true)
 
@@ -29,7 +29,9 @@ export const MainMediaPage = (props) => {
         setViewGrid(oldViewGrid => !oldViewGrid)
     }
 
-
+    const onMediaSelectionChange = (selection) => {
+        console.log(selection)
+    }
 
     return (
         <MediaPage
@@ -65,6 +67,7 @@ export const MainMediaPage = (props) => {
                 view={viewGrid ? 'grid' : 'list'}
                 type="media"
                 linkTo='/media/media/details/'
+                onSelectionChange={onMediaSelectionChange}
                 disablePagination
             />
 

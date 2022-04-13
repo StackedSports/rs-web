@@ -15,7 +15,7 @@ export const MediaPage = (props) => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
 
-    console.log(teamMembers.items)
+    // console.log(teamMembers.items)
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])

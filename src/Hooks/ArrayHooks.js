@@ -6,7 +6,7 @@ export default function useArray(initialState, control) {
     useEffect(() => {
         //console.log("this should not be here")
         //console.log(initialState)
-        if(initialState && Array.isArray(initialState)) {
+        if(initialState && Array.isArray(initialState) && initialState.length > 0) {
             set(initialState)
            // console.log('set array to intial state')
         }
@@ -65,7 +65,7 @@ export default function useArray(initialState, control) {
     const utils = {
         all, push, put, unshift, remove, removeById, clear, filter
     }
-    
+
     if(control === 'v2')
         return {
             items: a,

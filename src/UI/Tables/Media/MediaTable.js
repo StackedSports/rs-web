@@ -25,29 +25,91 @@ import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
  * @param {function} onClickItem function to call when an item is clicked
  * @returns 
  */
-const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination, disablePagination = false, onClickItem, linkTo }) => {
+const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props}) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
-    const selection = useArray([], 'v2')
+    // const selection = useArray(null, 'v2')
+    const [selection, setSelection] = useState([])
     const [selectedControl, setSelectedControl] = useState({})
-
-    const onSelectedItemsChange = (selectedItems) => {
-        setSelectedItems(selectedItems)
-    }
+    const selectionRef = useRef([])
 
     const onMediaSelectedChange = (selected, index, item) => {
         let control = Object.assign({}, selectedControl)
 
         if(control[item.id]) {
             control[item.id].selected = selected
+
+            if(selected)
+                selectionRef.current.push(item.id)
+            else
+                selectionRef.current.splice(control[item.id].index, 1)
         } else {
+            selectionRef.current.push(item.id)
+
             control[item.id] = {
                 selected,
-                index
+                index: selectionRef.current.length - 1
             }
         }
 
         setSelectedControl(control)
+        setSelection(selectionRef.current)
+
+        if(props.onSelectionChange)
+            props.onSelectionChange(selectionRef.current)
+    }
+
+    const onDataTableSelectionChange = (selection) => {
+        let control = Object.assign({}, selectedControl)
+
+        if(selection.length > selectionRef.current.length) {
+            // New selection from data table is bigger than
+            // last selection. New selected item is at the
+            // end of the array. Add new selected item to
+            // selectedControl
+
+            let index = selection.length - 1
+
+            control[selection[index]] = {
+                selected: true,
+                index: selection.length - 1
+            }
+        } else {
+            // New selection from data table is smaller than
+            // last selection. An item has been removed from the
+            // selection. We need to find the missing item's id
+            // so we can updated it in the selectedControl.
+
+            let foundIndex = -1
+
+            selectionRef.current.every((id, index) => {
+                if(id !== selection[index]) {
+                    // The items don't match, which means the item
+                    // on our last selection was removed from the
+                    // current index we are accessing.
+
+                    foundIndex = index
+
+                    return false
+                }
+
+                return true
+            })
+
+            if(foundIndex !== -1) {
+                control[selectionRef.current[foundIndex].id] = {
+                    selected: false,
+                    index: foundIndex
+                }
+            }
+        }
+
+        setSelectedControl(control)
+        setSelection(selection)
+        selectionRef.current = selection
+
+        if(props.onSelectionChange)
+            props.onSelectionChange(selection)
     }
 
     const onLoadMore = () => {
@@ -56,17 +118,19 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination,
         }
     }
 
+    // console.log('aaaaa')
+
     return (
         <Box width='100%' pb={2}>
             <Box >
                 {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
-                        {items && items.map((item, index) => (
+                        {props.items && props.items.map((item, index) => (
                             <MediaPreview
                               key={item.hashid || item.id}
                               type={type}
                               item={item}
-                              linkTo={linkTo && `${linkTo}${item.id}`}
+                              linkTo={props.linkTo && `${props.linkTo}${item.id}`}
                               selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
                               onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}                              
                             />
@@ -74,19 +138,21 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination,
                     </Stack>
                 ) : (
                     <DataTable
-                      items={items}
+                      items={props.items}
                       columns={columns}
+                      selection={selection}
+                      onSelectionChange={onDataTableSelectionChange}
                       checkboxSelection
                       hidePagination={disablePagination}
                     />
                 )}
             </Box>
-            {loading && items && items.length > 0 && (
+            {props.loading && props.items && props.items.length > 0 && (
                 <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
                     <CircularProgress />
                 </Box>
             )}
-            {pagination && <Button name='Load More' onClick={onLoadMore} />}
+            {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
         </Box>
     )
 
