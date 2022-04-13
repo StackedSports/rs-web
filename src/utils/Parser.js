@@ -166,14 +166,18 @@ export const getMessageRecipientsLabelArray = (recipients) => {
 
 	if(recipients.filter_list && recipients.filter_list) {
 		recipients.filter_list.forEach(filter => {
-			list.push(filter.name)
+			list.push(`${filter.name} (${filter.contacts.length})`)
 		})
 	}
 
 	if(recipients.contact_list && recipients.contact_list) {
-		recipients.contact_list.forEach(contact => {
-			list.push(getFullName(contact))
-		})
+		if(recipients.contact_list.length > 5) {
+			list.push(`${recipients.contact_list.length} Individual Contacts`)
+		} else {
+			recipients.contact_list.forEach(contact => {
+				list.push(getFullName(contact))
+			})
+		}
 	}
 
 	if(list.length === 0)

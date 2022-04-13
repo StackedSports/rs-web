@@ -237,6 +237,14 @@ export const filterContacts = (page, perPage, filters) => {
         criteria: { ...getFilterContactsCriteria(filters) }
     }
 
+    // data = {
+    //     filter: {
+    //         name: 'Name',
+    //         is_shared: true,
+    //         criteria: { ...getFilterContactsCriteria(filters) }
+    //     }
+    // }
+
     console.log(data)
 
     return AXIOS('post', 'contacts/filter', data)
@@ -304,7 +312,16 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     if (!objectNotNull(data.criteria))
         delete data.criteria
 
-    console.log(data.criteria)
+    
+
+    data = {
+        criteria: {
+            message_status: ['Sent'],
+            include_team: true
+        }
+    }
+
+    console.log(data.criteria.message_status)
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)

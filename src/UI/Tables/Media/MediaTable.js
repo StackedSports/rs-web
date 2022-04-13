@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Stack, Typography, Box, CircularProgress } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid';
-import { KeyboardArrowDown } from '@mui/icons-material'
 
 import { Link } from 'react-router-dom';
 
@@ -9,6 +7,8 @@ import { Link } from 'react-router-dom';
 import Button from 'UI/Widgets/Buttons/Button'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DataTable from 'UI/Tables/DataTable'
+
+import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
 
 import { mediaRoutes } from 'Routes/Routes';
 
@@ -24,28 +24,38 @@ import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
  * @param {function} onClickItem function to call when an item is clicked
  * @returns 
  */
-const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagination = false, onClickItem }) => {
+const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination, disablePagination = false, onClickItem, linkTo }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
+
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const onSelectedItemsChange = (selectedItems) => {
+        setSelectedItems(selectedItems);
+    }
+
+    const onLoadMore = () => {
+        if (pagination.currentPage < pagination.totalPages) {
+            pagination.getPage(pagination.currentPage + 1)
+        }
+    }
 
     return (
         <Box width='100%' pb={2}>
             <Box >
-                {loading  && (
-                    <Box
-                        height='300px'
-                        sx={{ display: 'grid', placeItems: 'center' }}
-                    >
-                        <CircularProgress />
-                    </Box>
-                )}
-                {!loading && (view === 'grid' ? (
+                {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {items && items.map(item => (
-                            <MediaPreview
-                                key={item.id}
+                            /* <MediaPreview
+                                key={item.hashid || item.id}
                                 type={type}
                                 media={item}
-                                onClick={onClickItem}
+                                onClick={onClickItem}                               
+                            /> */
+                            <MyMediaPreview
+                                key={item.hashid || item.id}
+                                type={type}
+                                item={item}
+                                linkTo={linkTo && `${linkTo}${item.id}`}
                             />
                         ))}
                     </Stack>
@@ -56,8 +66,14 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', disablePagi
                         checkboxSelection
                         hidePagination={disablePagination}
                     />
-                ))}
+                )}
             </Box>
+            {loading && items && items.length > 0 && (
+                <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
+                    <CircularProgress />
+                </Box>
+            )}
+            {pagination && <Button name='Load More' onClick={onLoadMore} />}
         </Box>
     )
 

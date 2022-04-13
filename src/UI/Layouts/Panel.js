@@ -11,16 +11,22 @@ import PanelFilters from 'UI/Widgets/PanelFilters';
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
 
-const PanelDropdown = ({ action }) => {
+export const PanelDropdown = ({ action, header }) => {
 
-    const header = () => (
-        <Button 
-            style={{ marginLeft: 0 }}
-            name={action.name}
-            variant={action.variant} 
-            endIcon={<action.icon/>}
-        />
-    )
+    if(!header) {
+        //console.log('ok')
+        header = () => (
+            <Button 
+                style={{ marginLeft: 0 }}
+                name={action.name}
+                variant={action.variant} 
+                endIcon={<action.icon/>}
+                textColor={action.textColor}
+            />
+        )
+    }
+
+    //console.log('ok 2')
 
     const content = () => (
         <Dropdown.List style={{ alignItems: 'flex-end' }}>
@@ -106,9 +112,7 @@ export default function Panel(props) {
                         {renderActions(props.actions)}
                     </div>
                 </div>
-                <PanelFilters
-                    {...props.propsPanelFilters}
-                />
+                <PanelFilters {...props.propsPanelFilters}/>
             </div>
             {props.children}  
         </div>

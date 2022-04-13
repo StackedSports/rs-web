@@ -12,6 +12,7 @@ import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
 
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
+import { PanelDropdown } from 'UI/Layouts/Panel'
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,12 +29,16 @@ import {
     useUser,
 } from 'Api/Hooks'
 
+import { messageRoutes } from 'Routes/Routes'
+
 export default function ContactsPage(props) {
+    const [redirect, setRedirect] = useState('')
+
     const contacts = useContacts()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState([])
-    const [showPanelFilters, setShowPanelFilters] = useState(true)
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
 
 
@@ -143,22 +148,50 @@ export default function ContactsPage(props) {
     }
 
     const onSendMessageClick = (e) => {
+        console.log(selectedContacts)
 
+        //return 
+        // message.item.recipients
+
+        // localStorage.setItem('')
+        let now = Date.now()
+
+        console.log(now)
+
+        localStorage.setItem(`new-message-contact-${now}`, JSON.stringify(selectedContacts))
+        setRedirect(`${messageRoutes.create}/contacts-${now}`)
+    }
+
+    const onExportAsCSVClick = (e) => {
+
+    }
+
+    const onRemoveTagClick = (e) => { 
+        
+    }
+
+    const onFollowOnTwitterClick = (e) => {
+        
+    }
+
+    const onArchiveContactClick = (e) => {
+        
     }
 
     return (
         <MainLayout
-            title='Contacts'
-            topActionName='+ New Contact'
-            onTopActionClick={onTopActionClick}
-            filters={filters}
-            onFilterSelected={onFilterSelected}
-            actions={mainActions}
-            propsPanelFilters={{
-                open: showPanelFilters,
-                filters: panelFiltersData,
-                onFilterChange: onPanelFilterChange
-            }}
+          title='Contacts'
+          topActionName='+ New Contact'
+          onTopActionClick={onTopActionClick}
+          filters={filters}
+          onFilterSelected={onFilterSelected}
+          actions={mainActions}
+          redirect={redirect}
+          propsPanelFilters={{
+            open: showPanelFilters,
+            filters: panelFiltersData,
+            onFilterChange: onPanelFilterChange
+          }}
         >
             <Stack direction="row" alignItems="center" mb={2}>
                 <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -180,11 +213,18 @@ export default function ContactsPage(props) {
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                    <Button
-                        name="Actions"
-                        variant="outlined"
-                        endIcon={<AutoFixHighIcon />}
-                        onClick={onSendMessageClick}
+                    <PanelDropdown
+                      action={{
+                        name: 'Actions',
+                        variant: 'outlined',
+                        icon: AutoFixHighIcon,
+                        options: [
+                            { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                            { name: 'Remove Tag', onClick: onRemoveTagClick },
+                            { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                            { name: 'Archive Contact', onClick: onArchiveContactClick }
+                        ]
+                      }}
                     />
                     <Button
                         name="Tag"
@@ -193,12 +233,23 @@ export default function ContactsPage(props) {
                         onClick={onSendMessageClick}
                         disabled={selectedContacts.length == 0}
                     />
-                    <Button
-                        style={{ minWidth: 0 }}
-                        variant="outlined"
-                        name={<ViewColumnIcon />}
-                        onClick={onSendMessageClick}
-                        textColor="#3871DA"
+                    <PanelDropdown
+                      header={() => (
+                        <Button 
+                          style={{ minWidth: 0 }}
+                          variant="outlined"
+                          name={<ViewColumnIcon/>}
+                          textColor="#3871DA"
+                        />
+                      )}
+                      action={{
+                        options: [
+                            { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                            { name: 'Remove Tag', onClick: onRemoveTagClick },
+                            { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                            { name: 'Archive Contact', onClick: onArchiveContactClick }
+                        ]
+                      }} 
                     />
                 </Stack>
             </Stack>

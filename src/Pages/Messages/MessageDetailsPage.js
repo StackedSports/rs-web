@@ -366,6 +366,12 @@ const MessageDetailsPage = (props) => {
     const onSendNewMessageWithContacts = () => {
         console.log(selectedRecipients)
 
+        // let recipients = []
+
+        // selectedRecipients.forEach(recipientId => {
+
+        // })
+
         // message.item.recipients
 
         // localStorage.setItem('')

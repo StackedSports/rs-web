@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom"
 
 export const AllMediaPage = () => {
 
-  const [medias, setMedias] = useState([])
+  const [allMedias, setMedias] = useState([])
   const [viewGrid, setViewGrid] = useState(true)
   const history = useHistory()
 
@@ -26,14 +26,6 @@ export const AllMediaPage = () => {
     history.push(`/media/media/details/${item.id}`)
   }
 
-
-  const onLoadMore = () => {
-    if (pagination.currentPage < pagination.totalPages) {
-      pagination.getPage(pagination.currentPage + 1)
-    }
-  }
-
-
   const onSwitchView = () => {
     console.log("onSwitchView")
     setViewGrid(oldViewGrid => !oldViewGrid)
@@ -45,18 +37,22 @@ export const AllMediaPage = () => {
       onSwitchView={onSwitchView}
       viewGrid={viewGrid}
     >
-      <Typography>
-        {pagination.totalItems}
+      <Typography fontWeight='bold' gutterBottom>
+        Showing  {' '}
+        <Typography component='span' color='primary' fontWeight='bold'>
+          {allMedias.length + " of " + pagination.totalItems}
+        </Typography>
+        {' '} medias
       </Typography>
       <MediaTable
-        items={medias}
-        loading={loading}
+        items={allMedias}
         pagination={pagination}
+        loading={loading}
         view={viewGrid ? 'grid' : 'list'}
         onClickItem={onClickItem}
+        linkTo='/media/media/details/'
       />
 
-      <Button name='Load More' onClick={onLoadMore} />
     </MediaPage>
   )
 }

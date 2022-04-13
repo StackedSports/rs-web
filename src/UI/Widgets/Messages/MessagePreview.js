@@ -79,13 +79,50 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         })
     }, [recipients])
 
-    // console.log(message.media)
+    console.log(message)
+    console.log(recipients)
 
-    const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
-    const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
+    const hasMedia = useMemo(() => objectNotNull(message?.media), [message])
+    const hasMediaPlaceholder = useMemo(() => objectNotNull(message?.media_placeholder), [message])
 
     const showMedia = hasMedia || hasMediaPlaceholder
 
+    const mediaPlaceholder = useMemo(() => {
+        if(!recipients)
+            return message.media_placeholder
+
+        let mediaFiles = []
+
+        const pushMedia = (recipient, medias) => {
+            if(objectNotNull(recipient.media))
+                medias.push(recipient.media)
+
+            if(medias.length === 3)
+                return false
+            else
+                return true
+        }
+        
+        if(recipients.contact_list.length > 0) {
+            recipients.contact_list.every(recipient => pushMedia(recipient, mediaFiles))
+        }
+
+        if(mediaFiles.length < 3) {
+            recipients.filter_list.every(filter => {
+                return filter.contacts.every(recipient => pushMedia(recipient, mediaFiles))
+            })
+        }
+
+        console.log(mediaFiles)
+
+        return {
+            ...message.media_placeholder,
+            media: mediaFiles
+        }
+    }, [message, recipients])
+
+    // console.log(hasMedia)
+    // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
 
     return (
@@ -96,7 +133,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                         <MediaPreview
                           containerStyle={{ marginLeft: 15, marginRight: 15 }}
                           type={hasMedia ? 'media' : 'placeholder'}
-                          media={hasMedia ? message.media : message.media_placeholder}/>
+                          media={hasMedia ? message.media : mediaPlaceholder}/>
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
