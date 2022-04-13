@@ -121,8 +121,8 @@ export const MediaDetailsPage = () => {
                           item={media}
                           loading={loading}
                           type='media'
-                          selected={mediaSelected}
-                          onSelectedChange={onMediaSelectedChange}
+                        //   selected={mediaSelected}
+                        //   onSelectedChange={onMediaSelectedChange}
                         />
 
                         {/* <MyMediaPreview
