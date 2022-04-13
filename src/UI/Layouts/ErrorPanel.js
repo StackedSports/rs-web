@@ -18,7 +18,7 @@ export default function ErrorPanel(props) {
           justifyContent="center"
           >
             <Stack mt={5} alignItems="center">
-                <span style={{...styles.span }}>
+                <span style={{...styles.span, marginBottom: 16 }}>
                     Sorry, something bad happened :(
                 </span>
                 <span style={{...styles.span, marginBottom: 60}}>
