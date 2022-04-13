@@ -12,7 +12,7 @@ import { createNewBoard } from 'Api/Endpoints'
  * @returns 
  */
 
-export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) => {
+export const CreateBoardDialog = ({ open, onClose, selectedFilters }) => {
     const [boardName, setBoardName] = useState('')
     const [isShared, setIsShared] = useState(false)
 
@@ -31,24 +31,24 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
             is_shared: isShared,
         }
         createNewBoard(data, selectedFilters)
-            // .then(() => {
-            //     console.log('New Board Created')
-            // })
-            // .catch(error => console.log(error))
-            // .finally(() => setSubmitting(false))
+        // .then(() => {
+        //     console.log('New Board Created')
+        // })
+        // .catch(error => console.log(error))
+        // .finally(() => setSubmitting(false))
     }
 
     const selectedFiltersKeys = useMemo(() => Object.keys(selectedFilters), [selectedFilters])
 
     return (
         <Dialog
-            component="form"
-            open={open}
-            onClose={onClose}
-            aria-labelledby='form-dialog-save-board'
-            fullWidth
-            maxWidth='sm'
-            onSubmit={handleSubmit}
+          component="form"
+          open={open}
+          onClose={onClose}
+          aria-labelledby='form-dialog-save-board'
+          fullWidth
+          maxWidth='sm'
+          onSubmit={handleSubmit}
         >
             <DialogTitle
                 sx={{

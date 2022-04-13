@@ -1,14 +1,9 @@
 import axios from "axios";
-import moment from "moment";
-
-import curlirize from 'axios-curlirize';
-
 
 import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
     getFilterMediasCriteria,
-    getFilterMessagesCriteria
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'

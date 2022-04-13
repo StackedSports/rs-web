@@ -66,7 +66,6 @@ export const MediaPage = (props) => {
                 { name: 'Download', onClick: () => { console.log("clicked") } },
                 { name: 'Archive Media', onClick: () => { console.log("clicked") } },
                 { name: 'Untag', onClick: () => { console.log("clicked") } },
-
             ]
         },
         {
@@ -87,6 +86,7 @@ export const MediaPage = (props) => {
         "fileType": {
             label: 'File Type',
             options: mediaTypes,
+            isUnique: true,
         },
         "distributed": {
             label: 'Distributed',
