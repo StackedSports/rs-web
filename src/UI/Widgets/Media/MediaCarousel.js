@@ -49,7 +49,6 @@ export const MediaCarousel = (props) => {
         </Fab>
         <img src={url} />
       </DialogContent>
-
     </StyledDialog>
   )
 }
@@ -72,16 +71,16 @@ const StyledDialog = styled(Dialog)({
     zIndex: 1,
   },
   '.MuiFab-root.next': {
-    position: 'absolute',
+    position: 'fixed',
     top: '50%',
-    right: 0,
-    transform: 'translateY(-50%)',
+    right: 20,
+    // transform: 'translateY(-50%)',
     zIndex: 10,
   },
   '.MuiFab-root.previous': {
-    position: 'absolute',
+    position: 'fixed',
     top: '50%',
-    left: 0,
-    transform: 'translateY(-50%)',
+    left: 20,
+    // transform: 'translateY(-50%)',
   },
 })
