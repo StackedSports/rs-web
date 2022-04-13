@@ -31,113 +31,113 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
             is_shared: isShared,
         }
         createNewBoard(data, selectedFilters)
-            // .then(() => {
-            //     console.log('New Board Created')
-            // })
-            // .catch(error => console.log(error))
-            // .finally(() => setSubmitting(false))
+            .then((res) => {
+                console.log('New Board Created', res)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setSubmitting(false))
     }
 
     const selectedFiltersKeys = useMemo(() => Object.keys(selectedFilters), [selectedFilters])
 
     return (
         <Dialog
-            component="form"
-            open={open}
-            onClose={onClose}
-            aria-labelledby='form-dialog-save-board'
-            fullWidth
-            maxWidth='sm'
-            onSubmit={handleSubmit}
+          component="form"
+          open={open}
+          onClose={onClose}
+          aria-labelledby='form-dialog-save-board'
+          fullWidth
+          maxWidth='sm'
+          onSubmit={handleSubmit}
         >
             <DialogTitle
-                sx={{
-                    textAlign: 'center',
-                    fontWeight: 'bold !important',
-                }}
+              sx={{
+                  textAlign: 'center',
+                  fontWeight: 'bold !important',
+              }}
             >
                 Create Board
             </DialogTitle>
 
             <DialogContent>
                 <Divider
-                    sx={{
-                        mb: 3,
-                    }}
+                  sx={{
+                      mb: 3,
+                  }}
                 />
 
                 <TextField
-                    margin='dense'
-                    id='name'
-                    label='Create Board Name'
-                    type='text'
-                    value={boardName}
-                    onChange={onBoardNameChange}
-                    fullWidth
-                    InputProps={{
-                        sx: {
-                            fontSize: '1.2rem',
-                        }
-                    }}
-                    InputLabelProps={{
-                        sx: {
-                            fontWeight: 'bold',
-                            color: 'text.disabled',
-                        }
-                    }}
+                  margin='dense'
+                  id='name'
+                  label='Create Board Name'
+                  type='text'
+                  value={boardName}
+                  onChange={onBoardNameChange}
+                  fullWidth
+                  InputProps={{
+                    sx: {
+                        fontSize: '1.2rem',
+                    }
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                        fontWeight: 'bold',
+                        color: 'text.disabled',
+                    }
+                  }}
                 />
 
                 <Typography py={2} fontWeight='bold' fontSize='12px' color='text.secondary' >
                     Filter Criteria:
                     {selectedFilters && selectedFiltersKeys.map((key, index) => {
-                        const filter = selectedFilters[key];
+                      const filter = selectedFilters[key];
 
-                        return (
-                            <Typography
-                                component='span'
-                                color='text.primary'
-                                fontWeight='700 !important'
-                                textTransform='capitalize'
-                            >
-                                {`${key}: ${filter?.map(f => f.name).join(', ')}${index === selectedFiltersKeys.length - 1 ? '' : '; '}`}
-                            </Typography>
-                        )
+                      return (
+                          <Typography
+                              component='span'
+                              color='text.primary'
+                              fontWeight='700 !important'
+                              textTransform='capitalize'
+                          >
+                              {`${key}: ${filter?.map(f => f.name).join(', ')}${index === selectedFiltersKeys.length - 1 ? '' : '; '}`}
+                          </Typography>
+                      )
                     })
                     }
                 </Typography>
                 <Divider
-                    sx={{
-                        my: 2,
-                    }}
+                  sx={{
+                    my: 2,
+                  }}
                 />
 
                 <Stack direction='row' gap={2}>
                     <FormControlLabel
-                        sx={{
-                            mr: 'auto',
-                            alignSelf: 'center',
-                        }}
-                        control={
-                            <Checkbox
-                                name='share'
-                                color='primary'
-                                checked={isShared}
-                                onChange={() => setIsShared(!isShared)}
-                            />
-                        }
-                        label='Share with team'
+                      sx={{
+                          mr: 'auto',
+                          alignSelf: 'center',
+                      }}
+                      control={
+                          <Checkbox
+                            name='share'
+                            color='primary'
+                            checked={isShared}
+                            onChange={() => setIsShared(!isShared)}
+                          />
+                      }
+                      label='Share with team'
                     />
 
                     <Button
-                        variant='outlined'
-                        onClick={onClose}
-                        name='Cancel'
+                      variant='outlined'
+                      onClick={onClose}
+                      name='Cancel'
                     />
                     <Button
-                        variant='contained'
-                        type='submit'
-                        endIcon={<People />}
-                        name='Create Board'
+                      variant='contained'
+                      type='submit'
+                      endIcon={<People />}
+                      name='Create Board'
                     />
                 </Stack>
             </DialogContent>
