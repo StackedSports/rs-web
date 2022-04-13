@@ -18,7 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import {
     useContacts,
-    useStatus,
+    useStatuses,
     useRanks,
     useGradeYears,
     useBoards,
@@ -38,11 +38,7 @@ export default function ContactsPage(props) {
 
 
     // handle filters options
-    const status = useStatus()?.map(item => ({ id: item.id, name: item.status }))
-    // const ranks = useRanks().items?.map(item => ({ id: item.id, name: item.rank }))
-    // const gradeYears = useGradeYears().items?.map((item, index) => ({ id: index, name: item }))
-    // const positions = usePositions().items
-    // const teamMembers = useTeamMembers().items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` }))
+    const status = useStatuses()
     const ranks = useRanks()
     const gradeYears = useGradeYears()
     const tags = useTags()
@@ -69,17 +65,15 @@ export default function ContactsPage(props) {
     ({
         status: {
             label: 'Status',
-            options: status || [],
+            options: status.items?.map(item => ({ id: item.id, name: item.status })) || [],
             type: 'status'
         },
         rank: {
             label: 'Rank',
-            // options: ranks || [],
             options: ranks.items?.map(item => ({ id: item.id, name: item.rank })) || [],
         },
         gradeYear: {
             label: 'Grad Year',
-            // options: gradeYears || [],
             options: gradeYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
         tags: {
@@ -88,17 +82,14 @@ export default function ContactsPage(props) {
         },
         position: {
             label: 'Position',
-            // options: positions || [],
             options: positions.items || [],
         },
         areaCoach: {
             label: 'Area Coach',
-            // options: teamMembers || []
             options: teamMembersItems
         },
         positionCoach: {
             label: 'Position Coach',
-            // options: teamMembers || []
             options: teamMembersItems
         }
     }), [status, ranks, gradeYears, tags, positions])
