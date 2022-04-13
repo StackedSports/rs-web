@@ -182,7 +182,7 @@ export const login = (email, password) => {
 }
 
 export const getPlatform = () => {
-    return AXIOS('get', `team/platforms`)
+    return AXIOS('get', `team/settings/platforms`)
 }
 
 export const getContact = (id) => {
@@ -228,7 +228,7 @@ export const archiveContacts = (ids) => {
 }
 
 export const getAllStatus = () => {
-    return AXIOS('get', `team/statuses`)
+    return AXIOS('get', `team/settings/statuses`)
 }
 
 export const getContacts = (page, perPage) => {
@@ -275,10 +275,10 @@ export const getTagsWithMessages = () => {
     return AXIOS('get', `tags/with_messages`)
 }
 export const getRanks = () => {
-    return AXIOS('get', `team/ranks`)
+    return AXIOS('get', `team/settings/ranks`)
 }
 export const getGradeYears = () => {
-    return AXIOS('get', `team/grad_years`)
+    return AXIOS('get', `team/settings/grad_years`)
 }
 
 
@@ -286,13 +286,13 @@ export const getBoards = () => {
     return AXIOS('get', `filters`)
 }
 export const getPositions = () => {
-    return AXIOS('get', `team/positions`)
+    return AXIOS('get', `team/settings/positions`)
 }
 export const getStatuses = () => {
-    return AXIOS('get', `team/statuses`)
+    return AXIOS('get', `team/settings/statuses`)
 }
 export const getAllColumns = () => {
-    return AXIOS('get', `team/available_columns`)
+    return AXIOS('get', `team/settings/available_columns`)
 }
 export const getBoardFiltersById = (id) => {
     return AXIOS('get', `filters/${id}`)
@@ -317,7 +317,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     if (!objectNotNull(data.criteria))
         delete data.criteria
 
-    
+
 
     // data = {
     //     criteria: {
@@ -366,18 +366,18 @@ export const getMediaTypes = () => {
 }
 
 export const getTextPlaceholders = () => {
-    return AXIOS('get', `team/placeholders`)
+    return AXIOS('get', `team/settings/placeholders`)
 }
 
 export const getSnippets = () => {
-    return AXIOS('get', `team/snippets`)
+    return AXIOS('get', `team/settings/snippets`)
 }
 
 export const getCoachTypes = () => {
-    return AXIOS('get', `team/send_as_coaches`)
+    return AXIOS('get', `team/settings/send_as_coaches`)
 }
 export const getPeopleTypes = () => {
-    return AXIOS('get', `team/people_types`)
+    return AXIOS('get', `team/settings/people_types`)
 }
 
 export const createMessage = (data) => {
@@ -474,6 +474,10 @@ export const addTagsToContacts = (tagIds, contactIds) => {
     })
 }
 
+export const deleteTagToContact = (tagId) => {
+    return DELETE(`contacts/${tagId}/remove_tag`)
+}
+
 // TODO: what is this function?
 export const CreateUser = (body) => {
     //const data = JSON.stringify(body);
@@ -481,28 +485,15 @@ export const CreateUser = (body) => {
 }
 
 export const createNewBoard = (data, selectedFilters) => {
-    const filters = {
-        "status": [],
-        "rank": [],
-        "gradeYear": [],
-        "tags": [],
-        "position": [],
-        "areaCoach": [],
-        "positionCoach": [],
-        ...selectedFilters,
-    }
 
-    console.log(getFilterContactsCriteria(filters))
     const body = {
         filter: {
             ...data,
-            criteria: { ...getFilterContactsCriteria(filters) }
+            criteria: { ...getFilterContactsCriteria(selectedFilters) }
         }
     }
-    console.log(body)
-    console.log(" createNewBoard body", body)
 
-    // return POST(`api/filters`, body)
+    return POST(`filters`, body)
 }
 
 export const getAllContactsEnd = (page) => {
