@@ -4,7 +4,6 @@ import { Stack, Typography, Box, CircularProgress } from '@mui/material'
 
 import { Link } from 'react-router-dom'
 
-
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -18,8 +17,6 @@ export const MainMediaPage = (props) => {
     const media = useMedias(1, 5)
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
-
-    // console.log(placeholders?.items)
 
     const [viewGrid, setViewGrid] = useState(true)
 

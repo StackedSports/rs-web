@@ -18,8 +18,7 @@ import Button from '../Buttons/Button';
 export const PanelFilters = (props) => {
 
   const [selectedFilters, setSelectedFilters] = useState({});
-  console.log("panel filters", props.filters)
-
+  
   const handleOptionsChange = (filter, filterName, isUnique) => {
 
     setSelectedFilters(oldSelectFilters => {
@@ -33,14 +32,18 @@ export const PanelFilters = (props) => {
       }
 
       if (isUnique) {
-        newSelectFilters[filterName] = [filter];
+        newSelectFilters[filterName] = newSelectFilters[filterName].slice(-1);
       }
 
       if (newSelectFilters[filterName].length === 0) {
         delete newSelectFilters[filterName];
       }
 
-      props.onFilterChange(newSelectFilters);
+      if (isUnique && newSelectFilters[filterName]) {
+        props.onFilterChange({ ...newSelectFilters, [filterName]: newSelectFilters[filterName][0] });
+      } else {
+        props.onFilterChange(newSelectFilters);
+      }
 
       return newSelectFilters;
     })
