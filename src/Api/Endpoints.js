@@ -137,7 +137,7 @@ const POST = (url, body) => {
 
         axios.post(URL + url, data, config)
             .then(res => {
-                if (res.status === 204 || res.status === 201)
+                if (res.status === 200 || res.status === 204 || res.status === 201)
                     resolve(res)
                 else
                     reject(res)
@@ -165,6 +165,7 @@ const PUT = (url, body) => {
 
         axios.put(URL + url, data, config)
             .then(res => {
+                console.log(res)
                 if (res.status === 204 || res.status === 201)
                     resolve(res)
                 else
@@ -174,6 +175,10 @@ const PUT = (url, body) => {
                 reject(error)
             })
     })
+}
+
+export const login = (email, password) => {
+    return POST('login', { email, password })
 }
 
 export const getPlatform = () => {

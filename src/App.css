@@ -531,19 +531,22 @@ select-search {
 }
 
 .hoverHighlight:hover {
-  border: 1px solid #3871da !important;
+  /* border: 1px solid #3871da !important; */
 }
 .focusHighlight:focus {
-  border: 1px solid #3871da !important;
+  /* border: 1px solid #5c5e62 !important; */
 }
 
 .MuiCheckbox-colorPrimary.Mui-checked {
-  color: #3871da !important;
+  /* color: #3871da !important; */
 }
 button:focus {
   outline: none;
   border: none;
+  /* color: #eee; */
   outline: 0 none -webkit-focus-ring-color !important;
+
+  /* background-color: #3871da; */
 }
 .css-1aquho2-MuiTabs-indicator {
   display: none;

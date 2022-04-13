@@ -37,40 +37,43 @@ import {
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
+import AuthProvider from 'Context/Auth/AuthProvider'
 
 function App() {
-  return (
-    <ThemeProvider>
-      <div className="body">
-        <Router>
-          <Switch>
-            <Route path="/" exact component={Signup} />
-            <Route path="/dashboard" exact component={Dashboard} />
-            <Route path="/dashboard/:user" exact component={Dashboard} />
-            <Route path="/oldcontacts" exact component={Contacts} />
-            <Route path="/chat" exact component={Chat} />
+	return (
+		<ThemeProvider>
+			<AuthProvider>
+				<div className="body">
+					<Router>
+						<Switch>
+							<Route path="/" exact component={Signup} />
+							<Route path="/dashboard" exact component={Dashboard} />
+							<Route path="/dashboard/:user" exact component={Dashboard} />
+							<Route path="/oldcontacts" exact component={Contacts} />
+							<Route path="/chat" exact component={Chat} />
 
-            <Route path="/oldmedia" exact component={Media} />
-            <Route path="/tweet-create" exact component={TweetCreate} />
+							<Route path="/oldmedia" exact component={Media} />
+							<Route path="/tweet-create" exact component={TweetCreate} />
 
-            <Route path="/contact-profile/:id" exact component={UserProfile} />
-            <Route path="/message-create" exact component={MessageCreatePage} />
-            <Route path="/team-settings" exact component={TeamSettings} />
-            <Route path="/team-settings/:userID" exact component={TeamSettings} />
-            <Route path="/twitter-stream" exact component={TwitterStream} />
-            <Route path="/Media-component" exact component={MediaC} />
+							<Route path="/contact-profile/:id" exact component={UserProfile} />
+							<Route path="/message-create" exact component={MessageCreatePage} />
+							<Route path="/team-settings" exact component={TeamSettings} />
+							<Route path="/team-settings/:userID" exact component={TeamSettings} />
+							<Route path="/twitter-stream" exact component={TwitterStream} />
+							<Route path="/Media-component" exact component={MediaC} />
 
-            <Route path='/test' component={Test} />
+							<Route path='/test' component={Test} />
 
-            <Route path={routes.contacts.path} component={ContactsRoutes} />
-            <Route path={routes.messages.path} component={MessagesRoutes} />
-            <Route path={routes.media.path} component={MediaRoutes} />
-            <Route path={routes.settings.path} component={SettingsRoutes} />
-          </Switch>
-        </Router>
-      </div>
-    </ThemeProvider>
-  );
+							<Route path={routes.contacts.path} component={ContactsRoutes} />
+							<Route path={routes.messages.path} component={MessagesRoutes} />
+							<Route path={routes.media.path} component={MediaRoutes} />
+							<Route path={routes.settings.path} component={SettingsRoutes} />
+						</Switch>
+					</Router>
+				</div>
+			</AuthProvider>
+		</ThemeProvider>
+	);
 }
 
 export default App;

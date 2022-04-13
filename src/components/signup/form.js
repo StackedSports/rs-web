@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   FormWrap,
@@ -38,6 +38,10 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles } from "@material-ui/core/styles";
 import { ToastContainer, toast } from "react-toastify";
 
+import { Redirect } from "react-router-dom";
+
+import { AuthContext } from 'Context/Auth/AuthProvider'
+
 var validator = require("email-validator");
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Signin() {
   const classes = useStyles();
+
+  const auth = useContext(AuthContext)
+  
+  const [redirect, setRedirect] = useState(null)
+
   const [checked, setChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -83,16 +92,16 @@ export default function Signin() {
 
   const loginUserUsingCredential = () => {
     setLoading(true);
-    loginUser(email, password).then(
+    auth.login(email, password).then(
       (res) => {
         // console.log(res);
-        if (res.statusText === "OK") {
-          // console.log("This is the resonse of login", res.data);
-          localStorage.setItem("user", JSON.stringify(res.data));
-          console.log(localStorage.getItem("user"));
-          setLoading(false);
-          window.location.href = "/dashboard";
-        }
+        // console.log("This is the resonse of login", res.data);
+        //localStorage.setItem("user", JSON.stringify(res.data));
+        //console.log(localStorage.getItem("user"));
+        setLoading(false);
+        // window.location.href = "/dashboard";
+        console.log('redirecting...')
+        setRedirect('/dashboard')
       },
       (error) => {
         // console.log("this is error", error.JSON());
@@ -106,6 +115,9 @@ export default function Signin() {
   useEffect(() => {}, []);
 
   const notifyUser = (data) => toast(data);
+
+  if(redirect)
+    return <Redirect to={redirect}/>
 
   return (
     <>

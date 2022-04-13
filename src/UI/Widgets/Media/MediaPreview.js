@@ -16,8 +16,9 @@ const Placeholder = (props) => {
             position='relative'
             overflow='hidden'
         >
-            <Box
-                sx={{
+            {images && images[0] && (
+                <Box
+                  sx={{
                     position: 'absolute',
                     width: '50%',
                     height: '100%',
@@ -25,19 +26,21 @@ const Placeholder = (props) => {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1,
-                }}
-            >
-                <img
-                    src={images[0]}
-                    alt='placeholder'
-                    height='100%'
-                    width='100%'
-                    style={{ objectFit: 'contain' }}
-                />
-            </Box>
+                  }}
+                >
+                    <img
+                      src={images[0]}
+                      alt='placeholder'
+                      height='100%'
+                      width='100%'
+                      style={{ objectFit: 'contain' }}
+                    />
+                </Box>
+            )}
 
-            <Box
-                sx={{
+            {images && images[0] && (
+                <Box
+                  sx={{
                     position: 'absolute',
                     width: '50%',
                     height: '100%',
@@ -45,19 +48,21 @@ const Placeholder = (props) => {
                     left: '50%',
                     transform: 'translate(-100%, -50%)  scale(0.7)',
                     zIndex: 0,
-                }}
-            >
-                <img
-                    src={images[1] ? images[1] : images[0]}
-                    alt='placeholder'
-                    height='100%'
-                    width='100%'
-                    style={{ objectFit: 'contain' }}
-                />
-            </Box>
+                  }}
+                >
+                    <img
+                      src={images[1] ? images[1] : images[0]}
+                      alt='placeholder'
+                      height='100%'
+                      width='100%'
+                      style={{ objectFit: 'contain' }}
+                    />
+                </Box>
+            )}
 
-            <Box
-                sx={{
+            {images && images[0] && (
+                <Box
+                  sx={{
                     position: 'absolute',
                     width: '50%',
                     height: '100%',
@@ -66,16 +71,17 @@ const Placeholder = (props) => {
                     transform: 'translate(0, -50%) scale(0.7)',
                     zIndex: 0,
 
-                }}
-            >
-                <img
-                    src={images[2] ? images[2] : images[0]}
-                    alt='placeholder'
-                    height='100%'
-                    width='100%'
-                    style={{ objectFit: 'contain' }}
-                />
-            </Box>
+                  }}
+                >
+                    <img
+                      src={images[2] ? images[2] : images[0]}
+                      alt='placeholder'
+                      height='100%'
+                      width='100%'
+                      style={{ objectFit: 'contain' }}
+                    />
+                </Box>
+            )}
 
 
         </Box>
@@ -97,6 +103,8 @@ const Image = (props) => {
 }
 
 const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
+    if(!props.media)
+        return <></>
     // console.log(props.media)
 
     const isMedia = type === 'media'
@@ -128,14 +136,16 @@ const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
                     ) : (
                         <PhotoLibraryIcon style={styles.icon} />
                     )}
-                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name}>
+                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name} arrow>
                         <Typography noWrap style={styles.mediaName}>
                             {props.media?.name ? props.media?.name : props.media?.file_name}
                         </Typography>
                     </Tooltip>
                 </Stack>
                 {props.media?.created_at && (
-                    <Typography noWrap variant='caption'>Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}</Typography>
+                    <Typography noWrap variant='caption'>
+                        Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}
+                    </Typography>
                 )}
             </Box>
         </Grid>
