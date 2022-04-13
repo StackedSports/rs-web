@@ -48,7 +48,7 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination,
                             /* <MediaPreview
                                 key={item.hashid || item.id}
                                 type={type}
-                                media={item}
+                                item={item}
                                 onClick={onClickItem}                               
                             /> */
                             <MyMediaPreview

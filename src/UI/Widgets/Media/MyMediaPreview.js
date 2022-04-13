@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, styled } from "@mui/material"
 import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
@@ -88,45 +90,59 @@ const MediaImage = ({ media }) => {
     )
 }
 
-export const MyMediaPreview = ({ type = 'media', item, linkTo, onClick, onSelected, ...restOfProps }) => {
+export const MyMediaPreview = ({ type = 'media', ...props }) => {
+    const [isHovering, setIsHovering] = useState(false)
 
     const isMedia = type === 'media'
 
     // TODO: rename this to "selectable"
-    const checkBoxOnHover = (onSelected && onSelected instanceof Function) ? true : false
+    const selectable = (props.onSelectionChange && props.onSelectionChange instanceof Function) ? true : false
 
     const cardActionProps = () => {
-        if (linkTo) {
+        if (props.linkTo) {
             return ({
                 component: Link,
-                to: linkTo,
+                to: props.linkTo,
             })
         } else {
             return ({
-                onClick: onClick,
+                onClick: props.onClick,
             })
         }
     }
 
     // return true or false if the item is selected
-    const handleSelectCheckBox = (event) => {
-        onSelected(event.target.checked)
+    const onCheckboxChange = (event) => {
+        props.onSelectionChange(event.target.checked)
+    }
+
+    const onMouseEnter = (e) => {
+        setIsHovering(true)
+    }
+
+    const onMouseLeave = (e) => {
+        setIsHovering(false)
     }
 
     return (
-        <StyledCard variant="outlined" {...restOfProps}>
-            <CardActionArea {...cardActionProps()} disableRipple >
+        <StyledCard
+          variant="outlined"
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+        >
+            <CardActionArea {...cardActionProps()}disableRipple >
                 <CardImage>
                     {isMedia ? (
-                        <MediaImage media={item} />
+                        <MediaImage media={props.item} />
                     ) : (
-                        <PlaceholderImage placeholder={item} />
+                        <PlaceholderImage placeholder={props.item} />
                     )}
-                    {checkBoxOnHover &&
+                    {selectable && (isHovering || props.selected) &&
                         <StyledCheckBox
-                            color="primary"
+                            // color="primary"
+                            checked={props.selected}
                             disableRipple
-                            onChange={(e) => handleSelectCheckBox(e)}
+                            onChange={onCheckboxChange}
                             onClick={e => e.stopPropagation()}
                         />
                     }
@@ -139,17 +155,17 @@ export const MyMediaPreview = ({ type = 'media', item, linkTo, onClick, onSelect
                             <PhotoLibraryIcon />
                         )}
                         <Tooltip
-                            title={item?.name ? item?.name : item?.file_name || ''}
+                            title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
                         >
                             <Typography noWrap fontWeight='bold'>
-                                {item?.name ? item?.name : item?.file_name}
+                                {props.item?.name ? props.item?.name : props.item?.file_name}
                             </Typography>
                         </Tooltip>
                     </Stack>
-                    {item?.created_at && (
+                    {props.item?.created_at && (
                         <Typography noWrap variant='caption'>
                             Uploaded at:
-                            {formatDate(item?.created_at)}
+                            {formatDate(props.item?.created_at)}
                         </Typography>
                     )}
                 </CardContent>
@@ -189,7 +205,7 @@ const CardImage = styled(Box)(({ theme }) => ({
 
 const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
     position: 'absolute',
-    top: 10,
-    left: 10,
+    top: 0,
+    left: 0,
     zIndex: 1,
 }));

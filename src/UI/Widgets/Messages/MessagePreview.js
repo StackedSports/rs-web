@@ -79,8 +79,11 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         })
     }, [recipients])
 
-    console.log(message)
-    console.log(recipients)
+    // console.log(message)
+    // console.log(recipients)
+
+    // console.log(message.media)
+    // console.log(message.media_placeholder)
 
     const hasMedia = useMemo(() => objectNotNull(message?.media), [message])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message?.media_placeholder), [message])
@@ -131,9 +134,9 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
                         <MediaPreview
-                          containerStyle={{ marginLeft: 15, marginRight: 15 }}
+                          cardStyle={{ marginLeft: 15, marginRight: 15 }}
                           type={hasMedia ? 'media' : 'placeholder'}
-                          media={hasMedia ? message.media : mediaPlaceholder}/>
+                          item={hasMedia ? message.media : mediaPlaceholder}/>
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
