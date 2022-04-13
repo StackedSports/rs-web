@@ -8,8 +8,8 @@ const TagsTable = (props) => {
         <DataTable
           items={props.tags}
           columns={columns}
-          selectionModel={props.selection}
-          onSelectionModelChange={props.onSelectionChange}
+          selection={props.selection}
+          onSelectionChange={props.onSelectionChange}
           loading={props.loading}
           checkboxSelection
         />
