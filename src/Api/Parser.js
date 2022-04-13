@@ -5,7 +5,7 @@ export const getFilterContactsCriteria = (filters) => {
 
     console.log(filters)
 
-    if(filters.status) {
+    if (filters.status) {
         criteria['status'] = []
 
         filters.status.forEach(status => {
@@ -13,7 +13,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.rank) {
+    if (filters.rank) {
         criteria['ranks'] = []
 
         filters.rank.forEach(rank => {
@@ -21,7 +21,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.gradeYear) {
+    if (filters.gradeYear) {
         criteria['years'] = []
 
         filters.gradeYear.forEach(year => {
@@ -29,7 +29,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.tags) {
+    if (filters.tags) {
         criteria['tags'] = []
 
         filters.tags.forEach(tag => {
@@ -37,7 +37,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.position) {
+    if (filters.position) {
         criteria['positions'] = []
 
         filters.position.forEach(position => {
@@ -45,7 +45,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.areaCoach) {
+    if (filters.areaCoach) {
         criteria['area_coaches'] = []
 
         filters.areaCoach.forEach(areaCoach => {
@@ -53,7 +53,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.positionCoach) {
+    if (filters.positionCoach) {
         criteria['position_coaches'] = []
 
         filters.positionCoach.forEach(positionCoach => {
@@ -83,14 +83,14 @@ export const getFilterContactsCriteria = (filters) => {
 }
 
 export const getFilterMessagesCriteria = (filters) => {
-    if(!filters)
+    if (!filters)
         return null
-    
+
     let criteria = {}
 
     console.log(filters)
 
-    if(filters.status) {
+    if (filters.status) {
         criteria['message_status'] = []
 
         filters.status.forEach(status => {
@@ -115,6 +115,44 @@ export const getFilterMessagesCriteria = (filters) => {
     //         ,"sent_at_dates": [] //Filter by sent at, If passing in sent_at_dates, both a start and end date are required
     //     }
     // }
+
+    return criteria
+}
+
+export const getFilterMediasCriteria = (filters) => {
+    if (!filters)
+        return null
+
+    console.log("Parser Filter", filters)
+
+    let criteria = {}
+    console.log(filters)
+
+    // OK but only filters one type per request
+    if (filters.fileType)
+        criteria['type'] = filters.fileType.id
+
+    // OK 
+    if (filters.tag) {
+        criteria['tag_id'] = []
+
+        filters.tag.forEach(tag => {
+            criteria['tag_id'].push(tag.id)
+        })
+    }
+
+    // TODO
+    if (filters.placeholder)
+        criteria['placeholder_id'] = filters.placeholder
+
+    /*  {
+         "per_page": 25,
+         "page": 1,
+         //"name":,
+         "type": 1 // 0: recent_uploads, 1: my_media, 2: images, 3: gifs, 4: mp4s, 5: pdfs
+         // "tag_id": [7693] // pass an array of tag ids to search
+         // "placeholder_id": 1536
+     }*/
 
     return criteria
 }

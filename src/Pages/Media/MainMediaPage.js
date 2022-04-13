@@ -19,8 +19,6 @@ export const MainMediaPage = (props) => {
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
 
-    console.log(placeholders?.items)
-
     const [viewGrid, setViewGrid] = useState(true)
 
     // console.log("placeholders", placeholders)
@@ -33,8 +31,9 @@ export const MainMediaPage = (props) => {
 
     return (
         <MediaPage
-            viewGrid={viewGrid}
-            onSwitchView={onSwitchView}
+          viewGrid={viewGrid}
+          onSwitchView={onSwitchView}
+          filter = {media.filter}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -43,10 +42,10 @@ export const MainMediaPage = (props) => {
                 </Typography>
                 <Box>
                     <Button
-                        component={Link}
-                        to={mediaRoutes.media}
-                        name='View More'
-                        variant='text'
+                      component={Link}
+                      to={mediaRoutes.media}
+                      name='View More'
+                      variant='text'
                     />
                 </Box>
             </Stack>
@@ -60,12 +59,12 @@ export const MainMediaPage = (props) => {
                 </Box>)}
 
             <MediaTable
-                items={media.items || []}
-                loading={media.loading}
-                view={viewGrid ? 'grid' : 'list'}
-                type="media"
-                linkTo='/media/media/details/'
-                disablePagination
+              items={media.items || []}
+              loading={media.loading}
+              view={viewGrid ? 'grid' : 'list'}
+              type="media"
+              linkTo='/media/media/details/'
+              disablePagination
             />
 
             <Divider />

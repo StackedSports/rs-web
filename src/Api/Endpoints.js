@@ -4,9 +4,10 @@ import moment from "moment";
 import curlirize from 'axios-curlirize';
 
 
-import { 
+import {
     getFilterContactsCriteria,
-    getFilterMessagesCriteria 
+    getFilterMessagesCriteria,
+    getFilterMediasCriteria,
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'
@@ -108,7 +109,7 @@ const GET = (url, body) => {
         axios.get(URL + url, config)
             .then(res => {
                 console.log(res)
-                if(res.status === 200 || res.status === 204 || res.status === 201) {
+                if (res.status === 200 || res.status === 204 || res.status === 201) {
                     let pagination = getPagination(res)
                     resolve([res.data, pagination])
                 } else
@@ -311,13 +312,13 @@ export const getUser = () => {
 
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
-        criteria: {...getFilterMessagesCriteria(filters)}
+        criteria: { ...getFilterMessagesCriteria(filters) }
     }
 
-    if(!objectNotNull(data.criteria))
+    if (!objectNotNull(data.criteria))
         delete data.criteria
 
-    
+
 
     data = {
         criteria: {
@@ -359,6 +360,16 @@ export const getMedia = (id) => {
 export const getMedias = (page, perPage) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
+}
+
+export const filterMedias = (page, perPage, filters) => {
+    const data = {
+        page: page,
+        per_page: perPage,
+        ...getFilterMediasCriteria(filters),
+    }
+
+    return AXIOS('post', 'media/search', data)
 }
 
 export const getMediaTypes = () => {

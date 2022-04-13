@@ -14,6 +14,7 @@ export const AllMediaPage = () => {
   const [viewGrid, setViewGrid] = useState(true)
   const history = useHistory()
 
+  const medias = useMedias(1, 25)
   const { items: media, loading, pagination } = useMedias(1, 25)
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export const AllMediaPage = () => {
       title="Media"
       onSwitchView={onSwitchView}
       viewGrid={viewGrid}
+      filter={medias.filter}
     >
       <Typography fontWeight='bold' gutterBottom>
         Showing  {' '}

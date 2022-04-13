@@ -15,14 +15,12 @@ export const MediaPage = (props) => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
 
-    console.log(teamMembers.items)
-
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
-    // const [selectedFilters, setSelectedFilters] = useState({})
+    const [selectedFilters, setSelectedFilters] = useState({})
 
     useEffect(() => {
         getMediaTypes().then(res => {
@@ -40,7 +38,6 @@ export const MediaPage = (props) => {
                 name: getFullName(item)
             })))
     }, [teamMembers.items])
-
 
     const filters = [
         { // Category
@@ -120,6 +117,7 @@ export const MediaPage = (props) => {
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
+        props.filter(filter)
     }
 
 

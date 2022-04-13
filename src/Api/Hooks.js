@@ -35,6 +35,7 @@ import {
     getTagsWithMedia,
     archiveContacts,
     filterContacts,
+    filterMedias,
 } from 'Api/Endpoints'
 
 import { usePagination } from './Pagination'
@@ -669,10 +670,15 @@ export const useMedias = (currentPage, itemsPerPage) => {
     const [media, setMedia] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
+    // TODO: testing filter
+    const [filters, setFilters] = useState(null)
+
     useEffect(() => {
         setLoading(true)
 
-        getMedias(pagination.currentPage, pagination.itemsPerPage)
+        const get = objectNotNull(filters) ? filterMedias : getMedias
+
+        get(pagination.currentPage, pagination.itemsPerPage,filters)
             .then(([media, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -684,12 +690,24 @@ export const useMedias = (currentPage, itemsPerPage) => {
             })
             .finally(() => setLoading(false))
 
-    }, [pagination.currentPage])
+    }, [pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        console.log("hook filter",filters)
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
 
     return {
         items: media,
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 

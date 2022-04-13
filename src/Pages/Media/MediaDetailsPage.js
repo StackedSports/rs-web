@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear } from "@mui/icons-material"
-import { Grid, Stack, Box, Typography, Paper, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
+import { Grid, Stack, Box, Typography, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
