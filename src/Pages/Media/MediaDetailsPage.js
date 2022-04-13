@@ -93,12 +93,18 @@ export const MediaDetailsPage = () => {
     }
 
     const messagesCountLabel = useMemo(() => {
-        if(!media)
+        if (!media)
             return '--'
-        
+
         return `${Object.values(media.activity).reduce((acc, item) => acc + item, 0)} Messages`
     }, [media])
 
+    const fileSizeFormatted = useMemo(() => {
+        if (!media)
+            return '--'
+
+        return `${(media.size / 1000).toFixed(2)} kb`
+    }, [media])
 
     return (
         <MainLayout
@@ -124,38 +130,19 @@ export const MediaDetailsPage = () => {
                             onSelected={(checked) => console.log(checked)}
                         />
 
-                        <Box
-                            flex='1 1 auto'
-                            sx={{
-                                color: 'text.secondary',
-                            }}
-                        >
+                        <Box flex='1 1 auto' >
                             <Typography variant='subtitle1' color='text.primary' >
                                 {media?.name || media?.file_name}
                             </Typography>
 
-                            <DetailsPreview label="File Type:" value={media?.file_type}/>
-                            
-                            <Typography variant="body1">
-                                Uploaded on :
-                                <Typography component="span" >
-                                    {' ' + formatDate(media?.created_at)}
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1">
-                                Uploaded by :
-                                <Typography component="span" >
-                                    {' ' + getFullName(media?.owner)}
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1">
-                                File Size:
-                                <Typography component="span" >
-                                    {' ' + (media?.size / 1000).toFixed(0) + ' kb'}
-                                </Typography>
-                            </Typography>
+                            <DetailsPreview label="File Type:" value={media?.file_type} />
+
+                            <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
+                            <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
+                            <DetailsPreview label="File Size:" value={fileSizeFormatted} />
+
                             <Stack direction='row' gap={2} alignItems='center'>
-                                <Typography variant="body1">
+                                <Typography variant="info">
                                     Tags :
                                 </Typography>
                                 {media?.tags.map((tag) => (
@@ -317,22 +304,16 @@ export const MediaDetailsPage = () => {
                         <Typography variant='subtitle1'>
                             Media Status
                         </Typography>
-                        <Stack>
-                            <DetailsPreview
-                              direction="column"
-                              label="Sent in:"
-                              value={messagesCountLabel}
-                            />
-                        </Stack>
-                        <Stack>
-                            <Typography variant='subtitle2' gutterBottom >
-                                Media Published in:
-                            </Typography>
-                            <Typography variant='subtitle1'>
-                                {media?.activity?.tweets} Tweets
-                            </Typography>
-                        </Stack>
-
+                        <DetailsPreview
+                            direction="column"
+                            label="Sent in:"
+                            value={messagesCountLabel}
+                        />
+                        <DetailsPreview
+                            direction="column"
+                            label="Media Published in:"
+                            value={`${media?.activity?.tweets} Tweets`}
+                        />
                         <Stack>
                             <Typography variant='subtitle2' gutterBottom >
                                 Messaging Stats:
@@ -358,7 +339,7 @@ export const MediaDetailsPage = () => {
                         </Stack>
 
                         <Stack>
-                            <Typography variant='subtitle2' gutterBottom >
+                            <Typography variant="info" gutterBottom >
                                 Post Stats:
                             </Typography>
 
@@ -376,7 +357,7 @@ export const MediaDetailsPage = () => {
                                     -
                                 </Typography>
                                 <Typography variant='caption'>
-                                    Favourites from Contacts
+                                    Favorites from Contacts
                                 </Typography>
                             </Stack>
 
@@ -445,10 +426,6 @@ const GridItemLeft = styled(Grid)(({ theme }) => ({
         textTransform: 'capitalize',
     },
 
-    'span.MuiTypography-body1': {
-        fontWeight: 'bold',
-        color: theme.palette.text.primary,
-    }
 }));
 
 const TagsInfo = styled('span')(({ theme }) => ({
@@ -457,7 +434,7 @@ const TagsInfo = styled('span')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadius, 
     marginRight: theme.spacing(1),
     width: 'fit-content',
 }));
