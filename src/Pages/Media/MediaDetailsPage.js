@@ -93,7 +93,7 @@ export const MediaDetailsPage = () => {
         //TODO
     }
 
-    const onMediaSelectionChange = (checked) => {
+    const onMediaSelectedChange = (checked) => {
         setMediaSelected(checked)
     }
 
@@ -127,8 +127,8 @@ export const MediaDetailsPage = () => {
                           item={media}
                           loading={loading}
                           type='media'
-                          selected={mediaSelected}
-                          onSelectionChange={onMediaSelectionChange}
+                        //   selected={mediaSelected}
+                        //   onSelectedChange={onMediaSelectedChange}
                         />
 
                         {/* <MyMediaPreview

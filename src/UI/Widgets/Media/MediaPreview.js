@@ -112,7 +112,7 @@ const MediaPreview = ({ type, ...props }) => {
 
     const isMedia = type === 'media'
 
-    const selectable = (props.onSelectionChange && props.onSelectionChange instanceof Function) ? true : false
+    const selectable = (props.onSelectedChange && props.onSelectedChange instanceof Function) ? true : false
 
     const cardActionProps = () => {
         if (props.linkTo) {
@@ -134,7 +134,7 @@ const MediaPreview = ({ type, ...props }) => {
     }
 
     const onCheckboxChange = (event) => {
-        props.onSelectionChange(event.target.checked)
+        props.onSelectedChange(event.target.checked)
     }
 
     const onMouseEnter = (e) => {

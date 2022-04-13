@@ -19,6 +19,8 @@ export const MainMediaPage = (props) => {
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
 
+    // console.log(placeholders?.items)
+
     const [viewGrid, setViewGrid] = useState(true)
 
     // console.log("placeholders", placeholders)
@@ -27,7 +29,9 @@ export const MainMediaPage = (props) => {
         setViewGrid(oldViewGrid => !oldViewGrid)
     }
 
-
+    const onMediaSelectionChange = (selection) => {
+        console.log(selection)
+    }
 
     return (
         <MediaPage
@@ -59,12 +63,13 @@ export const MainMediaPage = (props) => {
                 </Box>)}
 
             <MediaTable
-              items={media.items || []}
-              loading={media.loading}
-              view={viewGrid ? 'grid' : 'list'}
-              type="media"
-              linkTo='/media/media/details/'
-              disablePagination
+                items={media.items || []}
+                loading={media.loading}
+                view={viewGrid ? 'grid' : 'list'}
+                type="media"
+                linkTo='/media/media/details/'
+                onSelectionChange={onMediaSelectionChange}
+                disablePagination
             />
 
             <Divider />
