@@ -312,7 +312,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     if (!objectNotNull(data.criteria))
         delete data.criteria
 
-    
+
 
     data = {
         criteria: {
@@ -469,6 +469,10 @@ export const addTagsToContacts = (tagIds, contactIds) => {
     })
 }
 
+export const deleteTagToContact = (tagId) => {
+    return DELETE(`contacts/${tagId}/remove_tag`)
+}
+
 // TODO: what is this function?
 export const CreateUser = (body) => {
     //const data = JSON.stringify(body);
@@ -476,28 +480,15 @@ export const CreateUser = (body) => {
 }
 
 export const createNewBoard = (data, selectedFilters) => {
-    const filters = {
-        "status": [],
-        "rank": [],
-        "gradeYear": [],
-        "tags": [],
-        "position": [],
-        "areaCoach": [],
-        "positionCoach": [],
-        ...selectedFilters,
-    }
 
-    console.log(getFilterContactsCriteria(filters))
     const body = {
         filter: {
             ...data,
-            criteria: { ...getFilterContactsCriteria(filters) }
+            criteria: { ...getFilterContactsCriteria(selectedFilters) }
         }
     }
-    console.log(body)
-    console.log(" createNewBoard body", body)
 
-    // return POST(`api/filters`, body)
+    return POST(`filters`, body)
 }
 
 export const getAllContactsEnd = (page) => {
