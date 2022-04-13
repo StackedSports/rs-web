@@ -4,7 +4,6 @@ import { Stack, Typography, Box, CircularProgress } from '@mui/material'
 
 import { Link } from 'react-router-dom'
 
-
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -18,8 +17,6 @@ export const MainMediaPage = (props) => {
     const media = useMedias(1, 5)
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
-
-    // console.log(placeholders?.items)
 
     const [viewGrid, setViewGrid] = useState(true)
 
@@ -35,8 +32,9 @@ export const MainMediaPage = (props) => {
 
     return (
         <MediaPage
-            viewGrid={viewGrid}
-            onSwitchView={onSwitchView}
+          viewGrid={viewGrid}
+          onSwitchView={onSwitchView}
+          filter = {media.filter}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -45,10 +43,10 @@ export const MainMediaPage = (props) => {
                 </Typography>
                 <Box>
                     <Button
-                        component={Link}
-                        to={mediaRoutes.media}
-                        name='View More'
-                        variant='text'
+                      component={Link}
+                      to={mediaRoutes.media}
+                      name='View More'
+                      variant='text'
                     />
                 </Box>
             </Stack>

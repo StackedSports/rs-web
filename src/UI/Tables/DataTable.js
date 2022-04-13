@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
 
 import { Stack } from '@mui/material'
-import { Grid } from "@material-ui/core"
 import { DataGrid } from '@mui/x-data-grid'
 import Pagination from '@mui/material/Pagination'
-// import Stack from '@mui/material/Stack'
+
 
 const DataTable = (props) => {
 
@@ -38,13 +37,14 @@ const DataTable = (props) => {
     let style = {}
 
     if(props.mini)
-        style['height'] = 500
+        style['height'] = 500 
 
     return (
         <Stack spacing={2} style={{ width: '100%', ...style }}>
             <DataGrid sx={{ m: 0 }}
                 //   rows={props.contacts ? props.contacts : []}
               autoHeight={props.mini ? false : true}
+              disableSelectionOnClick={props.disableSelectionOnClick ? true : false}
               rows={props.items}
               columns={props.columns}
               checkboxSelection={props.checkboxSelection}
@@ -56,6 +56,7 @@ const DataTable = (props) => {
               hideFooter
               pageSize={props.pageSize || 50}
               rowsPerPageOptions={[props.rowsPerPageOptions || 50]}
+              onCellClick={props.onCellClick}
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}

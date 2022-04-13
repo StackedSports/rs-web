@@ -11,93 +11,102 @@ import Button from '../Buttons/Button';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
- * @param {boolean} open controls the state of the panel expand/collapse 
- * @param {object} filters object with the filters options and labels
- * @param {function} onOptionSelected callback function to be called when an option is selected from the dropdown returns the selected options object
+ * @param {boolean} props.open controls the state of the panel expand/collapse 
+ * @param {object} props.filters object with the filters options and labels isUnique
+ * @param {function} props.onFilterChange callback function to be called when an option is selected from the dropdown returns the selected options object
  */
-export const PanelFilters = ({ open, filters, onFilterChange }) => {
+export const PanelFilters = (props) => {
 
-    const [selectedFilters, setSelectedFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState({});
+  
+  const handleOptionsChange = (filter, filterName, isUnique) => {
 
-    const handleOptionsChange = (filter, filterName) => {
+    setSelectedFilters(oldSelectFilters => {
+      const newSelectFilters = { ...oldSelectFilters };
+      newSelectFilters[filterName] || (newSelectFilters[filterName] = []);
 
-        setSelectedFilters(oldSelectFilters => {
-            const newSelectFilters = { ...oldSelectFilters };
-            newSelectFilters[filterName] || (newSelectFilters[filterName] = []);
+      if (newSelectFilters[filterName].includes(filter)) {
+        newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
+      } else {
+        newSelectFilters[filterName].push(filter);
+      }
 
-            if (newSelectFilters[filterName].includes(filter)) {
-                newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
-            } else {
-                newSelectFilters[filterName].push(filter);
-            }
+      if (isUnique) {
+        newSelectFilters[filterName] = newSelectFilters[filterName].slice(-1);
+      }
 
-            if (newSelectFilters[filterName].length === 0) {
-                delete newSelectFilters[filterName];
-            }
+      if (newSelectFilters[filterName].length === 0) {
+        delete newSelectFilters[filterName];
+      }
 
-            onFilterChange(newSelectFilters);
-            return newSelectFilters;
-        })
-    }
+      if (isUnique && newSelectFilters[filterName]) {
+        props.onFilterChange({ ...newSelectFilters, [filterName]: newSelectFilters[filterName][0] });
+      } else {
+        props.onFilterChange(newSelectFilters);
+      }
 
-    const onRemoveFilter = (filterName, filter) => {
-        setSelectedFilters(oldSelectFilters => {
-            const newSelectFilters = { ...oldSelectFilters };
-            newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
+      return newSelectFilters;
+    })
+  }
 
-            if (newSelectFilters[filterName].length === 0) {
-                delete newSelectFilters[filterName];
-            }
+  const onRemoveFilter = (filterName, filter) => {
+    setSelectedFilters(oldSelectFilters => {
+      const newSelectFilters = { ...oldSelectFilters };
+      newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
 
-            onFilterChange(newSelectFilters);
+      if (newSelectFilters[filterName].length === 0) {
+        delete newSelectFilters[filterName];
+      }
 
-            return newSelectFilters;
-        })
-    }
+      props.onFilterChange(newSelectFilters);
 
-    const getContent = (options, filterName) => (
-        <Dropdown.List>
-            {options.map((option) => (
-                <Dropdown.Item
-                    key={option.id}
-                    name={option.name}
-                    onClick={() => handleOptionsChange(option, filterName)}
+      return newSelectFilters;
+    })
+  }
+
+  const getContent = (options, filterName, isUnique) => (
+    <Dropdown.List>
+      {options.map((option) => (
+        <Dropdown.Item
+          key={option.id}
+          name={option.name}
+          onClick={() => handleOptionsChange(option, filterName, isUnique)}
+        />
+      ))}
+    </Dropdown.List>
+  )
+
+  const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
+
+  return (
+    <>
+      <Stack direction='row' flexWrap='wrap' pb={1}>
+        {selectedFilters && Object.keys(selectedFilters).map(key =>
+          selectedFilters[key].map((filter, index) => (
+            <SearchableOptionSelected
+              style={{ marginLeft: 0 }}
+              key={filter.id}
+              item={`${props.filters[key].label}: ${filter.name}`}
+              onRemove={(e) => onRemoveFilter(key, filter)}
+            />
+          )))}
+      </Stack>
+
+      <Collapse in={props.open}>
+        <Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
+          {props.filters && Object.keys(props.filters).map(filterName => {
+            const filter = props.filters[filterName];
+            return (
+              <Box key={filterName}>
+                <Dropdown
+                  header={() => getHeader(filter.label)}
+                  content={() => getContent(filter.options, filterName, filter.isUnique)}
                 />
-            ))}
-        </Dropdown.List>
-    )
-
-    const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
-
-    return (
-        <>
-            <Stack direction='row' flexWrap='wrap' pb={1}>
-                {selectedFilters && Object.keys(selectedFilters).map(key =>
-                    selectedFilters[key].map((filter, index) => (
-                        <SearchableOptionSelected
-                          style={{marginLeft: 0}}
-                          key={filter.id}
-                          item={`${filters[key].label}: ${filter.name}`}
-                          onRemove={(e) => onRemoveFilter(key, filter)}
-                        />
-                    )))}
-            </Stack>
-
-            <Collapse in={open}>
-                <Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
-                    {filters && Object.keys(filters).map(filterName => {
-                        const filter = filters[filterName];
-                        return (
-                            <Box key={filterName}>
-                                <Dropdown
-                                    header={() => getHeader(filter.label)}
-                                    content={() => getContent(filter.options, filterName)}
-                                />
-                            </Box>
-                        )
-                    })}
-                </Stack>
-            </Collapse>
-        </>
-    )
+              </Box>
+            )
+          })}
+        </Stack>
+      </Collapse>
+    </>
+  )
 }

@@ -4,7 +4,7 @@ import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear 
 import { Grid, Stack, Box, Typography, Paper, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
 
 import MainLayout from 'UI/Layouts/MainLayout'
-import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
+import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 
 import { usePlaceholder } from "Api/Hooks"
 import { formatDate, getFullName } from "utils/Parser"
@@ -31,7 +31,7 @@ export const MediaPlaceholderDetailsPage = () => {
     >
 
       <Stack direction="row" flexWrap='wrap' spacing={2}>
-        <MyMediaPreview
+        <MediaPreview
           type="placeholder"
           item={placeholder || {}}
         />

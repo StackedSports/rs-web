@@ -22,7 +22,7 @@ export const MediaPage = (props) => {
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
-    // const [selectedFilters, setSelectedFilters] = useState({})
+    const [selectedFilters, setSelectedFilters] = useState({})
 
     useEffect(() => {
         getMediaTypes().then(res => {
@@ -40,7 +40,6 @@ export const MediaPage = (props) => {
                 name: getFullName(item)
             })))
     }, [teamMembers.items])
-
 
     const filters = [
         { // Category
@@ -69,7 +68,6 @@ export const MediaPage = (props) => {
                 { name: 'Download', onClick: () => { console.log("clicked") } },
                 { name: 'Archive Media', onClick: () => { console.log("clicked") } },
                 { name: 'Untag', onClick: () => { console.log("clicked") } },
-
             ]
         },
         {
@@ -90,6 +88,7 @@ export const MediaPage = (props) => {
         "fileType": {
             label: 'File Type',
             options: mediaTypes,
+            isUnique: true,
         },
         "distributed": {
             label: 'Distributed',
@@ -118,10 +117,9 @@ export const MediaPage = (props) => {
     }
 
     const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
         setSelectedFilters(filter)
+        props.filter(filter)
     }
-
 
 
     return (

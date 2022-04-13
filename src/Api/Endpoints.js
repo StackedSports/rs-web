@@ -1,12 +1,9 @@
 import axios from "axios";
-import moment from "moment";
-
-import curlirize from 'axios-curlirize';
-
 
 import {
     getFilterContactsCriteria,
-    getFilterMessagesCriteria
+    getFilterMessagesCriteria,
+    getFilterMediasCriteria,
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'
@@ -359,6 +356,16 @@ export const getMedia = (id) => {
 export const getMedias = (page, perPage) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
+}
+
+export const filterMedias = (page, perPage, filters) => {
+    const data = {
+        page: page,
+        per_page: perPage,
+        ...getFilterMediasCriteria(filters),
+    }
+
+    return AXIOS('post', 'media/search', data)
 }
 
 export const getMediaTypes = () => {

@@ -25,7 +25,7 @@ import { createNewBoard } from 'Api/Endpoints'
  * @returns 
  */
 
-export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) => {
+export const CreateBoardDialog = ({ open, onClose, selectedFilters }) => {
     const [boardName, setBoardName] = useState('')
     const [isShared, setIsShared] = useState(false)
 
