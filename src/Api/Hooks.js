@@ -699,7 +699,7 @@ export const useMedias = (currentPage, itemsPerPage) => {
 export const useMessage = (id, refresh) => {
     const [message, setMessage] = useState(null)
     const [loading, setLoading] = useState(true)
-
+    const [error, setError] = useState(null)
     // console.log(refresh)
 
     useEffect(() => {
@@ -715,6 +715,7 @@ export const useMessage = (id, refresh) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -722,7 +723,8 @@ export const useMessage = (id, refresh) => {
 
     return {
         item: message,
-        loading
+        loading,
+        error
     }
 }
 
