@@ -3,7 +3,6 @@
  * See for details: https://material-ui.com/customization/default-theme/?expand-path=$.palette
  */
 
-
 import {
     createTheme,
     ThemeProvider as MuiThemeProvider,
@@ -50,6 +49,13 @@ let theme = createTheme({
 
 theme = createTheme(theme, {
     components: {
+        MuiTooltip: {
+            styleOverrides: {
+                tooltip: {
+                    fontSize: '14px'
+                }
+            }
+        },
         MuiButton: {
             styleOverrides: {
                 root: {
