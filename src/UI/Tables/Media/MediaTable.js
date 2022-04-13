@@ -11,6 +11,7 @@ import DataTable from 'UI/Tables/DataTable'
 import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
 
 import { mediaRoutes } from 'Routes/Routes';
+import useArray from 'Hooks/ArrayHooks'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
 
@@ -27,10 +28,26 @@ import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
 const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination, disablePagination = false, onClickItem, linkTo }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
-    const [selectedItems, setSelectedItems] = useState([]);
+    const selection = useArray([], 'v2')
+    const [selectedControl, setSelectedControl] = useState({})
 
     const onSelectedItemsChange = (selectedItems) => {
-        setSelectedItems(selectedItems);
+        setSelectedItems(selectedItems)
+    }
+
+    const onMediaSelectedChange = (selected, index, item) => {
+        let control = Object.assign({}, selectedControl)
+
+        if(control[item.id]) {
+            control[item.id].selected = selected
+        } else {
+            control[item.id] = {
+                selected,
+                index
+            }
+        }
+
+        setSelectedControl(control)
     }
 
     const onLoadMore = () => {
@@ -44,27 +61,23 @@ const MediaTable = ({ items, loading, view = 'grid', type = 'media', pagination,
             <Box >
                 {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
-                        {items && items.map(item => (
-                            /* <MediaPreview
-                                key={item.hashid || item.id}
-                                type={type}
-                                item={item}
-                                onClick={onClickItem}                               
-                            /> */
-                            <MyMediaPreview
-                                key={item.hashid || item.id}
-                                type={type}
-                                item={item}
-                                linkTo={linkTo && `${linkTo}${item.id}`}
+                        {items && items.map((item, index) => (
+                            <MediaPreview
+                              key={item.hashid || item.id}
+                              type={type}
+                              item={item}
+                              linkTo={linkTo && `${linkTo}${item.id}`}
+                              selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
+                              onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}                              
                             />
                         ))}
                     </Stack>
                 ) : (
                     <DataTable
-                        items={items}
-                        columns={columns}
-                        checkboxSelection
-                        hidePagination={disablePagination}
+                      items={items}
+                      columns={columns}
+                      checkboxSelection
+                      hidePagination={disablePagination}
                     />
                 )}
             </Box>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export default function useArray(initialState) {
+export default function useArray(initialState, control) {
     const [a, set] = useState(initialState ? initialState : [])
 
     useEffect(() => {
@@ -65,6 +65,12 @@ export default function useArray(initialState) {
     const utils = {
         all, push, put, unshift, remove, removeById, clear, filter
     }
+    
+    if(control === 'v2')
+        return {
+            items: a,
+            ...utils
+        }
 
     return [ a, utils ]
 }
