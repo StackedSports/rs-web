@@ -237,7 +237,7 @@ export default function ContactsPage(props) {
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>
-                <Stack flex={1} direction="column" justifyContent="center" alignItems="start" spacing={1}>
+                <Stack flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
                     <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                         <span style={{ fontWeight: 'bold' }}>
                             You have{' '}
@@ -249,11 +249,11 @@ export default function ContactsPage(props) {
                     </Stack>
                     {selectedContacts.length > 0 &&
                         <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                            <span style={{ fontWeight: 'bold' }}>
+                            <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
                                 <span style={{ color: '#3871DA' }}>
                                     {selectedContacts.length}
                                 </span>
-                                {' '}selected contact{selectedContacts.length > 1 && "s"}
+                                {' '}contact{selectedContacts.length > 1 && "s"} selected
                             </span>
                         </Stack>
                     }

@@ -1,7 +1,20 @@
 import { useState, useMemo } from 'react';
-import { Dialog, DialogTitle, Stack, DialogContent, DialogContentText, Checkbox, FormControlLabel, TextField, Divider, Typography } from '@mui/material';
-import { People } from '@mui/icons-material';
-import Button from '../Buttons/Button';
+
+import {
+	Dialog,
+	DialogTitle,
+	Stack,
+	DialogContent,
+	DialogContentText,
+	Checkbox,
+	FormControlLabel,
+	TextField,
+	Divider,
+	Typography
+} from '@mui/material'
+import { People } from '@mui/icons-material'
+import Button from '../Buttons/Button'
+
 import { createNewBoard } from 'Api/Endpoints'
 
 /**
@@ -24,12 +37,15 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
+
         setSubmitting(true)
+
         let data = {
             name: boardName,
             is_shared: isShared,
         }
+
         createNewBoard(data, selectedFilters)
             .then((res) => {
                 console.log('New Board Created', res)
@@ -81,14 +97,13 @@ export const CreateBoardDialog = ({ open, onClose, selectedFilters, onSubmit }) 
                   }}
                   InputLabelProps={{
                     sx: {
-                        fontWeight: 'bold',
                         color: 'text.disabled',
                     }
                   }}
                 />
 
-                <Typography py={2} fontWeight='bold' fontSize='12px' color='text.secondary' >
-                    Filter Criteria:
+                <Typography py={1} fontWeight='bold' fontSize='12px' color='text.secondary' >
+                    Filter Criteria:{' '}
                     {selectedFilters && selectedFiltersKeys.map((key, index) => {
                       const filter = selectedFilters[key];
 
