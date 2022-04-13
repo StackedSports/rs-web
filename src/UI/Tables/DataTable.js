@@ -35,22 +35,27 @@ const DataTable = (props) => {
         })
     }
 
+    let style = {}
+
+    if(props.mini)
+        style['height'] = 500
+
     return (
-        <Stack spacing={2} style={{ width: '100%' }}>
+        <Stack spacing={2} style={{ width: '100%', ...style }}>
             <DataGrid sx={{ m: 0 }}
                 //   rows={props.contacts ? props.contacts : []}
-                autoHeight
-                rows={props.items}
-                columns={props.columns}
-                checkboxSelection={props.checkboxSelection}
-                selectionModel={props.selection}
-                onSelectionModelChange={props.onSelectionChange}
-                loading={props.loading}
-                page={pagination.currentPage - 1}
-                rowCount={pagination.totalItems}
-                hideFooter
-                pageSize={props.pageSize || 50}
-                rowsPerPageOptions={[props.rowsPerPageOptions || 50]}
+              autoHeight={props.mini ? false : true}
+              rows={props.items}
+              columns={props.columns}
+              checkboxSelection={props.checkboxSelection}
+              selectionModel={props.selection}
+              onSelectionModelChange={props.onSelectionChange}
+              loading={props.loading}
+              page={pagination.currentPage - 1}
+              rowCount={pagination.totalItems}
+              hideFooter
+              pageSize={props.pageSize || 50}
+              rowsPerPageOptions={[props.rowsPerPageOptions || 50]}
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}
