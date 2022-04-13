@@ -123,12 +123,9 @@ export const getFilterMediasCriteria = (filters) => {
     if (!filters)
         return null
 
-    console.log("Parser Filter", filters)
-
     let criteria = {}
-    console.log(filters)
 
-    // OK but only filters one type per request
+    // OK
     if (filters.fileType)
         criteria['type'] = filters.fileType.id
 

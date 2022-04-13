@@ -693,7 +693,6 @@ export const useMedias = (currentPage, itemsPerPage) => {
     }, [pagination.currentPage, filters])
 
     const filter = (filters) => {
-        console.log("hook filter",filters)
         pagination.getPage(1)
         setFilters(filters)
     }

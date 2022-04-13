@@ -1,17 +1,13 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Stack, Typography, Box, CircularProgress } from '@mui/material'
 
-import { Link } from 'react-router-dom';
 
 
 import Button from 'UI/Widgets/Buttons/Button'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DataTable from 'UI/Tables/DataTable'
+import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
-import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
-
-import { mediaRoutes } from 'Routes/Routes';
-import useArray from 'Hooks/ArrayHooks'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
 
@@ -25,7 +21,7 @@ import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
  * @param {function} onClickItem function to call when an item is clicked
  * @returns 
  */
-const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props}) => {
+const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
     // const selection = useArray(null, 'v2')
@@ -33,13 +29,25 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     const [selectedControl, setSelectedControl] = useState({})
     const selectionRef = useRef([])
 
+    const [carouselOpen, setCarouselOpen] = useState(false)
+    const [carouselIndex, setCarouselIndex] = useState(0)
+
+    const onCellClick = ({ field, row }) => {
+
+        if (field === 'urls') {
+            setCarouselOpen(true)
+            setCarouselIndex(props.items.indexOf(row))
+        }
+
+    }
+
     const onMediaSelectedChange = (selected, index, item) => {
         let control = Object.assign({}, selectedControl)
 
-        if(control[item.id]) {
+        if (control[item.id]) {
             control[item.id].selected = selected
 
-            if(selected)
+            if (selected)
                 selectionRef.current.push(item.id)
             else
                 selectionRef.current.splice(control[item.id].index, 1)
@@ -55,14 +63,14 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         setSelectedControl(control)
         setSelection(selectionRef.current)
 
-        if(props.onSelectionChange)
+        if (props.onSelectionChange)
             props.onSelectionChange(selectionRef.current)
     }
 
     const onDataTableSelectionChange = (selection) => {
         let control = Object.assign({}, selectedControl)
 
-        if(selection.length > selectionRef.current.length) {
+        if (selection.length > selectionRef.current.length) {
             // New selection from data table is bigger than
             // last selection. New selected item is at the
             // end of the array. Add new selected item to
@@ -83,7 +91,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             let foundIndex = -1
 
             selectionRef.current.every((id, index) => {
-                if(id !== selection[index]) {
+                if (id !== selection[index]) {
                     // The items don't match, which means the item
                     // on our last selection was removed from the
                     // current index we are accessing.
@@ -96,7 +104,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 return true
             })
 
-            if(foundIndex !== -1) {
+            if (foundIndex !== -1) {
                 control[selectionRef.current[foundIndex].id] = {
                     selected: false,
                     index: foundIndex
@@ -108,13 +116,13 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         setSelection(selection)
         selectionRef.current = selection
 
-        if(props.onSelectionChange)
+        if (props.onSelectionChange)
             props.onSelectionChange(selection)
     }
 
     const onLoadMore = () => {
-        if (pagination.currentPage < pagination.totalPages) {
-            pagination.getPage(pagination.currentPage + 1)
+        if (props.pagination.currentPage < props.pagination.totalPages) {
+            props.pagination.getPage(props.pagination.currentPage + 1)
         }
     }
 
@@ -127,23 +135,24 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {props.items && props.items.map((item, index) => (
                             <MediaPreview
-                              key={item.hashid || item.id}
-                              type={type}
-                              item={item}
-                              linkTo={props.linkTo && `${props.linkTo}${item.id}`}
-                              selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
-                              onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}                              
+                                key={item.hashid || item.id}
+                                type={type}
+                                item={item}
+                                linkTo={props.linkTo && `${props.linkTo}${item.id}`}
+                                selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
+                                onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
                             />
                         ))}
                     </Stack>
                 ) : (
                     <DataTable
-                      items={props.items}
-                      columns={columns}
-                      selection={selection}
-                      onSelectionChange={onDataTableSelectionChange}
-                      checkboxSelection
-                      hidePagination={disablePagination}
+                        items={props.items}
+                        columns={columns}
+                        selection={selection}
+                        onSelectionChange={onDataTableSelectionChange}
+                        checkboxSelection
+                        hidePagination={disablePagination}
+                        onCellClick={onCellClick}
                     />
                 )}
             </Box>
@@ -153,6 +162,12 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 </Box>
             )}
             {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
+            <MediaCarousel
+                index={carouselIndex}
+                items={props.items}
+                open={carouselOpen}
+                onClose={() => setCarouselOpen(false)}
+            />
         </Box>
     )
 

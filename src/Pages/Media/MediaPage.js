@@ -117,11 +117,9 @@ export const MediaPage = (props) => {
     }
 
     const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
         setSelectedFilters(filter)
         props.filter(filter)
     }
-
 
 
     return (

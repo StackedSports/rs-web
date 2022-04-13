@@ -1,11 +1,23 @@
 import { formatDate } from 'utils/Parser'
+import { Link } from 'react-router-dom'
+import { mediaRoutes } from 'Routes/Routes'
 
-const name = {
+const nameMedia = {
     field: 'name',
     headerName: 'Name',
     // width: 150,
     flex: 3,
-    valueGetter: (params) => params.row.name || params.row.file_name
+    valueGetter: (params) => params.row.name || params.row.file_name,
+    renderCell: (params) => <Link style={{color:'inherit', textDecoration:'none'}} to={`${mediaRoutes.mediaDetails}/${params.row.id}`}>{params.value}</Link>,
+}
+
+const namePlaceholder = {
+    field: 'name',
+    headerName: 'Name',
+    // width: 150,
+    flex: 3,
+    valueGetter: (params) => params.row.name || params.row.file_name,
+    renderCell: (params) => <Link style={{color:'inherit', textDecoration:'none'}} to={`${mediaRoutes.placeholderDetails}/${params.row.id}`}>{params.value}</Link>,
 }
 
 const file = {
@@ -34,6 +46,7 @@ const owner = {
 
 const updatedAt = {
     field: 'updated_at',
+    type:'date',
     headerName: 'Last Modified',
     valueGetter: (params) => formatDate(new Date(params.value), 'short', 'short'),
     flex: 1,
@@ -42,7 +55,7 @@ const updatedAt = {
 
 // Reusing same properties
 export const columnsMedias = [
-    name,
+    nameMedia,
     file,
     owner,
     updatedAt,
@@ -50,6 +63,6 @@ export const columnsMedias = [
 
 // Reusing same properties
 export const columnsPlaceHolders = [
-    name,
+    namePlaceholder,
     updatedAt,
 ];

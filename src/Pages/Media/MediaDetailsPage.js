@@ -5,11 +5,10 @@ import { Grid, Stack, Box, Typography, styled, TextField, Autocomplete, Checkbox
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
-import MyMediaPreview from 'UI/Widgets/Media/MyMediaPreview'
-import { getFullName, formatDate } from 'utils/Parser'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
+import {formatDate, getFullName} from "utils/Parser"
 
 export const MediaDetailsPage = () => {
     const { id } = useParams()
@@ -130,13 +129,6 @@ export const MediaDetailsPage = () => {
                         //   selected={mediaSelected}
                         //   onSelectedChange={onMediaSelectedChange}
                         />
-
-                        {/* <MyMediaPreview
-                            item={media}
-                            type='media'
-                            selected={mediaSelected}
-                            onSelectionChange={onMediaSelectionChange}
-                        /> */}
 
                         <Box flex='1 1 auto' >
                             <Typography variant='subtitle1' color='text.primary' >
