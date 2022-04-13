@@ -16,6 +16,7 @@ export const MediaDetailsPage = () => {
 
     const tags = useTags()
     const { item: media, loading } = useMedia(id)
+    const [mediaSelected, setMediaSelected] = useState(false)
 
     const [itemTags, setItemTags] = useState([])
     const [itemOwner, setItemOwner] = useState([])
@@ -92,6 +93,10 @@ export const MediaDetailsPage = () => {
         //TODO
     }
 
+    const onMediaSelectionChange = (checked) => {
+        setMediaSelected(checked)
+    }
+
     const messagesCountLabel = useMemo(() => {
         if (!media)
             return '--'
@@ -119,16 +124,19 @@ export const MediaDetailsPage = () => {
                     <Stack direction='row' flexWrap='wrap' gap={2}>
 
                         <MediaPreview
-                            media={media}
-                            loading={loading}
-                            type='media'
+                          item={media}
+                          loading={loading}
+                          type='media'
+                          selected={mediaSelected}
+                          onSelectionChange={onMediaSelectionChange}
                         />
 
-                        <MyMediaPreview
+                        {/* <MyMediaPreview
                             item={media}
                             type='media'
-                            onSelected={(checked) => console.log(checked)}
-                        />
+                            selected={mediaSelected}
+                            onSelectionChange={onMediaSelectionChange}
+                        /> */}
 
                         <Box flex='1 1 auto' >
                             <Typography variant='subtitle1' color='text.primary' >
@@ -158,34 +166,34 @@ export const MediaDetailsPage = () => {
                         Owner
                     </Typography>
                     <Autocomplete
-                        multiple
-                        selectOnFocus
-                        clearOnBlur
-                        value={itemOwner}
-                        options={teamMembers.items || []}
-                        loading={teamMembers.loading}
-                        getOptionLabel={(option) => getFullName(option)}
-                        isOptionEqualToValue={(option, value) => option.hashid === value.hashid}
-                        onChange={(event, newValue) => {
-                            handleChangeOwner(newValue)
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="outlined"
-                                label="+ Add Owner"
+                      multiple
+                      selectOnFocus
+                      clearOnBlur
+                      value={itemOwner}
+                      options={teamMembers.items || []}
+                      loading={teamMembers.loading}
+                      getOptionLabel={(option) => getFullName(option)}
+                      isOptionEqualToValue={(option, value) => option.hashid === value.hashid}
+                      onChange={(event, newValue) => {
+                        handleChangeOwner(newValue)
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          label="+ Add Owner"
+                         />
+                      )}
+                      renderTags={(tagValue, getTagProps) => {
+                        return tagValue.map((option, index) => (
+                            <CustomChip
+                              variant='outlined'
+                              {...getTagProps({ index })}
+                              label={getFullName(option)}
+                              deleteIcon={<Clear />}
                             />
-                        )}
-                        renderTags={(tagValue, getTagProps) => {
-                            return tagValue.map((option, index) => (
-                                <CustomChip
-                                    variant='outlined'
-                                    {...getTagProps({ index })}
-                                    label={getFullName(option)}
-                                    deleteIcon={<Clear />}
-                                />
-                            ));
-                        }}
+                        ));
+                      }}
                     />
 
                     <Typography variant='subtitle1' >

@@ -8,6 +8,7 @@ import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
     getFilterMediasCriteria,
+    getFilterMessagesCriteria
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'
@@ -320,14 +321,14 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
 
 
 
-    data = {
-        criteria: {
-            message_status: ['Sent'],
-            include_team: true
-        }
-    }
+    // data = {
+    //     criteria: {
+    //         message_status: ['Sent'],
+    //         include_team: true
+    //     }
+    // }
 
-    console.log(data.criteria.message_status)
+    // console.log(data.criteria.message_status)
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)
@@ -489,6 +490,31 @@ export const addTagsToContacts = (tagIds, contactIds) => {
 export const CreateUser = (body) => {
     //const data = JSON.stringify(body);
     return AXIOS('post', `messages`, body)
+}
+
+export const createNewBoard = (data, selectedFilters) => {
+    const filters = {
+        "status": [],
+        "rank": [],
+        "gradeYear": [],
+        "tags": [],
+        "position": [],
+        "areaCoach": [],
+        "positionCoach": [],
+        ...selectedFilters,
+    }
+
+    console.log(getFilterContactsCriteria(filters))
+    const body = {
+        filter: {
+            ...data,
+            criteria: { ...getFilterContactsCriteria(filters) }
+        }
+    }
+    console.log(body)
+    console.log(" createNewBoard body", body)
+
+    // return POST(`api/filters`, body)
 }
 
 export const getAllContactsEnd = (page) => {

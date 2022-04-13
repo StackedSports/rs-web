@@ -1,12 +1,14 @@
 import { useState } from 'react'
 
-import { Grid, Typography, Stack, Box, Tooltip } from '@mui/material'
+import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, styled } from "@mui/material"
 import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
-import { format } from 'date-fns'
 
-const Placeholder = (props) => {
 
+import { formatDate } from "utils/Parser"
+import { Link } from "react-router-dom"
+
+const PlaceholderImage = (props) => {
     const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls.original)
 
     return (
@@ -88,7 +90,7 @@ const Placeholder = (props) => {
     )
 }
 
-const Image = (props) => {
+const MediaImage = (props) => {
 
     return (
         <img
@@ -102,12 +104,28 @@ const Image = (props) => {
     )
 }
 
-const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
-    if(!props.media)
+const MediaPreview = ({ type, ...props }) => {
+    if(!props.item)
         return <></>
-    // console.log(props.media)
+    
+    const [isHovering, setIsHovering] = useState(false)
 
     const isMedia = type === 'media'
+
+    const selectable = (props.onSelectionChange && props.onSelectionChange instanceof Function) ? true : false
+
+    const cardActionProps = () => {
+        if (props.linkTo) {
+            return ({
+                component: Link,
+                to: props.linkTo,
+            })
+        } else {
+            return ({
+                onClick: props.onClick,
+            })
+        }
+    }
 
     const onMediaClick = () => {
         if (onClick && typeof onClick === 'function') {
@@ -115,63 +133,123 @@ const MediaPreview = ({ type, containerStyle, onClick, ...props }) => {
         }
     }
 
+    const onCheckboxChange = (event) => {
+        props.onSelectionChange(event.target.checked)
+    }
+
+    const onMouseEnter = (e) => {
+        setIsHovering(true)
+    }
+
+    const onMouseLeave = (e) => {
+        setIsHovering(false)
+    }
+
     return (
-        <Grid
-            container
-            direction="column"
-            onClick={onMediaClick}
-            style={{ ...styles.container, ...containerStyle }}
+        <StyledCard
+          variant="outlined"
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          style={{ ...props.cardStyle }}
         >
-            <Box style={styles.mediaContainer}>
-                {isMedia ? (
-                    <Image media={props.media} />
-                ) : (
-                    <Placeholder placeholder={props.media} />
-                )}
-            </Box>
-            <Box style={{ padding: 10, width: '100%' }}>
-                <Stack direction='row'>
+            <CardActionArea {...cardActionProps()}disableRipple >
+                <CardImage>
                     {isMedia ? (
-                        <PhotoIcon style={styles.icon} />
+                        <MediaImage media={props.item} />
                     ) : (
-                        <PhotoLibraryIcon style={styles.icon} />
+                        <PlaceholderImage placeholder={props.item} />
                     )}
-                    <Tooltip title={props.media?.name ? props.media?.name : props.media?.file_name} arrow>
-                        <Typography noWrap style={styles.mediaName}>
-                            {props.media?.name ? props.media?.name : props.media?.file_name}
+                    {selectable && (isHovering || props.selected) &&
+                        <StyledCheckBox
+                            // color="primary"
+                          checked={props.selected}
+                          disableRipple
+                          onChange={onCheckboxChange}
+                          onClick={e => e.stopPropagation()}
+                        />
+                    }
+                </CardImage>
+                <CardContent>
+                    <Stack direction='row'>
+                        {isMedia ? (
+                            <PhotoIcon />
+                        ) : (
+                            <PhotoLibraryIcon />
+                        )}
+                        <Tooltip
+                            title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
+                        >
+                            <Typography noWrap fontWeight='bold'>
+                                {props.item?.name ? props.item?.name : props.item?.file_name}
+                            </Typography>
+                        </Tooltip>
+                    </Stack>
+                    {props.item?.created_at && (
+                        <Typography noWrap variant='caption'>
+                            Uploaded at:
+                            {formatDate(props.item?.created_at)}
                         </Typography>
-                    </Tooltip>
-                </Stack>
-                {props.media?.created_at && (
-                    <Typography noWrap variant='caption'>
-                        Uploaded at: {format(new Date(props.media?.created_at), 'yyyy-MM-dd')}
-                    </Typography>
-                )}
-            </Box>
-        </Grid>
+                    )}
+                </CardContent>
+            </CardActionArea>
+        </StyledCard>
     )
 }
 
 export default MediaPreview
 
-const styles = {
-    container: {
-        border: '1px solid #efefef',
-        borderRadius: 4,
-        width: 250,
-        overflow: 'hidden',
-    },
-    mediaContainer: {
-        width: 250,
-        height: 250,
-        backgroundColor: '#efefef'
-    },
-    icon: {
-        color: '#555',
-        marginRight: 10
-    },
-    mediaName: {
-        fontWeight: 'bold'
-    }
+// const styles = {
+//     container: {
+//         border: '1px solid #efefef',
+//         borderRadius: 4,
+//         width: 250,
+//         overflow: 'hidden',
+//     },
+//     mediaContainer: {
+//         width: 250,
+//         height: 250,
+//         backgroundColor: '#efefef'
+//     },
+//     icon: {
+//         color: '#555',
+//         marginRight: 10
+//     },
+//     mediaName: {
+//         fontWeight: 'bold'
+//     }
 
-}
+// }
+
+const StyledCard = styled(Card)(({ theme, width }) => ({
+    width: width ? width : 250,
+    overflow: 'hidden',
+
+    '.MuiSvgIcon-root': {
+        color: theme.palette.text.secondary,
+        marginRight: 10,
+    },
+
+    'a:hover': {
+        textDecoration: 'none',
+        color: 'inherit',
+    },
+
+}));
+
+const CardImage = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 250,
+    backgroundColor: '#efefef',
+    position: 'relative',
+    overflow: 'hidden',
+}));
+
+const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
+}));
