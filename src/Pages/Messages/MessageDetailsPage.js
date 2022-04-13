@@ -7,6 +7,7 @@ import RefreshIcon from '@mui/icons-material/Refresh'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
+import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
@@ -57,8 +58,21 @@ const MessageDetailsPage = (props) => {
     const [displayTagDialog, setDisplayTagDialog] = useState(false)
     const [tagging, setTagging] = useState(null)
 
+    const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
+
     console.log(message.item)
     console.log(recipients.items)
+
+    useEffect(() => {
+        if(!message.error)
+            return
+        
+        setErrorPanelMessage({
+            title: `${message.error.response.status} ${message.error.response.statusText}`,
+            body: message.error.response.data.errors[0].message
+        })
+
+    }, [message.error])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -320,6 +334,8 @@ const MessageDetailsPage = (props) => {
         console.log(selectedRecipients)
         console.log(selectedTags)
 
+        // return
+
         if(tagging === 'message')
             tagMessage(selectedTags)
         else if(tagging === 'recipients')
@@ -356,7 +372,7 @@ const MessageDetailsPage = (props) => {
                 if(res.error === 0)
                     alert.setSuccess('Recipients tagged successfully!')
                 else
-                    alert.setWarning(`${res.success} out of ${res.total} were tagged successfully. ${res.error} recipients failed to be tagged.`)
+                    alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
             })
             .finally(() => {
                 setLoading(false)
@@ -507,6 +523,13 @@ const MessageDetailsPage = (props) => {
               onConfirm={onTagsSelected}
             />
 
+            {message.error && (
+                <ErrorPanel
+                  title={errorPanelMessage.title}
+                  body={errorPanelMessage.body}
+                />
+            )}
+
             <MessagePreview 
               message={message.item} 
               recipients={recipients.items}
@@ -521,6 +544,8 @@ const MessageDetailsPage = (props) => {
               hasCoach={message.item?.send_as_coach}
               hasMedia={hasMedia || hasMediaPlaceholder}
             />
+
+
         </MainLayout>
     )
 }
