@@ -22,8 +22,6 @@ const SelectTagDialog = (props) => {
     useEffect(() => {
         if (!tags.items)
             return
-
-        console.log(tags.items)
     }, [tags.items])
 
     // useEffect(() => {
@@ -60,7 +58,8 @@ const SelectTagDialog = (props) => {
     }
 
     const onRemoveTag = (tag, index) => {
-
+        setSelectedTags(oldSelectedTags => oldSelectedTags.filter(item => item != tag.id))
+        setTagsSelected(oldTagsSelected => oldTagsSelected.filter(item => item.id != tag.id))
     }
 
     const onTagSearch = (input) => {
@@ -82,6 +81,7 @@ const SelectTagDialog = (props) => {
             open={props.open}
             onConfirm={onConfirm}
             onClose={props.onClose}
+            title={props.title || 'Select Tag'}
 
         >
             {/* <img 

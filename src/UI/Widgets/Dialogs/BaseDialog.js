@@ -1,43 +1,43 @@
 import {
-    Grid,
-    Dialog,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@material-ui/core"
 
 import Button from 'UI/Widgets/Buttons/Button'
 
 const BaseDialog = (props) => {
-    return (
-        <Dialog
-          maxWidth="md"
-          fullWidth
-          open={props.open}
-          onClose={props.onClose}
-        >
-            <Grid container style={{ padding: 16 }} direction='column'>
-                
-                {props.children}
+  return (
+    <Dialog
+      maxWidth="md"
+      fullWidth
+      open={props.open}
+      onClose={props.onClose}
+    >
+      <DialogTitle >{props.title}</DialogTitle>
 
-                <Grid 
-                  container
-                  direction="row" 
-                  alignItems="center"
-                  justifyContent="flex-end">
+      <DialogContent>
 
-                    <Button
-                      name="Cancel"
-                      onClick={props.onClose}
-                    />
+        {props.children}
 
-                    <Button
-                      variant="contained"
-                      name="Confirm"
-                      onClick={props.onConfirm}
-                    />
-                    
-                </Grid>
-            </Grid>
-        </Dialog>
-    )
+        <DialogActions>
+
+          <Button
+            name= {props.cancelLabel || 'Cancel'}
+            onClick={props.onClose}
+          />
+
+          <Button
+            variant="contained"
+            name= {props.confirmLabel || "Confirm"}
+            onClick={props.onConfirm}
+          />
+
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 export default BaseDialog
