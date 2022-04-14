@@ -367,7 +367,7 @@ export const getFilters = () => {
 }
 
 export const getPlaceholder = (id) => {
-    return AXIOS('get', `media/placeholder/${id}`)
+    return AXIOS('get', `media/placeholders/${id}`)
 }
 
 export const getPlaceholders = (page, perPage) => {
