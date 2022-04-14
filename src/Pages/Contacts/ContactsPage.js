@@ -63,7 +63,7 @@ export default function ContactsPage(props) {
         if (!contacts.items)
             return
 
-        //console.log(contacts.items)
+        console.log(contacts.items)
     }, [contacts.items])
 
     useEffect(() => {

@@ -23,7 +23,7 @@ const SelectTagDialog = (props) => {
         if (!tags.items)
             return
 
-        console.log(tags.items)
+        // console.log(tags.items)
     }, [tags.items])
 
     // useEffect(() => {

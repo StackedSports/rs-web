@@ -181,6 +181,7 @@ export const login = (email, password) => {
         const HEADERS = {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
+            Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
         }
 
         const config = {
@@ -189,6 +190,7 @@ export const login = (email, password) => {
 
         axios.post(URL + 'login', data, config)
             .then(res => {
+                console.log(res)
                 if (res.status === 200 || res.status === 204 || res.status === 201)
                     resolve(res)
                 else
