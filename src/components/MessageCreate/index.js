@@ -152,7 +152,7 @@ function MessageCreate(props) {
   const allBoards = useBoards()
   const boardContacts = useBoard("xGABNSeXmDOW")
   const messagesTags = useTags()
-  const tags = useTagsWithContacts()
+  const tags = useTagsWithContacts().items
   const allPlatforms = usePlatform().items
     console.log("snippetsandmessages",allPlatforms)
 

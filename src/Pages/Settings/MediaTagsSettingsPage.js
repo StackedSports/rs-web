@@ -1,0 +1,38 @@
+import { useState, useEffect } from 'react'
+
+import SettingsPage from './SettingsPage'
+
+import MediaTagsTable from 'UI/Tables/MediaTags/MediaTagsTable'
+
+import { useTagsWithMedia } from 'Api/Hooks'
+
+const MediaTagsSettingsPage = () => {
+  const tagsWithMedia = useTagsWithMedia()
+
+
+  useEffect(() => {
+    if (!tagsWithMedia.items)
+      return
+
+    console.log(tagsWithMedia.items)
+  }, [tagsWithMedia.items])
+
+  const onTopActionClick = (e) => {
+    console.log('top action click')
+  }
+
+  return (
+    <SettingsPage
+      title='Media Tags'
+      topActionName='+ New Media Tag'
+      onTopActionClick={onTopActionClick}
+    >
+      <MediaTagsTable
+        items={tagsWithMedia.items}
+        loading={tagsWithMedia.loading}
+      />
+    </SettingsPage>
+  )
+}
+
+export default MediaTagsSettingsPage

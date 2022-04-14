@@ -9,7 +9,6 @@ import {
     getTeamMembers,
     getBoard,
     CreateUser,
-    getTagsWithMessages,
     getPlatform,
     getMedia,
     getMedias,
@@ -31,8 +30,9 @@ import {
     getPeopleTypes,
     getBoardFiltersById,
     getTeamContacts,
-    getTagsWithContacts,
     getTagsWithMedia,
+    getTagsWithContacts,
+    getTagsWithMessages,
     archiveContacts,
     filterContacts,
     filterMedias,
@@ -79,34 +79,71 @@ export const usePlatform = () => {
         loading
     }
 }
-export const useTagsWithContacts = () => {
-    const [tags, setTags] = useState(null)
-
-    useEffect(() => {
-        getTagsWithContacts()
-            .then(([tag]) => {
-                // console.log('ApiHooks: getTagsWithContacts -----', tag)
-                // console.log(tag)
-                setTags(tag)
-            })
-            .catch(error => console.log(error))
-    }, [])
-
-    return tags
-}
 
 export const useTagsWithMedia = () => {
     const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getTagsWithMedia()
             .then(([tags]) => {
                 setTags(tags)
             })
             .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+
     }, [])
 
-    return tags
+    return {
+        items: tags,
+        loading
+    }
+}
+
+export const useTagsWithContacts = () => {
+    const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+        getTagsWithContacts()
+            .then(([tags]) => {
+                // console.log('ApiHooks: getTagsWithContacts -----', tags)
+                // console.log(tags)
+                setTags(tags)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    return {
+        items: tags,
+        loading
+    }
+}
+
+export const useTagsWithMessage = () => {
+    const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true)
+        getTagsWithMessages()
+            .then(([tags]) => {
+                // console.log(tags)
+                setTags(tags)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    return {
+        items: tags,
+        loading
+    }
 }
 
 // Custom Hook
