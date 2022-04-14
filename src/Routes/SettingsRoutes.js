@@ -3,14 +3,17 @@ import { Route } from 'react-router-dom'
 import {
   SettingsPage,
   OrganizationSettingsPage,
-  TagSettingsPage,
   TeamMembersSettingsPage,
-  GradYearsSettingsPage,
   PositionsSettingsPage,
   StatusesSettingsPage,
   RanksSettingsPage,
   SnippetsSettingsPage,
-  BoardSettingsPage,
+  MediaTagsSettingsPage,
+  ContactsTagsSettingsPage,
+  MessageTagsSettingsPage
+  // TagSettingsPage,
+  // GradYearsSettingsPage,
+  // BoardSettingsPage,
 } from 'Pages/Settings'
 
 import { settingsRoutes } from './Routes'
@@ -29,18 +32,8 @@ const SettingsRoutes = (props) => (
     />
     <Route
       exact
-      path={settingsRoutes.team.tags}
-      component={TagSettingsPage}
-    />
-    <Route
-      exact
-      path={settingsRoutes.team.members}
+      path={settingsRoutes.general.members}
       component={TeamMembersSettingsPage}
-    />
-    <Route
-      exact
-      path={settingsRoutes.team.gradYears}
-      component={GradYearsSettingsPage}
     />
     <Route
       exact
@@ -64,24 +57,50 @@ const SettingsRoutes = (props) => (
     />
     <Route
       exact
+      path={settingsRoutes.tags.mediaTags}
+      component={MediaTagsSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.tags.contactsTags}
+      component={ContactsTagsSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.tags.messageTags}
+      component={MessageTagsSettingsPage}
+    />
+
+    {/* <Route
+      exact
+      path={settingsRoutes.team.tags}
+      component={TagSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.team.gradYears}
+      component={GradYearsSettingsPage}
+    />
+    <Route
+      exact
       path={settingsRoutes.team.platforms}
       component={BoardSettingsPage}
     />
-    {/* <Route
-          exact
-          path={settingsRoutes.team.placeholders}
-          component={PlaceholdersSettingsPage}
-        />
-        <Route
-          exact
-          path={settingsRoutes.team.getSendCoachTypes}
-          component={SendCoachTypesSettingsPage}
-        />
-        <Route
-          exact
-          path={settingsRoutes.team.peopleTypes}
-          component={PeopleTypesSettingsPage}
-        /> */}
+    <Route
+      exact
+      path={settingsRoutes.team.placeholders}
+      component={PlaceholdersSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.team.getSendCoachTypes}
+      component={SendCoachTypesSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.team.peopleTypes}
+      component={PeopleTypesSettingsPage}
+    /> */}
   </>
 )
 
