@@ -37,6 +37,8 @@ import {
 
 import { messageRoutes } from 'Routes/Routes'
 
+import { timeZones, states } from 'utils/Data'
+
 export default function ContactsPage(props) {
     const [redirect, setRedirect] = useState('')
 
@@ -63,7 +65,7 @@ export default function ContactsPage(props) {
         if (!contacts.items)
             return
 
-        //console.log(contacts.items)
+        console.log(contacts.items)
     }, [contacts.items])
 
     useEffect(() => {
@@ -74,7 +76,7 @@ export default function ContactsPage(props) {
     }, [contacts.pagination])
 
     const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
-    
+
     const panelFiltersData = useMemo(() =>
     ({
         status: {
@@ -108,7 +110,7 @@ export default function ContactsPage(props) {
         },
         timeZone: {
             label: 'Time Zone',
-            options: []
+            options: timeZones
         },
         birthday: {
             label: 'Birthday',
@@ -116,7 +118,7 @@ export default function ContactsPage(props) {
         },
         state: {
             label: 'State',
-            options: []
+            options: states
         },
         status2: {
             label: 'Status 2',
@@ -219,6 +221,11 @@ export default function ContactsPage(props) {
             .finally(() => setLoading(false))
     }
 
+    const onPageChange = () => {
+        console.log("onPageChange")
+    }
+
+
     return (
         <MainLayout
             title='Contacts'
@@ -269,17 +276,17 @@ export default function ContactsPage(props) {
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
                     <PanelDropdown
-                      action={{
-                        name: 'Actions',
-                        variant: 'outlined',
-                        icon: AutoFixHighIcon,
-                        options: [
-                            { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                            { name: 'Remove Tag', onClick: onRemoveTagClick },
-                            { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                            { name: 'Archive Contact', onClick: onArchiveContactClick }
-                        ]
-                      }}
+                        action={{
+                            name: 'Actions',
+                            variant: 'outlined',
+                            icon: AutoFixHighIcon,
+                            options: [
+                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                { name: 'Archive Contact', onClick: onArchiveContactClick }
+                            ]
+                        }}
                     />
                     <Button
                         name="Tag"
@@ -289,22 +296,22 @@ export default function ContactsPage(props) {
                         disabled={selectedContacts.length == 0}
                     />
                     <PanelDropdown
-                      header={() => (
-                        <Button 
-                          style={{ minWidth: 0 }}
-                          variant="outlined"
-                          name={<ViewColumnIcon/>}
-                          textColor="#3871DA"
-                        />
-                      )}
-                      action={{
-                        options: [
-                            { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                            { name: 'Remove Tag', onClick: onRemoveTagClick },
-                            { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                            { name: 'Archive Contact', onClick: onArchiveContactClick }
-                        ]
-                      }} 
+                        header={() => (
+                            <Button
+                                style={{ minWidth: 0 }}
+                                variant="outlined"
+                                name={<ViewColumnIcon />}
+                                textColor="#3871DA"
+                            />
+                        )}
+                        action={{
+                            options: [
+                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                { name: 'Archive Contact', onClick: onArchiveContactClick }
+                            ]
+                        }}
                     />
                 </Stack>
             </Stack>
@@ -315,6 +322,7 @@ export default function ContactsPage(props) {
                 pagination={contacts.pagination}
                 loading={contacts.loading}
                 onSelectionChange={(selected) => { setSelectedContacts(selected) }}
+                onPageChange={onPageChange}
             />
 
             <CreateBoardDialog
