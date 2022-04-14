@@ -175,7 +175,30 @@ const PUT = (url, body) => {
 }
 
 export const login = (email, password) => {
-    return POST('login', { email, password })
+    return new Promise((resolve, reject) => {
+        let data = JSON.stringify({ email, password })
+
+        const HEADERS = {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+        }
+
+        const config = {
+            headers: HEADERS
+        }
+
+        axios.post(URL + 'login', data, config)
+            .then(res => {
+                if (res.status === 200 || res.status === 204 || res.status === 201)
+                    resolve(res)
+                else
+                    reject(res)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+    //return POST('login', { email, password })
 }
 
 export const getPlatform = () => {
