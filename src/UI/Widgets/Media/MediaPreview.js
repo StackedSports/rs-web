@@ -128,7 +128,7 @@ const MediaPreview = ({ type, ...props }) => {
     }
 
     const onMediaClick = () => {
-        if (onClick && typeof onClick === 'function') {
+        if (props.onClick && typeof props.onClick === 'function') {
             onClick(props.media)
         }
     }

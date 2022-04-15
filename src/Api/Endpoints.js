@@ -177,6 +177,7 @@ const PUT = (url, body) => {
 export const login = (email, password) => {
     return new Promise((resolve, reject) => {
         let data = JSON.stringify({ email, password })
+        console.log("eu sou o login")
 
         const HEADERS = {
             Accept: "application/json; version=1",
@@ -393,6 +394,10 @@ export const filterMedias = (page, perPage, filters) => {
     return AXIOS('post', 'media/search', data)
 }
 
+export const deleteMedia = (mediaId) => {
+    return DELETE(`media/${mediaId}`)
+}
+
 export const getMediaTypes = () => {
     return AXIOS('get', 'media/types')
 }
@@ -536,6 +541,122 @@ export const getAllContactsEnd = (page) => {
     // console.log("This is perpage", perPage);
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}&sort_column=first_name`)
     // contacts?page=${page}&per_page=${perPage}&sort_column=first_name
+}
+
+/**
+ * 
+ * @param {int} mediaId media id
+ * @param {object} data should be an object with the following keys:
+ * @param {string} data.name name of the media
+ * @param {string} data.team_contact_id Id for contact to associate to media
+ * @param {string} data.media_placeholder_id id for placeholder to associate to media
+ * @param {string} data.owner Id for the user to set as the owner
+ * @param {Boolean} data.archive Can pass true to archive media
+ * @returns {Promise} promise
+ */
+export const updateMedia = (mediaId, data) => {
+    let body = {
+        media: { ...data }
+    }
+    return PUT(`media/${mediaId}`, body)
+}
+
+/**
+ * 
+ * @param {string} mediaId media id
+ * @returns {Promise} promise
+ */
+export const archiveMedia = (mediaId) => {
+    return updateMedia(mediaId, { archive: true })
+}
+
+/**
+ * 
+ * @param {string[]} mediasIds array of media ids to archive
+ * @returns {Object} returns an object with the following keys: success.count, success.ids, error.count, error.ids
+ */
+export const archiveMedias = (mediasIds) => {
+    let response = {
+        success: {
+            count: 0,
+            id: []
+        },
+        error: {
+            count: 0,
+            id: []
+        }
+    }
+    if (mediasIds instanceof Array) {
+        Promise.allSettled(mediasIds.map(mediaId => archiveMedia(mediaId))).
+            then(results => {
+                results.forEach(result => {
+                    if (result.status === 'fulfilled') {
+                        result.value.then(res => {
+                            response.success.count++
+                            //Todo add id to array
+                        })
+                    }
+                    else {
+                        response.error.count++
+                        //console.log(result.reason.config.url.slice(`${URL}/media/`.length))
+                        //Todo find better way to add id to reponse
+                    }
+                })
+            })
+    }
+    return response
+}
+
+/**
+ * Adds array of tags to a Media
+ * @param {int[]} tagIds array of tag ids to archive
+ * @param {int} mediaId  media id to associate tags to
+ * @returns {promise} promise
+ */
+export const addTagsToMedia = (tagIds, mediaId) => {
+    let body = {
+        media: {
+            tag_ids: tagIds
+        }
+    }
+
+    return POST(`media/${mediaId}/add_tags`, body)
+}
+
+/**
+ * Adds array of tags to an array of Medias
+ * @param {*} mediasId 
+ * @returns 
+ */
+export const addTagsToMedias = (tagIds, mediaIds) => {
+    let response = {
+        success: {
+            count: 0,
+            id: []
+        },
+        error: {
+            count: 0,
+            id: []
+        }
+    }
+    if (mediaIds instanceof Array && tagIds instanceof Array) {
+        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(mediaId))).
+            then(results => {
+                results.forEach(result => {
+                    if (result.status === 'fulfilled') {
+                        result.value.then(res => {
+                            response.success.count++
+                            //Todo find better way to add id to reponse
+                        })
+                    }
+                    else {
+                        response.error.count++
+                        //Todo find better way to add id to reponse
+                    }
+                })
+            })
+    }
+    return response
 }
 
 

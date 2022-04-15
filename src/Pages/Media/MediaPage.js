@@ -4,6 +4,7 @@ import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } f
 
 
 import MainLayout from 'UI/Layouts/MainLayout'
+import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import { Divider } from 'UI'
 
 import { useTags, useTeamMembers } from 'Api/Hooks'
@@ -15,14 +16,14 @@ export const MediaPage = (props) => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
 
-    // console.log(teamMembers.items)
-
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
 
+    const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
-
     const [selectedFilters, setSelectedFilters] = useState({})
+    const [loading, setLoading] = useState(false)
+    
 
     useEffect(() => {
         getMediaTypes().then(res => {
@@ -74,6 +75,7 @@ export const MediaPage = (props) => {
             name: 'Tag',
             icon: LocalOfferOutlined,
             variant: 'outlined',
+            onClick: () => setOpenSelectTagDialog(true),
         },
         {
             name: 'Filters',
@@ -121,6 +123,11 @@ export const MediaPage = (props) => {
         props.filter(filter)
     }
 
+    const onTagsSelected = (selectedTagsIds) => {
+        //setLoading(true)
+       console.log(selectedTagsIds)
+    }
+
 
     return (
         <MainLayout
@@ -129,6 +136,7 @@ export const MediaPage = (props) => {
             onTopActionClick={onTopActionClick}
             filters={filters}
             actions={mainActions}
+            loading={loading}
             propsPanelFilters={{
                 open: showPanelFilters,
                 filters: panelFiltersData,
@@ -139,6 +147,12 @@ export const MediaPage = (props) => {
 
             {/* {() => cloneElement(props.children, { viewGrid })} */}
             {props.children}
+
+            <SelectTagDialog
+                open={openSelectTagDialog}
+                onClose={() => setOpenSelectTagDialog(false)}
+                onConfirm={onTagsSelected}
+            />
 
         </MainLayout>
     )

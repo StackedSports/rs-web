@@ -41,10 +41,10 @@ export const MediaCarousel = (props) => {
         <Fab className='closeFab' onClick={props.onClose}>
           <Close />
         </Fab>
-        <Fab color="primary" className='next' onClick={onClickNext}>
+        <Fab className='next' onClick={onClickNext}>
           <NavigateNext />
         </Fab>
-        <Fab color="primary" className='previous' onClick={onClickPrevious}>
+        <Fab className='previous' onClick={onClickPrevious}>
           <NavigateBefore />
         </Fab>
         <img src={url} />
