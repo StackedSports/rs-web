@@ -61,6 +61,15 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
+    if(filters.state) {
+        criteria['states'] = []
+
+        filters.state.forEach(state => {
+            criteria.states.push(state.abbreviation)
+            criteria.states.push(state.name)
+        })
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags
@@ -82,6 +91,16 @@ export const getFilterContactsCriteria = (filters) => {
     return criteria
 }
 
+const getStatus = (status) => {
+    console.log(status)
+    switch(status) {
+        case 'drafts': return 'draft'
+        case 'in_progress': return 'in progress'
+        // case 'pending'
+        default: return status
+    }
+}
+
 export const getFilterMessagesCriteria = (filters) => {
     if (!filters)
         return null
@@ -94,7 +113,7 @@ export const getFilterMessagesCriteria = (filters) => {
         criteria['message_status'] = []
 
         filters.status.forEach(status => {
-            criteria['message_status'].push(status.name)
+            criteria['message_status'].push(getStatus(status.name))
         })
     }
 
@@ -125,6 +144,10 @@ export const getFilterMediasCriteria = (filters) => {
 
     let criteria = {}
 
+    if(filters.name) {
+        criteria['name'] = filters.name
+    }
+
     // OK
     if (filters.fileType)
         criteria['type'] = filters.fileType.id
@@ -150,6 +173,19 @@ export const getFilterMediasCriteria = (filters) => {
          // "tag_id": [7693] // pass an array of tag ids to search
          // "placeholder_id": 1536
      }*/
+
+    return criteria
+}
+
+export const getFilterPlaceholdersCriteria = (filters) => {
+    if (!filters)
+        return null
+
+    let criteria = {}
+
+    if(filters.name) {
+        criteria['name'] = filters.name
+    }
 
     return criteria
 }

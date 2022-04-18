@@ -2,13 +2,13 @@ import { useState, useRef, useEffect } from 'react'
 
 import MessageCreatePage from './MessageCreatePage'
 
-import { useMessage } from 'Api/Hooks'
+import { useMessage, useMessageRecipients } from 'Api/Hooks'
 
 const MessageEditPage = (props) => {
     const messageId = useRef(props.match.params.id)
 
-    const message = useMessage(messageId.current, false)
-
+    const message = useMessage(messageId.current, 1, 1000)
+    const recipients = useMessageRecipients(messageId.current, false)
     // Platform
     const [platformSelected, setPlatformSelected] = useState(null)
 
@@ -62,21 +62,22 @@ const MessageEditPage = (props) => {
 
     // Recipient
     useEffect(() => {
-        if(!message.item)
+        if(!recipients.items)
             return
 
-        let recipients = message.item.recipients
+        //let recipients = recipients.item
         let selected = {
             contacts: [],
             teamBoards: [],
-            privateBoards: []
+            privateBoards: [],
+            recipients: []
         }
 
-        if(recipients.contact_list)
-            selected.contacts = recipients.contact_list
+        if(recipients.items.contact_list)
+            selected.contacts = recipients.items.contact_list
 
-        if(recipients.filter_list) {
-            recipients.filter_list.forEach(filter => {
+        if(recipients.items.filter_list) {
+            recipients.items.filter_list.forEach(filter => {
                 selected.teamBoards.push({ id: filter.id, name: filter.name })
             })
         }
@@ -90,7 +91,7 @@ const MessageEditPage = (props) => {
 
         setRecipientSelected(selected)
 
-    }, [message.item])
+    }, [recipients.items])
 
     // Send At
     useEffect(() => {

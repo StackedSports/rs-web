@@ -4,6 +4,7 @@ import {
     Grid,
     Dialog,
 } from "@material-ui/core"
+import { Stack, Box } from '@mui/material'
 
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -56,14 +57,13 @@ export default function SelectDialogTab(props) {
           open={props.open}
           onClose={props.onClose}
         >
-            <Grid container style={{ padding: 16 }} direction='column'>
+            <Box container style={{ padding: 16 }} direction='column'>
                 <TabContext value={tabIndex}>
-                    <Grid container direction='row'>
-                        <Grid item xs={6}
-                            container
-                            direction='row'
-                            justify='flex-start'
-                            alignItems='center'
+                    <Stack container direction='row' mb={2}>
+                        <Stack flex={1}
+                          direction='row'
+                          justify='flex-start'
+                          alignItems='center'
                             // style={{marginLeft: 10}}
                         >
                             <span style={{marginLeft: marginLeft }}></span>
@@ -78,26 +78,27 @@ export default function SelectDialogTab(props) {
                                     />
                                 ))}
                             </TabList>
-                        </Grid>
-                        <Grid  item xs={6}
-                            container
-                            direction='row'
-                            justify='flex-end'
-                            alignItems='center'
+                        </Stack>
+                        <Stack flex={1}
+                          direction='row'
+                          justify='flex-end'
+                          alignItems='center'
                         >
                             <SearchBar style={{ marginLeft: 20 }}
                               placeholder={`Search ${props.tabs[tabIndex].label}`}
+                              onSearch={(search) => props.onSearch(search, tabIndex)}
+                              onClear={() => props.onClearSearch(tabIndex)}
                             />
-                        </Grid>
-                    </Grid>
+                        </Stack>
+                    </Stack>
 
-                    {props.children}
+                    <Box height="500px" sx={{ overflowY: 'auto' }}>
+                        {props.children}
+                    </Box>
 
                 </TabContext>
-                <Grid container direction='row'>
-                    <Grid
-                      xs={6}
-                      container
+                <Stack direction='row' mt={2}>
+                    <Stack flex={1}
                       direction='row'
                       alignItems='center'
                       justifyContent='flex-start'
@@ -105,11 +106,9 @@ export default function SelectDialogTab(props) {
                         <p style={{ color: '#3871DA', marginLeft: 28, marginBottom: 0 }}>
                             {props.selectionLabel}
                         </p>
-                    </Grid>
+                    </Stack>
 
-                    <Grid
-                      xs={6}
-                      container
+                    <Stack flex={1}
                       direction='row'
                       alignItems='center'
                       justifyContent='flex-end'
@@ -149,10 +148,10 @@ export default function SelectDialogTab(props) {
                             Add Selection
                         </Button>
 
-                    </Grid>
+                    </Stack>
 
-                </Grid>
-            </Grid>
+                </Stack>
+            </Box>
         </Dialog>
     )    
 }

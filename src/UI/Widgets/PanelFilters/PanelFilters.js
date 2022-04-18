@@ -17,96 +17,120 @@ import Button from '../Buttons/Button';
  */
 export const PanelFilters = (props) => {
 
-  const [selectedFilters, setSelectedFilters] = useState({});
-  
-  const handleOptionsChange = (filter, filterName, isUnique) => {
+	const [selectedFilters, setSelectedFilters] = useState({});
+	
+	const handleOptionsChange = (filterName, filter, option) => {
+		console.log(filterName)
+		console.log(option)
 
-    setSelectedFilters(oldSelectFilters => {
-      const newSelectFilters = { ...oldSelectFilters };
-      newSelectFilters[filterName] || (newSelectFilters[filterName] = []);
+		let filters = Object.assign({}, selectedFilters)
 
-      if (newSelectFilters[filterName].includes(filter)) {
-        newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
-      } else {
-        newSelectFilters[filterName].push(filter);
-      }
+		if(filters[filterName]) {
+			if(filter.isUnique) {
+				filters[filterName] = [option]
+			} else {
+				filters[filterName].push(option)
+			}
+		} else {
+			filters[filterName] = [option]
+		}
 
-      if (isUnique) {
-        newSelectFilters[filterName] = newSelectFilters[filterName].slice(-1);
-      }
+		console.log(filters)
 
-      if (newSelectFilters[filterName].length === 0) {
-        delete newSelectFilters[filterName];
-      }
+		setSelectedFilters(filters)
 
-      if (isUnique && newSelectFilters[filterName]) {
-        props.onFilterChange({ ...newSelectFilters, [filterName]: newSelectFilters[filterName][0] });
-      } else {
-        props.onFilterChange(newSelectFilters);
-      }
+		props.onFilterChange(filters)
 
-      return newSelectFilters;
-    })
+		// return
+		// setSelectedFilters(oldSelectFilters => {
+		//   const newSelectFilters = { ...oldSelectFilters };
+		//   newSelectFilters[filter.name] || (newSelectFilters[filter.name] = []);
+
+		//   if (newSelectFilters[filter.name].includes(filter)) {
+		//     newSelectFilters[filter.name] = newSelectFilters[filter.name].filter(item => item !== filter);
+		//   } else {
+		//     newSelectFilters[filter.name].push(filter);
+		//   }
+
+		//   if (filter.isUnique) {
+		//     newSelectFilters[filter.name] = newSelectFilters[filter.name].slice(-1);
+		//   }
+
+		//   if (newSelectFilters[filter.name].length === 0) {
+		//     delete newSelectFilters[filter.name];
+		//   }
+
+		//   if (filter.isUnique && newSelectFilters[filter.name]) {
+		//     props.onFilterChange({ ...newSelectFilters, [filter.name]: newSelectFilters[filter.name][0] });
+		//   } else {
+		//     props.onFilterChange(newSelectFilters);
+		//   }
+
+		//   return newSelectFilters;
+		// })
+	}
+
+	const onRemoveFilter = (filterName, filter) => {
+		let filters = Object.assign({}, selectedFilters)
+
+
+		setSelectedFilters(oldSelectFilters => {
+			const newSelectFilters = { ...oldSelectFilters };
+			newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
+
+			if (newSelectFilters[filterName].length === 0) {
+				delete newSelectFilters[filterName];
+			}
+
+			props.onFilterChange(newSelectFilters);
+
+			return newSelectFilters;
+		})
   }
 
-  const onRemoveFilter = (filterName, filter) => {
-    setSelectedFilters(oldSelectFilters => {
-      const newSelectFilters = { ...oldSelectFilters };
-      newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item !== filter);
-
-      if (newSelectFilters[filterName].length === 0) {
-        delete newSelectFilters[filterName];
-      }
-
-      props.onFilterChange(newSelectFilters);
-
-      return newSelectFilters;
-    })
-  }
-
-  const getContent = (options, filterName, isUnique) => (
-    <Dropdown.List>
-      {options.map((option) => (
-        <Dropdown.Item
-          key={option.id}
-          name={option.name}
-          onClick={() => handleOptionsChange(option, filterName, isUnique)}
-        />
-      ))}
-    </Dropdown.List>
-  )
+	const getContent = (filter, filterName) => (
+		<Dropdown.List>
+			{filter.options.map((option) => (
+				<Dropdown.Item
+				  key={option.id}
+				  name={option.name}
+				  onClick={() => handleOptionsChange(filterName, filter, option)}
+				/>
+			))}
+		</Dropdown.List>
+	)
 
   const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
 
   return (
     <>
-      <Stack direction='row' flexWrap='wrap' pb={1}>
-        {selectedFilters && Object.keys(selectedFilters).map(key =>
-          selectedFilters[key].map((filter, index) => (
-            <SearchableOptionSelected
-              style={{ marginLeft: 0 }}
-              key={filter.id}
-              item={`${props.filters[key].label}: ${filter.name}`}
-              onRemove={(e) => onRemoveFilter(key, filter)}
-            />
-          )))}
-      </Stack>
+		<Stack direction='row' flexWrap='wrap' pb={1}>
+			{selectedFilters && Object.keys(selectedFilters).map(key =>
+				selectedFilters[key].map((filter, index) => (
+					<SearchableOptionSelected
+					  style={{ marginLeft: 0 }}
+					  key={filter.id}
+					  item={`${props.filters[key].label}: ${filter.name}`}
+					  onRemove={(e) => onRemoveFilter(key, filter)}
+					/>
+				)))}
+		</Stack>
 
-      <Collapse in={props.open}>
-        <Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
-          {props.filters && Object.keys(props.filters).map(filterName => {
-            const filter = props.filters[filterName];
-            return (
-              <Box key={filterName}>
-                <Dropdown
-                  header={() => getHeader(filter.label)}
-                  content={() => getContent(filter.options, filterName, filter.isUnique)}
-                />
-              </Box>
-            )
-          })}
-        </Stack>
-      </Collapse>
+		<Collapse in={props.open}>
+			<Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
+				{props.filters && Object.keys(props.filters).map(filterName => {
+					const filter = props.filters[filterName];
+					return (
+						<Box key={filterName}>
+							<Dropdown
+							  header={() => getHeader(filter.label)}
+							  content={() => getContent(filter, filterName)}
+							/>
+						</Box>
+					)
+				})}
+			</Stack>
+		</Collapse>
     </>
   )
 }

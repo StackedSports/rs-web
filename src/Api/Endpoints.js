@@ -4,6 +4,7 @@ import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
     getFilterMediasCriteria,
+    getFilterPlaceholdersCriteria
 } from './Parser'
 
 import { objectNotNull } from 'utils/Validation'
@@ -90,6 +91,8 @@ const GET = (url, body) => {
     return new Promise((resolve, reject) => {
         //const data = JSON.stringify(body);
 
+        console.log(body)
+
         const HEADERS = {
             Accept: "application/json; version=1",
             "Content-Type": "application/json",
@@ -99,6 +102,7 @@ const GET = (url, body) => {
 
         const config = {
             headers: HEADERS,
+            // params: JSON.stringify(body)
             params: body
         }
 
@@ -334,17 +338,20 @@ export const getUser = () => {
 
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
-        criteria: { ...getFilterMessagesCriteria(filters) }
+        criteria: { 
+            ...getFilterMessagesCriteria(filters),
+            include_team: "true"
+        }
     }
 
     if (!objectNotNull(data.criteria))
         delete data.criteria
 
-
+    // not working: In Progress,
 
     // data = {
     //     criteria: {
-    //         message_status: ['Sent'],
+    //         message_status: ['In Progress'],
     //         include_team: true
     //     }
     // }
@@ -371,8 +378,17 @@ export const getPlaceholder = (id) => {
     return AXIOS('get', `media/placeholders/${id}`)
 }
 
-export const getPlaceholders = (page, perPage) => {
-    return AXIOS('get', `media/placeholders?page=${page}&per_page=${perPage}`)
+export const getPlaceholders = (page, perPage, filters) => {
+    let data = {
+        criteria: {...getFilterPlaceholdersCriteria(filters)}
+    }
+
+    if (!objectNotNull(data.criteria))
+        delete data.criteria
+
+    console.log(data)
+
+    return GET(`media/placeholders?page=${page}&per_page=${perPage}`, data)
 }
 
 export const getMedia = (id) => {

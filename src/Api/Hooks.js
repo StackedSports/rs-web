@@ -651,12 +651,15 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
     const [placeholders, setPlaceholders] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
+    // TODO: testing filter
+    const [filters, setFilters] = useState(null)
+
     useEffect(() => {
         setLoading(true)
 
-        getPlaceholders(pagination.currentPage, pagination.itemsPerPage)
+        getPlaceholders(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([placeholders, pagination]) => {
-                //console.log('ApiHooks: getContact -----')
+                console.log('ApiHooks: get placeholders')
                 // console.log(pagination)
                 setPlaceholders(placeholders)
                 setPagination(pagination)
@@ -665,12 +668,23 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
                 console.log(error)
             })
             .finally(() => setLoading(false))
-    }, [pagination.currentPage])
+    }, [pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
 
     return {
         items: placeholders,
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 
@@ -779,7 +793,7 @@ export const useMessage = (id, refresh) => {
     }
 }
 
-export const useMessageRecipients = (id, refresh) => {
+export const useMessageRecipients = (id, refresh, currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [recipients, setRecipients] = useState(null)
 

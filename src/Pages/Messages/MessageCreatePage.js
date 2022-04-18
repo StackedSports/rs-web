@@ -5,7 +5,7 @@ import MuiAlert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check'
 import SendIcon from '@mui/icons-material/Send'
 
-import MainLayout from 'UI/Layouts/MainLayout'
+import BaseMessagePage from './BaseMessagePage'
 import MessageInput from 'UI/Forms/Inputs/MessageInput'
 
 import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
@@ -29,21 +29,7 @@ import {
 import { formatDate } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
-import { SelectAllOutlined } from '@material-ui/icons';
 
-const filters = [
-    { // Category
-        id: '0',
-        name: 'Messages',
-        items: [
-            // Filters
-            { id: '0', name: 'Scheduled' },
-            { id: '1', name: 'In Progress' },
-            { id: '2', name: 'Finished' },
-            { id: '3', name: 'Archived' },
-        ]
-    }
-]
 
 export default function MessageCreatePage(props) {
     const [loading, setLoading] = useState(false)
@@ -147,7 +133,7 @@ export default function MessageCreatePage(props) {
 
     // Recipients from Props
     useEffect(() => {
-        // console.log(props.recipientSelected)
+        console.log(props.recipientSelected)
 
         if(props.recipientSelected)
             setRecipientSelected(props.recipientSelected)
@@ -229,16 +215,6 @@ export default function MessageCreatePage(props) {
     }
 
     // console.log(teamMembers.items)
-
-    const onTopActionClick = (e) => {
-        console.log('top action click')
-    }
-
-    
-
-    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
-    }
 
     const onPlatformSelected = (platform, index) => {
         console.log('platform selected = ' + platform)
@@ -640,9 +616,9 @@ export default function MessageCreatePage(props) {
             // the actual item of its respective type.
 
             if(mediaSelected.type === 'media')
-                messageData['media_id'] = mediaSelected.item.id
+                messageData['media_id'] = mediaSelected.item.id.toString()
             else if(mediaSelected.type === 'placeholder')
-                messageData['media_placeholder_id'] = mediaSelected.item.id
+                messageData['media_placeholder_id'] = mediaSelected.item.id.toString()
         }
 
         // delete messageData.user_id
@@ -735,15 +711,12 @@ export default function MessageCreatePage(props) {
     
 
     return (
-        <MainLayout
+        <BaseMessagePage
           title='Create Message'
           topActionName='+ New Message'
-          onTopActionClick={onTopActionClick}
-          filters={filters}
           actions={panelActions}
           redirect={redirect}
           loading={loading || props.loading}
-          onFilterSelected={onFilterSelected}
         >
             <Snackbar
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -836,6 +809,6 @@ export default function MessageCreatePage(props) {
               />
             
             <div style={{ marginBottom: 50 }}/>
-        </MainLayout>
+        </BaseMessagePage>
     )
 }

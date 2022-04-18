@@ -49,7 +49,8 @@ export default function MediaSelectDialog(props) {
         props.onSelected(Object.assign({}, selectedItem), selectedType)
     }
 
-    const onMediaSelectionChange = (selectedId) => {
+    const onMediaSelectionChange = (selection) => {
+        let selectedId = selection[0]
         // console.log(selection)
         setPlaceholderSelectedId('')
         setMediaSelectedId(selectedId)
@@ -61,7 +62,9 @@ export default function MediaSelectDialog(props) {
         setSelectedItem(selected)
     }
     
-    const onPlaceholderSelectionChange = (selectedId) => {
+    const onPlaceholderSelectionChange = (selection) => {
+        let selectedId = selection[0]
+
         setPlaceholderSelectedId(selectedId)
         setMediaSelectedId('')
         setSelectedType('placeholder')
@@ -72,13 +75,32 @@ export default function MediaSelectDialog(props) {
         setSelectedItem(selected)
     }
 
+    const onSearch = (search, tabIndex) => {
+        console.log(`${search} ${tabIndex}`)
+
+        //if(tabIndex === 0)
+        media.filter({ name: search })
+        placeholders.filter({ name: search })
+    }
+
+    const onClearSearch = (tabIndex) => {
+        console.log(tabIndex)
+
+        //if(tabIndex === 0)
+        media.clearFilter()
+        placeholders.clearFilter()
+    }
+
     return (
         <SelectDialogTab
           tabs={tabs}
           tabsMarginLeft={18}
           selectionLabel={selectionLabel}
+        //   loading={media.loading}
           open={props.open}
           onConfirmSelection={onConfirmSelection}
+          onSearch={onSearch}
+          onClearSearch={onClearSearch}
           onClose={props.onClose}
         >
             <TabPanel value={0} index={0}>
@@ -94,17 +116,26 @@ export default function MediaSelectDialog(props) {
                   loading={media.loading}
                   view={'grid'}
                   type="media"
+                  onSelectionChange={onMediaSelectionChange}
                   disablePagination
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
-                <MediaGrid
+                <MediaTable
+                  items={placeholders.items}
+                  loading={placeholders.loading}
+                  view={'grid'}
+                  type="placeholder"
+                  onSelectionChange={onPlaceholderSelectionChange}
+                  disablePagination
+                />
+                {/* <MediaGrid
                   type="placeholder"
                   media={placeholders.items}
                   pagination={placeholders.pagination}
                   loading={placeholders.loading}
                   selected={placeholderSelectedId}
-                  onSelectionChange={onPlaceholderSelectionChange}/>
+                  onSelectionChange={onPlaceholderSelectionChange}/> */}
             </TabPanel>
         </SelectDialogTab>
     )    

@@ -125,8 +125,16 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     }
 
     return (
-        <Box width='100%' pb={2}>
-            <Box >
+        <Box width='100%' flex={1} pb={2}>
+            <Box>
+                {!props.loading && props.items && props.items.length === 0 && (
+                    <span>No media available</span>
+                )}
+                {props.loading  && (
+                    <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
+                        <CircularProgress />
+                    </Box>
+                )}
                 {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {props.items && props.items.map((item, index) => (
@@ -153,11 +161,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     />
                 )}
             </Box>
-            {props.loading && props.items && props.items.length > 0 && (
-                <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
-                    <CircularProgress />
-                </Box>
-            )}
+            
             {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
             <MediaCarousel
               index={carouselIndex}

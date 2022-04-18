@@ -35,7 +35,7 @@ function Category(props) {
                 {props.items.map((item, index) => {
                     if(item.path)
                         return (
-                            <NavLink className="link" activeClassName="linkActive" to={item.path}>
+                            <NavLink exact className="link" activeClassName="linkActive" to={item.path}>
                                 <p key={item.id}>
                                     {item.name}
                                 </p>

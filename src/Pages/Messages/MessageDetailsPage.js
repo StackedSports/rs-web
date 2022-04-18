@@ -6,7 +6,8 @@ import SendIcon from '@mui/icons-material/Send'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
+import BaseMessagePage from './BaseMessagePage'
+import { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
@@ -26,20 +27,6 @@ import { messageRoutes } from 'Routes/Routes'
 
 import { getStringListOfIds } from 'utils/Helper'
 import { objectNotNull } from 'utils/Validation'
-
-const filters = [
-    { // Category
-        id: '0',
-        name: 'Messages',
-        items: [
-            // Filters
-            { id: '0', name: 'Scheduled' },
-            { id: '1', name: 'In Progress' },
-            { id: '2', name: 'Finished' },
-            { id: '3', name: 'Archived' },
-        ]
-    }
-]
 
 const MessageDetailsPage = (props) => {
     const messageId = useRef(props.match.params.id)
@@ -506,11 +493,10 @@ const MessageDetailsPage = (props) => {
     // console.log(hasMedia || hasMediaPlaceholder)
 
     return (
-        <MainLayout
+        <BaseMessagePage
           title='Message Preview'
           topActionName='+ New Message'
           onTopActionClick={onTopActionClick}
-          filters={filters}
           alert={alert}
           actions={mainActions}
           loading={message.loading || loading}
@@ -546,7 +532,7 @@ const MessageDetailsPage = (props) => {
             />
 
 
-        </MainLayout>
+        </BaseMessagePage>
     )
 }
 

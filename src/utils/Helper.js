@@ -43,7 +43,7 @@ export const getStringListOfIds = (items) => {
         // if board is not last, add the a comma and space
         // before next board
         if(index !== items.length - 1)
-            string += ', '
+            string += ','
     })
 
     return string
