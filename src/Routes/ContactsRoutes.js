@@ -2,6 +2,7 @@ import { Route } from 'react-router-dom'
 
 import ContactsPage from 'Pages/Contacts/ContactsPage'
 import ContactsProfilePage from 'Pages/Contacts/ContactsProfilePage'
+import BoardPage from 'Pages/Contacts/BoardPage'
 
 import { routes, contactsRoutes } from './Routes'
 
@@ -14,8 +15,8 @@ const ContactsRoutes = (props) => (
     />
     <Route
       exact
-      path={`${contactsRoutes.board}/:id`}
-      component={ContactsPage}
+      path={`${contactsRoutes.board}/:boardId`}
+      component={BoardPage}
     />
     <Route
       exact

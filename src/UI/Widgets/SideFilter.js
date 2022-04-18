@@ -27,10 +27,14 @@ function Category(props) {
 
     if (!props.items) {
         return (
-            <NavLink exact className='Category-Header link' to={props?.path || ''}>
-                <h3 className='Title'>{props.title}</h3>
-                <ArrowForwardIosIcon className='IconNormal' />
-            </NavLink>
+            <div className='Category'>
+                <div className='Category-Header'>
+                    <NavLink exact={false} className='Category-Header link' to={props?.path || ''}>
+                        <h3 className='Title'>{props.title}</h3>
+                        <ArrowForwardIosIcon className='IconNormal' />
+                    </NavLink>
+                </div>
+            </div>
         )
     }
 
@@ -76,10 +80,10 @@ export default function SideFilter(props) {
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
-                        title={category.name}
-                        items={category.items}
-                        onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
-                        path={category.path}
+                      title={category.name}
+                      items={category.items}
+                      onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
+                      path={category.path}
                     />
                 )
             })}

@@ -98,6 +98,7 @@ export const settingsRoutes = {
 }
 
 export const contactsRoutes = {
+    all: '/contacts',
     board: '/contacts/board',
     profile: '/contacts/profile'
 }

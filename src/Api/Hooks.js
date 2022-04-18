@@ -13,6 +13,7 @@ import {
     getMedia,
     getMedias,
     getBoards,
+    getBoardContacts,
     getPlaceholder,
     getPlaceholders,
     getSnippets,
@@ -161,6 +162,53 @@ export const useBoard = (id) => {
     }, [])
 
     return board
+}
+
+export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) => {
+    const [loading, setLoading] = useState(true)
+    const [contacts, setContacts] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+
+    // TODO: testing filter
+    const [filters, setFilters] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        // const get = objectNotNull(filters) ? filterContacts : getContacts
+
+        getBoardContacts(boardId, pagination.currentPage, 50, filters)
+            .then(([contacts, pag]) => {
+                //console.log('ApiHooks: getContact -----')
+                //console.log(contact)
+                setContacts(contacts)
+                setPagination(pag)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+
+    }, [boardId, pagination.currentPage, filters])
+
+    const filter = (filters) => {
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+    }
+
+    return {
+        items: contacts,
+        pagination,
+        loading,
+        filter,
+        clearFilter
+    }
 }
 
 

@@ -20,7 +20,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import {
-    useContacts,
     useStatuses,
     useRanks,
     useGradeYears,
@@ -28,7 +27,6 @@ import {
     useTags,
     usePositions,
     useTeamMembers,
-    useUser,
 } from 'Api/Hooks'
 
 import {
@@ -40,13 +38,11 @@ import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
 
-export default function ContactsPage(props) {
-    const { id, boardId } = useParams();
-    console.log(id)
-    console.log(boardId)
+export default function BaseContactsPage(props) {
     const [redirect, setRedirect] = useState('')
 
-    const contacts = useContacts()
+    const contacts = useMemo(() => props.contacts, [props.contacts])
+
     const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
@@ -99,12 +95,12 @@ export default function ContactsPage(props) {
         setTeamBoards(teamBoards)
     }, [boards.items])
 
-    useEffect(() => {
-        if (!id)
-            return
+    // useEffect(() => {
+    //     if (!id)
+    //         return
 
-        console.log(id)
-    }, [id])
+    //     console.log(id)
+    // }, [id])
 
 
     const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
@@ -280,7 +276,7 @@ export default function ContactsPage(props) {
 
     return (
         <MainLayout
-            title='Contacts'
+            title={props.title || 'Contacts'}
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
             filters={filters}

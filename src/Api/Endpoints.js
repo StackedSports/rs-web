@@ -332,6 +332,11 @@ export const getTeamContacts = () => {
 export const getBoard = (id) => {
     return AXIOS('get', `filters/${id}`)
 }
+
+export const getBoardContacts = (id, page, perPage, filters) => {
+    return AXIOS('get', `filters/${id}/contacts?page=${page}&per_page=${perPage}`)
+}
+
 export const getUser = () => {
     return AXIOS('get', 'me')
 }
