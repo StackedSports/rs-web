@@ -822,6 +822,7 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
     const [messages, setMessages] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     const [filters, setFilters] = useState(initialFilters || null)
 
@@ -837,6 +838,7 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -855,6 +857,7 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
         items: messages,
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
         loading,
+        error,
         filter,
         clearFilter
     }

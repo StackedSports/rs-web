@@ -9,6 +9,7 @@ const MessageEditPage = (props) => {
 
     const message = useMessage(messageId.current, 1, 1000)
     const recipients = useMessageRecipients(messageId.current, false)
+
     // Platform
     const [platformSelected, setPlatformSelected] = useState(null)
 
@@ -74,7 +75,7 @@ const MessageEditPage = (props) => {
         }
 
         if(recipients.items.contact_list)
-            selected.contacts = recipients.items.contact_list
+            selected.recipients = recipients.items.contact_list
 
         if(recipients.items.filter_list) {
             recipients.items.filter_list.forEach(filter => {

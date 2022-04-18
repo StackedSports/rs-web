@@ -112,9 +112,14 @@ export const getFilterMessagesCriteria = (filters) => {
     if (filters.status) {
         criteria['message_status'] = []
 
-        filters.status.forEach(status => {
-            criteria['message_status'].push(getStatus(status.name))
-        })
+        if(filters.status === 'all') {
+            criteria['message_status'] = [`Error`, `Preview`, `In Progress`, `Sent`,
+                `Rejected`, `Completed`, `Cancelled`, `Pending`]
+        } else {
+            filters.status.forEach(status => {
+                criteria['message_status'].push(getStatus(status.name))
+            })
+        }
     }
 
     // {

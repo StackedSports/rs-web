@@ -34,6 +34,7 @@ export const MainMediaPage = (props) => {
         <MediaPage
           viewGrid={viewGrid}
           onSwitchView={onSwitchView}
+          
           filter = {media.filter}
         >
 

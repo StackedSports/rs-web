@@ -55,6 +55,7 @@ export const messageRoutes = {
         scheduled: '/messages/filter/pending',
         inProgress: '/messages/filter/in_progress',
         finished: '/messages/filter/finished',
+        error: '/messages/filter/error',
         rejected: '/messages/filter/rejected',
         archived: '/messages/filter/archived',
     }

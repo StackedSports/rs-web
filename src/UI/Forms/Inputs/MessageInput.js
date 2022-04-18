@@ -282,7 +282,7 @@ const InputReceivers = (props) => {
                   selection={props.selected.recipients}
                   label='Message Recipients'
                   type='recipients'
-                //   imgDef={'twitter_profile.profile_image'}
+                  imgDef={'profile_image'}
                   nameDef={['first_name', 'last_name']}
                   onSelectedClick={props.onSelectedClick}
                   onRemove={props.onRemove}
