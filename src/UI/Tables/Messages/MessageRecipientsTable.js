@@ -75,13 +75,16 @@ const MessageRecipientsTable = (props) => {
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
             />
-            <Grid container justifyContent="center" alignItems="center">
-                {/* <Pagination
-                    count={props.pagination.totalPages}
-                    page={props.pagination.currentPage}
-                    onChange={onPageChange}
-                    disabled={props.loading}/> */}
-            </Grid>
+            {props.pagination && props.pagination.totalPages > 1 && (
+                <Grid container justifyContent="center" alignItems="center">
+                    <Pagination
+                      count={props.pagination.totalPages}
+                      page={props.pagination.currentPage}
+                      onChange={onPageChange}
+                      disabled={props.loading}
+                    />
+                </Grid>
+            )}
         </Stack>
     )
 }

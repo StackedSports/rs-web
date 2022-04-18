@@ -25,6 +25,8 @@ export default function useMultiPageSelection(page) {
         setCurrentSelection.all(lastSelection ? lastSelection : [])
     }, [page])
 
+    // Call saveData before changing the page so we can save the 
+    // selected items data
     const saveData = (data) => {
         console.log(data)
         
@@ -66,17 +68,28 @@ export default function useMultiPageSelection(page) {
         return count
     }
 
+    // Get the data of all selected items across all pages
     const getDataSelected = () => {
         let data = []
+        console.log(selected.current)
     
-        Object.keys(selected.current).forEach(key => {
+        let every = Object.keys(selected.current).every(key => {
             // if(key !== currentPage)
-                data = data.concat(selected.current[key].data)
+            if(!selected.current[key].data) {
+                return false
+            } 
+
+            data = data.concat(selected.current[key].data)
+            return true
         })
-    
-        return data   
+
+        if(every)
+            return data   
+        else
+            return null
     }
 
+    // Remove a certain item from an unknown page
     const remove = (id) => {
         let currentIndex = -1
         Object.keys(selected.current).every(key => {
@@ -93,6 +106,7 @@ export default function useMultiPageSelection(page) {
         setSelectedCount(selectedCount => selectedCount - 1)
     }
 
+    // Clear all selected items including their data
     const clear = () => {
         selected.current = {}
         setCurrentSelection.clear()
@@ -103,9 +117,19 @@ export default function useMultiPageSelection(page) {
     //     selected.current[currentPage].data = 
     // }
 
+    return {
+        items: currentSelection,
+        count: selectedCount,
+        onSelectionChange,
+        saveData,
+        getDataSelected,
+        remove,
+        clear 
+    }
 
     return [ 
         currentSelection, 
         selectedCount, 
-        { onSelectionChange, saveData, getDataSelected, remove, clear }]
+        { onSelectionChange, saveData, getDataSelected, remove, clear }
+    ]
 }

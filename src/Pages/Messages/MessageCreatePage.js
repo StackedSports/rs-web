@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
+import { useParams } from "react-router-dom"
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check'
@@ -36,7 +37,8 @@ export default function MessageCreatePage(props) {
     // const contacts = useContacts()
     // const ranks = useRanks()
 
-    const fromContactsId = useRef(props.match?.params?.contacts)
+    const { control } = useParams()
+    // const fromContactsId = useRef(props.match?.params?.contacts)
     
 
     // TODO: user should be coming from user context, not from
@@ -91,8 +93,29 @@ export default function MessageCreatePage(props) {
     const [redirect, setRedirect] = useState('')
 
     useEffect(() => {
-        if(!fromContactsId.current)
+        if(!control)
             return
+        
+        console.log(control)
+
+        let payload = JSON.parse(localStorage.getItem('new-message-payload'))
+
+        console.log(payload)
+
+        // return
+
+        if(payload.recipients) {
+            console.log(payload.recipients)
+
+            setRecipientSelected({
+                privateBoards: recipientSelected?.privateBoards || [],
+                teamBoards: recipientSelected?.teamBoards || [],
+                contacts: recipientSelected?.contacts || [],
+                recipients: payload.recipients
+            })
+        }
+
+        return
 
         // console.log(fromContactsId.current)
         let parts = fromContactsId.current.split('-')
@@ -117,7 +140,7 @@ export default function MessageCreatePage(props) {
             })
         }
 
-    }, [fromContactsId.current])
+    }, [control])
 
     useEffect(() => {
         if(props.platformSelected)

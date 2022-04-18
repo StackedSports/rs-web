@@ -21,6 +21,13 @@ import { objectNotNull } from 'utils/Validation'
 
 import { messageRoutes } from 'Routes/Routes'
 
+const getRecipientsLabel = (message) => {
+    if(message.recipient_count === 0)
+        return '--'
+    
+    return `${message.recipient_count} Recipients`
+}
+
 const Label = ({ label }) => (
     <span className="MessagePreview-Label">{label}</span>
 )
@@ -148,7 +155,8 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                       status={getMessageStatusLabel(message.status)}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)}/>
-                    <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/>
+                    <Details label="Recipient(s)" value={getRecipientsLabel(message)}/>
+                    {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
                     <Details label="Send As" value={getMessagePlatformLabel(message.platform)}/>
                     <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')}/>
                     <Details label="Tags" value={message.tags || '--'}/>

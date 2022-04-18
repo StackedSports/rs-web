@@ -505,9 +505,9 @@ export const addTagsToContacts = (tagIds, contactIds) => {
                     console.log(res)
                     success++
                 })
-                .catch(error => {
-                    console.log(error)
-                    errors.push(error)
+                .catch(err => {
+                    console.log(err)
+                    errors.push(err)
                     failedIds.push(contactId)
                     error++
                 })

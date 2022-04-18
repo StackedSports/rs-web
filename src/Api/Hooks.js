@@ -796,23 +796,29 @@ export const useMessage = (id, refresh) => {
 export const useMessageRecipients = (id, refresh, currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [recipients, setRecipients] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
 
-        getMessageRecipients(id)
+        getMessageRecipients(id, pagination.currentPage, pagination.itemsPerPage)
             .then(([recipients, pagination]) => {
                 setRecipients(recipients)
+                setPagination(pagination)
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
-    }, [id, refresh])
+    }, [id, refresh, pagination.currentPage])
 
     return {
         items: recipients,
-        loading
+        pagination,
+        loading,
+        error
     }
 }
 

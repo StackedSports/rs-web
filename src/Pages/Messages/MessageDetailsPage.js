@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
@@ -12,6 +12,9 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
+
+import { AppContext } from 'Context/AppProvider'
+import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
 import { useMessage, useMessageRecipients } from 'Api/Hooks'
 import { 
@@ -29,6 +32,8 @@ import { getStringListOfIds } from 'utils/Helper'
 import { objectNotNull } from 'utils/Validation'
 
 const MessageDetailsPage = (props) => {
+    const app = useContext(AppContext)
+
     const messageId = useRef(props.match.params.id)
     const [loading, setLoading] = useState(false)
 
@@ -36,9 +41,12 @@ const MessageDetailsPage = (props) => {
     const [refresh, setRefresh] = useState(false)
     
     const message = useMessage(messageId.current, refresh)
-    const recipients = useMessageRecipients(messageId.current, refresh)
+    const recipients = useMessageRecipients(messageId.current, refresh, 1, 25)
+    // console.log(recipients)
 
-    const [selectedRecipients, setSelectedRecipients] = useState([])
+
+    const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
+    // const [selectedRecipients.items, setSelectedRecipients] = useState([])
 
     const alert = useMainLayoutAlert()
 
@@ -47,8 +55,8 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
-    console.log(message.item)
-    console.log(recipients.items)
+    // console.log(message.item)
+    // console.log(recipients.items) 
 
     useEffect(() => {
         if(!message.error)
@@ -181,10 +189,10 @@ const MessageDetailsPage = (props) => {
         // Making a copy because we are going to change the recipients
         // list content
         let recipients = Object.assign({}, message.item.recipients)
-        // let selection = Object.assign([], selectedRecipients)
+        // let selection = Object.assign([], selectedRecipients.items)
 
         console.log(recipients)
-        console.log(selectedRecipients)
+        console.log(selectedRecipients.items)
 
         let foundFilters = {}
         let totalInFilters = 0
@@ -193,7 +201,7 @@ const MessageDetailsPage = (props) => {
             let count = 0
             let indices = []
 
-            selectedRecipients.forEach(selectedId => {
+            selectedRecipients.items.forEach(selectedId => {
                 let index = -1
 
                 filter.contacts.every((contact, i) => {
@@ -309,7 +317,7 @@ const MessageDetailsPage = (props) => {
 
     const onSelectedRecipientsChange = (selection) => {
         console.log(selection)
-        setSelectedRecipients(selection)
+        selectedRecipients.onSelectionChange(selection)
     }
 
     const onTagContactClick = () => {
@@ -318,7 +326,7 @@ const MessageDetailsPage = (props) => {
     }
 
     const onTagsSelected = (selectedTags) => {
-        console.log(selectedRecipients)
+        console.log(selectedRecipients.items)
         console.log(selectedTags)
 
         // return
@@ -352,7 +360,7 @@ const MessageDetailsPage = (props) => {
     const tagRecipients = (selectedTags) => {
         setLoading(true)
 
-        addTagsToContacts(selectedTags, selectedRecipients)
+        addTagsToContacts(selectedTags, selectedRecipients.items)
             .then(res => {
                 console.log(res)
 
@@ -367,23 +375,50 @@ const MessageDetailsPage = (props) => {
     }
 
     const onSendNewMessageWithContacts = () => {
-        console.log(selectedRecipients)
+        let tmp = []
 
-        // let recipients = []
+        if(recipients.items.filter_list)
+            recipients.items.filter_list.forEach(filter => {
+                tmp = tmp.concat(filter.contacts)
+            })
 
-        // selectedRecipients.forEach(recipientId => {
+        if(recipients.items.contact_list)
+            tmp = tmp.concat(recipients.items.contact_list)
 
-        // })
+        selectedRecipients.saveData(tmp)
 
-        // message.item.recipients
+        // console.log(selectedRecipients.items)
+        // return
 
-        // localStorage.setItem('')
-        let now = Date.now()
+        let data = selectedRecipients.getDataSelected()
+        console.log(data)
 
-        console.log(now)
+        if(data) {
+            app.sendMessageToRecipients(data)
+        } 
+    }
 
-        localStorage.setItem(`new-message-contact-${now}`, JSON.stringify(selectedRecipients))
-        setRedirect(`${messageRoutes.create}/contacts-${now}`)
+    const onRecipientsPageChange = (page) => {
+        // save data from mpSelection
+
+        // TODO: recipients.items is an object and not an array
+        // { count, contact_list, filter_list, status_count }
+        // TODO: we need to either parse useMessageRecipients response
+        // or do a manual parse here
+        let tmp = []
+
+        if(recipients.items.filter_list)
+            recipients.items.filter_list.forEach(filter => {
+                tmp = tmp.concat(filter.contacts)
+            })
+
+        if(recipients.items.contact_list)
+            tmp = tmp.concat(recipients.items.contact_list)
+
+        selectedRecipients.saveData(tmp)
+
+        recipients.pagination.getPage(page)
+        // call get next page
     }
 
     const mainActions = useMemo(() => {
@@ -455,16 +490,16 @@ const MessageDetailsPage = (props) => {
         if(showAction)
             actions.push(action)
     
-        if(selectedRecipients.length == 0 && message.item.status === 'Draft') {
+        if(selectedRecipients.count == 0 && message.item.status === 'Draft') {
             if(now.getTime() > sendDate.getTime()) {
                 actions.push({ name: 'Send', variant: 'contained', icon: SendIcon, onClick: onSendMessageClick })
             } else {
                 actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: onScheduleMessageClick })
             }
-        } else if(selectedRecipients.length > 0) {
+        } else if(selectedRecipients.count > 0) {
             actions.push({ 
                 id: 'Recipients Action',
-                name: `${selectedRecipients.length} Recipients Selected`,
+                name: `${selectedRecipients.count} Recipients Selected`,
                 type: 'dropdown',
                 variant: 'contained', 
                 icon: ArrowDropDownIcon,
@@ -483,7 +518,7 @@ const MessageDetailsPage = (props) => {
         }
 
         return actions
-    }, [message.item, selectedRecipients])
+    }, [message.item, selectedRecipients.items, selectedRecipients.count])
 
     const hasMedia = useMemo(() => objectNotNull(message.item?.media), [message.item])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message.item?.media_placeholder), [message.item])
@@ -523,12 +558,15 @@ const MessageDetailsPage = (props) => {
             />
 
             <MessageRecipientsTable 
-              selection={selectedRecipients}
+              selection={selectedRecipients.items}
               onSelectionChange={onSelectedRecipientsChange}
               platform={message.item?.platform}
               recipients={recipients.items}
+              loading={recipients.loading}
               hasCoach={message.item?.send_as_coach}
               hasMedia={hasMedia || hasMediaPlaceholder}
+              pagination={recipients.pagination}
+              onPageChange={onRecipientsPageChange}
             />
 
 

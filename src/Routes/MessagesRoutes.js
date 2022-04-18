@@ -16,7 +16,7 @@ const MessagesRoutes = (props) => (
     <>
         <Route
           // exact
-          path={`${messageRoutes.create}/:contacts`}
+          path={`${messageRoutes.create}/:control`}
           component={MessageCreatePage}
         />
         <Route

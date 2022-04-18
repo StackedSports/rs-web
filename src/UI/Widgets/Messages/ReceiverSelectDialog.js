@@ -69,8 +69,8 @@ export default function ReceiverSelectDialog(props) {
     // having to iterate over selected ids for contacts we already retrieved
     // the data from. So here's a hook for that!
     // 
-    const [mpSelection, mpSelectedCount, mpUtils] = useMultiPageSelection(contacts.pagination.currentPage)
-    //
+    const mpSelection = useMultiPageSelection(contacts.pagination.currentPage)
+    // 
 
     // Boards
     const boards = useBoards()
@@ -145,23 +145,23 @@ export default function ReceiverSelectDialog(props) {
             if(index === 'all') {
                 // paginatedContactsSelection.current = {}
                 // setContactsSelectionCount(0)
-                mpUtils.clear()
+                mpSelection.clear()
             } else {
                 // removeContactFromPaginatedSelection(id)
                 // setContactsSelectionCount(contactsSelectionCount - 1)
-                mpUtils.remove(id)
+                mpSelection.remove(id)
             }
-        }
+        } 
         
         set(tmp)
-
+        
     }, [props.removedItem])
 
     const onContactsSelectionChange = (selection) => {
         console.log('onSelectionChange')
 
         // mpSelection, mpSelectedCount, mpUtils
-        mpUtils.onSelectionChange(selection)
+        mpSelection.onSelectionChange(selection)
 
         return
 
@@ -172,7 +172,7 @@ export default function ReceiverSelectDialog(props) {
         console.log('onPageChange')
 
         // mpSelection, mpSelectedCount, mpUtils
-        mpUtils.saveData(contacts.items)
+        mpSelection.saveData(contacts.items)
 
         contacts.pagination.getPage(page)
 
@@ -183,8 +183,8 @@ export default function ReceiverSelectDialog(props) {
         const selectionTeam = findByIds(selectedTeamBoards, teamBoards)
 
         // For the contacts, we need to add the selected contacts from previous pages  
-        mpUtils.saveData(contacts.items)
-        let selectionContact = mpUtils.getDataSelected()     
+        mpSelection.saveData(contacts.items)
+        let selectionContact = mpSelection.getDataSelected()     
 
         // console.log(selectionPrivate)
         // console.log(selectionTeam)
@@ -196,7 +196,7 @@ export default function ReceiverSelectDialog(props) {
     const selectionLabel = getSelectionLabel(
         selectedPrivateBoards.length,
         selectedTeamBoards.length,
-        mpSelectedCount)
+        mpSelection.count)
     
     return (
         <SelectDialogTab
@@ -229,7 +229,7 @@ export default function ReceiverSelectDialog(props) {
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}
-                    selection={mpSelection} // selectedContacts
+                    selection={mpSelection.items} // selectedContacts
                     onSelectionChange={onContactsSelectionChange}
                     onPageChange={onContactsPageChange}/>
             </TabPanel>

@@ -95,5 +95,8 @@ export const settingsRoutes = {
         contactsTags: '/settings/contacts-tags',
         messageTags: '/settings/message-tags',
     },
+}
 
+export const contactRoutes = {
+    board: '/contacts/board'
 }
