@@ -453,8 +453,10 @@ export const useTeamContact = () => {
 
 export const useBoards = () => {
     const [boards, setBoards] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getBoards()
             .then(([boards]) => {
                 //console.log('ApiHooks: getRanks -----')
@@ -464,9 +466,14 @@ export const useBoards = () => {
             .catch(error => {
                 console.log(error)
             })
+            .finally(() => setLoading(false))
+
     }, [])
 
-    return boards
+    return {
+        items: boards,
+        loading
+    }
 }
 
 // Get filters by id
@@ -726,7 +733,7 @@ export const useMedias = (currentPage, itemsPerPage) => {
 
         const get = objectNotNull(filters) ? filterMedias : getMedias
 
-        get(pagination.currentPage, pagination.itemsPerPage,filters)
+        get(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([media, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)

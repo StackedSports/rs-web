@@ -1,19 +1,20 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-import Stack from '@mui/material/Stack'
-import { AccountBox, Tune } from '@material-ui/icons'
+import Stack from '@mui/material/Stack';
+import { AccountBox, Tune } from '@material-ui/icons';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
-import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
-import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog'
+import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
+import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
+import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
-import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
-import { PanelDropdown } from 'UI/Layouts/Panel'
+import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
+import { PanelDropdown } from 'UI/Layouts/Panel';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -35,11 +36,12 @@ import {
     deleteTagToContact,
 } from 'Api/Endpoints'
 
-import { messageRoutes } from 'Routes/Routes'
+import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
 
 export default function ContactsPage(props) {
+    const { id } = useParams();
     const [redirect, setRedirect] = useState('')
 
     const contacts = useContacts()
@@ -51,6 +53,8 @@ export default function ContactsPage(props) {
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
     const [loading, setLoading] = useState(false)
+    const [privateBoards, setPrivateBoards] = useState([])
+    const [teamBoards, setTeamBoards] = useState([])
 
 
     // handle filters options
@@ -60,6 +64,7 @@ export default function ContactsPage(props) {
     const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
+    const boards = useBoards()
 
     useEffect(() => {
         if (!contacts.items)
@@ -74,6 +79,31 @@ export default function ContactsPage(props) {
 
         //console.log(contacts.pagination)
     }, [contacts.pagination])
+
+    useEffect(() => {
+        if (!boards.items)
+            return
+
+        // console.log(boards.items)
+        const privateBoards = boards.items.filter(board => {
+            if (!board.is_shared)
+                return board
+        })
+        const teamBoards = boards.items.filter(board => {
+            if (board.is_shared)
+                return board
+        })
+        setPrivateBoards(privateBoards)
+        setTeamBoards(teamBoards)
+    }, [boards.items])
+
+    useEffect(() => {
+        if (!id)
+            return
+
+        console.log(id)
+    }, [id])
+
 
     const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
 
@@ -152,15 +182,34 @@ export default function ContactsPage(props) {
     let filters = [
         { // Category
             id: '0',
-            name: 'My Boards',
+            name: 'All Contacts',
             items: [
                 // Filters
-                { id: '0', name: 'Scheduled' },
-                { id: '1', name: 'In Progress' },
-                { id: '2', name: 'Finished' },
-                { id: '3', name: 'Archived' },
+                { id: '0', name: 'New (Last 30 days)' },
             ]
-        }
+        },
+        { // Category
+            id: '1',
+            name: 'My Boards',
+            // Filters
+            items: privateBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
+
+        },
+        { // Category
+            id: '2',
+            name: 'Shared Boards',
+            // Filters
+            items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
+        },
+        { // Category
+            id: '3',
+            name: 'User Boards',
+            items: [
+                // Filters
+                // { id: '0', name: 'Scheduled' },
+                // { id: '1', name: 'In Progress' },
+            ]
+        },
     ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
@@ -221,8 +270,8 @@ export default function ContactsPage(props) {
             .finally(() => setLoading(false))
     }
 
-    const onPageChange = () => {
-        console.log("onPageChange")
+    const onPageChange = (page) => {
+        contacts.pagination.getPage(page)
     }
 
 
@@ -282,7 +331,7 @@ export default function ContactsPage(props) {
                             icon: AutoFixHighIcon,
                             options: [
                                 { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.length == 0 },
                                 { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                 { name: 'Archive Contact', onClick: onArchiveContactClick }
                             ]
@@ -306,10 +355,27 @@ export default function ContactsPage(props) {
                         )}
                         action={{
                             options: [
-                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                { name: 'Profile Image', onClick: onExportAsCSVClick },
+                                { name: 'Full Name', onClick: onRemoveTagClick },
+                                { name: 'First Name', onClick: onFollowOnTwitterClick },
+                                { name: 'Last Name', onClick: onArchiveContactClick },
+                                { name: 'Nick Name', onClick: onExportAsCSVClick },
+                                { name: 'Twitter', onClick: onRemoveTagClick },
+                                { name: 'Phone', onClick: onFollowOnTwitterClick },
+                                { name: 'State', onClick: onArchiveContactClick },
+                                { name: 'School', onClick: onExportAsCSVClick },
+                                { name: 'Grad Year', onClick: onRemoveTagClick },
+                                { name: 'Positions', onClick: onFollowOnTwitterClick },
+                                { name: 'Area Coach', onClick: onArchiveContactClick },
+                                { name: 'Recruiting Coach', onClick: onExportAsCSVClick },
+                                { name: 'Status', onClick: onRemoveTagClick },
+                                { name: 'Status 2', onClick: onFollowOnTwitterClick },
+                                { name: 'Rank', onClick: onArchiveContactClick },
+                                { name: 'Last Messaged', onClick: onArchiveContactClick },
+                                { name: 'Most Active Time', onClick: onArchiveContactClick },
+                                { name: 'Date Added', onClick: onArchiveContactClick },
+                                { name: 'Time Zone', onClick: onArchiveContactClick },
+                                { name: 'Birthday (dob)', onClick: onArchiveContactClick },
                             ]
                         }}
                     />

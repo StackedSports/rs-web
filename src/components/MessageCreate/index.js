@@ -11,9 +11,10 @@ import SelectSearch from "react-select-search";
 import PropTypes from 'prop-types'
 import ArrowBackwardIosIcon from "@material-ui/icons/ArrowBackIos";
 import SendIcon from '@mui/icons-material/Send';
-import {useMessages, 
+import {
+  useMessages,
   useSnippets,
-  useBoards, 
+  useBoards,
   useBoard,
   useTags,
   useTagsWithContacts,
@@ -59,18 +60,18 @@ import TimePicker from "../DateTimePicker/index";
 import MediaComponnet from "../Media/MediaComponent";
 import {
   getAllContactsWithSearch,
- 
+
   getMedia,
   getTeamContacts,
   getPlaceholder,
   getMessage,
   createMessage,
- 
+
   getBoardFiltersById,
- 
+
   getPlatform,
- 
- 
+
+
 } from "../../ApiHelper";
 // import SearchBar from "material-ui-search-bar";
 
@@ -93,7 +94,7 @@ import { id } from "date-fns/locale";
 let filterMessage = []
 let filterMessageDetails = []
 function Alert(props) {
- 
+
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 function TabPanel(props) {
@@ -132,48 +133,48 @@ function MessageCreate(props) {
   //api
   //var userProfile;
   const [value, setValue] = React.useState(1);
-  const [boardsId,setBoardsId] = React.useState([])
+  const [boardsId, setBoardsId] = React.useState([])
   const [counts, setCount] = React.useState(0)
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
- 
-  const [showModal, setShowModal] = useState(true);
-  
-  const [statusses, setStatuses] = useState(["Draft","Scheduled","In Progress","Finished","Archived","Error"]);
 
-  const [startIndex,setStartIndex] = useState(0)
-  const [endIndex,setEndIndex] = useState(99)
-  
+  const [showModal, setShowModal] = useState(true);
+
+  const [statusses, setStatuses] = useState(["Draft", "Scheduled", "In Progress", "Finished", "Archived", "Error"]);
+
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(99)
+
   //const [allTags, setAllTags] = useState(null);
-  
+
   const allMessages = useMessages()
   const snippets = useSnippets()
-  const allBoards = useBoards()
+  const allBoards = useBoards().items
   const boardContacts = useBoard("xGABNSeXmDOW")
   const messagesTags = useTags()
   const tags = useTagsWithContacts().items
   const allPlatforms = usePlatform().items
-    console.log("snippetsandmessages",allPlatforms)
+  console.log("snippetsandmessages", allPlatforms)
 
-     
 
-    
-      
 
-   
 
-      
+
+
+
+
+
 
   useEffect(() => {
     setShowDrawer(false);
     setShowAnimation(true);
     handleAnimation();
-    
-  
-    
+
+
+
   }, []);
-  
+
 
   const handleAnimation = () => {
     //setShowDrawer(true);
@@ -195,15 +196,15 @@ function MessageCreate(props) {
   const [selectedDrafts, setSelectedDrafts] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [uselessState, setuseLessState] = useState(0);
-  const [addMedia,setAddMedia]=useState(false);
-  const [recieve,setRecieve]=useState([])
+  const [addMedia, setAddMedia] = useState(false);
+  const [recieve, setRecieve] = useState([])
   // const [showFiltersRow, setShowFiltersRow] = useState(false);
   const [showMessageFiltersRow, setShowMessageFiltersRow] = useState(false);
   const [displayCreateMessage, setDisplayCreateMessage] = useState(false);
   const [displaySnippets, setDisplaySnippets] = useState(false);
   const [displayEmojiSelect, setDisplayEmojiSelect] = useState(false);
   const [displayTextPlaceholders, setDisplayTextPlaceholders] = useState(false);
- // const [addMedia, setAddMedia] = useState(false);
+  // const [addMedia, setAddMedia] = useState(false);
   const [displayMessageSenders, setDisplayMessageSenders] = useState(false);
   const [displayMessageReceivers, setDisplayMessageReceivers] = useState(false);
   const [displaySendTo, setDisplaySendTo] = useState(false);
@@ -218,16 +219,16 @@ function MessageCreate(props) {
   const [twitterDm, settwitterDm] = useState(false);
   const [personalText, setPersonalText] = useState(false);
   const [rsText, setrsText] = useState(false);
-const handleAddMedia=(media)=> setAddMedia(media)
-  const [messageStatus,setMessageStatus] = useState(null)
+  const handleAddMedia = (media) => setAddMedia(media)
+  const [messageStatus, setMessageStatus] = useState(null)
   const [messageSender, setMessageSender] = useState(null);
   const [messageDetails, setMessageDetails] = useState(null);
   const [messagePreview, setMessagePreview] = useState(null);
- 
+
   const [messageCreated, setMessageCreated] = useState(false);
   const [messageNotCreated, setMessageNotCreated] = useState(false);
-  const [messageDeleted,setMessageDeleted] = useState(false)
-  const [saveDraft,setSaveDraft] = useState(false)
+  const [messageDeleted, setMessageDeleted] = useState(false)
+  const [saveDraft, setSaveDraft] = useState(false)
   const [fromAreaCoach, setFromAreaCoach] = useState(false);
   const [fromPositionCoach, setFromPositinCoach] = useState(false);
 
@@ -236,7 +237,7 @@ const handleAddMedia=(media)=> setAddMedia(media)
 
   const [showBoardFilters, setshowBoardFilters] = useState(true);
   const [stateSearch, setStateSearch] = useState("");
-  
+
   const [statusFilter, setStatusFilter] = useState(null);
   const [rankFilter, setRankFilter] = useState(null);
   const [gradeYearFilter, setGradeYearFilter] = useState(null);
@@ -249,25 +250,25 @@ const handleAddMedia=(media)=> setAddMedia(media)
   const [placeholders, setPlaceHolders] = useState(null);
   const [contacts, setContacts] = useState(null);
   const [media, setMedia] = useState();
-  const handleMedia =(media)=>setMedia(media)
+  const handleMedia = (media) => setMedia(media)
   const [copyContacts, setCopyContacts] = useState(null);
   const [allColumns, setAllColumns] = useState(null);
   const [allStatuses, setAllStatuses] = useState(null);
   const [allGradYears, setAllGraderYears] = useState(null);
   const [allTags, setAllTags] = useState(null);
   const [allRanks, setAllRanks] = useState(null);
- // const [allBoards, setAllBoards] = useState(null);
+  // const [allBoards, setAllBoards] = useState(null);
   const [allindividualBoards, setAllindividualBoards] = useState(null);
-  const [saveMessage,setSaveMessage] = useState([]);
+  const [saveMessage, setSaveMessage] = useState([]);
   const [AllSearchBoards, setAllSearchBoards] = useState(null);
-console.log("SaveMessage",saveMessage)
+  console.log("SaveMessage", saveMessage)
 
   const [positions, setAllPositions] = useState(null);
   const [rows, setRows] = useState(allBoards);
   const [individualrows, setindividualRows] = useState(allindividualBoards);
 
-  const [sendMessage,setSendMessage]=useState(false)
-  const [scheduleMessage,setScheduleMessage]=useState(false)
+  const [sendMessage, setSendMessage] = useState(false)
+  const [scheduleMessage, setScheduleMessage] = useState(false)
   const [searched, setSearched] = useState("");
 
   const [teamContacts, setTeamContacts] = useState(null);
@@ -279,23 +280,23 @@ console.log("SaveMessage",saveMessage)
   const [showAnimation, setShowAnimation] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [stateiconColor, setstateiconColor] = useState('gray');
-  console.log("selectedcheckbox",media)
+  console.log("selectedcheckbox", media)
   console.log(allBoards, "All Boards")
-  const [tableData, setTableData] = React.useState([ ]);
-  
-  function showStatus(){
-  
-  //   setTimeout(()=>{
-    //  moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?setMessageStatus("Drafts"):""
-      
-    // },100)
-   
+  const [tableData, setTableData] = React.useState([]);
 
-     
-   }  // const classes = useStyles();
+  function showStatus() {
+
+    //   setTimeout(()=>{
+    //  moment(date).format(" MM/DD/YYYY")<=moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?setMessageStatus("Drafts"):""
+
+    // },100)
+
+
+
+  }  // const classes = useStyles();
 
   const requestSearch = (searchedVal) => {
-    console.log("searchedVal",searchedVal)
+    console.log("searchedVal", searchedVal)
     getMyContactsSearch()
 
     const filteredRows = allBoards?.filter((row) => {
@@ -338,14 +339,14 @@ console.log("SaveMessage",saveMessage)
   useEffect(() => {
     setRows(allBoards)
   }, [allBoards])
- 
- 
-  
+
+
+
   useEffect(
     (data) => {
-     
+
       //setTableData(recieve);
-      
+
       requestSearch()
       // setindividualRows(s)
       // action on update of movies
@@ -599,7 +600,7 @@ console.log("SaveMessage",saveMessage)
       <div
         style={{
           width: 300,
-         
+
           // marginLeft: 16,
           border:
             selectedCheckBoxes.indexOf(m) > -1
@@ -615,17 +616,17 @@ console.log("SaveMessage",saveMessage)
           justify="center"
           style={{ background: "#f6f6f6" }}
         >
-          {m?.file_type==="video/mp4"?
-          <video
-          style={{ width: "100%", height: 150, objectFit: "contain" }}
-            src={m?.urls?.original}
-            >     
-          </video>
-            
-            :<img
-            style={{ width: "100%", height: 150, objectFit: "contain" }}
-            src={m?.urls?.original}
-          ></img>}
+          {m?.file_type === "video/mp4" ?
+            <video
+              style={{ width: "100%", height: 150, objectFit: "contain" }}
+              src={m?.urls?.original}
+            >
+            </video>
+
+            : <img
+              style={{ width: "100%", height: 150, objectFit: "contain" }}
+              src={m?.urls?.original}
+            ></img>}
         </Grid>
         <Grid
           container
@@ -633,14 +634,14 @@ console.log("SaveMessage",saveMessage)
           style={{ height: 30, marginLeft: 16, marginTop: 10 }}
           alignItems="center"
         >
-          {m?.file_type&&m?.file_type=="image/gif"  ? (
+          {m?.file_type && m?.file_type == "image/gif" ? (
             <GifIcon style={{ color: "black", fontSize: 20 }} ></GifIcon>
-          ) :m?.file_type&&m.file_type=="image/png"  ||
-          m?.file_type&& m?.file_type=="image/jpg"  ||
-          m?.file_type&& m?.file_type=="image/jpeg" ||
-          m?.file_type&& m?.file_type=="image" ? (
+          ) : m?.file_type && m.file_type == "image/png" ||
+            m?.file_type && m?.file_type == "image/jpg" ||
+            m?.file_type && m?.file_type == "image/jpeg" ||
+            m?.file_type && m?.file_type == "image" ? (
             <FaImage style={{ color: "black", fontSize: 20 }}></FaImage>
-          ) :m?.file_type&&m?.file_type=="video/mp4" ? (
+          ) : m?.file_type && m?.file_type == "video/mp4" ? (
             <FaVideo style={{ color: "black", fontSize: 20 }} ></FaVideo>
           ) : (
             <FaFilePdf style={{ color: "black", fontSize: 20 }}></FaFilePdf>
@@ -651,10 +652,10 @@ console.log("SaveMessage",saveMessage)
               fontSize: 12,
               margin: 0,
               marginLeft: 5,
-              
+
             }}
           >
-            {m?.file_name?m.file_name:m?.name}
+            {m?.file_name ? m.file_name : m?.name}
           </p>
           <div style={{ width: "100%" }}></div>
         </Grid>
@@ -667,18 +668,18 @@ console.log("SaveMessage",saveMessage)
             }}
           >
             Uploaded at : {new moment(m?.created_at).format("YYYY-MM-DD h:mm a")} by {" "}
-           
+
           </p>
-           <p
+          <p
             style={{
               margin: 0,
               fontSize: 13,
               color: "#5a5a5a",
             }}
           >
-            
-            {m?.owner?m.owner.first_name+" "+m?.owner?.last_name:
-            JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}
+
+            {m?.owner ? m.owner.first_name + " " + m?.owner?.last_name :
+              JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}
           </p>
         </Grid>
       </div>
@@ -707,7 +708,7 @@ console.log("SaveMessage",saveMessage)
           <IconTextField
             // width={180}
             width={100}
-         
+
             text="Action"
             background={selectedDrafts ? "#3871DA" : "transparent"}
             textColor={selectedDrafts ? "white" : "black"}
@@ -721,63 +722,63 @@ console.log("SaveMessage",saveMessage)
 
             onClick={() => {
               setSelectedDrafts(!selectedDrafts)
-            
+
             }}
 
 
           ></IconTextField>
           {selectedDrafts && (
-            <Paper elevation={3} class="dropdown" 
-            style={{textAlign: "end", cursor: "pointer",background:'white',marginLeft:-20,position:"fixed"}} >
-              <div class="dropdown" style={{  }}>
+            <Paper elevation={3} class="dropdown"
+              style={{ textAlign: "end", cursor: "pointer", background: 'white', marginLeft: -20, position: "fixed" }} >
+              <div class="dropdown" style={{}}>
                 <p style={{ color: "black", margin: 12 }}
-                 onClick={() => {
-                 setMessagePreview(false)
-                 setSelectedDrafts(false)
-                }}
-                
+                  onClick={() => {
+                    setMessagePreview(false)
+                    setSelectedDrafts(false)
+                  }}
+
                 >Edit</p>
                 <p
                   onClick={() => {
-                  setSaveMessage(null)
-                  setMessageType(null)
-                 setMessageText("")
-                  setMessageSender(null)
-                  setRecieve(null)
-                  setMessageReceiver([])
-                  settwitterDm(false)
-                  setrsText(false)
-                  setPersonalText(false)
-                  setMedia(null)
-                  setMessageDeleted(true)
-                  setMessagePreview(false)
-                  setDate("ASAP")
-                  setMessageDeleted(true)
-                  setSelectedDrafts(false)
+                    setSaveMessage(null)
+                    setMessageType(null)
+                    setMessageText("")
+                    setMessageSender(null)
+                    setRecieve(null)
+                    setMessageReceiver([])
+                    settwitterDm(false)
+                    setrsText(false)
+                    setPersonalText(false)
+                    setMedia(null)
+                    setMessageDeleted(true)
+                    setMessagePreview(false)
+                    setDate("ASAP")
+                    setMessageDeleted(true)
+                    setSelectedDrafts(false)
                   }}
                   style={{ color: "red", margin: 12 }}
                 >
-                   Delete Message
-               
+                  Delete Message
+
 
 
                 </p>
                 <p style={{ color: "black", margin: 12 }}
-                 onClick={() => {
-                  setSaveMessage(null)
-                  setMessageType(null)
-                 setMessageText("")
-                  setMessageSender(null)
-                  setRecieve(null)
-                  setMessageReceiver([])
-                  settwitterDm(false)
-                  setrsText(false)
-                  setPersonalText(false)
-                  setMedia(null)
-                  setSaveDraft(true)
-                  setMessagePreview(false)
-                  setDate(new Date())
-                  setSelectedDrafts(false)
+                  onClick={() => {
+                    setSaveMessage(null)
+                    setMessageType(null)
+                    setMessageText("")
+                    setMessageSender(null)
+                    setRecieve(null)
+                    setMessageReceiver([])
+                    settwitterDm(false)
+                    setrsText(false)
+                    setPersonalText(false)
+                    setMedia(null)
+                    setSaveDraft(true)
+                    setMessagePreview(false)
+                    setDate(new Date())
+                    setSelectedDrafts(false)
                   }}
                 >
                   Save As Draft & Exit
@@ -812,41 +813,41 @@ console.log("SaveMessage",saveMessage)
   };
 
   const showSendButton = () => {
-    
+
     return (
-      
+
       <IconTextField
-        text={moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?"Schedule":"Send"}
-        textColor={ "white"}
+        text={moment(date).format(" MM/DD/YYYY") > moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? "Schedule" : "Send"}
+        textColor={"white"}
         background={"#3871DA"}
         width={120}
         onClick={() => {
-                 setSaveMessage(null)
-                  setMessageType(null)
-                 setMessageText("")
-                  setMessageSender(null)
-                  setRecieve(null)
-                  setMessageReceiver([])
-                  settwitterDm(false)
-                  setrsText(false)
-                  setPersonalText(false)
-                  setMedia(null)
-                  moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
-                  setScheduleMessage(true):setSendMessage(true)
-                  setMessagePreview(false)
-                  setDate(new Date())
+          setSaveMessage(null)
+          setMessageType(null)
+          setMessageText("")
+          setMessageSender(null)
+          setRecieve(null)
+          setMessageReceiver([])
+          settwitterDm(false)
+          setrsText(false)
+          setPersonalText(false)
+          setMedia(null)
+          moment(date).format(" MM/DD/YYYY") > moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
+            setScheduleMessage(true) : setSendMessage(true)
+          setMessagePreview(false)
+          setDate(new Date())
 
         }}
         icon={
-          moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
-          <CalendarTodayIcon
-            style={{
-              color:  "white",
-            }}
-          ></CalendarTodayIcon>:<SendIcon
-          style={{
-            color:  "white",
-          }}/>
+          moment(date).format(" MM/DD/YYYY") > moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ?
+            <CalendarTodayIcon
+              style={{
+                color: "white",
+              }}
+            ></CalendarTodayIcon> : <SendIcon
+              style={{
+                color: "white",
+              }} />
         }
       ></IconTextField>
     );
@@ -910,7 +911,7 @@ console.log("SaveMessage",saveMessage)
         // console.log("THis is all contacts res", res);
         if (res.statusText === "OK") {
           // console.log("These are all media", res.data);
-         
+
         }
       },
       (error) => {
@@ -962,10 +963,10 @@ console.log("SaveMessage",saveMessage)
   // }
   console.log(boardsId, "boardsById")
 
-  
 
- 
-  
+
+
+
 
   const filtesSpacingStyle = {
     marginRight: 5,
@@ -973,36 +974,36 @@ console.log("SaveMessage",saveMessage)
 
   const mediaContainer = (m) => {
     //alert('ok')
-    
+
     console.log("THis is container ", m);
-     return (
-    <Badge
+    return (
+      <Badge
         badgeContent={
           <ClearIcon
             style={{ height: 10, width: 10, cursor: "pointer" }}
-          /*  onClick={() => {
-              var alreadySelected = false;
-              media.map((item) => {
-                if (m.hashid === item.hashid) {
-                  alreadySelected = true;
-                }
-              });
-              if (alreadySelected) {
-                var temp = [];
+            /*  onClick={() => {
+                var alreadySelected = false;
                 media.map((item) => {
-                  if (m.hashid != item.hashid) {
-                    temp.push(item);
+                  if (m.hashid === item.hashid) {
+                    alreadySelected = true;
                   }
                 });
-                setMedia(temp);
-                localStorage.setItem("selectedMedia", JSON.stringify(temp));
-                setuseLessState(uselessState + 1);
-              }
-            }}*/
-            onClick={() =>{
-            setMedia(null)
-          saveMessage.media_placeholder_id=null
-            setSaveMessage(saveMessage)
+                if (alreadySelected) {
+                  var temp = [];
+                  media.map((item) => {
+                    if (m.hashid != item.hashid) {
+                      temp.push(item);
+                    }
+                  });
+                  setMedia(temp);
+                  localStorage.setItem("selectedMedia", JSON.stringify(temp));
+                  setuseLessState(uselessState + 1);
+                }
+              }}*/
+            onClick={() => {
+              setMedia(null)
+              saveMessage.media_placeholder_id = null
+              setSaveMessage(saveMessage)
             }}
 
 
@@ -1013,13 +1014,13 @@ console.log("SaveMessage",saveMessage)
         <div
           style={{
             width: 270,
-         
+
             marginLeft: 20,
             // border: "1px solid #d2d2d2",
             border: "1px solid #d2d2d2",
             borderRadius: 4,
             // marginTop: 20,
-           
+
           }}
         >
           <Grid
@@ -1084,12 +1085,12 @@ console.log("SaveMessage",saveMessage)
               }}
             >
               Uploaded at : {new moment(m.created_at).format("YYYY-MM-DD")} by {"    "}
-              {m.owner&&m.owner.first_name+" "+m.owner.last_name}
+              {m.owner && m.owner.first_name + " " + m.owner.last_name}
             </p>
           </Grid>
         </div>
       </Badge>
-            );
+    );
   };
 
   const renderMessageFilters = () => {
@@ -1111,7 +1112,7 @@ console.log("SaveMessage",saveMessage)
           placeholder="Type"
           style={filtesSpacingStyle}
         >
-          {console.log("platforms",allPlatforms)}
+          {console.log("platforms", allPlatforms)}
           {allPlatforms &&
             allPlatforms.map((option) => (
               <Dropdown.Item
@@ -1242,7 +1243,7 @@ console.log("SaveMessage",saveMessage)
                 color: timeZoneFilter === option ? "white" : "black",
               }}
               onClick={() => {
-                addDataToFilter(option,"statuses");
+                addDataToFilter(option, "statuses");
               }}
             >
               {option}
@@ -1256,7 +1257,7 @@ console.log("SaveMessage",saveMessage)
   };
 
   const renderMessageDetails = () => {
-    console.log("table data = ",tableData)
+    console.log("table data = ", tableData)
     return (
       <div
         style={{
@@ -1279,24 +1280,24 @@ console.log("SaveMessage",saveMessage)
               style={{ cursor: "pointer", fontSize: 18 }}
             ></FormatAlignLeftIcon> */}
 
-{
-                  showDrawer ?
-                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(false);
-                      setShowAnimation(true);
-                      handleAnimation();
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>
-                    :
-                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(true);
-                      setShowAnimation(true);
-                      handleAnimation();
+            {
+              showDrawer ?
+                <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                  setshowSideFilters(!showSideFilters);
+                  setShowDrawer(false);
+                  setShowAnimation(true);
+                  handleAnimation();
+                }}
+                  style={{ cursor: "pointer", width: 40 }}></img>
+                :
+                <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                  setshowSideFilters(!showSideFilters);
+                  setShowDrawer(true);
+                  setShowAnimation(true);
+                  handleAnimation();
 
-                    }}
-                    style={{ cursor: "pointer", width: 40 }}></img>}
+                }}
+                  style={{ cursor: "pointer", width: 40 }}></img>}
 
             <span
               style={{
@@ -1313,7 +1314,7 @@ console.log("SaveMessage",saveMessage)
           <Grid item md={8} sm={8}>
             <Grid container direction="row" justify="flex-end">
               {showActionButton()}
-              { showFilterButton()  }
+              {showFilterButton()}
             </Grid>
           </Grid>
 
@@ -1383,7 +1384,7 @@ console.log("SaveMessage",saveMessage)
               }
             }}
           >
-            
+
             {placeholders &&
               placeholders.map((selectedPlaceholder, index) => {
                 if (index < 1) {
@@ -1404,10 +1405,10 @@ console.log("SaveMessage",saveMessage)
   };
 
   const selectedMessageStatusTable = (props) => (
- 
+
     <>
-    
-       { console.log("selectedMessagetablelist",props)}
+
+      {console.log("selectedMessagetablelist", props)}
       <Grid
         container
         direction="row"
@@ -1422,19 +1423,19 @@ console.log("SaveMessage",saveMessage)
         <Grid item md={1} xs={1}>
           <Checkbox
             color="primary"
-      //      checked={selectedDrafts.length === 6}
-           /* onChange={() => {
-              var array = [1, 2, 3, 4, 5, 6];
-              var temp = [];
-              if (selectedDrafts.length === array.length) {
-                setSelectedDrafts([]);
-              } else {
-                array.map((item) => {
-                  temp.push(item);
-                });
-                setSelectedDrafts(temp);
-              }
-            }}*/
+          //      checked={selectedDrafts.length === 6}
+          /* onChange={() => {
+             var array = [1, 2, 3, 4, 5, 6];
+             var temp = [];
+             if (selectedDrafts.length === array.length) {
+               setSelectedDrafts([]);
+             } else {
+               array.map((item) => {
+                 temp.push(item);
+               });
+               setSelectedDrafts(temp);
+             }
+           }}*/
           ></Checkbox>
         </Grid>
         <Grid item md={2} xs={2}>
@@ -1443,7 +1444,7 @@ console.log("SaveMessage",saveMessage)
             direction="row"
             onClick={() => {
               let data = props.contact_list.sort((a, b) =>
-              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+                a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
               );
               console.log(data);
               setTableData(() => [...data]);
@@ -1458,7 +1459,7 @@ console.log("SaveMessage",saveMessage)
           </Grid>
         </Grid>
         <Grid
-       
+
         >
           <span className={classes.tableHeading}>Board/List</span>
         </Grid>
@@ -1469,11 +1470,11 @@ console.log("SaveMessage",saveMessage)
           xs={2}
           onClick={() => {
             let data = props.contact_list?.sort((a, b) =>
-            a.phone? ( a.phone > b.phone
+              a.phone ? (a.phone > b.phone
                 ? 1
                 : b.phoneNumber > a.phoneNumber
                   ? -1
-                  : 0):''
+                  : 0) : ''
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1487,8 +1488,8 @@ console.log("SaveMessage",saveMessage)
         <Grid
           onClick={() => {
             let data = props.contact_list.sort((a, b) =>
-            a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
-    
+              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1504,7 +1505,7 @@ console.log("SaveMessage",saveMessage)
           item
           md={2}
           xs={2}
-        
+
         >
           <span className={classes.tableHeading}>Delivered at</span>
         </Grid>
@@ -1523,75 +1524,77 @@ console.log("SaveMessage",saveMessage)
           </Grid>
         </Grid>
       </Grid>
-        
-      {
-      
-      props.contact_list.length>0 ? props.contact_list.map((item) => { 
-       
-        return (
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              border: "1px solid #d8d8d8",
-              borderBottom: "none",
-              borderRadius: 4,
-              paddingTop: 4,
-              paddingBottom: 4,
-              minWidth: 1025,
-            }}
-          >
-            <Grid item md={1} xs={1}>
-              <Checkbox
-                color="primary"
-                onChange={() => {
-               //   makeDraftSelected(item);
-                }}
-            //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                style={{ marginTop: 1, marginBottom: 1 }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                }}
-              ></Checkbox>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-              {item.first_name?item.first_name+" "+item.last_name:
-             ""}</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>
-              {""}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields} >
-                {formatPhoneNumber(item?.phone)}
-              </span>
-            </Grid>
 
-            <Grid item md={2} xs={2}>
-              <span >{item.first_name&&item.first_name}</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {/*isMesasgeStatusClick
+      {
+
+        props.contact_list.length > 0 ? props.contact_list.map((item) => {
+
+          return (
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                border: "1px solid #d8d8d8",
+                borderBottom: "none",
+                borderRadius: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                minWidth: 1025,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  color="primary"
+                  onChange={() => {
+                    //   makeDraftSelected(item);
+                  }}
+                  //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                  style={{ marginTop: 1, marginBottom: 1 }}
+                  onMouseLeave={() => {
+                    setHoveredIndex(null);
+                  }}
+                ></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {item.first_name ? item.first_name + " " + item.last_name :
+                    ""}</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableFields}>
+                  {""}
+                </span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields} >
+                  {formatPhoneNumber(item?.phone)}
+                </span>
+              </Grid>
+
+              <Grid item md={2} xs={2}>
+                <span >{item.first_name && item.first_name}</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {/*isMesasgeStatusClick
                   ? "-"
                   : moment(date).format("MM/DD/YYYY  h:mm a")*/}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              
-                <span >
-                  <Info style={{ color: item?.status==="pending"?"#f0ad24": 
-                  item?.status==="sent"?"#54a300": item?.status==="error"?"red":"#8bb14c", fontSize: 16 }}></Info>{" "}
-                    <span  >
-                
-                { item?.status
-                 }
                 </span>
-                   {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+              </Grid>
+              <Grid item md={2} xs={2}>
+
+                <span >
+                  <Info style={{
+                    color: item?.status === "pending" ? "#f0ad24" :
+                      item?.status === "sent" ? "#54a300" : item?.status === "error" ? "red" : "#8bb14c", fontSize: 16
+                  }}></Info>{" "}
+                  <span  >
+
+                    {item?.status
+                    }
+                  </span>
+                  {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                  { setMessageStatus("Drafts")}
                 { messageStatus
@@ -1611,81 +1614,83 @@ console.log("SaveMessage",saveMessage)
                  }
                 </span>
               )*/}
-               </span>
-          
+                </span>
+
+              </Grid>
             </Grid>
-          </Grid>
-        );
-      }): //props.filter_list.map((filter)=>
-      //{
-        props.filter_list[0]?.contacts.map((item) => {
-          
-          return (
-        
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              style={{
-                border: "1px solid #d8d8d8",
-                borderBottom: "none",
-                borderRadius: 4,
-                paddingTop: 4,
-                paddingBottom: 4,
-                minWidth: 1025,
-              }}
-            >
-     
-              <Grid item md={1} xs={1}>
-                <Checkbox
-                  color="primary"
-                  onChange={() => {
-                 //   makeDraftSelected(item);
-                  }}
-              //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                  style={{ marginTop: 1, marginBottom: 1 }}
-                  onMouseLeave={() => {
-                    setHoveredIndex(null);
-                  }}
-                ></Checkbox>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableFields}>
-                {item.first_name?item.first_name+" "+item.last_name:
-               ""}</span>
-              </Grid>
-              <Grid item md={1} xs={1}>
-                <span className={classes.tableFields}>
-                {filter.name}
-                </span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableFields} >
-                  {formatPhoneNumber(item.phone&& item.phone)}
-                </span>
-              </Grid>
-  
-              <Grid item md={2} xs={2}>
-                <span >{item.first_name&&item.first_name}</span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                <span className={classes.tableFields}>
-                  {/*isMesasgeStatusClick
+          );
+        }) : //props.filter_list.map((filter)=>
+          //{
+          props.filter_list[0]?.contacts.map((item) => {
+
+            return (
+
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                style={{
+                  border: "1px solid #d8d8d8",
+                  borderBottom: "none",
+                  borderRadius: 4,
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                  minWidth: 1025,
+                }}
+              >
+
+                <Grid item md={1} xs={1}>
+                  <Checkbox
+                    color="primary"
+                    onChange={() => {
+                      //   makeDraftSelected(item);
+                    }}
+                    //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                    style={{ marginTop: 1, marginBottom: 1 }}
+                    onMouseLeave={() => {
+                      setHoveredIndex(null);
+                    }}
+                  ></Checkbox>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields}>
+                    {item.first_name ? item.first_name + " " + item.last_name :
+                      ""}</span>
+                </Grid>
+                <Grid item md={1} xs={1}>
+                  <span className={classes.tableFields}>
+                    {filter.name}
+                  </span>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields} >
+                    {formatPhoneNumber(item.phone && item.phone)}
+                  </span>
+                </Grid>
+
+                <Grid item md={2} xs={2}>
+                  <span >{item.first_name && item.first_name}</span>
+                </Grid>
+                <Grid item md={2} xs={2}>
+                  <span className={classes.tableFields}>
+                    {/*isMesasgeStatusClick
                     ? "-"
                     : moment(date).format("MM/DD/YYYY  h:mm a")*/}
-                </span>
-              </Grid>
-              <Grid item md={2} xs={2}>
-                
-                  <span >
-                    <Info style={{ color: item?.status==="pending"?"#f0ad24": 
-                    item?.status==="sent"?"#54a300": item?.status==="error"?"red":"#8bb14c", fontSize: 16 }}></Info>{" "}
-                      <span  >
-                  
-                  { item?.status
-                   }
                   </span>
-                     {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+                </Grid>
+                <Grid item md={2} xs={2}>
+
+                  <span >
+                    <Info style={{
+                      color: item?.status === "pending" ? "#f0ad24" :
+                        item?.status === "sent" ? "#54a300" : item?.status === "error" ? "red" : "#8bb14c", fontSize: 16
+                    }}></Info>{" "}
+                    <span  >
+
+                      {item?.status
+                      }
+                    </span>
+                    {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                   <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                    { setMessageStatus("Drafts")}
                   { messageStatus
@@ -1705,16 +1710,16 @@ console.log("SaveMessage",saveMessage)
                    }
                   </span>
                 )*/}
-                 </span>
-            
+                  </span>
+
+                </Grid>
               </Grid>
-            </Grid>
-          );
-        })
+            );
+          })
 
 
       }
-      
+
     </>
   );
 
@@ -1735,19 +1740,19 @@ console.log("SaveMessage",saveMessage)
         <Grid item md={1} xs={1}>
           <Checkbox
             color="primary"
-      //      checked={selectedDrafts.length === 6}
-           /* onChange={() => {
-              var array = [1, 2, 3, 4, 5, 6];
-              var temp = [];
-              if (selectedDrafts.length === array.length) {
-                setSelectedDrafts([]);
-              } else {
-                array.map((item) => {
-                  temp.push(item);
-                });
-                setSelectedDrafts(temp);
-              }
-            }}*/
+          //      checked={selectedDrafts.length === 6}
+          /* onChange={() => {
+             var array = [1, 2, 3, 4, 5, 6];
+             var temp = [];
+             if (selectedDrafts.length === array.length) {
+               setSelectedDrafts([]);
+             } else {
+               array.map((item) => {
+                 temp.push(item);
+               });
+               setSelectedDrafts(temp);
+             }
+           }}*/
           ></Checkbox>
         </Grid>
         <Grid item md={2} xs={2}>
@@ -1756,7 +1761,7 @@ console.log("SaveMessage",saveMessage)
             direction="row"
             onClick={() => {
               let data = tableData.sort((a, b) =>
-              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+                a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
               );
               console.log(data);
               setTableData(() => [...data]);
@@ -1776,11 +1781,11 @@ console.log("SaveMessage",saveMessage)
           xs={1}
           onClick={() => {
             let data = saveMessage.filter_ids.sort((a, b) =>
-             a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
+              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
             );
-           
+
             setTableData(() => [...data]);
-            
+
           }}
         >
           <span className={classes.tableHeading}>Board/List</span>
@@ -1792,11 +1797,11 @@ console.log("SaveMessage",saveMessage)
           xs={2}
           onClick={() => {
             let data = tableData.sort((a, b) =>
-            a.phone? ( a.phone > b.phone
+              a.phone ? (a.phone > b.phone
                 ? 1
                 : b.phoneNumber > a.phoneNumber
                   ? -1
-                  : 0):''
+                  : 0) : ''
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1810,8 +1815,8 @@ console.log("SaveMessage",saveMessage)
         <Grid
           onClick={() => {
             let data = tableData.sort((a, b) =>
-            a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name> a.first_name ? -1 : 0):(a.name>b.name?1:b.name>a.name?-1:0) 
-    
+              a.first_name ? (a.first_name > b.first_name ? 1 : b.first_name > a.first_name ? -1 : 0) : (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)
+
             );
             console.log(data);
             setTableData(() => [...data]);
@@ -1827,7 +1832,7 @@ console.log("SaveMessage",saveMessage)
           item
           md={2}
           xs={2}
-        
+
         >
           <span className={classes.tableHeading}>Delivered at</span>
         </Grid>
@@ -1846,82 +1851,84 @@ console.log("SaveMessage",saveMessage)
           </Grid>
         </Grid>
       </Grid>
-{console.log("tabledata",tableData)}
+      {console.log("tabledata", tableData)}
       {tableData && tableData.map((item, index) => {
-        console.log("date",date,item)
-        
-       
+        console.log("date", date, item)
+
+
 
         return (
-          item.name?
-         
-         
-          item.contacts.list.map((contact)=>{
-          {           console.log("VONTACTS",contact)}
-          return(         
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              border: "1px solid #d8d8d8",
-              borderBottom: "none",
-              borderRadius: 4,
-              paddingTop: 4,
-              paddingBottom: 4,
-              minWidth: 1025,
-            }}
-          >
-            <Grid item md={1} xs={1}>
-              <Checkbox
-                color="primary"
-                onChange={() => {
-               //   makeDraftSelected(item);
-                }}
-            //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                style={{ marginTop: 1, marginBottom: 1 }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                }}
-              ></Checkbox>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-              { contact.first_name?contact.first_name+" "+contact.last_name:
-    ""}</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>
-              {item.name}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields} style={{ marginLeft: 40 }}>
-                {formatPhoneNumber(contact.phone)}
-              </span>
-            </Grid>
+          item.name ?
 
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{contact.first_name&&contact.first_name}</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {isMesasgeStatusClick
-                  ? "-"
-                  : moment(date).format("MM/DD/YY  h:mm a")}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              
-                <span className={classes.tableFields}>
-                  <Info style={{ color: messageStatus==="Drafts"?"#f0ad24": 
-                  messageStatus==="In Progress"?"#54a300":"#8bb14c", fontSize: 16 }}></Info>{" "}
-                    <span className={classes.mdMargin} style={{ marginLeft:5 }}>
-                 { setMessageStatus("Drafts")}
-                { messageStatus
-                 }
-                </span>
-                   {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+
+            item.contacts.list.map((contact) => {
+              { console.log("VONTACTS", contact) }
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  style={{
+                    border: "1px solid #d8d8d8",
+                    borderBottom: "none",
+                    borderRadius: 4,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                    minWidth: 1025,
+                  }}
+                >
+                  <Grid item md={1} xs={1}>
+                    <Checkbox
+                      color="primary"
+                      onChange={() => {
+                        //   makeDraftSelected(item);
+                      }}
+                      //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                      style={{ marginTop: 1, marginBottom: 1 }}
+                      onMouseLeave={() => {
+                        setHoveredIndex(null);
+                      }}
+                    ></Checkbox>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>
+                      {contact.first_name ? contact.first_name + " " + contact.last_name :
+                        ""}</span>
+                  </Grid>
+                  <Grid item md={1} xs={1}>
+                    <span className={classes.tableFields}>
+                      {item.name}
+                    </span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields} style={{ marginLeft: 40 }}>
+                      {formatPhoneNumber(contact.phone)}
+                    </span>
+                  </Grid>
+
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>{contact.first_name && contact.first_name}</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <span className={classes.tableFields}>
+                      {isMesasgeStatusClick
+                        ? "-"
+                        : moment(date).format("MM/DD/YY  h:mm a")}
+                    </span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+
+                    <span className={classes.tableFields}>
+                      <Info style={{
+                        color: messageStatus === "Drafts" ? "#f0ad24" :
+                          messageStatus === "In Progress" ? "#54a300" : "#8bb14c", fontSize: 16
+                      }}></Info>{" "}
+                      <span className={classes.mdMargin} style={{ marginLeft: 5 }}>
+                        {setMessageStatus("Drafts")}
+                        {messageStatus
+                        }
+                      </span>
+                      {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                  { setMessageStatus("Drafts")}
                 { messageStatus
@@ -1941,79 +1948,81 @@ console.log("SaveMessage",saveMessage)
                  }
                 </span>
               )*/}
-               </span>
-          
-            </Grid>
-          </Grid>);
+                    </span>
+
+                  </Grid>
+                </Grid>);
 
 
 
-          })
-        
-          :
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            style={{
-              border: "1px solid #d8d8d8",
-              borderBottom: "none",
-              borderRadius: 4,
-              paddingTop: 4,
-              paddingBottom: 4,
-              minWidth: 1025,
-            }}
-          >
-            <Grid item md={1} xs={1}>
-              <Checkbox
-                color="primary"
-                onChange={() => {
-               //   makeDraftSelected(item);
-                }}
-            //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
-                style={{ marginTop: 1, marginBottom: 1 }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                }}
-              ></Checkbox>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-              {item.first_name?item.first_name+" "+item.last_name:
-    ""}</span>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              <span className={classes.tableFields}>
-              {item.name}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields} style={{ marginLeft: 40 }}>
-                {formatPhoneNumber(item?.phone)}
-              </span>
-            </Grid>
+            })
 
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>{item.first_name&&item.first_name}</span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              <span className={classes.tableFields}>
-                {isMesasgeStatusClick
-                  ? "-"
-                  : moment(date).format("MM/DD/YY  h:mm a")}
-              </span>
-            </Grid>
-            <Grid item md={2} xs={2}>
-              
+            :
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{
+                border: "1px solid #d8d8d8",
+                borderBottom: "none",
+                borderRadius: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                minWidth: 1025,
+              }}
+            >
+              <Grid item md={1} xs={1}>
+                <Checkbox
+                  color="primary"
+                  onChange={() => {
+                    //   makeDraftSelected(item);
+                  }}
+                  //    checked={selectedDrafts.indexOf(item) > -1 ? true : false}
+                  style={{ marginTop: 1, marginBottom: 1 }}
+                  onMouseLeave={() => {
+                    setHoveredIndex(null);
+                  }}
+                ></Checkbox>
+              </Grid>
+              <Grid item md={2} xs={2}>
                 <span className={classes.tableFields}>
-                  <Info style={{ color: messageStatus==="Drafts"?"#f0ad24": 
-                  messageStatus==="In Progress"?"#54a300":"#8bb14c", fontSize: 16 }}></Info>{" "}
-                    <span className={classes.mdMargin} style={{ marginLeft:5 }}>
-                 { setMessageStatus("Drafts")}
-                { messageStatus
-                 }
+                  {item.first_name ? item.first_name + " " + item.last_name :
+                    ""}</span>
+              </Grid>
+              <Grid item md={1} xs={1}>
+                <span className={classes.tableFields}>
+                  {item.name}
                 </span>
-                   {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields} style={{ marginLeft: 40 }}>
+                  {formatPhoneNumber(item?.phone)}
+                </span>
+              </Grid>
+
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>{item.first_name && item.first_name}</span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <span className={classes.tableFields}>
+                  {isMesasgeStatusClick
+                    ? "-"
+                    : moment(date).format("MM/DD/YY  h:mm a")}
+                </span>
+              </Grid>
+              <Grid item md={2} xs={2}>
+
+                <span className={classes.tableFields}>
+                  <Info style={{
+                    color: messageStatus === "Drafts" ? "#f0ad24" :
+                      messageStatus === "In Progress" ? "#54a300" : "#8bb14c", fontSize: 16
+                  }}></Info>{" "}
+                  <span className={classes.mdMargin} style={{ marginLeft: 5 }}>
+                    {setMessageStatus("Drafts")}
+                    {messageStatus
+                    }
+                  </span>
+                  {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ marginLeft:5 }}>
                  { setMessageStatus("Drafts")}
                 { messageStatus
@@ -2033,20 +2042,20 @@ console.log("SaveMessage",saveMessage)
                  }
                 </span>
               )*/}
-               </span>
-          
+                </span>
+
+              </Grid>
             </Grid>
-          </Grid>
         );
       })}
     </>
   );
   const MessageFilterDetails = (props) => {
-    console.log("allMessagesss",props)
-    const filterMessage=props.selectedPlaceholder
-    
-       filterMessageDetails=filterMessage
-  
+    console.log("allMessagesss", props)
+    const filterMessage = props.selectedPlaceholder
+
+    filterMessageDetails = filterMessage
+
     return (
       <Grid
         container
@@ -2087,8 +2096,8 @@ console.log("SaveMessage",saveMessage)
             padding: 16,
           }}
         >
-          
-          { filterMessage?.media?.urls&& placeholderContainer(filterMessage?.media)}
+
+          {filterMessage?.media?.urls && placeholderContainer(filterMessage?.media)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -2108,17 +2117,17 @@ console.log("SaveMessage",saveMessage)
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
-              
-            
-                <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                  {filterMessage?.status&& filterMessage.status}
-                </span>
-              
 
 
-              
-               
-          
+              <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
+                {filterMessage?.status && filterMessage.status}
+              </span>
+
+
+
+
+
+
             </p>
             <p class className={classes.messageDetailsHeading}>
               Send As:
@@ -2126,26 +2135,26 @@ console.log("SaveMessage",saveMessage)
             </p>
             <p class className={classes.messageDetailsHeading}>
               Sender:
-              <strong className={classes.mdMargin}>{filterMessage?.sender?.first_name+" "+filterMessage.sender?.last_name}</strong>{" "}
-              {filterMessage.sender?.phone?formatPhoneNumber(filterMessage.sender?.phone):''}
+              <strong className={classes.mdMargin}>{filterMessage?.sender?.first_name + " " + filterMessage.sender?.last_name}</strong>{" "}
+              {filterMessage.sender?.phone ? formatPhoneNumber(filterMessage.sender?.phone) : ''}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Recepient:
               <strong className={classes.mdMargin}>
                 {filterMessage?.recipients?.count}
               </strong>
-            
-            </p>
-          
-              <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
-                <strong className={classes.mdMargin}>
-                {moment(filterMessage?.send_at).format(" MM/DD/YYYY h:mm a")}
-                </strong>{" "}
-              </p>
-          
 
-        {/*    <Grid
+            </p>
+
+            <p class className={classes.messageDetailsHeading}>
+              Start Sending at:
+              <strong className={classes.mdMargin}>
+                {moment(filterMessage?.send_at).format(" MM/DD/YYYY h:mm a")}
+              </strong>{" "}
+            </p>
+
+
+            {/*    <Grid
               container
               direction="row"
               className={classes.messageDetailsHeading}
@@ -2173,10 +2182,10 @@ console.log("SaveMessage",saveMessage)
               className={classes.messageDetailsHeading}
               style={{ color: "black", fontWeight: 500 }}
             >
-              {filterMessage?.body }   
+              {filterMessage?.body}
             </p>
           </div>
-       
+
         </Grid>
         {props.hideStats === null && (
           <div
@@ -2216,16 +2225,16 @@ console.log("SaveMessage",saveMessage)
                 borderBottom: "1px solid #d2d2d2",
               }}
             >   <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 26,
-                  margin: 0,
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                
-            {((filterMessageDetails.recipients?.status_counts?.sent/filterMessageDetails.recipients?.count)*100).toFixed(2)+"%"}
+              style={{
+                fontWeight: "bold",
+                fontSize: 26,
+                margin: 0,
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+
+                {((filterMessageDetails.recipients?.status_counts?.sent / filterMessageDetails.recipients?.count) * 100).toFixed(2) + "%"}
               </p>
               <p
                 style={{
@@ -2234,9 +2243,9 @@ console.log("SaveMessage",saveMessage)
                   height: 30,
                 }}
               >
-                Delivery Rate ({filterMessageDetails.recipients?.status_counts?.sent+"/"+filterMessageDetails.recipients?.count})
+                Delivery Rate ({filterMessageDetails.recipients?.status_counts?.sent + "/" + filterMessageDetails.recipients?.count})
               </p>
-             {/* <p
+              {/* <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -2295,14 +2304,14 @@ console.log("SaveMessage",saveMessage)
 
                   console.log("ASd");
                   setMessageSelected([]);
-                  
+
                 } else {
                   setMessageDetails(null);
-                  filterMessageDetails=filterMessage
+                  filterMessageDetails = filterMessage
                   setMessagePreview(null);
                   console.log("ASd");
                   setMessageSelected([{}]);
-                 
+
                 }
               }}
             >
@@ -2329,15 +2338,15 @@ console.log("SaveMessage",saveMessage)
   };
 
   const SelectedMessageDetails = (props) => {
-    console.log("messageCreatepropss",filterMessageDetails)
-    console.log("filterMessagesDetailsprops",props)
+    console.log("messageCreatepropss", filterMessageDetails)
+    console.log("filterMessagesDetailsprops", props)
     {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
             totalcount+=  saveMessage.contact_ids.map(m =>m.length)
             setCount(totalcount)
     console.log("totalcount",count)*/}
-    
+
     return (
       <Grid
         container
@@ -2379,7 +2388,7 @@ console.log("SaveMessage",saveMessage)
           }}
         >
 
-          { filterMessageDetails?.media?.urls && placeholderContainer(filterMessageDetails?.media)}
+          {filterMessageDetails?.media?.urls && placeholderContainer(filterMessageDetails?.media)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -2395,14 +2404,14 @@ console.log("SaveMessage",saveMessage)
                 marginBottom: 0,
               }}
             >
-              {filterMessageDetails.media &&  filterMessageDetails.media.name}
+              {filterMessageDetails.media && filterMessageDetails.media.name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
-              
+
               <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                  {filterMessageDetails.status}
-                </span>
+                {filterMessageDetails.status}
+              </span>
               {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
                   Drafts
@@ -2419,9 +2428,9 @@ console.log("SaveMessage",saveMessage)
               )*/}
 
 
-              
-               
-          
+
+
+
             </p>
             <p class className={classes.messageDetailsHeading}>
               Send As:
@@ -2429,7 +2438,7 @@ console.log("SaveMessage",saveMessage)
             </p>
             <p class className={classes.messageDetailsHeading}>
               Sender:
-              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
+              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
               {formatPhoneNumber(JSON.parse(localStorage.getItem("user")).phone)}
             </p>
             <p class className={classes.messageDetailsHeading}>
@@ -2437,23 +2446,23 @@ console.log("SaveMessage",saveMessage)
               <strong className={classes.mdMargin}>
                 {filterMessageDetails.recipients?.count}
               </strong>
-              </p>
-               <p class className={classes.messageDetailsHeading}>
+            </p>
+            <p class className={classes.messageDetailsHeading}>
               Pending:
               <strong className={classes.mdMargin}>
                 {filterMessageDetails.recipients?.status_counts.pending}
               </strong>
-            
+
             </p>
-           
-            
-              <p class className={classes.messageDetailsHeading}>
-                Start Sending at:
-                <strong className={classes.mdMargin}>
+
+
+            <p class className={classes.messageDetailsHeading}>
+              Start Sending at:
+              <strong className={classes.mdMargin}>
                 {moment(filterMessageDetails?.send_at).format(" MM/DD/YYYY h:mm a")}
-                </strong>{" "}
-              </p>
-            
+              </strong>{" "}
+            </p>
+
 
             <Grid
               container
@@ -2461,7 +2470,7 @@ console.log("SaveMessage",saveMessage)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id?.tags?.length>0&&  <div
+              {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
@@ -2471,9 +2480,9 @@ console.log("SaveMessage",saveMessage)
                   marginLeft: 16,
                 }}
               >
-                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name )}
-   </div>}
-   
+                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
+              </div>}
+
             </Grid>
             <p class className={classes.messageDetailsHeading}>
               Message Text :
@@ -2481,12 +2490,12 @@ console.log("SaveMessage",saveMessage)
             <p
               class
               className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500,width:"70%" }}
+              style={{ color: "black", fontWeight: 500, width: "70%" }}
             >
-              {filterMessageDetails.body }   
+              {filterMessageDetails.body}
             </p>
           </div>
-       
+
         </Grid>
         {props.hideStats === null && (
           <div
@@ -2535,8 +2544,8 @@ console.log("SaveMessage",saveMessage)
                   textAlign: "center",
                 }}
               >
-                
-            {((filterMessageDetails.recipients.status_counts.sent/filterMessageDetails.recipients.count)*100).toFixed(2)+"%"}
+
+                {((filterMessageDetails.recipients.status_counts.sent / filterMessageDetails.recipients.count) * 100).toFixed(2) + "%"}
               </p>
               <p
                 style={{
@@ -2545,9 +2554,9 @@ console.log("SaveMessage",saveMessage)
                   height: 30,
                 }}
               >
-                Delivery Rate ({filterMessageDetails.recipients.status_counts.sent+"/"+filterMessageDetails.recipients.count})
+                Delivery Rate ({filterMessageDetails.recipients.status_counts.sent + "/" + filterMessageDetails.recipients.count})
               </p>
-            {/*  <p
+              {/*  <p
                 style={{
                   fontWeight: "bold",
                   fontSize: 26,
@@ -2607,7 +2616,7 @@ console.log("SaveMessage",saveMessage)
                   console.log("ASd");
                   setMessageSelected([]);
                 } else {
-                 
+
                   setMessageDetails(null);
                   setMessagePreview(null);
                   console.log("ASd");
@@ -2638,8 +2647,8 @@ console.log("SaveMessage",saveMessage)
   };
 
   const MessageDetailsCard = (props) => {
-    console.log("messageprops",saveMessage)
-    console.log("MesagedETAILS",filterMessageDetails)
+    console.log("messageprops", saveMessage)
+    console.log("MesagedETAILS", filterMessageDetails)
     {/*const [count,setCount] = useState()
     let totalcount= saveMessage.filter_ids.map(m => count+m.contacts.profile_images.length)
     
@@ -2648,7 +2657,7 @@ console.log("SaveMessage",saveMessage)
     console.log("totalcount",count)*/}
     let count = 0
 
-    boardsId?.map((m)=>m.contacts?count+=m.contacts.count:0)
+    boardsId?.map((m) => m.contacts ? count += m.contacts.count : 0)
     count = count + saveMessage.contact_ids?.length
     return (
       <Grid
@@ -2691,7 +2700,7 @@ console.log("SaveMessage",saveMessage)
           }}
         >
 
-          { saveMessage?.media_placeholder_id && placeholderContainer(saveMessage?.media_placeholder_id)}
+          {saveMessage?.media_placeholder_id && placeholderContainer(saveMessage?.media_placeholder_id)}
           {/* </Grid> */}
           {/* <Grid item md={8} xs={8}> */}
           <div
@@ -2707,14 +2716,14 @@ console.log("SaveMessage",saveMessage)
                 marginBottom: 0,
               }}
             >
-              {saveMessage.media_placeholder_id &&  saveMessage.media_placeholder_id.file_name}
+              {saveMessage.media_placeholder_id && saveMessage.media_placeholder_id.file_name}
             </p>
             <p class className={classes.messageDetailsHeading}>
               Message Status:
-              
+
               <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
-                  Drafts
-                </span>
+                Drafts
+              </span>
               {/*moment(date).format(" MM/DD/YYYY")>moment(new Date().toLocaleDateString()).format(" MM/DD/YYYY") ? (
                 <span className={classes.mdMargin} style={{ color: "#f0ad24" }}>
                   Drafts
@@ -2731,9 +2740,9 @@ console.log("SaveMessage",saveMessage)
               )*/}
 
 
-              
-               
-          
+
+
+
             </p>
             <p class className={classes.messageDetailsHeading}>
               Send As:
@@ -2741,7 +2750,7 @@ console.log("SaveMessage",saveMessage)
             </p>
             <p class className={classes.messageDetailsHeading}>
               Sender:
-              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
+              <strong className={classes.mdMargin}>{JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name}</strong>{" "}
               {JSON.parse(localStorage.getItem("user")).phone}
             </p>
             <p class className={classes.messageDetailsHeading}>
@@ -2749,13 +2758,13 @@ console.log("SaveMessage",saveMessage)
               <strong className={classes.mdMargin}>
                 {count}
               </strong>
-            
+
             </p>
             {saveMessage.contact_ids.status === "Scheduled" ? (
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                
+
                 </strong>{" "}
                 <span
                   style={{ textDecoration: "underline", cursor: "pointer" }}
@@ -2771,7 +2780,7 @@ console.log("SaveMessage",saveMessage)
               <p class className={classes.messageDetailsHeading}>
                 Start Sending at:
                 <strong className={classes.mdMargin}>
-                {moment(date).format(" MM/DD/YYYY h:mm a")}
+                  {moment(date).format(" MM/DD/YYYY h:mm a")}
                 </strong>{" "}
               </p>
             )}
@@ -2782,7 +2791,7 @@ console.log("SaveMessage",saveMessage)
               className={classes.messageDetailsHeading}
             >
               Tags:
-           { saveMessage.media_placeholder_id?.tags?.length>0&&  <div
+              {saveMessage.media_placeholder_id?.tags?.length > 0 && <div
                 style={{
                   border: "1px solid #0091ff",
                   color: "#0091ff",
@@ -2792,9 +2801,9 @@ console.log("SaveMessage",saveMessage)
                   marginLeft: 16,
                 }}
               >
-                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name )}
-   </div>}
-   
+                {saveMessage.media_placeholder_id.tags.map((tags) => tags.name)}
+              </div>}
+
             </Grid>
             <p class className={classes.messageDetailsHeading}>
               Message Text :
@@ -2802,12 +2811,12 @@ console.log("SaveMessage",saveMessage)
             <p
               class
               className={classes.messageDetailsHeading}
-              style={{ color: "black", fontWeight: 500,width:200 }}
+              style={{ color: "black", fontWeight: 500, width: 200 }}
             >
-              {saveMessage.body }   
+              {saveMessage.body}
             </p>
           </div>
-       
+
         </Grid>
         {props.hideStats === null && (
           <div
@@ -2927,7 +2936,7 @@ console.log("SaveMessage",saveMessage)
                   console.log("ASd");
                   setMessageSelected([]);
                 } else {
-             
+
                   setMessageDetails(null);
                   setMessagePreview(null);
                   console.log("ASd");
@@ -2958,7 +2967,7 @@ console.log("SaveMessage",saveMessage)
   };
 
   const RenderSelectedMessage = (props) => {
-    console.log('selectedmessage',props)
+    console.log('selectedmessage', props)
 
 
 
@@ -2984,7 +2993,7 @@ console.log("SaveMessage",saveMessage)
                 setIsMesasgeStatusClick(false);
                 setMessagePreview(null);
                 setMessageSelected([]);
-                
+
               }}
               style={{ cursor: "pointer", fontSize: 30, fontWeight: "bold" }}
             ></KeyboardArrowLeftIcon>
@@ -3035,7 +3044,7 @@ console.log("SaveMessage",saveMessage)
                       hideStats={null}
                       selectedPlaceholder={selectedPlaceholder}
                     ></SelectedMessageDetails>
-                    
+
                   );
                 }
               })}
@@ -3060,90 +3069,78 @@ console.log("SaveMessage",saveMessage)
     const lastname = JSON.parse(localStorage.getItem("user")).last_name.trim()
     console.log("fistandlastnamee", firstname, lastname)
     console.log("itemboard", filter)
-    
 
-     
-     
+
+
+
     console.log("filtering", filterMessage)
-       let filteredMessage = []
-      if(allMessages){
-        for(let f of filter )
-        {
-          
-          if(f==="AllMessages"){
-            filteredMessage = filteredMessage.concat(allMessages.slice(0,99))
-           // filterMessage = filterMessage.filter((m)=>m.id.includes())
-          }
-          else if(f==="Archived")
-      {
-        filteredMessage=filteredMessage.concat( allMessages.filter(m => m.status === "Archived"))
-        filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f==="Finished")
-      {
-       filteredMessage=filteredMessage.concat( allMessages?.filter(m => m.status === "Sent"));
-       filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f==="In Progress")
-      {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "In Progress"));
-         filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f==="Scheduled")
-      {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Scheduled"));
-          filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f==="Draft")
-      {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Draft"));
-         filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f==="Error")
-      {
-         filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.status === "Error"));
-         filteredMessage = filteredMessage.slice(0,99)
-      }
-      else if(f===firstname+" "+lastname)
-      {
-        filteredMessage=filteredMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname));
-        filteredMessage = filteredMessage.slice(0,99)
-      }
+    let filteredMessage = []
+    if (allMessages) {
+      for (let f of filter) {
 
-      else if(f===teamContacts.map((m)=>m.first_name+" "+m.last_name))
-      {
-       filterMessage=filterMessage.concat( allMessages?.filter(m => 
-        m.sender.first_name+" "+m.sender.last_name === f));
-      }
-      else if(f===allPlatforms.map((m)=>m.name))
-      {
-        filterMessage=filterMessage.concat(allMessages?.filter(m => m.platform?.name === f)).slice(500,600);
-      }
-      else if(f===statusses.map((m)=>m))
-      {
-        filterMessage=filterMessage.concat(allMessages?.filter(m => m.status === f)).slice(0,99);
-      }
-      else if(allTags!==null)
-      {
-        filterMessage=filterMessage.concat(allMessages?.filter(m => m.tags === f));
-      }
-
-      filteredMessage = [...new Set(filteredMessage.filter(item =>item.id))];
-      const filteredArr = filteredMessage.filter((item, index) => {
-        return filteredMessage.indexOf(item) === index;
-    })
-    console.log(filteredMessage,"filteredarra")
-
-
-      //const fil = [...new Set(filterMessage) ]
-          console.log(f,"filtermessagesanddata",filteredMessage,filteredArr)
-       
-       
+        if (f === "AllMessages") {
+          filteredMessage = filteredMessage.concat(allMessages.slice(0, 99))
+          // filterMessage = filterMessage.filter((m)=>m.id.includes())
+        }
+        else if (f === "Archived") {
+          filteredMessage = filteredMessage.concat(allMessages.filter(m => m.status === "Archived"))
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === "Finished") {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Sent"));
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === "In Progress") {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "In Progress"));
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === "Scheduled") {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Scheduled"));
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === "Draft") {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Draft"));
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === "Error") {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.status === "Error"));
+          filteredMessage = filteredMessage.slice(0, 99)
+        }
+        else if (f === firstname + " " + lastname) {
+          filteredMessage = filteredMessage.concat(allMessages?.filter(m => m.sender.first_name === firstname && m.sender.last_name === lastname));
+          filteredMessage = filteredMessage.slice(0, 99)
         }
 
-        
+        else if (f === teamContacts.map((m) => m.first_name + " " + m.last_name)) {
+          filterMessage = filterMessage.concat(allMessages?.filter(m =>
+            m.sender.first_name + " " + m.sender.last_name === f));
+        }
+        else if (f === allPlatforms.map((m) => m.name)) {
+          filterMessage = filterMessage.concat(allMessages?.filter(m => m.platform?.name === f)).slice(500, 600);
+        }
+        else if (f === statusses.map((m) => m)) {
+          filterMessage = filterMessage.concat(allMessages?.filter(m => m.status === f)).slice(0, 99);
+        }
+        else if (allTags !== null) {
+          filterMessage = filterMessage.concat(allMessages?.filter(m => m.tags === f));
+        }
+
+        filteredMessage = [...new Set(filteredMessage.filter(item => item.id))];
+        const filteredArr = filteredMessage.filter((item, index) => {
+          return filteredMessage.indexOf(item) === index;
+        })
+        console.log(filteredMessage, "filteredarra")
+
+
+        //const fil = [...new Set(filterMessage) ]
+        console.log(f, "filtermessagesanddata", filteredMessage, filteredArr)
+
+
       }
-    
+
+
+    }
+
     {/*filter.map ((boardname) =>{
       
       if(boardname==="AllMessages"){
@@ -3190,10 +3187,10 @@ console.log("SaveMessage",saveMessage)
       
   */ }
 
-   
+
 
     console.log("filterMessages", filterMessage)
-  
+
     return (
       <div
         style={{
@@ -3230,7 +3227,7 @@ console.log("SaveMessage",saveMessage)
                     <ClearIcon
                       onClick={() => {
                         removeDataFromFilter(index);
-                       // setMessageDetails(true)
+                        // setMessageDetails(true)
                       }}
                       style={{
                         color: "red",
@@ -3240,7 +3237,7 @@ console.log("SaveMessage",saveMessage)
                       }}
                     ></ClearIcon>{" "}
                   </Grid>
-            
+
                 </div>
               );
             })}
@@ -3249,25 +3246,25 @@ console.log("SaveMessage",saveMessage)
           <Grid item md={4} sm={4}>
 
 
-         
-{
-                  showDrawer ?
-                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(false);
-                      setShowAnimation(true);
-                      handleAnimation();
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>
-                    :
-                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(true);
-                      setShowAnimation(true);
-                      handleAnimation();
 
-                    }}
-                    style={{ cursor: "pointer", width: 40 }}></img>}
+            {
+              showDrawer ?
+                <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                  setshowSideFilters(!showSideFilters);
+                  setShowDrawer(false);
+                  setShowAnimation(true);
+                  handleAnimation();
+                }}
+                  style={{ cursor: "pointer", width: 40 }}></img>
+                :
+                <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                  setshowSideFilters(!showSideFilters);
+                  setShowDrawer(true);
+                  setShowAnimation(true);
+                  handleAnimation();
+
+                }}
+                  style={{ cursor: "pointer", width: 40 }}></img>}
 
             <span
               style={{
@@ -3283,7 +3280,7 @@ console.log("SaveMessage",saveMessage)
 
           <Grid item md={8} sm={8}>
             <Grid container direction="row" justify="flex-end">
-            {showActionButton()}
+              {showActionButton()}
               {showFilterButton()}
             </Grid>
           </Grid>
@@ -3339,7 +3336,7 @@ console.log("SaveMessage",saveMessage)
         </Grid>
       </div>
     );
-   
+
   };
 
 
@@ -3360,10 +3357,10 @@ console.log("SaveMessage",saveMessage)
         <Grid container direction="row">
           <Grid item md={4} sm={4}>
 
-          <ArrowBackIosNewIcon style={{cursor:"pointer"}}  onClick={() => {
-                          setMessagePreview(false);
-                          setSelectedDrafts(false)
-                        }}/>
+            <ArrowBackIosNewIcon style={{ cursor: "pointer" }} onClick={() => {
+              setMessagePreview(false);
+              setSelectedDrafts(false)
+            }} />
 
             <span
               style={{
@@ -3452,10 +3449,10 @@ console.log("SaveMessage",saveMessage)
     window.location.href = "/";
   }
 
-const addDataToFilter = (value, type) => {
-     console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
+  const addDataToFilter = (value, type) => {
+    console.log(value, type, 'okkkkkkkkkkkkkkkkkkkkk');
     if (filter.includes(value)) {
-      
+
       var temp = filter;
       if (temp.length === 1) {
         setFilter(temp);
@@ -3475,8 +3472,8 @@ const addDataToFilter = (value, type) => {
     }
   };
 
-  
-  
+
+
   const addDataToReceivers = (value, type) => {
     if (messageReceiver.includes(value)) {
       var temp = [];
@@ -3506,33 +3503,32 @@ const addDataToFilter = (value, type) => {
     tempType.splice(index, 1);
     var newArray = temp;
     let deletedboard;
-    filter.map((board) =>{
-       filter.map((name)=>{
-         if(board.includes(name))
-         {} else {
-           deletedboard= name
-         }
-       })
+    filter.map((board) => {
+      filter.map((name) => {
+        if (board.includes(name)) { } else {
+          deletedboard = name
+        }
+      })
     })
-    console.log("deleteMessageDetails",deletedboard)
-  
-    
-        deletedboard  = filterMessage.indexOf(deletedboard)
-          console.log("deleteMessageDetails",deletedboard)
-        filterMessage.splice(index,1)
-        console.log("deleteMessageDetails",filterMessage)
-     
-          
-           
-     
-       
-      
-      
-    
+    console.log("deleteMessageDetails", deletedboard)
 
-    
-     
-        
+
+    deletedboard = filterMessage.indexOf(deletedboard)
+    console.log("deleteMessageDetails", deletedboard)
+    filterMessage.splice(index, 1)
+    console.log("deleteMessageDetails", filterMessage)
+
+
+
+
+
+
+
+
+
+
+
+
     setFilter(newArray);
     setFilterType(tempType);
     setuseLessState(uselessState - 1);
@@ -3540,15 +3536,15 @@ const addDataToFilter = (value, type) => {
   useEffect(() => {
     if (localStorage.getItem("user")) {
       if (localStorage.getItem("selectedMedia")) {
-       
+
         setSelectedMedia(JSON.parse(localStorage.getItem("selectedMedia")));
       }
       getMyPlaceholders();
       // getMyContactsSearch()
       getMyMedia();
       getMyTeamContacts();
-     
-     // setTimeout()
+
+      // setTimeout()
       // getCreateSearch();
     } else {
       window.location.href = "/";
@@ -3558,7 +3554,7 @@ const addDataToFilter = (value, type) => {
   // console.log("THis is great message type", messageType);
 
   const renderMessageReceiver = (messageType) => {
-    console.log("messageType",messageType)
+    console.log("messageType", messageType)
     return messageType.map((item) => {
 
       return (
@@ -3577,7 +3573,7 @@ const addDataToFilter = (value, type) => {
             alignItems="center"
           >
             {messageType.icon}
-            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item?.first_name?item.first_name+" "+item.last_name:item.name}</p>
+            <p style={{ margin: 0, marginLeft: 16, marginRight: 5 }}>{item?.first_name ? item.first_name + " " + item.last_name : item.name}</p>
             <ClearIcon
               onClick={() => {
                 addDataToReceivers(item);
@@ -3596,7 +3592,7 @@ const addDataToFilter = (value, type) => {
   };
 
   const renderMessageSenderTag = (sender) => {
-    console.log("sendertag",sender)
+    console.log("sendertag", sender)
     return (
       <Grid container direction="row" style={{ width: '80%' }}>
         {
@@ -3736,10 +3732,10 @@ const addDataToFilter = (value, type) => {
 
     );
   };
-  let filtercontacts =[];
-  
+  let filtercontacts = [];
+
   const renderMessageTypeTag = (messageType) => {
-    console.log('===========renderMessageTypeTag=========================',messageType);
+    console.log('===========renderMessageTypeTag=========================', messageType);
     console.log(messageType, "title");
     console.log(messageType.icon, "icon");
 
@@ -3780,104 +3776,104 @@ const addDataToFilter = (value, type) => {
     );
   };
   const getboardscontacts = async () => {
-    const filtersdata=recieve.filter(m=>m.name?recieve:null)
-    const promises=[];
+    const filtersdata = recieve.filter(m => m.name ? recieve : null)
+    const promises = [];
     //let filtercontacts = [];
-   for(let data of filtersdata){
-     promises.push(getBoardFiltersById(data.id));
-   }
+    for (let data of filtersdata) {
+      promises.push(getBoardFiltersById(data.id));
+    }
 
-   console.log("promised  = ",promises)
+    console.log("promised  = ", promises)
 
-   //let tmpFilterContacts = []
+    //let tmpFilterContacts = []
 
-   Promise.all(promises).then((response)=>{
-     console.log(response)
-     console.log("response = ", response.map((data) => data.data))
+    Promise.all(promises).then((response) => {
+      console.log(response)
+      console.log("response = ", response.map((data) => data.data))
       filtercontacts = response.map((d) => d.data)
-     let temp = Object.assign( [] , filtercontacts)
-     setBoardsId(temp)
-     console.log("filterscontacts", temp)
-   }).catch((err)=>{
-     console.log("err = ",err)
+      let temp = Object.assign([], filtercontacts)
+      setBoardsId(temp)
+      console.log("filterscontacts", temp)
+    }).catch((err) => {
+      console.log("err = ", err)
 
-   })
+    })
   }
-  let contactsdata=[]
+  let contactsdata = []
   useEffect(() => {
- setTableData(d=>[...contactsdata,...boardsId])
+    setTableData(d => [...contactsdata, ...boardsId])
   }, [boardsId])
-  
- console.log("handlesendmessage")
- const handleSendMessage = async () => {
-  
-  getboardscontacts()
- 
-    setCount(counts+1)
+
+  console.log("handlesendmessage")
+  const handleSendMessage = async () => {
+
+    getboardscontacts()
+
+    setCount(counts + 1)
     console.log("counts", counts)
-    
+
     setMessagePreview(true);
-    console.log("recieve",recieve)
-     let count = 0;
-    const contactsId = messageSender?messageSender.id:null
-    
-    contactsdata=recieve.filter(m=>m.first_name?recieve:null)
+    console.log("recieve", recieve)
+    let count = 0;
+    const contactsId = messageSender ? messageSender.id : null
+
+    contactsdata = recieve.filter(m => m.first_name ? recieve : null)
     //const contactsids=contactsdata?.map((id)=>id.id).join(",")
-     
+
     const data = {
-      message:{
-      platform: messageType[0].title,
-      media_placeholder_id: media && media[0]?media[0].id:null,
-      filter_ids:"yBgMwvsbRmGa",
-      send_at: date,
-      body:  messageText,
-      contact_ids: contactsdata,
-     user_id: JSON.parse(localStorage.getItem("user")).id,
-     } }
+      message: {
+        platform: messageType[0].title,
+        media_placeholder_id: media && media[0] ? media[0].id : null,
+        filter_ids: "yBgMwvsbRmGa",
+        send_at: date,
+        body: messageText,
+        contact_ids: contactsdata,
+        user_id: JSON.parse(localStorage.getItem("user")).id,
+      }
+    }
 
-   
-  
-  
 
-     console.log("boardsdata",boardsId)
-     const save = {
-    
+
+
+
+    console.log("boardsdata", boardsId)
+    const save = {
+
       platform: messageType[0].title,
-      media_placeholder_id:media && media[0]?media[0]:null,
+      media_placeholder_id: media && media[0] ? media[0] : null,
       filter_ids: boardsId,
       send_at: date,
       body: messageText,
       contact_ids: contactsdata,
       user_id: JSON.parse(localStorage.getItem("user")).id,
-    
-      }
-      //contactsdata+=filtercontacts
-      const recievedata=boardsId.concat(contactsdata)
-      console.log("recievedata",recievedata)
-      setTableData(recievedata);
 
-     setSaveMessage(save)
-     console.log("saveMessage",saveMessage)
-     setMessageCreated(true)
-   //const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
- 
+    }
+    //contactsdata+=filtercontacts
+    const recievedata = boardsId.concat(contactsdata)
+    console.log("recievedata", recievedata)
+    setTableData(recievedata);
+
+    setSaveMessage(save)
+    console.log("saveMessage", saveMessage)
+    setMessageCreated(true)
+    //const filterName=  save.filter_ids?.filter((filterid)=>filterid?.name).map((filter)=>filter.name)
+
     console.log('handleSendMessage = ', data)
-try {
-  const res =await createMessage(data)
-}catch(e)
-{
-  console.log("MessageError",e)
-}
+    try {
+      const res = await createMessage(data)
+    } catch (e) {
+      console.log("MessageError", e)
+    }
     //addUser(data)
-   
+
 
     //  postMessage(data)
 
   }
 
-  const name=JSON.parse(localStorage.getItem("user")).first_name+" "+JSON.parse(localStorage.getItem("user")).last_name
-  const [item,setItem] = useState() 
-  console.log("date",date)
+  const name = JSON.parse(localStorage.getItem("user")).first_name + " " + JSON.parse(localStorage.getItem("user")).last_name
+  const [item, setItem] = useState()
+  console.log("date", date)
 
 
 
@@ -3902,13 +3898,13 @@ try {
         open={openSnakBar}
         autoHideDuration={2000}
         onClose={handleClose}
-        
+
       >
         <Alert onClose={handleClose} severity="success">
           {selectedCheckBoxes.length + " "} contacts have been tagged!
         </Alert>
       </Snackbar>
-     
+
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={messageCreated}
@@ -3918,13 +3914,13 @@ try {
           setMessageDeleted(false)
         }}
       >
-     
-        <Alert  onClose={() => {
-            setMessageCreated(false);
-          }} severity="success">
-                  Message Preview And Send !
-                </Alert>
-              
+
+        <Alert onClose={() => {
+          setMessageCreated(false);
+        }} severity="success">
+          Message Preview And Send !
+        </Alert>
+
 
       </Snackbar>
       <Snackbar
@@ -3933,16 +3929,16 @@ try {
         autoHideDuration={2000}
         onClose={() => {
           setSendMessage(false);
-          
+
         }}
       >
-     
-        <Alert  onClose={() => {
-            setSendMessage(false);
-          }} severity="success">
-                 Message Sent !
-                </Alert>
-              
+
+        <Alert onClose={() => {
+          setSendMessage(false);
+        }} severity="success">
+          Message Sent !
+        </Alert>
+
 
       </Snackbar>
       <Snackbar
@@ -3950,16 +3946,16 @@ try {
         open={scheduleMessage}
         autoHideDuration={2000}
         onClose={() => {
-         setScheduleMessage(false)
+          setScheduleMessage(false)
         }}
       >
-     
-        <Alert  onClose={() => {
-            setScheduleMessage(false);
-          }} severity="success">
-                  Message Scheduled!
-                </Alert>
-              
+
+        <Alert onClose={() => {
+          setScheduleMessage(false);
+        }} severity="success">
+          Message Scheduled!
+        </Alert>
+
 
       </Snackbar>
       <Snackbar
@@ -3967,31 +3963,31 @@ try {
         open={messageDeleted}
         autoHideDuration={2000}
         onClose={() => {
-          
+
           setMessageDeleted(false)
         }}
       >
-      <Alert  onClose={() => {
-            setMessageDeleted(false);
-          }} severity="error">
-                  Message Removed
-                </Alert>
-                </Snackbar>
-                <Snackbar
+        <Alert onClose={() => {
+          setMessageDeleted(false);
+        }} severity="error">
+          Message Removed
+        </Alert>
+      </Snackbar>
+      <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={saveDraft}
         autoHideDuration={2000}
         onClose={() => {
-          
+
           setSaveDraft(false)
         }}
       >
-      <Alert  onClose={() => {
-            setSaveDraft(false);
-          }} severity="info">
-                  Message Saved As Drafts
-                </Alert>
-                </Snackbar>
+        <Alert onClose={() => {
+          setSaveDraft(false);
+        }} severity="info">
+          Message Saved As Drafts
+        </Alert>
+      </Snackbar>
 
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -4001,17 +3997,17 @@ try {
           setMessageNotCreated(false);
         }}
       >
-  
-                <Alert  onClose={() => {
-            setMessageNotCreated(false);
-          }} severity="error">
-                   <strong>Fill  all the required fields</strong>
-                </Alert>
+
+        <Alert onClose={() => {
+          setMessageNotCreated(false);
+        }} severity="error">
+          <strong>Fill  all the required fields</strong>
+        </Alert>
 
 
       </Snackbar>
 
-      
+
 
       <Grid container direction="row">
 
@@ -4068,7 +4064,7 @@ try {
                 setMessageDetails(true);
 
                 if (filter.includes("AllMessages")) {
-      
+
                   var temp = filter;
                   if (temp.length === 1) {
                     setFilter(temp);
@@ -4096,7 +4092,7 @@ try {
             </p>
             {showBoardFilters === true && (
               <div>
-                {  ["Scheduled", "In Progress", "Finished", "Archived"].map(
+                {["Scheduled", "In Progress", "Finished", "Archived"].map(
                   (item) => {
                     return (
                       <p
@@ -4136,7 +4132,7 @@ try {
           ></MediaComponnet>
         ) : messageDetails ? (
           <MessageDetails item={item} />
-       //   <MessageDetails />
+          //   <MessageDetails />
         ) : messagePreview ? (
           <MessagePreview />
         ) : messageSelected.length ? (
@@ -4200,7 +4196,7 @@ try {
             {/* <Grid container direction="row" alignItems="center"></Grid> */}
 
 
-            
+
 
             <div style={{
               width: "100%", overflowX: "hide",
@@ -4214,23 +4210,23 @@ try {
 
 
                       {
-                  showDrawer ?
-                    <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(false);
-                      setShowAnimation(true);
-                      handleAnimation();
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>
-                    :
-                    <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
-                      setshowSideFilters(!showSideFilters);
-                      setShowDrawer(true);
-                      setShowAnimation(true);
-                      handleAnimation();
+                        showDrawer ?
+                          <img src={showAnimation ? DrawerAnimation : DrawerIcon} onClick={(e) => {
+                            setshowSideFilters(!showSideFilters);
+                            setShowDrawer(false);
+                            setShowAnimation(true);
+                            handleAnimation();
+                          }}
+                            style={{ cursor: "pointer", width: 40 }}></img>
+                          :
+                          <img src={showAnimation ? BackAnimation : BackIcon} onClick={(e) => {
+                            setshowSideFilters(!showSideFilters);
+                            setShowDrawer(true);
+                            setShowAnimation(true);
+                            handleAnimation();
 
-                    }}
-                      style={{ cursor: "pointer", width: 40 }}></img>}
+                          }}
+                            style={{ cursor: "pointer", width: 40 }}></img>}
 
                       <div
                         style={{
@@ -4319,7 +4315,7 @@ try {
                                           }}
                                           onClick={() => {
                                             addDataToReceivers(boards);
-                                            
+
                                             // setMessageReceiver();
                                             // setMessageReceiver(temp);
 
@@ -4412,7 +4408,7 @@ try {
                                           }}
                                           onClick={() => {
                                             addDataToReceivers(boards);
-                                            
+
                                             // setMessageReceiver();
                                           }}
                                         >
@@ -4506,7 +4502,7 @@ try {
                                           // const full_name=indv.first_name {indv.last_name}
                                           // const m =(indv.first_name,indv.last_name)
                                           addDataToReceivers(indv);
-                                        
+
                                           // setMessageReceiver( indv.first_name,indv.last_name);
 
                                           // setMessageReceiver();
@@ -4584,7 +4580,7 @@ try {
                   md={displaySendTo ? 8 : 12}
                   xs={displaySendTo ? 8 : 12}
                 >
-                  
+
                   <Grid
                     className="mb-3"
                     container
@@ -4618,9 +4614,9 @@ try {
 
                         </strong>
                       </span>
-        
-            <div className="d-flex ">
-         {/*               <IconTextField
+
+                      <div className="d-flex ">
+                        {/*               <IconTextField
                           width={100}
                           text="More"
                           textColor="#3871DA"
@@ -5507,7 +5503,7 @@ try {
                               }}
                             >
                               {time
-                                ? moment(date).format('MM/DD/YYYY h:mm a') 
+                                ? moment(date).format('MM/DD/YYYY h:mm a')
                                 : "ASAP"}
                             </p>
                           }
@@ -5553,59 +5549,59 @@ try {
                         <p style={{ margin: 0, marginLeft: 16 }}>Add Media:</p>
                       </Grid>
 
-                      {media  &&
-                       /* media.map((m) => {
-                          return mediaContainer(media[0]);
-                        })*/
-                              mediaContainer(media[0])
+                      {media &&
+                        /* media.map((m) => {
+                           return mediaContainer(media[0]);
+                         })*/
+                        mediaContainer(media[0])
 
-                       }
-                        <Grid item container md={10} xs={10}>
-             
-                        { media ?
-                        <div></div> 
-                        : 
-                        <Grid item xs={2.5} md ={2.5}
-                              container
-                              direction="row"
+                      }
+                      <Grid item container md={10} xs={10}>
+
+                        {media ?
+                          <div></div>
+                          :
+                          <Grid item xs={2.5} md={2.5}
+                            container
+                            direction="row"
+                            style={{
+                              marginLeft: 10,
+                              border: "1px solid #d8d8d8",
+                              height: 150,
+                              width: 150,
+                              cursor: "pointer",
+                              borderRadius: 4,
+                            }}
+                            onClick={() => {
+                              setAddMedia(true);
+                            }}
+                            alignItems="center"
+                            justify="center"
+                          >
+                            {" "}
+                            <FaPlus
                               style={{
-                                marginLeft:10,
-                                border: "1px solid #d8d8d8",
-                                height: 150,
-                                width: 150,
-                                cursor: "pointer",
-                                borderRadius: 4,
+                                // color: displayMessageSenders ? "white" : "#3871da",
+                                color: "#3871da",
                               }}
-                              onClick={() => {
-                                setAddMedia(true);
-                              }}
-                              alignItems="center"
-                              justify="center"
-                            >
-                              {" "}
-                              <FaPlus
-                                style={{
-                                  // color: displayMessageSenders ? "white" : "#3871da",
-                                  color: "#3871da",
-                                }}
-                              ></FaPlus>{" "}
-                              Add Media
-                            </Grid>}
-                          {" "}
-                        </Grid>
-                    
+                            ></FaPlus>{" "}
+                            Add Media
+                          </Grid>}
+                        {" "}
+                      </Grid>
+
                     </Grid>
 
 
 
-                   
+
                     <Grid
                       container
                       direction="row"
                       alignItems="center"
                       style={{
                         // background: "#f5f6f9",
-                        
+
                         // minWidth: 1110,
                         border: "1px solid #d8d8d8",
                         borderRadius: 4,
@@ -5620,36 +5616,36 @@ try {
                       }}
                     >
                       {/* <Grid item md={2} xs={2}> */}
-                      <p style={{ marginBottom:40, marginLeft: 10}}>
+                      <p style={{ marginBottom: 40, marginLeft: 10 }}>
                         Message Text:
                       </p>
-                        <div class="dropdown">
-                          
-                          <textarea
-                            type="text"
-                            id={"textArea"}
-                            style={{
-                              border: "none",
-                              outline:"none",
-                              marginBottom:10,
-                              width:"510%",
-                              height:"100%",
-                              borderRadius: 4,
-                              paddingLeft: 12,
-                              resize: "none",
-                              overflow:"hidden"
-                            }}
-                            value={messageText}
-                            onChange={(e) => {
-                              setMessageText(e.target.value);
-                            }}
-                            placeholder="Type message"
-                          ></textarea>
-                         
-                        </div>
+                      <div class="dropdown">
+
+                        <textarea
+                          type="text"
+                          id={"textArea"}
+                          style={{
+                            border: "none",
+                            outline: "none",
+                            marginBottom: 10,
+                            width: "510%",
+                            height: "100%",
+                            borderRadius: 4,
+                            paddingLeft: 12,
+                            resize: "none",
+                            overflow: "hidden"
+                          }}
+                          value={messageText}
+                          onChange={(e) => {
+                            setMessageText(e.target.value);
+                          }}
+                          placeholder="Type message"
+                        ></textarea>
+
+                      </div>
                       {/* </Grid> */}
                       <Grid item md={12} xs={12} direction >
-                      
+
                       </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center">

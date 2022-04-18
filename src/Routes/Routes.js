@@ -97,6 +97,7 @@ export const settingsRoutes = {
     },
 }
 
-export const contactRoutes = {
-    board: '/contacts/board'
+export const contactsRoutes = {
+    board: '/contacts/board',
+    profile: '/contacts/profile'
 }
