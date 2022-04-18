@@ -196,19 +196,19 @@ export default function BaseContactsPage(props) {
         },
         { // Category
             id: '2',
-            name: 'Shared Boards',
+            name: 'Team Boards',
             // Filters
             items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
         },
-        { // Category
-            id: '3',
-            name: 'User Boards',
-            items: [
-                // Filters
-                // { id: '0', name: 'Scheduled' },
-                // { id: '1', name: 'In Progress' },
-            ]
-        },
+        // { // Category
+        //     id: '3',
+        //     name: 'User Boards',
+        //     items: [
+        //         // Filters
+        //         // { id: '0', name: 'Scheduled' },
+        //         // { id: '1', name: 'In Progress' },
+        //     ]
+        // },
     ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
