@@ -8,7 +8,7 @@ const getImg = (profile_image) => {
 }
 
 const profileImg = {
-    field: 'profile',
+    field: 'profileImg',
     headerName: '',
     width: 50,
     sortable: false,
@@ -62,7 +62,7 @@ const nickName = {
 }
 
 const twitterName = {
-    field: 'twitter_profile',
+    field: 'twitterName',
     headerName: 'Twitter',
     // width: 130,
     flex: 1,
@@ -94,20 +94,22 @@ const state = {
 }
 
 const school = {
-    field: 'high_school',
+    field: 'school',
     headerName: 'School',
     // width: 120
     flex: 1,
+    valueGetter: (params) => params.row.high_school ? params.row.high_school : ''
 }
 
 const gradYear = {
-    field: 'grad_year',
+    field: 'gradYear',
     headerName: 'Grad Year',
     flex: 1,
+    valueGetter: (params) => params.row.grad_year ? params.row.grad_year : ''
 }
 
 const positions = {
-    field: 'position',
+    field: 'positions',
     headerName: 'Position',
     flex: 1,
     valueGetter: (params) => params.row.positions ? params.row.positions.join(", ").toUpperCase() : ''
@@ -117,14 +119,15 @@ const areaCoach = {//array
     field: 'areaCoach',
     headerName: 'Area Coach',
     flex: 1,
+    valueGetter: (params) => params.row.area_coach ? params.row.area_coach : ''
 }
 
-// const recruitingCoach = {
-//     field: 'recruitingCoach',
-//     headerName: 'Recruiting Coach',
-//     flex: 1,
-//     // valueGetter: (params) => params.row. ? params.row. : ''
-// }
+const recruitingCoach = {
+    field: 'recruitingCoach',
+    headerName: 'Recruiting Coach',
+    flex: 1,
+    valueGetter: (params) => params.row.area_coach ? params.row.area_coach : ''
+}
 
 const status = {
     field: 'status',
@@ -150,29 +153,29 @@ const rank = {
     valueGetter: (params) => params.row.rank ? params.row.rank.rank : ''
 }
 
-// const lastMessaged = {
-//     field: 'lastMessaged',
-//     headerName: 'Last Messaged',
-//     // width: 120,
-//     flex: 1,
-//     // valueGetter: (params) => params.row. ? params.row. : ''
-// }
+const lastMessaged = {
+    field: 'lastMessaged',
+    headerName: 'Last Messaged',
+    // width: 120,
+    flex: 1,
+    // valueGetter: (params) => params.row. ? params.row. : ''
+}
 
-// const mostActiveTime = {
-//     field: 'mostActiveTime',
-//     headerName: 'Most Active Time',
-//     // width: 120,
-//     flex: 1,
-//     // valueGetter: (params) => params.row. ? params.row. : ''
-// }
+const mostActiveTime = {
+    field: 'mostActiveTime',
+    headerName: 'Most Active Time',
+    // width: 120,
+    flex: 1,
+    // valueGetter: (params) => params.row. ? params.row. : ''
+}
 
-// const dateAdded = {
-//     field: 'dateAdded',
-//     headerName: 'Date Added',
-//     // width: 120,
-//     flex: 1,
-//     // valueGetter: (params) => params.row. ? params.row. : ''
-// }
+const dateAdded = {
+    field: 'dateAdded',
+    headerName: 'Date Added',
+    // width: 120,
+    flex: 1,
+    // valueGetter: (params) => params.row. ? params.row. : ''
+}
 
 const timeZone = {
     field: 'timeZone',
@@ -182,13 +185,13 @@ const timeZone = {
     valueGetter: (params) => params.row.time_zone ? params.row.time_zone : ''
 }
 
-// const birthday  = {
-//     field: 'birthday',
-//     headerName: 'Birthday ',
-//     // width: 120,
-//     flex: 1,
-//     // valueGetter: (params) => params.row. ? params.row. : ''
-// }
+const birthday = {
+    field: 'birthday',
+    headerName: 'Birthday ',
+    // width: 120,
+    flex: 1,
+    valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : ''
+}
 
 export const columnsMini = [
     profileImg,
@@ -197,13 +200,37 @@ export const columnsMini = [
     phone,
 ]
 
+// export const columnsFull = [
+//     profileImg,
+//     fullName,
+//     twitterName,
+//     phone,
+//     state,
+//     gradYear,
+//     school,
+//     status
+// ]
+
 export const columnsFull = [
     profileImg,
     fullName,
+    firstName,
+    lastName,
+    nickName,
     twitterName,
     phone,
     state,
-    gradYear,
     school,
-    status
+    gradYear,
+    positions,
+    areaCoach,
+    recruitingCoach,
+    status,
+    status2,
+    rank,
+    // lastMessaged,
+    // mostActiveTime,
+    // dateAdded,
+    timeZone,
+    birthday,
 ]

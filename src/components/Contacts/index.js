@@ -1077,7 +1077,7 @@ function Home(props) {
   });
   console.log(GRADYEAR, "GRADYEAR")
   var allGradYears = GRADYEAR
-  var allBoards = useBoards()
+  var allBoards = useBoards().items
   console.log('allBoards', allBoards)
   const ArchiveContact = () => {
 

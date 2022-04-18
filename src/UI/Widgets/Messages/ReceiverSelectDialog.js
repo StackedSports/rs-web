@@ -73,7 +73,7 @@ export default function ReceiverSelectDialog(props) {
     //
 
     // Boards
-    const boards = useBoards()
+    const boards = useBoards().items
 
     // Private Boards
     const [privateBoards, setPrivateBoards] = useArray()
