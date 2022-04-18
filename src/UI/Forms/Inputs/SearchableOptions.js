@@ -321,10 +321,6 @@ export const SearchableOptionSelected = props => {
 
 	return (
 		<div
-			container
-			direction="row"
-			alignItems="center"
-			justify="center"
 			className={classes.tags}
 			style={props.style}
 		>

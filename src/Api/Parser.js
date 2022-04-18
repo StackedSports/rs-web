@@ -155,7 +155,7 @@ export const getFilterMediasCriteria = (filters) => {
 
     // OK
     if (filters.fileType)
-        criteria['type'] = filters.fileType.id
+        criteria['type'] = filters.fileType[0].id
 
     // OK 
     if (filters.tag) {

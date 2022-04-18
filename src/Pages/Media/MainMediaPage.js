@@ -1,17 +1,17 @@
 import { useState, useMemo, useEffect } from 'react'
-import { LocalOfferOutlined, KeyboardArrowDown } from '@mui/icons-material'
+import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune } from '@mui/icons-material'
 import { Stack, Typography, Box, CircularProgress } from '@mui/material'
-
 import { Link } from 'react-router-dom'
 
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
+import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
+import MediaPage from './MediaPage'
 
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
-
+import { archiveMedias, addTagsToMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
-import MediaPage from './MediaPage'
 
 export const MainMediaPage = (props) => {
     const media = useMedias(1, 5)
@@ -19,6 +19,10 @@ export const MainMediaPage = (props) => {
     const tags = useTags()
 
     const [viewGrid, setViewGrid] = useState(true)
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
+    const [selectedMedias, setSelectedMedias] = useState([])
+    const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
+    const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 
     // console.log("placeholders", placeholders)
 
@@ -27,15 +31,64 @@ export const MainMediaPage = (props) => {
     }
 
     const onMediaSelectionChange = (selection) => {
-        console.log(selection)
+        setSelectedMedias(selection)
     }
+
+    const onPlaceholderSelectionChange = (selection) => {
+        setSelectedPlaceholders(selection)
+    }
+
+    const onArchiveAction = async () => {
+        const response = await archiveMedias(selectItems)
+        console.log("response", response)
+    }
+
+    const handleTagsDialogConfirm = (selectedTagsIds) => {
+        const result = addTagsToMedias(selectedTagsIds, selectedMedias)
+    }
+
+    const mainActions = [
+        {
+            name: 'Change view',
+            type: 'icon',
+            icon: viewGrid ? GridView : FormatListBulleted,
+            onClick: onSwitchView
+        },
+        {
+            name: 'Action',
+            icon: AutoFixHigh,
+            variant: 'outlined',
+            type: 'dropdown',
+            options: [
+                { name: 'Send in Message', onClick: () => { console.log("clicked") } },
+                { name: 'Download', onClick: () => { console.log("clicked") } },
+                { name: 'Archive Media', onClick: onArchiveAction },
+                { name: 'Untag', onClick: () => { console.log("clicked") } },
+            ]
+        },
+        {
+            name: 'Tag',
+            icon: LocalOfferOutlined,
+            variant: 'outlined',
+            onClick: () => setOpenSelectTagDialog(true),
+            disabled: selectedMedias.length === 0,
+        },
+        {
+            name: 'Filters',
+            icon: Tune,
+            variant: 'outlined',
+            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
+        },
+    ]
 
     return (
         <MediaPage
-          viewGrid={viewGrid}
-          onSwitchView={onSwitchView}
-          
-          filter = {media.filter}
+        //   viewGrid={viewGrid}
+        //   onSwitchView={onSwitchView}
+        //   filter = {media.filter}
+          filter={media.filter}
+          actions={mainActions}
+          showPanelFilters={showPanelFilters}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -44,10 +97,10 @@ export const MainMediaPage = (props) => {
                 </Typography>
                 <Box>
                     <Button
-                      component={Link}
-                      to={mediaRoutes.media}
-                      name='View More'
-                      variant='text'
+                        component={Link}
+                        to={mediaRoutes.media}
+                        name='View More'
+                        variant='text'
                     />
                 </Box>
             </Stack>
@@ -99,6 +152,7 @@ export const MainMediaPage = (props) => {
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
                 linkTo='/media/placeholders/details/'
+                onSelectionChange={onPlaceholderSelectionChange}
                 disablePagination
             />
 
@@ -146,7 +200,11 @@ export const MainMediaPage = (props) => {
                     ))}
                 </Stack>
             </Box>
-
+            <SelectTagDialog
+                open={openSelectTagDialog}
+                onClose={() => setOpenSelectTagDialog(false)}
+                onConfirm={handleTagsDialogConfirm}
+            />
         </MediaPage>
     )
 }

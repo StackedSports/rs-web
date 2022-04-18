@@ -34,6 +34,11 @@
     /* flex: 1; */
 }
 
+.SideFilter .Category-Header .IconNormal {
+    font-size: 12px;
+    margin-left: 0.5em;
+}
+
 .SideFilter .Category-Header .Icon {
     font-size: 12px;
     margin-left: 0.5em;
@@ -68,15 +73,18 @@
     margin: 0 0 5px 0;
 }
 
-.SideFilter .Category-Content .link {
+.SideFilter .Category-Content .link,
+.SideFilter .Category-Header.link {
     color: inherit
 }
 
-.SideFilter .Category-Content .link:hover {
+.SideFilter .Category-Content .link:hover,
+.SideFilter .Category-Header.link:hover {
     text-decoration: none;
 }
 
-.SideFilter .Category-Content .linkActive {
+.SideFilter .Category-Content .linkActive,
+.SideFilter .Category-Header.linkActive {
     /* opacity: 0.3; */
     color: #222;
     font-weight: bold;

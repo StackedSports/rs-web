@@ -1,12 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
-import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
-
-
 
 import MainLayout from 'UI/Layouts/MainLayout'
-import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import { Divider } from 'UI'
 
+import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useTeamMembers } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
 import { getFullName } from 'utils/Parser'
@@ -18,13 +15,8 @@ export const MediaPage = (props) => {
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
-
-    const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-    const [showPanelFilters, setShowPanelFilters] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState({})
     const [loading, setLoading] = useState(false)
     
-
     useEffect(() => {
         getMediaTypes().then(res => {
             setMediaTypes(res[0].map(item => ({
@@ -43,47 +35,46 @@ export const MediaPage = (props) => {
     }, [teamMembers.items])
 
     const filters = [
-        { // Category
-            id: '0',
+        {
+            id: 0,
             name: 'My Media',
-            items: [
-                // Filters
-            ]
+            items: [ ...owners],   
         },
+        {
+            id: 1,
+            name: 'Recent',
+            path: mediaRoutes.media + '?recent',
+        },
+        {
+            id: 2,
+            name: 'Images',
+            path: mediaRoutes.media + '?fileType=image',
+        },
+        {
+            id: 2,
+            name: 'Videos',
+            path: mediaRoutes.media + '?fileType=video',
+        },
+        {
+            id: 3,
+            name: 'Gifs',
+            path: mediaRoutes.media + '?fileType=gif',
+        },
+        {
+            id: 4,
+            name: 'Personalized Media',
+            path: mediaRoutes.media + '?personalized',
+        },
+        {
+            id: 5,
+            name: 'Placeholders',
+            path: mediaRoutes.placeholders,
+        }
     ]
 
-    const mainActions = [
-        {
-            name: 'Change view',
-            type: 'icon',
-            icon: props.viewGrid ? GridView : FormatListBulleted,
-            onClick: props.onSwitchView
-        },
-        {
-            name: 'Action',
-            icon: AutoFixHigh,
-            variant: 'outlined',
-            type: 'dropdown',
-            options: [
-                { name: 'Send in Message', onClick: () => { console.log("clicked") } },
-                { name: 'Download', onClick: () => { console.log("clicked") } },
-                { name: 'Archive Media', onClick: () => { console.log("clicked") } },
-                { name: 'Untag', onClick: () => { console.log("clicked") } },
-            ]
-        },
-        {
-            name: 'Tag',
-            icon: LocalOfferOutlined,
-            variant: 'outlined',
-            onClick: () => setOpenSelectTagDialog(true),
-        },
-        {
-            name: 'Filters',
-            icon: Tune,
-            variant: 'outlined',
-            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-        },
-    ]
+    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
+        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
+    }
 
     const panelFiltersData = useMemo(() =>
     ({
@@ -119,13 +110,7 @@ export const MediaPage = (props) => {
     }
 
     const onPanelFilterChange = (filter) => {
-        setSelectedFilters(filter)
         props.filter(filter)
-    }
-
-    const onTagsSelected = (selectedTagsIds) => {
-        //setLoading(true)
-       console.log(selectedTagsIds)
     }
 
 
@@ -135,10 +120,11 @@ export const MediaPage = (props) => {
             topActionName={props.topActionName || '+ Add Media'}
             onTopActionClick={onTopActionClick}
             filters={filters}
-            actions={mainActions}
+            onFilterSelected={onFilterSelected}
+            actions={props.actions}
             loading={loading}
             propsPanelFilters={{
-                open: showPanelFilters,
+                open: props.showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange
             }}
@@ -147,12 +133,6 @@ export const MediaPage = (props) => {
 
             {/* {() => cloneElement(props.children, { viewGrid })} */}
             {props.children}
-
-            <SelectTagDialog
-                open={openSelectTagDialog}
-                onClose={() => setOpenSelectTagDialog(false)}
-                onConfirm={onTagsSelected}
-            />
 
         </MainLayout>
     )
