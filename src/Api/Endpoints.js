@@ -614,8 +614,7 @@ export const archiveMedias = (mediasIds) => {
                     }
                     else {
                         response.error.count++
-                        //console.log(result.reason.config.url.slice(`${URL}/media/`.length))
-                        //Todo find better way to add id to reponse
+                        response.error.id.push(result.reason.config.url.slice(`${URL}/media/`.length))
                     }
                 })
             })
@@ -641,7 +640,8 @@ export const addTagsToMedia = (tagIds, mediaId) => {
 
 /**
  * Adds array of tags to an array of Medias
- * @param {*} mediasId 
+ * @param {*} tagsIds array of tag ids to archive 
+ * @param {*} mediasId  array of media ids to associate tags to
  * @returns 
  */
 export const addTagsToMedias = (tagIds, mediaIds) => {
@@ -656,7 +656,7 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
         }
     }
     if (mediaIds instanceof Array && tagIds instanceof Array) {
-        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(mediaId))).
+        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds,mediaId))).
             then(results => {
                 results.forEach(result => {
                     if (result.status === 'fulfilled') {
@@ -675,5 +675,20 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
     return response
 }
 
+/**
+ * Delete tags from a Media
+ * @param {int[]} tagsId  array of tag ids to delete
+ * @param {int} mediaId  media id to removes tags from
+ * @returns 
+ */
+export const deleteTagsFromMedia = (tagsId,mediaId) => {
+    let body = {
+        media: {
+            tag_ids: tagsId
+        }
+    }
+
+    return DELETE(`media/${mediaId}/remove_tags`, body)
+}
 
 

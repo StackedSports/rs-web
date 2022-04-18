@@ -20,44 +20,54 @@ function Category(props) {
     let iconClass = 'Icon'
     let contentClass = 'Category-Content'
 
-    if(collapsed) {
+    if (collapsed) {
         iconClass += ' collapsed'
         contentClass += ' collapsed'
+    }
+
+    if (!props.items) {
+        return (
+            <NavLink exact className='Category-Header link' to={props?.path || ''}>
+                <h3 className='Title'>{props.title}</h3>
+                <ArrowForwardIosIcon className='IconNormal' />
+            </NavLink>
+        )
     }
 
     return (
         <div className='Category'>
             <div className='Category-Header' onClick={onHeaderClick}>
                 <h3 className='Title'>{props.title}</h3>
-                <ArrowForwardIosIcon className={iconClass}/>
+                <ArrowForwardIosIcon className={iconClass} />
             </div>
             <div className={contentClass}>
-                {props.items.map((item, index) => {
-                    if(item.path)
-                        return (
-                            <NavLink exact className="link" activeClassName="linkActive" to={item.path}>
-                                <p key={item.id}>
+                {
+                    props.items.map((item, index) => {
+                        if (item.path)
+                            return (
+                                <NavLink exact className="link" activeClassName="linkActive" to={item.path}>
+                                    <p key={item.id}>
+                                        {item.name}
+                                    </p>
+                                </NavLink>
+                            )
+                        else
+                            return (
+                                <p
+                                    key={item.id}
+                                    onClick={(e) => onItemClick(e, item, index)}
+                                >
                                     {item.name}
                                 </p>
-                            </NavLink>
-                        )
-                    else
-                        return (
-                            <p 
-                              key={item.id}
-                              onClick={(e) => onItemClick(e, item, index)}
-                            >
-                                {item.name}
-                            </p>
-                        )
-                })}
+                            )
+                    })}
             </div>
         </div>
     )
 }
 
 export default function SideFilter(props) {
-    if(!props.visible)
+    if (!props.visible)
         return <></>
 
     return (
@@ -66,9 +76,10 @@ export default function SideFilter(props) {
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
-                      title={category.name}
-                      items={category.items}
-                      onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
+                        title={category.name}
+                        items={category.items}
+                        onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
+                        path={category.path}
                     />
                 )
             })}

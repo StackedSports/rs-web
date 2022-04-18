@@ -2,14 +2,16 @@ import { useEffect, useState, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
+import lodash from "lodash"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
+import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
 import { mediaRoutes } from "Routes/Routes"
-import { archiveMedia, deleteMedia, updateMedia } from "Api/Endpoints"
+import { archiveMedia, deleteMedia, updateMedia, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
 
 export const MediaDetailsPage = () => {
@@ -29,6 +31,7 @@ export const MediaDetailsPage = () => {
     const [itemOwner, setItemOwner] = useState([])
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
+    const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 
 
     useEffect(() => {
@@ -37,7 +40,6 @@ export const MediaDetailsPage = () => {
             setItemOwner([media.owner])
         }
     }, [media])
-
 
     const onArchiveAction = () => {
         archiveMedia(media.id).then(() => {
@@ -76,25 +78,42 @@ export const MediaDetailsPage = () => {
             name: 'Tag',
             icon: LocalOfferOutlined,
             variant: 'outlined',
+            onClick: () => setOpenSelectTagDialog(true),
         },
     ]
 
-    const handleChangeTags = (tag) => {
-        if (tag) {
-            setItemTags(oldTags => {
-                const newTags = [...oldTags]
-                if (!newTags.includes(tag)) {
-                    newTags.push(tag)
-                }
-                return newTags
+    const handleChangeTags = (newTags) => {
+        const differenceTags = lodash.differenceBy(newTags, itemTags, 'id')
+        const differenceTagsIds = differenceTags.map(tag => tag.id)
+
+        if (newTags.length > itemTags.length) {
+            console.log("tag adicionada", differenceTags)
+
+            addTagsToMedia(differenceTagsIds, media.id).then(() => {
+                setItemTags(newTags)
+                alert.setSuccess("Tag " + differenceTags[0].name + " added")
+            }).catch(err => {
+                alert.setWarning(err.message)
+            })
+        } else {
+            console.log("tag removida", differenceTags)
+            deleteTagsFromMedia(differenceTagsIds, media.id).then(() => {
+                setItemTags(newTags)
+                alert.setSuccess("Tag " + differenceTags[0].name + " removed")
+            }).catch(err => {
+                alert.setWarning(err.message)
             })
         }
+    }
+
+    const handleTagsDialogConfirm = (selectedTagsIds) => {
+        console.log(selectedTagsIds)
     }
 
     const handleChangeOwner = (owner) => {
         if (owner && owner.length > 0) {
             const newOwner = owner[0]
-            updateMedia(media.id, { owner: newOwner}).then(() => {
+            updateMedia(media.id, { owner: newOwner }).then(() => {
                 setItemOwner([newOwner])
                 alert.setSuccess("Media owner updated")
             }
@@ -105,10 +124,21 @@ export const MediaDetailsPage = () => {
     }
 
     const handleChangePlaceholder = (placeholder) => {
-        if (placeholder) {
-            setItemPlaceholder(placeholder.slice(-1))
+        if (placeholder && placeholder.length > 0) {
+            const newPlaceholder = placeholder[0]
+            updateMedia(media.id, { media_placeholder_id: newPlaceholder.id }).then(() => {
+                setItemPlaceholder([newPlaceholder])
+                alert.setSuccess("Media placeholder updated")
+            }
+            ).catch(err => {
+                alert.setWarning(err.message)
+            })
+        }else{
+            // TODO REMOVER PLACEHOLDER
         }
     }
+
+    //TODO handle Placeholder inputSearch
 
     const handleContactInputSearch = debounce((value) => {
         if (value) {
@@ -122,7 +152,16 @@ export const MediaDetailsPage = () => {
 
     const handleChangeContact = (contact) => {
         if (contact && contact.length > 0) {
-            setItemContact(contact.slice(-1))
+            const newContact = contact[0]
+            updateMedia(media.id, { team_contact_id: newContact.id }).then(() => {
+                setItemContact([newContact])
+                alert.setSuccess("Media contact updated")
+            }
+            ).catch(err => {
+                alert.setWarning(err.message)
+            })
+        }else{
+            // TODO REMOVER CONTATO
         }
     }
 
@@ -234,8 +273,10 @@ export const MediaDetailsPage = () => {
                         openOnFocus
                         selectOnFocus
                         clearOnBlur
+                        value={itemTags}
                         options={tags || []}
                         disableCloseOnSelect
+                        isOptionEqualToValue={(option, value) => option?.id === value?.id}
                         getOptionLabel={(option) => option?.name}
                         onChange={(event, newValue) => {
                             handleChangeTags(newValue)
@@ -259,7 +300,7 @@ export const MediaDetailsPage = () => {
                                 <CustomChip
                                     variant='outlined'
                                     {...getTagProps({ index })}
-                                    label={option.name}
+                                    label={option?.name}
                                     deleteIcon={<Clear />}
                                 />
                             ));
@@ -412,6 +453,11 @@ export const MediaDetailsPage = () => {
                     </MediaStatsColumn>
                 </GridItemRight>
             </Grid>
+            <SelectTagDialog
+                open={openSelectTagDialog}
+                onClose={() => setOpenSelectTagDialog(false)}
+                onConfirm={handleTagsDialogConfirm}
+            />
         </MainLayout>
     )
 }
