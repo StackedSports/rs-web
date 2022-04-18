@@ -329,6 +329,10 @@ export const getUser = () => {
     return AXIOS('get', 'me')
 }
 
+export const upadateSelectedColumns = (userId, body) => {
+    return AXIOS('put', `users/${userId}/selected_columns`, body)
+}
+
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
         criteria: { ...getFilterMessagesCriteria(filters) }
@@ -463,6 +467,57 @@ export const addTagsToContact = (tagIds, contactId) => {
     }
 
     return POST(`contacts/${contactId}/add_tags`, body)
+}
+
+export const untagContact = (tagIds, contactsIds) => {
+    let body = {
+        contact: {
+            tag_ids: tagIds
+        }
+    }
+
+    return AXIOS("delete", `contacts/${contactId}/remove_tags`, body)
+}
+
+export const untagContacts = (tagIds, contactIds) => {
+    return new Promise((resolve, reject) => {
+        let total = contactIds.length
+        let success = 0
+        let error = 0
+
+        let errors = []
+        let successIds = []
+        let errorIds = []
+
+        let count = contactIds.length
+
+        contactIds.forEach(contactId => {
+            addTagsToContact(tagIds, contactId)
+                .then(res => {
+                    console.log(res)
+                    success++
+                    successIds.push(contactId)
+                })
+                .catch(err => {
+                    console.log(err)
+                    errors.push(err)
+                    errorIds.push(contactId)
+                    error++
+                })
+                .finally(() => {
+                    count--
+                    if (count === 0)
+                        resolve({
+                            total,
+                            success,
+                            error,
+                            errors,
+                            successIds,
+                            errorIds
+                        })
+                })
+        })
+    })
 }
 
 export const addTagsToContacts = (tagIds, contactIds) => {
