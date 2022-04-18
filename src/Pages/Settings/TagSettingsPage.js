@@ -21,18 +21,18 @@ const TagSettingsPage = () => {
     }, [tags.items])
 
     useEffect(() => {
-        if(!tagsWithContacts)
+        if(!tagsWithContacts.items)
             return
 
-        console.log(tagsWithContacts)
-    }, [tagsWithContacts])
+        console.log(tagsWithContacts.items)
+    }, [tagsWithContacts.items])
 
     useEffect(() => {
-        if(!tagsWithMedia)
+        if(!tagsWithMedia.items)
             return
 
-        console.log(tagsWithMedia)
-    }, [tagsWithMedia])
+        console.log(tagsWithMedia.items)
+    }, [tagsWithMedia.items])
 
     const onTopActionClick = (e) => {
         console.log('top action click')

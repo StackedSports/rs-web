@@ -73,20 +73,26 @@ export const settingsRoutes = {
     general: {
         main: '/settings/general',
         organization: '/settings/organization',
+        members: '/settings/team-members',
     },
     team: {
         main: '/settings/team',
-        members: '/settings/team-members',
-        tags: '/settings/tags',
-        gradYears: '/settings/grad-years',
         positions: '/settings/positions',
         statuses: '/settings/statuses',
         ranks: '/settings/ranks',
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
+        
+        // tags: '/settings/tags',
+        // gradYears: '/settings/grad-years',
         // placeholders: '/settings/placeholders',
         // getSendCoachTypes: '/settings/get_send_as_coaches',
         // peopleTypes: '/settings/people_types',
+    },
+    tags: {
+        mediaTags: '/settings/media-tags',
+        contactsTags: '/settings/contacts-tags',
+        messageTags: '/settings/message-tags',
     },
 
 }

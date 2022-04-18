@@ -1001,7 +1001,7 @@ function Home(props) {
 
 
 
-  let getTagsWithContacts = useTagsWithContacts()
+  let getTagsWithContacts = useTagsWithContacts().items
   console.log(getTagsWithContacts, "getTagsWithContacts")
   var TeamContacts = useTeamContact()
   var COACH = []
