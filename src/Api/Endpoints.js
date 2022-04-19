@@ -587,6 +587,22 @@ export const addTagsToContacts = (tagIds, contactIds) => {
     })
 }
 
+export const addOpponent = (data, contactId) => {
+    // data =   {
+    //     "week": 1, 
+    //     "name": "WHHS", 
+    //     "win_loss": true, 
+    //     "score": "21-15",
+    //     "notes": ""
+    // }
+
+    let body = {
+        opponents: data
+    }
+
+    return POST(`contacts/${contactId}/opponents`, body)
+}
+
 export const deleteTagToContact = (tagId) => {
     return DELETE(`contacts/${tagId}/remove_tag`)
 }
