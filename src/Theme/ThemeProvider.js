@@ -41,7 +41,7 @@ let theme = createTheme({
         },
         background: {
             default: '#FFFFFF',
-            paper: '#fafafa',
+            paper: '#FFFFFF',
         },
     },
     typography

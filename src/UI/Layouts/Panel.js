@@ -16,8 +16,9 @@ export const PanelDropdown = ({ action, header }) => {
     if(!header) {
         //console.log('ok')
         header = () => (
-            <Button 
+            <Button
                 style={{ marginLeft: 0 }}
+                key={action.name}
                 name={action.name}
                 variant={action.variant} 
                 endIcon={<action.icon/>}

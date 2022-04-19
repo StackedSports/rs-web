@@ -14,6 +14,7 @@ const AuthProvider = (props) => {
                 .then(res => {
                     console.log(res.data)
                     setUser(res.data)
+                    localStorage.setItem('user', JSON.stringify(res.data))
                     resolve(res.data)
                 })
                 .catch(error => {

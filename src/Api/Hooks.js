@@ -368,14 +368,14 @@ export const useRanks = () => {
 
     useEffect(() => {
         setLoading(true)
+
         getRanks()
             .then(([ranks]) => {
                 //console.log('ApiHooks: getRanks -----')
                 if (ranks) {
-
                     setRanks(ranks)
                 }
-                console.log(ranks)
+                //console.log(ranks)
             })
             .catch(error => {
                 console.log(error)
@@ -434,16 +434,13 @@ export const useTagWithContact = () => {
 
 // TODO: is this getting contacts?
 export const useTeamContact = () => {
-    const [Contacts, setContacts] = useState(null)
+    const [contacts, setContacts] = useState(null)
 
     useEffect(() => {
         getTeamContacts()
-            .then(([Contacts]) => {
+            .then(([contacts]) => {
                 //console.log('ApiHooks: getContacts -----')
-                if (Contacts) {
-
-                    setContacts(Contacts)
-                }
+                setContacts(contacts)
                 //console.log(Contacts)
             })
             .catch(error => {
@@ -451,7 +448,7 @@ export const useTeamContact = () => {
             })
     }, [])
 
-    return Contacts
+    return contacts
 }
 
 export const useBoards = () => {
@@ -594,7 +591,7 @@ export const useStatuses = () => {
         getStatuses()
             .then(([statuses]) => {
                 //console.log('ApiHooks: getPositions -----')
-                console.log(statuses)
+                //console.log(statuses)
                 setStatuses(statuses)
             })
             .catch(error => {

@@ -3,43 +3,74 @@ import { useParams } from "react-router-dom"
 import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
 
-import MainLayout from 'UI/Layouts/MainLayout'
+import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
-import {formatDate, getFullName} from "utils/Parser"
+import { mediaRoutes } from "Routes/Routes"
+import { archiveMedia, deleteMedia, updateMedia } from "Api/Endpoints"
+import { formatDate, getFullName } from "utils/Parser"
 
 export const MediaDetailsPage = () => {
     const { id } = useParams()
 
+    const alert = useMainLayoutAlert()
     const tags = useTags()
-    const { item: media, loading } = useMedia(id)
-    const [mediaSelected, setMediaSelected] = useState(false)
+    const contacts = useContacts()
+    const teamMembers = useTeamMembers()
+    // TODO filter placeholders on autocomplete
+    const placeholders = usePlaceholders()
 
+    const { item: media, loading } = useMedia(id)
+
+    const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
     const [itemOwner, setItemOwner] = useState([])
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
 
-    const contacts = useContacts()
-    const teamMembers = useTeamMembers()
-
-    // TODO filter placeholders on autocomplete
-    const placeholders = usePlaceholders()
 
     useEffect(() => {
         if (media) {
             setItemTags(media.tags)
-            setItemOwner(oldOwner => [...oldOwner, media.owner].slice(-1))
+            setItemOwner([media.owner])
         }
     }, [media])
+
+
+    const onArchiveAction = () => {
+        archiveMedia(media.id).then(() => {
+            alert.setSuccess("Media archived")
+        }).catch(err => {
+            alert.setWarning(err.message)
+        })
+    }
+
+    const onSendInMessageAction = () => {
+        console.log("send in message")
+    }
+
+    const onDeleteAction = () => {
+        deleteMedia(media.id).then(() => {
+            alert.setSuccess("Media archived")
+            setRedirect(mediaRoutes.media)
+        }).catch(err => {
+            alert.setWarning(err.message)
+        })
+    }
 
     const mainActions = [
         {
             name: 'Action',
             icon: AutoFixHigh,
             variant: 'outlined',
+            type: 'dropdown',
+            options: [
+                { name: 'Archive', onClick: onArchiveAction },
+                { name: 'Send in Message', onClick: onSendInMessageAction },
+                { name: 'Delete', onClick: onDeleteAction },
+            ]
         },
         {
             name: 'Tag',
@@ -60,9 +91,16 @@ export const MediaDetailsPage = () => {
         }
     }
 
-    const handleChangeOwner = (contact) => {
-        if (contact) {
-            setItemOwner(contact.slice(-1))
+    const handleChangeOwner = (owner) => {
+        if (owner && owner.length > 0) {
+            const newOwner = owner[0]
+            updateMedia(media.id, { owner: newOwner}).then(() => {
+                setItemOwner([newOwner])
+                alert.setSuccess("Media owner updated")
+            }
+            ).catch(err => {
+                alert.setWarning(err.message)
+            })
         }
     }
 
@@ -83,7 +121,7 @@ export const MediaDetailsPage = () => {
     }, 500)
 
     const handleChangeContact = (contact) => {
-        if (contact) {
+        if (contact && contact.length > 0) {
             setItemContact(contact.slice(-1))
         }
     }
@@ -115,6 +153,8 @@ export const MediaDetailsPage = () => {
             title="Media Details"
             actions={mainActions}
             loading={loading}
+            alert={alert}
+            redirect={redirect}
         >
 
             <Grid container mt={3}>
@@ -123,20 +163,17 @@ export const MediaDetailsPage = () => {
                     <Stack direction='row' flexWrap='wrap' gap={2}>
 
                         <MediaPreview
-                          item={media}
-                          loading={loading}
-                          type='media'
-                        //   selected={mediaSelected}
-                        //   onSelectedChange={onMediaSelectedChange}
+                            item={media}
+                            loading={loading}
+                            type='media'
                         />
 
                         <Box flex='1 1 auto' >
-                            <Typography variant='subtitle1' color='text.primary' >
+                            <Typography variant='subtitle1' sx={{ wordBreak: 'break-word' }} >
                                 {media?.name || media?.file_name}
                             </Typography>
 
                             <DetailsPreview label="File Type:" value={media?.file_type} />
-
                             <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
                             <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
                             <DetailsPreview label="File Size:" value={fileSizeFormatted} />
@@ -158,34 +195,35 @@ export const MediaDetailsPage = () => {
                         Owner
                     </Typography>
                     <Autocomplete
-                      multiple
-                      selectOnFocus
-                      clearOnBlur
-                      value={itemOwner}
-                      options={teamMembers.items || []}
-                      loading={teamMembers.loading}
-                      getOptionLabel={(option) => getFullName(option)}
-                      isOptionEqualToValue={(option, value) => option.hashid === value.hashid}
-                      onChange={(event, newValue) => {
-                        handleChangeOwner(newValue)
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          label="+ Add Owner"
-                         />
-                      )}
-                      renderTags={(tagValue, getTagProps) => {
-                        return tagValue.map((option, index) => (
-                            <CustomChip
-                              variant='outlined'
-                              {...getTagProps({ index })}
-                              label={getFullName(option)}
-                              deleteIcon={<Clear />}
+                        multiple
+                        selectOnFocus
+                        clearOnBlur
+                        value={itemOwner}
+                        options={teamMembers.items || []}
+                        loading={teamMembers.loading}
+                        getOptionLabel={(option) => getFullName(option)}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        onChange={(event, newValue) => {
+                            handleChangeOwner(newValue)
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="+ Add Owner"
+                                placeholder="Search for owner"
                             />
-                        ));
-                      }}
+                        )}
+                        renderTags={(tagValue, getTagProps) => {
+                            return tagValue.map((option, index) => (
+                                <CustomChip
+                                    variant='outlined'
+                                    {...getTagProps({ index })}
+                                    label={getFullName(option)}
+                                    deleteIcon={<Clear />}
+                                />
+                            ));
+                        }}
                     />
 
                     <Typography variant='subtitle1' >
@@ -434,7 +472,7 @@ const TagsInfo = styled('span')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: theme.shape.borderRadius, 
+    borderRadius: theme.shape.borderRadius,
     marginRight: theme.spacing(1),
     width: 'fit-content',
 }));

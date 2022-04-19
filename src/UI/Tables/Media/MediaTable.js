@@ -18,7 +18,6 @@ import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
  * @param {boolean} loading true if the items are being loaded
  * @param {object} pagination pagination object
  * @param {boolean} disablePagination true if the pagination should be disabled
- * @param {function} onClickItem function to call when an item is clicked
  * @returns 
  */
 const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props }) => {
@@ -38,7 +37,6 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             setCarouselOpen(true)
             setCarouselIndex(props.items.indexOf(row))
         }
-
     }
 
     const onMediaSelectedChange = (selected, index, item) => {
@@ -126,8 +124,6 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         }
     }
 
-    // console.log('aaaaa')
-
     return (
         <Box width='100%' pb={2}>
             <Box >
@@ -135,12 +131,12 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {props.items && props.items.map((item, index) => (
                             <MediaPreview
-                                key={item.hashid || item.id}
-                                type={type}
-                                item={item}
-                                linkTo={props.linkTo && `${props.linkTo}${item.id}`}
-                                selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
-                                onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
+                              key={item.hashid || item.id}
+                              type={type}
+                              item={item}
+                              linkTo={props.linkTo && `${props.linkTo}${item.id}`}
+                              selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
+                              onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
                             />
                         ))}
                     </Stack>
@@ -164,10 +160,10 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             )}
             {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
             <MediaCarousel
-                index={carouselIndex}
-                items={props.items}
-                open={carouselOpen}
-                onClose={() => setCarouselOpen(false)}
+              index={carouselIndex}
+              items={props.items}
+              open={carouselOpen}
+              onClose={() => setCarouselOpen(false)}
             />
         </Box>
     )
