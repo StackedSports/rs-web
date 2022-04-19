@@ -55,7 +55,7 @@ export default function ContactsProfilePage(props) {
     // const [showPanelFilters, setShowPanelFilters] = useState(false)
     // const [selectedFilters, setSelectedFilters] = useState({})
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-    const [expandedAccordion, setExpandedAccordion] = React.useState();
+    const [expandedAccordion, setExpandedAccordion] = useState();
 
     const [contactGeneralSaved, setContactGeneralSaved] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
@@ -225,18 +225,28 @@ export default function ContactsProfilePage(props) {
             loading={loading}
             redirect={redirect}
         >
-            <Stack flex={1} direction="row" justifyContent="center" alignItems="start" spacing={1} >
-                <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1} style={{ borderRight: "#dadada  1px solid" }} >
+            <Stack 
+              flex={1} 
+              direction="row" 
+              justifyContent="center" 
+              alignItems="start" 
+              spacing={1} 
+            >
+                <Stack 
+                //   flex={1} 
+                  direction="column" 
+                  justifyContent="flex-start" 
+                  alignItems="center" 
+                  spacing={1} 
+                  sx={{ width: '300px' }}
+                  style={{ borderRight: "#dadada  1px solid", backgroundColor: '#999' }} >
                     <Formik
-                        initialValues={initialValuesForm}
-                        onSubmit={(values, actions) => {
-                            console.log(values)
-                        }}
+                      initialValues={initialValuesForm}
+                      onSubmit={(values, actions) => {
+                        console.log(values)
+                      }}
                     >
-                        {({
-                            handleChange,
-                            setFieldValue
-                        }) => (
+                        {({ handleChange, setFieldValue }) => (
                             <Form>
                                 <AccordionComponent
                                     id='general'

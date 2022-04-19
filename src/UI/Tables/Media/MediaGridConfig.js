@@ -1,5 +1,7 @@
-import { formatDate } from 'utils/Parser'
+
 import { Link } from 'react-router-dom'
+
+import { formatDate } from 'utils/Parser'
 import { mediaRoutes } from 'Routes/Routes'
 
 const nameMedia = {
@@ -8,7 +10,14 @@ const nameMedia = {
     // width: 150,
     flex: 3,
     valueGetter: (params) => params.row.name || params.row.file_name,
-    renderCell: (params) => <Link style={{color:'inherit', textDecoration:'none'}} to={`${mediaRoutes.mediaDetails}/${params.row.id}`}>{params.value}</Link>,
+    renderCell: (params) => (
+        <Link 
+          style={{ color:'inherit' }} 
+          to={`${mediaRoutes.mediaDetails}/${params.row.id}`}
+        >
+            {params.value}
+        </Link>
+    ),
 }
 
 const namePlaceholder = {

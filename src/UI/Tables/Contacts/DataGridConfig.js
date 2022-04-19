@@ -1,4 +1,7 @@
+import { Link } from 'react-router-dom'
+
 import { formatPhoneNumber } from 'utils/Parser'
+import { contactsRoutes } from 'Routes/Routes'
 
 import AvatarImg from "images/avatar.png";
 
@@ -34,7 +37,15 @@ const fullName = {
         let contact = params.row
 
         return contact.first_name + ' ' + contact.last_name
-    }
+    },
+    renderCell: (params) => (
+        <Link 
+          style={{ color:'inherit' }} 
+          to={`${contactsRoutes.profile}/${params.row.id}`}
+        >
+            {params.value}
+        </Link>
+    ),
 }
 
 const firstName = {
