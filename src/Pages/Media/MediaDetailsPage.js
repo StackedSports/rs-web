@@ -83,12 +83,12 @@ export const MediaDetailsPage = () => {
                 { name: 'Delete', onClick: onDeleteAction },
             ]
         },
-        {
-            name: 'Tag',
-            icon: LocalOfferOutlined,
-            variant: 'outlined',
-            onClick: () => setOpenSelectTagDialog(true),
-        },
+        // {
+        //     name: 'Tag',
+        //     icon: LocalOfferOutlined,
+        //     variant: 'outlined',
+        //     onClick: () => setOpenSelectTagDialog(true),
+        // },
     ]
 
     const handleMediaNameChange = (type) => {
