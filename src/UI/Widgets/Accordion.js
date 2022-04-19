@@ -44,7 +44,7 @@ export default function AccordionComponent(props) {
 								label={item.label}
 								type={item.type || "text"}
 								component={item.component}
-								onChange={e => { item.onChange(e); item.onChange(item.name, e.target.value) }}
+								onChange={e => { item.onChange(e); item.setValue(item.name, e.target.value) }}
 								variant="standard"
 							/>
 						)

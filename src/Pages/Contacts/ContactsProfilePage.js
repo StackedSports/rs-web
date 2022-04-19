@@ -28,7 +28,6 @@ import {
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
-import AccordionContactDetails from 'UI/Forms/Inputs/AccordionContactDetails';
 import { Formik, Form } from 'formik';
 import TextField from '@mui/material/TextField';
 
@@ -71,7 +70,12 @@ export default function ContactsProfilePage(props) {
         if (!id)
             return
         console.log(id)
-    }, [id])
+        if (!status.items)
+            return
+
+        console.log(id)
+        console.log(status.items)
+    }, [id, status.items])
 
     useEffect(() => {
         if (!positions.items)
@@ -120,9 +124,9 @@ export default function ContactsProfilePage(props) {
         stats: "",
         rank: "",
         //coaches
-        positionCoach: "",
-        areaCoach: "",
-        coordinator: "",
+        positionCoach: [],
+        areaCoach: [],
+        coordinator: [],
         //positions
         offense: "",
         defense: "",
@@ -213,29 +217,29 @@ export default function ContactsProfilePage(props) {
             loading={loading}
             redirect={redirect}
         >
-            <Stack 
-              flex={1} 
-              direction="row" 
-              justifyContent="center" 
-              alignItems="start" 
-              spacing={1} 
+            <Stack
+                flex={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="start"
+                spacing={1}
             >
-                <Stack 
-                //   flex={1} 
-                  direction="column" 
-                  justifyContent="flex-start" 
-                  alignItems="center" 
-                  pr={1}
-                  spacing={1} 
-                  sx={{ width: '300px', height: '100%' }}
-                  style={{ borderRight: "#efefef  1px solid" }} >
+                <Stack
+                    //   flex={1} 
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    pr={1}
+                    spacing={1}
+                    sx={{ width: '300px', height: '100%' }}
+                    style={{ borderRight: "#efefef  1px solid" }} >
                     <Formik
-                      initialValues={initialValuesForm}
-                      onSubmit={(values, actions) => {
-                        console.log(values)
-                      }}
+                        initialValues={initialValuesForm}
+                        onSubmit={(values, actions) => {
+                            console.log(values)
+                        }}
                     >
-                        {({ handleChange, setFieldValue }) => (
+                        {({ values, handleChange, setFieldValue }) => (
                             <Form style={{ flex: 1, width: '100%' }}>
                                 <AccordionComponent
                                     id='general'
@@ -259,36 +263,104 @@ export default function ContactsProfilePage(props) {
                                     items={[
                                         { label: 'Graduation Year', name: 'gradYear', type: "number", component: TextField, onChange: handleChange, setValue: setFieldValue },
                                         { label: 'Current School', name: 'school', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                        { label: 'State', name: 'state', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                        { label: 'Status', name: 'stats', component: TextField, onChange: handleChange, setValue: setFieldValue },
                                         { label: 'Rank', name: 'rank', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                        // { label: 'State', name: 'state', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                        // { label: 'Status', name: 'stats', component: TextField, onChange: handleChange, setValue: setFieldValue },
                                     ]}
-                                />
-                                <AccordionComponent
-                                  id='coaches'
-                                  title='Coaches'
-                                  expandedId={expandedAccordionId}
-                                  setExpanded={setExpandedAccordion}
-                                    // items={[
-                                    //     { label: 'Position Coach', name: 'positionCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                    //     { label: 'Area Coach', name: 'areaCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                    //     { label: 'Coordinator', name: 'coordinator', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                    // ]}
                                 >
                                     <SearchableSelector
-                                      label="Position Coach"
-                                      placeholder="Search" 
-                                      multiple
-                                      value={[]}
-                                      options={teamMembers.items || []}
-                                      loading={teamMembers.loading}
-                                      isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                                      getOptionLabel={(option) => option.first_name}
-                                      getChipLabel={(option) => {
-                                        console.log('ccc', option)
-                                        return option.first_name
-                                      }}
+                                        label="State"
+                                        placeholder="Search"
+                                        multiple
+                                        value={values.state}
+                                        options={states || []}
+                                        //   loading={teamMembers.loading}
+                                        isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                        getOptionLabel={(option) => option.name}
+                                        getChipLabel={(option) => {
+                                            console.log('ccc', option)
+                                            return option.name
+                                        }}
+                                        onChange={(newValue) => {
+                                            console.log(newValue)
+                                            setFieldValue("state", newValue[0].abbreviation)
+                                        }}
                                     />
+
+                                    <SearchableSelector
+                                        label="Status"
+                                        placeholder="Search"
+                                        multiple
+                                        value={values.stats}
+                                        options={status.items || []}
+                                        loading={status.loading}
+                                        isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                        getOptionLabel={(option) => option.status}
+                                        getChipLabel={(option) => {
+                                            console.log('ccc', option)
+                                            return option.status
+                                        }}
+                                        onChange={(newValue) => setFieldValue("state", newValue)}
+                                    />
+                                </AccordionComponent>
+                                <AccordionComponent
+                                    id='coaches'
+                                    title='Coaches'
+                                    expandedId={expandedAccordionId}
+                                    setExpanded={setExpandedAccordion}
+                                // items={[
+                                //     { label: 'Position Coach', name: 'positionCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                //     { label: 'Area Coach', name: 'areaCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                //     { label: 'Coordinator', name: 'coordinator', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                // ]}
+                                >
+                                    <>
+                                        <SearchableSelector
+                                            label="Position Coach"
+                                            placeholder="Search"
+                                            multiple
+                                            value={values.positionCoach}
+                                            options={teamMembers.items || []}
+                                            loading={teamMembers.loading}
+                                            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                            getOptionLabel={(option) => option.first_name}
+                                            getChipLabel={(option) => {
+                                                console.log('ccc', option)
+                                                return option.first_name
+                                            }}
+                                            onChange={(newValue) => setFieldValue("positionCoach", newValue)}
+                                        />
+                                        <SearchableSelector
+                                            label="Area Coach"
+                                            placeholder="Search"
+                                            multiple
+                                            value={values.areaCoach}
+                                            options={teamMembers.items || []}
+                                            loading={teamMembers.loading}
+                                            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                            getOptionLabel={(option) => option.first_name}
+                                            getChipLabel={(option) => {
+                                                console.log('ccc', option)
+                                                return option.first_name
+                                            }}
+                                            onChange={(newValue) => setFieldValue("areaCoach", newValue)}
+                                        />
+                                        <SearchableSelector
+                                            label="Coordinator"
+                                            placeholder="Search"
+                                            multiple
+                                            value={values.coordinator}
+                                            options={teamMembers.items || []}
+                                            loading={teamMembers.loading}
+                                            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                            getOptionLabel={(option) => option.first_name}
+                                            getChipLabel={(option) => {
+                                                console.log('ccc', option)
+                                                return option.first_name
+                                            }}
+                                            onChange={(newValue) => setFieldValue("coordinator", newValue)}
+                                        />
+                                    </>
                                 </AccordionComponent>
                                 <AccordionComponent
                                     id='positions'
