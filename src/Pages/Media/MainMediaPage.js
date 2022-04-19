@@ -51,7 +51,7 @@ export const MainMediaPage = (props) => {
         {
             name: 'Change view',
             type: 'icon',
-            icon: viewGrid ? GridView : FormatListBulleted,
+            icon: !viewGrid ? GridView : FormatListBulleted,
             onClick: onSwitchView
         },
         {

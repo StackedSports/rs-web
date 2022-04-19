@@ -37,7 +37,7 @@ export const AllMediaPlaceholderPage = (props) => {
     {
       name: 'Change view',
       type: 'icon',
-      icon: viewGrid ? GridView : FormatListBulleted,
+      icon: !viewGrid ? GridView : FormatListBulleted,
       onClick: () => setViewGrid(oldViewGrid => !oldViewGrid)
     },
     {

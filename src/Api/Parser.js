@@ -4,6 +4,9 @@ export const getFilterContactsCriteria = (filters) => {
     let criteria = {}
 
     console.log(filters)
+    if(filters.search) {
+        criteria['search'] = filters.search
+    }
 
     if (filters.status) {
         criteria['status'] = []
