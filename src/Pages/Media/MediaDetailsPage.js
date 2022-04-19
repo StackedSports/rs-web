@@ -90,6 +90,7 @@ export const MediaDetailsPage = () => {
         if (type === 'cancel')
             inputMediaNameRef.current.value = media.name
         else {
+            console.log(itemName)
             updateMediaForm(media.id, { name: itemName }).then(() => {
                 alert.setSuccess("Media name updated")
             }).catch(err => {
@@ -363,6 +364,7 @@ export const MediaDetailsPage = () => {
                                 selectOnFocus
                                 clearOnBlur
                                 getOptionLabel={(option) => option?.name}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 value={itemPlaceholder}
                                 onChange={(event, newValue) => {
                                     handleChangePlaceholder(newValue)
@@ -396,6 +398,7 @@ export const MediaDetailsPage = () => {
                                 value={itemContact}
                                 loading={contacts.loading}
                                 getOptionLabel={(option) => getFullName(option)}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 onChange={(event, newValue) => {
                                     handleChangeContact(newValue)
                                 }}
