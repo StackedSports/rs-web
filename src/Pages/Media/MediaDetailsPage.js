@@ -26,6 +26,8 @@ export const MediaDetailsPage = () => {
 
     const { item: media, loading } = useMedia(id)
 
+    const [optionsPlaceholders, setOptionsPlaceholders] = useState([])
+
     const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
     const [itemOwner, setItemOwner] = useState([])
@@ -157,7 +159,16 @@ export const MediaDetailsPage = () => {
         }
     }
 
-    //TODO handle Placeholder inputSearch
+
+    const handlePlaceholderInputSearch =  debounce((value) => {
+        if(value){
+            placeholders.filter({
+                name: value,
+            })
+        }else{
+            placeholders.clearFilter()
+        }
+    }, 500)
 
     const handleContactInputSearch = debounce((value) => {
         if (value) {
@@ -233,6 +244,7 @@ export const MediaDetailsPage = () => {
                                 disabled={!editName}
                                 onChange={(e) => setItemName(e.target.value)}
                                 sx={{ my: 2 }}
+                                placeholder='Media Name'
                                 endAdornment={
                                     <InputAdornment position="end">
                                         {!editName ?
@@ -362,12 +374,16 @@ export const MediaDetailsPage = () => {
                                 loading={placeholders.loading}
                                 multiple
                                 selectOnFocus
+                                includeInputInList
                                 clearOnBlur
                                 getOptionLabel={(option) => option?.name}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
                                 value={itemPlaceholder}
                                 onChange={(event, newValue) => {
                                     handleChangePlaceholder(newValue)
+                                }}
+                                onInputChange={(event, newInputValue) => {
+                                    handlePlaceholderInputSearch(newInputValue)
                                 }}
                                 renderInput={(params) => (
                                     <TextField {...params} label="Placeholder" fullWidth />
