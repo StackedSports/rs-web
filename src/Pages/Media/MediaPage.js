@@ -15,10 +15,10 @@ export const MediaPage = (props) => {
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
-    const [loading, setLoading] = useState(false)
     
     useEffect(() => {
         getMediaTypes().then(res => {
+            console.log(res)
             setMediaTypes(res[0].map(item => ({
                 id: item.key,
                 name: item.type
@@ -43,7 +43,7 @@ export const MediaPage = (props) => {
         {
             id: 1,
             name: 'Recent',
-            path: mediaRoutes.media + '?recent',
+            path: mediaRoutes.media + '?fileType=recent',
         },
         {
             id: 2,
@@ -51,22 +51,22 @@ export const MediaPage = (props) => {
             path: mediaRoutes.media + '?fileType=image',
         },
         {
-            id: 2,
+            id: 3,
             name: 'Videos',
             path: mediaRoutes.media + '?fileType=video',
         },
         {
-            id: 3,
+            id: 4,
             name: 'Gifs',
             path: mediaRoutes.media + '?fileType=gif',
         },
         {
-            id: 4,
+            id: 5,
             name: 'Personalized Media',
             path: mediaRoutes.media + '?personalized',
         },
         {
-            id: 5,
+            id: 6,
             name: 'Placeholders',
             path: mediaRoutes.placeholders,
         }
@@ -122,11 +122,12 @@ export const MediaPage = (props) => {
             filters={filters}
             onFilterSelected={onFilterSelected}
             actions={props.actions}
-            loading={loading}
+            loading={teamMembers.loading}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: panelFiltersData,
-                onFilterChange: onPanelFilterChange
+                onFilterChange: onPanelFilterChange,
+                setFilter: props.setFilter
             }}
         >
             <Divider />

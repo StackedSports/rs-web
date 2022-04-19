@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Collapse, Stack, Box } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
@@ -18,15 +18,24 @@ import Button from '../Buttons/Button';
 export const PanelFilters = (props) => {
 
 	const [selectedFilters, setSelectedFilters] = useState({});
-	
+
+	useEffect(() => {
+		if (props.setFilter) {
+			const { filterName, filter, option } = props.setFilter;
+			if (filterName && filter && option) {
+				handleFilterChange(filterName, filter, option);
+			}
+		}
+	}, [props.setFilter]);
+
 	const handleOptionsChange = (filterName, filter, option) => {
 		console.log(filterName)
 		console.log(option)
 
 		let filters = Object.assign({}, selectedFilters)
 
-		if(filters[filterName]) {
-			if(filter.isUnique) {
+		if (filters[filterName]) {
+			if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
 				filters[filterName].push(option)
@@ -86,51 +95,51 @@ export const PanelFilters = (props) => {
 
 			return newSelectFilters;
 		})
-  }
+	}
 
 	const getContent = (filter, filterName) => (
 		<Dropdown.List>
 			{filter.options.map((option) => (
 				<Dropdown.Item
-				  key={option.id}
-				  name={option.name}
-				  onClick={() => handleOptionsChange(filterName, filter, option)}
+					key={option.id}
+					name={option.name}
+					onClick={() => handleOptionsChange(filterName, filter, option)}
 				/>
 			))}
 		</Dropdown.List>
 	)
 
-  const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
+	const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
 
-  return (
-    <>
-		<Stack direction='row' flexWrap='wrap' pb={1}>
-			{selectedFilters && Object.keys(selectedFilters).map(key =>
-				selectedFilters[key].map((filter, index) => (
-					<SearchableOptionSelected
-					  style={{ marginLeft: 0 }}
-					  key={filter.id}
-					  item={`${props.filters[key].label}: ${filter.name}`}
-					  onRemove={(e) => onRemoveFilter(key, filter)}
-					/>
-				)))}
-		</Stack>
-
-		<Collapse in={props.open}>
-			<Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
-				{props.filters && Object.keys(props.filters).map(filterName => {
-					const filter = props.filters[filterName];
-					return (
-						<Box key={filterName}>
-							<Dropdown
-							  header={() => getHeader(filter.label)}
-							  content={() => getContent(filter, filterName)}
-							/>
-						</Box>
-					)
-				})}
+	return (
+		<>
+			<Stack direction='row' flexWrap='wrap' pb={1}>
+				{selectedFilters && Object.keys(selectedFilters).map(key =>
+					selectedFilters[key].map((filter, index) => (
+						<SearchableOptionSelected
+							style={{ marginLeft: 0 }}
+							key={filter.id}
+							item={`${props.filters[key].label}: ${filter.name}`}
+							onRemove={(e) => onRemoveFilter(key, filter)}
+						/>
+					)))}
 			</Stack>
-		</Collapse>
-    </>
-  )
+
+			<Collapse in={props.open}>
+				<Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
+					{props.filters && Object.keys(props.filters).map(filterName => {
+						const filter = props.filters[filterName];
+						return (
+							<Box key={filterName}>
+								<Dropdown
+									header={() => getHeader(filter.label)}
+									content={() => getContent(filter, filterName)}
+								/>
+							</Box>
+						)
+					})}
+				</Stack>
+			</Collapse>
+		</>
+	)
 }
