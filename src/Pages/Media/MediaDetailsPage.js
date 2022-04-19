@@ -8,6 +8,7 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
+import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 
 import { AppContext } from 'Context/AppProvider'
 
@@ -24,12 +25,8 @@ export const MediaDetailsPage = () => {
     const tags = useTags()
     const contacts = useContacts()
     const teamMembers = useTeamMembers()
-    // TODO filter placeholders on autocomplete
     const placeholders = usePlaceholders()
-
     const { item: media, loading } = useMedia(id)
-
-    const [optionsPlaceholders, setOptionsPlaceholders] = useState([])
 
     const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
@@ -156,8 +153,7 @@ export const MediaDetailsPage = () => {
             updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then(() => {
                 setItemPlaceholder([newPlaceholder])
                 alert.setSuccess("Media placeholder updated")
-            }
-            ).catch(err => {
+            }).catch(err => {
                 alert.setWarning(err.message)
             })
         } else {
@@ -166,12 +162,12 @@ export const MediaDetailsPage = () => {
     }
 
 
-    const handlePlaceholderInputSearch =  debounce((value) => {
-        if(value){
+    const handlePlaceholderInputSearch = debounce((value) => {
+        if (value) {
             placeholders.filter({
                 name: value,
             })
-        }else{
+        } else {
             placeholders.clearFilter()
         }
     }, 500)
@@ -206,13 +202,6 @@ export const MediaDetailsPage = () => {
         }
     }
 
-    const handleSaveChanges = () => {
-        //TODO
-    }
-
-    const onMediaSelectedChange = (checked) => {
-        setMediaSelected(checked)
-    }
 
     const messagesCountLabel = useMemo(() => {
         if (!media)
@@ -299,54 +288,32 @@ export const MediaDetailsPage = () => {
                     <Typography variant='subtitle1' >
                         Owner
                     </Typography>
-                    <Autocomplete
+                    <SearchableSelector
                         multiple
-                        selectOnFocus
-                        clearOnBlur
-                        value={itemOwner}
-                        options={teamMembers.items || []}
+                        options={teamMembers.items}
                         loading={teamMembers.loading}
+                        value={itemOwner}
+                        onChange={handleChangeOwner}
+                        label="+ Add Owner"
+                        placeholder="Search for owner"
                         getOptionLabel={(option) => getFullName(option)}
+                        getChipLabel={(option) => getFullName(option)}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                        onChange={(event, newValue) => {
-                            handleChangeOwner(newValue)
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="outlined"
-                                label="+ Add Owner"
-                                placeholder="Search for owner"
-                            />
-                        )}
-                        renderTags={(tagValue, getTagProps) => {
-                            return tagValue.map((option, index) => (
-                                <CustomChip
-                                    variant='outlined'
-                                    {...getTagProps({ index })}
-                                    label={getFullName(option)}
-                                    deleteIcon={<Clear />}
-                                />
-                            ));
-                        }}
                     />
 
                     <Typography variant='subtitle1' >
                         Tags
                     </Typography>
-                    <Autocomplete
+                    <SearchableSelector
                         multiple
-                        openOnFocus
-                        selectOnFocus
-                        clearOnBlur
+                        options={tags}
                         value={itemTags}
-                        options={tags || []}
-                        disableCloseOnSelect
-                        isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                        onChange={handleChangeTags}
+                        label="+ Add tag"
+                        placeholder="Search for tags"
                         getOptionLabel={(option) => option?.name}
-                        onChange={(event, newValue) => {
-                            handleChangeTags(newValue)
-                        }}
+                        getChipLabel={(option) => option?.name}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         renderOption={(props, option, { selected }) => (
                             <li {...props}>
                                 <Checkbox
@@ -358,19 +325,6 @@ export const MediaDetailsPage = () => {
                                 {option.name}
                             </li>
                         )}
-                        renderInput={(params) => (
-                            <TextField {...params} label="+ Add tag" fullWidth />
-                        )}
-                        renderTags={(tagValue, getTagProps) => {
-                            return tagValue.map((option, index) => (
-                                <CustomChip
-                                    variant='outlined'
-                                    {...getTagProps({ index })}
-                                    label={option?.name}
-                                    deleteIcon={<Clear />}
-                                />
-                            ));
-                        }}
                     />
 
                     <Stack direction='row' alignItems='center' flexWrap='wrap' gap={1} >
@@ -380,36 +334,20 @@ export const MediaDetailsPage = () => {
                             <Typography variant='subtitle1' mb={2}  >
                                 Association to Placeholder
                             </Typography>
-                            <Autocomplete
-                                options={placeholders.items || []}
-                                loading={placeholders.loading}
-                                multiple
-                                selectOnFocus
-                                includeInputInList
-                                clearOnBlur
-                                getOptionLabel={(option) => option?.name}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={itemPlaceholder}
-                                onChange={(event, newValue) => {
-                                    handleChangePlaceholder(newValue)
-                                }}
-                                onInputChange={(event, newInputValue) => {
-                                    handlePlaceholderInputSearch(newInputValue)
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Placeholder" fullWidth />
-                                )}
-                                renderTags={(tagValue, getTagProps) => {
-                                    return tagValue.map((option, index) => (
-                                        <CustomChip
-                                            variant='outlined'
-                                            {...getTagProps({ index })}
-                                            label={option?.name}
-                                            deleteIcon={<Clear />}
-                                        />
-                                    ));
-                                }}
+                            <SearchableSelector
+                              multiple
+                              options={placeholders.items}
+                              loading={placeholders.loading}
+                              value={itemPlaceholder}
+                              onChange={handleChangePlaceholder}
+                              label="Placeholder"
+                              placeholder="Search for placeholder"
+                              getOptionLabel={(option) => option?.name}
+                              onInputChange={(event, newInputValue) => { handlePlaceholderInputSearch(newInputValue) }}
+                              getChipLabel={(option) => option?.name}
+                              isOptionEqualToValue={(option, value) => option.id === value.id}
                             />
+
                         </Box>
 
                         <Box sx={{ flex: '1 1 auto', }} >
@@ -417,34 +355,18 @@ export const MediaDetailsPage = () => {
                             <Typography variant='subtitle1' mb={2} >
                                 Association to Contact
                             </Typography>
-                            <Autocomplete
-                                multiple
-                                options={contacts.items || []}
-                                selectOnFocus
-                                clearOnBlur
-                                value={itemContact}
-                                loading={contacts.loading}
-                                getOptionLabel={(option) => getFullName(option)}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                onChange={(event, newValue) => {
-                                    handleChangeContact(newValue)
-                                }}
-                                onInputChange={(event, newInputValue) => {
-                                    handleContactInputSearch(newInputValue)
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Contact" fullWidth />
-                                )}
-                                renderTags={(tagValue, getTagProps) => {
-                                    return tagValue.map((option, index) => (
-                                        <CustomChip
-                                            variant='outlined'
-                                            {...getTagProps({ index })}
-                                            label={getFullName(option)}
-                                            deleteIcon={<Clear />}
-                                        />
-                                    ));
-                                }}
+                            
+                            <SearchableSelector
+                              multiple
+                              options={contacts.items}
+                              loading={contacts.loading}
+                              value={itemContact}
+                              label="Contact"
+                              placeholder="Search for contact"
+                              onChange={handleChangeContact}
+                              getOptionLabel={(option) => getFullName(option)}
+                              onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}
+                              getChipLabel={(option) => getFullName(option)}
                             />
                         </Box>
                     </Stack>

@@ -2,13 +2,26 @@ import { useEffect, useState, useMemo, useRef } from "react"
 import { Clear } from "@mui/icons-material"
 import { styled, TextField, Autocomplete, Chip } from "@mui/material"
 import { AssignmentReturn } from "@material-ui/icons"
+import lodash from "lodash"
 
 export default function SearchableSelector(props) {
     const [value, setValue] = useState([])
+    const [options,setOptions] = useState([])
+
+    useEffect(() => {
+        if(!props.options)
+            return
+
+        setOptions(oldOptions =>{
+            return lodash.uniqBy(oldOptions.concat(props.options), 'id')
+        })
+    }, [props.options])
 
     useEffect(() => {
         if(!props.value)
             return
+
+        setValue(props.value)
         // if props.value changed
 
         // if(JSON.stringify(obj1) === JSON.stringify(obj2))
@@ -31,29 +44,22 @@ export default function SearchableSelector(props) {
     }
 
     const onInputChange = (event, newInputValue) => {
-        // handleContactInputSearch(newInputValue)
         if(props.onInputChange)
             props.onInputChange(event, newInputValue)
     }
 
     const getChipLabel = (option) => {
-        console.log('aaaa', option)
-        //return option.first_name 
         if(props.getChipLabel) {
-            console.log('bbb')
             return props.getChipLabel(option)
         } else {
             return option
         }
     }
 
-    // (option) => getFullName(option)
-    // (option, value) => option.id === value.id
-
     return (
         <Autocomplete
           multiple={props.multiple || false}
-          options={props.options || []}
+          options={options}
           selectOnFocus={props.selectOnFocus || true}
           clearOnBlur={props.clearOnBlur || true}
           value={value}
@@ -62,6 +68,7 @@ export default function SearchableSelector(props) {
           isOptionEqualToValue={props.isOptionEqualToValue}
           onChange={onChange}
           onInputChange={onInputChange}
+          renderOption={props.renderOption}
           renderInput={(params) => (
             <TextField 
               {...params} 
