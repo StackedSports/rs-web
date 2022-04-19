@@ -27,6 +27,8 @@ export default function BoardPage(props) {
         else
             return 'Board'
     }, [board])
+
+    
     
     return (
         <BaseContactsPage

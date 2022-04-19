@@ -21,27 +21,25 @@ const AppProvider = (props) => {
             
     }, [location.pathname, redirect])
 
-    const sendMediaInMessage = (media) => {
+    const callCreateMessageWithPayload = (payload) => {
+        localStorage.setItem(`new-message-payload`, JSON.stringify(payload))
+        setRedirect(`${messageRoutes.create}/with-payload`)
+    }
+
+    const sendMediaInMessage = (mediaId) => {
 
     }
 
     const sendMessageToContacts = (contacts) => {
-
+        console.log(contacts)
+        
+        callCreateMessageWithPayload({ contacts })
     }
 
     const sendMessageToRecipients = (recipients) => {
         console.log(recipients)
-        // return
-        // let now = Date.now()
-
-        // console.log(now)
-
-        let payload = {
-            recipients
-        }
-
-        localStorage.setItem(`new-message-payload`, JSON.stringify(payload))
-        setRedirect(`${messageRoutes.create}/with-payload`)
+        
+        callCreateMessageWithPayload({ recipients })
     }
 
     const scrollToTop = () => {

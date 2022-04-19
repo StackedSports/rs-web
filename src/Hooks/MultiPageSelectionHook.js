@@ -71,7 +71,7 @@ export default function useMultiPageSelection(page) {
     // Get the data of all selected items across all pages
     const getDataSelected = () => {
         let data = []
-        console.log(selected.current)
+        // console.log(selected.current)
     
         let every = Object.keys(selected.current).every(key => {
             // if(key !== currentPage)

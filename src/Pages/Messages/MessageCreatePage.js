@@ -103,17 +103,23 @@ export default function MessageCreatePage(props) {
         console.log(payload)
 
         // return
+        let newRecipients = []
+        let newContacts = []
 
         if(payload.recipients) {
-            console.log(payload.recipients)
-
-            setRecipientSelected({
-                privateBoards: recipientSelected?.privateBoards || [],
-                teamBoards: recipientSelected?.teamBoards || [],
-                contacts: recipientSelected?.contacts || [],
-                recipients: payload.recipients
-            })
+            newRecipients = payload.recipients
         }
+
+        if(payload.contacts) {
+            newContacts = payload.contacts
+        }
+
+        setRecipientSelected({
+            privateBoards: recipientSelected?.privateBoards || [],
+            teamBoards: recipientSelected?.teamBoards || [],
+            contacts: newContacts,
+            recipients: newRecipients
+        })
 
         return
 
