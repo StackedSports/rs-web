@@ -5,6 +5,13 @@ import { contactsRoutes } from 'Routes/Routes'
 
 import AvatarImg from "images/avatar.png";
 
+const getFullName = (params) => {
+    if(params)
+        return `${params.first_name || ''} ${params.last_name || ''}`
+    else
+        ''
+}
+
 const getImg = (profile_image) => {
     return profile_image && !profile_image.includes('contact-missing-image') ?
         profile_image : AvatarImg
@@ -33,11 +40,7 @@ const fullName = {
     // width: 180,
     flex: 2,
     resizable: true,
-    valueGetter: (params) => {
-        let contact = params.row
-
-        return contact.first_name + ' ' + contact.last_name
-    },
+    valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
         <Link 
           style={{ color:'inherit' }} 
@@ -130,14 +133,21 @@ const areaCoach = {//array
     field: 'areaCoach',
     headerName: 'Area Coach',
     flex: 1,
-    valueGetter: (params) => params.row.area_coach ? params.row.area_coach : ''
+    valueGetter: (params) => params.row.area_coach?.full_name || ''
+}
+
+const positionCoach = {
+    field: 'positionCoach',
+    headerName: 'Position Coach',
+    flex: 1,
+    valueGetter: (params) => params.row.position_coach?.full_name || ''
 }
 
 const recruitingCoach = {
     field: 'recruitingCoach',
     headerName: 'Recruiting Coach',
     flex: 1,
-    valueGetter: (params) => params.row.area_coach ? params.row.area_coach : ''
+    valueGetter: (params) => params.row.coordinator?.full_name || ''
 }
 
 const status = {
@@ -235,6 +245,7 @@ export const columnsFull = [
     gradYear,
     positions,
     areaCoach,
+    positionCoach,
     recruitingCoach,
     status,
     status2,

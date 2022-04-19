@@ -73,9 +73,12 @@
 }
 
 .MessageInput .Input .Container.Large {
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* padding: 0; */
 }
 
@@ -91,6 +94,12 @@
     object-fit: contain;
 }
 
+.MessageInput .MediaPreview {
+    position: relative;
+    background-color: #d8d8d8;
+    width: fit-content;
+}
+
 .MessageInput .Input .Icon {
     color: #3871da;
     margin-right: 20px;
@@ -103,7 +112,7 @@
     height: 18px;
 }
 
-.MessageInput .Input .Clear.MediaSelected {
+.MessageInput .Input .Clear.ClearSelected {
     position: absolute;
     top: 10px;
     right: 5px;

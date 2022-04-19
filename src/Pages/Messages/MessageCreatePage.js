@@ -114,6 +114,10 @@ export default function MessageCreatePage(props) {
             newContacts = payload.contacts
         }
 
+        if(payload.media) {
+            setMediaSelected(payload.media)
+        }
+
         setRecipientSelected({
             privateBoards: recipientSelected?.privateBoards || [],
             teamBoards: recipientSelected?.teamBoards || [],
@@ -122,29 +126,6 @@ export default function MessageCreatePage(props) {
         })
 
         return
-
-        // console.log(fromContactsId.current)
-        let parts = fromContactsId.current.split('-')
-        // console.log(parts)
-
-        if(parts[1]) {
-            let selection = JSON.parse(localStorage.getItem(`new-message-contact-${parts[1]}`))
-            console.log(selection)
-
-            selection.forEach((id, index) => {
-                selection[index] = { id, first_name: 'Selected', last_name: 'Recipient' }
-            })
-
-            console.log(selection)
-            console.log(recipientSelected)
-
-            setRecipientSelected({
-                privateBoards: recipientSelected?.privateBoards || [],
-                teamBoards: recipientSelected?.teamBoards || [],
-                contacts: recipientSelected?.contacts || [],
-                recipients: selection
-            })
-        }
 
     }, [control])
 

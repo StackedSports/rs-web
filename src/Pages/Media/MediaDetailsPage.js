@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react"
+import { useEffect, useState, useMemo, useRef, useContext } from "react"
 import { useParams } from "react-router-dom"
 import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear, Edit, Check } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, styled, TextField, Input, InputAdornment, IconButton, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
@@ -9,12 +9,15 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
+import { AppContext } from 'Context/AppProvider'
+
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
 
 export const MediaDetailsPage = () => {
+    const app = useContext(AppContext)
     const { id } = useParams()
 
     const alert = useMainLayoutAlert()
@@ -56,7 +59,10 @@ export const MediaDetailsPage = () => {
     }
 
     const onSendInMessageAction = () => {
-        console.log("send in message")
+        if(!media)
+            return
+        
+        app.sendMediaInMessage(media, 'media')
     }
 
     const onDeleteAction = () => {
@@ -180,16 +186,21 @@ export const MediaDetailsPage = () => {
         }
     }, 500)
 
+
     const handleChangeContact = (contact) => {
+        // return console.log('change contact')
         if (contact && contact.length > 0) {
             const newContact = contact[0]
-            updateMedia(media.id, { team_contact_id: newContact.id }).then(() => {
-                setItemContact([newContact])
-                alert.setSuccess("Media contact updated")
-            }
-            ).catch(err => {
-                alert.setWarning(err.message)
-            })
+
+            // Associate media to contact
+            updateMedia(media.id, { team_contact_id: newContact.id })
+                .then(() => {
+                    setItemContact([newContact])
+                    alert.setSuccess("Media contact updated")
+                }
+                ).catch(err => {
+                    alert.setWarning(err.message)
+                })
         } else {
             // TODO REMOVER CONTATO
         }

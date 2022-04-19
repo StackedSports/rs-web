@@ -5,6 +5,10 @@ export const getFilterContactsCriteria = (filters) => {
 
     console.log(filters)
 
+    if(filters.search) {
+        criteria['search'] = filters.search
+    }
+
     if (filters.status) {
         criteria['status'] = []
 

@@ -28,6 +28,7 @@ import { Picker, Emoji } from 'emoji-mart'
 
 import Dropdown from 'UI/Widgets/Dropdown'
 import {SearchableOptionListItem} from 'UI/Forms/Inputs/SearchableOptions'
+import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
@@ -68,9 +69,15 @@ const InputSelected = (props) => {
         }
 
         return (
-            <div style={props.style} className={'Container Large Media'} onClick={onClick}>
-                <img className="MediaSelected" src={getSrc[props.variant](props.item)}/>
-                <CloseIcon className='Clear MediaSelected' onClick={props.onRemove}/>
+            <div style={props.style} className={'MediaPreview'} onClick={onClick}>
+                {/* <img className="MediaSelected" src={getSrc[props.variant](props.item)}/> */}
+                <MediaPreview
+                  mini
+                    item={props.item}
+                    // loading={loading}
+                    type={props.variant}
+                />
+                <CloseIcon className='Clear ClearSelected' onClick={props.onRemove}/>
             </div>
         )
     }

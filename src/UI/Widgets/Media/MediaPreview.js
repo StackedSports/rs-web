@@ -169,28 +169,30 @@ const MediaPreview = ({ type, ...props }) => {
                         />
                     }
                 </CardImage>
-                <CardContent>
-                    <Stack direction='row'>
-                        {isMedia ? (
-                            <PhotoIcon />
-                        ) : (
-                            <PhotoLibraryIcon />
-                        )}
-                        <Tooltip
-                            title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
-                        >
-                            <Typography noWrap fontWeight='bold'>
-                                {props.item?.name ? props.item?.name : props.item?.file_name}
+                {!props.mini && (
+                    <CardContent>
+                        <Stack direction='row'>
+                            {isMedia ? (
+                                <PhotoIcon />
+                            ) : (
+                                <PhotoLibraryIcon />
+                            )}
+                            <Tooltip
+                                title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
+                            >
+                                <Typography noWrap fontWeight='bold'>
+                                    {props.item?.name ? props.item?.name : props.item?.file_name}
+                                </Typography>
+                            </Tooltip>
+                        </Stack>
+                        {props.item?.created_at && (
+                            <Typography noWrap variant='caption'>
+                                Uploaded at:
+                                {formatDate(props.item?.created_at)}
                             </Typography>
-                        </Tooltip>
-                    </Stack>
-                    {props.item?.created_at && (
-                        <Typography noWrap variant='caption'>
-                            Uploaded at:
-                            {formatDate(props.item?.created_at)}
-                        </Typography>
-                    )}
-                </CardContent>
+                        )}
+                    </CardContent>
+                )}
             </CardActionArea>
         </StyledCard>
     )

@@ -20,7 +20,7 @@ const MessagesRoutes = (props) => (
           component={MessageCreatePage}
         />
         <Route
-          // exact
+          exact
           path={`${messageRoutes.create}`}
           component={MessageCreatePage}
         />

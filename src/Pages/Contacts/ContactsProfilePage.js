@@ -227,7 +227,7 @@ export default function ContactsProfilePage(props) {
                   alignItems="center" 
                   pr={1}
                   spacing={1} 
-                  sx={{ width: '300px', height: '100%' }}
+                  sx={{ width: '350px', height: '100%' }}
                   style={{ borderRight: "#efefef  1px solid" }} >
                     <Formik
                       initialValues={initialValuesForm}

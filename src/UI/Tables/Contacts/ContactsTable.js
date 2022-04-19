@@ -7,32 +7,13 @@ import { useState } from 'react';
 import { columnsMini, columnsFull } from './DataGridConfig';
 import { de } from "date-fns/locale";
 
+import { useContactTableColumns } from 'Api/Hooks'
+
 export default function ContactsTable(props) {
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
-    const [visibleColumns, setVisibleColumns] = useState({
-        profileImg: true,
-        fullname: true,
-        firstName: false,
-        lastName: false,
-        nickName: false,
-        twitterName: true,
-        phone: true,
-        state: true,
-        school: true,
-        gradYear: true,
-        position: false,
-        areaCoach: false,
-        recruitingCoach: false,
-        status: false,
-        status2: false,
-        rank: false,
-        // lastMessaged: false,
-        // mostActiveTime: false,
-        // dateAdded: false,
-        timeZone: false,
-        birthday: false,
-    })
+    
+    const visibleColumns = useContactTableColumns()
 
     // const onPageChange = (page, details) => {
     //     console.log(page)
@@ -40,7 +21,8 @@ export default function ContactsTable(props) {
     // }
 
     const onColumnVisibilityModelChange = (newModel) => {
-        setVisibleColumns(newModel)
+        // setVisibleColumns(newModel)
+        visibleColumns.onChange(newModel)
     }
 
     const onPageChange = (e, page) => {
@@ -65,7 +47,7 @@ export default function ContactsTable(props) {
                 page={props.pagination.currentPage - 1}
                 onPageChange={() => { }}
                 loading={props.loading}
-                columnVisibilityModel={visibleColumns}
+                columnVisibilityModel={visibleColumns.items}
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}

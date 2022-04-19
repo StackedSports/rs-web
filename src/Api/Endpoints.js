@@ -650,6 +650,9 @@ export const updateMedia = (mediaId, data) => {
     let body = {
         media: { ...data }
     }
+
+    console.log(body)
+    
     return PUT(`media/${mediaId}`, body)
 }
 

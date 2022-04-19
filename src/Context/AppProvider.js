@@ -26,8 +26,12 @@ const AppProvider = (props) => {
         setRedirect(`${messageRoutes.create}/with-payload`)
     }
 
-    const sendMediaInMessage = (mediaId) => {
+    const sendMediaInMessage = (media, type) => {
+        if(type !== 'media' && type !== 'placeholder')
+            return
 
+            
+        callCreateMessageWithPayload({ media: { item: media, type }})
     }
 
     const sendMessageToContacts = (contacts) => {

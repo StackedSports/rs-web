@@ -997,6 +997,43 @@ export const usePeopleTypes = () => {
     }
 }
 
+export const useContactTableColumns = () => {
+    const [columns, setColumns] = useState(JSON.parse(localStorage.getItem('contact-table-columns')) || {
+        profileImg: true,
+        fullname: true,
+        firstName: false,
+        lastName: false,
+        nickName: false,
+        twitterName: true,
+        phone: true,
+        state: true,
+        school: true,
+        gradYear: true,
+        position: false,
+        areaCoach: false,
+        positionCoach: false,
+        recruitingCoach: false,
+        status: false,
+        status2: false,
+        rank: false,
+        // lastMessaged: false,
+        // mostActiveTime: false,
+        // dateAdded: false,
+        timeZone: false,
+        birthday: false,
+    })
+
+    const onChange = (newValue) => {
+        localStorage.setItem('contact-table-columns', JSON.stringify(newValue))
+        setColumns(newValue)
+    }
+
+    return {
+        items: columns,
+        onChange
+    }
+}
+
 
 // TODO:
 
