@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { useParams } from "react-router-dom"
-import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear } from "@mui/icons-material"
-import { Grid, Stack, Box, Typography, styled, TextField, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
+import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear, Edit, Check } from "@mui/icons-material"
+import { Grid, Stack, Box, Typography, styled, TextField, Input, InputAdornment, IconButton, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
 import lodash from "lodash"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
@@ -11,7 +11,7 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
 import { mediaRoutes } from "Routes/Routes"
-import { archiveMedia, deleteMedia, updateMedia, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
+import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
 
 export const MediaDetailsPage = () => {
@@ -29,15 +29,19 @@ export const MediaDetailsPage = () => {
     const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
     const [itemOwner, setItemOwner] = useState([])
+    const [itemName, setItemName] = useState('')
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [editName, setEditName] = useState(false)
+    const inputMediaNameRef = useRef(null)
 
 
     useEffect(() => {
         if (media) {
             setItemTags(media.tags)
             setItemOwner([media.owner])
+            setItemName(media.name)
         }
     }, [media])
 
@@ -82,6 +86,21 @@ export const MediaDetailsPage = () => {
         },
     ]
 
+    const handleMediaNameChange = (type) => {
+        if (type === 'cancel')
+            inputMediaNameRef.current.value = media.name
+        else {
+            console.log(itemName)
+            updateMediaForm(media.id, { name: itemName }).then(() => {
+                alert.setSuccess("Media name updated")
+            }).catch(err => {
+                setItemName(media.name)
+                alert.setWarning(err.message)
+            })
+        }
+        setEditName(false)
+    }
+
     const handleChangeTags = (newTags) => {
         const differenceTags = lodash.differenceBy(newTags, itemTags, 'id')
         const differenceTagsIds = differenceTags.map(tag => tag.id)
@@ -113,7 +132,7 @@ export const MediaDetailsPage = () => {
     const handleChangeOwner = (owner) => {
         if (owner && owner.length > 0) {
             const newOwner = owner[0]
-            updateMedia(media.id, { owner: newOwner }).then(() => {
+            updateMediaForm(media.id, { owner: newOwner.id }).then(() => {
                 setItemOwner([newOwner])
                 alert.setSuccess("Media owner updated")
             }
@@ -126,14 +145,14 @@ export const MediaDetailsPage = () => {
     const handleChangePlaceholder = (placeholder) => {
         if (placeholder && placeholder.length > 0) {
             const newPlaceholder = placeholder[0]
-            updateMedia(media.id, { media_placeholder_id: newPlaceholder.id }).then(() => {
+            updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then(() => {
                 setItemPlaceholder([newPlaceholder])
                 alert.setSuccess("Media placeholder updated")
             }
             ).catch(err => {
                 alert.setWarning(err.message)
             })
-        }else{
+        } else {
             // TODO REMOVER PLACEHOLDER
         }
     }
@@ -160,7 +179,7 @@ export const MediaDetailsPage = () => {
             ).catch(err => {
                 alert.setWarning(err.message)
             })
-        }else{
+        } else {
             // TODO REMOVER CONTATO
         }
     }
@@ -208,10 +227,34 @@ export const MediaDetailsPage = () => {
                         />
 
                         <Box flex='1 1 auto' >
-                            <Typography variant='subtitle1' sx={{ wordBreak: 'break-word' }} >
-                                {media?.name || media?.file_name}
-                            </Typography>
+                            <Input
+                                inputRef={inputMediaNameRef}
+                                disableUnderline={!editName}
+                                disabled={!editName}
+                                onChange={(e) => setItemName(e.target.value)}
+                                sx={{ my: 2 }}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        {!editName ?
+                                            <IconButton onClick={() => setEditName(true)} >
+                                                <Edit />
+                                            </IconButton>
+                                            : (
+                                                <>
+                                                    <IconButton color='error' onClick={() => handleMediaNameChange('cancel')} >
+                                                        <Clear />
+                                                    </IconButton>
+                                                    <IconButton color='success' onClick={handleMediaNameChange} >
+                                                        <Check />
+                                                    </IconButton>
+                                                </>
+                                            )}
 
+                                    </InputAdornment>
+                                }
+                            />
+
+                            <DetailsPreview label="File Name:" value={media?.file_name} />
                             <DetailsPreview label="File Type:" value={media?.file_type} />
                             <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
                             <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
@@ -321,6 +364,7 @@ export const MediaDetailsPage = () => {
                                 selectOnFocus
                                 clearOnBlur
                                 getOptionLabel={(option) => option?.name}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 value={itemPlaceholder}
                                 onChange={(event, newValue) => {
                                     handleChangePlaceholder(newValue)
@@ -354,6 +398,7 @@ export const MediaDetailsPage = () => {
                                 value={itemContact}
                                 loading={contacts.loading}
                                 getOptionLabel={(option) => getFullName(option)}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 onChange={(event, newValue) => {
                                     handleChangeContact(newValue)
                                 }}

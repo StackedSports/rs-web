@@ -108,7 +108,7 @@ const GET = (url, body) => {
 
         axios.get(URL + url, config)
             .then(res => {
-                console.log(res)
+                //console.log(res)
                 if (res.status === 200 || res.status === 204 || res.status === 201) {
                     let pagination = getPagination(res)
                     resolve([res.data, pagination])
@@ -347,7 +347,7 @@ export const upadateSelectedColumns = (userId, body) => {
 
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
-        criteria: { 
+        criteria: {
             ...getFilterMessagesCriteria(filters),
             include_team: "true"
         }
@@ -389,7 +389,7 @@ export const getPlaceholder = (id) => {
 
 export const getPlaceholders = (page, perPage, filters) => {
     let data = {
-        criteria: {...getFilterPlaceholdersCriteria(filters)}
+        criteria: { ...getFilterPlaceholdersCriteria(filters) }
     }
 
     if (!objectNotNull(data.criteria))
@@ -637,6 +637,41 @@ export const updateMedia = (mediaId, data) => {
     return PUT(`media/${mediaId}`, body)
 }
 
+export const updateMediaForm = (mediaId, data) => {
+
+    let bodyFormData = new FormData();
+    if (data.name)
+        bodyFormData.append('media[name]', data.name)
+    if (data.team_contact_id)
+        bodyFormData.append('media[team_contact_id]', data.team_contact_id)
+    if (data.media_placeholder_id)
+        bodyFormData.append('media[media_placeholder_id]', data.media_placeholder_id)
+    if (data.owner)
+        bodyFormData.append('media[owner]', data.owner)
+    if (data.archive)
+        bodyFormData.append('media[archive]', data.archive)
+
+    return new Promise((resolve, reject) => {
+
+        let myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json; version=1");
+        myHeaders.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
+        myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
+
+        let requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: bodyFormData,
+            redirect: 'follow'
+        };
+
+        fetch(URL + `media/${mediaId}`, requestOptions)
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(error => reject(error))
+    })
+}
+
 /**
  * 
  * @param {string} mediaId media id
@@ -716,7 +751,7 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
         }
     }
     if (mediaIds instanceof Array && tagIds instanceof Array) {
-        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds,mediaId))).
+        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds, mediaId))).
             then(results => {
                 results.forEach(result => {
                     if (result.status === 'fulfilled') {
@@ -741,7 +776,7 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
  * @param {int} mediaId  media id to removes tags from
  * @returns 
  */
-export const deleteTagsFromMedia = (tagsId,mediaId) => {
+export const deleteTagsFromMedia = (tagsId, mediaId) => {
     let body = {
         media: {
             tag_ids: tagsId

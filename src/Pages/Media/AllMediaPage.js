@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 
-import { Typography, Button } from "@mui/material"
+import { Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
 
 import MediaPage from "./MediaPage"
@@ -9,6 +9,7 @@ import { archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
+import  useQuery  from 'Hooks/QueryHook'
 import { addTagsToMedias } from "Api/Endpoints"
 
 export const AllMediaPage = () => {
@@ -17,10 +18,13 @@ export const AllMediaPage = () => {
   const [viewGrid, setViewGrid] = useState(true)
   const [showPanelFilters, setShowPanelFilters] = useState(false)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+  const [selectedMedias, setSelectedMedias] = useState([])
   const filterChanged = useRef(false)
 
-  const [selectedMedias, setSelectedMedias] = useState([])
+  const query = useQuery()
+ 
   const medias = useMedias(1, 25)
+  
 
   useEffect(() => {
     if (medias.items) {
@@ -48,7 +52,7 @@ export const AllMediaPage = () => {
   }
 
   const handleTagsDialogConfirm = (selectedTagsIds) => {
-    const result =  addTagsToMedias(selectedTagsIds, selectedMedias)
+    const result = addTagsToMedias(selectedTagsIds, selectedMedias)
   }
 
   const mainActions = [
@@ -82,7 +86,7 @@ export const AllMediaPage = () => {
       icon: Tune,
       variant: 'outlined',
       onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-  },
+    },
   ]
 
   return (
