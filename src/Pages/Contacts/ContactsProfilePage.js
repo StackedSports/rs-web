@@ -2,22 +2,10 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
-import { AccountBox, Tune } from '@material-ui/icons';
-import SendIcon from '@mui/icons-material/Send';
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
-import AccordionComponent from 'components/Contacts/Accordion';
-import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
-import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
-import { PanelDropdown } from 'UI/Layouts/Panel';
-
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import AccordionComponent from 'UI/Widgets/Accordion';
+import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 
 import {
     // useContacts,
@@ -55,7 +43,7 @@ export default function ContactsProfilePage(props) {
     // const [showPanelFilters, setShowPanelFilters] = useState(false)
     // const [selectedFilters, setSelectedFilters] = useState({})
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-    const [expandedAccordion, setExpandedAccordion] = useState();
+    const [expandedAccordionId, setExpandedAccordion] = useState();
 
     const [contactGeneralSaved, setContactGeneralSaved] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
@@ -237,9 +225,10 @@ export default function ContactsProfilePage(props) {
                   direction="column" 
                   justifyContent="flex-start" 
                   alignItems="center" 
+                  pr={1}
                   spacing={1} 
-                  sx={{ width: '300px' }}
-                  style={{ borderRight: "#dadada  1px solid", backgroundColor: '#999' }} >
+                  sx={{ width: '300px', height: '100%' }}
+                  style={{ borderRight: "#efefef  1px solid" }} >
                     <Formik
                       initialValues={initialValuesForm}
                       onSubmit={(values, actions) => {
@@ -247,11 +236,11 @@ export default function ContactsProfilePage(props) {
                       }}
                     >
                         {({ handleChange, setFieldValue }) => (
-                            <Form>
+                            <Form style={{ flex: 1, width: '100%' }}>
                                 <AccordionComponent
                                     id='general'
                                     title='General'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'First Name', name: 'firstName', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -265,7 +254,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='details'
                                     title='Details'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Graduation Year', name: 'gradYear', type: "number", component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -276,20 +265,35 @@ export default function ContactsProfilePage(props) {
                                     ]}
                                 />
                                 <AccordionComponent
-                                    id='coaches'
-                                    title='Coaches'
-                                    expanded={expandedAccordion}
-                                    setExpanded={setExpandedAccordion}
-                                    items={[
-                                        { label: 'Position Coach', name: 'positionCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                        { label: 'Area Coach', name: 'areaCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                        { label: 'Coordinator', name: 'coordinator', component: TextField, onChange: handleChange, setValue: setFieldValue },
-                                    ]}
-                                />
+                                  id='coaches'
+                                  title='Coaches'
+                                  expandedId={expandedAccordionId}
+                                  setExpanded={setExpandedAccordion}
+                                    // items={[
+                                    //     { label: 'Position Coach', name: 'positionCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                    //     { label: 'Area Coach', name: 'areaCoach', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                    //     { label: 'Coordinator', name: 'coordinator', component: TextField, onChange: handleChange, setValue: setFieldValue },
+                                    // ]}
+                                >
+                                    <SearchableSelector
+                                      label="Position Coach"
+                                      placeholder="Search" 
+                                      multiple
+                                      value={[]}
+                                      options={teamMembers.items || []}
+                                      loading={teamMembers.loading}
+                                      isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                                      getOptionLabel={(option) => option.first_name}
+                                      getChipLabel={(option) => {
+                                        console.log('ccc', option)
+                                        return option.first_name
+                                      }}
+                                    />
+                                </AccordionComponent>
                                 <AccordionComponent
                                     id='positions'
                                     title='Positions'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Offense', name: 'offense', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -299,7 +303,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='family-relationship'
                                     title='Family & Relationship'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'People', name: 'people', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -308,7 +312,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='opponents'
                                     title='Opponents'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Opponents', name: 'opponents', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -317,7 +321,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='external-profiles'
                                     title='External Profiles'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Hudl', name: 'hudl', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -327,7 +331,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='tags'
                                     title='Tags'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Tags', name: 'tags', component: TextField, onChange: handleChange, setValue: setFieldValue },
@@ -336,7 +340,7 @@ export default function ContactsProfilePage(props) {
                                 <AccordionComponent
                                     id='actions'
                                     title='Actions'
-                                    expanded={expandedAccordion}
+                                    expandedId={expandedAccordionId}
                                     setExpanded={setExpandedAccordion}
                                     items={[
                                         { label: 'Archive', name: 'archive', component: TextField, onChange: handleChange, setValue: setFieldValue },

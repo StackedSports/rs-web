@@ -176,6 +176,10 @@ export default function ContactsPage(props) {
         console.log('top action click')
     }
 
+    // useEffect(() => {
+    //     app.setSideFilters(filters)
+    // }, [filters])
+
     let filters = [
         { // Category
             id: '0',
