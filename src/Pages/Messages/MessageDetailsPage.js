@@ -55,8 +55,8 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
-    // console.log(message.item)
-    // console.log(recipients.items) 
+    console.log(message.item)
+    console.log(recipients.items) 
 
     useEffect(() => {
         if(!message.error)

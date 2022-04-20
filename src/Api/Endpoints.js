@@ -418,6 +418,8 @@ export const filterMedias = (page, perPage, filters) => {
         ...getFilterMediasCriteria(filters),
     }
 
+    console.log(data)
+
     return AXIOS('post', 'media/search', data)
 }
 

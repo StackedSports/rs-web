@@ -768,15 +768,23 @@ export const useMedia = (id) => {
     }
 }
 
-export const useMedias = (currentPage, itemsPerPage) => {
+export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
     const [media, setMedia] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
+    console.log(initialFilters)
     // TODO: testing filter
-    const [filters, setFilters] = useState(null)
+    const [filters, setFilters] = useState(initialFilters || null)
+    console.log(filters)
 
     useEffect(() => {
+        if(filters !== initialFilters)
+            setFilters(initialFilters)
+    }, [initialFilters])
+
+    useEffect(() => {
+        console.log('getting media')
         setLoading(true)
 
         const get = objectNotNull(filters) ? filterMedias : getMedias

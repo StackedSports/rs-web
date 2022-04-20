@@ -66,7 +66,17 @@ export const mediaRoutes = {
     media: '/media/media',
     placeholders: '/media/placeholders',
     mediaDetails: '/media/media/details',
-    placeholderDetails: '/media/placeholders/details'
+    placeholderDetails: '/media/placeholders/details',
+    filters: {
+        base: '/media/media/filters/:type/:value',
+        recent: '/media/media/filters/type/recent',
+        images: '/media/media/filters/type/image',
+        videos: '/media/media/filters/type/video',
+        gifs: '/media/media/filters/type/gif',
+        personalized: '/media/media/filters/type/personalized',
+        placeholders: '/media/placeholders',
+        owner: '/media/media/filters/owner'
+    }
 }
 
 export const settingsRoutes = {

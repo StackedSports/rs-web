@@ -43,27 +43,27 @@ export const MediaPage = (props) => {
         {
             id: 1,
             name: 'Recent',
-            path: mediaRoutes.media + '?fileType=recent',
+            path: mediaRoutes.filters.recent,
         },
         {
             id: 2,
             name: 'Images',
-            path: mediaRoutes.media + '?fileType=image',
+            path: mediaRoutes.filters.images,
         },
         {
             id: 3,
             name: 'Videos',
-            path: mediaRoutes.media + '?fileType=video',
+            path: mediaRoutes.filters.videos,
         },
         {
             id: 4,
             name: 'Gifs',
-            path: mediaRoutes.media + '?fileType=gif',
+            path: mediaRoutes.filters.gifs,
         },
         {
             id: 5,
             name: 'Personalized Media',
-            path: mediaRoutes.media + '?personalized',
+            path: mediaRoutes.filters.personalized,
         },
         {
             id: 6,

@@ -18,6 +18,11 @@ const MediaRoutes = (props) => (
     />
     <Route
       exact
+      path={mediaRoutes.filters.base}
+      component={AllMediaPage}
+    />
+    <Route
+      exact
       path={`${mediaRoutes.placeholders}`}
       component={AllMediaPlaceholderPage}
     />
