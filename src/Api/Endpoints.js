@@ -60,8 +60,9 @@ const AXIOS = (method, url, body) => {
     })
 }
 
-const DELETE = (url) => {
+const DELETE = (url, body) => {
     return new Promise((resolve, reject) => {
+        const data = JSON.stringify(body)
 
         const HEADERS = {
             Accept: "application/json; version=1",
@@ -71,7 +72,8 @@ const DELETE = (url) => {
         }
 
         const config = {
-            headers: HEADERS
+            headers: HEADERS,
+            data 
         }
 
         axios.delete(URL + url, config)

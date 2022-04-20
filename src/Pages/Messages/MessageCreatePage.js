@@ -105,6 +105,8 @@ export default function MessageCreatePage(props) {
         // return
         let newRecipients = []
         let newContacts = []
+        let newPrivateBoards = []
+        let newTeamBoards = []
 
         if(payload.recipients) {
             newRecipients = payload.recipients
@@ -114,13 +116,21 @@ export default function MessageCreatePage(props) {
             newContacts = payload.contacts
         }
 
+        if(payload.privateBoard) {
+            newPrivateBoards.push(payload.privateBoard)
+        }
+
+        if(payload.teamBoard) {
+            newTeamBoards.push(payload.teamBoard)
+        }
+
         if(payload.media) {
             setMediaSelected(payload.media)
         }
 
         setRecipientSelected({
-            privateBoards: recipientSelected?.privateBoards || [],
-            teamBoards: recipientSelected?.teamBoards || [],
+            privateBoards: newPrivateBoards,
+            teamBoards: newTeamBoards,
             contacts: newContacts,
             recipients: newRecipients
         })

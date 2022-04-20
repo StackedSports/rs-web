@@ -19,6 +19,8 @@ import { PanelDropdown } from 'UI/Layouts/Panel';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
+import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+
 import {
     useStatuses,
     useRanks,
@@ -43,16 +45,20 @@ export default function BaseContactsPage(props) {
 
     const contacts = useMemo(() => props.contacts, [props.contacts])
 
+    const [loading, setLoading] = useState(false)
+    const [privateBoards, setPrivateBoards] = useState([])
+    const [teamBoards, setTeamBoards] = useState([])
+
     const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-    const [selectedContacts, setSelectedContacts] = useState([])
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+
+    const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const [selectedFilters, setSelectedFilters] = useState({})
-    const [loading, setLoading] = useState(false)
-    const [privateBoards, setPrivateBoards] = useState([])
-    const [teamBoards, setTeamBoards] = useState([])
+
+    
 
 
     // handle filters options
@@ -222,19 +228,21 @@ export default function BaseContactsPage(props) {
         contacts.filter(filter)
     }
 
+    const onContactsSelectionChange = (selection) => { 
+        // setSelectedContacts(selected)
+        selectedContacts.onSelectionChange(selection)
+    }
+
     const onSendMessageClick = (e) => {
         console.log(selectedContacts)
 
-        //return 
-        // message.item.recipients
+        selectedContacts.saveData(contacts.items)
+        let selectedData = selectedContacts.getDataSelected()
 
-        // localStorage.setItem('')
-        let now = Date.now()
-
-        console.log(now)
-
-        localStorage.setItem(`new-message-contact-${now}`, JSON.stringify(selectedContacts))
-        setRedirect(`${messageRoutes.create}/contacts-${now}`)
+        if(props.onSendMessage)
+            props.onSendMessage(selectedData)
+        // else
+        //     app.sendMessageToContacts(selectedData)
     }
 
     const onExportAsCSVClick = (e) => {
@@ -302,13 +310,13 @@ export default function BaseContactsPage(props) {
                             {' '}contacts
                         </span>
                     </Stack>
-                    {selectedContacts.length > 0 &&
+                    {selectedContacts.count > 0 &&
                         <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
                                 <span style={{ color: '#3871DA' }}>
-                                    {selectedContacts.length}
+                                    {selectedContacts.count}
                                 </span>
-                                {' '}contact{selectedContacts.length > 1 && "s"} selected
+                                {' '}contact{selectedContacts.count > 1 && "s"} selected
                             </span>
                         </Stack>
                     }
@@ -319,7 +327,8 @@ export default function BaseContactsPage(props) {
                         variant="contained"
                         endIcon={<SendIcon />}
                         onClick={onSendMessageClick}
-                        disabled={selectedContacts.length == 0}
+                        disabled={props.enableSendMessageWithoutSelection ? 
+                            false : selectedContacts.count == 0}
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
@@ -341,7 +350,7 @@ export default function BaseContactsPage(props) {
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
                         onClick={() => setOpenSelectTagDialog(true)}
-                        disabled={selectedContacts.length == 0}
+                        disabled={selectedContacts.count == 0}
                     />
                     <PanelDropdown
                         header={() => (
@@ -386,7 +395,8 @@ export default function BaseContactsPage(props) {
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
-                onSelectionChange={(selected) => { setSelectedContacts(selected) }}
+                selection={selectedContacts.items}
+                onSelectionChange={onContactsSelectionChange}
                 onPageChange={onPageChange}
             />
 

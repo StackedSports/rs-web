@@ -1,7 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import BaseContactsPage from './BaseContactsPage'
+
+import { AppContext } from 'Context/AppProvider'
 
 import {
     useBoard,
@@ -9,6 +11,8 @@ import {
 } from 'Api/Hooks'
 
 export default function BoardPage(props) {
+    const app = useContext(AppContext)
+
     const { id, boardId } = useParams();
     // console.log(id)
     // console.log(boardId)
@@ -28,12 +32,22 @@ export default function BoardPage(props) {
             return 'Board'
     }, [board])
 
-    
+    const onSendMessage = (selectedData) => {
+        console.log(selectedData)
+
+        if(selectedData && selectedData.length > 0) {
+            app.sendMessageToContacts(selectedData)
+        } else {
+            app.sendMessageToBoard(board)
+        }
+    }
     
     return (
         <BaseContactsPage
           title={title}
           contacts={boardContacts}
+          enableSendMessageWithoutSelection
+          onSendMessage={onSendMessage}
         />
     )
 }

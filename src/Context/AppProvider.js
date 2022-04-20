@@ -21,6 +21,13 @@ const AppProvider = (props) => {
             
     }, [location.pathname, redirect])
 
+    const shouldRedirect = useMemo(() => {
+        if(location.pathname !== redirect && redirect !== '')
+            return true
+        else    
+            return false
+    }, [location.pathname, redirect])
+
     const callCreateMessageWithPayload = (payload) => {
         localStorage.setItem(`new-message-payload`, JSON.stringify(payload))
         setRedirect(`${messageRoutes.create}/with-payload`)
@@ -46,6 +53,19 @@ const AppProvider = (props) => {
         callCreateMessageWithPayload({ recipients })
     }
 
+    const sendMessageToBoard = (board) => {
+        console.log(board)
+
+        let payload = {}
+
+        if(board.is_shared)
+            payload['teamBoard'] = board
+        else
+            payload['privateBoard'] = board
+
+        callCreateMessageWithPayload(payload)
+    }
+
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -54,17 +74,13 @@ const AppProvider = (props) => {
         })
     }
 
-    const shouldRedirect = useMemo(() => {
-        if(location.pathname !== redirect && redirect !== '')
-            return true
-        else    
-            return false
-    }, [location.pathname, redirect])
+    
 
     const utils = {
         sendMediaInMessage,
         sendMessageToContacts,
         sendMessageToRecipients,
+        sendMessageToBoard,
         scrollToTop
     }
 
