@@ -447,11 +447,11 @@ export const MediaDetailsPage = () => {
                     </MediaStatsColumn>
                 </GridItemRight>
             </Grid>
-            <SelectTagDialog
+            {/* <SelectTagDialog
                 open={openSelectTagDialog}
                 onClose={() => setOpenSelectTagDialog(false)}
                 onConfirm={handleTagsDialogConfirm}
-            />
+            /> */}
         </MainLayout>
     )
 }
