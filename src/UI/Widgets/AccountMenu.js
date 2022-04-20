@@ -75,7 +75,7 @@ export default function AccountMenu() {
                         width: 32,
                         height: 32,
                         ml: -0.5,
-                        mr: 1,
+                        mr: 1.5,
                     },
                     // '&:before': {
                     //     content: '""',
