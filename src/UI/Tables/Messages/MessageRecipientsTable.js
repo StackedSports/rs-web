@@ -17,8 +17,7 @@ const MessageRecipientsTable = (props) => {
     // const columns = props.mini ? columnsMini : columnsFull
     const [contacts, setContacts] = useState([])
     const [columns, setColumns] = useState([])
-    const [carouselOpen, setCarouselOpen] = useState(false)
-    const [carouselIndex, setCarouselIndex] = useState(0)
+    const [carouselIndex, setCarouselIndex] = useState(null)
 
     useEffect(() => {
         if(!props.recipients)
@@ -58,11 +57,8 @@ const MessageRecipientsTable = (props) => {
     console.log("contacts", contacts)
 
     const onCellClick = ({ field, row }) => {
-        console.log("Row",row)
-        if (field === 'media') {
-            setCarouselOpen(true)
+        if (field === 'media') 
             setCarouselIndex(contacts.indexOf(row))
-        }
     }
 
     return (
@@ -102,8 +98,7 @@ const MessageRecipientsTable = (props) => {
             <MediaCarousel
               index={carouselIndex}
               items={contacts?.map(item => item?.media?.urls?.original)}
-              open={carouselOpen}
-              onClose={() => setCarouselOpen(false)}
+              onClose={() => setCarouselIndex(null)}
             />
         </Stack>
     )

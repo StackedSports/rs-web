@@ -709,7 +709,7 @@ export const archiveMedia = (mediaId) => {
  * @param {string[]} mediasIds array of media ids to archive
  * @returns {Object} returns an object with the following keys: success.count, success.ids, error.count, error.ids
  */
-export const archiveMedias = (mediasIds) => {
+export const archiveMedias = async(mediasIds) => {
     let response = {
         success: {
             count: 0,
@@ -735,6 +735,8 @@ export const archiveMedias = (mediasIds) => {
                         response.error.id.push(result.reason.config.url.slice(`${URL}/media/`.length))
                     }
                 })
+            }).finally(() => {
+                return response
             })
     }
     return response

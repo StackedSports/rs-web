@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { AutoFixHigh, Clear, Edit, GridView, FormatListBulleted, Check } from "@mui/icons-material"
-import { Stack, Box, Input, IconButton, InputAdornment, Typography, Toolbar } from "@mui/material"
+import { AutoFixHigh, Clear, Edit, GridView, FormatListBulleted, Check, ArrowDropDown } from "@mui/icons-material"
+import { Stack, Box, Input, IconButton, InputAdornment, Typography, Tooltip } from "@mui/material"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
@@ -14,7 +14,7 @@ import { AppContext } from 'Context/AppProvider'
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholder } from "Api/Hooks"
 import { formatDate } from "utils/Parser"
-import { archiveMedia, deleteMedia, addTagsToMedias, updatePlaceholder } from "Api/Endpoints"
+import { archiveMedias, deleteMedia, addTagsToMedias, updatePlaceholder } from "Api/Endpoints"
 
 export const MediaPlaceholderDetailsPage = () => {
   const app = useContext(AppContext)
@@ -29,6 +29,7 @@ export const MediaPlaceholderDetailsPage = () => {
   const [itemName, setItemName] = useState('')
   const [editName, setEditName] = useState(false)
   const inputMediaNameRef = useRef(null)
+  const [selectedMedias, setSelectedMedias] = useState([])
 
   useEffect(() => {
     if (placeholder) {
@@ -43,12 +44,15 @@ export const MediaPlaceholderDetailsPage = () => {
     app.sendMediaInMessage(placeholder, 'placeholder')
   }
 
-  const onArchiveAction = () => {
-    archiveMedia(media.id).then(() => {
-      alert.setSuccess("Media archived")
-    }).catch(err => {
-      alert.setWarning(err.message)
-    })
+  const onArchiveAction = async() => {
+    const { success, error } = await archiveMedias(selectedMedias)
+    console.log(error)
+    console.log(success)
+    if (error.count > 0) {
+      alert.setWarning(`${error.count} medias could not be archived`)
+    }else{
+      alert.setSuccess(`All ${success.count} medias archived`)
+    }
   }
 
   const onDeleteAction = () => {
@@ -68,12 +72,30 @@ export const MediaPlaceholderDetailsPage = () => {
       type: 'dropdown',
       options: [
         { name: 'Send in Message', onClick: onSendInMessageAction },
-        { name: 'Archive Media', onClick: () => { console.log("clicked") }, disabled: true },
-        { name: 'Delete Media', onClick: () => { console.log("clicked") } },
-        { name: 'Tag Media', onClick: () => setOpenSelectTagDialog(true) },
+        { name: 'Delete', onClick: () => { console.log("clicked") } },
       ]
     },
   ]
+
+  if (selectedMedias.length > 0) {
+    mainActions.push({
+      id: 'Recipients Action',
+      name: `${selectedMedias.length} Media Selected`,
+      type: 'dropdown',
+      variant: 'contained',
+      icon: ArrowDropDown,
+      options: [
+        { name: 'Tag', onClick: () => setOpenSelectTagDialog(true) },
+        { name: 'Untag', onClick: () => setOpenSelectTagDialog(true) },
+        { name: 'Archive', onClick: onArchiveAction },
+        { name: 'Delete', onClick: () => console.log("clicked") },
+      ]
+    })
+  }
+
+  const onSelectionChange = (selection) => {
+    setSelectedMedias(selection)
+  }
 
   const handleMediaNameChange = (type) => {
     if (type === 'cancel')
@@ -155,14 +177,14 @@ export const MediaPlaceholderDetailsPage = () => {
         <Typography variant='h6' fontWeight='bold' color='textPrimary'>
           Medias:
         </Typography>
-        <Toolbar title={`Change to ${viewGrid ? 'list' : 'grid'} view`}>
+        <Tooltip title={`Change to ${viewGrid ? 'list' : 'grid'} view`}>
           <IconButton
             color='primary'
             onClick={() => setViewGrid(oldViewGrid => !oldViewGrid)}
           >
             {viewGrid ? <FormatListBulleted /> : <GridView />}
           </IconButton>
-        </Toolbar>
+        </Tooltip>
       </Stack>
       <MediaTable
         items={placeholder?.media || []}
@@ -170,6 +192,7 @@ export const MediaPlaceholderDetailsPage = () => {
         view={viewGrid ? 'grid' : 'list'}
         type="media"
         linkTo={mediaRoutes.mediaDetails}
+        onSelectionChange={onSelectionChange}
       />
 
       <SelectTagDialog
