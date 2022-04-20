@@ -4,7 +4,7 @@ import { Close, NavigateBefore, NavigateNext } from "@mui/icons-material"
 
 /**
  * 
- * @param {string} props.url url to fetch the data from
+ * @param {string} props.items array of url strings
  */
 export const MediaCarousel = (props) => {
 
@@ -18,7 +18,7 @@ export const MediaCarousel = (props) => {
 
   useEffect(() => {
     if (props.items)
-      setUrl(props.items[index]?.urls?.original)
+      setUrl(props.items[index])
   }, [props.items, index])
 
   const onClickNext = () => {

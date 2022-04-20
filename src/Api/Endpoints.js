@@ -809,4 +809,19 @@ export const deleteTagsFromMedia = (tagsId, mediaId) => {
     return DELETE(`media/${mediaId}/remove_tags`, body)
 }
 
+/**
+ * updates placeholder name
+ * @param {int} placeholderId placeholder id
+ * @param {String} name new name 
+ * @returns {Promise} promise
+ */
+export const updatePlaceholder = (placeholderId, name) => {
+    let body = {
+        media_placeholder: { 
+            name: name
+         }
+    }
+
+    return PUT(`media/placeholders/${placeholderId}`, body)
+}
 

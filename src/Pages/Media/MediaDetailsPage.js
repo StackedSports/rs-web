@@ -1,13 +1,12 @@
 import { useEffect, useState, useMemo, useRef, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { AutoFixHigh, LocalOfferOutlined, CheckBoxOutlineBlank, CheckBox, Clear, Edit, Check } from "@mui/icons-material"
+import { AutoFixHigh, CheckBoxOutlineBlank, CheckBox, Clear, Edit, Check } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, styled, TextField, Input, InputAdornment, IconButton, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
 import lodash from "lodash"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
-import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 
 import { AppContext } from 'Context/AppProvider'
@@ -31,10 +30,9 @@ export const MediaDetailsPage = () => {
     const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
     const [itemOwner, setItemOwner] = useState([])
-    const [itemName, setItemName] = useState('')
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
-    const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [itemName, setItemName] = useState('')
     const [editName, setEditName] = useState(false)
     const inputMediaNameRef = useRef(null)
 
@@ -128,10 +126,6 @@ export const MediaDetailsPage = () => {
                 alert.setWarning(err.message)
             })
         }
-    }
-
-    const handleTagsDialogConfirm = (selectedTagsIds) => {
-        console.log(selectedTagsIds)
     }
 
     const handleChangeOwner = (owner) => {
@@ -447,11 +441,6 @@ export const MediaDetailsPage = () => {
                     </MediaStatsColumn>
                 </GridItemRight>
             </Grid>
-            {/* <SelectTagDialog
-                open={openSelectTagDialog}
-                onClose={() => setOpenSelectTagDialog(false)}
-                onConfirm={handleTagsDialogConfirm}
-            /> */}
         </MainLayout>
     )
 }

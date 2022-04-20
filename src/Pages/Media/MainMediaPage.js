@@ -118,7 +118,7 @@ export const MainMediaPage = (props) => {
                 loading={media.loading}
                 view={viewGrid ? 'grid' : 'list'}
                 type="media"
-                linkTo='/media/media/details/'
+                linkTo={mediaRoutes.mediaDetails}
                 onSelectionChange={onMediaSelectionChange}
                 disablePagination
             />
@@ -151,7 +151,7 @@ export const MainMediaPage = (props) => {
                 items={placeholders.items}
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
-                linkTo='/media/placeholders/details/'
+                linkTo={mediaRoutes.placeholderDetails}
                 onSelectionChange={onPlaceholderSelectionChange}
                 disablePagination
             />

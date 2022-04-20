@@ -142,7 +142,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                               key={item.hashid || item.id}
                               type={type}
                               item={item}
-                              linkTo={props.linkTo && `${props.linkTo}${item.id}`}
+                              linkTo={props.linkTo && `${props.linkTo}/${item.id}`}
                               selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
                               onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
                             />
@@ -165,7 +165,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
             <MediaCarousel
               index={carouselIndex}
-              items={props.items}
+              items={props?.items?.map(item => item?.urls?.original)}
               open={carouselOpen}
               onClose={() => setCarouselOpen(false)}
             />
