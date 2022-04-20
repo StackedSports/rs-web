@@ -8,6 +8,7 @@ import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 
 import { getColumns } from './DataGridConfig'
+import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
 const MessageRecipientsTable = (props) => {
     if(!props.recipients || props.recipients.length === 0)
@@ -16,6 +17,8 @@ const MessageRecipientsTable = (props) => {
     // const columns = props.mini ? columnsMini : columnsFull
     const [contacts, setContacts] = useState([])
     const [columns, setColumns] = useState([])
+    const [carouselOpen, setCarouselOpen] = useState(false)
+    const [carouselIndex, setCarouselIndex] = useState(0)
 
     useEffect(() => {
         if(!props.recipients)
@@ -52,6 +55,15 @@ const MessageRecipientsTable = (props) => {
         console.log(page)
         props.onPageChange(page)
     }
+    console.log("contacts", contacts)
+
+    const onCellClick = ({ field, row }) => {
+        console.log("Row",row)
+        if (field === 'media') {
+            setCarouselOpen(true)
+            setCarouselIndex(contacts.indexOf(row))
+        }
+    }
 
     return (
         <Stack spacing={2} style={{ width: '100%' }}>
@@ -72,6 +84,7 @@ const MessageRecipientsTable = (props) => {
             //   page={props.pagination.currentPage - 1}
             //   onPageChange={() => {}}
               loading={props.loading}
+              onCellClick={onCellClick}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
             />
@@ -85,6 +98,13 @@ const MessageRecipientsTable = (props) => {
                     />
                 </Grid>
             )}
+
+            <MediaCarousel
+              index={carouselIndex}
+              items={contacts?.map(item => item?.media?.urls?.original)}
+              open={carouselOpen}
+              onClose={() => setCarouselOpen(false)}
+            />
         </Stack>
     )
 }

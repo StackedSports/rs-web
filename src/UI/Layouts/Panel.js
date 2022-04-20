@@ -23,6 +23,7 @@ export const PanelDropdown = ({ action, header }) => {
                 variant={action.variant} 
                 endIcon={<action.icon/>}
                 textColor={action.textColor}
+                disabled={action.disabled}
             />
         )
     }
