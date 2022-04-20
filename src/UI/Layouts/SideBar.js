@@ -1,8 +1,16 @@
 import './SideBar.css'
+import { useContext } from 'react'
 
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
+
+import Avatar from '@mui/material/Avatar'
+import Stack from '@mui/material/Stack'
+
+import AccountMenu from 'UI/Widgets/AccountMenu'
 
 import { routes } from 'Routes/Routes'
+
+import { getFullName } from 'utils/Parser'
 
 const items = [
     routes.dashboard,
@@ -15,6 +23,7 @@ const items = [
 ]
 
 export default function SideBar(props) {
+    
     return (
         <div className='SideBar'>
             {items.map(item => (
@@ -23,6 +32,14 @@ export default function SideBar(props) {
                     {/* <p className='label'>Dashboard</p> */}
                 </NavLink>
             ))}
+            <Stack
+              flex={1} 
+              alignItems="center" 
+              justifyContent="flex-end"
+              mb={2}
+            >
+                <AccountMenu/>
+            </Stack>
         </div>
     )
 }

@@ -568,8 +568,6 @@ const MessageDetailsPage = (props) => {
               pagination={recipients.pagination}
               onPageChange={onRecipientsPageChange}
             />
-
-
         </BaseMessagePage>
     )
 }

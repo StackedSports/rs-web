@@ -1,5 +1,8 @@
 import axios from "axios";
 
+// import { useContext } from "react"
+// import { AuthContext } from "Context/Auth/AuthProvider"
+
 import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
@@ -20,6 +23,8 @@ const URL = "https://api.recruitsuite.co/api/";
 const makeError = (code, message) => { code, message }
 
 const AXIOS = (method, url, body) => {
+    // const { user } = useContext(AuthContext)
+
     return new Promise((resolve, reject) => {
         const data = JSON.stringify(body);
 
@@ -28,6 +33,7 @@ const AXIOS = (method, url, body) => {
             "Content-Type": "application/json",
             Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
             "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+            // "X-Auth-Token": user.token
         }
 
         axios({
@@ -208,6 +214,10 @@ export const login = (email, password) => {
             })
     })
     //return POST('login', { email, password })
+}
+
+export const logout = () => {
+    return POST('logout')
 }
 
 export const getPlatform = () => {
