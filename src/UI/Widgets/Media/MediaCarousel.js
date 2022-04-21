@@ -10,10 +10,14 @@ export const MediaCarousel = (props) => {
 
   const [url, setUrl] = useState(null)
   const [index, setIndex] = useState(0)
+  const [carouselOpen, setCarouselOpen] = useState(false)
 
   useEffect(() => {
-    if (props.index)
+    console.log(props.index)
+    if (props.index !== null && props.index !== undefined) {
       setIndex(props.index)
+      setCarouselOpen(true)
+    }
   }, [props.index])
 
   useEffect(() => {
@@ -35,10 +39,15 @@ export const MediaCarousel = (props) => {
       setIndex(props.items.length - 1)
   }
 
+  const onClose = () => {
+    setCarouselOpen(false)
+    props.onClose()
+  }
+
   return (
-    <StyledDialog open={props.open} onClose={props.onClose} maxWidth='xl'>
+    <StyledDialog open={carouselOpen} onClose={onClose} maxWidth='xl'>
       <DialogContent>
-        <Fab className='closeFab' onClick={props.onClose}>
+        <Fab className='closeFab' onClick={onClose}>
           <Close />
         </Fab>
         <Fab className='next' onClick={onClickNext}>

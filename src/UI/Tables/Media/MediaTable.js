@@ -28,13 +28,11 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     const [selectedControl, setSelectedControl] = useState({})
     const selectionRef = useRef([])
 
-    const [carouselOpen, setCarouselOpen] = useState(false)
-    const [carouselIndex, setCarouselIndex] = useState(0)
+    const [carouselIndex, setCarouselIndex] = useState(null)
 
     const onCellClick = ({ field, row }) => {
 
         if (field === 'urls') {
-            setCarouselOpen(true)
             setCarouselIndex(props.items.indexOf(row))
         }
     }
@@ -166,8 +164,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             <MediaCarousel
               index={carouselIndex}
               items={props?.items?.map(item => item?.urls?.original)}
-              open={carouselOpen}
-              onClose={() => setCarouselOpen(false)}
+              onClose={() => setCarouselIndex(null)}
             />
         </Box>
     )
