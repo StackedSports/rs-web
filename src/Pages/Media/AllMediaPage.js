@@ -16,7 +16,7 @@ import { addTagsToMedias } from "Api/Endpoints"
 
 export const AllMediaPage = () => {
 	const { type, value } = useParams()
-	console.log(type + ' = ' + value)
+	// console.log(type + ' = ' + value)
 
 	const filters = useMemo(() => {
 		console.log('getting filters')

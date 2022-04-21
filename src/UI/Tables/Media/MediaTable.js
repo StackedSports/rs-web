@@ -26,6 +26,8 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     // const selection = useArray(null, 'v2')
     const [selection, setSelection] = useState([])
     const [selectedControl, setSelectedControl] = useState({})
+
+    // Array of selected item ids
     const selectionRef = useRef([])
 
     const [carouselIndex, setCarouselIndex] = useState(null)
@@ -55,6 +57,9 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 index: selectionRef.current.length - 1
             }
         }
+
+        // console.log(control)
+        // console.log(selectionRef.current)
 
         setSelectedControl(control)
         setSelection(selectionRef.current)
@@ -101,12 +106,15 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             })
 
             if (foundIndex !== -1) {
-                control[selectionRef.current[foundIndex].id] = {
+                control[selectionRef.current[foundIndex]] = {
                     selected: false,
                     index: foundIndex
                 }
             }
         }
+
+        // console.log(control)
+        // console.log(selection)
 
         setSelectedControl(control)
         setSelection(selection)
