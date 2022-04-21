@@ -72,7 +72,7 @@ const InputSelected = (props) => {
             <div style={props.style} className={'MediaPreview'} onClick={onClick}>
                 {/* <img className="MediaSelected" src={getSrc[props.variant](props.item)}/> */}
                 <MediaPreview
-                  mini
+                //   mini
                     item={props.item}
                     // loading={loading}
                     type={props.variant}

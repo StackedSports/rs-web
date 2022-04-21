@@ -14,26 +14,26 @@ export default function AccordionComponent(props) {
 
 	return (
 		<Accordion
-		  sx={{ width: '100%' }}
-		  TransitionProps={{ unmountOnExit: true }}
-		  onChange={handleChange(props.id)}
-		  expanded={props.expandedId === props.id}
+			sx={{ width: '100%' }}
+			TransitionProps={{ unmountOnExit: true }}
+			onChange={handleChange(props.id)}
+			expanded={props.expandedId === props.id}
 		>
 			<AccordionSummary
-			  sx={{ backgroundColor: '#efefef' }}
-			  expandIcon={<ExpandMoreIcon />}
-			  aria-controls={`${props.id}-content`}
-			  id={`${props.id}-header`}
+				sx={{ backgroundColor: '#efefef' }}
+				expandIcon={<ExpandMoreIcon />}
+				aria-controls={`${props.id}-content`}
+				id={`${props.id}-header`}
 			>
 				<Typography fontWeight="bold">
 					{props.title}
 				</Typography>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack 
-				  flex={1} 
-				  justifyContent="flex-start"
-				  spacing={2}
+				<Stack
+					flex={1}
+					justifyContent="flex-start"
+					spacing={2}
 				>
 					{props.items && props.items.map(item => {
 						return (
@@ -42,6 +42,7 @@ export default function AccordionComponent(props) {
 								id={item.name}
 								name={item.name}
 								label={item.label}
+								value={item.value || ""}
 								type={item.type || "text"}
 								component={item.component}
 								onChange={e => { item.onChange(e); item.setValue(item.name, e.target.value) }}

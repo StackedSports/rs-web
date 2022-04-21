@@ -6,11 +6,13 @@
     width: 60px;
     /* bottom: 0; */
     /* height: 600px; */
-    height: calc(100vh - 75px);
+    height: calc(100vh - 70px);
     transform: translateX(-60px);
     /* height: 100%; */
     /* flex: 1; */
     transition: all 300ms cubic-bezier(1, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
 }
 
 .SideBar.visible {

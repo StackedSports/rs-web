@@ -36,8 +36,7 @@ const AppProvider = (props) => {
     const sendMediaInMessage = (media, type) => {
         if(type !== 'media' && type !== 'placeholder')
             return
-
-            
+           
         callCreateMessageWithPayload({ media: { item: media, type }})
     }
 
@@ -74,14 +73,18 @@ const AppProvider = (props) => {
         })
     }
 
-    
+    const redirectTo = (path) => {
+        setRedirect(path)
+    }
 
     const utils = {
+        location,
         sendMediaInMessage,
         sendMessageToContacts,
         sendMessageToRecipients,
         sendMessageToBoard,
-        scrollToTop
+        scrollToTop,
+        redirect: redirectTo
     }
 
     return (

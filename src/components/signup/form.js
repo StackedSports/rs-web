@@ -101,7 +101,7 @@ export default function Signin() {
         setLoading(false);
         // window.location.href = "/dashboard";
         console.log('redirecting...')
-        setRedirect('/dashboard')
+        setRedirect('/contacts')
       },
       (error) => {
         // console.log("this is error", error.JSON());
@@ -161,7 +161,7 @@ export default function Signin() {
                   placeholder="Your Email"
                   value={email}
                   onChange={(e) => {
-                    // console.log("This is password", e.target.value);
+                    console.log("This is password", e.target.value);
                     setEmail(e.target.value);
                   }}
                 ></FormInput>
@@ -182,7 +182,7 @@ export default function Signin() {
                   required
                   value={password}
                   onChange={(e) => {
-                    // console.log("This is password", e.target.value);
+                    console.log("This is password", e.target.value);
                     setPassword(e.target.value);
                   }}
                   placeholder="Your Password"
