@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-    Grid,
-    Dialog,
-} from "@material-ui/core"
-
+import { Stack, Typography } from '@mui/material'
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import SearchBar from 'UI/Widgets/SearchBar'
@@ -83,25 +79,33 @@ const SelectTagDialog = (props) => {
             open={props.open}
             onConfirm={onConfirm}
             onClose={props.onClose}
-            title={props.title || 'Select Tag'}
-
+            // title={props.title || 'Select Tag'}
         >
-            {/* <img 
-            //   src={user.team.org.logo.original}
-              src="https://stakdsocial.s3.us-east-2.amazonaws.com/5wibzn5fjffdka74d6frm2o53gus?response-content-disposition=inline%3B%20filename%3D%22test_account.png%22%3B%20filename%2A%3DUTF-8%27%27test_account.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220331%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220331T181333Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=c3b504cbe0fa79df9f9dad60bd44f3ebb8877202a6c3fa24907d0b145de33935"
-            /> */}
-            <SearchBar
-                style={{
-                    marginBottom: tagsSelected.length > 0 ? 5 : 15,
+            <Stack 
+              direction="row" 
+              flex={1} 
+              alignItems="center"
+              sx={{ marginBottom: tagsSelected.length > 0 ? 1 : 2 }}
+            >
+                <Stack flex={1}>
+                    <Typography variant="h1" component="h3">
+                        {props.title || 'Select Tags'}
+                    </Typography>
+                </Stack>
+
+                <SearchBar
+                  style={{
                     border: '1px solid #ddd'
-                }}
-                placeholder="Search Tags"
-                onSearch={onTagSearch}
-                onClear={onClearSearch}
-                searchOnChange
-            />
+                  }}
+                  placeholder="Search Tags"
+                  onSearch={onTagSearch}
+                  onClear={onClearSearch}
+                  searchOnChange
+                />
+            </Stack>
+            
             <TagsList
-                style={{ marginBottom: 5 }}
+                // style={{ marginBottom: 5 }}
                 tags={tagsSelected}
                 onRemoveTag={onRemoveTag}
             />

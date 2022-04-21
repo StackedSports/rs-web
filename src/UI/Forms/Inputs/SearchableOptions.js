@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { Stack } from '@mui/material'
+
 import {
     Grid,
     Dialog,
@@ -324,7 +326,7 @@ export const SearchableOptionSelected = props => {
 			className={classes.tags}
 			style={props.style}
 		>
-			<Grid
+			<Stack
 				style={{ height: 50 }}
 				container
 				direction="row"
@@ -353,7 +355,7 @@ export const SearchableOptionSelected = props => {
 					marginLeft: 8,
 					}}
 				></ClearIcon>{" "}
-			</Grid>
+			</Stack>
 		</div>
 	)
 }

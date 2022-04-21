@@ -131,7 +131,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     }
 
     return (
-        <Box width='100%' flex={1} pb={2}>
+        <Box width='100%' height={props.mini ? 500 : ''} flex={1} pb={2}>
             <Box>
                 {!props.loading && props.items && props.items.length === 0 && (
                     <span>No media available</span>

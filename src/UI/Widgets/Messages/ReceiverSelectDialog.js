@@ -62,6 +62,7 @@ const getSelectionLabel = (privateCount, teamCount, contactCount) => {
 export default function ReceiverSelectDialog(props) {
     // Contacts
     const contacts = useContacts()
+
     const [selectedContacts, setSelectedContacts] = useState([])
     // When Contacts page change, we need to store the selected contacts data
     // and the current selection somehow. We also need to keep track of each
@@ -73,7 +74,7 @@ export default function ReceiverSelectDialog(props) {
     // 
 
     // Boards
-    const boards = useBoards().items
+    const boards = useBoards()
 
     // Private Boards
     const [privateBoards, setPrivateBoards] = useArray()
@@ -86,13 +87,13 @@ export default function ReceiverSelectDialog(props) {
     // console.log(boards)
 
     useEffect(() => {
-        if(!boards)
+        if(!boards.items)
             return
 
         let tempTeam = []
         let tempPrivate = []
 
-        boards.forEach(board => {
+        boards.items.forEach(board => {
             let array = board.is_shared ? tempTeam : tempPrivate
             array.push(board) 
         })
@@ -100,7 +101,7 @@ export default function ReceiverSelectDialog(props) {
         setPrivateBoards.all(tempPrivate)
         setTeamBoards.all(tempTeam)
 
-    }, [boards])
+    }, [boards.items])
 
     useEffect(() => {
         if(!props.removedItem)
@@ -178,6 +179,16 @@ export default function ReceiverSelectDialog(props) {
 
     }
 
+    const onSearch = (searchTerm, tabIndex) => {
+        contacts.filter({ search: searchTerm })
+        boards.filter({ search: searchTerm })
+    }
+
+    const onClearSearch = (tabIndex) => {
+        contacts.clearFilter()
+        boards.clearFilter()
+    }
+
     const onSelectionConfirm = (e) => {
         const selectionPrivate = findByIds(selectedPrivateBoards, privateBoards)
         const selectionTeam = findByIds(selectedTeamBoards, teamBoards)
@@ -204,6 +215,8 @@ export default function ReceiverSelectDialog(props) {
             selectionLabel={selectionLabel}
             open={props.open}
             onConfirmSelection={onSelectionConfirm}
+            onSearch={onSearch}
+            onClearSearch={onClearSearch}
             onClose={props.onClose}
         >
             <TabPanel value={0} index={0}>

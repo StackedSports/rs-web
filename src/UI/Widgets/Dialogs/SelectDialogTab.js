@@ -92,7 +92,7 @@ export default function SelectDialogTab(props) {
                         </Stack>
                     </Stack>
 
-                    <Box height="500px" sx={{ overflowY: 'auto' }}>
+                    <Box  sx={{ overflowY: 'auto' }}>
                         {props.children}
                     </Box>
 

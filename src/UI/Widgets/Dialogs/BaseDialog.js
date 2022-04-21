@@ -15,7 +15,7 @@ const BaseDialog = (props) => {
       open={props.open}
       onClose={props.onClose}
     >
-      <DialogTitle >{props.title}</DialogTitle>
+      {props.title && <DialogTitle >{props.title}</DialogTitle>}
 
       <DialogContent>
 

@@ -1,23 +1,47 @@
 
-import {
-    Grid,
-} from "@material-ui/core"
+import { Stack, Typography, Chip } from '@mui/material'
+import ClearIcon from '@material-ui/icons/Clear'
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions'
 
+const Tag = (props) => (
+    <Chip label={props.name} variant="outlined" onDelete={props.onRemove} />
+    // <Stack>
+    //     <Typography>
+    //         {props.name}
+    //     </Typography>
+    //     <ClearIcon
+    //       onClick={props.onRemove}
+    //       style={{
+    //         color: "red",
+    //         fontSize: 17,
+    //         cursor: "pointer",
+    //         marginLeft: 8,
+    //       }}
+    //     />
+    // </Stack>
+)
+
 const TagsList = (props) => {
-
-
+    if(!props.tags || props.tags.length === 0)
+        return <></>
+        
     return (
-        <Grid container direction="row" style={props.style}>
+        <Stack
+          direction="row" 
+          flexWrap="wrap" 
+          style={props.style} 
+          gap={1} 
+          mt={2} 
+          mb={2}>
             {props.tags && props.tags.map((tag, index) => (
-                <SearchableOptionSelected
-                  item={tag.name}
+                <Tag
+                //   style={{ margin: 0, margin }}
+                  name={tag.name}
                   onRemove={(e) => props.onRemoveTag(tag, index)}
                 />
             ))}
-
-        </Grid>
+        </Stack>
 
     )
 }

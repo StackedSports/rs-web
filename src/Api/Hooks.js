@@ -505,6 +505,7 @@ export const useBoards = () => {
 
     useEffect(() => {
         setLoading(true)
+
         getBoards()
             .then(([boards]) => {
                 //console.log('ApiHooks: getRanks -----')
@@ -518,9 +519,19 @@ export const useBoards = () => {
 
     }, [])
 
+    const filter = (filters) => {
+
+    }
+
+    const clearFilter = () => {
+
+    }
+
     return {
         items: boards,
-        loading
+        loading,
+        filter,
+        clearFilter
     }
 }
 

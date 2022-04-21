@@ -8,7 +8,8 @@ import {
 const typography = {
     h1: {
         fontSize: '18px',
-        color: '#212529'
+        color: '#212529',
+        fontWeight: 'bold'
     },
     info: {
         color: '#999',

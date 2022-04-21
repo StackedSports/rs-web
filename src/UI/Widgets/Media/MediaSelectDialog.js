@@ -111,7 +111,7 @@ export default function MediaSelectDialog(props) {
                   selected={mediaSelectedId}
                   onSelectionChange={onMediaSelectionChange}/> */}
 
-                <MediaTable
+                <MediaTable mini
                   items={media.items}
                   loading={media.loading}
                   view={'grid'}
@@ -121,7 +121,7 @@ export default function MediaSelectDialog(props) {
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
-                <MediaTable
+                <MediaTable mini
                   items={placeholders.items}
                   loading={placeholders.loading}
                   view={'grid'}
