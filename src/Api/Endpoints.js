@@ -73,7 +73,7 @@ const DELETE = (url, body) => {
 
         const config = {
             headers: HEADERS,
-            data 
+            data
         }
 
         axios.delete(URL + url, config)
@@ -656,7 +656,7 @@ export const updateMedia = (mediaId, data) => {
     }
 
     console.log(body)
-    
+
     return PUT(`media/${mediaId}`, body)
 }
 
@@ -705,11 +705,11 @@ export const archiveMedia = (mediaId) => {
 }
 
 /**
- * 
+ *  
  * @param {string[]} mediasIds array of media ids to archive
  * @returns {Object} returns an object with the following keys: success.count, success.ids, error.count, error.ids
  */
-export const archiveMedias = async(mediasIds) => {
+export const archiveMedias = async (mediasIds) => {
     let response = {
         success: {
             count: 0,
@@ -720,26 +720,27 @@ export const archiveMedias = async(mediasIds) => {
             id: []
         }
     }
-    if (mediasIds instanceof Array) {
+    return new Promise((resolve, reject) => {
+        if (!mediasIds instanceof Array)
+            return reject(new Error("Both mediaIds and tagIds must be an array"))
         Promise.allSettled(mediasIds.map(mediaId => archiveMedia(mediaId))).
             then(results => {
-                results.forEach(result => {
+                results.forEach((result,index) => {
                     if (result.status === 'fulfilled') {
-                        result.value.then(res => {
+                        result.value.then((res) => {
                             response.success.count++
-                            //Todo add id to array
+                            response.success.id.push(mediasIds[index])
                         })
                     }
                     else {
                         response.error.count++
-                        response.error.id.push(result.reason.config.url.slice(`${URL}/media/`.length))
+                        response.error.id.push(mediasIds[index])
                     }
                 })
             }).finally(() => {
-                return response
+                resolve(response)
             })
-    }
-    return response
+    })
 }
 
 /**
@@ -775,24 +776,28 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
             id: []
         }
     }
-    if (mediaIds instanceof Array && tagIds instanceof Array) {
+    return new Promise((resolve, reject) => {
+        if (!mediaIds instanceof Array && !tagIds instanceof Array)
+            return reject(new Error("Both mediaIds and tagIds must be an array"))
+
         Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds, mediaId))).
             then(results => {
-                results.forEach(result => {
+                results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
                         result.value.then(res => {
                             response.success.count++
-                            //Todo find better way to add id to reponse
+                            response.success.id.push(mediaIds[index])
                         })
                     }
                     else {
                         response.error.count++
-                        //Todo find better way to add id to reponse
+                        response.error.id.push(mediaIds[index])
                     }
                 })
+            }).finally(() => {
+                resolve(response)
             })
-    }
-    return response
+    })
 }
 
 /**
@@ -819,9 +824,9 @@ export const deleteTagsFromMedia = (tagsId, mediaId) => {
  */
 export const updatePlaceholder = (placeholderId, name) => {
     let body = {
-        media_placeholder: { 
+        media_placeholder: {
             name: name
-         }
+        }
     }
 
     return PUT(`media/placeholders/${placeholderId}`, body)

@@ -62,7 +62,7 @@ export const MediaDetailsPage = () => {
 
     const onDeleteAction = () => {
         deleteMedia(media.id).then(() => {
-            alert.setSuccess("Media archived")
+            alert.setSuccess("Media deleted")
             setRedirect(mediaRoutes.media)
         }).catch(err => {
             alert.setWarning(err.message)

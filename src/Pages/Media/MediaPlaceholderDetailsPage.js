@@ -44,23 +44,25 @@ export const MediaPlaceholderDetailsPage = () => {
     app.sendMediaInMessage(placeholder, 'placeholder')
   }
 
-  const onArchiveAction = async() => {
+  const onArchiveAction = async () => {
     const { success, error } = await archiveMedias(selectedMedias)
     console.log(error)
     console.log(success)
     if (error.count > 0) {
       alert.setWarning(`${error.count} medias could not be archived`)
-    }else{
+    } else {
       alert.setSuccess(`All ${success.count} medias archived`)
     }
   }
 
   const onDeleteAction = () => {
-    deleteMedia(media.id).then(() => {
-      alert.setSuccess("Media archived")
-      setRedirect(mediaRoutes.media)
-    }).catch(err => {
-      alert.setWarning(err.message)
+    Promise.allSettled(selectedMedias.map(media => deleteMedia(media))).then(results => {
+      const errors = results.filter(result => result.status === 'rejected')
+      if (errors.length > 0) {
+        alert.setWarning(`${errors.length} medias could not be deleted`)
+      } else {
+        alert.setSuccess(`All ${results.length} medias deleted`)
+      }
     })
   }
 
@@ -88,7 +90,7 @@ export const MediaPlaceholderDetailsPage = () => {
         { name: 'Tag', onClick: () => setOpenSelectTagDialog(true) },
         { name: 'Untag', onClick: () => setOpenSelectTagDialog(true) },
         { name: 'Archive', onClick: onArchiveAction },
-        { name: 'Delete', onClick: () => console.log("clicked") },
+        { name: 'Delete', onClick: onDeleteAction },
       ]
     })
   }

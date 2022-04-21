@@ -11,8 +11,8 @@ import { archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
-import  useQuery  from 'Hooks/QueryHook'
 import { addTagsToMedias } from "Api/Endpoints"
+import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
 	const { type, value } = useParams()
@@ -57,8 +57,6 @@ export const AllMediaPage = () => {
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
 	const filterChanged = useRef(false)
-
-	const query = useQuery()
 	
 	const medias = useMedias(1, 25, filters)
   
@@ -146,7 +144,7 @@ export const AllMediaPage = () => {
 				pagination={medias.pagination}
 				loading={medias.loading}
 				view={viewGrid ? 'grid' : 'list'}
-				linkTo='/media/media/details/'
+				linkTo={mediaRoutes.mediaDetails}
 				onSelectionChange={onSelectionChange}
 			/>
 
