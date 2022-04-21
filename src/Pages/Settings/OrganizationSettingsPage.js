@@ -1,4 +1,5 @@
-import SettingsPage from './SettingsPage'
+import { useContext } from 'react'
+
 import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button'
@@ -10,6 +11,10 @@ import favicon from 'images/stacked-favicon.png'
 import Typography from '@mui/material/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
+import SettingsPage from './SettingsPage'
+
+import { AuthContext } from 'Context/Auth/AuthProvider'
+
 const useStyles = makeStyles(theme => ({
     textField: {
         border: "#dadada 1px solid",
@@ -18,18 +23,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const OrganizationSettingsPage = (props) => {
-
     const classes = useStyles();
 
+    const { user } = useContext(AuthContext)
+    console.log(user)
+
     const initialValues = {
-        organization: "University of Miami",
-        teamName: "Miami Football",
-        address: "Street Adress",
-        city: "City",
-        state: "State",
-        zipCode: "Zip Code",
-        email: "Email",
-        phone: "Phone",
+        organization: user.team.org.name,
+        teamName: user.team.org.nickname,
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        email: "",
+        phone: "",
     }
 
     const inputProps = {
