@@ -228,6 +228,13 @@ export const getContact = (id) => {
     return AXIOS('get', `contacts/${id}`)
 }
 
+export const updateContact = (id, data) => {
+    const body = {
+        contact: data
+    }
+    return AXIOS('put', `contacts/${id}`, body)
+}
+
 export const archiveContact = (id) => {
     return DELETE(`contacts/${id}`)
 }
