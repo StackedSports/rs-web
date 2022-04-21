@@ -6,6 +6,7 @@ import { Grid } from "@material-ui/core"
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import Typography from 'UI/Widgets/Typography'
+import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 import {
     getFullName,
@@ -60,8 +61,13 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
     )
 }
 
-const MessagePreview = ({ message, recipients, mini = false, style, link = false }) => {
-    if(!message) return <></>
+const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
+    if(!message) 
+        return (
+            <div style={{ height: 300 }}>
+                {props.loading &&  <LoadingOverlay/>}
+            </div>
+        )
 
     const [messageStats, setMessageStats] = useState(null)
 

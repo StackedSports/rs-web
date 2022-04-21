@@ -84,7 +84,7 @@ const DELETE = (url, body) => {
 
         axios.delete(URL + url, config)
             .then(res => {
-                if (res.status === 204)
+                if (res.status === 204 || res.status === 200 || res.status === 201 || res.status === 203)
                     resolve(res)
                 else
                     reject(res)
@@ -482,6 +482,49 @@ export const updateMessage = (messageId, data) => {
     }
 
     return PUT(`messages/${messageId}`, body)
+}
+
+export const removeRecipient = (messageId, recipientId) => {
+    return DELETE(`messages/${messageId}/remove_recipient/${recipientId}`)
+}
+
+export const removeRecipients = (messageId, recipientsId) => {
+    return new Promise((resolve, reject) => {
+        if(!Array.isArray(recipientsId))
+            reject(new TypeError('recipientsId must be an array of ids'))
+
+        let count = recipientsId.length
+        let error = 0
+        let success = 0
+        let removedRecipients = []
+        let errors = []
+
+        recipientsId.forEach(recipientId => {
+            removeRecipient(messageId, recipientId)
+                .then(res => {
+                    console.log(res)
+                    success++
+                    removedRecipients.push(recipientId)
+                })
+                .catch(err => {
+                    console.log(err)
+                    error++
+                    errors.push(err)
+                })
+                .finally(() => {
+                    count--
+
+                    if(count === 0) {
+                        resolve({
+                            errorCount: error,
+                            successCount: success,
+                            removedRecipients,
+                            errors
+                        })
+                    }
+                })
+        })
+    })
 }
 
 export const sendMessage = (messageId) => {

@@ -9,10 +9,15 @@ import Stack from '@mui/material/Stack'
 
 import { getColumns } from './DataGridConfig'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
+import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 const MessageRecipientsTable = (props) => {
     if(!props.recipients || props.recipients.length === 0)
-        return <></>
+        return (
+            <div style={{ height: 300, position: 'relative' }}>
+                {props.loading &&  <LoadingOverlay/>}
+            </div>
+        )
 
     // const columns = props.mini ? columnsMini : columnsFull
     const [contacts, setContacts] = useState([])
@@ -62,7 +67,8 @@ const MessageRecipientsTable = (props) => {
     }
 
     return (
-        <Stack spacing={2} style={{ width: '100%' }}>
+        <Stack spacing={2} style={{ width: '100%', height: 600, position: 'relative' }}>
+            {props.loading && <LoadingOverlay/>}
             <DataGrid sx={{ m: 0 }}
             //   rows={props.contacts ? props.contacts : []}
               rows={contacts}
@@ -72,14 +78,14 @@ const MessageRecipientsTable = (props) => {
               onSelectionModelChange={props.onSelectionChange}
               hideFooter
             //   autoPageSize
-              autoHeight
+            //   autoHeight
             //   pageSize={props.pagination.itemsPerPage}
             //   rowsPerPageOptions={[props.pagination.itemsPerPage]}
             //   rowCount={props.pagination.totalItems}
             //   paginationMode='server'
             //   page={props.pagination.currentPage - 1}
             //   onPageChange={() => {}}
-              loading={props.loading}
+            //   loading={props.loading}
               onCellClick={onCellClick}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}

@@ -22,6 +22,7 @@ import {
     deleteMessage,
     archiveMessage,
     updateMessage,
+    removeRecipients,
     addTagsToMessage,
     addTagsToContacts
 } from 'Api/Endpoints'
@@ -186,6 +187,37 @@ const MessageDetailsPage = (props) => {
 
         // console.log(message.item)
 
+        setLoading(true)
+
+        removeRecipients(message.item.id, selectedRecipients.items)
+                .then(result => {
+                    console.log(result)
+                    // let message = result.data
+
+                    if(result.successCount === 0) {
+                        alert.setError('Could not remove recipients')
+                    } else {
+                        if(result.errorCount === 0)
+                            alert.setSuccess('Recipients removed successfully!')
+                        else
+                            alert.setWarning(`${result.successCount} recipients removed successfully. `
+                                + `${result.errorCount} recipeints failed to be removed.`)
+                            
+                        
+                        //removeFromSelection(result.removedRecipients)
+                        // setTimeout(() => {
+                            refreshMessage()
+                        // }, 1500)
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+
+                    alert.setError('Could not remove recipients')
+                })
+                .finally(() => setLoading(false))
+
+        return 
         // Making a copy because we are going to change the recipients
         // list content
         let recipients = Object.assign({}, message.item.recipients)
@@ -308,6 +340,11 @@ const MessageDetailsPage = (props) => {
                     alert.setError('We could not update your message.')
                 })
                 .finally(() => setLoading(false))
+    }
+
+
+    const removeFromSelection = (ids) => {
+
     }
 
     const refreshMessage = () => {
@@ -503,6 +540,7 @@ const MessageDetailsPage = (props) => {
                 type: 'dropdown',
                 variant: 'contained', 
                 icon: ArrowDropDownIcon,
+                disabled: recipients.loading,
                 options: [
                     { name: 'Send New Message', onClick: onSendNewMessageWithContacts },
                     { name: 'Tag', onClick: onTagContactClick },
@@ -555,6 +593,7 @@ const MessageDetailsPage = (props) => {
               message={message.item} 
               recipients={recipients.items}
               style={{ marginBottom: 20 }}
+              loading={message.loading}
             />
 
             <MessageRecipientsTable 
@@ -562,7 +601,7 @@ const MessageDetailsPage = (props) => {
               onSelectionChange={onSelectedRecipientsChange}
               platform={message.item?.platform}
               recipients={recipients.items}
-              loading={recipients.loading}
+              loading={!message.loading && recipients.loading}
               hasCoach={message.item?.send_as_coach}
               hasMedia={hasMedia || hasMediaPlaceholder}
               pagination={recipients.pagination}
