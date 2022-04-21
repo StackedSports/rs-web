@@ -29,6 +29,13 @@ const namePlaceholder = {
     renderCell: (params) => <Link style={{color:'inherit', textDecoration:'none'}} to={`${mediaRoutes.placeholderDetails}/${params.row.id}`}>{params.value}</Link>,
 }
 
+const placeholderMediaCount = {
+    field: 'media',
+    headerName: 'File Count',
+    flex:1,
+    valueGetter: (params) => params.row.media.length,
+}
+
 const file = {
     field: 'urls',
     headerName: 'File',
@@ -73,5 +80,6 @@ export const columnsMedias = [
 // Reusing same properties
 export const columnsPlaceHolders = [
     namePlaceholder,
+    placeholderMediaCount,
     updatedAt,
 ];

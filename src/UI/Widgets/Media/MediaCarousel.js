@@ -13,7 +13,6 @@ export const MediaCarousel = (props) => {
   const [carouselOpen, setCarouselOpen] = useState(false)
 
   useEffect(() => {
-    console.log(props.index)
     if (props.index !== null && props.index !== undefined) {
       setIndex(props.index)
       setCarouselOpen(true)

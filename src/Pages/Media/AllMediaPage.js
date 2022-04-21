@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, useMemo } from "react"
-
+import { useState, useEffect, useRef, useMemo, useContext } from "react"
 import { useParams } from "react-router-dom"
-
 import { Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
+
+import { AppContext } from 'Context/AppProvider'
 
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -11,8 +11,8 @@ import { archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
-import  useQuery  from 'Hooks/QueryHook'
 import { addTagsToMedias } from "Api/Endpoints"
+import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
 	const { type, value } = useParams()
@@ -57,10 +57,9 @@ export const AllMediaPage = () => {
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
 	const filterChanged = useRef(false)
-
-	const query = useQuery()
 	
 	const medias = useMedias(1, 25, filters)
+	const app = useContext(AppContext)
   
 
 	useEffect(() => {
@@ -146,8 +145,9 @@ export const AllMediaPage = () => {
 				pagination={medias.pagination}
 				loading={medias.loading}
 				view={viewGrid ? 'grid' : 'list'}
-				linkTo='/media/media/details/'
+				linkTo={mediaRoutes.mediaDetails}
 				onSelectionChange={onSelectionChange}
+				onSendClick={(media)=>app.sendMediaInMessage(media, 'media')}
 			/>
 
 			<SelectTagDialog

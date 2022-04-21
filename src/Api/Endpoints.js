@@ -79,7 +79,7 @@ const DELETE = (url, body) => {
 
         const config = {
             headers: HEADERS,
-            data 
+            data
         }
 
         axios.delete(URL + url, config)
@@ -175,7 +175,7 @@ const PUT = (url, body) => {
         axios.put(URL + url, data, config)
             .then(res => {
                 console.log(res)
-                if (res.status === 204 || res.status === 201)
+                if (res.status === 204 || res.status === 201 || res.status === 200)
                     resolve(res)
                 else
                     reject(res)
@@ -716,7 +716,7 @@ export const updateMedia = (mediaId, data) => {
     }
 
     console.log(body)
-    
+
     return PUT(`media/${mediaId}`, body)
 }
 
@@ -765,11 +765,11 @@ export const archiveMedia = (mediaId) => {
 }
 
 /**
- * 
+ *  
  * @param {string[]} mediasIds array of media ids to archive
  * @returns {Object} returns an object with the following keys: success.count, success.ids, error.count, error.ids
  */
-export const archiveMedias = async(mediasIds) => {
+export const archiveMedias = async (mediasIds) => {
     let response = {
         success: {
             count: 0,
@@ -780,26 +780,27 @@ export const archiveMedias = async(mediasIds) => {
             id: []
         }
     }
-    if (mediasIds instanceof Array) {
+    return new Promise((resolve, reject) => {
+        if (!mediasIds instanceof Array)
+            return reject(new Error("Both mediaIds and tagIds must be an array"))
         Promise.allSettled(mediasIds.map(mediaId => archiveMedia(mediaId))).
             then(results => {
-                results.forEach(result => {
+                results.forEach((result,index) => {
                     if (result.status === 'fulfilled') {
-                        result.value.then(res => {
+                        result.value.then((res) => {
                             response.success.count++
-                            //Todo add id to array
+                            response.success.id.push(mediasIds[index])
                         })
                     }
                     else {
                         response.error.count++
-                        response.error.id.push(result.reason.config.url.slice(`${URL}/media/`.length))
+                        response.error.id.push(mediasIds[index])
                     }
                 })
             }).finally(() => {
-                return response
+                resolve(response)
             })
-    }
-    return response
+    })
 }
 
 /**
@@ -822,7 +823,7 @@ export const addTagsToMedia = (tagIds, mediaId) => {
  * Adds array of tags to an array of Medias
  * @param {*} tagsIds array of tag ids to archive 
  * @param {*} mediasId  array of media ids to associate tags to
- * @returns 
+ * @returns {promise} promise with an object with the following keys: success.count, success.ids, error.count, error.ids
  */
 export const addTagsToMedias = (tagIds, mediaIds) => {
     let response = {
@@ -835,24 +836,28 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
             id: []
         }
     }
-    if (mediaIds instanceof Array && tagIds instanceof Array) {
+    return new Promise((resolve, reject) => {
+        if (!mediaIds instanceof Array && !tagIds instanceof Array)
+            return reject(new Error("Both mediaIds and tagIds must be an array"))
+
         Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds, mediaId))).
             then(results => {
-                results.forEach(result => {
+                results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
                         result.value.then(res => {
                             response.success.count++
-                            //Todo find better way to add id to reponse
+                            response.success.id.push(mediaIds[index])
                         })
                     }
                     else {
                         response.error.count++
-                        //Todo find better way to add id to reponse
+                        response.error.id.push(mediaIds[index])
                     }
                 })
+            }).finally(() => {
+                resolve(response)
             })
-    }
-    return response
+    })
 }
 
 /**
@@ -879,11 +884,15 @@ export const deleteTagsFromMedia = (tagsId, mediaId) => {
  */
 export const updatePlaceholder = (placeholderId, name) => {
     let body = {
-        media_placeholder: { 
+        media_placeholder: {
             name: name
-         }
+        }
     }
 
     return PUT(`media/placeholders/${placeholderId}`, body)
+}
+
+export const deletePlaceholder = (placeholderId) => {
+    return DELETE(`media/placeholders/${placeholderId}`)
 }
 
