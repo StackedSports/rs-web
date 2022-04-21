@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Stack from '@mui/material/Stack';
 import { Field } from 'formik';
+import Button from '@mui/material/Button';
 
 export default function AccordionComponent(props) {
 
@@ -20,14 +21,17 @@ export default function AccordionComponent(props) {
 			expanded={props.expandedId === props.id}
 		>
 			<AccordionSummary
-				sx={{ backgroundColor: '#efefef' }}
+				sx={{ backgroundColor: '#f7f7f7', padding: '7px' }}
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls={`${props.id}-content`}
 				id={`${props.id}-header`}
 			>
+				{/* <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"> */}
 				<Typography fontWeight="bold">
 					{props.title}
 				</Typography>
+				<Button variant="contained">Save</Button>
+				{/* </Stack> */}
 			</AccordionSummary>
 			<AccordionDetails>
 				<Stack
