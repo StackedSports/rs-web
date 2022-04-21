@@ -1,20 +1,28 @@
-import { useEffect, useState, useRef, useContext } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { AutoFixHigh, Clear, Edit, GridView, FormatListBulleted, Check, ArrowDropDown } from "@mui/icons-material"
-import { Stack, Box, Input, IconButton, InputAdornment, Typography, Tooltip } from "@mui/material"
+import { AutoFixHigh, GridView, FormatListBulleted, ArrowDropDown } from "@mui/icons-material"
+import { Stack, Box, IconButton, Typography, Tooltip } from "@mui/material"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
+import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 
 import { AppContext } from 'Context/AppProvider'
 
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholder } from "Api/Hooks"
 import { formatDate } from "utils/Parser"
-import { archiveMedias, deleteMedia, addTagsToMedias, updatePlaceholder } from "Api/Endpoints"
+import {
+  archiveMedias,
+  deleteMedia,
+  addTagsToMedias,
+  deleteTagsFromMedia,
+  updatePlaceholder,
+  deletePlaceholder,
+} from "Api/Endpoints"
 
 export const MediaPlaceholderDetailsPage = () => {
   const app = useContext(AppContext)
@@ -22,13 +30,12 @@ export const MediaPlaceholderDetailsPage = () => {
   const alert = useMainLayoutAlert()
   const { item: placeholder, loading } = usePlaceholder(id)
 
-  console.log(placeholder)
+  //console.log(placeholder)
 
-  const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+  const [openSelectAddTagDialog, setOpenSelectAddTagDialog] = useState(false)
+  const [openSelectRemoveTagDialog, setOpenSelectRemoveTagDialog] = useState(false)
   const [viewGrid, setViewGrid] = useState(true)
   const [itemName, setItemName] = useState('')
-  const [editName, setEditName] = useState(false)
-  const inputMediaNameRef = useRef(null)
   const [selectedMedias, setSelectedMedias] = useState([])
 
   useEffect(() => {
@@ -44,6 +51,20 @@ export const MediaPlaceholderDetailsPage = () => {
     app.sendMediaInMessage(placeholder, 'placeholder')
   }
 
+  // i didn't test this function
+  const onDeletePlaceholder = () => {
+    if (!placeholder)
+      return
+
+    deletePlaceholder(placeholder.id)
+      .then(() => {
+        alert.success('Placeholder deleted')
+        app.redirect(mediaRoutes.placeholders)
+      }).catch(err => {
+        alert.error(err.message)
+      })
+  }
+
   const onArchiveAction = async () => {
     const { success, error } = await archiveMedias(selectedMedias)
     console.log(error)
@@ -55,8 +76,30 @@ export const MediaPlaceholderDetailsPage = () => {
     }
   }
 
-  const onDeleteAction = () => {
+  const onDeleteMediaAction = () => {
     Promise.allSettled(selectedMedias.map(media => deleteMedia(media))).then(results => {
+      const errors = results.filter(result => result.status === 'rejected')
+      if (errors.length > 0) {
+        alert.setWarning(`${errors.length} medias could not untagged`)
+      } else {
+        alert.setSuccess(`All ${results.length} medias untagged`)
+      }
+    })
+  }
+
+  const onAddTagsAction = async (tags) => {
+    const { success, error } = await addTagsToMedias(tags, selectedMedias)
+    console.log(error)
+    console.log(success)
+    if (error.count > 0) {
+      alert.setWarning(`${error.count} medias could not be tagged`)
+    } else {
+      alert.setSuccess(`All ${success.count} medias tagged`)
+    }
+  }
+
+  const onRemoveTagsAction = (tags) => {
+    Promise.allSettled(selectedMedias.map(media => deleteTagsFromMedia(tags, media))).then(results => {
       const errors = results.filter(result => result.status === 'rejected')
       if (errors.length > 0) {
         alert.setWarning(`${errors.length} medias could not be deleted`)
@@ -74,7 +117,7 @@ export const MediaPlaceholderDetailsPage = () => {
       type: 'dropdown',
       options: [
         { name: 'Send in Message', onClick: onSendInMessageAction },
-        { name: 'Delete', onClick: () => { console.log("clicked") } },
+        { name: 'Delete', onClick: onDeletePlaceholder },
       ]
     },
   ]
@@ -87,10 +130,10 @@ export const MediaPlaceholderDetailsPage = () => {
       variant: 'contained',
       icon: ArrowDropDown,
       options: [
-        { name: 'Tag', onClick: () => setOpenSelectTagDialog(true) },
-        { name: 'Untag', onClick: () => setOpenSelectTagDialog(true) },
+        { name: 'Tag', onClick: () => setOpenSelectAddTagDialog(true) },
+        { name: 'Untag', onClick: () => setOpenSelectRemoveTagDialog(true) },
         { name: 'Archive', onClick: onArchiveAction },
-        { name: 'Delete', onClick: onDeleteAction },
+        { name: 'Delete', onClick: onDeleteMediaAction },
       ]
     })
   }
@@ -99,23 +142,25 @@ export const MediaPlaceholderDetailsPage = () => {
     setSelectedMedias(selection)
   }
 
-  const handleMediaNameChange = (type) => {
-    if (type === 'cancel')
-      inputMediaNameRef.current.value = placeholder.name
-    else {
-      const newName = inputMediaNameRef.current.value
-      updatePlaceholder(placeholder.id, newName).then(() => {
-        alert.setSuccess("Media name updated")
-        setItemName(inputMediaNameRef.current.value)
-      }).catch(err => {
-        alert.setWarning(err.message)
-      })
-    }
-    setEditName(false)
+  const onEditName = (newName) => {
+    updatePlaceholder(placeholder.id, newName).then(() => {
+      alert.setSuccess("Media name updated")
+      setItemName(newName)
+    }).catch(err => {
+      setItemName(placeholder.name)
+      alert.setWarning(err.message)
+    })
   }
 
-  const handleTagsDialogConfirm = (selectedTagsIds) => {
-    console.log(selectedTagsIds)
+  const handleTagsDialogConfirm = (selectedTagsIds, type) => {
+    if (type === 'add') {
+      onAddTagsAction(selectedTagsIds)
+      setOpenSelectAddTagDialog(false)
+    }
+    if (type === 'remove') {
+      onRemoveTagsAction(selectedTagsIds)
+      setOpenSelectRemoveTagDialog(false)
+    }
   }
 
   return (
@@ -126,7 +171,7 @@ export const MediaPlaceholderDetailsPage = () => {
       alert={alert}
     >
 
-      <Stack direction="row" flexWrap='wrap' spacing={2} my={3}>
+      <Stack direction="row" flexWrap='wrap' gap={2} my={3}>
         <MediaPreview
           type="placeholder"
           item={placeholder || {}}
@@ -139,33 +184,10 @@ export const MediaPlaceholderDetailsPage = () => {
           }}
         >
 
-          <Input
-            inputRef={inputMediaNameRef}
-            disableUnderline={!editName}
-            value={itemName}
-            disabled={!editName}
-            onChange={(e) => setItemName(e.target.value)}
-            sx={{ my: 2 }}
+          <EditableLabel
             placeholder='Placeholder Name'
-            endAdornment={
-              <InputAdornment position="end">
-                {!editName ?
-                  <IconButton onClick={() => setEditName(true)} >
-                    <Edit />
-                  </IconButton>
-                  : (
-                    <>
-                      <IconButton color='error' onClick={() => handleMediaNameChange('cancel')} >
-                        <Clear />
-                      </IconButton>
-                      <IconButton color='success' onClick={handleMediaNameChange} >
-                        <Check />
-                      </IconButton>
-                    </>
-                  )}
-
-              </InputAdornment>
-            }
+            value={itemName}
+            onEdit={onEditName}
           />
 
           <DetailsPreview label="Media Count" value={placeholder?.media.length} />
@@ -198,9 +220,18 @@ export const MediaPlaceholderDetailsPage = () => {
       />
 
       <SelectTagDialog
-        open={openSelectTagDialog}
-        onClose={() => setOpenSelectTagDialog(false)}
-        onConfirm={handleTagsDialogConfirm}
+        title="Select Tags to add"
+        open={openSelectAddTagDialog}
+        onClose={() => setOpenSelectAddTagDialog(false)}
+        onConfirm={(tags) => handleTagsDialogConfirm(tags, 'add')}
+        confirmLabel="Add"
+      />
+      <SelectTagDialog
+        title="Select Tags to remove"
+        open={openSelectRemoveTagDialog}
+        onClose={() => setOpenSelectRemoveTagDialog(false)}
+        confirmLabel="Remove"
+        onConfirm={(tags) => handleTagsDialogConfirm(tags, 'remove')}
       />
 
     </MainLayout>

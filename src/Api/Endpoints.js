@@ -175,7 +175,7 @@ const PUT = (url, body) => {
         axios.put(URL + url, data, config)
             .then(res => {
                 console.log(res)
-                if (res.status === 204 || res.status === 201)
+                if (res.status === 204 || res.status === 201 || res.status === 200)
                     resolve(res)
                 else
                     reject(res)
@@ -780,7 +780,7 @@ export const addTagsToMedia = (tagIds, mediaId) => {
  * Adds array of tags to an array of Medias
  * @param {*} tagsIds array of tag ids to archive 
  * @param {*} mediasId  array of media ids to associate tags to
- * @returns 
+ * @returns {promise} promise with an object with the following keys: success.count, success.ids, error.count, error.ids
  */
 export const addTagsToMedias = (tagIds, mediaIds) => {
     let response = {
@@ -847,5 +847,9 @@ export const updatePlaceholder = (placeholderId, name) => {
     }
 
     return PUT(`media/placeholders/${placeholderId}`, body)
+}
+
+export const deletePlaceholder = (placeholderId) => {
+    return DELETE(`media/placeholders/${placeholderId}`)
 }
 

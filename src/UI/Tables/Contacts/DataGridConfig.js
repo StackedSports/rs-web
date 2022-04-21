@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Tooltip, Typography } from '@mui/material';
 
 import { formatPhoneNumber } from 'utils/Parser'
 import { contactsRoutes } from 'Routes/Routes'
@@ -42,12 +43,14 @@ const fullName = {
     resizable: true,
     valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
-        <Link 
-          style={{ color:'inherit' }} 
-          to={`${contactsRoutes.profile}/${params.row.id}`}
-        >
-            {params.value}
-        </Link>
+        <Tooltip title={getFullName(params.row)} placement='right-start'>
+            <Link 
+              style={{ color:'inherit' }} 
+              to={`${contactsRoutes.profile}/${params.row.id}`}
+            >
+                {params.value}
+            </Link>
+        </Tooltip>
     ),
 }
 
@@ -112,7 +115,12 @@ const school = {
     headerName: 'School',
     // width: 120
     flex: 1,
-    valueGetter: (params) => params.row.high_school ? params.row.high_school : ''
+    valueGetter: (params) => params.row.high_school ? params.row.high_school : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const gradYear = {

@@ -76,6 +76,8 @@ const SelectTagDialog = (props) => {
 
     const onConfirm = () => {
         props.onConfirm(selectedTags)
+        setSelectedTags([])
+        setTagsSelected([])
     }
 
     return (
@@ -84,6 +86,8 @@ const SelectTagDialog = (props) => {
             onConfirm={onConfirm}
             onClose={props.onClose}
             title={props.title || 'Select Tag'}
+            confirmLabel={props.confirmLabel}
+            cancelLabel={props.cancelLabel}
 
         >
             {/* <img 

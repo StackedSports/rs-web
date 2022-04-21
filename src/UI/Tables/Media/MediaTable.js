@@ -116,11 +116,17 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             props.onSelectionChange(selection)
     }
 
+    const onSendClick =(item) =>{
+        if (props.onSendClick)
+            props.onSendClick(item)
+    }
+
     const onLoadMore = () => {
         if (props.pagination.currentPage < props.pagination.totalPages) {
             props.pagination.getPage(props.pagination.currentPage + 1)
         }
     }
+    const isLastPage = props?.pagination?.currentPage === props?.pagination?.totalPages
 
     return (
         <Box width='100%' flex={1} pb={2}>
@@ -128,21 +134,17 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 {!props.loading && props.items && props.items.length === 0 && (
                     <span>No media available</span>
                 )}
-                {props.loading  && (
-                    <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
-                        <CircularProgress />
-                    </Box>
-                )}
                 {view === 'grid' ? (
                     <Stack gap={2} direction='row' flexWrap='wrap' >
                         {props.items && props.items.map((item, index) => (
                             <MediaPreview
-                              key={item.hashid || item.id}
-                              type={type}
-                              item={item}
-                              linkTo={props.linkTo && `${props.linkTo}/${item.id}`}
-                              selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
-                              onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
+                                key={item.hashid || item.id}
+                                type={type}
+                                item={item}
+                                linkTo={props.linkTo && `${props.linkTo}/${item.id}`}
+                                selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
+                                onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
+                                onSendClick={ props.onSendClick && (() => onSendClick(item))}
                             />
                         ))}
                     </Stack>
@@ -159,12 +161,16 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     />
                 )}
             </Box>
-            
-            {props.pagination && <Button name='Load More' onClick={onLoadMore} />}
+            {props.loading && (
+                <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
+                    <CircularProgress />
+                </Box>
+            )}
+            {(props.pagination && !isLastPage && !props.loading) && <Button name='Load More' onClick={onLoadMore} />}
             <MediaCarousel
-              index={carouselIndex}
-              items={props?.items?.map(item => item?.urls?.original)}
-              onClose={() => setCarouselIndex(null)}
+                index={carouselIndex}
+                items={props?.items?.map(item => item?.urls?.original)}
+                onClose={() => setCarouselIndex(null)}
             />
         </Box>
     )

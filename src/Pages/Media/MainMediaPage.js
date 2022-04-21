@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useContext } from 'react'
 import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune } from '@mui/icons-material'
 import { Stack, Typography, Box, CircularProgress } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -9,11 +9,14 @@ import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import MediaPage from './MediaPage'
 
+import { AppContext } from 'Context/AppProvider'
+
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
 import { archiveMedias, addTagsToMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
 
 export const MainMediaPage = (props) => {
+    const app = useContext(AppContext)
     const media = useMedias(1, 5)
     const placeholders = usePlaceholders(1, 5)
     const tags = useTags()
@@ -120,6 +123,7 @@ export const MainMediaPage = (props) => {
                 type="media"
                 linkTo={mediaRoutes.mediaDetails}
                 onSelectionChange={onMediaSelectionChange}
+                onSendClick={(media)=>app.sendMediaInMessage(media, 'media')}
                 disablePagination
             />
 
@@ -153,6 +157,7 @@ export const MainMediaPage = (props) => {
                 type="placeholder"
                 linkTo={mediaRoutes.placeholderDetails}
                 onSelectionChange={onPlaceholderSelectionChange}
+                onSendClick={(placeholder)=>app.sendMediaInMessage(placeholder, 'placeholder')}
                 disablePagination
             />
 

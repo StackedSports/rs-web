@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, useMemo } from "react"
-
+import { useState, useEffect, useRef, useMemo, useContext } from "react"
 import { useParams } from "react-router-dom"
-
 import { Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
+
+import { AppContext } from 'Context/AppProvider'
 
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -59,6 +59,7 @@ export const AllMediaPage = () => {
 	const filterChanged = useRef(false)
 	
 	const medias = useMedias(1, 25, filters)
+	const app = useContext(AppContext)
   
 
 	useEffect(() => {
@@ -146,6 +147,7 @@ export const AllMediaPage = () => {
 				view={viewGrid ? 'grid' : 'list'}
 				linkTo={mediaRoutes.mediaDetails}
 				onSelectionChange={onSelectionChange}
+				onSendClick={(media)=>app.sendMediaInMessage(media, 'media')}
 			/>
 
 			<SelectTagDialog

@@ -1,17 +1,18 @@
-import { useEffect, useState, useMemo, useRef, useContext } from "react"
+import { useEffect, useState, useMemo, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { AutoFixHigh, CheckBoxOutlineBlank, CheckBox, Clear, Edit, Check } from "@mui/icons-material"
-import { Grid, Stack, Box, Typography, styled, TextField, Input, InputAdornment, IconButton, Autocomplete, Checkbox, Chip, debounce } from "@mui/material"
+import { AutoFixHigh, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material"
+import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
 import lodash from "lodash"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
+import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
+import { useMedia, useContacts, useTags, usePlaceholders, usePlaceholder, useTeamMembers } from "Api/Hooks"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
@@ -33,8 +34,6 @@ export const MediaDetailsPage = () => {
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
     const [itemName, setItemName] = useState('')
-    const [editName, setEditName] = useState(false)
-    const inputMediaNameRef = useRef(null)
 
 
     useEffect(() => {
@@ -45,6 +44,8 @@ export const MediaDetailsPage = () => {
         }
     }, [media])
 
+    //find way to get placeholder
+
     const onArchiveAction = () => {
         archiveMedia(media.id).then(() => {
             alert.setSuccess("Media archived")
@@ -54,9 +55,9 @@ export const MediaDetailsPage = () => {
     }
 
     const onSendInMessageAction = () => {
-        if(!media)
+        if (!media)
             return
-        
+
         app.sendMediaInMessage(media, 'media')
     }
 
@@ -89,19 +90,15 @@ export const MediaDetailsPage = () => {
         // },
     ]
 
-    const handleMediaNameChange = (type) => {
-        if (type === 'cancel')
-            inputMediaNameRef.current.value = media.name
-        else {
-            console.log(itemName)
-            updateMediaForm(media.id, { name: itemName }).then(() => {
-                alert.setSuccess("Media name updated")
-            }).catch(err => {
-                setItemName(media.name)
-                alert.setWarning(err.message)
-            })
-        }
-        setEditName(false)
+
+    const onEditName = (newName) => {
+        updateMedia(media.id, { name: newName }).then(() => {
+            alert.setSuccess("Media name updated")
+            setItemName(newName)
+        }).catch(err => {
+            setItemName(media.name)
+            alert.setWarning(err.message)
+        })
     }
 
     const handleChangeTags = (newTags) => {
@@ -131,7 +128,7 @@ export const MediaDetailsPage = () => {
     const handleChangeOwner = (owner) => {
         if (owner && owner.length > 0) {
             const newOwner = owner[0]
-            updateMediaForm(media.id, { owner: newOwner.id }).then(() => {
+            updateMedia(media.id, { owner: newOwner.id }).then(() => {
                 setItemOwner([newOwner])
                 alert.setSuccess("Media owner updated")
             }
@@ -144,7 +141,7 @@ export const MediaDetailsPage = () => {
     const handleChangePlaceholder = (placeholder) => {
         if (placeholder && placeholder.length > 0) {
             const newPlaceholder = placeholder[0]
-            updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then(() => {
+            updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then((res) => {
                 setItemPlaceholder([newPlaceholder])
                 alert.setSuccess("Media placeholder updated")
             }).catch(err => {
@@ -176,7 +173,6 @@ export const MediaDetailsPage = () => {
         }
     }, 500)
 
-
     const handleChangeContact = (contact) => {
         // return console.log('change contact')
         if (contact && contact.length > 0) {
@@ -195,7 +191,6 @@ export const MediaDetailsPage = () => {
             // TODO REMOVER CONTATO
         }
     }
-
 
     const messagesCountLabel = useMemo(() => {
         if (!media)
@@ -226,38 +221,17 @@ export const MediaDetailsPage = () => {
                     <Stack direction='row' flexWrap='wrap' gap={2}>
 
                         <MediaPreview
-                            item={media}
-                            loading={loading}
-                            type='media'
+                          item={media}
+                          loading={loading}
+                          type='media'
                         />
 
                         <Box flex='1 1 auto' >
-                            <Input
-                                inputRef={inputMediaNameRef}
-                                disableUnderline={!editName}
-                                disabled={!editName}
-                                onChange={(e) => setItemName(e.target.value)}
-                                sx={{ my: 2 }}
-                                placeholder='Media Name'
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        {!editName ?
-                                            <IconButton onClick={() => setEditName(true)} >
-                                                <Edit />
-                                            </IconButton>
-                                            : (
-                                                <>
-                                                    <IconButton color='error' onClick={() => handleMediaNameChange('cancel')} >
-                                                        <Clear />
-                                                    </IconButton>
-                                                    <IconButton color='success' onClick={handleMediaNameChange} >
-                                                        <Check />
-                                                    </IconButton>
-                                                </>
-                                            )}
 
-                                    </InputAdornment>
-                                }
+                            <EditableLabel
+                                placeholder='Media Name'
+                                value={itemName}
+                                onEdit={onEditName}
                             />
 
                             <DetailsPreview label="File Name:" value={media?.file_name} />
@@ -292,7 +266,6 @@ export const MediaDetailsPage = () => {
                         placeholder="Search for owner"
                         getOptionLabel={(option) => getFullName(option)}
                         getChipLabel={(option) => getFullName(option)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
                     />
 
                     <Typography variant='subtitle1' >
@@ -307,7 +280,6 @@ export const MediaDetailsPage = () => {
                         placeholder="Search for tags"
                         getOptionLabel={(option) => option?.name}
                         getChipLabel={(option) => option?.name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         renderOption={(props, option, { selected }) => (
                             <li {...props}>
                                 <Checkbox
@@ -329,17 +301,16 @@ export const MediaDetailsPage = () => {
                                 Association to Placeholder
                             </Typography>
                             <SearchableSelector
-                              multiple
-                              options={placeholders.items}
-                              loading={placeholders.loading}
-                              value={itemPlaceholder}
-                              onChange={handleChangePlaceholder}
-                              label="Placeholder"
-                              placeholder="Search for placeholder"
-                              getOptionLabel={(option) => option?.name}
-                              onInputChange={(event, newInputValue) => { handlePlaceholderInputSearch(newInputValue) }}
-                              getChipLabel={(option) => option?.name}
-                              isOptionEqualToValue={(option, value) => option.id === value.id}
+                                multiple
+                                options={placeholders.items}
+                                loading={placeholders.loading}
+                                value={itemPlaceholder}
+                                onChange={handleChangePlaceholder}
+                                label="Placeholder"
+                                placeholder="Search for placeholder"
+                                getOptionLabel={(option) => option?.name}
+                                onInputChange={(event, newInputValue) => { handlePlaceholderInputSearch(newInputValue) }}
+                                getChipLabel={(option) => option?.name}
                             />
 
                         </Box>
@@ -349,18 +320,18 @@ export const MediaDetailsPage = () => {
                             <Typography variant='subtitle1' mb={2} >
                                 Association to Contact
                             </Typography>
-                            
+
                             <SearchableSelector
-                              multiple
-                              options={contacts.items}
-                              loading={contacts.loading}
-                              value={itemContact}
-                              label="Contact"
-                              placeholder="Search for contact"
-                              onChange={handleChangeContact}
-                              getOptionLabel={(option) => getFullName(option)}
-                              onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}
-                              getChipLabel={(option) => getFullName(option)}
+                                multiple
+                                options={contacts.items}
+                                loading={contacts.loading}
+                                value={itemContact}
+                                label="Contact"
+                                placeholder="Search for contact"
+                                onChange={handleChangeContact}
+                                getOptionLabel={(option) => getFullName(option)}
+                                onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}
+                                getChipLabel={(option) => getFullName(option)}
                             />
                         </Box>
                     </Stack>

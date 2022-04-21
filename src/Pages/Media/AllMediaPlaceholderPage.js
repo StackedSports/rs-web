@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted } from '@mui/icons-material'
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import MediaPage from "./MediaPage"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
+import { AppContext } from 'Context/AppProvider'
 import { mediaRoutes } from "Routes/Routes"
-
 import { usePlaceholders } from 'Api/Hooks'
 
 export const AllMediaPlaceholderPage = (props) => {
@@ -16,6 +16,7 @@ export const AllMediaPlaceholderPage = (props) => {
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
   const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
 
+  const app = useContext(AppContext)
   const placeholders = usePlaceholders(1, 25)
   console.log(placeholders.items)
 
@@ -74,6 +75,7 @@ export const AllMediaPlaceholderPage = (props) => {
         view={viewGrid ? 'grid' : 'list'}
         linkTo={mediaRoutes.placeholderDetails}
         onSelectionChange={onSelectionChange}
+				onSendClick={(placeholder)=>app.sendMediaInMessage(placeholder, 'placeholder')}
       />
 
       <SelectTagDialog
