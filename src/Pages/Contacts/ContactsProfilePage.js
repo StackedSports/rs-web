@@ -625,7 +625,6 @@ export default function ContactsProfilePage(props) {
                     <SentMedia />
                     <AssociatedMedia />
                 </Stack>
-                
             </Stack>
         </MainLayout >
     )
