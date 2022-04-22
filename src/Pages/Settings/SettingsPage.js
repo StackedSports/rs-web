@@ -10,7 +10,7 @@ const filters = [
         name: 'General',
         items: [
             // Filters
-            { id: '0', name: 'Organization', path: settingsRoutes.general.organization },
+            { id: '0', name: 'Organization', path: settingsRoutes.main },
             { id: 'team-members', name: 'Team Members', path: settingsRoutes.general.members },
         ]
     },

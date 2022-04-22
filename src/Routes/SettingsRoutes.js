@@ -23,7 +23,8 @@ const SettingsRoutes = (props) => (
     <Route
       exact
       path={settingsRoutes.main}
-      component={SettingsPage}
+      component={OrganizationSettingsPage}
+      // component={SettingsPage}
     />
     <Route
       exact
