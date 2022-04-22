@@ -91,6 +91,22 @@ export const AllMediaPage = () => {
 		const result = addTagsToMedias(selectedTagsIds, selectedMedias)
 	}
 
+	const onDownloadAction = () => {
+        if (selectedMedias.length > 0) {
+            medias.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
+                if (mediaSelected?.urls?.original) {
+                    let url = mediaSelected.urls.original;
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.download = mediaSelected.name;
+                    a.click();
+                }
+
+            })
+        }
+    }
+
 	const mainActions = [
 		{
 			name: 'Change view',
@@ -105,7 +121,7 @@ export const AllMediaPage = () => {
 			type: 'dropdown',
 			options: [
 				{ name: 'Send in Message', onClick: () => { console.log("clicked") } },
-				{ name: 'Download', onClick: () => { console.log("clicked") } },
+				{ name: 'Download', onClick: onDownloadAction },
 				{ name: 'Archive Media', onClick: archiveMedia },
 				{ name: 'Untag', onClick: () => { console.log("clicked") } },
 			]

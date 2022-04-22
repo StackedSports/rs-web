@@ -5,12 +5,11 @@ import {
 	DialogTitle,
 	Stack,
 	DialogContent,
-	DialogContentText,
 	Checkbox,
 	FormControlLabel,
 	TextField,
 	Divider,
-	Typography
+	Typography,
 } from '@mui/material'
 import { People } from '@mui/icons-material'
 import Button from '../Buttons/Button'

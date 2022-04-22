@@ -33,6 +33,11 @@ export const AllMediaPlaceholderPage = (props) => {
   const handleTagsDialogConfirm = (selectedTagsIds) => {
     console.log(selectedTagsIds)
   }
+   
+  const onSendInMessageAction = () => {
+    // should send all selected medias in a message?
+   /*  app.sendMediaInMessage(placeholder, 'placeholder') */
+  }
 
   const mainActions = [
     {

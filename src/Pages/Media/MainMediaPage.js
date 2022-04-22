@@ -46,6 +46,21 @@ export const MainMediaPage = (props) => {
         console.log("response", response)
     }
 
+    const onDownloadAction = () => {
+        if (selectedMedias.length > 0) {
+            media.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
+                if (mediaSelected?.urls?.original) {
+                    let url = mediaSelected.urls.original;
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.download = mediaSelected.name;
+                    a.click();
+                }
+            })
+        }
+    }
+
     const handleTagsDialogConfirm = (selectedTagsIds) => {
         const result = addTagsToMedias(selectedTagsIds, selectedMedias)
     }
@@ -64,7 +79,7 @@ export const MainMediaPage = (props) => {
             type: 'dropdown',
             options: [
                 { name: 'Send in Message', onClick: () => { console.log("clicked") } },
-                { name: 'Download', onClick: () => { console.log("clicked") } },
+                { name: 'Download', onClick: onDownloadAction },
                 { name: 'Archive Media', onClick: onArchiveAction },
                 { name: 'Untag', onClick: () => { console.log("clicked") } },
             ]
@@ -86,12 +101,12 @@ export const MainMediaPage = (props) => {
 
     return (
         <MediaPage
-        //   viewGrid={viewGrid}
-        //   onSwitchView={onSwitchView}
-        //   filter = {media.filter}
-          filter={media.filter}
-          actions={mainActions}
-          showPanelFilters={showPanelFilters}
+            //   viewGrid={viewGrid}
+            //   onSwitchView={onSwitchView}
+            //   filter = {media.filter}
+            filter={media.filter}
+            actions={mainActions}
+            showPanelFilters={showPanelFilters}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -123,7 +138,7 @@ export const MainMediaPage = (props) => {
                 type="media"
                 linkTo={mediaRoutes.mediaDetails}
                 onSelectionChange={onMediaSelectionChange}
-                onSendClick={(media)=>app.sendMediaInMessage(media, 'media')}
+                onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
                 disablePagination
             />
 
@@ -157,7 +172,7 @@ export const MainMediaPage = (props) => {
                 type="placeholder"
                 linkTo={mediaRoutes.placeholderDetails}
                 onSelectionChange={onPlaceholderSelectionChange}
-                onSendClick={(placeholder)=>app.sendMediaInMessage(placeholder, 'placeholder')}
+                onSendClick={(placeholder) => app.sendMediaInMessage(placeholder, 'placeholder')}
                 disablePagination
             />
 
