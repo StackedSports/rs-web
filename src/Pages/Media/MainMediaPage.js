@@ -17,8 +17,8 @@ import { mediaRoutes } from 'Routes/Routes';
 
 export const MainMediaPage = (props) => {
     const app = useContext(AppContext)
-    const media = useMedias(1, 5)
-    const placeholders = usePlaceholders(1, 5)
+    const media = useMedias(1, 6)
+    const placeholders = usePlaceholders(1, 6)
     const tags = useTags()
 
     const [viewGrid, setViewGrid] = useState(true)
