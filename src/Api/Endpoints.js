@@ -896,3 +896,10 @@ export const deletePlaceholder = (placeholderId) => {
     return DELETE(`media/placeholders/${placeholderId}`)
 }
 
+export const createContact = (data) => {
+   const body = {
+        contact: {...data}
+    }
+    return POST(`contacts`, body)
+}
+
