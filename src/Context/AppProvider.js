@@ -10,10 +10,26 @@ const AppContext = createContext()
 AppContext.displayName = 'AppContext'
 
 const AppProvider = (props) => {
+    const [windowSize, setWindowSize] = useState({
+        width: null,
+        height: null
+    })
+
     const location = useLocation()
     // console.log(location.pathname)
 
     const [redirect, setRedirect] = useState('')
+
+    useEffect(() => {
+        const listener = window.addEventListener('resize', () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight
+            })
+        })
+
+        return window.removeEventListener('resize', listener)
+    }, [])
 
     useEffect(() => {
         if(location.pathname === redirect)
@@ -78,6 +94,7 @@ const AppProvider = (props) => {
     }
 
     const utils = {
+        windowSize,
         location,
         sendMediaInMessage,
         sendMessageToContacts,
