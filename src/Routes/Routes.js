@@ -39,7 +39,7 @@ export const routes = {
     },
     settings: {
         title: 'Settings',
-        path: '/settings/organization', // /settings
+        path: '/settings', // /settings
         icon: SettingsIcon
     },
 }
