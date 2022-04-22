@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, createContext } from 'react'
+import { useState, useContext, useEffect, createContext, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { AppContext } from 'Context/AppProvider'
@@ -11,8 +11,6 @@ const AuthProvider = (props) => {
     const app = useContext(AppContext)
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
-
-    console.log(user)
 
     useEffect(() => {
         console.log('yo')
@@ -63,8 +61,12 @@ const AuthProvider = (props) => {
         // localStorage.removeItem('user')
     }
 
+    const utils = useMemo(() => ({
+        user, login, logout
+    }), [user])
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={utils}>
             {props.children}
         </AuthContext.Provider>
     )
