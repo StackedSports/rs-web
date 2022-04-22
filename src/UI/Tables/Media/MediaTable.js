@@ -1,15 +1,14 @@
-import { useState, useRef, useEffect, useMemo } from 'react'
-import { Stack, Typography, Box, CircularProgress } from '@mui/material'
+import { useState, useRef, useMemo } from 'react'
+import { Box, CircularProgress } from '@mui/material'
 
 
 
 import Button from 'UI/Widgets/Buttons/Button'
-import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DataTable from 'UI/Tables/DataTable'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
+import MediaGrid from './MediaGrid'
 
-
-import { columnsMedias, columnsPlaceHolders } from './MediaGridConfig'
+import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
 
 /**
  * 
@@ -143,19 +142,19 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <span>No media available</span>
                 )}
                 {view === 'grid' ? (
-                    <Stack gap={2} direction='row' flexWrap='wrap' >
-                        {props.items && props.items.map((item, index) => (
-                            <MediaPreview
-                                key={item.hashid || item.id}
-                                type={type}
-                                item={item}
-                                linkTo={props.linkTo && `${props.linkTo}/${item.id}`}
-                                selected={selectedControl[item.id] ? selectedControl[item.id].selected : false}
-                                onSelectedChange={(selected) => onMediaSelectedChange(selected, index, item)}
-                                onSendClick={ props.onSendClick && (() => onSendClick(item))}
-                            />
-                        ))}
-                    </Stack>
+                    <MediaGrid
+                      type={type}
+                      items={props.items}
+                      linkTo={props.linkTo}
+                      selectedControl={selectedControl}
+                      onSelectedChange={onMediaSelectedChange}
+                      onSendClick={props.onSendClick}
+                      xs={props.xs} 
+                      sm={props.sm} 
+                      md={props.md} 
+                      lg={props.lg} 
+                      xl={props.xl}
+                    />
                 ) : (
                     <DataTable
                         items={props.items}

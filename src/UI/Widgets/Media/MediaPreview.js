@@ -1,21 +1,23 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
+
+import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
 import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import SendIcon from '@mui/icons-material/Send';
 
+import { AppContext } from 'Context/AppProvider'
 
 import { formatDate } from "utils/Parser"
-import { Link } from "react-router-dom"
 
 const PlaceholderImage = (props) => {
     const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls.original)
 
     return (
         <Box
-            width={250}
-            height={250}
+            width={props.size}
+            height={props.size}
             position='relative'
             overflow='hidden'
         >
@@ -97,8 +99,8 @@ const MediaImage = (props) => {
         <img
             style={{
                 objectFit: 'contain',
-                width: 250,
-                height: 250
+                width: props.size,
+                height: props.size
             }}
             src={props.media?.urls?.original}
         />
@@ -109,12 +111,24 @@ const MediaPreview = ({ type, ...props }) => {
     if (!props.item)
         return <></>
 
+    const app = useContext(AppContext)
+    const self = useRef(null)
+
+    const [width, setWidth] = useState(250)
     const [isHovering, setIsHovering] = useState(false)
 
     const isMedia = type === 'media'
 
     const selectable = (props.onSelectedChange && props.onSelectedChange instanceof Function) ? true : false
     const showSendOnHover = (props.onSendClick && props.onSendClick instanceof Function) ? true : false
+
+    useEffect(() => {
+        if(!self.current)
+            return
+
+        // console.log(self.current.clientWidth)
+        setWidth(self.current.clientWidth)
+    }, [self.current, app.windowSize])
 
     const cardActionProps = () => {
         if (props.linkTo) {
@@ -155,17 +169,23 @@ const MediaPreview = ({ type, ...props }) => {
 
     return (
         <StyledCard
-            variant="outlined"
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            style={{ ...props.cardStyle }}
+          ref={self}
+          variant="outlined"
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          width={width}
+          style={{ ...props.cardStyle }}
         >
             <CardActionArea {...cardActionProps()} disableRipple >
-                <CardImage isHovering={isHovering} showOverlay={selectable || showSendOnHover} >
+                <CardImage
+                  isHovering={isHovering}
+                  showOverlay={selectable || showSendOnHover}
+                  size={width}
+                >
                     {isMedia ? (
-                        <MediaImage media={props.item} />
+                        <MediaImage media={props.item} size={width}/>
                     ) : (
-                        <PlaceholderImage placeholder={props.item} />
+                        <PlaceholderImage placeholder={props.item} size={width}/>
                     )}
                     {selectable && (isHovering || props.selected) &&
                         <StyledCheckBox
@@ -214,7 +234,7 @@ const MediaPreview = ({ type, ...props }) => {
 export default MediaPreview
 
 const StyledCard = styled(Card)(({ theme, width }) => ({
-    width: width ? width : 250,
+    // width: width ? width : 10,
     overflow: 'hidden',
 
     'a:hover': {
@@ -224,12 +244,12 @@ const StyledCard = styled(Card)(({ theme, width }) => ({
 
 }));
 
-const CardImage = styled(Box)(({ theme, isHovering,showOverlay }) => ({
+const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 250,
+    height: size,
     backgroundColor: '#efefef',
     position: 'relative',
     overflow: 'hidden',

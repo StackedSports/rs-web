@@ -6,7 +6,6 @@ import TabPanel from '@mui/lab/TabPanel';
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
-import MediaGrid from 'UI/Tables/Media/MediaGrid'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
 import { usePlaceholders, useBoards, useMedias } from 'Api/Hooks'
@@ -104,14 +103,7 @@ export default function MediaSelectDialog(props) {
           onClose={props.onClose}
         >
             <TabPanel value={0} index={0}>
-                {/* <MediaGrid
-                  media={media.items}
-                  pagination={media.pagination}
-                  loading={media.loading}
-                  selected={mediaSelectedId}
-                  onSelectionChange={onMediaSelectionChange}/> */}
-
-                <MediaTable mini
+                <MediaTable mini 
                   items={media.items}
                   loading={media.loading}
                   view={'grid'}
@@ -129,13 +121,6 @@ export default function MediaSelectDialog(props) {
                   onSelectionChange={onPlaceholderSelectionChange}
                   disablePagination
                 />
-                {/* <MediaGrid
-                  type="placeholder"
-                  media={placeholders.items}
-                  pagination={placeholders.pagination}
-                  loading={placeholders.loading}
-                  selected={placeholderSelectedId}
-                  onSelectionChange={onPlaceholderSelectionChange}/> */}
             </TabPanel>
         </SelectDialogTab>
     )    
