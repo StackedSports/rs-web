@@ -20,6 +20,8 @@ const ContactAvatarChip = (props) => {
     width: 100%;
     display: ${showOptions ? "flex" : "none"};
     flex-direction: column;
+    position: absolute;
+    top: 100%;
 
     button {
       width: 100%;
@@ -51,10 +53,9 @@ const ContactAvatarChip = (props) => {
         borderRadius: "5px",
         cursor: "pointer"
       }}
-      onMouseEnter={() => setShowOptions(!showOptions)}
-      onMouseLeave={() => setShowOptions(!showOptions)}
+      onClick={() => setShowOptions(!showOptions)}
     >
-      <Stack spacing={1} direction="row" alignItems="center" justifyContent="center">
+      <Stack spacing={1} direction="row" justifyContent="center" alignItems="center" >
         <Avatar sx={{ width: 36, height: 36 }} alt={props.fullName} src={props.profileImage || ""} />
         <Chip
           sx={{
