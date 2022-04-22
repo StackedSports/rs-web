@@ -103,6 +103,8 @@ const getStatus = (status) => {
     switch(status) {
         case 'drafts': return 'draft'
         case 'in_progress': return 'in progress'
+        case 'finished': return 'sent'
+        case 'scheduled': return 'pending'
         // case 'pending'
         default: return status
     }
@@ -122,6 +124,9 @@ export const getFilterMessagesCriteria = (filters) => {
         if(filters.status === 'all') {
             criteria['message_status'] = [`Error`, `Preview`, `In Progress`, `Sent`,
                 `Rejected`, `Completed`, `Cancelled`, `Pending`]
+        } else if (filters.status === 'finished') {
+            criteria['message_status'] = [`Error`, `Sent`, `Completed`, `Cancelled`]
+            // criteria['message_status'] = [`Sent`]
         } else {
             filters.status.forEach(status => {
                 criteria['message_status'].push(getStatus(status.name))

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { Clear } from "@mui/icons-material"
-import { styled, TextField, Autocomplete, Chip } from "@mui/material"
+import { styled, TextField, Autocomplete, Chip, Avatar } from "@mui/material"
+
 import lodash from "lodash"
 
 export default function SearchableSelector(props) {
-    const [value, setValue] = useState([])
+    const [value, setValue] = useState(props.multiple ? [] : null)
     const [options, setOptions] = useState([])
 
     useEffect(() => {
@@ -66,15 +67,25 @@ export default function SearchableSelector(props) {
                     label={props.label}
                     placeholder={props.placeholder}
                     fullWidth
+                    onKeyPress={(event) => {
+                        //params.onKeyPress(event)
+                        props.onKeyPress(event)
+                    }}
                 />
             )}
             renderTags={(tagValue, getTagProps) => {
                 return tagValue.map((option, index) => (
                     <CustomChip
-                        variant='outlined'
-                        {...getTagProps({ index })}
-                        label={getChipLabel(option)}
-                        deleteIcon={<Clear />}
+                      variant='outlined'
+                      {...getTagProps({ index })}
+                      avatar={props.getChipAvatar ? (
+                        <Avatar
+                          alt={getChipLabel(option)} 
+                          src={props.getChipAvatar(option)}
+                        />
+                      ) : null}
+                      label={getChipLabel(option)}
+                      deleteIcon={<Clear />}
                     />
                 ));
             }}
@@ -93,8 +104,9 @@ const CustomChip = styled(Chip)(({ theme }) => ({
     margin: 8,
 
     '.MuiChip-deleteIcon': {
-        color: theme.palette.error.main,
-
+        color: 'red',//theme.palette.error.main,
+        width: 16,
+        height: 16,
         '&:hover': {
             color: theme.palette.error.dark,
             borderRadius: '50%',

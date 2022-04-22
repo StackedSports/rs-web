@@ -52,7 +52,7 @@ export const messageRoutes = {
     filters: {
         main: '/messages/filter',
         drafts: '/messages/filter/drafts',
-        scheduled: '/messages/filter/pending',
+        scheduled: '/messages/filter/scheduled',
         inProgress: '/messages/filter/in_progress',
         finished: '/messages/filter/finished',
         error: '/messages/filter/error',

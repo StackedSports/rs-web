@@ -384,7 +384,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     //     }
     // }
 
-    // console.log(data.criteria.message_status)
+    console.log(data)
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)

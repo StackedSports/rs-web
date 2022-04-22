@@ -26,11 +26,14 @@ const MessagesPage = (props) => {
     const { filter } = useParams()
     const lastFilter = useRef(filter)
 
-    console.log(JSON.parse(localStorage.getItem("user")).token)
+    // console.log(JSON.parse(localStorage.getItem("user")).token)
 
     const messageFilter = useMemo(() => {
+        console.log(filter)
         if(!filter)
             return { status: 'all' }
+        else if (filter === 'finished')
+            return { status: 'finished'}
         else
             return { status: [{ id: filter, name: filter}] }
     }, [filter])
@@ -41,7 +44,7 @@ const MessagesPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
 
-    console.log(messages.items)
+    // console.log(messages.items)
 
     useEffect(() => {
         console.log('on filter')

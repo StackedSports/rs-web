@@ -380,6 +380,8 @@ export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState(null)
     const [loading, setLoading] = useState(true)
 
+    const apiResults = useRef(null)
+
     useEffect(() => {
         setLoading(true)
 
@@ -389,6 +391,7 @@ export const useTeamMembers = () => {
                 // console.log(members)
                 //console.log(pagination)
                 setTeamMembers(members)
+                apiResults.current = members
             })
             .catch(error => {
                 console.log(error)
@@ -397,14 +400,22 @@ export const useTeamMembers = () => {
     }, [])
 
     const filter = (param) => {
+        if(!teamMembers)
+            return
+
         let filtered = teamMembers.filter(member => (`${member.first_name} ${member.last_name}`).includes(param))
         setTeamMembers(filtered)
+    }
+
+    const clearFilter = () => {
+        setTeamMembers(apiResults.current)
     }
 
     return {
         items: teamMembers,
         loading,
-        filter
+        filter,
+        clearFilter
     }
 }
 

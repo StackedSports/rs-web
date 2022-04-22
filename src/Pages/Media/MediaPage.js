@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo } from 'react'
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
 
+import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
+
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useTeamMembers } from 'Api/Hooks'
 import { getMediaTypes } from 'Api/Endpoints'
@@ -15,6 +17,8 @@ export const MediaPage = (props) => {
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
+
+    const [uploadDialogOpen, setUploadDialogOpen] = useState(true)
     
     useEffect(() => {
         getMediaTypes().then(res => {
@@ -134,6 +138,11 @@ export const MediaPage = (props) => {
 
             {/* {() => cloneElement(props.children, { viewGrid })} */}
             {props.children}
+
+            <UploadMediaDialog
+              open={uploadDialogOpen}
+              onClose={() => setUploadDialogOpen(false)}
+            />
 
         </MainLayout>
     )
