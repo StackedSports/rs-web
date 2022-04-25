@@ -26,7 +26,7 @@ export default function MainLayout(props) {
             <SideBar />
             <Content>
                 <SideFilter
-                    visible={displayFilters}
+                    visible={displayFilters && !props.filtersDisabled}
                     title={props.title}
                     filters={props.filters}
                     collapsed={true}
@@ -36,7 +36,9 @@ export default function MainLayout(props) {
                     title={props.title}
                     actions={props.actions}
                     menuOpen={displayFilters}
+                    menuDisabled={props.filtersDisabled}
                     onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    onBackClick={props.onBackClick}
                     propsPanelFilters={props.propsPanelFilters}
                 >
                     {props.alert && (

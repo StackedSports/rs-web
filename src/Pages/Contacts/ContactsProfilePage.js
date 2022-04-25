@@ -190,6 +190,8 @@ export default function ContactsProfilePage(props) {
             // title='Contacts'
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
+            filtersDisabled
+            onBackClick={() => {}}
             // filters={filters}
             // alert={alert}
             // actions={mainActions}
