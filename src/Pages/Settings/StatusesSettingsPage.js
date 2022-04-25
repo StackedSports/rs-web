@@ -1,13 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import SettingsPage from './SettingsPage'
 
 import StatusesTable from 'UI/Tables/Statuses/StatusesTable'
+import { StatusesDialog } from 'UI/Widgets/Settings/StatusesDialog'
 
 import { useStatuses } from 'Api/Hooks'
 
 const StatusesSettingsPage = () => {
     const statuses = useStatuses()
+    const [openStatusesDialog, setOpenStatusesDialog] = useState(false)
 
     useEffect(() => {
         if (!statuses.items)
@@ -17,7 +19,11 @@ const StatusesSettingsPage = () => {
     }, [statuses.items])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenStatusesDialog(true)
+    }
+
+    const handleSusccess = () => {
+        console.log('handle susccess')
     }
 
     return (
@@ -29,6 +35,11 @@ const StatusesSettingsPage = () => {
             <StatusesTable
                 items={statuses.items}
                 loading={statuses.loading}
+            />
+            <StatusesDialog
+                open={openStatusesDialog}
+                onClose={() => setOpenStatusesDialog(false)}
+                onSusccess={handleSusccess}
             />
         </SettingsPage>
     )

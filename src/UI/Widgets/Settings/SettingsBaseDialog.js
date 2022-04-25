@@ -1,15 +1,29 @@
-import { Dialog, DialogContent, DialogTitle, IconButton, DialogActions } from '@mui/material'
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogTitle, IconButton, DialogActions, Alert, AlertTitle } from '@mui/material'
 import { LoadingButton } from '@mui/lab';
 import { Close } from '@mui/icons-material';
 
 export const SettingsBaseDialog = (props) => {
+    const [error, setError] = useState(null);
+    useEffect(() => {
+        if (props.error) {
+            setError(props.error)
+        }
+    }, [props.error])
+
+    const handleClose = () => {
+        setError(null)
+        if (props.onClose)
+            props.onClose()
+    }
+
     return (
         <Dialog
             component="form"
             maxWidth="md"
             fullWidth
             open={props.open}
-            onClose={props.onClose}
+            onClose={handleClose}
             onSubmit={props.onSubmit}
         >
             <DialogTitle
@@ -22,7 +36,7 @@ export const SettingsBaseDialog = (props) => {
 
                 <IconButton
                     aria-label="close"
-                    onClick={props.onClose}
+                    onClick={handleClose}
                     sx={{
                         position: 'absolute',
                         right: 8,
@@ -42,6 +56,26 @@ export const SettingsBaseDialog = (props) => {
                 }}
             >
                 {props.children}
+
+                {(error !== null) &&
+                    <Alert
+                        severity="error"
+                        action={
+                            <IconButton
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    setError(null);
+                                }}
+                            >
+                                <Close fontSize="inherit" />
+                            </IconButton>
+                        }
+                    >
+                        <AlertTitle >Error</AlertTitle>
+                        {error.message}
+                    </Alert>
+                }
             </DialogContent>
             <DialogActions sx={{ padding: '0 20px 24px' }}>
                 <LoadingButton

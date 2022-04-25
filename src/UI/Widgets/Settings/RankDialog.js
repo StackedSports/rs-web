@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { SettingsBaseDialog } from './SettingsBaseDialog';
+import { createRank, updateRank } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
   rank: yup
@@ -35,7 +36,7 @@ export const RankDialog = (props) => {
             handleClose()
           })
           .catch(err => {
-            setError(err.message)
+            setError(err)
           }).finally(() => {
             formikHelpers.setSubmitting(false)
           })
@@ -46,7 +47,7 @@ export const RankDialog = (props) => {
             handleClose()
           })
           .catch(err => {
-            setError(err.message)
+            setError(err)
           }).finally(() => {
             formikHelpers.setSubmitting(false)
           })
@@ -58,7 +59,8 @@ export const RankDialog = (props) => {
     if (reason && reason == "backdropClick")
       return;
 
-    formik.resetForm();
+    formik.resetForm()
+    setError(null)
     props.onClose()
   }
 
@@ -69,6 +71,7 @@ export const RankDialog = (props) => {
       title={props.rank ? "Edit Rank" : "Add Rank"}
       onSubmit={formik.handleSubmit}
       loading = {formik.isSubmitting}
+      error={error}
     >
       <TextField
         label="Rank"

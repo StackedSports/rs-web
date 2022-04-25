@@ -1,13 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useContext } from 'react'
 
 import SettingsPage from './SettingsPage'
 
 import SnippetsTable from 'UI/Tables/Snippets/SnippetsTable'
+import SnippetsDialog from 'UI/Widgets/Settings/SnippetsDialog'
 
 import { useSnippets } from 'Api/Hooks'
 
 const SnippetsSettingsPage = () => {
     const snippets = useSnippets()
+    const [openSnippetDialog, setOpenSnippetDialog] = useState(false)
 
     useEffect(() => {
         if (!snippets.items)
@@ -17,7 +19,11 @@ const SnippetsSettingsPage = () => {
     }, [snippets.items])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenSnippetDialog(true)
+    }
+
+    const handleSusccess = () => {
+        console.log('handle susccess')
     }
 
     return (
@@ -29,6 +35,11 @@ const SnippetsSettingsPage = () => {
             <SnippetsTable
                 items={snippets.items}
                 loading={snippets.loading}
+            />
+            <SnippetsDialog
+                open={openSnippetDialog}
+                onClose={() => setOpenSnippetDialog(false)}
+                onSusccess={handleSusccess}
             />
         </SettingsPage>
     )

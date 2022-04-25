@@ -5,6 +5,7 @@ import { Close } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
+import { SettingsBaseDialog } from './SettingsBaseDialog';
 import { createPosition, updatePosition } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
@@ -55,7 +56,7 @@ export const PositionDialog = (props) => {
                         handleClose()
                     })
                     .catch(err => {
-                        setError(err.message)
+                        setError(err)
                     }).finally(() => {
                         formikHelpers.setSubmitting(false)
                     })
@@ -67,7 +68,7 @@ export const PositionDialog = (props) => {
                         handleClose()
                     })
                     .catch(err => {
-                        setError(err.message)
+                        setError(err)
                     }).finally(() => {
                         formikHelpers.setSubmitting(false)
                     })
@@ -80,133 +81,91 @@ export const PositionDialog = (props) => {
             return;
 
         formik.resetForm();
+        setError(null)
         props.onClose()
     }
 
     return (
-        <Dialog
-            component="form"
-            maxWidth="md"
-            fullWidth
+        <SettingsBaseDialog
             open={props.open}
             onClose={handleClose}
+            title={props.position ? "Edit Position" : "Add Position"}
             onSubmit={formik.handleSubmit}
+            loading={formik.isSubmitting}
+            error={error}
         >
-            <DialogTitle
-                sx={{
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                }}
+            <TextField
+                margin="dense"
+                name='name'
+                label="Name*"
+                type='text'
+                fullWidth
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+                InputLabelProps={{ shrink: true }}
+                disabled={formik.isSubmitting}
+            />
+            <TextField
+                margin="dense"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                label="Abbreviation*"
+                name='abbreviation'
+                type='text'
+                value={formik.values.abbreviation}
+                onChange={formik.handleChange}
+                error={formik.touched.abbreviation && Boolean(formik.errors.abbreviation)}
+                helperText={formik.touched.abbreviation && formik.errors.abbreviation}
+                disabled={formik.isSubmitting}
+            />
+            <TextField
+                margin="dense"
+                fullWidth
+                name='standardized_name'
+                InputLabelProps={{ shrink: true }}
+                label="Standardized Name*"
+                type='text'
+                value={formik.values.standardized_name}
+                onChange={formik.handleChange}
+                error={formik.touched.standardized_name && Boolean(formik.errors.standardized_name)}
+                helperText={formik.touched.standardized_name && formik.errors.standardized_name}
+                disabled={formik.isSubmitting}
+            />
+            <TextField
+                margin="dense"
+                fullWidth
+                name='role'
+                select
+                InputLabelProps={{ shrink: true }}
+                label="Role*"
+                type='text'
+                value={formik.values.role}
+                onChange={formik.handleChange}
+                error={formik.touched.role && Boolean(formik.errors.role)}
+                helperText={formik.touched.role && formik.errors.role}
+                disabled={formik.isSubmitting}
             >
-                {props.title}
+                <MenuItem value="Offense">Offense</MenuItem>
+                <MenuItem value="Offense">Defense</MenuItem>
+                <MenuItem value="Offense">Special</MenuItem>
+            </TextField>
+            <TextField
+                margin="dense"
+                fullWidth
+                name='alternate_names'
+                InputLabelProps={{ shrink: true }}
+                label="Alternate Names"
+                type='text'
+                value={formik.values.alternate_names}
+                onChange={formik.handleChange}
+                error={formik.touched.alternate_names && Boolean(formik.errors.alternate_names)}
+                helperText={formik.touched.alternate_names && formik.errors.alternate_names}
+                disabled={formik.isSubmitting}
+            />
 
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                >
-                    <Close />
-                </IconButton>
-
-            </DialogTitle>
-
-            <DialogContent
-                sx={{
-                    ' >*:not(:last-child) ': {
-                        marginBottom: '1rem'
-                    },
-                }}
-            >
-                <TextField
-                    margin="dense"
-                    name='name'
-                    label="Name*"
-                    type='text'
-                    fullWidth
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
-                    helperText={formik.touched.name && formik.errors.name}
-                    InputLabelProps={{ shrink: true }}
-                    disabled={formik.isSubmitting}
-                />
-                <TextField
-                    margin="dense"
-                    fullWidth
-                    InputLabelProps={{ shrink: true }}
-                    label="Abbreviation*"
-                    name='abbreviation'
-                    type='text'
-                    value={formik.values.abbreviation}
-                    onChange={formik.handleChange}
-                    error={formik.touched.abbreviation && Boolean(formik.errors.abbreviation)}
-                    helperText={formik.touched.abbreviation && formik.errors.abbreviation}
-                    disabled={formik.isSubmitting}
-                />
-                <TextField
-                    margin="dense"
-                    fullWidth
-                    name='standardized_name'
-                    InputLabelProps={{ shrink: true }}
-                    label="Standardized Name*"
-                    type='text'
-                    value={formik.values.standardized_name}
-                    onChange={formik.handleChange}
-                    error={formik.touched.standardized_name && Boolean(formik.errors.standardized_name)}
-                    helperText={formik.touched.standardized_name && formik.errors.standardized_name}
-                    disabled={formik.isSubmitting}
-                />
-                <TextField
-                    margin="dense"
-                    fullWidth
-                    name='role'
-                    select
-                    InputLabelProps={{ shrink: true }}
-                    label="Role*"
-                    type='text'
-                    value={formik.values.role}
-                    onChange={formik.handleChange}
-                    error={formik.touched.role && Boolean(formik.errors.role)}
-                    helperText={formik.touched.role && formik.errors.role}
-                    disabled={formik.isSubmitting}
-                >
-                    <MenuItem value="Offense">Offense</MenuItem>
-                    <MenuItem value="Offense">Defense</MenuItem>
-                    <MenuItem value="Offense">Special</MenuItem>
-                </TextField>
-                <TextField
-                    margin="dense"
-                    fullWidth
-                    name='alternate_names'
-                    InputLabelProps={{ shrink: true }}
-                    label="Alternate Names"
-                    type='text'
-                    value={formik.values.alternate_names}
-                    onChange={formik.handleChange}
-                    error={formik.touched.alternate_names && Boolean(formik.errors.alternate_names)}
-                    helperText={formik.touched.alternate_names && formik.errors.alternate_names}
-                    disabled={formik.isSubmitting}
-                />
-
-            </DialogContent>
-            <DialogActions sx={{ padding: '0 20px 24px' }}>
-                <LoadingButton
-                    type="submit"
-                    size='large'
-                    variant="contained"
-                    color="primary"
-                    loading={formik.isSubmitting}
-                >
-                    Salvar
-                </LoadingButton>
-            </DialogActions>
-
-        </Dialog>
+        </SettingsBaseDialog>
     )
 }
 

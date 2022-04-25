@@ -15,9 +15,9 @@ const PositionsSettingsPage = () => {
     // const loading = useGradeYears().loading
 
     useEffect(() => {
-        if(!positions.items)
+        if (!positions.items)
             return
-        
+
         console.log(positions.items)
     }, [positions.items])
 
@@ -25,21 +25,25 @@ const PositionsSettingsPage = () => {
         setOpenPositionDialog(true)
     }
 
+    const handleSusccess = () => {
+        console.log('handle susccess')
+    }
+
     return (
         <SettingsPage
-          title='Positions'
-          topActionName='+ New Position'
-          onTopActionClick={onTopActionClick}
+            title='Positions'
+            topActionName='+ New Position'
+            onTopActionClick={onTopActionClick}
         >
             <PositionsTable
-              items={positions.items}
-              loading={positions.loading}
+                items={positions.items}
+                loading={positions.loading}
             />
             <PositionDialog
                 open={openPositionDialog}
                 onClose={() => setOpenPositionDialog(false)}
-                title='New Position'
-             />
+                onSusccess={handleSusccess}
+            />
         </SettingsPage>
     )
 }
