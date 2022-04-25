@@ -294,8 +294,11 @@ export const useTags2 = () => {
 
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
+
         getContact(id)
             .then(([contact]) => {
                 //console.log('ApiHooks: getContact -----')
@@ -305,9 +308,13 @@ export const useContact = (id) => {
             .catch(error => {
                 console.log(error)
             })
+            .finally(() => setLoading(false))
     }, [id])
 
-    return contact
+    return {
+        item: contact,
+        loading
+    }
 }
 
 export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
