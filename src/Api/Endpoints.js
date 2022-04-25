@@ -232,7 +232,7 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    console.log("body updateContact: (" + id + ") : ", body)
+    
     return PUT(`contacts/${id}`, body)
 }
 

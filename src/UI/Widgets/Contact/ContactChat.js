@@ -6,7 +6,14 @@ import ContactChatMessages from "./ContactChatMessages";
 const ContactChat = (props) => {
 
   return (
-    <Stack flex={1} sx={{ height: "650px" }} justifyContent="flex-start" alignItems="start" spacing={1}>
+    <Stack 
+      flex={1} 
+      // justifyContent="flex-start" 
+      // alignItems="start" 
+      spacing={1}
+      
+      // sx={{ wheight: '100%' }}
+    >
       <ContactChatHeader contact={props.contact} />
       <ContactChatMessages />
       <ContactChatInput />

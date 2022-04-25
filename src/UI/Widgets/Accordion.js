@@ -60,7 +60,7 @@ export default function AccordionComponent(props) {
 								setShowLoadingButton(true)
 							if (e.target.value == "")
 								setShowLoadingButton(false)
-							props.onFildChange(e)
+							props.onFieldChange(e)
 						}
 
 						return (
@@ -73,7 +73,7 @@ export default function AccordionComponent(props) {
 									value={item.value || ""}
 									type={item.type || "text"}
 									component={item.component}
-									onChange={e => { onInputChange(e); props.setFildValue(item.name, e.target.value) }}
+									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
 									variant="standard"
 								/>
 								{item.touch && <ErrorMessage name={item.name} />}
