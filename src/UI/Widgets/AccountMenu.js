@@ -15,6 +15,8 @@ import Logout from '@mui/icons-material/Logout'
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import { getFullName } from 'utils/Parser'
+import { Link } from 'react-router-dom'
+import { routes } from 'Routes'
 
 export default function AccountMenu() {
     const auth = React.useContext(AuthContext)
@@ -47,59 +49,59 @@ export default function AccountMenu() {
                         aria-expanded={open ? 'true' : undefined}
                     >
                         <Avatar sx={{ width: 32, height: 32 }}
-                          alt={getFullName(auth?.user)}
-                          src={auth.user?.twitter_profile?.profile_image}
+                            alt={getFullName(auth?.user)}
+                            src={auth.user?.twitter_profile?.profile_image}
                         />
                     </IconButton>
                 </Tooltip>
             </Box>
             <Menu
-              anchorEl={anchorEl}
-              id="account-menu"
-              open={open}
-              onClose={handleClose}
-              onClick={handleClose}
-              sx={{
-                  '.MuiMenu-root': {
-                      marginBotton: 16
-                  }
-              }}
-              PaperProps={{
-                elevation: 0,
-                sx: {
-                    overflow: 'visible',
-                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                    minWidth: 180,
-                    // mb: 2,
-                    '& .MuiAvatar-root': {
-                        width: 32,
-                        height: 32,
-                        ml: -0.5,
-                        mr: 1.5,
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                sx={{
+                    '.MuiMenu-root': {
+                        marginBotton: 16
+                    }
+                }}
+                PaperProps={{
+                    elevation: 0,
+                    sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        minWidth: 180,
+                        // mb: 2,
+                        '& .MuiAvatar-root': {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1.5,
+                        },
+                        // '&:before': {
+                        //     content: '""',
+                        //     display: 'block',
+                        //     position: 'absolute',
+                        //     top: 0,
+                        //     right: 14,
+                        //     width: 10,
+                        //     height: 10,
+                        //     bgcolor: 'background.paper',
+                        //     transform: 'translateY(-50%) rotate(45deg)',
+                        //     zIndex: 0,
+                        // },
                     },
-                    // '&:before': {
-                    //     content: '""',
-                    //     display: 'block',
-                    //     position: 'absolute',
-                    //     top: 0,
-                    //     right: 14,
-                    //     width: 10,
-                    //     height: 10,
-                    //     bgcolor: 'background.paper',
-                    //     transform: 'translateY(-50%) rotate(45deg)',
-                    //     zIndex: 0,
-                    // },
-                },
-              }}
-              transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                }}
+                transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
                 <MenuItem>
-                    <Avatar 
-                      alt={getFullName(auth?.user)}
-                      src={auth.user?.twitter_profile?.profile_image}
-                    /> 
-                    My Profile
+                    <Avatar
+                        alt={getFullName(auth?.user)}
+                        src={auth.user?.twitter_profile?.profile_image}
+                    />
+                    <Link to={routes.userSettings.path}>My Profile</Link>
                 </MenuItem>
                 <Divider />
                 {/* <MenuItem>
