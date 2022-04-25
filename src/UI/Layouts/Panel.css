@@ -38,6 +38,17 @@
     opacity: 0.4;
 }
 
+.Panel .Header .IconBack {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.Panel .Header .IconBack:hover {
+    cursor: pointer;
+    opacity: 0.4;
+}
+
 .Panel .Header .Title {
     font-size: 18px;
     font-weight: bold;

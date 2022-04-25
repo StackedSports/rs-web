@@ -232,8 +232,8 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    console.log("body updateContact: (" + id + ") : ", body)
-    // return AXIOS('put', `contacts/${id}`, body)
+    
+    return PUT(`contacts/${id}`, body)
 }
 
 export const archiveContact = (id) => {
@@ -963,8 +963,8 @@ export const deletePlaceholder = (placeholderId) => {
 }
 
 export const createContact = (data) => {
-   const body = {
-        contact: {...data}
+    const body = {
+        contact: { ...data }
     }
     return POST(`contacts`, body)
 }
