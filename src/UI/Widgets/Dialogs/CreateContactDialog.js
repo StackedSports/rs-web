@@ -9,18 +9,22 @@ import {
     Divider,
     Typography,
     Alert,
+    Box,
+    AlertTitle,
     DialogActions,
-    Button,
+    IconButton,
     InputAdornment,
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
-import { PersonOutline } from '@mui/icons-material';
+import { PersonOutline, CheckCircleOutline, Close } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
+import Button from 'UI/Widgets/Buttons/Button';
 
 import { createContact } from 'Api/Endpoints';
-import {contactsRoutes} from 'Routes/Routes'
+import { contactsRoutes } from 'Routes/Routes'
 
 const validationSchema = yup.object({
     first_name: yup
@@ -36,21 +40,20 @@ const validationSchema = yup.object({
         .min(3, 'Name must be at least 3 characters')
         .max(40),
     phone: yup
-        .string('Enter with a valid phone number')
-        .matches(/^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/, 'Please enter valid phone number'),
+        .string('Enter with a valid phone number'),
     twitter_handle: yup
         .string('Enter with a valid twitter handle')
         .matches(/^[a-zA-Z0-9_]{1,15}$/, 'Please enter valid twitter handle')
 });
 
-// todo: add validation for twitter handle and phone validation backend adds +1
+// todo: add validation for twitter handle and phone validation, backend adds +1
 
 
 export const CreateContactDialog = (props) => {
 
     const [error, setError] = useState(null)
     const [showCreatedContact, setShowCreatedContact] = useState(false)
-    const [ id, setId ] = useState(null)
+    const [id, setId] = useState(null)
 
     const formik = useFormik({
         initialValues: {
@@ -66,9 +69,7 @@ export const CreateContactDialog = (props) => {
                 values.twitter_handle = `@${values.twitter_handle}`
             }
             if (values.phone.length > 0 || values.twitter_handle.length > 0) {
-                console.log(values)
                 createContact(values).then((res) => {
-                    console.log(res.data.id)
                     setId(res.data.id)
                     props.onContactCreated()
                     formikHelpers.resetForm()
@@ -90,21 +91,23 @@ export const CreateContactDialog = (props) => {
             return;
 
         formik.resetForm()
+        setError(null)
         props.onClose()
     }
-
 
     const FormPanel = useMemo(() => (
         <>
             <DialogContent>
 
-                <Stack direction='row' gap={2}>
+                <Stack direction='row' gap={2} mb={1}>
 
                     <TextField
                         margin='dense'
                         name='first_name'
                         label='Fist Name'
+                        placeholder='Fist Name'
                         type='text'
+                        InputLabelProps={{ shrink: true }}
                         value={formik.values.first_name}
                         disabled={formik.isSubmitting}
                         onChange={formik.handleChange}
@@ -117,7 +120,9 @@ export const CreateContactDialog = (props) => {
                         margin='dense'
                         name='last_name'
                         label='Last Name'
+                        placeholder='Last Name'
                         type='text'
+                        InputLabelProps={{ shrink: true }}
                         value={formik.values.last_name}
                         disabled={formik.isSubmitting}
                         onChange={formik.handleChange}
@@ -132,12 +137,17 @@ export const CreateContactDialog = (props) => {
                     margin='dense'
                     name='phone'
                     label='Phone'
-                    type='phone'
+                    placeholder='Phone'
+                    type='text'
+                    InputLabelProps={{ shrink: true }}
                     value={formik.values.phone}
                     disabled={formik.isSubmitting}
                     onChange={formik.handleChange}
                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                     helperText={formik.touched.phone && formik.errors.phone}
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start">+1</InputAdornment>,
+                    }}
                     fullWidth
                 />
                 <Divider>
@@ -147,6 +157,7 @@ export const CreateContactDialog = (props) => {
                     margin='dense'
                     name='twitter_handle'
                     label='Twitter Handle'
+                    placeholder='Twitter Handle'
                     type='text'
                     value={formik.values.twitter_handle}
                     disabled={formik.isSubmitting}
@@ -159,17 +170,36 @@ export const CreateContactDialog = (props) => {
                     }}
                 />
 
+                {(error !== null) &&
+                    <Alert
+                        severity="error"
+                        action={
+                            <IconButton
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    setError(null);
+                                }}
+                            >
+                                <Close fontSize="inherit" />
+                            </IconButton>
+                        } >
+                        <AlertTitle >Error</AlertTitle>
+                        {error.message}
+                    </Alert>
+                }
+
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ padding: '0 20px 24px' }}>
                 <Button
                     onClick={handleClose}
                     color='primary'
                     size='large'
                     disabled={formik.isSubmitting}
                     variant='outlined'
-                >
-                    Cancel
-                </Button>
+                    name='Cancel'
+                />
+
                 <LoadingButton
                     type='submit'
                     variant='contained'
@@ -183,38 +213,32 @@ export const CreateContactDialog = (props) => {
                 </LoadingButton>
             </DialogActions>
         </>
-    ), [formik.values, formik.isSubmitting])
+    ), [formik])
 
 
     const CreatedProfilePanel = useMemo(() => (
         <>
             <DialogContent>
-                <Alert severity="success">
-                    Profile created successfully
-                </Alert>
+                <Box sx={{ textAlign: 'center', mt: 1 }} >
+                    <CheckCircleOutline color="success" sx={{ fontSize: '5rem !important' }} />
+                    <Typography variant='h5' sx={{ mt: 1 }} gutterBottom>
+                        Contact created!
+                    </Typography>
+                    <Link to={`${contactsRoutes.profile}/${id}`}>
+                        click here to see the profile page
+                    </Link>
+                </Box>
+
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ padding: '0 20px 24px' }}>
                 <Button
-                    onClick={() => setShowCreatedContact(false)}
-                    color='primary'
-                    size='large'
-                    variant='outlined'
-                >
-                    Create Another Profile
-                </Button>
-                <Button
-                    onClick={handleClose}
-                    color='primary'
-                    size='large'
+                    onClick={() => setShowCreatedContact(old => !old)}
                     variant='contained'
-                    component={Link}
-                    to={`${contactsRoutes.profile}/${id}`}
-                >
-                    See The Profile Page
-                </Button>
+                    name='Create Another Contact'
+                />
             </DialogActions>
         </>
-    ), [])
+    ), [id])
 
     return (
         <Dialog
@@ -228,9 +252,22 @@ export const CreateContactDialog = (props) => {
             <DialogTitle
                 sx={{
                     fontWeight: 'bold',
+                    fontSize: '1rem',
                 }}
             >
                 <PersonOutline color='primary' /> New Contact Profile
+                <IconButton
+                    aria-label="close"
+                    onClick={handleClose}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <Close />
+                </IconButton>
             </DialogTitle>
 
             {

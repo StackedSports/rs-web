@@ -1,12 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import SettingsPage from './SettingsPage'
 
 import RanksTable from 'UI/Tables/Ranks/RanksTable'
+import RankDialog from 'UI/Widgets/Settings/RankDialog'
 
 import { useRanks } from 'Api/Hooks'
 
 const RanksSettingsPage = () => {
+
+    const [openRankDialog, setOpenRankDialog] = useState(false)
     const ranks = useRanks()
 
     useEffect(() => {
@@ -17,7 +20,11 @@ const RanksSettingsPage = () => {
     }, [ranks.items])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenRankDialog(true)
+    }
+
+    const handleSusccess = () => {
+        console.log('handle susccess')
     }
 
     return (
@@ -29,6 +36,11 @@ const RanksSettingsPage = () => {
             <RanksTable
                 items={ranks.items}
                 loading={ranks.loading}
+            />
+            <RankDialog
+                open={openRankDialog}
+                onClose={() => setOpenRankDialog(false)}
+                onSusccess={ handleSusccess }
             />
         </SettingsPage>
     )

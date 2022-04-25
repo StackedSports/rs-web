@@ -1,12 +1,16 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import SettingsPage from './SettingsPage'
 
 import PositionsTable from 'UI/Tables/Positions/PositionsTable'
+import PositionDialog from 'UI/Widgets/Settings/PositionDialog'
 
 import { usePositions } from 'Api/Hooks'
 
 const PositionsSettingsPage = () => {
+
+    const [openPositionDialog, setOpenPositionDialog] = useState(false)
+
     const positions = usePositions()
     // const loading = useGradeYears().loading
 
@@ -18,7 +22,7 @@ const PositionsSettingsPage = () => {
     }, [positions.items])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenPositionDialog(true)
     }
 
     return (
@@ -31,6 +35,11 @@ const PositionsSettingsPage = () => {
               items={positions.items}
               loading={positions.loading}
             />
+            <PositionDialog
+                open={openPositionDialog}
+                onClose={() => setOpenPositionDialog(false)}
+                title='New Position'
+             />
         </SettingsPage>
     )
 }

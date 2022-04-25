@@ -324,20 +324,68 @@ export const getTagsWithMessages = () => {
 export const getRanks = () => {
     return AXIOS('get', `team/settings/ranks`)
 }
+
+export const createRank = (data) => {
+    let body = {
+        rank: { ...data }
+    }
+    return POST('team/settings/ranks', body)
+}
+
+export const updateRank = (id, data) => {
+    let body = {
+        rank: { ...data }
+    }
+
+    return PUT(`team/settings/ranks/${id}`, body)
+}
+
 export const getGradeYears = () => {
     return AXIOS('get', `team/settings/grad_years`)
 }
 
-
 export const getBoards = () => {
     return AXIOS('get', `filters`)
 }
+
 export const getPositions = () => {
     return AXIOS('get', `team/settings/positions`)
 }
+
+export const createPosition = (data) => {
+    let body = {
+        position: { ...data }
+    }
+    return POST('team/settings/positions', body)
+}
+
+export const updatePosition = (id, data) => {
+    let body = {
+        position: { ...data }
+    }
+
+    return PUT(`team/settings/positions/${id}`, body)
+}
+
 export const getStatuses = () => {
     return AXIOS('get', `team/settings/statuses`)
 }
+
+export const createStatuses = (data) => {
+    let body = {
+        status: { ...data }
+    }
+    return POST('team/settings/statuses', body)
+}
+
+export const updateStatuses = (id, data) => {
+    let body = {
+        status: { ...data }
+    }
+
+    return PUT(`team/settings/statuses/${id}`, body)
+}
+
 export const getAllColumns = () => {
     return AXIOS('get', `team/settings/available_columns`)
 }
@@ -455,6 +503,21 @@ export const getTextPlaceholders = () => {
 
 export const getSnippets = () => {
     return AXIOS('get', `team/settings/snippets`)
+}
+
+export const createSnippets = (data) => {
+    let body = {
+        snippet: { ...data }
+    }
+    return POST('team/settings/snippets', body)
+}
+
+export const updateSnippets = (id, data) => {
+    let body = {
+        snippet: { ...data }
+    }
+
+    return PUT(`team/settings/snippets/${id}`, body)
 }
 
 export const getCoachTypes = () => {
@@ -898,8 +961,8 @@ export const deletePlaceholder = (placeholderId) => {
 }
 
 export const createContact = (data) => {
-   const body = {
-        contact: {...data}
+    const body = {
+        contact: { ...data }
     }
     return POST(`contacts`, body)
 }

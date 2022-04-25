@@ -3,7 +3,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from "@material-ui/core"
+} from '@mui/material'
 
 import Button from 'UI/Widgets/Buttons/Button'
 
