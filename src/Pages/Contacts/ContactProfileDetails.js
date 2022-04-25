@@ -117,9 +117,6 @@ const ContactProfileDetails = (props) => {
                   items={[
                     { label: 'Graduation Year', name: 'graduation_year', type: "number", value: values.graduation_year, component: TextField },
                     { label: 'Current School', name: 'high_school', value: values.high_school, component: TextField },
-                    // { label: 'Rank', name: 'rank', values:values.rank ,component: TextField },
-                    // { label: 'State', name: 'state', values:values.state ,component: TextField },
-                    // { label: 'Status', name: 'stats', values:values.stats ,component: TextField },
                   ]}
                 >
                   <SearchableSelector
@@ -141,16 +138,14 @@ const ContactProfileDetails = (props) => {
                     label="Status"
                     placeholder="Search"
                     // multiple
-                    value={values.status}
+                    value={values.status_id}
                     options={status.items || []}
                     loading={status.loading}
                     isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                    getOptionLabel={(option) => option.status || values.status_id.status || ""}
+                    getOptionLabel={(option) => option.status || values.status_id || ""}
                     onChange={(newValue) => {
-                      const id = newValue.id
                       console.log(newValue)
-                      console.log(id)
-                      setFieldValue("status_id", id)
+                      setFieldValue("status_id", newValue.id)
                     }}
                   />
 
@@ -165,8 +160,8 @@ const ContactProfileDetails = (props) => {
                     getOptionLabel={(option) => option.rank || values.rank_id || ""}
                     getChipLabel={(option) => option.rank}
                     onChange={(newValue) => {
-                      const id = newValue.rank
-                      setFieldValue("rank_id", id)
+                      console.log(newValue)
+                      setFieldValue("rank_id", newValue.id)
                     }}
                   />
                 </AccordionComponent>
@@ -178,13 +173,6 @@ const ContactProfileDetails = (props) => {
                   setExpanded={setExpandedAccordion}
                   loadingUpdateContact={loadingUpdateContact}
                   showButtonSummary
-                // onFildChange={handleChange}
-                // setFildValue={setFieldValue}
-                // items={[
-                //   { label: 'Position Coach', name: 'positionCoach', values:values.positionCoach ,component: TextField },
-                //   { label: 'Area Coach', name: 'areaCoach', values:values.areaCoach ,component: TextField },
-                //   { label: 'Coordinator', name: 'coordinator', values:values.coordinator ,component: TextField },
-                // ]}
                 >
                   <>
                     <SearchableSelector
@@ -195,14 +183,14 @@ const ContactProfileDetails = (props) => {
                       options={teamMembers.items || []}
                       loading={teamMembers.loading}
                       isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                      getOptionLabel={(option) => option.first_name || values.position_coach_id.first_name || ""}
+                      getOptionLabel={(option) => option.first_name || values.position_coach_id || ""}
                       getChipLabel={(option) => {
                         console.log('ccc', option)
-                        return option.first_name
+                        return option.first_name || option
                       }}
                       onChange={(newValue) => {
                         const id = newValue.id
-                        setFieldValue("recruiting_coach_id", id)
+                        setFieldValue("position_coach_id", newValue)
                       }}
                     />
                     <SearchableSelector
@@ -213,14 +201,14 @@ const ContactProfileDetails = (props) => {
                       options={teamMembers.items || []}
                       loading={teamMembers.loading}
                       isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                      getOptionLabel={(option) => option.first_name || values.recruiting_coach_id.first_name || ""}
+                      getOptionLabel={(option) => option.first_name || values.recruiting_coach_id || ""}
                       getChipLabel={(option) => {
                         console.log('ccc', option)
-                        return option.first_name
+                        return option.first_name || option
                       }}
                       onChange={(newValue) => {
                         const id = newValue.id
-                        setFieldValue("recruiting_coach_id", id)
+                        setFieldValue("recruiting_coach_id", newValue)
                       }}
                     />
                     <SearchableSelector
@@ -231,14 +219,14 @@ const ContactProfileDetails = (props) => {
                       options={teamMembers.items || []}
                       loading={teamMembers.loading}
                       isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                      getOptionLabel={(option) => option.first_name || values.coordinator_id.first_name || ""}
+                      getOptionLabel={(option) => option.first_name || values.coordinator_id || ""}
                       getChipLabel={(option) => {
                         console.log('ccc', option)
-                        return option.first_name
+                        return option.first_name || option
                       }}
                       onChange={(newValue) => {
                         const id = newValue.id
-                        setFieldValue("coordinator_id", id)
+                        setFieldValue("coordinator_id", newValue)
                       }}
                     />
                   </>
@@ -251,12 +239,6 @@ const ContactProfileDetails = (props) => {
                   setExpanded={setExpandedAccordion}
                   loadingUpdateContact={loadingUpdateContact}
                   showButtonSummary
-                // onFildChange={handleChange}
-                // setFildValue={setFieldValue}
-                // items={[
-                // { label: 'Offense', name: 'offense', values:values.offense ,component: TextField },
-                // { label: 'Defense', name: 'defense', values:values.defense ,component: TextField },
-                // ]}
                 >
                   <SearchableSelector
                     label="Positions"
@@ -325,11 +307,6 @@ const ContactProfileDetails = (props) => {
                   setExpanded={setExpandedAccordion}
                   loadingUpdateContact={loadingUpdateContact}
                   showButtonSummary
-                // onFildChange={handleChange}
-                // setFildValue={setFieldValue}
-                // items={[
-                //     { label: 'Tags', name: 'tags', values:values.tags ,component: TextField },
-                // ]}
                 >
                   <SearchableSelector
                     label="Tags"
@@ -339,9 +316,9 @@ const ContactProfileDetails = (props) => {
                     options={tags.items || []}
                     loading={tags.loading}
                     isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                    getOptionLabel={(option) => option.name || ""}
+                    getOptionLabel={(option) => option.name || option || ""}
                     getChipLabel={(option) => {
-                      return option.name
+                      return option.name || option
                     }}
                     onChange={(newValue) => {
                       const teamTags = newValue.map(tag => tag.name || tag)

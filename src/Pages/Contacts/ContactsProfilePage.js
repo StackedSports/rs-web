@@ -8,12 +8,12 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import {
     useBoards,
+    useContact,
     useTeamMembers,
 } from 'Api/Hooks'
 
 import {
     updateContact,
-    getContact
 } from 'Api/Endpoints'
 
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
@@ -34,8 +34,6 @@ export default function ContactsProfilePage(props) {
     const [teamBoards, setTeamBoards] = useState([])
     const [loading, setLoading] = useState(false)
     const [loadingContact, setLoadingContact] = useState(false)
-    const [contact, setContact] = useState(null)
-
 
     // handle filters options
     // const positions = usePositions()
@@ -44,25 +42,13 @@ export default function ContactsProfilePage(props) {
     // const ranks = useRanks()
     // const tags = useTags2()
     // const teamMembers = useTeamMembers()
+    const contact = useContact(id)
     const boards = useBoards()
 
     useEffect(() => {
-        if (!id)
+        if (!contact)
             return
-
-        getContact(id)
-            .then(([contact]) => {
-                setLoadingContact(true)
-                setContact(contact)
-                console.log(contact)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setLoadingContact(false)
-            })
-
+        console.log(contact.item)
     }, [id])
 
     useEffect(() => {
@@ -93,37 +79,37 @@ export default function ContactsProfilePage(props) {
 
     const initialValuesForm = {
         //general
-        first_name: contact?.first_name || "",
-        last_name: contact?.last_name || "",
-        nick_name: contact?.nick_name || "",
-        phone: contact?.phone ? formatPhoneNumber(contact.phone) : "",
-        email: contact?.email,
-        twitter_handle: contact?.twitter_profile.screen_name || "",
+        first_name: contact.item?.first_name || "",
+        last_name: contact.item?.last_name || "",
+        nick_name: contact.item?.nick_name || "",
+        phone: contact.item?.phone ? formatPhoneNumber(contact.item.phone) : "",
+        email: contact.item?.email,
+        twitter_handle: contact.item?.twitter_profile?.screen_name || "",
         //details
-        graduation_year: contact?.grad_year || "",
-        high_school: contact?.high_school || "",
-        state: contact?.state || "",
-        status_id: contact?.status?.status || "",
-        rank_id: contact?.rank?.rank || "",
+        graduation_year: contact.item?.grad_year || "",
+        high_school: contact.item?.high_school || "",
+        state: contact.item?.state || "",
+        status_id: contact.item?.status?.status || "",
+        rank_id: contact.item?.rank?.rank || "",
         //coaches
-        position_coach_id: contact?.position_coach || "",
-        recruiting_coach_id: contact?.position_coach || "",
-        coordinator_id: contact?.coordinator || "",
+        position_coach_id: contact.item?.position_coach?.first_name || "",
+        recruiting_coach_id: contact.item?.position_coach?.first_name || "",
+        coordinator_id: contact.item?.coordinator?.first_name || "",
         //positions
-        position_tags: contact?.positions.map(p => p.toUpperCase()) || "",
-        // offense: contact?.positions || "",
-        // defense: contact?.positions || "",
+        position_tags: contact.item?.positions?.map(p => p.toUpperCase()) || "",
+        // offense: contact.item?.positions || "",
+        // defense: contact.item?.positions || "",
         //family&relationship
-        relationships: contact?.relationships || "",
+        relationships: contact.item?.relationships || "",
         //opponents
-        opponents: contact?.opponents || "",
+        opponents: contact.item?.opponents || "",
         //external profiles
-        hudl_link: contact?.hudl || "",
-        arms_id: contact?.arms_id || "",
+        hudl_link: contact.item?.hudl || "",
+        arms_id: contact.item?.arms_id || "",
         //tags
-        team_tags: contact?.tags || "",
+        team_tags: contact.item?.tags || "",
         //actions
-        archived: contact?.archived || false,
+        archived: contact.item?.archived || false,
     }
 
     // const mainActions = [
@@ -149,17 +135,17 @@ export default function ContactsProfilePage(props) {
         console.log('top action click')
     }
 
-    const onTagsSelected = (selectedTagsIds) => {
-        // setLoading(true)
+    // const onTagsSelected = (selectedTagsIds) => {
+    //     // setLoading(true)
 
-    }
+    // }
 
     const onUpdateContact = (values) => {
         let data = {}
 
         Object.keys(initialValuesForm).forEach(key => {
             if (initialValuesForm[key] !== values[key]) {
-                data[key] = values[key]
+                data[key] = values[key].toString()
             }
         })
         if (Object.keys(data).length > 0)
@@ -220,11 +206,11 @@ export default function ContactsProfilePage(props) {
                 spacing={1}
             >
                 <ContactProfileDetails
-                    loadingContact={loadingContact}
+                    loadingContact={contact.loading}
                     onUpdateContact={onUpdateContact}
                     initialValuesForm={initialValuesForm}
                 />
-                <ContactChat contact={contact} />
+                <ContactChat contact={contact.item} />
                 <ContactMessageDetails />
             </Stack>
         </MainLayout >
