@@ -43,7 +43,7 @@ const fullName = {
     resizable: true,
     valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
-        <Tooltip title={getFullName(params.row)} placement='right-start'>
+        <Tooltip title={params.value} placement='right-start'>
             <Link 
               style={{ color:'inherit' }} 
               to={`${contactsRoutes.profile}/${params.row.id}`}
@@ -59,7 +59,12 @@ const firstName = {
     headerName: 'First Name',
     flex: 1,
     // resizable: true,
-    valueGetter: (params) => params.row.first_name ? params.row.first_name : ''
+    valueGetter: (params) => params.row.first_name ? params.row.first_name : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const lastName = {
@@ -67,7 +72,12 @@ const lastName = {
     headerName: 'Last Name',
     flex: 1,
     // resizable: true,
-    valueGetter: (params) => params.row.last_name ? params.row.last_name : ''
+    valueGetter: (params) => params.row.last_name ? params.row.last_name : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const nickName = {
@@ -75,7 +85,12 @@ const nickName = {
     headerName: 'Nick Name',
     flex: 1,
     // resizable: true,
-    valueGetter: (params) => params.row.nick_name ? params.row.nick_name : ''
+    valueGetter: (params) => params.row.nick_name ? params.row.nick_name : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const twitterName = {
@@ -91,7 +106,12 @@ const twitterName = {
             return `@${params.row.twitter_profile?.screen_name}`
         else
             return ''
-    }
+    },
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const phone = {
@@ -100,7 +120,12 @@ const phone = {
     width: 150,
     // flex: 1,
     // resizable: true,
-    valueGetter: (params) => formatPhoneNumber(params.row.phone)
+    valueGetter: (params) => formatPhoneNumber(params.row.phone),
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const state = {
@@ -118,7 +143,7 @@ const school = {
     valueGetter: (params) => params.row.high_school ? params.row.high_school : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
-         <Typography noWrap >{params.value}</Typography>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
         </Tooltip>
     ),
 }
@@ -127,35 +152,60 @@ const gradYear = {
     field: 'gradYear',
     headerName: 'Grad Year',
     flex: 1,
-    valueGetter: (params) => params.row.grad_year ? params.row.grad_year : ''
+    valueGetter: (params) => params.row.grad_year ? params.row.grad_year : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const positions = {
     field: 'positions',
     headerName: 'Position',
     flex: 1,
-    valueGetter: (params) => params.row.positions ? params.row.positions.join(", ").toUpperCase() : ''
+    valueGetter: (params) => params.row.positions ? params.row.positions.join(", ").toUpperCase() : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const areaCoach = {//array
     field: 'areaCoach',
     headerName: 'Area Coach',
     flex: 1,
-    valueGetter: (params) => params.row.area_coach?.full_name || ''
+    valueGetter: (params) => params.row.area_coach?.full_name || '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const positionCoach = {
     field: 'positionCoach',
     headerName: 'Position Coach',
     flex: 1,
-    valueGetter: (params) => params.row.position_coach?.full_name || ''
+    valueGetter: (params) => params.row.position_coach?.full_name || '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const recruitingCoach = {
     field: 'recruitingCoach',
     headerName: 'Recruiting Coach',
     flex: 1,
-    valueGetter: (params) => params.row.coordinator?.full_name || ''
+    valueGetter: (params) => params.row.coordinator?.full_name || '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const status = {
@@ -163,7 +213,12 @@ const status = {
     headerName: 'Status',
     // width: 120,
     flex: 1,
-    valueGetter: (params) => params.row.status ? params.row.status.status : ''
+    valueGetter: (params) => params.row.status ? params.row.status.status : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const status2 = {
@@ -171,7 +226,12 @@ const status2 = {
     headerName: 'Status 2',
     // width: 120,
     flex: 1,
-    valueGetter: (params) => params.row.status_2 ? params.row.status_2 : ''
+    valueGetter: (params) => params.row.status_2 ? params.row.status_2 : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const rank = {
@@ -179,7 +239,12 @@ const rank = {
     headerName: 'Rank',
     // width: 120,
     flex: 1,
-    valueGetter: (params) => params.row.rank ? params.row.rank.rank : ''
+    valueGetter: (params) => params.row.rank ? params.row.rank.rank : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const lastMessaged = {
@@ -211,7 +276,12 @@ const timeZone = {
     headerName: 'Time Zone',
     // width: 120,
     flex: 1,
-    valueGetter: (params) => params.row.time_zone ? params.row.time_zone : ''
+    valueGetter: (params) => params.row.time_zone ? params.row.time_zone : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const birthday = {
@@ -219,7 +289,12 @@ const birthday = {
     headerName: 'Birthday ',
     // width: 120,
     flex: 1,
-    valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : ''
+    valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 export const columnsMini = [

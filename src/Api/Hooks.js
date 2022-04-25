@@ -513,6 +513,7 @@ export const useTeamContact = () => {
 export const useBoards = () => {
     const [boards, setBoards] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -528,7 +529,7 @@ export const useBoards = () => {
             })
             .finally(() => setLoading(false))
 
-    }, [])
+    }, [refresh])
 
     const filter = (filters) => {
 
@@ -538,11 +539,16 @@ export const useBoards = () => {
 
     }
 
+    const refreshData = () => {
+        setRefresh(old=>!old)
+    }
+
     return {
         items: boards,
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        refreshData
     }
 }
 

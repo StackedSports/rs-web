@@ -11,6 +11,7 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
+import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
@@ -50,6 +51,7 @@ export default function ContactsPage(props) {
     const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
+    const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 
     // const [selectedContacts, setSelectedContacts] = useState([])
@@ -173,7 +175,7 @@ export default function ContactsPage(props) {
 
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenCreateContactDialog(true)
     }
 
     // useEffect(() => {
@@ -272,6 +274,16 @@ export default function ContactsPage(props) {
                     alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
             .finally(() => setLoading(false))
+    }
+
+    const onBoardCreated = () => {
+        setOpenCreateBoardDialog(false)
+        boards.refreshData()
+        alert.setSuccess('Board created successfully!')
+    }
+
+    const onContactCreated = () => {
+        alert.setSuccess('Contact created successfully!')
     }
 
     const onPageChange = (page) => {
@@ -401,6 +413,13 @@ export default function ContactsPage(props) {
                 open={openCreateBoardDialog}
                 onClose={() => setOpenCreateBoardDialog(false)}
                 selectedFilters={selectedFilters}
+                onBoardCreated={onBoardCreated}
+            />
+
+            <CreateContactDialog
+                open={openCreateContactDialog}
+                onClose={() => setOpenCreateContactDialog(false)}
+                onContactCreated={onContactCreated}
             />
 
             <SelectTagDialog

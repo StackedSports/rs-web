@@ -8,6 +8,7 @@ export const EditableLabel = (props) => {
     const inputRef = useRef(null)
 
     useEffect(() => {
+        if(props.value ==! undefined || props.value != null) 
         setValue(props.value)
     }, [props.value])
 
