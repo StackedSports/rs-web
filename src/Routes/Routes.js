@@ -42,6 +42,11 @@ export const routes = {
         path: '/settings', // /settings
         icon: SettingsIcon
     },
+    userSettings: {
+        title: ' User Settings',
+        path: '/user', //
+        // icon: SettingsIcon
+    },
 }
 
 export const messageRoutes = {
@@ -93,7 +98,7 @@ export const settingsRoutes = {
         ranks: '/settings/ranks',
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
-        
+
         // tags: '/settings/tags',
         // gradYears: '/settings/grad-years',
         // placeholders: '/settings/placeholders',
@@ -111,4 +116,10 @@ export const contactsRoutes = {
     all: '/contacts',
     board: '/contacts/board',
     profile: '/contacts/profile'
+}
+
+export const userRoutes = {
+    profile: "/user/profile",
+    account: "/user/account",
+    notifications: "/user/notifications",
 }

@@ -29,11 +29,12 @@ import MediaC from "./components/MediaComponent/Media";
 import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
 import {
-  ContactsRoutes,
-  MessagesRoutes,
-  MediaRoutes,
-  SettingsRoutes,
-  routes
+	ContactsRoutes,
+	MessagesRoutes,
+	MediaRoutes,
+	SettingsRoutes,
+	UserSettingsRoutes,
+	routes
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
@@ -67,6 +68,7 @@ function App() {
 						<Route path={routes.messages.path} component={MessagesRoutes} />
 						<Route path={routes.media.path} component={MediaRoutes} />
 						<Route path={routes.settings.path} component={SettingsRoutes} />
+						<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 					</Switch>
 				</div>
 			</AppProvider>
