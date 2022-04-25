@@ -6,7 +6,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 const ContactChatInput = (props) => {
 
   return (
-    <Stack sx={{ width: "100%" }} direction="row" flex={1} justifyContent="space-between" alignItems="center" spacing={1}>
+    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
       <TextareaAutosize
         maxRows={4}
         aria-label="type Message to send"

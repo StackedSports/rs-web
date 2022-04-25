@@ -1,50 +1,22 @@
-import { useState, useMemo, useRef, useEffect, useContext } from 'react'
+import { useState } from 'react'
 
-import {
-  Dialog,
-} from "@material-ui/core"
-import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
+import { Dialog } from "@material-ui/core"
+import { Grid, Stack, debounce } from "@mui/material"
 
-
+import MuiAlert from "@material-ui/lab/Alert";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { Button as MuiButton } from '@mui/material';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { LoadingButton } from '@mui/lab';
 
-
-import Upload from "images/Upload.PNG";
-
-
-
-
-import {
-  getTags,
-  getTeamContacts,
-  getPlaceholder,
-  getAllContacts2,
-  getSearchedContacts,
-  addTag,
-  getAssociatedContactByFileName,
-  uploadMedia,
-  addTagToMedia,
-  createContacts
-} from "ApiHelper";
-
-
+import Upload from "images/Upload.PNG"
 
 import {
     MediaUploadHeader,
     MediaUploadItem,
-    MediaTableItemLoading,
-    MediaUploadStatus
-  } from 'UI/Tables/MediaUpload/MediaUploadTable'
-  
-import SearchableOptions, {
-    // SearchableOptions,
-    SearchableOptionDropdown,
-    SearchableOptionListItem
-} from 'UI/Forms/Inputs/SearchableOptions'
+} from 'UI/Tables/MediaUpload/MediaUploadTable'
+
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import MediaInputTitle from 'UI/Forms/Inputs/MediaInputTitle'
   
@@ -55,85 +27,65 @@ import { formatDate, getFullName } from "utils/Parser"
 import {
     useTeamMembers,
     useTags2,
-    usePlaceholders
+    usePlaceholders,
+	useContacts
 } from 'Api/Hooks'
+
+import {
+	getAssociatedContactByFileName,
+} from 'Api/Helper'
+
+import {
+	createPlaceholder,
+	uploadMedia,
+	addTagToMedia
+} from 'Api/Endpoints'
 
 const FileDropZone = (props) => {
     return (
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justify="center"
-        style={{
-          height: "max-content",
-          background: "#fafcfd",
-          // marginTop: 16,
-          marginBottom: 16,
-          borderRadius: 4,
-          border: "1px dotted gray",
-          padding: 16,
-          ...props.style
-        }}
-        onDragOver={(e) => {
-          e.preventDefault();
-          // alert("This is alert");
-          //////console.log("This is great");
-        }}
-        onDrop={props.onDrop}
-      >
-        <img src={Upload}></img>
-        <p
-          style={{
-            width: "100%",
-            textAlign: "center",
-            color: "#a2acc1",
-            margin: 0,
-          }}
-        >
-          Upload Media
-        </p>
+		<Stack
+		  alignItems="center"
+		  justify="center"
+		  style={{
+		  	height: "max-content",
+		    background: "#fafcfd",
+			// marginTop: 16,
+			marginBottom: 16,
+			borderRadius: 4,
+			border: "1px dotted gray",
+			padding: 16,
+			...props.style
+		  }}
+		  onDragOver={(e) => e.preventDefault()}
+		  onDrop={props.onDrop}
+		>
+			<img src={Upload}></img>
+			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+				Upload Media
+			</p>
 
-        <p
-          style={{
-            width: "100%",
-            textAlign: "center",
-            color: "#a2acc1",
-            margin: 0,
-          }}
-        >
-          Drag and Drop or{" "}
-          <span
-            style={{ color: "#6aa8f4", cursor: "pointer" }}
-            onClick={() => {
-              document.getElementById("browse").click();
-            }}
-          >
-            Browse
-          </span>{" "}
-          your files here
-        </p>
-      </Grid>
+			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+				Drag and Drop or{" "}
+				<span
+				  style={{ color: "#6aa8f4", cursor: "pointer" }}
+				  onClick={() => document.getElementById("browse").click()}
+				>
+					Browse
+				</span>{" "}
+				your files here
+			</p>
+		</Stack>
     );
 }
 
 const dummyFiles = [
-    // {
-    //   name: "file1.png"
-    // },
-    // {
-    //   name: "test.png"
-    // },
-    // {
-    //   name: "test2.png"
-    // },
-    // {
-    //   name: "test3.png"
-    // },
-    // {
-    //   name: "test4.png"
-    // }
-  ]
+    // { name: "file1.png" },
+    // { name: "test.png" },
+    // { name: "test2.png" },
+	// { name: "file1.png" },
+    // { name: "test.png" },
+    // { name: "test2.png" },
+]
 
 const dummyUploadProgress = [
     // "none",
@@ -142,44 +94,32 @@ const dummyUploadProgress = [
     // "success",
     // "failed",
     // "failed",
-    // "failed",
-    // "failed",
-    // "failed"   
-  ]
+]
 
-  const dummyAssociatedPeople = [
+const dummyAssociatedPeople = [
     // { first_name: "Ben", last_name: "Graves"},
     // null,
     // null,
+	// { first_name: "Ben", last_name: "Graves"},
     // null,
-    // null
-  ]
+    // null,
+]
 
 export default function UploadMediaDialog(props) { 
     const teamMembers = useTeamMembers()
     const tags = useTags2()
-    const placeholders = usePlaceholders()
+    const placeholders = usePlaceholders(1, 25)
+	const contacts = useContacts()
 
-    const [selectedOwner, setSelectedOwner] = useState(null)
+    const [selectedOwner, setSelectedOwner] = useState([])
     const [selectedTags, setSelectedTags] = useState([])
     const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
-  
-    const [searchedTeamMembers, setSearchedTeamMembers] = useState([])
-
-  // Tags
-  const [searchedTags, setSearchedTags] = useState([])
-
-  // Placeholders
-  const [searchedPlaceholders, setSearchedPlaceholders] = useState([])
-
 
     const [uploadStatus, setUploadStatus] = useState(dummyUploadProgress)
     const [uploadingMedia, setUploadingMedia] = useState(false)
 
     // Media
     const [dropFiles, setDropFiles] = useState(dummyFiles);
-    const contactSearchLast = useRef(0)
-    const contactSearchTimeout = useRef(null)
 
     // Upload Process
     const [uploadStatusCount, setUploadStatusCount] = useState({ success: 13, failed: 5, total: 18 })
@@ -189,25 +129,20 @@ export default function UploadMediaDialog(props) {
     // Alerts
     const [alerts, setAlerts] = useAlerts()
 
-    
-  const [displayOwner, setDisplayOwner] = useState(null);
-  const [displayTags, setDisplayTags] = useState(null);
-  const [displayPlaceholder, setDisplayPlaceholder] = useState(null);
-  const [associatedPeople, setAssociatedPeople] = useState(dummyAssociatedPeople);
+	const [associatedPeople, setAssociatedPeople] = useState(dummyAssociatedPeople)
 
-  const [displayAssociate, setDisplayAssociate] = useState(null);
-  const [searchTeamContact, setSearchTeamContact] = useState("")
+	// console.log(placeholders)
   
     const onMediaAlertClose = (index) => {
         setAlerts.remove(index)
-      }
+    }
     
     const handleAssociateContactToFile = (files, associated, uploadStatus) => {
         return new Promise((resolve, reject) => {
     
             let count = files.length
 
-            //////console.log("start count " + count)
+            //console.log("start count " + count)
 
             files.forEach((file, index) => {
                 getAssociatedContactByFileName(file.name)
@@ -218,7 +153,7 @@ export default function UploadMediaDialog(props) {
                         //console.log(associated)
                     })
                     .catch(error => {
-                        //console.log("error " + error)
+                        console.log("error " + error)
                         associated[index] = null
 
                         //console.log(associated)
@@ -281,17 +216,17 @@ export default function UploadMediaDialog(props) {
         for (let i = 0; i < files.length; i++) {
             let file = files[i]
 
-            //////console.log(file)
+            //console.log(file)
 
             if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
             || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
-            // 5MB for images and 15MB for videos
+				// 5MB for images and 15MB for videos
 
-            //////console.log(file.name + "*")
+				//console.log(file.name + "*")
 
-            tempFiles.push(file)
-            tempAssociated.push("loading")
-            tempUploadStatus.push("none")
+				tempFiles.push(file)
+				tempAssociated.push("loading")
+				tempUploadStatus.push("none")
             }
         }
 
@@ -309,19 +244,15 @@ export default function UploadMediaDialog(props) {
 
         handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)   
             .then(() => {
-                //////console.log("**************************")
-                //////console.log("result")
-                //////console.log("**************************")
 
-                //////console.log(tempFiles)
-                //////console.log(tempAssociated)
+                //console.log(tempFiles)
+                //console.log(tempAssociated)
 
                 setAssociatedPeople(initialAssociated.concat(tempAssociated))
                 setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
                 // setDropFiles(dropFiles.concat(tempFiles));
             })
 
-        //////console.log("Droped files ", tempFiles);
         setAssociatedPeople(associatedPeople.concat(tempAssociated))
         setDropFiles(dropFiles.concat(tempFiles));
         setUploadStatus(uploadStatus.concat(tempUploadStatus))
@@ -334,7 +265,7 @@ export default function UploadMediaDialog(props) {
         return
     }
 
-    const drop = (ev) => {
+    const onDrop = (ev) => {
         ev.preventDefault();
         handleImportFiles(ev.dataTransfer.files)
     }
@@ -351,26 +282,23 @@ export default function UploadMediaDialog(props) {
         setDropFiles(tempFiles)
         setAssociatedPeople(tempAssociated)
         setUploadStatus(tempUploadStatus)
-      }
+    }
     
-      const onUploadMedia = () => {
+    const onUploadMedia = () => {
+		// console.log(selectedTags)
+		
+		// return
     
         if (uploadFinished) {
-          // do something else
-          close()
-          return
+			close()
+			return
         }
     
-        if (dropFiles.length == 0) {
-          setAlerts.push("You forgot to import media files to upload")
-    
-          // setMediaAlert({
-          //   message: "You forgot to import media files to upload",
-          //   visible: true
-          // })
-    
-          return
-        }
+		// TODO: uncomment this
+        // if (dropFiles.length == 0) {
+		// 	setAlerts.push("You forgot to import media files to upload")
+		// 	return
+        // }
     
         // uploadingMedia
         // associatedPeople
@@ -380,90 +308,122 @@ export default function UploadMediaDialog(props) {
         // selectedPlaceholders[0]
         // selectedTags
         // selectedOwner[0]
+
+		// console.log('testing')
     
-        setUploadingMedia(true)
+        // setSelectedPlaceholders(oldValue => ([{ id: oldValue[0].id, name: oldValue[0].name, test: 'worked'}]))
+		// 	.then(() => {
+		// 		console.log('finsihed')
+		// 		console.log(selectedPlaceholders)
+		// 	})
     
-        let tempUploadStatus = Object.assign([], uploadStatus)
+        
+		// return
+		// return console.log(selectedOwner)
+
+		if(selectedPlaceholders[0] && selectedPlaceholders[0].id.toString().includes('new-')) {
+			console.log(selectedPlaceholders[0])
+
+			setUploadingMedia(true)
+
+			createPlaceholder(selectedPlaceholders[0].name)
+				.then(res => {
+					console.log(res)
+
+					handleUpload(res.data)
+				})
+				.catch(error => {
+					console.log(error)
+				})
+		} else {
+			handleUpload()
+		}
+    }
+
+	const handleUpload = (withPlaceholder) => {
+		let tempUploadStatus = Object.assign([], uploadStatus)
     
         let count = dropFiles.length
     
         let failedCount = 0
         let successCount = 0
+
+		setUploadingMedia(true)
     
         dropFiles.forEach((file, index) => {
-          let media = {
-            file,
-            owner: selectedOwner[0]?.id.toString(),
-            placeholder: selectedPlaceholders[0]?.id.toString(),
-            contact: associatedPeople[index]?.id.toString(),
-            selectedTags: selectedTags
-          }
+			let media = {
+				file,
+				owner: selectedOwner[0]?.id.toString(),
+				placeholder: withPlaceholder || selectedPlaceholders[0]?.id.toString(),
+				contact: associatedPeople[index]?.id.toString(),
+				selectedTags: selectedTags
+			}
     
-          //////console.log("upload " + index)
-          //////console.log(media)     
+			// console.log("upload " + index)
+			console.log(media)     
+		
+			//return
+		
+			tempUploadStatus[index] = "uploading"
+			setUploadStatus(tempUploadStatus)
+		
+			// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
     
-          //return
+			uploadMedia(media)
+				.then(res => {
+					// console.log(res)
+			
+					let mediaRes = res
+			
+					let temp2 = Object.assign([], tempUploadStatus)
+					tempUploadStatus[index] = "success"
+					temp2[index] = "success"
+					setUploadStatus(temp2)
+					// console.log(temp2)
+			
+					successCount++
+			
+					selectedTags.forEach(tag => {
+						//if(typeof tag.id == "string" && tag.id.includes("new-")) {
+						addTagToMedia(mediaRes.id, tag.name)
+							.then(res => {
+								//console.log(res)
+							})
+							.catch(error => {
+								//console.log(error)
+							})
+						//}
+					})
+			
+					// last id 314852
+				})
+				.catch(error => {
+					// console.log(error)
+			
+					let temp2 = Object.assign([], tempUploadStatus)
+					temp2[index] = "failed"
+					tempUploadStatus[index] = "failed"
+					setUploadStatus(temp2)
+					// console.log(temp2)
+			
+					failedCount++
+			
+					//tempUploadStatus[index] = "failed"
+					//setUploadStatus(tempUploadStatus)
+				})
+				.finally(() => {
+					//setUploadStatus(tempUploadStatus)
+					count--
+			
+					if (count == 0) {
+						setUploadingMedia(false)
+						onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
+					}
+				})
+		})
+	}
     
-          tempUploadStatus[index] = "uploading"
-          setUploadStatus(tempUploadStatus)
-    
-          // TODO: create new placeholder if selectedPlaceholders id contains 'new-'
-    
-          uploadMedia(media)
-            .then(res => {
-              //////console.log(res)
-    
-              let mediaRes = res
-    
-              let temp2 = Object.assign([], tempUploadStatus)
-              tempUploadStatus[index] = "success"
-              temp2[index] = "success"
-              setUploadStatus(temp2)
-              //////console.log(temp2)
-    
-              successCount++
-    
-              selectedTags.forEach(tag => {
-                //if(typeof tag.id == "string" && tag.id.includes("new-")) {
-                addTagToMedia(mediaRes.id, tag.name)
-                  .then(res => {
-                    //console.log(res)
-                  })
-                  .catch(error => {
-                    //console.log(error)
-                  })
-                //}
-              })
-    
-              // last id 314852
-            })
-            .catch(error => {
-              //////console.log(error)
-    
-              let temp2 = Object.assign([], tempUploadStatus)
-              temp2[index] = "failed"
-              tempUploadStatus[index] = "failed"
-              setUploadStatus(temp2)
-              //////console.log(temp2)
-    
-              failedCount++
-    
-              //tempUploadStatus[index] = "failed"
-              //setUploadStatus(tempUploadStatus)
-            })
-            .finally(() => {
-              //setUploadStatus(tempUploadStatus)
-              count--
-    
-              if (count == 0) {
-                setUploadingMedia(false)
-                onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
-              }
-            })
-        })
-      }
-    
-      const onUploadFinished = (tempUploadStatus, successCount, failedCount, totalCount) => {
+    const onUploadFinished = (tempUploadStatus, successCount, failedCount, totalCount) => {
         let tmp = []
     
         tempUploadStatus.forEach((status, index) => {
@@ -474,21 +434,21 @@ export default function UploadMediaDialog(props) {
         setFailedUploads(tmp)
         setUploadStatusCount({ success: successCount, failed: failedCount, total: totalCount })
         setUploadFinished(true)
-      }
+    }
 
     const onCloseMedia = () => {
         if (!uploadFinished)
-          setAddMedia(false)
+          	props.onClose()
     
         clearAllFields()
-      }
+    }
     
-      const close = () => {
-        setAddMedia(false)
+    const close = () => {
+        props.onClose()
         clearAllFields()
-      }
+    }
     
-      const clearAllFields = () => {
+    const clearAllFields = () => {
         setDropFiles([])
         setAssociatedPeople([])
         setUploadStatus([])
@@ -496,28 +456,28 @@ export default function UploadMediaDialog(props) {
         setSelectedPlaceholders([])
         setSelectedTags([])
         setUploadFinished(false)
-      }
+    }
     
-      const associateContactToMedia = (teamContact, index) => {
+    const associateContactToMedia = (selection, index) => {
         // ////console.log("This is the contact ", teamContact, index);
     
         let temp = Object.assign([], associatedPeople)
-        temp[index] = teamContact
+        temp[index] = selection[0]
         setAssociatedPeople(temp)
     
-      }
+    }
     
-      const removeContactFromMedia = (index) => {
+    const removeContactFromMedia = (index) => {
         //////console.log("on remove contact from media")
         let temp = Object.assign([], associatedPeople)
         temp[index] = null
         //////console.log(temp)
         setAssociatedPeople(temp)
-      }
+    }
     
-      function Alert(props) {
+    const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
-      }
+    }
 
     const onOwnerChange = (owner) => {
         if(owner.length <= 1) {
@@ -534,6 +494,14 @@ export default function UploadMediaDialog(props) {
             teamMembers.clearFilter()
         }
     }, 500)
+
+	const onSearchContacts = (input) => {
+		contacts.filter({ search: input })
+	}
+
+	const onClearSearchContacts = () => {
+		contacts.clearFilter()
+	}
 
     const onTagsChange = (tags) => {
         setSelectedTags(tags)
@@ -566,11 +534,11 @@ export default function UploadMediaDialog(props) {
     }
 
     const onPlaceholdersInputChange = debounce((value) => {
-        // if (value && value !== ' ') {
-        //     teamMembers.filter({ search: value })
-        // } else {
-        //     teamMembers.clearFilter()
-        // }
+        if (value && value !== ' ') {
+            placeholders.filter({ search: value })
+        } else {
+            placeholders.clearFilter()
+        }
     }, 500)
 
     const onPlaceholdersKeyPress = (event) => {
@@ -586,278 +554,212 @@ export default function UploadMediaDialog(props) {
         // console.log(event.target.value)
     }
       
-    
-      const onContactSearchTermChange = (contactSearchInput) => {
-        // const now = Date.now()
-    
-        // Clear last timeout
-        clearTimeout(contactSearchTimeout.current)
-    
-        // Start new timeout
-        contactSearchTimeout.current = setTimeout(() => {
-          //////console.log("this should be seem once")
-          getSearchedContacts(contactSearchInput)
-            .then((res) => {
-              if (res.statusText === "OK") {
-                //////console.log("These are all team contacts from search ", res.data);
-                setTeamContacts(res.data);
-              }
-            })
-            .catch((error) => {
-              //////console.log("search contacts error " + error)
-            })
-        }, 200)
-    
-        // contactSearchLast.current
-    
-    
-    
-      }
-    
-      const onSearchTeamContactKeyPress = (e) => {
-        // search input change
-    
-        // let searched = []
-    
-        // allPlaceholders.forEach(placeholder => {
-        //   if(placeholder.name.toLowerCase().includes(placeholderInput.toLowerCase()))
-        //     searched.push(placeholder)
-        // })
-    
-        // setSearchedPlaceholders(searched)
-    
-    
-        // search key enter
-    
-        if (e.key === "Enter") {
-    
-        }
-      }
 
     const files = uploadFinished ? failedUploads : dropFiles
-    
+    console.log(associatedPeople)
 
     return (
-      <Dialog
-        maxWidth={"lg"}
-        width={"lg"}
-        scroll={"body"}
-        open={props.open}
-        onClose={props.onClose}
-      >
-        <input
-            type="file"
-            name="image"
-            id={"browse"}
-            className="form-control"
-            multiple
-            style={{ display: "none" }}
-            // value={post.image.name}
-            onChange={handleFileChange}
-        />
+		<Dialog
+			maxWidth="md"
+			fullWidth={true}
+			scroll={"body"}
+			open={props.open}
+			onClose={props.onClose}
+		>
+			<input
+				type="file"
+				name="image"
+				id={"browse"}
+				className="form-control"
+				multiple
+				style={{ display: "none" }}
+				// value={post.image.name}
+				onChange={handleFileChange}
+			/>
 
-        <Grid container direction="row" style={{ maxWidth: 1300, padding: 20 }}>
-            <InsertDriveFileIcon
-                style={{ color: "#3871da" }}
-            />
+			<Stack direction="row" margin={2} mb={0} spacing={2}>
+				<InsertDriveFileIcon
+					style={{ color: "#3871da" }}
+				/>
 
-            <p style={{ width: "90%", fontWeight: 700, marginLeft: 5 }}>
-                Create Placeholder & Upload Media
-            </p>
+				<p style={{ width: "90%", fontWeight: 700 }}>
+					Create Placeholder & Upload Media
+				</p>
+			</Stack>
 
-            {uploadFinished &&
-                <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                direction="column"
-                style={{ padding: 50 }}
-                >
-                    <MediaInputTitle title="Upload Complete" style={{ fontWeight: 700, fontSize: 30 }} />
-                    <MediaInputTitle title={`${uploadStatusCount.success} of ${uploadStatusCount.total} files uploaded successfully`} style={{ marginTop: 0, fontSize: 20 }} />
-                    <MediaInputTitle title={`${uploadStatusCount.failed} files failed to upload`} style={{ marginTop: 0, fontSize: 20 }} />
-                </Grid>
-            }
+			<Stack padding={2} pt={0} maxHeight={700} sx={{ overflowY: 'auto' }}>
+				
+			
+				{uploadFinished &&
+					<Stack
+					alignItems="center"
+					justifyContent="center"
+					style={{ padding: 50 }}
+					>
+						<MediaInputTitle title="Upload Complete" style={{ fontWeight: 700, fontSize: 30 }} />
+						<MediaInputTitle title={`${uploadStatusCount.success} of ${uploadStatusCount.total} files uploaded successfully`} style={{ marginTop: 0, fontSize: 20 }} />
+						<MediaInputTitle title={`${uploadStatusCount.failed} files failed to upload`} style={{ marginTop: 0, fontSize: 20 }} />
+					</Stack>
+				}
+				
 
-            {!uploadFinished &&
-                <Stack flex={1}>
-                    <Stack flex={1}>
-                        <MediaInputTitle title="Owner" />
+				{!uploadFinished &&
+					<Stack flex={1}>
+						<Stack flex={1}>
+							<MediaInputTitle title="Owner" />
 
-                        <SearchableSelector
-                          multiple
-                          options={teamMembers.items}
-                          loading={teamMembers.loading}
-                          value={selectedOwner}
-                          label="+ Add Owner"
-                          placeholder="Search Owner"
-                          onChange={onOwnerChange}
-                          getOptionLabel={(option) => getFullName(option)}
-                          getChipLabel={(option) => getFullName(option)}
-                          getChipAvatar={(option) => option.twitter_profile?.profile_image}
-                          onInputChange={(event, newInputValue) => onOwnerInputChange(newInputValue)}
-                        />
+							<SearchableSelector
+							multiple
+							options={teamMembers.items}
+							loading={teamMembers.loading}
+							value={selectedOwner}
+							label="+ Add Owner"
+							placeholder="Search Owner"
+							getOptionLabel={(option) => getFullName(option)}
+							getChipLabel={(option) => getFullName(option)}
+							getChipAvatar={(option) => option.twitter_profile?.profile_image}
+							onInputChange={(event, newInputValue) => onOwnerInputChange(newInputValue)}
+							onChange={onOwnerChange}
+							/>
+						</Stack>
+						<Stack flex={1}>
+							<MediaInputTitle title="Tags" />
 
-                    </Stack>
-                    <Stack flex={1}>
-                        <MediaInputTitle title="Tags" />
+							<SearchableSelector
+							multiple
+							options={tags.items}
+							loading={tags.loading}
+							value={selectedTags}
+							label="+ Add Tag"
+							placeholder="Search Tags"
+							onChange={onTagsChange}
+							getOptionLabel={(option) => option?.name || ''}
+							getChipLabel={(option) => option.name}
+							onInputChange={(event, newInputValue) => onTagsInputChange(newInputValue)}
+							onKeyPress={onTagsKeyPress}
+							/>
+						</Stack>
 
-                        <SearchableSelector
-                          multiple
-                          options={tags.items}
-                          loading={tags.loading}
-                          value={selectedTags}
-                          label="+ Add Tag"
-                          placeholder="Search Tags"
-                          onChange={onTagsChange}
-                          getOptionLabel={(option) => option.name}
-                          getChipLabel={(option) => option.name}
-                          onInputChange={(event, newInputValue) => onTagsInputChange(newInputValue)}
-                          onKeyPress={onTagsKeyPress}
-                        />
-                    </Stack>
+						<Stack flex={1}>
+							<MediaInputTitle title="Associate to placeholder or create new" />
 
-                    <Stack flex={1}>
-                        <MediaInputTitle title="Associate to placeholder or create new" />
+							<SearchableSelector
+							multiple
+							options={placeholders.items}
+							loading={placeholders.loading}
+							value={selectedPlaceholders}
+							label="+ Add Media Placeholder"
+							placeholder="Search Placeholder"
+							onChange={onPlaceholdersChange}
+							getOptionLabel={(option) => option?.name || ''}
+							getChipLabel={(option) => option.name}
+							onInputChange={(event, newInputValue) => onPlaceholdersInputChange(newInputValue)}
+							onKeyPress={onPlaceholdersKeyPress}
+							/>
+						</Stack>
+					</Stack>
+				}
 
-                        <SearchableSelector
-                          multiple
-                          options={placeholders.items}
-                          loading={placeholders.loading}
-                          value={selectedPlaceholders}
-                          label="+ Add Media Placeholder"
-                          placeholder="Search Placeholder"
-                          onChange={onPlaceholdersChange}
-                          getOptionLabel={(option) => option.name}
-                          getChipLabel={(option) => option.name}
-                          onInputChange={(event, newInputValue) => onPlaceholdersInputChange(newInputValue)}
-                          onKeyPress={onPlaceholdersKeyPress}
-                        />
-                    </Stack>
-                </Stack>
-            }
+				{/* {dropFiles.length < 1 && <FileDropZone/>} */}
 
-          {/* {dropFiles.length < 1 && <FileDropZone/>} */}
+				{alerts.length > 0 &&
+					<div
+					style={{
+						// marginTop: 16,
+						transform: "translateY(15px)",
+						marginBottom: 0,
+						width: "100%",
+						border: "1px solid #dbe2ed",
+						borderRadius: 4,
+					}}
+					>
+					{alerts.map((alert, index) => (
+						<Alert key={alert.id}
+						style={{ boxShadow: "0 0 transparent" }}
+						variant="standard"
+						severity="warning"
+						onClose={() => onMediaAlertClose(index)}
+						>
+						{alert.message}
+						</Alert>
+					))}
+					</div>
+				}
 
-          {alerts.length > 0 &&
-            <div
-              style={{
-                // marginTop: 16,
-                transform: "translateY(15px)",
-                marginBottom: 0,
-                width: "100%",
-                border: "1px solid #dbe2ed",
-                borderRadius: 4,
-              }}
-            >
-              {alerts.map((alert, index) => (
-                <Alert key={alert.id}
-                  style={{ boxShadow: "0 0 transparent" }}
-                  variant="standard"
-                  severity="warning"
-                  onClose={() => onMediaAlertClose(index)}
-                >
-                  {alert.message}
-                </Alert>
-              ))}
-            </div>
+				{files.length > 0 &&
+					<div
+					  style={{
+						marginTop: 32,
+						marginBottom: 0,
+						width: "100%",
+						border: "1px solid #dbe2ed",
+						borderRadius: 4,
+					  }}
+					>
+						<MediaUploadHeader />
 
-          }
+						{files.map((item, index) => (
+							<MediaUploadItem
+								id={index}
+								disableAssociateInput={uploadFinished}
+								item={item}
+								options={contacts.items}
+								optionsLoading={contacts.loading}
+								onOptionSelected={(option) => associateContactToMedia(option, index)}
+								optionSelected={associatedPeople[index]}
+								onRemoveOptionSelected={() => removeContactFromMedia(index)}
+								itemUploadStatus={uploadStatus[index]}
+								onSearch={onSearchContacts} 
+								onClearSearch={onClearSearchContacts}
+								onDeleteMedia={() => deleteMedia(index)}
+							/>
+						))}
+					</div>
+				}
 
-          {files.length > 0 &&
-            <div
-              style={{
-                marginTop: 32,
-                marginBottom: 0,
-                width: "100%",
-                border: "1px solid #dbe2ed",
-                borderRadius: 4,
-              }}
-            >
-              <MediaUploadHeader />
+				{!uploadFinished &&
+					<FileDropZone
+					  style={{ marginTop: dropFiles.length == 0 ? 30 : 0 }}
+					  onDrop={onDrop}
+					/>
+				}
 
-              {/* {mediaAlert.visible &&
-                <Alert 
-                  style={{ boxShadow: "0 0 transparent"}}
-                  variant="standard"
-                  severity="warning"
-                  onClose={onMediaAlertClose}
-                >
-                  {mediaAlert.message}
-                </Alert>
-              } */}
+				<Grid item md={5} xs={5}></Grid>
+				
+			</Stack>
 
-              {files.map((item, index) => {
-                return (
-                  <MediaUploadItem
-                    id={index}
-                    disableAssociateInput={uploadFinished}
-                    item={item}
-                    showContactDropDown={displayAssociate === index}
-                    onShowContactDropDown={(id) => setDisplayAssociate(index)}
-                    searchTerm={searchTeamContact}
-                    onSearchTermChange={onContactSearchTermChange}
-                    onSearchTermKeyPress={onSearchTeamContactKeyPress}
-                    searchOptions={teamMembers.items}
-                    optionImgDef={'twitter_profile.profile_image'}
-                    optionNameDef={['first_name', 'last_name']}
-                    onOptionSelected={(option) => associateContactToMedia(option, index)}
-                    optionSelected={associatedPeople[index]}
-                    optionSelectedNameDef={['first_name', 'last_name']}
-                    onRemoveOptionSelected={() => removeContactFromMedia(index)}
-                    itemUploadStatus={uploadStatus[index]}
-                    onDeleteMedia={() => deleteMedia(index)}
-                  />
-                )
-              })}
-            </div>
-          }
+			<Stack direction="row" justifyContent="flex-end" margin={2}>
+				<MuiButton
+					onClick={onCloseMedia}
+					style={{
+					minWidth: 120,
+					fontWeight: "bold",
+					textTransform: "capitalize",
+					marginRight: 10
+					}}
+					disableElevation
+					variant="outlined"
+				>
+					{uploadFinished ? "Upload More" : "Cancel"}
+				</MuiButton>
 
-          {!uploadFinished &&
-            <FileDropZone
-              style={{ marginTop: dropFiles.length == 0 ? 30 : 0 }}
-              onDrop={drop}
-            />
-          }
-
-          <Grid item md={5} xs={5}></Grid>
-          <Grid item md={7} xs={7} style={{ marginTop: 30 }}>
-            <Grid container direction="row" justify="flex-end">
-              <MuiButton
-                onClick={onCloseMedia}
-                style={{
-                  minWidth: 120,
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  marginRight: 10
-                }}
-                disableElevation
-                variant="outlined"
-              // border
-              // background={"#3871da"}
-              >
-                {uploadFinished ? "Upload More" : "Cancel"}
-              </MuiButton>
-
-              <LoadingButton
-                style={{
-                  minWidth: 120,
-                  backgroundColor: "#3871da",
-                  fontWeight: "bold",
-                  textTransform: "capitalize"
-                }}
-                onClick={onUploadMedia}
-                loading={uploadingMedia}
-                endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }} />}
-                disableElevation
-                // color="#3871da"
-                variant="contained">
-                {uploadFinished ? "OK" : "Upload"}
-              </LoadingButton>
-
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
+				<LoadingButton
+					style={{
+					minWidth: 120,
+					backgroundColor: "#3871da",
+					fontWeight: "bold",
+					textTransform: "capitalize"
+					}}
+					onClick={onUploadMedia}
+					loading={uploadingMedia}
+					endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }} />}
+					disableElevation
+					// color="#3871da"
+					variant="contained"
+				>
+					{uploadFinished ? "OK" : "Upload"}
+				</LoadingButton>
+			</Stack>
+		</Dialog>
     )
 }

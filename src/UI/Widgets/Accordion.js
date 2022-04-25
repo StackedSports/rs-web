@@ -12,7 +12,7 @@ import { useState } from 'react';
 
 export default function AccordionComponent(props) {
 
-	const [disabledButton, setDisabledButton] = useState(true)
+	const [showLoadingButton, setShowLoadingButton] = useState(false)
 
 	const handleChange = (accordionId) => (event, newExpanded) => {
 		props.setExpanded(newExpanded ? accordionId : false);
@@ -26,7 +26,7 @@ export default function AccordionComponent(props) {
 			expanded={props.expandedId === props.id}
 		>
 			<AccordionSummary
-				sx={{ backgroundColor: '#f7f7f7', padding: '7px' }}
+				sx={{ backgroundColor: '#f7f7f7', padding: '5px' }}
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls={`${props.id}-content`}
 				id={`${props.id}-header`}
@@ -35,18 +35,16 @@ export default function AccordionComponent(props) {
 					<Typography fontWeight="bold">
 						{props.title}
 					</Typography>
-					{props.showButtonSummary &&
-						<LoadingButton
-							loading={(props.expandedId === props.id) && props.loadingUpdateContact}
-							loadingPosition="start"
-							startIcon={<SaveIcon />}
-							variant="contained"
-							disabled={disabledButton}
-							type="submit"
-						>
-							Save
-						</LoadingButton>
-					}
+					<LoadingButton
+						style={{ visibility: showLoadingButton ? "visible" : "hidden" }}
+						loading={(props.expandedId === props.id) && props.loadingUpdateContact}
+						loadingPosition="start"
+						startIcon={<SaveIcon />}
+						variant="contained"
+						type="submit"
+					>
+						Save
+					</LoadingButton>
 				</Stack>
 			</AccordionSummary>
 			<AccordionDetails>
@@ -59,10 +57,10 @@ export default function AccordionComponent(props) {
 
 						const onInputChange = (e) => {
 							if (e.target.value != "")
-								setDisabledButton(false)
+								setShowLoadingButton(true)
 							if (e.target.value == "")
-								setDisabledButton(true)
-							props.onFildChange(e)
+								setShowLoadingButton(false)
+							props.onFieldChange(e)
 						}
 
 						return (
@@ -75,7 +73,7 @@ export default function AccordionComponent(props) {
 									value={item.value || ""}
 									type={item.type || "text"}
 									component={item.component}
-									onChange={e => { onInputChange(e); props.setFildValue(item.name, e.target.value) }}
+									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
 									variant="standard"
 								/>
 								{item.touch && <ErrorMessage name={item.name} />}

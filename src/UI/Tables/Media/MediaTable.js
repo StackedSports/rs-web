@@ -136,7 +136,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     const isLastPage = props?.pagination?.currentPage === props?.pagination?.totalPages
 
     return (
-        <Box width='100%' height={props.mini ? 500 : ''} flex={1} pb={2}>
+        <Box width='100%' height={props.mini ? 500 : 'fit-content'} flex={1} pb={2}>
             <Box>
                 {!props.loading && props.items && props.items.length === 0 && (
                     <span>No media available</span>
@@ -173,7 +173,8 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <CircularProgress />
                 </Box>
             )}
-            {(props.pagination && !isLastPage && !props.loading) && <Button name='Load More' onClick={onLoadMore} />}
+            {(props.pagination && !isLastPage && !props.loading && props.items?.length > 0) 
+                && <Button name='Load More' onClick={onLoadMore} />}
             <MediaCarousel
                 index={carouselIndex}
                 items={props?.items?.map(item => item?.urls?.original)}

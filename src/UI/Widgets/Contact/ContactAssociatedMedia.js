@@ -15,11 +15,11 @@ const ContactAssociatedMedia = (prosp) => {
   const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
+      title: 'Basketball3',
     },
     {
-      img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-      title: 'Fern',
+      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+      title: 'Basketball4',
     },
   ]
 

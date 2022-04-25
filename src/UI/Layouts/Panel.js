@@ -1,7 +1,9 @@
 import './Panel.css'
+import { useMemo } from 'react'
 
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import {default as ArrowBack} from '@mui/icons-material/ArrowBackIos';
 
 // import Button from '@mui/material/Button';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
@@ -103,12 +105,15 @@ export default function Panel(props) {
 
     const Icon = props.menuOpen ? MenuOpenIcon : MenuIcon
 
+    const showBackBtn = useMemo(() => props.onBackClick ? true : false, [props.onBackClick])
+    const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled]) 
+
     return (
         <div className='Panel'>
             <div style={{ marginBottom: 10 }}>
                 <div className='Header'>
-                    {/* <img className='Icon' src={Icon} onClick={props.onMenuIconClick}/> */}
-                    <Icon className='Icon' onClick={props.onMenuIconClick}/>
+                    {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick}/>}
+                    {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick}/>}
                     <h2 className='Title'>{props.title}</h2>
                     <div className="JustifyRight">
                         {renderActions(props.actions)}

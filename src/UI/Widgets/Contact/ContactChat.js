@@ -5,13 +5,16 @@ import ContactChatMessages from "./ContactChatMessages";
 
 const ContactChat = (props) => {
 
-  const fullName = props.contact?.first_name + " " + props.contact?.last_name
-  const profileImage = props.contact?.twitter_profile.profile_image
-  const phone = props.contact?.phone
-
   return (
-    <Stack flex={1} sx={{ height: "650px" }} justifyContent="flex-start" alignItems="start" spacing={1}>
-      <ContactChatHeader fullName={fullName} profileImage={profileImage} phone={phone} />
+    <Stack 
+      flex={1} 
+      // justifyContent="flex-start" 
+      // alignItems="start" 
+      spacing={1}
+      
+      // sx={{ wheight: '100%' }}
+    >
+      <ContactChatHeader contact={props.contact} />
       <ContactChatMessages />
       <ContactChatInput />
     </Stack>

@@ -56,7 +56,7 @@ const ContactAvatarChip = (props) => {
       onClick={() => setShowOptions(!showOptions)}
     >
       <Stack spacing={1} direction="row" justifyContent="center" alignItems="center" >
-        <Avatar sx={{ width: 36, height: 36 }} alt={props.fullName} src={props.profileImage || ""} />
+        <Avatar sx={{ width: 36, height: 36 }} alt={props.fullName} src={props.profileImage} />
         <Chip
           sx={{
             border: "none",

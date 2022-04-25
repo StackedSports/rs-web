@@ -232,8 +232,8 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    console.log("body updateContact: (" + id + ") : ", body)
-    // return AXIOS('put', `contacts/${id}`, body)
+    
+    return PUT(`contacts/${id}`, body)
 }
 
 export const archiveContact = (id) => {
@@ -451,6 +451,16 @@ export const getFilters = () => {
     return AXIOS('get', 'filters?is_shared=false')
 }
 
+export const createPlaceholder = (name) => {
+    const body = {
+        media_placeholder: {
+            name
+        }
+    }
+
+    return POST('media/placeholders', body)
+}
+
 export const getPlaceholder = (id) => {
     return AXIOS('get', `media/placeholders/${id}`)
 }
@@ -466,6 +476,61 @@ export const getPlaceholders = (page, perPage, filters) => {
     console.log(data)
 
     return GET(`media/placeholders?page=${page}&per_page=${perPage}`, data)
+}
+
+export const uploadMedia = (media) => {
+    return new Promise((resolve, reject) => {
+        let myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json; version=1");
+        myHeaders.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
+        myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
+
+        console.log("upload file name = " + media.file.name + "*")
+
+        let formdata = new FormData();
+        formdata.append("files[]", media.file, media.file.name);
+        formdata.append("name", media.file.name);
+
+        if (media.contact)
+            formdata.append("team_contact_id", media.contact)
+        if (media.placeholder)
+            formdata.append("media_placeholder_id", media.placeholder);
+        if (media.owner)
+            formdata.append("owner", media.owner);
+
+        let requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch(URL + "media/upload", requestOptions)
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(error => reject(error))
+    })
+}
+
+export const addTagToMedia = (mediaId, tag) => {
+    return new Promise((resolve, reject) => {
+        let headers = getHeaders()
+
+        let formdata = new FormData();
+        formdata.append("media[tag]", tag);
+
+        let requestOptions = {
+            method: 'POST',
+            headers: headers,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch(URL + "media/" + mediaId + "/add_tag", requestOptions)
+            //.then(response => response.json())
+            .then(result => resolve(result))
+            .catch(error => reject(error));
+    })
 }
 
 export const getMedia = (id) => {
