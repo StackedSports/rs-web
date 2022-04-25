@@ -750,6 +750,7 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
         getPlaceholders(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([placeholders, pagination]) => {
                 console.log('ApiHooks: get placeholders')
+                console.log(placeholders)
                 // console.log(pagination)
                 setPlaceholders(placeholders)
                 setPagination(pagination)

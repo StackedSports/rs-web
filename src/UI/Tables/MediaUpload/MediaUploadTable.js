@@ -1,15 +1,10 @@
 import LinearProgress from '@mui/material/LinearProgress';
 
-
 import {
-    Grid,
-    Dialog,
-    Snackbar,
     makeStyles,
-    withStyles,
-    Slider,
-    Backdrop,
 } from "@material-ui/core";
+
+import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
 
 
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"; // ----
@@ -19,9 +14,12 @@ import {
     SearchableOptions,
     SearchableOptionDropdown,
     SearchableOptionListItem,
-
     constructProperty
-  } from 'UI/Forms/Inputs/SearchableOptions'
+} from 'UI/Forms/Inputs/SearchableOptions'
+
+import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
+
+import { formatDate, getFullName } from "utils/Parser"
 
 const useStyles = makeStyles({
     tags: {
@@ -32,7 +30,7 @@ const useStyles = makeStyles({
       borderRadius: 4,
       paddingLeft: 16,
       paddingRight: 16,
-      margin: 8,
+    //   margin: 8,
     },
     dropdownHidden: {
       display: "none",
@@ -139,27 +137,15 @@ export const MediaUploadStatus = (props) => {
         case "uploading":
             return (
                 <MediaTableItemLoading
-                    style={{
+                  style={{
                     paddingTop: 10,
                     paddingLeft: 0,
                     paddingRight: 0
-                    }}
+                  }}
                 />
             )
     }
 
-    // {uploadStatus[index] === "none" && (
-    //     <p style={{color: "#aaa", width: 240}}></p>
-    //   )}
-    //   {uploadStatus[index] === "ready" && (
-    //     <p style={{color: "#aaa", width: 240}}>Ready To Upload</p>
-    //   )}
-    //   {uploadStatus[index] === "failed" && (
-    //     <p style={{color: "red", width: 240}}>Failed To Upload</p>
-    //   )}
-    //   {uploadStatus[index] === "success" && (
-    //     <p style={{color: "green", width: 240}}>Upload Successfull!</p>
-    //   )}
     return (
         <div></div>
     )
@@ -197,6 +183,17 @@ export const MediaUploadHeader = (props) => {
 export const MediaUploadItem = (props) => {
     const classes = useStyles();
 
+	const onKeyPress = () => {
+
+	}
+
+	const onInputChange = debounce(input => {
+        if(input && input !== '')
+            props.onSearch(input)
+        else
+            props.onClearSearch()
+    })
+
     return (
         <Grid container style={{ height: 60 }} alignItems="center">
         <Grid item md={4}>
@@ -208,96 +205,23 @@ export const MediaUploadItem = (props) => {
             }
 
             {props.optionSelected === null && !props.disableAssociateInput && (
-                <SearchableOptionDropdown
-                  id={props.id}
-                  placeholder="+ Associate Contact"
-                  options={props.searchOptions}
-                  search={props.searchOptions}
-                  imgDef={props.optionImgDef}
-                  nameDef={props.optionNameDef}
-                  showDropDown={props.showContactDropDown}
-                  onOptionSelected={props.onOptionSelected}
-                  onInputChange={props.onSearchTermChange}
-                  onInputPressEnter={props.onSearchTermKeyPress}
-                  onShowDropDown={props.onShowContactDropDown}
-                />
-
-                // <SearchableOptionDropdown
-                //     placeholder='+ Associate Contact'
-                //     options={teamContacts}
-                //     imgDef={'twitter_profile.profile_image'}
-                //     nameDef={['first_name', 'last_name']}
-                //     onOptionSelected={(contact, index) => associateContactToMedia(contact, index)}
-                // />
-            
-            //   <div class="dropdownMedia"
-            //   onClick={(e) => e.stopPropagation()}
-            // >
-            //   <input
-            //     type="text"
-            //     style={{
-            //       height: 40,
-            //       flex: "auto",
-            //       border: "none",
-            //       padding: 16,
-            //     }}
-            //     id={"associate" + props.item.name}
-            //     onClick={(e) => {
-            //       e.preventDefault();
-            //       e.stopPropagation();
-            //       props.onShowContactDropDown(e.target.id);
-            //       //displayAssociate = e.target.id;
-            //       console.log("This is id down", e.target.id);
-            //     }}
-            //     placeholder="+ Associate Contact"
-            //   ></input>
-            //   <div
-            //     className={classes.dropdownHidden}
-            //     style={{
-            //       display:
-            //         props.showContactDropDown == ("associate" + props.item.name)
-            //           ? "block"
-            //           : "none",
-            //       maxHeight: 240,
-            //     }}
-            //   >
-            //     <input
-            //       type="text"
-            //       style={{
-            //         width: "90%",
-            //         border: "1px solid #ebebeb",
-            //         borderRadius: 4,
-            //         marginTop: 8,
-            //         marginBottom: 4,
-            //         marginLeft: 12,
-            //         padding: 4
-            //       }}
-            //       id="searchTeamContact"
-            //       placeholder="Search Contact"
-            //       value={props.searchTerm}
-            //       onChange={(e) => {
-            //         props.onSearchTermChange(e.target.value);
-            //         //setDisplayTeamContact(true);
-            //       }}
-            //       onKeyPress={props.onSearchTermKeyPress}
-            //       onClick={(e) => {
-            //         e.stopPropagation()
-            //         //setDisplayPlaceholder(true);
-            //       }}
-            //     ></input>
-            //     {props.searchOptions &&
-            //       props.searchOptions.map((option, index) => {
-            //         return (
-            //           <SearchableOptionListItem
-            //             item={option}
-            //             imgDef={props.optionImgDef}
-            //             nameDef={props.optionNameDef}
-            //             onSelected={() => props.onOptionSelected(option, index)}
-            //           />
-            //         );
-            //       })}
-            //   </div>{" "}
-            // </div>
+				<SearchableSelector
+				multiple
+				options={props.options}
+				loading={props.optionsLoading}
+				value={props.optionSelected}
+				label="+ Associate Contact"
+				placeholder="Search Contact"
+				getOptionLabel={(option) => getFullName(option)}
+				getChipLabel={(option) => getFullName(option)}
+				getChipAvatar={(option) => option.twitter_profile?.profile_image}
+				onInputChange={(event, input) => onInputChange(input)}
+				onKeyPress={onKeyPress}
+				onChange={props.onOptionSelected}
+				  style={{
+					maxWidth: 200
+				  }}
+				/>
             )}
             {props.optionSelected && props.optionSelected !== "loading" &&  
               (
@@ -326,7 +250,7 @@ export const MediaUploadItem = (props) => {
                       src={props.optionSelected.twitter_profile.profile_image}
                     />
                   }
-                    {constructProperty(props.optionSelected, props.optionSelectedNameDef)}
+                    {props.optionSelected.first_name + ' ' + props.optionSelected.last_name}
                     {!props.disableAssociateInput &&
                       <ClearIcon
                         onClick={() => {

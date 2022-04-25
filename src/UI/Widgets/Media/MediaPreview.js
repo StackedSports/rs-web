@@ -12,7 +12,7 @@ import { AppContext } from 'Context/AppProvider'
 import { formatDate } from "utils/Parser"
 
 const PlaceholderImage = (props) => {
-    const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls.original)
+    const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls)
 
     return (
         <Box
@@ -34,7 +34,7 @@ const PlaceholderImage = (props) => {
                     }}
                 >
                     <img
-                        src={images[0]}
+                        src={images[0].thumb || images[0].original}
                         alt='placeholder'
                         height='100%'
                         width='100%'
@@ -43,7 +43,7 @@ const PlaceholderImage = (props) => {
                 </Box>
             )}
 
-            {images && images[0] && (
+            {images && images[1] && (
                 <Box
                     sx={{
                         position: 'absolute',
@@ -56,7 +56,7 @@ const PlaceholderImage = (props) => {
                     }}
                 >
                     <img
-                        src={images[1] ? images[1] : images[0]}
+                        src={images[1].thumb || images[1].original}
                         alt='placeholder'
                         height='100%'
                         width='100%'
@@ -65,7 +65,7 @@ const PlaceholderImage = (props) => {
                 </Box>
             )}
 
-            {images && images[0] && (
+            {images && images[2] && (
                 <Box
                     sx={{
                         position: 'absolute',
@@ -79,7 +79,7 @@ const PlaceholderImage = (props) => {
                     }}
                 >
                     <img
-                        src={images[2] ? images[2] : images[0]}
+                        src={images[2].thumb || images[2].original}
                         alt='placeholder'
                         height='100%'
                         width='100%'
@@ -102,7 +102,7 @@ const MediaImage = (props) => {
                 width: props.size,
                 height: props.size
             }}
-            src={props.media?.urls?.original}
+            src={props.media?.urls?.thumb || props.media?.urls?.original}
         />
     )
 }

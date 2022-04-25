@@ -123,13 +123,14 @@ export const MainMediaPage = (props) => {
                 </Box>
             </Stack>
 
-            {media.loading &&
-                (<Box
+            {media.loading && (
+                <Box
                     height='300px'
                     sx={{ display: 'grid', placeItems: 'center' }}
                 >
                     <CircularProgress />
-                </Box>)}
+                </Box>
+            )}
 
             <MediaTable
                 items={media.items || []}
@@ -158,13 +159,14 @@ export const MainMediaPage = (props) => {
                 </Box>
             </Stack>
 
-            {placeholders.loading &&
-                (<Box
+            {placeholders.loading && (
+                <Box
                     height='300px'
                     sx={{ display: 'grid', placeItems: 'center' }}
                 >
                     <CircularProgress />
-                </Box>)}
+                </Box>
+            )}
 
             <MediaTable
                 items={placeholders.items}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react"
 import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted } from '@mui/icons-material'
+import { Typography } from "@mui/material"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import MediaPage from "./MediaPage"
@@ -72,6 +73,16 @@ export const AllMediaPlaceholderPage = (props) => {
       title="Placeholders"
       actions={mainActions}
     >
+      {!placeholders.loading && (placeholders.items && placeholders.items.length > 0) && (
+				<Typography fontWeight='bold' gutterBottom>
+					Showing  {' '}
+					<Typography component='span' color='primary' fontWeight='bold'>
+						{allPlaceholders?.length + " of " + placeholders.pagination.totalItems}
+					</Typography>
+					{' '} placeholders
+				</Typography>
+			)}
+
       <MediaTable
         items={allPlaceholders}
         type='placeholder'

@@ -149,13 +149,16 @@ export const AllMediaPage = () => {
 		  showPanelFilters={showPanelFilters}
 		>
 
-			<Typography fontWeight='bold' gutterBottom>
-				Showing  {' '}
-				<Typography component='span' color='primary' fontWeight='bold'>
-					{allMedias?.length + " of " + medias.pagination.totalItems}
+			{!medias.loading && (medias.items && medias.items.length > 0) && (
+				<Typography fontWeight='bold' gutterBottom>
+					Showing  {' '}
+					<Typography component='span' color='primary' fontWeight='bold'>
+						{allMedias?.length + " of " + medias.pagination.totalItems}
+					</Typography>
+					{' '} medias
 				</Typography>
-				{' '} medias
-			</Typography>
+			)}
+
 			<MediaTable
 				items={allMedias}
 				pagination={medias.pagination}

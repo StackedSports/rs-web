@@ -50,8 +50,9 @@ export default function SearchableSelector(props) {
 
     return (
         <Autocomplete
+          style={props.style}
             multiple={props.multiple || false}
-            options={options}
+            options={props.options || []}
             selectOnFocus={props.selectOnFocus || true}
             clearOnBlur={props.clearOnBlur || true}
             value={props.value || value}

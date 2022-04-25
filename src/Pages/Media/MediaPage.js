@@ -11,14 +11,13 @@ import { getMediaTypes } from 'Api/Endpoints'
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
-
     const tags = useTags()
     const teamMembers = useTeamMembers()
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
 
-    const [uploadDialogOpen, setUploadDialogOpen] = useState(true)
+    const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     
     useEffect(() => {
         getMediaTypes().then(res => {
@@ -111,6 +110,7 @@ export const MediaPage = (props) => {
 
     const onTopActionClick = (e) => {
         console.log('top action click')
+        setUploadDialogOpen(true)
     }
 
     const onPanelFilterChange = (filter) => {
