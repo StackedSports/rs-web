@@ -232,7 +232,8 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    return AXIOS('put', `contacts/${id}`, body)
+    console.log("body updateContact: (" + id + ") : ", body)
+    // return AXIOS('put', `contacts/${id}`, body)
 }
 
 export const archiveContact = (id) => {
@@ -490,7 +491,7 @@ export const removeRecipient = (messageId, recipientId) => {
 
 export const removeRecipients = (messageId, recipientsId) => {
     return new Promise((resolve, reject) => {
-        if(!Array.isArray(recipientsId))
+        if (!Array.isArray(recipientsId))
             reject(new TypeError('recipientsId must be an array of ids'))
 
         let count = recipientsId.length
@@ -514,7 +515,7 @@ export const removeRecipients = (messageId, recipientsId) => {
                 .finally(() => {
                     count--
 
-                    if(count === 0) {
+                    if (count === 0) {
                         resolve({
                             errorCount: error,
                             successCount: success,
@@ -785,7 +786,7 @@ export const archiveMedias = async (mediasIds) => {
             return reject(new Error("Both mediaIds and tagIds must be an array"))
         Promise.allSettled(mediasIds.map(mediaId => archiveMedia(mediaId))).
             then(results => {
-                results.forEach((result,index) => {
+                results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
                         result.value.then((res) => {
                             response.success.count++

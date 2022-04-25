@@ -3,7 +3,8 @@ import Stack from '@mui/material/Stack';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
-const FieldMessage = (props) => {
+const ContactChatInput = (props) => {
+
   return (
     <Stack sx={{ width: "100%" }} direction="row" flex={1} justifyContent="space-between" alignItems="center" spacing={1}>
       <TextareaAutosize
@@ -18,4 +19,4 @@ const FieldMessage = (props) => {
   )
 }
 
-export default FieldMessage;
+export default ContactChatInput;

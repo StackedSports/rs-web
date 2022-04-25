@@ -1,0 +1,53 @@
+import Stack from '@mui/material/Stack';
+import { Typography } from '@material-ui/core';
+import CachedIcon from '@mui/icons-material/Cached';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import Button from '@mui/material/Button';
+
+
+const ContactSentMedia = (props) => {
+
+  const onRefresh = () => {
+    console.log("onRefresh")
+  }
+
+  const itemData = [
+    {
+      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+      title: 'Breakfast',
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+      title: 'Burger',
+    },
+  ]
+
+  return (
+    <Stack sx={{ width: "100%" }} spacing={1} justifyContent="start" alignItems="center">
+      <Stack sx={{ width: "100%" }} flex={1} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+        <Typography align='left' variant='subtitle1' component="p">
+          Sent Media
+        </Typography>
+        <CachedIcon sx={{ cursor: "pointer" }} /* onClick={onRefresh} */ />
+      </Stack>
+
+      <ImageList sx={{ width: "100%" }} cols={2} rowHeight={120}>
+        {itemData.map((item) => (
+          <ImageListItem key={item.img} style={{ margin: 15 }} >
+            <img
+              style={{ borderRadius: 5 }}
+              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+              alt={item.title}
+              loading="lazy"
+            />
+          </ImageListItem>
+        ))}
+      </ImageList>
+      <Button variant="outlined">View More</Button>
+    </Stack>
+  )
+}
+
+export default ContactSentMedia;
