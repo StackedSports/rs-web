@@ -3,7 +3,7 @@ import { TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { SettingsBaseDialog } from './SettingsBaseDialog';
+import { FormBaseDialog } from '../Dialogs/FormBaseDialog';
 import { createSnippets, updateSnippets } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
@@ -18,14 +18,8 @@ export const SnippetsDialog = (props) => {
         content: "",
     })
 
-    useEffect(() => {
-        if (props.snippet) {
-            setSnippet(props.snippet)
-        }
-    }, [props.snippet])
-
     const formik = useFormik({
-        initialValues: snippet,
+        initialValues: snippet ,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
             console.log(values)
@@ -53,7 +47,19 @@ export const SnippetsDialog = (props) => {
                     })
             }
         },
+        enableReinitialize: true,
     });
+
+    useEffect(() => {
+        if (props.snippet) {
+            setSnippet(props.snippet)
+        } else {
+            setSnippet({
+                content: ""
+            })
+        }
+    }, [props.snippet])
+
 
     const handleClose = (e, reason) => {
         if (reason && reason == "backdropClick")
@@ -64,7 +70,7 @@ export const SnippetsDialog = (props) => {
     };
 
     return (
-        <SettingsBaseDialog
+        <FormBaseDialog
             open={props.open}
             onClose={handleClose}
             title={props.snippet ? "Edit Snippet" : "Ad  Snippet"}
@@ -75,8 +81,9 @@ export const SnippetsDialog = (props) => {
 
             <TextField
                 label="Snippet"
-                margin='dense'
                 name='content'
+                margin='dense'
+                autoComplete='off'
                 value={formik.values.content}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -87,7 +94,7 @@ export const SnippetsDialog = (props) => {
                 fullWidth
             />
 
-        </SettingsBaseDialog>
+        </FormBaseDialog>
     )
 }
 

@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTitle, IconButton, DialogActions, Alert, A
 import { LoadingButton } from '@mui/lab';
 import { Close } from '@mui/icons-material';
 
-export const SettingsBaseDialog = (props) => {
+export const FormBaseDialog = (props) => {
     const [error, setError] = useState(null);
     useEffect(() => {
         if (props.error) {

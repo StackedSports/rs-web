@@ -3,8 +3,8 @@ import { TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { SettingsBaseDialog } from './SettingsBaseDialog';
-import { createStatuses, updateStatuses } from 'Api/Endpoints';
+import { FormBaseDialog } from '../Dialogs/FormBaseDialog';
+import { createStatus, updateStatus } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
     status: yup
@@ -13,6 +13,10 @@ const validationSchema = yup.object({
         .matches(/^[A-Za-z ]*$/, 'Please enter valid rank'),
 });
 
+const initialValues = {
+    status: "",
+}
+
 export const StatusesDialog = (props) => {
 
     const [error, setError] = useState(null);
@@ -20,19 +24,13 @@ export const StatusesDialog = (props) => {
         status: "",
     })
 
-    useEffect(() => {
-        if (props.status) {
-            setStatus(props.status)
-        }
-    }, [props.status])
-
     const formik = useFormik({
         initialValues: status,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
             console.log(values)
             if (props.status) {
-                updateStatuses(props.status.id, values)
+                updateStatus(props.status.id, values)
                     .then(() => {
                         props.onSusccess()
                         handleClose()
@@ -43,7 +41,7 @@ export const StatusesDialog = (props) => {
                         formikHelpers.setSubmitting(false)
                     })
             } else {
-                createStatuses(values)
+                createStatus(values)
                     .then(() => {
                         props.onSusccess()
                         handleClose()
@@ -55,17 +53,29 @@ export const StatusesDialog = (props) => {
                     })
             }
         },
+        enableReinitialize: true,
     });
+    
+    useEffect(() => {
+        if (props.status) {
+            setStatus(props.status)
+        }else{
+            setStatus({
+                status: ""
+            })
+        }
+    }, [props.status])
 
     const handleClose = (e, reason) => {
         if (reason && reason == "backdropClick")
             return;
         formik.resetForm();
+        setError(null);
         props.onClose()
     };
 
     return (
-        <SettingsBaseDialog
+        <FormBaseDialog
             open={props.open}
             onClose={handleClose}
             title={props.rank ? "Edit Statuses" : "Add Statuses"}
@@ -77,7 +87,7 @@ export const StatusesDialog = (props) => {
                 label="Status"
                 name="status"
                 margin='dense'
-                value={formik.values.rank}
+                value={formik.values.status}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.touched.status && formik.errors.status ? true : false}
@@ -87,6 +97,6 @@ export const StatusesDialog = (props) => {
                 fullWidth
             />
 
-        </SettingsBaseDialog>
+        </FormBaseDialog>
     )
 }

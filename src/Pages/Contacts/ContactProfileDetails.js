@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
+import { CreatePersonDialog } from 'UI/Widgets/Contact/CreatePersonDialog';
 
 import { states } from 'utils/Data';
 import {
@@ -26,6 +27,7 @@ import { AppContext } from 'Context/AppProvider'
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { objectNotNull } from 'utils/Validation'
 import { getStringListOfIds } from 'utils/Helper'
+import Button from 'UI/Widgets/Buttons/Button';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -55,6 +57,7 @@ const ContactProfileDetails = (props) => {
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
 	const [showSaveButton, setShowSaveButton] = useState([false, false, false, false, false, false, false, false])
+	const [openNewFamilyMemberDialog, setOpenNewFamilyMemberDialog] = useState(false)
 
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
@@ -263,6 +266,12 @@ const ContactProfileDetails = (props) => {
 		  overflowY="auto"
 		  style={{ borderRight: "#efefef  1px solid" }} 
 		>
+			<CreatePersonDialog
+			  open={openNewFamilyMemberDialog}
+			  onClose={() => setOpenNewFamilyMemberDialog(false)}
+			  contact={props.contact}
+			/>
+
 			<Formik
 			  initialValues={initialValues.general}
 			  onSubmit={onUpdateGeneral}
@@ -490,7 +499,14 @@ const ContactProfileDetails = (props) => {
 						items={[
 							{ label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
 						]}
-						/>
+						>
+							<Button 
+								name="Add new relationship" 
+								type="button" 
+								variant='outlined'
+								onClick={() => setOpenNewFamilyMemberDialog(true)} 
+							/>
+						</AccordionComponent>
 					</Form>
 				)}
 			</Formik>

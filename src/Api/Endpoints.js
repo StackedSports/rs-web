@@ -340,6 +340,10 @@ export const updateRank = (id, data) => {
     return PUT(`team/settings/ranks/${id}`, body)
 }
 
+export const deleteRank = (id) => {
+    return DELETE(`team/settings/ranks/${id}`)
+}
+
 export const getGradeYears = () => {
     return AXIOS('get', `team/settings/grad_years`)
 }
@@ -367,23 +371,31 @@ export const updatePosition = (id, data) => {
     return PUT(`team/settings/positions/${id}`, body)
 }
 
+export const deletePosition = (id) => {
+    return DELETE(`team/settings/positions/${id}`)
+}
+
 export const getStatuses = () => {
     return AXIOS('get', `team/settings/statuses`)
 }
 
-export const createStatuses = (data) => {
+export const createStatus = (data) => {
     let body = {
         status: { ...data }
     }
     return POST('team/settings/statuses', body)
 }
 
-export const updateStatuses = (id, data) => {
+export const updateStatus = (id, data) => {
     let body = {
         status: { ...data }
     }
 
     return PUT(`team/settings/statuses/${id}`, body)
+}
+
+export const deleteStatus = (id) => {
+    return DELETE(`team/settings/statuses/${id}`)
 }
 
 export const getAllColumns = () => {
@@ -583,6 +595,10 @@ export const updateSnippets = (id, data) => {
     }
 
     return PUT(`team/settings/snippets/${id}`, body)
+}
+
+export const deleteSnippets = (id) => {
+    return DELETE(`team/settings/snippets/${id}`)
 }
 
 export const getCoachTypes = () => {

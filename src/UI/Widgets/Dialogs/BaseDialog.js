@@ -10,7 +10,8 @@ import Button from 'UI/Widgets/Buttons/Button'
 const BaseDialog = (props) => {
   return (
     <Dialog
-      maxWidth="md"
+      keepMounted={props.keepMounted}
+      maxWidth={props.maxWidth || "md"}
       fullWidth
       open={props.open}
       onClose={props.onClose}
@@ -21,11 +22,11 @@ const BaseDialog = (props) => {
 
         {props.children}
 
-        <DialogActions>
+        <DialogActions sx={{mt:1}}>
 
           <Button
             name= {props.cancelLabel || 'Cancel'}
-            onClick={props.onClose}
+            onClick={props.secondaryAction ||props.onClose}
           />
 
           <Button

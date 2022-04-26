@@ -57,6 +57,7 @@ const DataTable = (props) => {
               pageSize={props.pageSize || 50}
               rowsPerPageOptions={[props.rowsPerPageOptions || 50]}
               onCellClick={props.onCellClick}
+              onRowClick={props.onRowClick}
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}

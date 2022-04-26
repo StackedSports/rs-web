@@ -1,0 +1,31 @@
+import { Typography } from "@mui/material";
+
+import BaseDialog from "UI/Widgets/Dialogs/BaseDialog";
+import { useContext } from "react";
+import ConfirmDialogContext from "Context/ConfirmDialogProvider";
+
+export const ConfirmDialog = () => {
+    const {title, message, onSubmit, close } = useContext(ConfirmDialogContext);
+
+    return (
+        <BaseDialog
+            keepMounted
+            maxWidth="sm"
+            open={Boolean(onSubmit)}
+            onClose={close}
+            title={title}
+            onConfirm={close}
+            secondaryAction={() => {
+                if (onSubmit)
+                    onSubmit();
+                close();
+            }}
+            confirmLabel="Cancel"
+            cancelLabel="Confirm"
+        >
+            <Typography>{message}</Typography>
+        </BaseDialog>
+    )
+}
+
+export default ConfirmDialog;

@@ -8,6 +8,7 @@ import { useAlert } from 'Hooks/AlertHooks'
 import { messageRoutes } from 'Routes/Routes'
 
 import AuthProvider from './Auth/AuthProvider'
+import { ConfirmDialogProvider } from 'Context/ConfirmDialogProvider'
 
 const AppContext = createContext()
 AppContext.displayName = 'AppContext'
@@ -33,15 +34,15 @@ const AppProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if(location.pathname === redirect)
+        if (location.pathname === redirect)
             setRedirect('')
-            
+
     }, [location.pathname, redirect])
 
     const shouldRedirect = useMemo(() => {
-        if(location.pathname !== redirect && redirect !== '')
+        if (location.pathname !== redirect && redirect !== '')
             return true
-        else    
+        else
             return false
     }, [location.pathname, redirect])
 
@@ -51,21 +52,21 @@ const AppProvider = (props) => {
     }
 
     const sendMediaInMessage = (media, type) => {
-        if(type !== 'media' && type !== 'placeholder')
+        if (type !== 'media' && type !== 'placeholder')
             return
-           
-        callCreateMessageWithPayload({ media: { item: media, type }})
+
+        callCreateMessageWithPayload({ media: { item: media, type } })
     }
 
     const sendMessageToContacts = (contacts) => {
         console.log(contacts)
-        
+
         callCreateMessageWithPayload({ contacts })
     }
 
     const sendMessageToRecipients = (recipients) => {
         console.log(recipients)
-        
+
         callCreateMessageWithPayload({ recipients })
     }
 
@@ -74,7 +75,7 @@ const AppProvider = (props) => {
 
         let payload = {}
 
-        if(board.is_shared)
+        if (board.is_shared)
             payload['teamBoard'] = board
         else
             payload['privateBoard'] = board
@@ -109,27 +110,29 @@ const AppProvider = (props) => {
     return (
         <AppContext.Provider value={utils}>
             <AuthProvider>
-                {shouldRedirect && <Redirect push to={redirect} />}
+                <ConfirmDialogProvider>
+                    {shouldRedirect && <Redirect push to={redirect} />}
 
-                {alert && (
-                    <Snackbar
-                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                      open={alert.visible}
-                      autoHideDuration={6000}
-                      onClose={alert.dismiss}
-                    >
-                        <MuiAlert
-                          variant="filled"
+                    {alert && (
+                        <Snackbar
+                          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                          open={alert.visible}
+                          autoHideDuration={6000}
                           onClose={alert.dismiss}
-                          severity={alert.severity}
-                          sx={{ width: '100%' }}
                         >
-                            {alert.message}
-                        </MuiAlert>
-                    </Snackbar>
-                )}
+                            <MuiAlert
+                              variant="filled"
+                              onClose={alert.dismiss}
+                              severity={alert.severity}
+                              sx={{ width: '100%' }}
+                            >
+                                {alert.message}
+                            </MuiAlert>
+                        </Snackbar>
+                    )}
 
-                {props.children}
+                    {props.children}
+                </ConfirmDialogProvider>
             </AuthProvider>
         </AppContext.Provider>
     )
