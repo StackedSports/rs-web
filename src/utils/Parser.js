@@ -92,6 +92,9 @@ export const getFullName = (contact) => {
 	if(!contact)
 		return ''
 
+	if(contact.full_name)
+		return contact.full_name
+
 	return `${contact.first_name || ''} ${contact.last_name || ''}`
 }
 

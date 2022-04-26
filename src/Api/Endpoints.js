@@ -174,7 +174,7 @@ const PUT = (url, body) => {
 
         axios.put(URL + url, data, config)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 if (res.status === 204 || res.status === 201 || res.status === 200)
                     resolve(res)
                 else

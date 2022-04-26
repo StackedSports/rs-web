@@ -1,6 +1,9 @@
 import { useState, useMemo, useEffect, createContext } from 'react'
-
 import { useLocation, Redirect } from 'react-router-dom'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
+
+import { useAlert } from 'Hooks/AlertHooks'
 
 import { messageRoutes } from 'Routes/Routes'
 
@@ -14,11 +17,9 @@ const AppProvider = (props) => {
         width: null,
         height: null
     })
-
     const location = useLocation()
-    // console.log(location.pathname)
-
     const [redirect, setRedirect] = useState('')
+    const alert = useAlert()
 
     useEffect(() => {
         const listener = window.addEventListener('resize', () => {
@@ -96,6 +97,7 @@ const AppProvider = (props) => {
     const utils = {
         windowSize,
         location,
+        alert,
         sendMediaInMessage,
         sendMessageToContacts,
         sendMessageToRecipients,
@@ -108,6 +110,25 @@ const AppProvider = (props) => {
         <AppContext.Provider value={utils}>
             <AuthProvider>
                 {shouldRedirect && <Redirect push to={redirect} />}
+
+                {alert && (
+                    <Snackbar
+                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                      open={alert.visible}
+                      autoHideDuration={6000}
+                      onClose={alert.dismiss}
+                    >
+                        <MuiAlert
+                          variant="filled"
+                          onClose={alert.dismiss}
+                          severity={alert.severity}
+                          sx={{ width: '100%' }}
+                        >
+                            {alert.message}
+                        </MuiAlert>
+                    </Snackbar>
+                )}
+
                 {props.children}
             </AuthProvider>
         </AppContext.Provider>

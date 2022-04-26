@@ -14,7 +14,7 @@ export default function AccordionComponent(props) {
 
 	const [showLoadingButton, setShowLoadingButton] = useState(false)
 
-	const handleChange = (accordionId) => (event, newExpanded) => {
+	const handleChange = (accordionId, event, newExpanded) => {
 		props.setExpanded(newExpanded ? accordionId : false);
 	};
 
@@ -22,11 +22,13 @@ export default function AccordionComponent(props) {
 		<Accordion
 			sx={{ width: '100%' }}
 			TransitionProps={{ unmountOnExit: true }}
-			onChange={handleChange(props.id)}
+			onChange={(event, newExpanded) => handleChange(props.id, event, newExpanded)}
 			expanded={props.expandedId === props.id}
+			disableGutters
+			elevation={0}
 		>
 			<AccordionSummary
-				sx={{ backgroundColor: '#f7f7f7', padding: '5px' }}
+				sx={{ backgroundColor: '#f7f7f7', padding: '1 2' }}
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls={`${props.id}-content`}
 				id={`${props.id}-header`}
@@ -36,12 +38,22 @@ export default function AccordionComponent(props) {
 						{props.title}
 					</Typography>
 					<LoadingButton
-						style={{ visibility: showLoadingButton ? "visible" : "hidden" }}
-						loading={(props.expandedId === props.id) && props.loadingUpdateContact}
+						style={{ visibility: props.showSaveButton && !props.saving ? "visible" : "hidden" }}
 						loadingPosition="start"
-						startIcon={<SaveIcon />}
+						// startIcon={<SaveIcon />}
+						variant="outlined"
+						onClick={props.onDiscard} 
+					>
+						Discard
+					</LoadingButton>
+					<LoadingButton
+						style={{ visibility: props.showSaveButton ? "visible" : "hidden" }}
+						loading={props.saving}
+						loadingPosition="start"
+						// startIcon={<SaveIcon />}
 						variant="contained"
 						type="submit"
+						onClick={(e) => e.stopPropagation()}
 					>
 						Save
 					</LoadingButton>
@@ -56,10 +68,10 @@ export default function AccordionComponent(props) {
 					{props.items && props.items.map(item => {
 
 						const onInputChange = (e) => {
-							if (e.target.value != "")
-								setShowLoadingButton(true)
-							if (e.target.value == "")
-								setShowLoadingButton(false)
+							// if (e.target.value != "")
+							// 	setShowLoadingButton(true)
+							// if (e.target.value == "")
+							// 	setShowLoadingButton(false)
 							props.onFieldChange(e)
 						}
 
@@ -72,9 +84,9 @@ export default function AccordionComponent(props) {
 									label={item.label}
 									value={item.value || ""}
 									type={item.type || "text"}
+									variant={item.variant || 'outlined'}
 									component={item.component}
 									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
-									variant="standard"
 								/>
 								{item.touch && <ErrorMessage name={item.name} />}
 							</>

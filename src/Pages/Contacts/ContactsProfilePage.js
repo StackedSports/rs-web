@@ -39,6 +39,8 @@ export default function ContactsProfilePage(props) {
     const contact = useContact(id)
     const boards = useBoards()
 
+    const [updatedContact, setUpdatedContact] = useState(null)
+
     useEffect(() => {
         if (!contact)
             return
@@ -79,6 +81,10 @@ export default function ContactsProfilePage(props) {
         console.log('top action click')
     }
 
+    const onContactUpdated = (newContact) => {
+        setUpdatedContact(newContact)
+    }
+
     // const onTagsSelected = (selectedTagsIds) => {
     //     // setLoading(true)
 
@@ -100,9 +106,10 @@ export default function ContactsProfilePage(props) {
             >
                 <ContactProfileDetails
                   loading={contact.loading}
-                  contact={contact.item}
+                  contact={updatedContact || contact.item}
+                  onContactUpdated={onContactUpdated}
                 />
-                <ContactChat contact={contact.item} />
+                <ContactChat contact={updatedContact || contact.item} />
                 <ContactMessageDetails />
             </Stack>
         </MainLayout >

@@ -48,6 +48,8 @@ export default function SearchableSelector(props) {
         }
     }
 
+    const Tag = props.variant === 'contained' ? Chip : CustomChip
+
     return (
         <Autocomplete
           style={props.style}
@@ -55,7 +57,7 @@ export default function SearchableSelector(props) {
             options={props.options || []}
             selectOnFocus={props.selectOnFocus || true}
             clearOnBlur={props.clearOnBlur || true}
-            value={props.value || value}
+            value={props.value}
             loading={props.loading}
             getOptionLabel={props.getOptionLabel}
             isOptionEqualToValue={props.isOptionEqualToValue || ((option, value) => option?.id === value?.id)}
@@ -76,8 +78,8 @@ export default function SearchableSelector(props) {
             )}
             renderTags={(tagValue, getTagProps) => {
                 return tagValue.map((option, index) => (
-                    <CustomChip
-                      variant='outlined'
+                    <Tag
+                      variant={props.variant || 'outlined'}
                       {...getTagProps({ index })}
                       avatar={props.getChipAvatar ? (
                         <Avatar
