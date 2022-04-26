@@ -9,9 +9,11 @@ const StatusesTable = (props) => {
       items={props.items}
       columns={columns}
       selectionModel={props.selection}
-      onSelectionModelChange={props.onSelectionChange}
+      onSelectionChange={props.onSelectionChange}
       loading={props.loading}
+      onRowClick={(e)=>props.onRowClick(e.row)}
       checkboxSelection
+      disableSelectionOnClick
     />
   )
 }

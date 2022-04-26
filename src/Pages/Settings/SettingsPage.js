@@ -20,7 +20,7 @@ const filters = [
         items: [
             // Filters
             { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
-            { id: 'statuses', name: 'Statuses', path: settingsRoutes.team.statuses },
+            { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
             { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
             { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
             // { id: 'tags', name: 'Tags', path: settingsRoutes.team.tags },
@@ -50,6 +50,7 @@ export default function SettingsPage(props) {
             topActionName={props.topActionName || null}
             onTopActionClick={props.onTopActionClick}
             filters={filters}
+            actions={props.actions}
         // onFilterSelected={onFilterSelected}
         >
             {props.children}

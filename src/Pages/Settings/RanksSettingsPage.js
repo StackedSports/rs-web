@@ -1,16 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useContext } from 'react'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import SettingsPage from './SettingsPage'
-
 import RanksTable from 'UI/Tables/Ranks/RanksTable'
 import RankDialog from 'UI/Widgets/Settings/RankDialog'
 
 import { useRanks } from 'Api/Hooks'
+import { deleteRank } from 'Api/Endpoints';
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
 const RanksSettingsPage = () => {
 
-    const [openRankDialog, setOpenRankDialog] = useState(false)
+    const confirmDialog = useContext(ConfirmDialogContext)
     const ranks = useRanks()
+    const [openRankDialog, setOpenRankDialog] = useState(false)
+    // row rank selected to edit
+    const [selectedRowRank, setSelectedRowRank] = useState(null)
+    // selection from checkbox
+    const [selectedRanks, setSelectedRanks] = useState([])
 
     useEffect(() => {
         if (!ranks.items)
@@ -20,27 +27,68 @@ const RanksSettingsPage = () => {
     }, [ranks.items])
 
     const onTopActionClick = (e) => {
+        setSelectedRowRank(null)
         setOpenRankDialog(true)
     }
 
     const handleSusccess = () => {
-        console.log('handle susccess')
+        setSelectedRowRank(null)
+        ranks.refreshData()
     }
+
+    const onRowClick = (e) => {
+        setSelectedRowRank(e)
+        setOpenRankDialog(true)
+    }
+
+    const onSelectionChange = (e) => {
+        setSelectedRanks(e)
+    }
+
+    const onDeleteAction = () => {
+        const title = `Delete ${selectedRanks.length >1 ? 'Ranks': 'Rank'}?`
+        confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
+            Promise.all(selectedRanks.map(rank => deleteRank(rank)))
+                .then(() => {
+                    ranks.refreshData()
+                }
+                ).catch(err => {
+                    console.log(err)
+                })
+        })
+    }
+
+    const actions = useMemo(() => {
+        if (selectedRanks.length > 0)
+            return [
+                {
+                    name: 'Delete (' + selectedRanks.length + ')',
+                    icon: DeleteForeverIcon,
+                    variant: 'outlined',
+                    onClick: onDeleteAction,
+                }
+            ]
+        return []
+    }, [selectedRanks])
 
     return (
         <SettingsPage
             title='Ranks'
             topActionName='+ New Rank'
             onTopActionClick={onTopActionClick}
+            actions={actions}
         >
             <RanksTable
                 items={ranks.items}
                 loading={ranks.loading}
+                onRowClick={onRowClick}
+                onSelectionChange={onSelectionChange}
             />
             <RankDialog
                 open={openRankDialog}
                 onClose={() => setOpenRankDialog(false)}
-                onSusccess={ handleSusccess }
+                onSusccess={handleSusccess}
+                rank={selectedRowRank}
             />
         </SettingsPage>
     )

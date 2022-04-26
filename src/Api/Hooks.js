@@ -407,7 +407,7 @@ export const useTeamMembers = () => {
     }, [])
 
     const filter = (param) => {
-        if(!teamMembers)
+        if (!teamMembers)
             return
 
         let filtered = teamMembers.filter(member => (`${member.first_name} ${member.last_name}`).includes(param))
@@ -431,6 +431,7 @@ export const useTeamMembers = () => {
 export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -446,11 +447,16 @@ export const useRanks = () => {
             .catch(error => {
                 console.log(error)
             }).finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         items: ranks,
         loading,
+        refreshData
     }
 }
 
@@ -547,7 +553,7 @@ export const useBoards = () => {
     }
 
     const refreshData = () => {
-        setRefresh(old=>!old)
+        setRefresh(old => !old)
     }
 
     return {
@@ -645,6 +651,7 @@ export const useTextPlaceholders = () => {
 export const usePositions = () => {
     const [Positions, setPositions] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -657,17 +664,23 @@ export const usePositions = () => {
             .catch(error => {
                 console.log(error)
             }).finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         items: Positions,
-        loading
+        loading,
+        refreshData
     }
 }
 
 export const useStatuses = () => {
     const [statuses, setStatuses] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -680,17 +693,23 @@ export const useStatuses = () => {
             .catch(error => {
                 console.log(error)
             }).finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         items: statuses,
         loading,
+        refreshData
     }
 }
 
 export const useSnippets = () => {
     const [snippets, setSnippets] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -703,11 +722,16 @@ export const useSnippets = () => {
             .catch(error => {
                 console.log(error)
             }).finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         items: snippets,
-        loading
+        loading,
+        refreshData
     }
 }
 
@@ -812,10 +836,10 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     // console.log(initialFilters)
     // TODO: testing filter
     const [filters, setFilters] = useState(initialFilters || null)
-   // console.log(filters)
+    // console.log(filters)
 
     useEffect(() => {
-        if(filters !== initialFilters)
+        if (filters !== initialFilters)
             setFilters(initialFilters)
     }, [initialFilters])
 

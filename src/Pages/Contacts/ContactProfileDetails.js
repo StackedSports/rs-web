@@ -6,6 +6,7 @@ import * as Yup from "yup";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
+import { CreatePersonDialog } from 'UI/Widgets/Contact/CreatePersonDialog';
 
 import { states } from 'utils/Data';
 import {
@@ -21,6 +22,7 @@ import {
 } from 'Api/Endpoints'
 
 import { formatPhoneNumber } from 'utils/Parser';
+import Button from 'UI/Widgets/Buttons/Button';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -35,6 +37,7 @@ const ContactProfileDetails = (props) => {
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [loadingUpdateContact, setLoadingUpdateContact] = useState(false)
+	const [openNewFamilyMemberDialog, setOpenNewFamilyMemberDialog] = useState(false)
 
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
@@ -328,7 +331,14 @@ const ContactProfileDetails = (props) => {
 								items={[
 									{ label: 'People', name: 'relationships', value: values.relationships, component: TextField },
 								]}
-								/>
+								>
+								 <Button 
+								   name="Add new relationship" 
+								   type="button" 
+								   variant='outlined'
+								   onClick={() => setOpenNewFamilyMemberDialog(true)} 
+								 />
+								</AccordionComponent>
 
 								<AccordionComponent
 								id='opponents'
@@ -402,6 +412,11 @@ const ContactProfileDetails = (props) => {
 					)}
 				</Formik>
 			}
+			<CreatePersonDialog
+			  open={openNewFamilyMemberDialog}
+			  onClose={() => setOpenNewFamilyMemberDialog(false)}
+			  contact={props.contact}
+			/>
 		</Stack>
 	)
 }

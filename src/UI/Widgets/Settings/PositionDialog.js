@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogTitle, TextField, IconButton, DialogActions, MenuItem } from '@mui/material'
-import { LoadingButton } from '@mui/lab';
-import { Close } from '@mui/icons-material';
+import { TextField, MenuItem } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { SettingsBaseDialog } from './SettingsBaseDialog';
+import { FormBaseDialog } from '../Dialogs/FormBaseDialog';
 import { createPosition, updatePosition } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
@@ -27,22 +25,18 @@ const validationSchema = yup.object({
         .string('Enter with a valid alternate names')
 });
 
+const initalValues = {
+    name: "",
+    abbreviation: "",
+    standardized_name: "",
+    role: "", //Accepts `Offense`, `Defense`, `Special`
+    alternate_names: ""
+}
+
 export const PositionDialog = (props) => {
 
     const [error, setError] = useState(null);
-    const [position, setPosition] = useState({
-        name: "",
-        abbreviation: "",
-        standardized_name: "",
-        role: "", //Accepts `Offense`, `Defense`, `Special`
-        alternate_names: ""
-    })
-
-    useEffect(() => {
-        if (props.position) {
-            setPosition(props.position)
-        }
-    }, [props.position])
+    const [position, setPosition] = useState(initalValues)
 
     const formik = useFormik({
         initialValues: position,
@@ -74,7 +68,17 @@ export const PositionDialog = (props) => {
                     })
             }
         },
+        enableReinitialize: true,
     });
+
+
+    useEffect(() => {
+        if (props.position) {
+            setPosition(props.position)
+        } else {
+            setPosition(initalValues)
+        }
+    }, [props.position])
 
     const handleClose = (e, reason) => {
         if (reason && reason == "backdropClick")
@@ -86,7 +90,7 @@ export const PositionDialog = (props) => {
     }
 
     return (
-        <SettingsBaseDialog
+        <FormBaseDialog
             open={props.open}
             onClose={handleClose}
             title={props.position ? "Edit Position" : "Add Position"}
@@ -148,8 +152,8 @@ export const PositionDialog = (props) => {
                 disabled={formik.isSubmitting}
             >
                 <MenuItem value="Offense">Offense</MenuItem>
-                <MenuItem value="Offense">Defense</MenuItem>
-                <MenuItem value="Offense">Special</MenuItem>
+                <MenuItem value="Defense">Defense</MenuItem>
+                <MenuItem value="Special">Special</MenuItem>
             </TextField>
             <TextField
                 margin="dense"
@@ -165,7 +169,7 @@ export const PositionDialog = (props) => {
                 disabled={formik.isSubmitting}
             />
 
-        </SettingsBaseDialog>
+        </FormBaseDialog>
     )
 }
 

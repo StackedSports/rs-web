@@ -5,6 +5,7 @@ import { useLocation, Redirect } from 'react-router-dom'
 import { messageRoutes } from 'Routes/Routes'
 
 import AuthProvider from './Auth/AuthProvider'
+import { ConfirmDialogProvider } from 'Context/ConfirmDialogProvider'
 
 const AppContext = createContext()
 AppContext.displayName = 'AppContext'
@@ -32,15 +33,15 @@ const AppProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if(location.pathname === redirect)
+        if (location.pathname === redirect)
             setRedirect('')
-            
+
     }, [location.pathname, redirect])
 
     const shouldRedirect = useMemo(() => {
-        if(location.pathname !== redirect && redirect !== '')
+        if (location.pathname !== redirect && redirect !== '')
             return true
-        else    
+        else
             return false
     }, [location.pathname, redirect])
 
@@ -50,21 +51,21 @@ const AppProvider = (props) => {
     }
 
     const sendMediaInMessage = (media, type) => {
-        if(type !== 'media' && type !== 'placeholder')
+        if (type !== 'media' && type !== 'placeholder')
             return
-           
-        callCreateMessageWithPayload({ media: { item: media, type }})
+
+        callCreateMessageWithPayload({ media: { item: media, type } })
     }
 
     const sendMessageToContacts = (contacts) => {
         console.log(contacts)
-        
+
         callCreateMessageWithPayload({ contacts })
     }
 
     const sendMessageToRecipients = (recipients) => {
         console.log(recipients)
-        
+
         callCreateMessageWithPayload({ recipients })
     }
 
@@ -73,7 +74,7 @@ const AppProvider = (props) => {
 
         let payload = {}
 
-        if(board.is_shared)
+        if (board.is_shared)
             payload['teamBoard'] = board
         else
             payload['privateBoard'] = board
@@ -107,8 +108,10 @@ const AppProvider = (props) => {
     return (
         <AppContext.Provider value={utils}>
             <AuthProvider>
-                {shouldRedirect && <Redirect push to={redirect} />}
-                {props.children}
+                <ConfirmDialogProvider>
+                    {shouldRedirect && <Redirect push to={redirect} />}
+                    {props.children}
+                </ConfirmDialogProvider>
             </AuthProvider>
         </AppContext.Provider>
     )

@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
-import {  TextField} from '@mui/material'
+import { TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { SettingsBaseDialog } from './SettingsBaseDialog';
+import { FormBaseDialog } from '../Dialogs/FormBaseDialog';
 import { createRank, updateRank } from 'Api/Endpoints';
 
 const validationSchema = yup.object({
   rank: yup
     .string('Enter with a valid rank')
-    .required('Rank is required')
-    .matches(/^[A-Za-z ]*$/, 'Please enter valid rank'),
+    .required('Rank is required'),
 });
 
 export const RankDialog = (props) => {
@@ -18,11 +17,6 @@ export const RankDialog = (props) => {
   const [rank, setRank] = useState({
     rank: "",
   })
-  useEffect(() => {
-    if (props.rank) {
-      setRank(props.rank)
-    }
-  }, [props.rank])
 
   const formik = useFormik({
     initialValues: rank,
@@ -53,7 +47,18 @@ export const RankDialog = (props) => {
           })
       }
     },
+    enableReinitialize: true,
   });
+
+  useEffect(() => {
+    if (props.rank) {
+      setRank(props.rank)
+    }else{
+      setRank({
+        rank: ""
+      })
+    }
+  }, [props.rank])
 
   const handleClose = (e, reason) => {
     if (reason && reason == "backdropClick")
@@ -65,18 +70,19 @@ export const RankDialog = (props) => {
   }
 
   return (
-    <SettingsBaseDialog
+    <FormBaseDialog
       open={props.open}
       onClose={handleClose}
       title={props.rank ? "Edit Rank" : "Add Rank"}
       onSubmit={formik.handleSubmit}
-      loading = {formik.isSubmitting}
+      loading={formik.isSubmitting}
       error={error}
     >
       <TextField
         label="Rank"
         name="rank"
         margin='dense'
+        autoComplete='off'
         value={formik.values.rank}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
@@ -87,7 +93,7 @@ export const RankDialog = (props) => {
         fullWidth
       />
 
-    </SettingsBaseDialog>
+    </FormBaseDialog>
   )
 }
 
