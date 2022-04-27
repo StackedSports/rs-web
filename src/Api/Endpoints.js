@@ -232,7 +232,7 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    
+
     return PUT(`contacts/${id}`, body)
 }
 
@@ -419,6 +419,13 @@ export const getBoardContacts = (id, page, perPage, filters) => {
 
 export const getUser = () => {
     return AXIOS('get', 'me')
+}
+
+export const updateUser = (data, idUser) => {
+    const body = {
+        user: data
+    }
+    return PUT(`users/${idUser}`, body)
 }
 
 export const upadateSelectedColumns = (userId, body) => {

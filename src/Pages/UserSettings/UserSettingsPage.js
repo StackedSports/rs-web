@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 
@@ -18,6 +18,8 @@ const filters = [
 ]
 
 export default function UserSettingsPage(props) {
+
+
     return (
         <MainLayout
             title={props.title || 'User Settings'}
@@ -25,6 +27,7 @@ export default function UserSettingsPage(props) {
             onTopActionClick={props.onTopActionClick}
             filters={filters}
         >
+            {/* {React.cloneElement(props.children, { user: user })} */}
             {props.children}
         </MainLayout>
     )

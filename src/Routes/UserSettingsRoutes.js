@@ -1,16 +1,12 @@
-import { Route } from 'react-router-dom'
+import { Route } from 'react-router-dom';
 
-import {
-  OrganizationSettingsPage,
-} from 'Pages/Settings'
-
-import { routes, userRoutes } from './Routes'
+import { routes, userRoutes } from './Routes';
 import {
   UserSettingsPage,
   UserSettingsProfilePage,
   UserSettingsAccountPage,
   UserSettingsNotificationsPage
-} from 'Pages/Settings'
+} from 'Pages/UserSettings';
 
 const UserSettingsRoutes = (props) => (
   <>
