@@ -364,6 +364,45 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     }
 }
 
+export const useContactsInfinite = () => {
+    const [allContacts, setAllContacts] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    const contacts = useContacts()
+    
+    useEffect(() => {
+        if(!contacts.items)
+            return
+        
+        setAllContacts(oldValue => oldValue.concat(contacts.items))
+        setLoading(false)
+    }, [contacts.items])
+
+    const loadMore = () => {
+        contacts.pagination.getPage(contacts.pagination.currentPage + 1)
+    }
+
+    const filter = (filters) => {
+        setAllContacts([])
+        contacts.filter(filters)
+    }
+
+    const clearFilter = () => {
+        setAllContacts([])
+        contacts.clearFilter()
+    }
+
+    return {
+        items: allContacts,
+        totalItems: contacts.pagination.totalItems,
+        loading,
+        loadingMore: contacts.loading,
+        loadMore,
+        filter,
+        clearFilter,
+    }
+}
+
 // TODO: this should not be a hook
 export const usearchiveContacts = (id) => {
     const [archivecontact, setarchiveContact] = useState(null)

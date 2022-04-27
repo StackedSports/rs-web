@@ -14,6 +14,7 @@ import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 
@@ -23,6 +24,7 @@ import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
 import {
     useContacts,
+    useContactsInfinite,
     useStatuses,
     useRanks,
     useGradeYears,
@@ -291,6 +293,13 @@ export default function ContactsPage(props) {
         contacts.pagination.getPage(page)
     }
 
+    const onContactSearch = (searchTerm) => {
+        contacts.filter({ search: searchTerm })
+    }
+    
+    const onContactSearchClear = () => {
+        contacts.clearFilter()
+    }
 
     return (
         <MainLayout
@@ -341,6 +350,11 @@ export default function ContactsPage(props) {
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
+                    <MiniSearchBar
+                      placeholder="Search Contacts" 
+                      onSearch={onContactSearch}
+                      onClear={onContactSearchClear}
+                    />
                     <PanelDropdown
                         action={{
                             name: 'Actions',

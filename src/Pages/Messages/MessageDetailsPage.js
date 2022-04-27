@@ -217,129 +217,6 @@ const MessageDetailsPage = (props) => {
                 })
                 .finally(() => setLoading(false))
 
-        return 
-        // Making a copy because we are going to change the recipients
-        // list content
-        let recipients = Object.assign({}, message.item.recipients)
-        // let selection = Object.assign([], selectedRecipients.items)
-
-        console.log(recipients)
-        console.log(selectedRecipients.items)
-
-        let foundFilters = {}
-        let totalInFilters = 0
-
-        recipients.filter_list.forEach(filter => {
-            let count = 0
-            let indices = []
-
-            selectedRecipients.items.forEach(selectedId => {
-                let index = -1
-
-                filter.contacts.every((contact, i) => {
-                    if(contact.id === selectedId) {
-                        console.log(i)
-                        index = i
-                        return false
-                    }
-
-                    return true
-                })
-
-                // console.log(index)
-                //let found = filter.contacts.find(contact => contact.id === selectedId)
-
-                if(index !== -1) {
-                    totalInFilters++
-                    count++
-                    indices.push(index)
-                }
-            })
-
-            if(count > 0) {
-                foundFilters[filter.name] = {
-                    count,
-                    indices
-                }
-            }
-        })
-
-        console.log(foundFilters)
-        console.log(totalInFilters)
-
-        let newRecipients = []
-        let newFilters = []
-
-
-        recipients.filter_list.forEach(filter => {
-            if(foundFilters[filter.name]) {
-                // Current filter holds selected contacts. We need to
-                // remove those contacts from its contacts list
-
-                let ids = []
-
-                foundFilters[filter.name].indices.forEach((index, i) => {
-                    // console.log('removing ' + index)
-                    // let rem = filter.contacts.splice(index - i, 1)
-                    // removed = removed.concat(rem)
-                    // console.log(filter.contacts)
-                    // console.log(rem)
-
-                    ids.push(filter.contacts[index].id)
-                })
-
-                filter.contacts.forEach(contact => {
-                    let found = ids.find(id => id === contact.id)
-
-                    if(!found)
-                        newRecipients.push(contact)
-                })
-
-                // console.log(filter.contacts)
-                // console.log(removed)
-            } else {
-                newFilters.push(filter)
-            }
-
-            // newRecipients = newRecipients.concat(filter.contacts)
-        })
-
-        // console.log('---------')
-        // console.log('New Recipients')
-        // console.log(newRecipients)
-
-        if(recipients.contact_list && recipients.contact_list.length > 0) {
-            // All the contacts to remove belong to filters. So we only
-            // need to remove contacts from filters, and we can just copy
-            // the ids from recipients.contact_list
-
-            newRecipients.concat(recipients.contact_list)
-        }
-
-        let messageData = {
-            contact_ids: getStringListOfIds(newRecipients),
-            filter_ids: getStringListOfIds(newFilters)
-        }
-
-        setLoading(true)
-
-        updateMessage(message.item.id, messageData)
-                .then(result => {
-                    console.log(result)
-                    // let message = result.data
-                    
-                    alert.setSuccess('Message recipients updated!')
-
-                    setTimeout(() => {
-                        refreshMessage()
-                    }, 1500)
-                })
-                .catch(error => {
-                    console.log(error)
-
-                    alert.setError('We could not update your message.')
-                })
-                .finally(() => setLoading(false))
     }
 
 
@@ -534,7 +411,7 @@ const MessageDetailsPage = (props) => {
                 actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: onScheduleMessageClick })
             }
         } else if(selectedRecipients.count > 0) {
-            actions.push({ 
+            let recipientActions = { 
                 id: 'Recipients Action',
                 name: `${selectedRecipients.count} Recipients Selected`,
                 type: 'dropdown',
@@ -544,15 +421,15 @@ const MessageDetailsPage = (props) => {
                 options: [
                     { name: 'Send New Message', onClick: onSendNewMessageWithContacts },
                     { name: 'Tag', onClick: onTagContactClick },
-                    // Disconsider bellow message ---.----
-                    // For some reason onRemoveRecipients was not referencing the updated
-                    // state when onClick received only a reference to the callback
-                    // so as a workaround each time selection changes, a new instance of that
-                    // callback is called with an updated reference to the selection
-                    { name: 'Remove', color: 'red', onClick: onRemoveRecipients },
-
                 ]
-            })
+            }
+
+            if(message.item.status === 'Draft')
+                recipientActions.options.push({ 
+                    name: 'Remove', color: 'red', onClick: onRemoveRecipients
+                })
+
+            actions.push(recipientActions)
         }
 
         return actions
