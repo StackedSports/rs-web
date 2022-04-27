@@ -12,12 +12,12 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
-
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 
 import { AppContext } from 'Context/AppProvider'
+import { mapSorting } from 'UI/Tables/Contacts/DataGridConfig'
 
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
@@ -227,7 +227,7 @@ export default function ContactsPage(props) {
         contacts.filter(filter)
     }
 
-    const onContactsSelectionChange = (selection) => { 
+    const onContactsSelectionChange = (selection) => {
         // setSelectedContacts(selected)
         selectedContacts.onSelectionChange(selection)
     }
@@ -289,6 +289,22 @@ export default function ContactsPage(props) {
     const onPageChange = (page) => {
         selectedContacts.saveData(contacts.items)
         contacts.pagination.getPage(page)
+    }
+
+    const onSortingChange = (sorting, details) => {
+        const filter = {}
+
+        if (sorting.length === 0)
+            return contacts.clearFilter()
+
+        const field = sorting[0].field
+
+        filter.sort_dir = sorting[0].sort
+        filter.sort_column = field
+
+        if (field === 'fullName')
+            filter.sort_column = 'first_name'
+        contacts.filter(filter)
     }
 
 
@@ -401,12 +417,13 @@ export default function ContactsPage(props) {
 
 
             <ContactsTable
-              contacts={contacts.items}
-              pagination={contacts.pagination}
-              loading={contacts.loading}
-              selection={selectedContacts.items}
-              onSelectionChange={onContactsSelectionChange}
-              onPageChange={onPageChange}
+                contacts={contacts.items}
+                pagination={contacts.pagination}
+                loading={contacts.loading}
+                selection={selectedContacts.items}
+                onSelectionChange={onContactsSelectionChange}
+                onPageChange={onPageChange}
+                onSortingChange={onSortingChange}
             />
 
             <CreateBoardDialog

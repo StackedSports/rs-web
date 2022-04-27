@@ -232,7 +232,7 @@ export const updateContact = (id, data) => {
     const body = {
         contact: data
     }
-    
+
     return PUT(`contacts/${id}`, body)
 }
 
@@ -283,11 +283,17 @@ export const getContacts = (page, perPage) => {
 }
 
 export const filterContacts = (page, perPage, filters) => {
+
     const data = {
         page: page,
         per_page: perPage,
         criteria: { ...getFilterContactsCriteria(filters) }
     }
+
+    if (filters.sort_column)
+        data.sort_column = filters.sort_column
+    if (filters.sort_dir)
+        data.sort_dir = filters.sort_dir
 
     // data = {
     //     filter: {
@@ -1048,3 +1054,16 @@ export const createContact = (data) => {
     return POST(`contacts`, body)
 }
 
+export const createPerson = (contactId, data) => {
+    const body = {
+        person: { ...data }
+    }
+    return POST(`contacts/${contactId}/people`, body)
+}
+
+export const createOpponent = (contactId, data) => {
+    const body = {
+        opponents: { ...data }
+    }
+    return POST(`contacts/${contactId}/opponents`, body)
+}

@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 
-import { useParams } from "react-router-dom"
-
 import MainLayout from 'UI/Layouts/MainLayout'
 
 import { messageRoutes } from 'Routes/Routes'
@@ -51,6 +49,12 @@ const BaseMessagePage = (props) => {
           redirect={props.redirect || redirect}
           actions={props.actions}
           onFilterSelected={onFilterSelected}
+          propsPanelFilters={{
+                open: props.showPanelFilters,
+                filters: props.panelFilters,
+                onFilterChange: props.onPanelFilterChange,
+                setFilter: props.setFilter
+            }}
         >
             {props.children}
         </MainLayout>

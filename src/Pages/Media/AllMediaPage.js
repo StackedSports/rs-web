@@ -11,7 +11,7 @@ import { archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
-import { addTagsToMedias } from "Api/Endpoints"
+import { addTagsToMedias, deleteTagsFromMedia } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
@@ -106,6 +106,12 @@ export const AllMediaPage = () => {
             })
         }
     }
+
+	// does it remove all tags?
+	const onUntagAction = () => {
+		if (selectedMedias.length > 0) {
+		}
+	}
 
 	const mainActions = [
 		{

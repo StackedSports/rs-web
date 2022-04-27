@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams } from "react-router-dom"
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
+import { Tune } from '@mui/icons-material'
 
 import BaseMessagePage from './BaseMessagePage'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
@@ -12,7 +13,7 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import { useMessages } from 'Api/Hooks'
 
 const getTitle = (filterName) => {
-    switch(filterName) {
+    switch (filterName) {
         case 'drafts': return 'Drafts'
         case 'pending': return 'Scheduled'
         case 'in_progress': return 'In Progress'
@@ -25,17 +26,18 @@ const getTitle = (filterName) => {
 const MessagesPage = (props) => {
     const { filter } = useParams()
     const lastFilter = useRef(filter)
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
 
     // console.log(JSON.parse(localStorage.getItem("user")).token)
 
     const messageFilter = useMemo(() => {
         console.log(filter)
-        if(!filter)
+        if (!filter)
             return { status: 'all' }
         else if (filter === 'finished')
-            return { status: 'finished'}
+            return { status: 'finished' }
         else
-            return { status: [{ id: filter, name: filter}] }
+            return { status: [{ id: filter, name: filter }] }
     }, [filter])
 
     const [redirect, setRedirect] = useState('')
@@ -52,18 +54,18 @@ const MessagesPage = (props) => {
         console.log(lastFilter.current)
         console.log(filter)
 
-        if(!filter || lastFilter.current === filter)
+        if (!filter || lastFilter.current === filter)
             return
-        
+
         console.log('filtering for ' + filter)
         lastFilter.current = filter
 
-        messages.filter({ status: [{ id: filter, name: filter}] })
-    
+        messages.filter({ status: [{ id: filter, name: filter }] })
+
     }, [filter])
 
     useEffect(() => {
-        if(!messages.error)
+        if (!messages.error)
             return
 
         Object.keys(messages.error).forEach(key => {
@@ -77,13 +79,22 @@ const MessagesPage = (props) => {
         })
 
         return
-        
+
         setErrorPanelMessage({
             title: `${messages.error.response.status} ${messages.error.response.statusText}`,
             body: messages.error.response.data.errors[0].message
         })
 
     }, [messages.error])
+
+    const actions = [
+        {
+            name: 'Filters',
+            icon: Tune,
+            variant: 'outlined',
+            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
+        }
+    ]
 
     const onPageChange = (e, page) => {
         console.log(page)
@@ -96,10 +107,30 @@ const MessagesPage = (props) => {
         })
     }
 
+    const panelFilters = {
+        'platform': {
+            label: 'Platform',
+            options: ['Twitter', 'Personal Text', 'RS Text'],
+        },
+        'sender': {
+        },
+        'recipient_status': {
+        },
+        'tags': {
+        },
+        'send_at_dates': {
+        },
+        'sent_at_dates': {
+        },
+    }
+
+
     return (
         <BaseMessagePage
-          title={getTitle(filter)}
-          redirect={redirect}
+            title={getTitle(filter)}
+            redirect={redirect}
+            actions={actions}
+            showPanelFilters={showPanelFilters}
         >
             <Stack direction="row" alignItems="center" mb={2}>
                 <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -122,7 +153,7 @@ const MessagesPage = (props) => {
             {messages.items && messages.items.map((message, index) => {
                 // console.log('rendering message ' + index)
                 return (
-                    <MessagePreview message={message} mini style={styles.divider} link/>
+                    <MessagePreview message={message} mini style={styles.divider} link />
                 )
             })}
             {!messages.loading && messages.items && messages.items.length > 0 && (
@@ -135,13 +166,13 @@ const MessagesPage = (props) => {
                 </Stack>
             )}
             {messages.loading && (
-                <LoadingOverlay/>
+                <LoadingOverlay />
             )}
 
             {messages.error && (
                 <ErrorPanel
-                  title={errorPanelMessage.title}
-                  body={errorPanelMessage.body}
+                    title={errorPanelMessage.title}
+                    body={errorPanelMessage.body}
                 />
             )}
         </BaseMessagePage>
