@@ -10,7 +10,8 @@ import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
-import { useMessages } from 'Api/Hooks'
+import { useMessages, useTeamMembers } from 'Api/Hooks'
+import { getFullName } from 'utils/Parser'
 
 const getTitle = (filterName) => {
     switch (filterName) {
@@ -27,6 +28,8 @@ const MessagesPage = (props) => {
     const { filter } = useParams()
     const lastFilter = useRef(filter)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+    
+    const senders = useTeamMembers()
 
     // console.log(JSON.parse(localStorage.getItem("user")).token)
 
@@ -110,18 +113,35 @@ const MessagesPage = (props) => {
     const panelFilters = {
         'platform': {
             label: 'Platform',
-            options: ['Twitter', 'Personal Text', 'RS Text'],
+            options: [{id:1, name:'Twitter'},{id:2, name:'Personal Text'}, {id:3, name:'RS Text'}],
         },
         'sender': {
+            label: 'Sender',
+            options:senders.items ||[],
+            optionsLabel: (sender) => getFullName(sender),
         },
         'recipient_status': {
+            label: 'Recipient Status',
+            options: [{id:1, name:'Cancelled'},{id:2, name:'Error'}, {id:3, name:'Ignored'}, {id:4, name:'Skipped'}, {id:5, name:'Sent'}, {id:6, name:'Pending'}],
+            optionsLabel: 'name',
         },
         'tags': {
+            label: 'Tags',
+            options: []
         },
         'send_at_dates': {
+            label: 'Send At Dates',
+            options: []
         },
         'sent_at_dates': {
+            label: 'Sent At Dates',
+            options: []
         },
+    }
+
+    const onFilterChange = (filterName, value) => {
+        console.log(filterName)
+        console.log(value)
     }
 
 
@@ -131,6 +151,8 @@ const MessagesPage = (props) => {
             redirect={redirect}
             actions={actions}
             showPanelFilters={showPanelFilters}
+            panelFilters={panelFilters}
+            onPanelFilterChange={onFilterChange}
         >
             <Stack direction="row" alignItems="center" mb={2}>
                 <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>

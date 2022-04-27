@@ -97,17 +97,29 @@ export const PanelFilters = (props) => {
 		})
 	}
 
-	const getContent = (filter, filterName) => (
-		<Dropdown.List>
+	const getContent = (filter, filterName) => {
+
+		const getName = (option) => {
+			if (filter.optionsLabel instanceof Function) {
+				return filter.optionsLabel(option);
+			} else if (filter.optionsLabel instanceof String) {
+				return option[filter.optionsLabel];
+			} else {
+				return option.name;
+			}
+		}
+
+
+		return (<Dropdown.List>
 			{filter.options.map((option) => (
 				<Dropdown.Item
 					key={option.id}
-					name={option.name}
+					name={getName(option)}
 					onClick={() => handleOptionsChange(filterName, filter, option)}
 				/>
 			))}
-		</Dropdown.List>
-	)
+		</Dropdown.List>);
+	}
 
 	const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
 
