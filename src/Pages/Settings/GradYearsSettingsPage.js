@@ -4,11 +4,11 @@ import SettingsPage from './SettingsPage'
 
 import GradYearsTable from 'UI/Tables/GradYears/GradYearsTable'
 
-import { useGradeYears } from 'Api/Hooks'
+import { useGradYears } from 'Api/Hooks'
 
 const GradYearsSettingsPage = () => {
-    const gradYears = useGradeYears()
-    // const loading = useGradeYears().loading
+    const gradYears = useGradYears()
+    // const loading = useGradYears().loading
 
     const [items, setItems] = useState([])
 

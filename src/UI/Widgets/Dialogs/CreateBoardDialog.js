@@ -48,7 +48,7 @@ export const CreateBoardDialog = (props) => {
     onSubmit: (values, formikHelpers) => {
       createNewBoard(values, props.selectedFilters)
         .then((res) => {
-          console.log(values,res)
+          console.log(values, res)
           props.onBoardCreated()
         })
         .catch(error => {
@@ -67,7 +67,7 @@ export const CreateBoardDialog = (props) => {
   }
 
   const selectedFiltersKeys = useMemo(() => Object.keys(props.selectedFilters), [props.selectedFilters])
-
+  console.log(props.selectedFilters)
   return (
     <Dialog
       component="form"
@@ -129,7 +129,7 @@ export const CreateBoardDialog = (props) => {
           Filter Criteria:{' '}
           {props.selectedFilters && selectedFiltersKeys.map((key, index) => {
             const filter = props.selectedFilters[key];
-
+            console.log(key)
             return (
               <Typography
                 component='span'

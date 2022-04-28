@@ -25,7 +25,7 @@ import {
     getAllColumns,
     getAllContactsEnd,
     getAllStatus,
-    getGradeYears,
+    getGradYears,
     getPositions,
     getStatuses,
     getPeopleTypes,
@@ -156,8 +156,10 @@ export const useTagsWithMessage = () => {
 // Custom Hook
 export const useBoard = (id) => {
     const [board, setBoard] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getBoard(id)
             .then(([board]) => {
                 console.log('ApiHooks: getBoardByid -----')
@@ -165,9 +167,13 @@ export const useBoard = (id) => {
                 setBoard(board)
             })
             .catch(error => console.log(error))
-    }, [])
+            .finally(() => setLoading(false))
+    }, [id])
 
-    return board
+    return {
+        item: board,
+        loading
+    }
 }
 
 export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) => {
@@ -375,11 +381,11 @@ export const useContactsInfinite = () => {
     const [loading, setLoading] = useState(true)
 
     const contacts = useContacts()
-    
+
     useEffect(() => {
-        if(!contacts.items)
+        if (!contacts.items)
             return
-        
+
         setAllContacts(oldValue => oldValue.concat(contacts.items))
         setLoading(false)
     }, [contacts.items])
@@ -650,18 +656,18 @@ export const useStatus = () => {
 }
 
 // TODO:
-export const useGradeYears = () => {
-    const [GradeYears, setGradeYears] = useState(null)
+export const useGradYears = () => {
+    const [GradYears, setGradYears] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setLoading(true)
-        getGradeYears()
-            .then(([GradeYears]) => {
-                //console.log('ApiHooks: getGradeYears -----')
-                //console.log(GradeYears)
+        getGradYears()
+            .then(([GradYears]) => {
+                //console.log('ApiHooks: getGradYears -----')
+                //console.log(GradYears)
 
-                setGradeYears(GradeYears)
+                setGradYears(GradYears)
             })
             .catch(error => {
                 console.log(error)
@@ -669,7 +675,7 @@ export const useGradeYears = () => {
     }, [])
 
     return {
-        items: GradeYears,
+        items: GradYears,
         loading,
     }
 }
@@ -1128,6 +1134,7 @@ export const useContactTableColumns = () => {
         recruitingCoach: false,
         status: false,
         status2: false,
+        tags: true,
         rank: false,
         // lastMessaged: false,
         // mostActiveTime: false,

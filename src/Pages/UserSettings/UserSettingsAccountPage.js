@@ -9,14 +9,25 @@ import { Divider } from "@material-ui/core";
 
 const UserAccountCard = (props) => {
 
-  const onLinkAccount = (id) => {
-    console.log("onLinkAccount: " + id)
+  const onLinkAccount = () => {
+    console.log("onLinkAccount: " + props.provider.name)
+    const data = {
+      provider: props.provider.name,
+      id: props.user?.id || "",
+      handle: props.user?.user_handle || "",
+      email: props.user?.email || "",
+      token: props.provider.token || "",
+      secret: props.provider.secret || "",
+    }
+    console.log(data)
   }
-  const onUnlinkAccount = (id) => {
-    console.log("onUnlinkAccount: " + id)
+
+  const onUnlinkAccount = () => {
+    console.log("onUnlinkAccount: " + props.provider.name)
   }
-  const onUsePhoto = (id) => {
-    console.log("onUsePhoto: " + id)
+
+  const onUsePhoto = () => {
+    console.log("onUsePhoto: " + props.provider.name)
   }
 
   return (
@@ -44,7 +55,7 @@ const UserAccountCard = (props) => {
         <Button
           variant="contained"
           disabled={props.disabled}
-          onClick={e => onLinkAccount(props.id)}
+          onClick={onLinkAccount}
           style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%" }}
         >
           {<props.icon />}
@@ -63,14 +74,14 @@ const UserAccountCard = (props) => {
       <Button
         variant="text"
         disabled={props.disabled}
-        onClick={e => onUnlinkAccount(props.id)}
+        onClick={onUnlinkAccount}
       >
         UNLINK
       </Button>
       <Button
         variant="text"
         disabled={props.disabled}
-        onClick={e => onUsePhoto(props.id)}
+        onClick={onUsePhoto}
         sx={{ color: "#525253" }}
       >
         USE THIS PHOTO
@@ -81,6 +92,16 @@ const UserAccountCard = (props) => {
 
 const UserSettingsAccountPage = (props) => {
 
+  const twitterProvider = {
+    name: "twitter",
+    token: "provider_token",
+    secret: "provider_secret",
+  }
+  const instagramProvider = {
+    name: "instagram",
+    token: "provider_token",
+    secret: "provider_secret",
+  }
 
   return (
     <UserSettingsPage
@@ -111,17 +132,17 @@ const UserSettingsAccountPage = (props) => {
         {/* ACCOUNT CARDS */}
         <Stack justifyContent="start" alignItems="start" spacing={2}>
           <UserAccountCard
-            id="twitter"
+            provider={twitterProvider}
             account="@JohnSmith21"
             title="Twitter Account"
             buttonText="LINK TWITTER"
-            image="https://images.unsplash.com/photo-1520188740392-665a13f453fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGxpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+            image="https://images.unsplash.com/photo-1520188740392-665a13f453fc?ixlib=rb-1.2.1&ixprovider=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGxpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
             icon={TwitterIcon}
           />
 
           <UserAccountCard
             disabled
-            id="instagram"
+            provider={instagramProvider}
             title="Instagram Account"
             buttonText="LINK IG"
             image="https://images.unsplash.com/photo-1520188740392-665a13f453fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGxpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"

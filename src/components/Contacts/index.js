@@ -83,7 +83,7 @@ import {
   removeTagsFromContacts,
 } from "../../ApiHelper";
 import { SelectAll } from "@material-ui/icons";
-import { useContact, useMyContacts, useRanks, useStatus, useGradeYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags, useTagsWithContacts } from "../../Api/Hooks";
+import { useContact, useMyContacts, useRanks, useStatus, useGradYears, useBoards, usePositions, useAllColumns, useTeamContact, useTagWithContact, useTags, useTagsWithContacts } from "../../Api/Hooks";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -1066,7 +1066,7 @@ function Home(props) {
   });
   console.log(STATUS, "STATUS")
   var allStatuses = STATUS
-  const GradeYears = useGradeYears().items
+  const GradeYears = useGradYears().items
   console.log('GradeYears', GradeYears)
   var GRADYEAR = [];
   GradeYears?.map((item) => {
