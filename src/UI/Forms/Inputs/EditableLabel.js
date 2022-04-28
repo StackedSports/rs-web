@@ -19,7 +19,6 @@ export const EditableLabel = (props) => {
     }
 
     const onCancel = (e) => {
-        console.log('blur')
         setValue(props.value)
         setEditable(false)
     }
@@ -32,7 +31,7 @@ export const EditableLabel = (props) => {
     return (
         <StyledInput
             variant={editable ? "outlined" : "standard"}
-            editable={editable}
+            editable={editable ? "true" : undefined}
             inputRef={inputRef}
             disableUnderline={true}
             value={value}

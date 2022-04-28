@@ -145,7 +145,7 @@ export default function ContactsPage(props) {
         },
         birthday: {
             label: 'Birthday',
-            options: []
+            type: 'date'
         },
         state: {
             label: 'State',

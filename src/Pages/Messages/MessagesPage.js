@@ -10,8 +10,10 @@ import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
-import { useMessages, useTeamMembers } from 'Api/Hooks'
+
+import { useMessages, useTeamMembers, useTags } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
+import { fileTypes } from 'utils/FileUtils'
 
 const getTitle = (filterName) => {
     switch (filterName) {
@@ -25,23 +27,24 @@ const getTitle = (filterName) => {
 }
 
 const MessagesPage = (props) => {
-    const { filter } = useParams()
-    const lastFilter = useRef(filter)
+    const { filterType, filterValue } = useParams()
+    const lastFilter = useRef(filterValue)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
-    
-    const senders = useTeamMembers()
 
-    // console.log(JSON.parse(localStorage.getItem("user")).token)
+    const senders = useTeamMembers()
+    const tags = useTags()
 
     const messageFilter = useMemo(() => {
-        console.log(filter)
-        if (!filter)
+        console.log(filterType, filterValue)
+        if (!filterType)
             return { status: 'all' }
-        else if (filter === 'finished')
+        else if (filterType === 'status' && filterValue === 'finished')
             return { status: 'finished' }
+        else if (filterType === 'team_members')
+            return { status: 'all', sender: [filterValue] }
         else
-            return { status: [{ id: filter, name: filter }] }
-    }, [filter])
+            return { status: [filterValue] }
+    }, [filterType, filterValue])
 
     const [redirect, setRedirect] = useState('')
     // console.log(filter)
@@ -55,17 +58,22 @@ const MessagesPage = (props) => {
         console.log('on filter')
 
         console.log(lastFilter.current)
-        console.log(filter)
 
-        if (!filter || lastFilter.current === filter)
+        if (!filterType || lastFilter.current === filterValue)
             return
 
-        console.log('filtering for ' + filter)
-        lastFilter.current = filter
+        console.log('filtering for ' + filterValue)
+        lastFilter.current = filterValue
 
-        messages.filter({ status: [{ id: filter, name: filter }] })
+        if (filterType === 'status') {
+            messages.filter({ status: [filterValue] })
+        } else if (filterType === 'team_members') {
+            messages.filter({ sender: [filterValue] })
+        } else {
+            messages.filter({ status: [filterValue] })
+        }
 
-    }, [filter])
+    }, [filterType, filterValue])
 
     useEffect(() => {
         if (!messages.error)
@@ -113,21 +121,21 @@ const MessagesPage = (props) => {
     const panelFilters = {
         'platform': {
             label: 'Platform',
-            options: [{id:1, name:'Twitter'},{id:2, name:'Personal Text'}, {id:3, name:'RS Text'}],
+            options: [{ id: 1, name: 'Twitter' }, { id: 2, name: 'Personal Text' }, { id: 3, name: 'RS Text' }],
         },
         'sender': {
             label: 'Sender',
-            options:senders.items ||[],
+            options: senders.items || [],
             optionsLabel: (sender) => getFullName(sender),
         },
         'recipient_status': {
             label: 'Recipient Status',
-            options: [{id:1, name:'Cancelled'},{id:2, name:'Error'}, {id:3, name:'Ignored'}, {id:4, name:'Skipped'}, {id:5, name:'Sent'}, {id:6, name:'Pending'}],
-            optionsLabel: 'name',
+            options: [{ id: 1, name: 'Cancelled' }, { id: 2, name: 'Error' }, { id: 3, name: 'Ignored' }, { id: 4, name: 'Skipped' }, { id: 5, name: 'Sent' }, { id: 6, name: 'Pending' }],
         },
         'tags': {
             label: 'Tags',
-            options: []
+            options: tags || [],
+
         },
         'send_at_dates': {
             label: 'Send At Dates',
@@ -139,15 +147,27 @@ const MessagesPage = (props) => {
         },
     }
 
-    const onFilterChange = (filterName, value) => {
-        console.log(filterName)
-        console.log(value)
-    }
+    const onFilterChange = (filters) => {
+        console.log(filters)
 
+        if (filters.length === 0)
+            messages.clearFilter()
+        else {
+            if (filters.platform)
+                filters.platform = filters.platform.map(platform => platform.name)
+            if (filters.sender)
+                filters.sender = filters.sender.map(sender => sender.id)
+            if (filters.recipient_status)
+                filters.recipient_status = filters.recipient_status.map(status => status.name)
+            if (filters.tags)
+                filters.tags = filters.tags.map(tag => tag.name)
+            messages.filter(filters)
+        }
+    }
 
     return (
         <BaseMessagePage
-            title={getTitle(filter)}
+            title={getTitle(filterType)}
             redirect={redirect}
             actions={actions}
             showPanelFilters={showPanelFilters}

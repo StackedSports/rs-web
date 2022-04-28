@@ -3374,12 +3374,12 @@ function MessageCreate(props) {
             </span>
           </Grid>
           <Grid item md={8} sm={8}>
-            <Grid container direction="row" justify="flex-end">
+            <Grid container justify="flex-end">
               {showActionButton()}
               {showSendButton()}
             </Grid>
           </Grid>
-          <Grid container direction="row">
+          <Grid container >
             {filter.length != 0 &&
               filter.map((fil, index) => {
                 return (
