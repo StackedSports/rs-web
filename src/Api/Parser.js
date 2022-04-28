@@ -77,6 +77,14 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
+    if(filters.timeZone) {
+        criteria['timezones'] = []
+
+        filters.timeZone.forEach(timezone => {
+            criteria.timezones.push(timezone.name)
+        })
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags
