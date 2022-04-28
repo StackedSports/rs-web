@@ -40,6 +40,7 @@ const fullName = {
     headerName: 'Full Name',
     // width: 180,
     flex: 2,
+    minWidth: 180,
     resizable: true,
     valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
@@ -58,6 +59,7 @@ const firstName = {
     field: 'first_name',
     headerName: 'First Name',
     flex: 1,
+    minWidth: 100,
     // resizable: true,
     valueGetter: (params) => params.row.first_name ? params.row.first_name : '',
     renderCell: (params) => (
@@ -71,6 +73,7 @@ const lastName = {
     field: 'last_name',
     headerName: 'Last Name',
     flex: 1,
+    minWidth: 100,
     // resizable: true,
     valueGetter: (params) => params.row.last_name ? params.row.last_name : '',
     renderCell: (params) => (
@@ -84,6 +87,7 @@ const nickName = {
     field: 'nick_name',
     headerName: 'Nick Name',
     flex: 1,
+    minWidth: 100,
     // resizable: true,
     valueGetter: (params) => params.row.nick_name ? params.row.nick_name : '',
     renderCell: (params) => (
@@ -98,6 +102,7 @@ const twitterName = {
     headerName: 'Twitter',
     // width: 130,
     flex: 1,
+    minWidth: 120,
     // resizable: true,
     valueGetter: (params) => {
         let contact = params.row
@@ -117,8 +122,8 @@ const twitterName = {
 const phone = {
     field: 'phone',
     headerName: 'Phone',
-    width: 150,
-    // flex: 1,
+    flex: 1,
+    minWidth: 150,
     // resizable: true,
     valueGetter: (params) => formatPhoneNumber(params.row.phone),
     renderCell: (params) => (
@@ -131,15 +136,15 @@ const phone = {
 const state = {
     field: 'state',
     headerName: 'State',
-    width: 80
+    width: 70
     // flex: 1,
 }
 
 const school = {
     field: 'high_school',
     headerName: 'School',
-    // width: 120
     flex: 1,
+    minWidth: 150,
     valueGetter: (params) => params.row.high_school ? params.row.high_school : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -152,6 +157,7 @@ const gradYear = {
     field: 'grad_year',
     headerName: 'Grad Year',
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.grad_year ? params.row.grad_year : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -164,6 +170,7 @@ const positions = {
     field: 'positions',
     headerName: 'Position',
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.positions ? params.row.positions.join(", ").toUpperCase() : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -176,6 +183,7 @@ const areaCoach = {//array
     field: 'area_coach',
     headerName: 'Area Coach',
     flex: 1,
+    minWidth: 150,
     valueGetter: (params) => params.row.area_coach?.full_name || '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -188,6 +196,7 @@ const positionCoach = {
     field: 'position_coach',
     headerName: 'Position Coach',
     flex: 1,
+    minWidth: 150,
     valueGetter: (params) => params.row.position_coach?.full_name || '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -200,6 +209,7 @@ const recruitingCoach = {
     field: 'coordinator',
     headerName: 'Recruiting Coach',
     flex: 1,
+    minWidth: 150,
     valueGetter: (params) => params.row.coordinator?.full_name || '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -211,8 +221,8 @@ const recruitingCoach = {
 const status = {
     field: 'status',
     headerName: 'Status',
-    // width: 120,
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.status ? params.row.status.status : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -224,8 +234,8 @@ const status = {
 const status2 = {
     field: 'status_2',
     headerName: 'Status 2',
-    // width: 120,
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.status_2 ? params.row.status_2 : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -237,8 +247,8 @@ const status2 = {
 const rank = {
     field: 'rank',
     headerName: 'Rank',
-    // width: 120,
     flex: 1,
+    minWidth: 70,
     valueGetter: (params) => params.row.rank ? params.row.rank.rank : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -274,8 +284,8 @@ const dateAdded = {
 const timeZone = {
     field: 'time_zone',
     headerName: 'Time Zone',
-    // width: 120,
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.time_zone ? params.row.time_zone : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -287,8 +297,8 @@ const timeZone = {
 const birthday = {
     field: 'dob',
     headerName: 'Birthday ',
-    // width: 120,
     flex: 1,
+    minWidth: 100,
     valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : '',
     renderCell: (params) => (
         <Tooltip title={formatDate(params.value,'short')} placement='right-start'>
