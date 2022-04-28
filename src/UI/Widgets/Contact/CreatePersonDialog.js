@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { TextField, MenuItem, FormGroup, FormControlLabel,Checkbox } from '@mui/material'
+import { TextField, MenuItem, FormGroup, FormControlLabel, Checkbox } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { FormBaseDialog } from "../Dialogs/FormBaseDialog";
+import { createPerson } from 'Api/Endpoints';
 
 const initialValues = {
   "person_relationship_type_id": "",
@@ -18,31 +19,71 @@ const initialValues = {
 }
 
 const validationSchema = yup.object().shape({
-  "person_relationship_type_id": yup.string().required("Required"),
+  "person_relationship_type_id": yup.number().required("Required"),
   "first_name": yup.string().required("Required"),
   "last_name": yup.string().required("Required"),
-  "phone": yup.string().required("Required"),
-  "email": yup.string().required("Required").email("Invalid email address"),
+  "phone": yup.string(),
+  "email": yup.string().email("Invalid email address"),
   "lives_with": yup.boolean(),
   "active_in_life": yup.boolean(),
   "top_influencer": yup.boolean(),
-  "twitter_profile": yup.string().required("Required")
+  "twitter_profile": yup.string()
 })
+
+const relationshipsTypes = [
+  "Mother",
+  "Father",
+  "Grandmother",
+  "Grandfather",
+  "Step Father",
+  "Step Mother",
+  "Guardian",
+  "Coach",
+  "Brother",
+  "Sister",
+  "Girlfriend",
+  "Other",
+  "Boyfriend",
+  "Friend",
+  "Aunt",
+  "Uncle",
+  "Godmother",
+  "Godfather",
+  "Cousin",
+  "Grandparent",
+  "Parent",
+  "Godparent",
+  "Son",
+  "Daughter",
+]
 
 export const CreatePersonDialog = (props) => {
 
   const [contact, setContact] = useState(props.contact || {});
-
+  const [error, setError] = useState(null);
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      console.log(values)
+      if (contact.id) {
+        formikHelpers.setSubmitting(true);
+        createPerson(contact.id, values)
+          .then((res) => {
+            console.log(res)
+            props.onCreated()
+          })
+          .catch(err => {
+            console.log(err)
+            setError(err)
+          }).finally(() => {
+            formikHelpers.setSubmitting(false);
+          })
+      }
     }
   })
 
-  const handleClose=()=>{
+  const handleClose = () => {
     props.onClose();
     formik.resetForm();
   }
@@ -54,6 +95,7 @@ export const CreatePersonDialog = (props) => {
       title={`New Relationship for contact: ${props?.contact?.first_name} ${props?.contact?.last_name}`}
       onSubmit={formik.handleSubmit}
       loading={formik.isSubmitting}
+      error={error}
     >
 
       <TextField
@@ -65,10 +107,17 @@ export const CreatePersonDialog = (props) => {
         value={formik.values.person_relationship_type_id}
         variant="outlined"
         margin="dense"
+        SelectProps={{
+          MenuProps:{
+            sx:{maxHeight: "300px"}
+          }
+        }}
       >
-        <MenuItem value="">
-          Family
-        </MenuItem>
+        {relationshipsTypes.map((option, index) => (
+          <MenuItem key={index} value={index}>
+            {option}
+          </MenuItem>
+        ))}
       </TextField>
 
       <TextField
@@ -141,54 +190,14 @@ export const CreatePersonDialog = (props) => {
         helperText={formik.touched.twitter_profile && formik.errors.twitter_profile}
       />
 
-      <TextField
-        label="Lives With"
-        name="lives_with"
-        type='checkbox'
-        fullWidth
-        value={formik.values.lives_with}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        variant="outlined"
-        margin="dense"
-        error={formik.touched.lives_with && Boolean(formik.errors.lives_with)}
-        helperText={formik.touched.lives_with && formik.errors.lives_with}
-      />
-
-      <TextField
-        label="Active in Life"
-        name="active_in_life"
-        type='checkbox'
-        fullWidth
-        value={formik.values.active_in_life}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        variant="outlined"
-        margin="dense"
-        error={formik.touched.active_in_life && Boolean(formik.errors.active_in_life)}
-        helperText={formik.touched.active_in_life && formik.errors.active_in_life}
-      />
-
-      <TextField
-        label="Top Influencer"
-        name="top_influencer"
-        type='checkbox'
-        fullWidth
-        value={formik.values.top_influencer}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        variant="outlined"
-        margin="dense"
-        error={formik.touched.top_influencer && Boolean(formik.errors.top_influencer)}
-        helperText={formik.touched.top_influencer && formik.errors.top_influencer}
-      />
-
-      <FormGroup>
-        <FormControlLabel control={<Checkbox checked={formik.values.lives_with} onChange={formik.handleChange} name="lives_with" />} label="Lives With" />
-        <FormControlLabel control={<Checkbox checked={formik.values.active_in_life} onChange={formik.handleChange} name="active_in_life" />} label="Active in Life" />
+      <FormGroup >
+        <FormControlLabel control={<Checkbox checked={formik.values.lives_with} onChange={formik.handleChange} name="lives_with" />} label="Lives With?" />
+        <FormControlLabel control={<Checkbox checked={formik.values.active_in_life} onChange={formik.handleChange} name="active_in_life" />} label="Active in Life?" />
+        <FormControlLabel control={<Checkbox checked={formik.values.top_influencer} onChange={formik.handleChange} name="top_influencer" />} label="Top Influencer?" />
       </FormGroup>
-
 
     </FormBaseDialog>
   )
 }
+
+export default CreatePersonDialog

@@ -49,8 +49,11 @@ export default function ContactsTable(props) {
                 loading={props.loading}
                 columnVisibilityModel={visibleColumns.items}
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+                sortingMode="server"
+                onSortModelChange={props.onSortingChange}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
+
             />
             <Grid container justifyContent="center" alignItems="center">
                 <Pagination

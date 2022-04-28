@@ -328,7 +328,6 @@ export const SearchableOptionSelected = props => {
 		>
 			<Stack
 				style={{ height: 50 }}
-				container
 				direction="row"
 				alignItems="center"
 			>

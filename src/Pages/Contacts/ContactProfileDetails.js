@@ -7,7 +7,8 @@ import * as Yup from "yup";
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
-import { CreatePersonDialog } from 'UI/Widgets/Contact/CreatePersonDialog';
+import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
+import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 
 import { states } from 'utils/Data';
 import {
@@ -19,7 +20,7 @@ import {
 } from 'Api/Hooks'
 
 import {
-    updateContact,
+	updateContact,
 } from 'Api/Endpoints'
 
 import { AppContext } from 'Context/AppProvider'
@@ -39,25 +40,26 @@ const formValidation = Yup.object().shape({
 })
 
 const ContactProfileDetails = (props) => {
-	if(props.loading)
+	if (props.loading)
 		return (
 			<Stack
 			  pr={1}
 			  spacing={1}
 			  sx={{ width: '350px', height: '100%' }}
 			  overflowY="auto"
-			  style={{ borderRight: "#efefef  1px solid" }} 
+			  style={{ borderRight: "#efefef  1px solid" }}
 			>
-				<LoadingPanel/>
+				<LoadingPanel />
 			</Stack>
 		)
-			
+
 	const app = useContext(AppContext)
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
 	const [showSaveButton, setShowSaveButton] = useState([false, false, false, false, false, false, false, false])
 	const [openNewFamilyMemberDialog, setOpenNewFamilyMemberDialog] = useState(false)
+	const [openNewOpponentDialog, setOpenNewOpponentDialog] = useState(false)
 
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
@@ -118,7 +120,7 @@ const ContactProfileDetails = (props) => {
 		let newData = {}
 
 		Object.keys(data).forEach(key => {
-			switch(key) {
+			switch (key) {
 				case 'status':
 				case 'rank':
 				case 'position_coach':
@@ -128,7 +130,7 @@ const ContactProfileDetails = (props) => {
 					break
 				case 'position_tags':
 					newData[key] = data[key].map(position => {
-						if(typeof position === 'string')
+						if (typeof position === 'string')
 							return position
 						else
 							return position.abbreviation
@@ -150,7 +152,7 @@ const ContactProfileDetails = (props) => {
 		console.log(data)
 		console.log(parseValues(data))
 
-		if(!objectNotNull(data))
+		if (!objectNotNull(data))
 			return app.alert.setInfo('No fields have changed, did not update profile')
 
 		setSavingContactAtIndex(index, true)
@@ -170,7 +172,7 @@ const ContactProfileDetails = (props) => {
 			.finally(() => setSavingContactAtIndex(index, false))
 
 		// return new Promise((resolve, reject) => {
-			
+
 		// })
 	}
 
@@ -181,7 +183,7 @@ const ContactProfileDetails = (props) => {
 
 		Object.keys(previous).forEach(key => {
 			// console.log('for ' + key)
-			if(previous[key] !== current[key]) {
+			if (previous[key] !== current[key]) {
 				// console.log('key different')
 				newValues[key] = current[key]
 			}
@@ -260,116 +262,124 @@ const ContactProfileDetails = (props) => {
 
 	return (
 		<Stack
-		  pr={1}
-		  spacing={1}
-		  sx={{ width: '350px', height: '100%' }}
-		  overflowY="auto"
-		  style={{ borderRight: "#efefef  1px solid" }} 
+			pr={1}
+			spacing={1}
+			sx={{ width: '350px', height: '100%' }}
+			overflowY="auto"
+			style={{ borderRight: "#efefef  1px solid" }}
 		>
 			<CreatePersonDialog
-			  open={openNewFamilyMemberDialog}
-			  onClose={() => setOpenNewFamilyMemberDialog(false)}
-			  contact={props.contact}
+				open={openNewFamilyMemberDialog}
+				onClose={() => setOpenNewFamilyMemberDialog(false)}
+				contact={props.contact}
+			//onCreated ={onRelationshipCreated  }
+			/>
+
+			<CreateOpponentDialog
+				open={openNewOpponentDialog}
+				onClose={() => setOpenNewOpponentDialog(false)}
+				contact={props.contact}
+			//onCreated ={onOpponentCreated  }
 			/>
 
 			<Formik
-			  initialValues={initialValues.general}
-			  onSubmit={onUpdateGeneral}
-			  validationSchema={formValidation}
+				initialValues={initialValues.general}
+				onSubmit={onUpdateGeneral}
+				validationSchema={formValidation}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						id='general'
-						title='GENERAL'
-						expandedId={expandedAccordionId}
-						setExpanded={setExpandedAccordion}
-						saving={savingContact[0]}
-						showButtonSummary
-						showSaveButton={showSaveButton[0]}
-						onFieldChange={(e) => onFieldChange(e, 0, formikProps)}
-						onFieldValue={formikProps.setFieldValue}
-						onDiscard={(e) => onDiscard(e, 0, formikProps)}
-						items={[
-							{ label: 'First Name', name: 'first_name', value: formikProps.values.first_name, component: TextField },
-							{ label: 'Last Name', name: 'last_name', value: formikProps.values.last_name, component: TextField },
-							{ label: 'Nick Name', name: 'nick_name', value: formikProps.values.nick_name, component: TextField },
-							{ label: 'Phone Number', name: 'phone', type: "tel", value: formikProps.values.phone, component: TextField, error: formikProps.errors.phone, touch: formikProps.touched.phone },
-							{ label: 'Email', name: 'email', type: "email", value: formikProps.values.email, component: TextField, error: formikProps.errors.email, touch: formikProps.touched.email },
-							{ label: 'Twitter Handle', name: 'twitter_handle', value: formikProps.values.twitter_handle, component: TextField },
-						]}
+							id='general'
+							title='GENERAL'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[0]}
+							showButtonSummary
+							showSaveButton={showSaveButton[0]}
+							onFieldChange={(e) => onFieldChange(e, 0, formikProps)}
+							onFieldValue={formikProps.setFieldValue}
+							onDiscard={(e) => onDiscard(e, 0, formikProps)}
+							items={[
+								{ label: 'First Name', name: 'first_name', value: formikProps.values.first_name, component: TextField },
+								{ label: 'Last Name', name: 'last_name', value: formikProps.values.last_name, component: TextField },
+								{ label: 'Nick Name', name: 'nick_name', value: formikProps.values.nick_name, component: TextField },
+								{ label: 'Phone Number', name: 'phone', type: "tel", value: formikProps.values.phone, component: TextField, error: formikProps.errors.phone, touch: formikProps.touched.phone },
+								{ label: 'Email', name: 'email', type: "email", value: formikProps.values.email, component: TextField, error: formikProps.errors.email, touch: formikProps.touched.email },
+								{ label: 'Twitter Handle', name: 'twitter_handle', value: formikProps.values.twitter_handle, component: TextField },
+							]}
 						/>
 					</Form>
 				)}
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.details}
-			  onSubmit={onUpdateDetails}
+				initialValues={initialValues.details}
+				onSubmit={onUpdateDetails}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						  id='details'
-						  title='DETAILS'
-						  expandedId={expandedAccordionId}
-						  setExpanded={setExpandedAccordion}
-						  saving={savingContact[1]}
-						  showButtonSummary
-						  showSaveButton={showSaveButton[1]}
-						  onFieldChange={(e) => onFieldChange(e, 1, formikProps)}
-						  onFieldValue={formikProps.setFieldValue}
-						  onDiscard={(e) => onDiscard(e, 1, formikProps)}
-						  items={[
-							{ label: 'Graduation Year', name: 'graduation_year', type: "number", value: formikProps.values.graduation_year, component: TextField },
-							{ label: 'Current School', name: 'high_school', value: formikProps.values.high_school, component: TextField },
-						  ]}
+							id='details'
+							title='DETAILS'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[1]}
+							showButtonSummary
+							showSaveButton={showSaveButton[1]}
+							onFieldChange={(e) => onFieldChange(e, 1, formikProps)}
+							onFieldValue={formikProps.setFieldValue}
+							onDiscard={(e) => onDiscard(e, 1, formikProps)}
+							items={[
+								{ label: 'Graduation Year', name: 'graduation_year', type: "number", value: formikProps.values.graduation_year, component: TextField },
+								{ label: 'Current School', name: 'high_school', value: formikProps.values.high_school, component: TextField },
+							]}
 						>
 							<SearchableSelector
-						  	  label="State"
-							  placeholder="Search"
-							  value={formikProps.values.state}
-							  options={states || []}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => option.abbreviation || option || ""}
-							  getChipLabel={(option) => option.abbreviation}
-							  onChange={(newValue) => {
-								console.log(newValue)
-								formikProps.setFieldValue("state", newValue.abbreviation)
-								onAccordionFieldChange(1)
-							  }}
+								label="State"
+								placeholder="Search"
+								value={formikProps.values.state}
+								options={states || []}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => option.abbreviation || option || ""}
+								getChipLabel={(option) => option.abbreviation}
+								onChange={(newValue) => {
+									console.log(newValue)
+									formikProps.setFieldValue("state", newValue.abbreviation)
+									onAccordionFieldChange(1)
+								}}
 							/>
 
 							<SearchableSelector
-							  label="Status"
-							  placeholder="Search"
-							  // multiple
-							  value={formikProps.values.status}
-							  options={status.items || []}
-							  loading={status.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => option.status || option || ""}
-							  onChange={(newValue) => {
-								console.log(newValue)
-								formikProps.setFieldValue('status', newValue)
-								onAccordionFieldChange(1)
-							  }}
+								label="Status"
+								placeholder="Search"
+								// multiple
+								value={formikProps.values.status}
+								options={status.items || []}
+								loading={status.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => option.status || option || ""}
+								onChange={(newValue) => {
+									console.log(newValue)
+									formikProps.setFieldValue('status', newValue)
+									onAccordionFieldChange(1)
+								}}
 							/>
 
 							<SearchableSelector
-							  label="Rank"
-							  placeholder="Search"
-							  // multiple
-							  value={formikProps.values.rank}
-							  options={ranks.items || []}
-							  loading={ranks.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => option.rank || option}
-							  getChipLabel={(option) => option.rank}
-							  onChange={(newValue) => {
-							 	formikProps.setFieldValue('rank', newValue)
-								onAccordionFieldChange(1)
-							  }}
+								label="Rank"
+								placeholder="Search"
+								// multiple
+								value={formikProps.values.rank}
+								options={ranks.items || []}
+								loading={ranks.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => option.rank || option}
+								getChipLabel={(option) => option.rank}
+								onChange={(newValue) => {
+									formikProps.setFieldValue('rank', newValue)
+									onAccordionFieldChange(1)
+								}}
 							/>
 						</AccordionComponent>
 					</Form>
@@ -377,65 +387,65 @@ const ContactProfileDetails = (props) => {
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.coaches}
-			  onSubmit={onUpdateCoaches}
+				initialValues={initialValues.coaches}
+				onSubmit={onUpdateCoaches}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						  id='coaches'
-						  title='COACHES'
-						  expandedId={expandedAccordionId}
-						  setExpanded={setExpandedAccordion}
-						  saving={savingContact[2]}
-						  showButtonSummary
-						  showSaveButton={showSaveButton[2]}
-						  onDiscard={(e) => onDiscard(e, 2, formikProps)}
+							id='coaches'
+							title='COACHES'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[2]}
+							showButtonSummary
+							showSaveButton={showSaveButton[2]}
+							onDiscard={(e) => onDiscard(e, 2, formikProps)}
 						>
-						
+
 							<SearchableSelector
-							  label="Position Coach"
-							  placeholder="Search"
-							  value={formikProps.values.position_coach}
-							  options={teamMembers.items || []}
-							  loading={teamMembers.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => getFullName(option)}
-							  getChipLabel={(option) => getFullName(option)}
-							  onChange={(newValue) => {
-								formikProps.setFieldValue("position_coach", newValue)
-								onAccordionFieldChange(2)
-							  }}
+								label="Position Coach"
+								placeholder="Search"
+								value={formikProps.values.position_coach}
+								options={teamMembers.items || []}
+								loading={teamMembers.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => getFullName(option)}
+								getChipLabel={(option) => getFullName(option)}
+								onChange={(newValue) => {
+									formikProps.setFieldValue("position_coach", newValue)
+									onAccordionFieldChange(2)
+								}}
 							/>
 
 							<SearchableSelector
-							  label="Area Coach"
-							  placeholder="Search"
-							  value={formikProps.values.recruiting_coach}
-							  options={teamMembers.items || []}
-							  loading={teamMembers.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => getFullName(option)}
-							  getChipLabel={(option) => getFullName(option)}
-							  onChange={(newValue) => {
-								formikProps.setFieldValue("recruiting_coach", newValue)
-								onAccordionFieldChange(2)
-							  }}
+								label="Area Coach"
+								placeholder="Search"
+								value={formikProps.values.recruiting_coach}
+								options={teamMembers.items || []}
+								loading={teamMembers.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => getFullName(option)}
+								getChipLabel={(option) => getFullName(option)}
+								onChange={(newValue) => {
+									formikProps.setFieldValue("recruiting_coach", newValue)
+									onAccordionFieldChange(2)
+								}}
 							/>
 
 							<SearchableSelector
-							  label="Coordinator"
-							  placeholder="Search"
-							  value={formikProps.values.coordinator}
-							  options={teamMembers.items || []}
-							  loading={teamMembers.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => getFullName(option)}
-							  getChipLabel={(option) => getFullName(option)}
-							  onChange={(newValue) => {
-								formikProps.setFieldValue("coordinator", newValue)
-								onAccordionFieldChange(2)
-							  }}
+								label="Coordinator"
+								placeholder="Search"
+								value={formikProps.values.coordinator}
+								options={teamMembers.items || []}
+								loading={teamMembers.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => getFullName(option)}
+								getChipLabel={(option) => getFullName(option)}
+								onChange={(newValue) => {
+									formikProps.setFieldValue("coordinator", newValue)
+									onAccordionFieldChange(2)
+								}}
 							/>
 						</AccordionComponent>
 					</Form>
@@ -443,36 +453,36 @@ const ContactProfileDetails = (props) => {
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.positions}
-			  onSubmit={onUpdatePositions}
+				initialValues={initialValues.positions}
+				onSubmit={onUpdatePositions}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						  id='positions'
-						  title='POSITIONS'
-						  expandedId={expandedAccordionId}
-						  setExpanded={setExpandedAccordion}
-						  saving={savingContact[3]}
-						  showButtonSummary
-						  showSaveButton={showSaveButton[3]}
-						  onDiscard={(e) => onDiscard(e, 3, formikProps)}
+							id='positions'
+							title='POSITIONS'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[3]}
+							showButtonSummary
+							showSaveButton={showSaveButton[3]}
+							onDiscard={(e) => onDiscard(e, 3, formikProps)}
 						>
 							<SearchableSelector
-							  label="Positions"
-							  placeholder="Search"
-							  variant="contained"
-							  multiple
-							  value={formikProps.values.position_tags}
-							  options={positions.items || []}
-							  loading={positions.loading}
-							  isOptionEqualToValue={(option, value) => option?.id === value?.id}
-							  getOptionLabel={(option) => option.abbreviation || option}
-							  getChipLabel={(option) => option.abbreviation || option}
-							  onChange={(newValue) => {
-								formikProps.setFieldValue("position_tags", newValue)
-								onAccordionFieldChange(3)
-							  }}
+								label="Positions"
+								placeholder="Search"
+								variant="contained"
+								multiple
+								value={formikProps.values.position_tags}
+								options={positions.items || []}
+								loading={positions.loading}
+								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								getOptionLabel={(option) => option.abbreviation || option}
+								getChipLabel={(option) => option.abbreviation || option}
+								onChange={(newValue) => {
+									formikProps.setFieldValue("position_tags", newValue)
+									onAccordionFieldChange(3)
+								}}
 							/>
 						</AccordionComponent>
 					</Form>
@@ -480,31 +490,31 @@ const ContactProfileDetails = (props) => {
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.relationships}
-			  onSubmit={onUpdateRelationships}
+				initialValues={initialValues.relationships}
+				onSubmit={onUpdateRelationships}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						id='family-relationship'
-						title='FAMILY & RELATIONSHIP'
-						expandedId={expandedAccordionId}
-						setExpanded={setExpandedAccordion}
-						saving={savingContact[4]}
-						showButtonSummary
-						showSaveButton={showSaveButton[4]}
-						onFieldChange={(e) => onFieldChange(e, 4, formikProps)}
-						onFieldValue={formikProps.setFieldValue}
-						onDiscard={(e) => onDiscard(e, 4, formikProps)}
-						items={[
-							{ label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
-						]}
+							id='family-relationship'
+							title='FAMILY & RELATIONSHIP'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[4]}
+							showButtonSummary
+							showSaveButton={showSaveButton[4]}
+							onFieldChange={(e) => onFieldChange(e, 4, formikProps)}
+							onFieldValue={formikProps.setFieldValue}
+							onDiscard={(e) => onDiscard(e, 4, formikProps)}
+							items={[
+								{ label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
+							]}
 						>
-							<Button 
-								name="Add new relationship" 
-								type="button" 
-								variant='outlined'
-								onClick={() => setOpenNewFamilyMemberDialog(true)} 
+							<Button
+								name="Add new relationship"
+								type="button"
+								variant='contained'
+								onClick={() => setOpenNewFamilyMemberDialog(true)}
 							/>
 						</AccordionComponent>
 					</Form>
@@ -512,71 +522,78 @@ const ContactProfileDetails = (props) => {
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.opponents}
-			  onSubmit={onUpdateOpponents}
+				initialValues={initialValues.opponents}
+				onSubmit={onUpdateOpponents}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						id='opponents'
-						title='OPPONENTS'
-						expandedId={expandedAccordionId}
-						setExpanded={setExpandedAccordion}
-						saving={savingContact[5]}
-						showButtonSummary
-						showSaveButton={showSaveButton[5]}
-						onFieldChange={(e) => onFieldChange(e, 5, formikProps)}
-						onFieldValue={formikProps.setFieldValue}
-						onDiscard={(e) => onDiscard(e, 5, formikProps)}
-						items={[
-							{ label: 'Opponents', name: 'opponents', value: formikProps.values.opponents, component: TextField },
-						]}
+							id='opponents'
+							title='OPPONENTS'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[5]}
+							showButtonSummary
+							showSaveButton={showSaveButton[5]}
+							onFieldChange={(e) => onFieldChange(e, 5, formikProps)}
+							onFieldValue={formikProps.setFieldValue}
+							onDiscard={(e) => onDiscard(e, 5, formikProps)}
+							items={[
+								{ label: 'Opponents', name: 'opponents', value: formikProps.values.opponents, component: TextField },
+							]}
+						>
+							<Button
+								name="Add new opponent"
+								type="button"
+								variant='contained'
+								onClick={() => setOpenNewOpponentDialog(true)}
+							/>
+						</AccordionComponent>
+					</Form>
+				)}
+			</Formik>
+
+			<Formik
+				initialValues={initialValues.external}
+				onSubmit={onUpdateExternal}
+			>
+				{(formikProps) => (
+					<Form style={{ width: '100%' }}>
+						<AccordionComponent
+							id='external-profiles'
+							title='EXTERNAL PROFILES'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[6]}
+							showButtonSummary
+							showSaveButton={showSaveButton[6]}
+							onFieldChange={(e) => onFieldChange(e, 6, formikProps)}
+							onFieldValue={formikProps.setFieldValue}
+							onDiscard={(e) => onDiscard(e, 6, formikProps)}
+							items={[
+								{ label: 'Hudl', name: 'hudl_link', value: formikProps.values.hudl_link, component: TextField },
+								{ label: 'Arms Id', name: 'arms_id', value: formikProps.values.arms_id, component: TextField },
+							]}
 						/>
 					</Form>
 				)}
 			</Formik>
 
 			<Formik
-			  initialValues={initialValues.external}
-			  onSubmit={onUpdateExternal}
+				initialValues={initialValues.tags}
+				onSubmit={onUpdateTags}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
-						id='external-profiles'
-						title='EXTERNAL PROFILES'
-						expandedId={expandedAccordionId}
-						setExpanded={setExpandedAccordion}
-						saving={savingContact[6]}
-						showButtonSummary
-						showSaveButton={showSaveButton[6]}
-						onFieldChange={(e) => onFieldChange(e, 6, formikProps)}
-						onFieldValue={formikProps.setFieldValue}
-						onDiscard={(e) => onDiscard(e, 6, formikProps)}
-						items={[
-							{ label: 'Hudl', name: 'hudl_link', value: formikProps.values.hudl_link, component: TextField },
-							{ label: 'Arms Id', name: 'arms_id', value: formikProps.values.arms_id, component: TextField },
-						]}
-						/>
-					</Form>
-				)}
-			</Formik>
-
-			<Formik
-			  initialValues={initialValues.tags}
-			  onSubmit={onUpdateTags}
-			>
-				{(formikProps) => (
-					<Form style={{ width: '100%' }}>
-						<AccordionComponent
-						id='tags'
-						title='TAGS'
-						expandedId={expandedAccordionId}
-						setExpanded={setExpandedAccordion}
-						saving={savingContact[7]}
-						showButtonSummary
-						showSaveButton={showSaveButton[7]}
-						onDiscard={(e) => onDiscard(e, 7, formikProps)}
+							id='tags'
+							title='TAGS'
+							expandedId={expandedAccordionId}
+							setExpanded={setExpandedAccordion}
+							saving={savingContact[7]}
+							showButtonSummary
+							showSaveButton={showSaveButton[7]}
+							onDiscard={(e) => onDiscard(e, 7, formikProps)}
 						>
 							<SearchableSelector
 								label="Tags"
@@ -587,7 +604,7 @@ const ContactProfileDetails = (props) => {
 								options={tags.items || []}
 								loading={tags.loading}
 								isOptionEqualToValue={(option, value) => option?.id === value?.id}
-								getOptionLabel={(option) => option.name ||  ""}
+								getOptionLabel={(option) => option.name || ""}
 								getChipLabel={(option) => option.name || ''}
 								onChange={(newValue) => {
 									console.log(newValue)
@@ -605,13 +622,13 @@ const ContactProfileDetails = (props) => {
 				title='ACTIONS'
 				expandedId={expandedAccordionId}
 				setExpanded={setExpandedAccordion}
-				// saving={savingContact[0]}
-				// showButtonSummary
-				// onFieldChange={handleChange}
-				// onFieldValue={setFieldValue}
-				// items={[
-				// 	{ label: 'Archive', name: 'archived', value: values.archived, component: TextField },
-				// ]}
+			// saving={savingContact[0]}
+			// showButtonSummary
+			// onFieldChange={handleChange}
+			// onFieldValue={setFieldValue}
+			// items={[
+			// 	{ label: 'Archive', name: 'archived', value: values.archived, component: TextField },
+			// ]}
 			/>
 		</Stack>
 	)
