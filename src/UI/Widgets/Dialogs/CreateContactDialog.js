@@ -66,7 +66,7 @@ export const CreateContactDialog = (props) => {
         onSubmit: (values, formikHelpers) => {
 
             if (values.twitter_handle.length > 0 && !values.twitter_handle.startsWith('@')) {
-                values.twitter_handle = `@${values.twitter_handle}`
+                values.twitter_handle = `${values.twitter_handle}`
             }
             if (values.phone.length > 0 || values.twitter_handle.length > 0) {
                 createContact(values).then((res) => {
