@@ -216,6 +216,35 @@ export const login = (email, password) => {
     //return POST('login', { email, password })
 }
 
+export const oauthLogin = (data) => {
+    return new Promise((resolve, reject) => {
+        let body = JSON.stringify({ oauth: data })
+        console.log("oauthLogin")
+
+        const HEADERS = {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            // Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        }
+
+        const config = {
+            headers: HEADERS
+        }
+
+        axios.post(URL + 'oauth/login', body, config)
+            .then(res => {
+                console.log(res)
+                if (res.status === 200 || res.status === 204 || res.status === 201)
+                    resolve(res)
+                else
+                    reject(res)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
 export const logout = () => {
     return POST('logout')
 }
@@ -344,7 +373,7 @@ export const deleteRank = (id) => {
     return DELETE(`team/settings/ranks/${id}`)
 }
 
-export const getGradeYears = () => {
+export const getGradYears = () => {
     return AXIOS('get', `team/settings/grad_years`)
 }
 
