@@ -234,6 +234,19 @@ const status2 = {
     ),
 }
 
+const tags = {
+    field: 'tags',
+    headerName: 'Tags',
+    // width: 120,
+    flex: 1,
+    valueGetter: (params) => params.row.tags ? params.row.tags.map(tag => tag.name).join(", ") : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+         <Typography fontSize={14} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
+}
+
 const rank = {
     field: 'rank',
     headerName: 'Rank',
@@ -332,6 +345,7 @@ export const columnsFull = [
     recruitingCoach,
     status,
     status2,
+    tags,
     rank,
     // lastMessaged,
     // mostActiveTime,
