@@ -45,8 +45,10 @@ import { objectNotNull } from 'utils/Validation'
 
 export const useUser = () => {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(true)
         getUser()
             .then(([user]) => {
                 // console.log('ApiHooks: getUser -----')
@@ -54,9 +56,13 @@ export const useUser = () => {
                 setUser(user)
             })
             .catch(error => console.log(error))
+            .finally(() => setLoading(false))
     }, [])
 
-    return user
+    return {
+        item: user,
+        loading
+    }
 }
 
 export const usePlatform = () => {

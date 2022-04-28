@@ -446,9 +446,9 @@ const Sidebar = (props) => {
 
   let teamLogo = DashboardLogo
 
-  if(user && user.team) {
-    console.log(user)
-    teamLogo = user.team.org.logo.original
+  if(user.item && user.item.team) {
+    console.log(user.item)
+    teamLogo = user.item.team.org.logo.original
     // teamLogo = user.team.org.logo.original
     // teamLogo = user.team.org.logo.medium
     // teamLogo = user.team.org.logo.large

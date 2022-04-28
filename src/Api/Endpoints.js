@@ -427,6 +427,13 @@ export const getUser = () => {
     return AXIOS('get', 'me')
 }
 
+export const updateUser = (data, idUser) => {
+    const body = {
+        user: data
+    }
+    return PUT(`users/${idUser}`, body)
+}
+
 export const upadateSelectedColumns = (userId, body) => {
     return AXIOS('put', `users/${userId}/selected_columns`, body)
 }
