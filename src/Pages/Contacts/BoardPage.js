@@ -24,14 +24,14 @@ export default function BoardPage(props) {
         if (board)
             console.log("board: ", board.item)
 
-    }, [boardId])
+    }, [board.item])
 
     const title = useMemo(() => {
         if (board.item)
             return `Board: ${board.item?.name}`
         else
             return 'Board'
-    }, [board])
+    }, [board.item])
 
     const onSendMessage = (selectedData) => {
         console.log(selectedData)
@@ -39,7 +39,7 @@ export default function BoardPage(props) {
         if (selectedData && selectedData.length > 0) {
             app.sendMessageToContacts(selectedData)
         } else {
-            app.sendMessageToBoard(board)
+            app.sendMessageToBoard(board.item)
         }
     }
 

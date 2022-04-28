@@ -351,7 +351,7 @@ export default function BaseContactsPage(props) {
                         onClick={() => setOpenSelectTagDialog(true)}
                         disabled={selectedContacts.count == 0}
                     />
-                    <PanelDropdown
+                    {/* <PanelDropdown
                         header={() => (
                             <Button
                                 style={{ minWidth: 0 }}
@@ -385,7 +385,7 @@ export default function BaseContactsPage(props) {
                                 { name: 'Birthday (dob)', onClick: onArchiveContactClick },
                             ]
                         }}
-                    />
+                    /> */}
                 </Stack>
             </Stack>
 
