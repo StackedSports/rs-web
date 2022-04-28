@@ -24,7 +24,7 @@ import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import {
     useStatuses,
     useRanks,
-    useGradeYears,
+    useGradYears,
     useBoards,
     useTags,
     usePositions,
@@ -58,13 +58,13 @@ export default function BaseContactsPage(props) {
     const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const [selectedFilters, setSelectedFilters] = useState({})
 
-    
+
 
 
     // handle filters options
     const status = useStatuses()
     const ranks = useRanks()
-    const gradeYears = useGradeYears()
+    const gradYears = useGradYears()
     const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
@@ -122,9 +122,9 @@ export default function BaseContactsPage(props) {
             label: 'Rank',
             options: ranks.items?.map(item => ({ id: item.id, name: item.rank })) || [],
         },
-        gradeYear: {
+        gradYear: {
             label: 'Grad Year',
-            options: gradeYears.items?.map((item, index) => ({ id: index, name: item })) || [],
+            options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
         tags: {
             label: 'Tags',
@@ -158,9 +158,9 @@ export default function BaseContactsPage(props) {
             label: 'Status 2',
             options: []
         },
-    }), [status, ranks, gradeYears, tags, positions])
+    }), [status, ranks, gradYears, tags, positions])
 
-    const mainActions = [
+    let mainActions = [
         {
             name: 'Save as Board',
             icon: AccountBox,
@@ -177,7 +177,6 @@ export default function BaseContactsPage(props) {
     ]
 
     // console.log(Object.keys(selectedFilters).length === 0)
-
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -228,7 +227,7 @@ export default function BaseContactsPage(props) {
         contacts.filter(filter)
     }
 
-    const onContactsSelectionChange = (selection) => { 
+    const onContactsSelectionChange = (selection) => {
         // setSelectedContacts(selected)
         selectedContacts.onSelectionChange(selection)
     }
@@ -239,7 +238,7 @@ export default function BaseContactsPage(props) {
         selectedContacts.saveData(contacts.items)
         let selectedData = selectedContacts.getDataSelected()
 
-        if(props.onSendMessage)
+        if (props.onSendMessage)
             props.onSendMessage(selectedData)
         // else
         //     app.sendMessageToContacts(selectedData)
@@ -289,7 +288,7 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             alert={alert}
-            actions={mainActions}
+            actions={props.title.includes("Board") ? [] : mainActions}
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
@@ -327,7 +326,7 @@ export default function BaseContactsPage(props) {
                         variant="contained"
                         endIcon={<SendIcon />}
                         onClick={onSendMessageClick}
-                        disabled={props.enableSendMessageWithoutSelection ? 
+                        disabled={props.enableSendMessageWithoutSelection ?
                             false : selectedContacts.count == 0}
                     />
                 </Stack>
@@ -341,7 +340,7 @@ export default function BaseContactsPage(props) {
                                 { name: 'Export as CSV', onClick: onExportAsCSVClick },
                                 { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.length == 0 },
                                 { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                { name: 'Archive Contact', onClick: onArchiveContactClick },
                             ]
                         }}
                     />

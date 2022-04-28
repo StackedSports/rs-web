@@ -21,13 +21,14 @@ export default function BoardPage(props) {
     const boardContacts = useBoardContacts(boardId)
 
     useEffect(() => {
-        if(board)
-            console.log(board)
-    }, [board])
+        if (board)
+            console.log("board: ", board.item)
 
-    const title= useMemo(() => {
-        if(board)
-            return `Board: ${board.name}`
+    }, [boardId])
+
+    const title = useMemo(() => {
+        if (board.item)
+            return `Board: ${board.item?.name}`
         else
             return 'Board'
     }, [board])
@@ -35,19 +36,19 @@ export default function BoardPage(props) {
     const onSendMessage = (selectedData) => {
         console.log(selectedData)
 
-        if(selectedData && selectedData.length > 0) {
+        if (selectedData && selectedData.length > 0) {
             app.sendMessageToContacts(selectedData)
         } else {
             app.sendMessageToBoard(board)
         }
     }
-    
+
     return (
         <BaseContactsPage
-          title={title}
-          contacts={boardContacts}
-          enableSendMessageWithoutSelection
-          onSendMessage={onSendMessage}
+            title={title}
+            contacts={boardContacts}
+            enableSendMessageWithoutSelection
+            onSendMessage={onSendMessage}
         />
     )
 }

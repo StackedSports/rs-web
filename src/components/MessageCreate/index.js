@@ -151,7 +151,7 @@ function MessageCreate(props) {
   const allMessages = useMessages()
   const snippets = useSnippets()
   const allBoards = useBoards().items
-  const boardContacts = useBoard("xGABNSeXmDOW")
+  const boardContacts = useBoard("xGABNSeXmDOW").item
   const messagesTags = useTags()
   const tags = useTagsWithContacts().items
   const allPlatforms = usePlatform().items
