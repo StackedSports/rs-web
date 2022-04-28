@@ -26,6 +26,7 @@ export const MainMediaPage = (props) => {
     const [selectedMedias, setSelectedMedias] = useState([])
     const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [addFilter, setAddFilter] = useState()
 
     // console.log("placeholders", placeholders)
 
@@ -63,6 +64,15 @@ export const MainMediaPage = (props) => {
 
     const handleTagsDialogConfirm = (selectedTagsIds) => {
         const result = addTagsToMedias(selectedTagsIds, selectedMedias)
+    }
+
+    const handleTagsClick = (tag) => {
+        const filter = {
+            filterName: 'tag',
+            filter: {},
+            option: tag
+        }
+        setAddFilter(filter)
     }
 
     const mainActions = [
@@ -107,6 +117,7 @@ export const MainMediaPage = (props) => {
             filter={media.filter}
             actions={mainActions}
             showPanelFilters={showPanelFilters}
+            setFilter={addFilter}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -195,6 +206,7 @@ export const MainMediaPage = (props) => {
                 <Stack direction='row' flexWrap='wrap' gap={3}>
                     {tags && tags.slice(0, 12).map(tag => (
                         <Stack
+                            onClick={() => handleTagsClick(tag)}
                             direction={'row'}
                             alignItems='center'
                             key={tag.id}
@@ -203,6 +215,7 @@ export const MainMediaPage = (props) => {
                                 paddingInline: '20px',
                                 maxWidth: '200px',
                                 border: '1px solid #E0E0E0',
+                                cursor: 'pointer',
                             }}
                         >
                             <LocalOfferOutlined

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { Collapse, Stack, Box } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
@@ -8,6 +8,7 @@ import { KeyboardArrowDown } from '@mui/icons-material';
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
 import Dropdown from 'UI/Widgets/Dropdown';
 import Button from '../Buttons/Button';
+import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
@@ -21,9 +22,10 @@ export const PanelFilters = (props) => {
 
 	useEffect(() => {
 		if (props.setFilter) {
+			console.log(props.setFilter);
 			const { filterName, filter, option } = props.setFilter;
 			if (filterName && filter && option) {
-				handleFilterChange(filterName, filter, option);
+				handleOptionsChange(filterName, filter, option);
 			}
 		}
 	}, [props.setFilter]);
@@ -38,7 +40,11 @@ export const PanelFilters = (props) => {
 			if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
-				filters[filterName].push(option)
+				if (filters[filterName].includes(option)) {
+					filters[filterName] = filters[filterName].filter(item => item !== option)
+				} else {
+					filters[filterName].push(option)
+				}
 			}
 		} else {
 			filters[filterName] = [option]
@@ -48,7 +54,7 @@ export const PanelFilters = (props) => {
 
 		setSelectedFilters(filters)
 
-		props.onFilterChange(filters)
+		props.onFilterChange(Object.assign({}, filters))
 
 		// return
 		// setSelectedFilters(oldSelectFilters => {
@@ -80,8 +86,6 @@ export const PanelFilters = (props) => {
 	}
 
 	const onRemoveFilter = (filterName, filter) => {
-		let filters = Object.assign({}, selectedFilters)
-
 
 		setSelectedFilters(oldSelectFilters => {
 			const newSelectFilters = { ...oldSelectFilters };
@@ -91,37 +95,36 @@ export const PanelFilters = (props) => {
 				delete newSelectFilters[filterName];
 			}
 
-			props.onFilterChange(newSelectFilters);
+			props.onFilterChange(Object.assign({}, newSelectFilters));
 
 			return newSelectFilters;
 		})
 	}
 
-	const getContent = (filter, filterName) => {
 
-		const getName = (option) => {
-			if (filter.optionsLabel instanceof Function) {
-				return filter.optionsLabel(option);
-			} else if (filter.optionsLabel instanceof String) {
-				return option[filter.optionsLabel];
-			} else {
-				return option.name;
-			}
+	const getOptionLabel = (filter, option) => {
+
+		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
+			return filter.optionsLabel(option);
+		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
+			return option[filter.optionsLabel];
+		} else {
+			return option.name;
 		}
+	}
 
+	const getContent = (filter, filterName) => {
 
 		return (<Dropdown.List>
 			{filter.options.map((option) => (
 				<Dropdown.Item
 					key={option.id}
-					name={getName(option)}
+					name={getOptionLabel(filter, option)}
 					onClick={() => handleOptionsChange(filterName, filter, option)}
 				/>
 			))}
 		</Dropdown.List>);
-	}
-
-	const getHeader = (label) => (<Button name={label} variant='outlined' endIcon={<KeyboardArrowDown />} />)
+	};
 
 	return (
 		<>
@@ -131,24 +134,27 @@ export const PanelFilters = (props) => {
 						<SearchableOptionSelected
 							style={{ marginLeft: 0 }}
 							key={filter.id}
-							item={`${props.filters[key].label}: ${filter.name}`}
+							item={`${props.filters[key].label}: ${getOptionLabel(props.filters[key], filter)}`}
 							onRemove={(e) => onRemoveFilter(key, filter)}
 						/>
 					)))}
 			</Stack>
 
 			<Collapse in={props.open}>
-				<Stack direction='row' gap={2} pb={2} flexWrap='wrap'>
+				<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
-						return (
-							<Box key={filterName}>
-								<Dropdown
-									header={() => getHeader(filter.label)}
-									content={() => getContent(filter, filterName)}
-								/>
-							</Box>
-						)
+						if (filter.type === 'date')
+							return <DatePicker />
+						else
+							return (
+								<Box key={filterName}>
+									<Dropdown
+										header={() => <Button name={filter.label} variant='outlined' endIcon={<KeyboardArrowDown />} />}
+										content={() => getContent(filter, filterName)}
+									/>
+								</Box>
+							)
 					})}
 				</Stack>
 			</Collapse>

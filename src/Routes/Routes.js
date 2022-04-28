@@ -56,13 +56,14 @@ export const messageRoutes = {
     all: '/messages',
     filters: {
         main: '/messages/filter',
-        drafts: '/messages/filter/drafts',
-        scheduled: '/messages/filter/scheduled',
-        inProgress: '/messages/filter/in_progress',
-        finished: '/messages/filter/finished',
-        error: '/messages/filter/error',
-        rejected: '/messages/filter/rejected',
-        archived: '/messages/filter/archived',
+        drafts: '/messages/filter/status/drafts',
+        scheduled: '/messages/filter/status/scheduled',
+        inProgress: '/messages/filter/status/in_progress',
+        finished: '/messages/filter/status/finished',
+        error: '/messages/filter/status/error',
+        rejected: '/messages/filter/status/rejected',
+        archived: '/messages/filter/status/archived',
+        teamMembers: '/messages/filter/team_members',
     }
 }
 

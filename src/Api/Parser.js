@@ -4,11 +4,11 @@ export const getFilterContactsCriteria = (filters) => {
     let criteria = {}
 
     console.log(filters)
-    if(filters.search) {
+    if (filters.search) {
         criteria['search'] = filters.search
     }
 
-    if(filters.search) {
+    if (filters.search) {
         criteria['search'] = filters.search
     }
 
@@ -68,7 +68,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.state) {
+    if (filters.state) {
         criteria['states'] = []
 
         filters.state.forEach(state => {
@@ -77,7 +77,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.timeZone) {
+    if (filters.timeZone) {
         criteria['timezones'] = []
 
         filters.timeZone.forEach(timezone => {
@@ -108,7 +108,7 @@ export const getFilterContactsCriteria = (filters) => {
 
 const getStatus = (status) => {
     console.log(status)
-    switch(status) {
+    switch (status) {
         case 'drafts': return 'draft'
         case 'in_progress': return 'in progress'
         case 'finished': return 'sent'
@@ -129,7 +129,7 @@ export const getFilterMessagesCriteria = (filters) => {
     if (filters.status) {
         criteria['message_status'] = []
 
-        if(filters.status === 'all') {
+        if (filters.status === 'all') {
             criteria['message_status'] = [`Error`, `Preview`, `In Progress`, `Sent`,
                 `Rejected`, `Completed`, `Cancelled`, `Pending`]
         } else if (filters.status === 'finished') {
@@ -137,9 +137,22 @@ export const getFilterMessagesCriteria = (filters) => {
             // criteria['message_status'] = [`Sent`]
         } else {
             filters.status.forEach(status => {
-                criteria['message_status'].push(getStatus(status.name))
+                criteria['message_status'].push(getStatus(status))
             })
         }
+    }
+
+    if (filters.sender) {
+        criteria['sender'] = filters.sender
+    }
+    if (filters.platform) {
+        criteria['platform'] = filters.platform
+    }
+    if (filters.recipient_status) {
+        criteria['recipient_status'] = filters.recipient_status
+    }
+    if (filters.tags){
+        criteria['tags'] = filters.tags
     }
 
     // {
@@ -169,7 +182,7 @@ export const getFilterMediasCriteria = (filters) => {
 
     let criteria = {}
 
-    if(filters.name) {
+    if (filters.name) {
         criteria['name'] = filters.name
     }
 
@@ -208,7 +221,7 @@ export const getFilterPlaceholdersCriteria = (filters) => {
 
     let criteria = {}
 
-    if(filters.name) {
+    if (filters.name) {
         criteria['name'] = filters.name
     }
 
