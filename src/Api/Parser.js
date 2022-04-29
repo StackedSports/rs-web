@@ -8,9 +8,9 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['search'] = filters.search
     }
 
-    if (filters.search) {
-        criteria['search'] = filters.search
-    }
+    // if (filters.search) {
+    //     criteria['search'] = filters.search
+    // }
 
     if (filters.status) {
         criteria['status'] = []
@@ -28,10 +28,10 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if (filters.gradeYear) {
+    if (filters.gradYear) {
         criteria['years'] = []
 
-        filters.gradeYear.forEach(year => {
+        filters.gradYear.forEach(year => {
             criteria.years.push(year.name)
         })
     }
