@@ -43,12 +43,28 @@ export default function BoardPage(props) {
         }
     }
 
+    let boardCriteria = []
+    for (const property in board.item?.criteria) {
+        const criteriaFilter = {
+            filterName: `${property[0].toUpperCase() + property.substring(1)}`,
+            filter: {},
+            option: {
+                id: `${board.item?.criteria[property]}`,
+                name: `${board.item?.criteria[property].join(", ")}`
+            }
+        }
+        boardCriteria.push(criteriaFilter)
+    }
+    console.log(boardCriteria)
+
     return (
         <BaseContactsPage
             title={title}
             contacts={boardContacts}
             enableSendMessageWithoutSelection
             onSendMessage={onSendMessage}
+            setFilter={boardCriteria}
+            // showPanelFilters
         />
     )
 }

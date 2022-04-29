@@ -59,8 +59,6 @@ export default function BaseContactsPage(props) {
     const [selectedFilters, setSelectedFilters] = useState({})
 
 
-
-
     // handle filters options
     const status = useStatuses()
     const ranks = useRanks()
@@ -100,13 +98,6 @@ export default function BaseContactsPage(props) {
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
-
-    // useEffect(() => {
-    //     if (!id)
-    //         return
-
-    //     console.log(id)
-    // }, [id])
 
 
     const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
@@ -216,6 +207,11 @@ export default function BaseContactsPage(props) {
         // },
     ]
 
+    // else if(action.type === 'criteria')
+    //     return (
+    //         <div>{action.name}</div>
+    //     )
+
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
@@ -288,14 +284,15 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             alert={alert}
-            actions={props.title.includes("Board") ? [] : mainActions}
+            actions={props.setFilter ? [] : mainActions}
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
             propsPanelFilters={{
-                open: showPanelFilters,
+                open: props.showPanelFilters || showPanelFilters,
                 filters: panelFiltersData,
-                onFilterChange: onPanelFilterChange
+                onFilterChange: onPanelFilterChange,
+                // setFilter: props.setFilter
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>
@@ -388,7 +385,6 @@ export default function BaseContactsPage(props) {
                     /> */}
                 </Stack>
             </Stack>
-
 
             <ContactsTable
                 contacts={contacts.items}
