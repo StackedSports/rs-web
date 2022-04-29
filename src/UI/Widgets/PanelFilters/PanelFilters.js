@@ -25,12 +25,12 @@ export const PanelFilters = (props) => {
 			console.log(props.setFilter);
 			const { filterName, filter, option } = props.setFilter;
 			if (filterName && filter && option) {
-				handleOptionsChange(filterName, filter, option);
+				handleOptionsChange(filterName, option, filter);
 			}
 		}
 	}, [props.setFilter]);
 
-	const handleOptionsChange = (filterName, filter, option) => {
+	const handleOptionsChange = (filterName, option, filter) => {
 		console.log(filterName)
 		console.log(option)
 
@@ -120,7 +120,7 @@ export const PanelFilters = (props) => {
 				<Dropdown.Item
 					key={option.id}
 					name={getOptionLabel(filter, option)}
-					onClick={() => handleOptionsChange(filterName, filter, option)}
+					onClick={() => handleOptionsChange(filterName, option, filter)}
 				/>
 			))}
 		</Dropdown.List>);
@@ -133,7 +133,7 @@ export const PanelFilters = (props) => {
 					selectedFilters[key].map((filter, index) => (
 						<SearchableOptionSelected
 							style={{ marginLeft: 0 }}
-							key={filter.id}
+							key={index+key}
 							item={`${props.filters[key].label}: ${getOptionLabel(props.filters[key], filter)}`}
 							onRemove={(e) => onRemoveFilter(key, filter)}
 						/>
@@ -145,7 +145,7 @@ export const PanelFilters = (props) => {
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
 						if (filter.type === 'date')
-							return <DatePicker />
+							return <DatePicker onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
 						else
 							return (
 								<Box key={filterName}>

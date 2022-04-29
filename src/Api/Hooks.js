@@ -37,6 +37,7 @@ import {
     archiveContacts,
     filterContacts,
     filterMedias,
+    getAllStatus2,
 } from 'Api/Endpoints'
 
 import { usePagination } from './Pagination'
@@ -646,6 +647,24 @@ export const useStatus = () => {
                 //console.log('ApiHooks: getstatus -----')
                 //console.log(status)
                 setstatus(status)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    return status
+}
+export const useStatus2 = () => {
+    const [status, setstatus] = useState([])
+
+    useEffect(() => {
+        getAllStatus2()
+            .then((res) => {
+                console.log('ApiHooks: getstatus2 -----')
+                //console.log(status)
+                console.log(res)
+                // setstatus(res)
             })
             .catch(error => {
                 console.log(error)

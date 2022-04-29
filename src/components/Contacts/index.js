@@ -1036,7 +1036,7 @@ function Home(props) {
   const allpositions = usePositions()
   console.log('positions', allpositions)
   var POSITIONS = [];
-  allpositions?.map((item) => {
+  allpositions?.items?.map((item) => {
     POSITIONS.push({
       value: item,
       label: item.name,
