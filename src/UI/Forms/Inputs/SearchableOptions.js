@@ -345,15 +345,19 @@ export const SearchableOptionSelected = props => {
 
 				{constructProperty(props.item, props.nameDef)}
 
-				<ClearIcon
-				  onClick={props.onRemove}
-					style={{
-					color: "red",
-					fontSize: 17,
-					cursor: "pointer",
-					marginLeft: 8,
-					}}
-				></ClearIcon>{" "}
+				{!props.disabled && (
+					<ClearIcon
+						onClick={props.onRemove}
+						style={{
+						color: "red",
+						fontSize: 17,
+						cursor: "pointer",
+						marginLeft: 8,
+						}}
+					/>
+				)}
+
+				
 			</Stack>
 		</div>
 	)

@@ -18,7 +18,15 @@ import DatePicker from 'UI/Forms/Inputs/DatePicker';
  */
 export const PanelFilters = (props) => {
 
-	const [selectedFilters, setSelectedFilters] = useState({});
+	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
+
+	useEffect(() => {
+		if(!props.selectedFilters)
+			return
+
+		setSelectedFilters(props.selectedFilters)
+	
+	}, [props.selectedFilters])
 
 	useEffect(() => {
 		if (props.setFilter) {
@@ -135,6 +143,7 @@ export const PanelFilters = (props) => {
 							style={{ marginLeft: 0 }}
 							key={index+key}
 							item={`${props.filters[key].label}: ${getOptionLabel(props.filters[key], filter)}`}
+							disabled={filter.disabled}
 							onRemove={(e) => onRemoveFilter(key, filter)}
 						/>
 					)))}

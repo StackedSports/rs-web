@@ -10,6 +10,28 @@ import {
     useBoardContacts
 } from 'Api/Hooks'
 
+const parseCriteriaNames = (criteria) => {
+    switch(criteria) {
+        case 'ranks':
+            return 'rank'
+        case 'years':
+            return 'gradYear'
+        case 'positions':
+            return 'position'
+        case 'area_coaches':
+            return 'areaCoach'
+        case 'position_coaches':
+            return 'positionCoach'
+        case 'timezones':
+            return 'timeZone'
+        case 'states':
+            return 'state'
+        default:
+            return criteria
+        
+    }
+}
+
 export default function BoardPage(props) {
     const app = useContext(AppContext)
 
@@ -21,7 +43,7 @@ export default function BoardPage(props) {
     const boardContacts = useBoardContacts(boardId)
 
     useEffect(() => {
-        if (board)
+        if (board.item)
             console.log("board: ", board.item)
 
     }, [board.item])
@@ -43,19 +65,49 @@ export default function BoardPage(props) {
         }
     }
 
-    let boardCriteria = []
-    for (const property in board.item?.criteria) {
-        const criteriaFilter = {
-            filterName: `${property[0].toUpperCase() + property.substring(1)}`,
-            filter: {},
-            option: {
-                id: `${board.item?.criteria[property]}`,
-                name: `${board.item?.criteria[property].join(", ")}`
-            }
-        }
-        boardCriteria.push(criteriaFilter)
-    }
-    console.log(boardCriteria)
+    const selectedFilters = useMemo(() => {
+        if(!board.item)
+            return null
+        
+        let criteria = board.item.criteria
+        let filters = {}
+
+        Object.keys(criteria).forEach(key => {
+            console.log(key)
+            console.log(criteria[key])
+
+            let filterName = parseCriteriaNames(key)
+
+            if(!filters[filterName])
+                filters[filterName] = []
+            
+            criteria[key].forEach(item => {
+                filters[filterName].push({
+                    id: item,
+                    name: item,
+                    disabled: true
+                })
+            })
+        })
+
+        console.log(filters)
+
+        return filters
+    }, [board.item])
+
+    // let boardCriteria = []
+    // for (const property in board.item?.criteria) {
+    //     const criteriaFilter = {
+    //         filterName: `${property[0].toUpperCase() + property.substring(1)}`,
+    //         filter: {},
+    //         option: {
+    //             id: `${board.item?.criteria[property]}`,
+    //             name: `${board.item?.criteria[property].join(", ")}`
+    //         }
+    //     }
+    //     boardCriteria.push(criteriaFilter)
+    // }
+    // console.log(boardCriteria)
 
     return (
         <BaseContactsPage
@@ -63,7 +115,9 @@ export default function BoardPage(props) {
             contacts={boardContacts}
             enableSendMessageWithoutSelection
             onSendMessage={onSendMessage}
-            setFilter={boardCriteria}
+            selectedFilters={selectedFilters}
+            disabledMainActions
+            // setFilter={boardCriteria}
             // showPanelFilters
         />
     )

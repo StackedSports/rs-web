@@ -13,7 +13,7 @@ const AuthProvider = (props) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
 
     useEffect(() => {
-        console.log(app.location)
+        // console.log(app.location)
         // save current location so when the user signs in
         // we redirect them to that location
         if(!user && app.location.pathname !== '/')

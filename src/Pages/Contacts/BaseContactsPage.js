@@ -72,7 +72,7 @@ export default function BaseContactsPage(props) {
         if (!contacts.items)
             return
 
-        console.log(contacts.items)
+        // console.log(contacts.items)
     }, [contacts.items])
 
     useEffect(() => {
@@ -118,7 +118,7 @@ export default function BaseContactsPage(props) {
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
         tags: {
-            label: 'Tags',
+            label: 'Tag',
             options: tags || [],
         },
         position: {
@@ -284,7 +284,7 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             alert={alert}
-            actions={props.setFilter ? [] : mainActions}
+            actions={props.disabledMainActions ? [] : mainActions}
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
@@ -292,7 +292,8 @@ export default function BaseContactsPage(props) {
                 open: props.showPanelFilters || showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                setFilter: props.setFilter
+                // setFilter: props.setFilter
+                selectedFilters: props.selectedFilters
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>

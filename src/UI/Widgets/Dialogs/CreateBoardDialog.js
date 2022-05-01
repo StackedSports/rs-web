@@ -67,7 +67,7 @@ export const CreateBoardDialog = (props) => {
   }
 
   const selectedFiltersKeys = useMemo(() => Object.keys(props.selectedFilters), [props.selectedFilters])
-  console.log(props.selectedFilters)
+  // console.log(props.selectedFilters)
   return (
     <Dialog
       component="form"

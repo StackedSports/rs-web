@@ -163,8 +163,8 @@ export const useBoard = (id) => {
         setLoading(true)
         getBoard(id)
             .then(([board]) => {
-                console.log('ApiHooks: getBoardByid -----')
-                console.log(board)
+                // console.log('ApiHooks: getBoardByid -----')
+                // console.log(board)
                 setBoard(board)
             })
             .catch(error => console.log(error))
