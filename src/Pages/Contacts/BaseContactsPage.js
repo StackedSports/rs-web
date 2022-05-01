@@ -292,7 +292,7 @@ export default function BaseContactsPage(props) {
                 open: props.showPanelFilters || showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                // setFilter: props.setFilter
+                setFilter: props.setFilter
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>

@@ -205,23 +205,23 @@ export const MediaUploadItem = (props) => {
             }
 
             {props.optionSelected === null && !props.disableAssociateInput && (
-				<SearchableSelector
-				multiple
-				options={props.options}
-				loading={props.optionsLoading}
-				value={props.optionSelected}
-				label="+ Associate Contact"
-				placeholder="Search Contact"
-				getOptionLabel={(option) => getFullName(option)}
-				getChipLabel={(option) => getFullName(option)}
-				getChipAvatar={(option) => option.twitter_profile?.profile_image}
-				onInputChange={(event, input) => onInputChange(input)}
-				onKeyPress={onKeyPress}
-				onChange={props.onOptionSelected}
-				  style={{
-					maxWidth: 200
-				  }}
-				/>
+            <SearchableSelector
+            multiple
+            options={props.options}
+            loading={props.optionsLoading}
+            value={props.optionSelected || []}
+            label="+ Associate Contact"
+            placeholder="Search Contact"
+            getOptionLabel={(option) => getFullName(option)}
+            getChipLabel={(option) => getFullName(option)}
+            getChipAvatar={(option) => option.twitter_profile?.profile_image}
+            onInputChange={(event, input) => onInputChange(input)}
+            onKeyPress={onKeyPress}
+            onChange={props.onOptionSelected}
+              style={{
+              maxWidth: 200
+              }}
+            />
             )}
             {props.optionSelected && props.optionSelected !== "loading" &&  
               (
