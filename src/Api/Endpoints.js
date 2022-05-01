@@ -1103,3 +1103,37 @@ export const createOpponent = (contactId, data) => {
     }
     return POST(`contacts/${contactId}/opponents`, body)
 }
+
+export const linkWithTwitter = () => {
+
+    //return GET(`messages?page=${page}&per_page=${perPage}`, data)
+
+    console.log(body)
+
+    
+    const HEADERS = {
+        Accept: "application/json; version=1",
+        "Content-Type": "application/json",
+        Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+    }
+
+    const config = {
+        headers: HEADERS,
+        // params: JSON.stringify(body)
+        params: body
+    }
+
+    axios.get(URL + url, config)
+        .then(res => {
+            //console.log(res)
+            if (res.status === 200 || res.status === 204 || res.status === 201) {
+                let pagination = getPagination(res)
+                resolve([res.data, pagination])
+            } else
+                reject(res)
+        })
+        .catch(error => {
+            reject(error)
+        })
+}

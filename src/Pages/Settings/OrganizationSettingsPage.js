@@ -188,7 +188,7 @@ const OrganizationSettingsPage = (props) => {
                             <Typography variant="h6" component="p">Org Favicon Logo</Typography>
                         </Stack>
                         <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1}>
-                            <Avatar sx={{ width: "96px", height: "96px", border: "#dadada   1px solid", padding: "15px", }} alt="org favicon" src={favicon} />
+                            <Avatar sx={{ width: "96px", height: "96px", border: "#dadada   1px solid", padding: "15px", }} alt="org favicon" src={user.team.org.logo.original} />
                         </Stack>
                     </Stack>
 
