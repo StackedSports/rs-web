@@ -33,6 +33,7 @@ import {
     usePositions,
     useTeamMembers,
     useUser,
+    useStatus2
 } from 'Api/Hooks'
 
 import {
@@ -50,6 +51,7 @@ export default function ContactsPage(props) {
     const [redirect, setRedirect] = useState('')
 
     const contacts = useContacts()
+    const status2 = useStatus2()
     const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
@@ -145,7 +147,11 @@ export default function ContactsPage(props) {
         },
         birthday: {
             label: 'Birthday',
-            type: 'date'
+            type: 'date',
+            optionsLabel: (dates) => {
+                console.log(dates)
+                return dates[0]?.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }) + ' - ' + dates[1]?.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })
+            },
         },
         state: {
             label: 'State',
@@ -296,7 +302,7 @@ export default function ContactsPage(props) {
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
     }
-    
+
     const onContactSearchClear = () => {
         contacts.clearFilter()
     }
@@ -368,9 +374,9 @@ export default function ContactsPage(props) {
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
                     <MiniSearchBar
-                      placeholder="Search Contacts" 
-                      onSearch={onContactSearch}
-                      onClear={onContactSearchClear}
+                        placeholder="Search Contacts"
+                        onSearch={onContactSearch}
+                        onClear={onContactSearchClear}
                     />
                     <PanelDropdown
                         action={{

@@ -306,6 +306,9 @@ export const archiveContacts = (ids) => {
 export const getAllStatus = () => {
     return AXIOS('get', `team/settings/statuses`)
 }
+export const getAllStatus2 = () => {
+    return AXIOS('get', `/team/settings/status_2`)
+}
 
 export const getContacts = (page, perPage) => {
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}`)
