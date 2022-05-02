@@ -12,6 +12,7 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
+import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
@@ -57,6 +58,7 @@ export default function ContactsPage(props) {
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
     // const [selectedContacts, setSelectedContacts] = useState([])
     const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
@@ -163,6 +165,18 @@ export default function ContactsPage(props) {
         },
     }), [status, ranks, gradYears, tags, positions])
 
+    const visibleTableRows = {
+        // profileImg: true,(default)
+        // fullname: true,(default)
+        twitterName: true,
+        phone: true,
+        state: true,
+        school: true,
+        gradYear: true,
+        rank: true,
+        timeZone: true,
+    }
+
     const mainActions = [
         {
             name: 'Save as Board',
@@ -257,7 +271,7 @@ export default function ContactsPage(props) {
     }
 
     const onFollowOnTwitterClick = (e) => {
-
+        setOpenFollowOnTwitterDialog(true)
     }
 
     const onArchiveContactClick = (e) => {
@@ -442,6 +456,7 @@ export default function ContactsPage(props) {
                 pagination={contacts.pagination}
                 loading={contacts.loading}
                 selection={selectedContacts.items}
+                columnsControl={visibleTableRows}
                 onSelectionChange={onContactsSelectionChange}
                 onPageChange={onPageChange}
                 onSortingChange={onSortingChange}
@@ -464,6 +479,19 @@ export default function ContactsPage(props) {
                 open={openSelectTagDialog}
                 onClose={() => setOpenSelectTagDialog(false)}
                 onConfirm={onTagsSelected}
+            />
+
+            <FollowOnTwitterDialog
+                open={openFollowOnTwitterDialog}
+                contacts={contacts.items}
+                onPageChange={onPageChange}
+                teamMembers={teamMembers.items}
+                pagination={contacts.pagination}
+                onSortingChange={onSortingChange}
+                selectedContacts={selectedContacts.items}
+                onSelectionChange={onContactsSelectionChange}
+                onClose={() => setOpenFollowOnTwitterDialog(false)}
+            // onConfirm={}
             />
         </MainLayout>
     )

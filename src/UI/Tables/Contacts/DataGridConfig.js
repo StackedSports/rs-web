@@ -56,7 +56,7 @@ const fullName = {
 }
 
 const firstName = {
-    field: 'first_name',
+    field: 'firstName',
     headerName: 'First Name',
     flex: 1,
     minWidth: 100,
@@ -70,7 +70,7 @@ const firstName = {
 }
 
 const lastName = {
-    field: 'last_name',
+    field: 'lastName',
     headerName: 'Last Name',
     flex: 1,
     minWidth: 100,
@@ -84,7 +84,7 @@ const lastName = {
 }
 
 const nickName = {
-    field: 'nick_name',
+    field: 'nickName',
     headerName: 'Nick Name',
     flex: 1,
     minWidth: 100,
@@ -98,7 +98,7 @@ const nickName = {
 }
 
 const twitterName = {
-    field: 'twitter_profile',
+    field: 'twitterProfile',
     headerName: 'Twitter',
     // width: 130,
     flex: 1,
@@ -141,7 +141,7 @@ const state = {
 }
 
 const school = {
-    field: 'high_school',
+    field: 'school',
     headerName: 'School',
     flex: 1,
     minWidth: 150,
@@ -154,7 +154,7 @@ const school = {
 }
 
 const gradYear = {
-    field: 'grad_year',
+    field: 'gradYear',
     headerName: 'Grad Year',
     flex: 1,
     minWidth: 100,
@@ -167,7 +167,7 @@ const gradYear = {
 }
 
 const positions = {
-    field: 'positions',
+    field: 'position',
     headerName: 'Position',
     flex: 1,
     minWidth: 100,
@@ -180,7 +180,7 @@ const positions = {
 }
 
 const areaCoach = {//array
-    field: 'area_coach',
+    field: 'areaCoach',
     headerName: 'Area Coach',
     flex: 1,
     minWidth: 150,
@@ -193,7 +193,7 @@ const areaCoach = {//array
 }
 
 const positionCoach = {
-    field: 'position_coach',
+    field: 'positionCoach',
     headerName: 'Position Coach',
     flex: 1,
     minWidth: 150,
@@ -206,7 +206,7 @@ const positionCoach = {
 }
 
 const recruitingCoach = {
-    field: 'coordinator',
+    field: 'recruitingCoach',
     headerName: 'Recruiting Coach',
     flex: 1,
     minWidth: 150,
@@ -232,7 +232,7 @@ const status = {
 }
 
 const status2 = {
-    field: 'status_2',
+    field: 'status2',
     headerName: 'Status 2',
     flex: 1,
     minWidth: 100,
@@ -252,7 +252,7 @@ const tags = {
     valueGetter: (params) => params.row.tags ? params.row.tags.map(tag => tag.name).join(", ") : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
-         <Typography fontSize={14} noWrap >{params.value}</Typography>
+            <Typography fontSize={14} noWrap >{params.value}</Typography>
         </Tooltip>
     ),
 }
@@ -295,7 +295,7 @@ const dateAdded = {
 }
 
 const timeZone = {
-    field: 'time_zone',
+    field: 'timeZone',
     headerName: 'Time Zone',
     flex: 1,
     minWidth: 100,
@@ -308,14 +308,14 @@ const timeZone = {
 }
 
 const birthday = {
-    field: 'dob',
+    field: 'birthday',
     headerName: 'Birthday ',
     flex: 1,
     minWidth: 100,
     valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : '',
     renderCell: (params) => (
-        <Tooltip title={formatDate(params.value,'short')} placement='right-start'>
-            <Typography fontSize={14} noWrap >{formatDate(params.value,'short')}</Typography>
+        <Tooltip title={formatDate(params.value, 'short')} placement='right-start'>
+            <Typography fontSize={14} noWrap >{formatDate(params.value, 'short')}</Typography>
         </Tooltip>
     ),
 }
