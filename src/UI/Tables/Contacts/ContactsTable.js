@@ -13,7 +13,7 @@ export default function ContactsTable(props) {
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
     
-    const visibleColumns = useContactTableColumns()
+    const visibleColumns = useContactTableColumns(props.columnsControl)
 
     // const onPageChange = (page, details) => {
     //     console.log(page)
@@ -51,6 +51,9 @@ export default function ContactsTable(props) {
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
                 sortingMode="server"
                 onSortModelChange={props.onSortingChange}
+                disableColumnSelector={props.disableColumnSelector}
+                disableColumnFilter={props.disableColumnFilter}
+                disableColumnMenu={props.disableColumnMenu}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
 

@@ -1135,31 +1135,31 @@ export const usePeopleTypes = () => {
     }
 }
 
-export const useContactTableColumns = () => {
+export const useContactTableColumns = (control) => {
     const [columns, setColumns] = useState(JSON.parse(localStorage.getItem('contact-table-columns')) || {
-        profileImg: true,
-        fullname: true,
-        firstName: false,
-        lastName: false,
-        nickName: false,
-        twitterName: true,
-        phone: true,
-        state: true,
-        school: true,
-        gradYear: true,
-        position: false,
-        areaCoach: false,
-        positionCoach: false,
-        recruitingCoach: false,
-        status: false,
-        status2: false,
-        tags: true,
-        rank: false,
+        profileImg: control?.profileImg || true,
+        fullname: control?.fullname || true,
+        firstName: control?.firstName || false,
+        lastName: control?.lastName || false,
+        nickName: control?.nickName || false,
+        twitterName: control?.twitterName || false,
+        phone: control?.phone || false,
+        state: control?.state || false,
+        school: control?.school || false,
+        gradYear: control?.gradYear || false,
+        position: control?.position || false,
+        areaCoach: control?.areaCoach || false,
+        positionCoach: control?.positionCoach || false,
+        recruitingCoach: control?.recruitingCoach || false,
+        status: control?.status || false,
+        status2: control?.status2 || false,
+        tags: control?.tags || false,
+        rank: control?.rank || false,
         // lastMessaged: false,
         // mostActiveTime: false,
         // dateAdded: false,
-        timeZone: false,
-        birthday: false,
+        timeZone: control?.timeZone || false,
+        birthday: control?.birthday || false,
     })
 
     const onChange = (newValue) => {

@@ -19,11 +19,11 @@ export const DatePicker = (props) => {
     const handleCloseCalendar = (data) => {
         if( value[0] && value[1] ) {
             if (props.onChange instanceof Function)
-                            props.onChange(value)
-        setShowCalendar(false);
-        setOpen(false);}
-        else
-        {
+                props.onChange(value)
+
+            setShowCalendar(false);
+            setOpen(false);
+        } else {
             setShowCalendar(false);
             setOpen(false);
         }
@@ -36,7 +36,7 @@ export const DatePicker = (props) => {
                     open={open}
                     clearable
                     allowSameDateSelection
-                    disableCloseOnSelect={true}
+                    // disableCloseOnSelect={true}
                     inputFormat="MM/dd"
                     mask='__/__'
                     value={value}

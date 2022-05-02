@@ -72,6 +72,7 @@ export const MainMediaPage = (props) => {
             filter: {},
             option: tag
         }
+        
         setAddFilter(filter)
     }
 
