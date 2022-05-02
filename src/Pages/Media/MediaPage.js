@@ -126,7 +126,7 @@ export const MediaPage = (props) => {
             filters={filters}
             onFilterSelected={onFilterSelected}
             actions={props.actions}
-            loading={teamMembers.loading}
+            //loading={teamMembers.loading}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: panelFiltersData,

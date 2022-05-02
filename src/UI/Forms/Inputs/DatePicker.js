@@ -16,14 +16,16 @@ export const DatePicker = (props) => {
         setOpen(true);
     }
 
-    const handleCloseCalendar = (data) => {
-        if( value[0] && value[1] ) {
-            if (props.onChange instanceof Function)
-                            props.onChange(value)
-        setShowCalendar(false);
-        setOpen(false);}
-        else
-        {
+    const handleCloseCalendar = (newDates) => {
+        console.log(newDates)
+        if (newDates[0] && newDates[1]) {
+            if (props.onChange instanceof Function) {
+                props.onChange(newDates.map(date => date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })))
+            }
+            setShowCalendar(false);
+            setOpen(false);
+        }
+        else {
             setShowCalendar(false);
             setOpen(false);
         }
@@ -36,20 +38,16 @@ export const DatePicker = (props) => {
                     open={open}
                     clearable
                     allowSameDateSelection
-                    disableCloseOnSelect={true}
+                    //disableCloseOnSelect={true}
                     inputFormat="MM/dd"
                     mask='__/__'
                     value={value}
                     onChange={(newValue) => setValue(newValue)}
-                    onAccept={(data) => {
-                        console.log(value)
-                        handleCloseCalendar(data)
-                    }}
+                    onAccept={(date)=>handleCloseCalendar(date)}
                     renderInput={
                         (startProps, endProps) => (
                             <StyledInputArea>
-                                <TextField {...startProps
-                                } size='small' />
+                                <TextField {...startProps} size='small' autoFocus />
                                 <TextField {...endProps} size='small' />
                             </StyledInputArea>
                         )}

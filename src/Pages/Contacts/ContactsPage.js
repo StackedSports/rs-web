@@ -149,9 +149,9 @@ export default function ContactsPage(props) {
             label: 'Birthday',
             type: 'date',
             optionsLabel: (dates) => {
-                console.log(dates)
-                return dates[0]?.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }) + ' - ' + dates[1]?.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })
+                return dates[0] + ' - ' + dates[1]
             },
+            isUnique: true
         },
         state: {
             label: 'State',

@@ -129,7 +129,6 @@ export const CreateBoardDialog = (props) => {
           Filter Criteria:{' '}
           {props.selectedFilters && selectedFiltersKeys.map((key, index) => {
             const filter = props.selectedFilters[key];
-            console.log(key)
             return (
               <Typography
                 component='span'

@@ -39,8 +39,8 @@ export const PanelFilters = (props) => {
 	}, [props.setFilter]);
 
 	const handleOptionsChange = (filterName, option, filter) => {
-		console.log(filterName)
-		console.log(option)
+		//console.log(filterName)
+		//console.log(option)
 
 		let filters = Object.assign({}, selectedFilters)
 
@@ -115,6 +115,7 @@ export const PanelFilters = (props) => {
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
 		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
+			console.log(filter.optionsLabel)
 			return option[filter.optionsLabel];
 		} else {
 			return option.name;

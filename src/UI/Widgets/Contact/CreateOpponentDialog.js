@@ -37,6 +37,7 @@ export const CreateOpponentDialog = (props) => {
         createOpponent(contact.id, values)
           .then((res) => {
             console.log(res)
+            if(props.onCreated && typeof props.onCreated instanceof Function )
             props.onCreated()
           })
           .catch(err => {

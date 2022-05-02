@@ -308,6 +308,8 @@ export const useTags2 = () => {
 export const useContact = (id) => {
     const [contact, setContact] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
+
 
     useEffect(() => {
         setLoading(true)
@@ -322,11 +324,16 @@ export const useContact = (id) => {
                 console.log(error)
             })
             .finally(() => setLoading(false))
-    }, [id])
+    }, [id,refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         item: contact,
-        loading
+        loading,
+        refreshData
     }
 }
 
@@ -661,9 +668,8 @@ export const useStatus2 = () => {
     useEffect(() => {
         getAllStatus2()
             .then((res) => {
-                console.log('ApiHooks: getstatus2 -----')
+                //console.log('ApiHooks: getstatus2 -----')
                 //console.log(status)
-                console.log(res)
                 // setstatus(res)
             })
             .catch(error => {

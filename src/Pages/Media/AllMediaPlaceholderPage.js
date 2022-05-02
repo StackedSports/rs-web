@@ -86,7 +86,6 @@ export const AllMediaPlaceholderPage = (props) => {
       <MediaTable
         items={allPlaceholders}
         type='placeholder'
-        loading={placeholders.loading}
         pagination={placeholders.pagination}
         view={viewGrid ? 'grid' : 'list'}
         linkTo={mediaRoutes.placeholderDetails}
