@@ -16,6 +16,7 @@ import { getFullName } from 'utils/Parser'
 import { fileTypes } from 'utils/FileUtils'
 
 const getTitle = (filterName) => {
+    console.log(filterName)
     switch (filterName) {
         case 'drafts': return 'Drafts'
         case 'pending': return 'Scheduled'
@@ -141,11 +142,11 @@ const MessagesPage = (props) => {
         },
         'send_at_dates': {
             label: 'Send At Dates',
-            options: []
-        },
-        'sent_at_dates': {
-            label: 'Sent At Dates',
-            options: []
+            type: 'date',
+            isUnique: true,
+            optionsLabel: (dates) => {
+                return dates[0] + ' - ' + dates[1]
+            },
         },
     }
 
@@ -169,7 +170,7 @@ const MessagesPage = (props) => {
 
     return (
         <BaseMessagePage
-          title={getTitle(filterType)}
+          title={getTitle(filterValue)}
           actions={actions}
           showPanelFilters={showPanelFilters}
           panelFilters={panelFilters}

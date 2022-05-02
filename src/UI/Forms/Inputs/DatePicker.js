@@ -56,7 +56,7 @@ export const DatePicker = (props) => {
             </LocalizationProvider>
         )
     } else {
-        return <Button variant='outlined' name="Birthday" onClick={handleOpenCalendar} endIcon={<KeyboardArrowDown />} />
+        return <Button variant='outlined' name={props.label} onClick={handleOpenCalendar} endIcon={<KeyboardArrowDown />} />
     }
 
 }

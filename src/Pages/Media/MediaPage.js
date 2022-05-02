@@ -16,9 +16,9 @@ export const MediaPage = (props) => {
 
     const [mediaTypes, setMediaTypes] = useState([])
     const [owners, setOwners] = useState([])
-
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
-    
+    const [selectedFilters, setSelectedFilters] = useState({})
+
     useEffect(() => {
         getMediaTypes().then(res => {
             console.log(res)
@@ -28,6 +28,23 @@ export const MediaPage = (props) => {
             })))
         })
     }, [])
+
+    //Handle with setSelectedFilters from props
+    useEffect(() => {
+        if (props.replecaSelectPanelFilter) {
+            const { type, value } = props.replecaSelectPanelFilter
+            if (type === 'type') {
+                setSelectedFilters({
+                    "fileType": [{...mediaTypes.find(item => item.id === value)}],
+                })
+            }
+            if (type === 'owner') {
+                setSelectedFilters({
+                    "owner": [{...owners.find(item => item.id === value)}],
+                })
+            }
+        }
+    }, [props.replecaSelectPanelFilter])
 
     useEffect(() => {
         if (teamMembers.items?.length > 0)
@@ -41,7 +58,7 @@ export const MediaPage = (props) => {
         {
             id: 0,
             name: 'My Media',
-            items: [ ...owners],   
+            items: owners.map(item => ({ id: item.id, name: item.name, path: `${mediaRoutes.filters.owner}/${item.id}` }))
         },
         {
             id: 1,
@@ -114,6 +131,7 @@ export const MediaPage = (props) => {
     }
 
     const onPanelFilterChange = (filter) => {
+        setSelectedFilters(filter)
         props.filter(filter)
     }
 
@@ -131,7 +149,8 @@ export const MediaPage = (props) => {
                 open: props.showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                setFilter: props.setFilter
+                setFilter: props.setFilter,
+                selectedFilters: selectedFilters
             }}
         >
             <Divider />
@@ -140,8 +159,8 @@ export const MediaPage = (props) => {
             {props.children}
 
             <UploadMediaDialog
-              open={uploadDialogOpen}
-              onClose={() => setUploadDialogOpen(false)}
+                open={uploadDialogOpen}
+                onClose={() => setUploadDialogOpen(false)}
             />
 
         </MainLayout>
