@@ -1113,7 +1113,7 @@ export const linkWithTwitter = () => {
 
     console.log(body)
 
-    
+
     const HEADERS = {
         Accept: "application/json; version=1",
         "Content-Type": "application/json",
@@ -1139,6 +1139,13 @@ export const linkWithTwitter = () => {
         .catch(error => {
             reject(error)
         })
+}
+
+export const followOnTwitter = (data) => {
+    const body = {
+        twitter_follow: data
+    }
+    AXIOS("post", "twitter_follow", body)
 }
 
 export const getStats = () => {
