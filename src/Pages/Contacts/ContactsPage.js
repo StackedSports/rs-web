@@ -166,7 +166,7 @@ export default function ContactsPage(props) {
     }), [status, ranks, gradYears, tags, positions])
 
     const visibleTableRows = {
-        // profileImg: true,(default)
+        profileImg: false,//
         // fullname: true,(default)
         twitterName: true,
         phone: true,

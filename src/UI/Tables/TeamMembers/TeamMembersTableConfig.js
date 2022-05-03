@@ -1,6 +1,9 @@
-import { formatPhoneNumber } from 'utils/Parser'
-
+import { Link } from 'react-router-dom';
 import AvatarImg from "images/avatar.png";
+
+import { formatPhoneNumber } from 'utils/Parser';
+import { settingsRoutes } from 'Routes/Routes';
+
 
 const getImg = (profile_image) => {
     return profile_image && !profile_image.includes('contact-missing-image') ?
@@ -34,7 +37,15 @@ const fullName = {
         let contact = params.row
 
         return contact.first_name + ' ' + contact.last_name
-    }
+    },
+    renderCell: (params) => (
+        <Link
+            style={{ color: 'inherit' }}
+            to={`${settingsRoutes.general.member}/${params.row.id}`}
+        >
+            {params.value}
+        </Link>
+    ),
 }
 
 const twitterName = {

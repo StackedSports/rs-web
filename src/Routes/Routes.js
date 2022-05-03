@@ -91,6 +91,7 @@ export const settingsRoutes = {
         main: '/settings/general',
         organization: '/settings/organization',
         members: '/settings/team-members',
+        member: '/settings/team-members',
     },
     team: {
         main: '/settings/team',

@@ -1,6 +1,7 @@
 export { default as SettingsPage } from './SettingsPage'
 export { default as OrganizationSettingsPage } from './OrganizationSettingsPage.js'
 export { default as TeamMembersSettingsPage } from './TeamMembersSettingsPage'
+export { default as TeamMemberProfilePage } from './TeamMemberProfilePage'
 export { default as PositionsSettingsPage } from './PositionsSettingsPage'
 export { default as StatusesSettingsPage } from './StatusesSettingsPage'
 export { default as RanksSettingsPage } from './RanksSettingsPage'

@@ -324,7 +324,7 @@ export const useContact = (id) => {
                 console.log(error)
             })
             .finally(() => setLoading(false))
-    }, [id,refresh])
+    }, [id, refresh])
 
     const refreshData = () => {
         setRefresh(old => !old)
@@ -1142,6 +1142,7 @@ export const usePeopleTypes = () => {
 }
 
 export const useContactTableColumns = (control) => {
+    console.log(control)
     const [columns, setColumns] = useState(JSON.parse(localStorage.getItem('contact-table-columns')) || {
         profileImg: control?.profileImg || true,
         fullname: control?.fullname || true,
@@ -1172,7 +1173,7 @@ export const useContactTableColumns = (control) => {
         localStorage.setItem('contact-table-columns', JSON.stringify(newValue))
         setColumns(newValue)
     }
-
+    console.log(columns)
     return {
         items: columns,
         onChange

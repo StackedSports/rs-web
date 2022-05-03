@@ -5,14 +5,12 @@ import { Stack, Typography } from '@mui/material';
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
+import { followOnTwitter } from 'Api/Endpoints';
+
 
 const FollowOnTwitterDialog = (props) => {
 
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([]);
-
-  const onConfirm = () => {
-    console.log("onConfirm FollowOnTwitterDialog")
-  }
 
   const contacts = props.contacts?.filter(contact => {
     if (props.selectedContacts.includes(contact.id))
@@ -29,12 +27,24 @@ const FollowOnTwitterDialog = (props) => {
     twitterName: true,
   }
 
+  const onConfirm = () => {
+    console.log("onConfirm FollowOnTwitterDialog")
+    const data = {
+      user_ids: selectedTeamMembers,
+      contact_ids: props.selectedContacts
+    }
+    if (data.user_ids.length > 0 || data.contact_ids.length > 0)
+      followOnTwitter(data)
+    // else
+  }
+
   console.log(selectedTeamMembers)
   console.log(props.selectedContacts)
 
   return (
     <BaseDialog
       // title="title"
+      maxWidth="lg"
       open={props.open}
       onConfirm={onConfirm}
       onClose={props.onClose}
@@ -67,9 +77,9 @@ const FollowOnTwitterDialog = (props) => {
           flex={1}
           spacing={4}
         >
-          <Typography sx={{ fontWeight: 600 }}>Follow on Twitter</Typography>
+          <Typography sx={{ fontWeight: 600 }}>Follow on Twitter:</Typography>
           <ContactsTable
-            // mini={300}
+            mini="600px"
             hidePagination
             disableColumnMenu
             disableColumnFilter
@@ -84,8 +94,9 @@ const FollowOnTwitterDialog = (props) => {
 
         <Stack flex={1} spacing={1} >
           <Stack spacing={4}>
-            <Typography sx={{ fontWeight: 600 }}>On behalf od user accounts</Typography>
+            <Typography sx={{ fontWeight: 600 }}>On behalf of User Accounts:</Typography>
             <ContactsTable
+              mini="600px"
               hidePagination
               disableColumnMenu
               disableColumnFilter
@@ -97,7 +108,7 @@ const FollowOnTwitterDialog = (props) => {
               onSelectionChange={onSelectionChange}
             />
           </Stack>
-          <Typography sx={{ fontWeight: 500 }}>*Select the accounts below you would to have follow the selected contacts.</Typography>
+          <Typography sx={{ fontWeight: 500 }}>Select the accounts you would like to have follow the selected contacts.</Typography>
         </Stack>
 
         {/* <Divider style={{ gridColumn: "1/3" }} /> */}

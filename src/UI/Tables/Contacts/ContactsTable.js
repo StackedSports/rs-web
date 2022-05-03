@@ -25,8 +25,6 @@ export default function ContactsTable(props) {
         props.onPageChange(page)
     }
 
-    console.log(visibleColumns.items)
-
     return (
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850 }}>
             <DataGrid sx={{ m: 0 }}

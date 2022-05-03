@@ -4,13 +4,14 @@ import {
   SettingsPage,
   OrganizationSettingsPage,
   TeamMembersSettingsPage,
+  TeamMemberProfilePage,
   PositionsSettingsPage,
   StatusesSettingsPage,
   RanksSettingsPage,
   SnippetsSettingsPage,
   MediaTagsSettingsPage,
   ContactsTagsSettingsPage,
-  MessageTagsSettingsPage
+  MessageTagsSettingsPage,
   // TagSettingsPage,
   // GradYearsSettingsPage,
   // BoardSettingsPage,
@@ -24,7 +25,7 @@ const SettingsRoutes = (props) => (
       exact
       path={settingsRoutes.main}
       component={OrganizationSettingsPage}
-      // component={SettingsPage}
+    // component={SettingsPage}
     />
     <Route
       exact
@@ -35,6 +36,11 @@ const SettingsRoutes = (props) => (
       exact
       path={settingsRoutes.general.members}
       component={TeamMembersSettingsPage}
+    />
+    <Route
+      exact
+      path={`${settingsRoutes.general.member}/:id`}
+      component={TeamMemberProfilePage}
     />
     <Route
       exact
