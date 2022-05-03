@@ -23,10 +23,10 @@ export const AllMediaPage = () => {
 
 		let filters = {}
 
-		if(type === 'type') {
+		if (type === 'type') {
 			let id = 0
 
-			switch(value) {
+			switch (value) {
 				case 'recent': id = 0; break;
 				case 'image': id = 2; break;
 				case 'video': id = 4; break;
@@ -35,32 +35,41 @@ export const AllMediaPage = () => {
 			}
 
 			filters['fileType'] = [{ id }]
-		} else if(type === 'owner') {
-			// TODO: add owner searching
+		} else if (type === 'owner') {
+			filters['owner'] = [value]
 		}
 
 		/*  {
-         "per_page": 25,
-         "page": 1,
-         //"name":,
-         "type": 1 // 0: recent_uploads, 1: my_media, 
+		 "per_page": 25,
+		 "page": 1,
+		 //"name":,
+		 "type": 1 // 0: recent_uploads, 1: my_media, 
 		 2: images, 3: gifs, 4: mp4s, 5: pdfs
-         // "tag_id": [7693] // pass an array of tag ids to search
-         // "placeholder_id": 1536
-     }*/
-	 	return filters
+		 // "tag_id": [7693] // pass an array of tag ids to search
+		 // "placeholder_id": 1536
+	 }*/
+		return filters
 	}, [type, value])
-	
+
 	const [allMedias, setAllMedias] = useState([])
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
 	const filterChanged = useRef(false)
-	
-	const medias = useMedias(1, 25, filters)
+	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
+
+	const medias = useMedias(1, 50, filters)
 	const app = useContext(AppContext)
-  
+
+	useEffect(() => {
+		setReplaceSelectedPanelFilter(
+			{
+				type: type,
+				value: value
+			}
+		)
+	}, [type, value])
 
 	useEffect(() => {
 		if (medias.items) {
@@ -75,6 +84,7 @@ export const AllMediaPage = () => {
 	}, [medias.items])
 
 	const onFilterChange = (filter) => {
+		console.log(filter)
 		filterChanged.current = true
 		medias.filter(filter)
 	}
@@ -92,20 +102,20 @@ export const AllMediaPage = () => {
 	}
 
 	const onDownloadAction = () => {
-        if (selectedMedias.length > 0) {
-            medias.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
-                if (mediaSelected?.urls?.original) {
-                    let url = mediaSelected.urls.original;
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.target = '_blank';
-                    a.download = mediaSelected.name;
-                    a.click();
-                }
+		if (selectedMedias.length > 0) {
+			medias.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
+				if (mediaSelected?.urls?.original) {
+					let url = mediaSelected.urls.original;
+					const a = document.createElement('a');
+					a.href = url;
+					a.target = '_blank';
+					a.download = mediaSelected.name;
+					a.click();
+				}
 
-            })
-        }
-    }
+			})
+		}
+	}
 
 	// does it remove all tags?
 	const onUntagAction = () => {
@@ -149,10 +159,11 @@ export const AllMediaPage = () => {
 
 	return (
 		<MediaPage
-		  title="Media"
-		  filter={onFilterChange}
-		  actions={mainActions}
-		  showPanelFilters={showPanelFilters}
+			title="Media"
+			filter={onFilterChange}
+			actions={mainActions}
+			showPanelFilters={showPanelFilters}
+			replecaSelectPanelFilter={replaceSelectedPanelFilter}
 		>
 
 			{!medias.loading && (medias.items && medias.items.length > 0) && (
@@ -172,7 +183,7 @@ export const AllMediaPage = () => {
 				view={viewGrid ? 'grid' : 'list'}
 				linkTo={mediaRoutes.mediaDetails}
 				onSelectionChange={onSelectionChange}
-				onSendClick={(media)=>app.sendMediaInMessage(media, 'media')}
+				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>
 
 			<SelectTagDialog

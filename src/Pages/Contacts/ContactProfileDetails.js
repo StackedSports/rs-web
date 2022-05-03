@@ -43,11 +43,11 @@ const ContactProfileDetails = (props) => {
 	if (props.loading)
 		return (
 			<Stack
-			  pr={1}
-			  spacing={1}
-			  sx={{ width: '350px', height: '100%' }}
-			  overflowY="auto"
-			  style={{ borderRight: "#efefef  1px solid" }}
+				pr={1}
+				spacing={1}
+				sx={{ width: '350px', height: '100%' }}
+				overflowY="auto"
+				style={{ borderRight: "#efefef  1px solid" }}
 			>
 				<LoadingPanel />
 			</Stack>
@@ -260,6 +260,11 @@ const ContactProfileDetails = (props) => {
 		formikProps.resetForm()
 	}
 
+	const onRelationshipCreated = (relationship) => {
+		console.log("new relationship Created ",relationship)
+		
+	}
+
 	return (
 		<Stack
 			pr={1}
@@ -272,7 +277,7 @@ const ContactProfileDetails = (props) => {
 				open={openNewFamilyMemberDialog}
 				onClose={() => setOpenNewFamilyMemberDialog(false)}
 				contact={props.contact}
-			//onCreated ={onRelationshipCreated  }
+				onCreated={onRelationshipCreated}
 			/>
 
 			<CreateOpponentDialog

@@ -1,12 +1,8 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { DataGrid } from '@mui/x-data-grid';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useState } from 'react';
-
 import { columnsMini, columnsFull } from './DataGridConfig';
-import { de } from "date-fns/locale";
-
 import { useContactTableColumns } from 'Api/Hooks'
 
 export default function ContactsTable(props) {

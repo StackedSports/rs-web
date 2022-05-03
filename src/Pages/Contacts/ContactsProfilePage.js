@@ -56,7 +56,7 @@ export default function ContactsProfilePage(props) {
 
     // const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
 
-    
+
 
     // const mainActions = [
     //     {
@@ -92,12 +92,12 @@ export default function ContactsProfilePage(props) {
 
     return (
         <MainLayout
-            topActionName='+ New Contact'
-            onTopActionClick={onTopActionClick}
-            filtersDisabled
-            onBackClick={() => {}}
-            loading={loading}
-            redirect={redirect}
+          topActionName='+ New Contact'
+          onTopActionClick={onTopActionClick}
+          filtersDisabled
+          onBackClick={() => { }}
+          loading={loading}
+          redirect={redirect}
         >
             <Stack
               flex={1}
@@ -107,11 +107,12 @@ export default function ContactsProfilePage(props) {
                 <ContactProfileDetails
                   loading={contact.loading}
                   contact={updatedContact || contact.item}
+                  refreshContact={() => contact.refreshData()}
                   onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />
                 <ContactMessageDetails />
             </Stack>
-        </MainLayout >
+        </MainLayout>
     )
 }

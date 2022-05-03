@@ -16,6 +16,7 @@ import { getFullName } from 'utils/Parser'
 import { fileTypes } from 'utils/FileUtils'
 
 const getTitle = (filterName) => {
+    console.log(filterName)
     switch (filterName) {
         case 'drafts': return 'Drafts'
         case 'pending': return 'Scheduled'
@@ -30,12 +31,12 @@ const MessagesPage = (props) => {
     const { filterType, filterValue } = useParams()
     const lastFilter = useRef(filterValue)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+    const [selectedFilters, setSelectedFilters] = useState()
 
     const senders = useTeamMembers()
     const tags = useTags()
 
     const messageFilter = useMemo(() => {
-        console.log(filterType, filterValue)
         if (!filterType)
             return { status: 'all' }
         else if (filterType === 'status' && filterValue === 'finished')
@@ -46,7 +47,6 @@ const MessagesPage = (props) => {
             return { status: [filterValue] }
     }, [filterType, filterValue])
 
-    const [redirect, setRedirect] = useState('')
     // console.log(filter)
     const messages = useMessages(1, 10, messageFilter)
 
@@ -68,6 +68,9 @@ const MessagesPage = (props) => {
         if (filterType === 'status') {
             messages.filter({ status: [filterValue] })
         } else if (filterType === 'team_members') {
+            setSelectedFilters({
+                sender: [{ ...senders.items.find(sender => sender.id === filterValue) }]
+            })
             messages.filter({ sender: [filterValue] })
         } else {
             messages.filter({ status: [filterValue] })
@@ -139,11 +142,11 @@ const MessagesPage = (props) => {
         },
         'send_at_dates': {
             label: 'Send At Dates',
-            options: []
-        },
-        'sent_at_dates': {
-            label: 'Sent At Dates',
-            options: []
+            type: 'date',
+            isUnique: true,
+            optionsLabel: (dates) => {
+                return dates[0] + ' - ' + dates[1]
+            },
         },
     }
 
@@ -167,12 +170,12 @@ const MessagesPage = (props) => {
 
     return (
         <BaseMessagePage
-            title={getTitle(filterType)}
-            redirect={redirect}
-            actions={actions}
-            showPanelFilters={showPanelFilters}
-            panelFilters={panelFilters}
-            onPanelFilterChange={onFilterChange}
+          title={getTitle(filterValue)}
+          actions={actions}
+          showPanelFilters={showPanelFilters}
+          panelFilters={panelFilters}
+          onPanelFilterChange={onFilterChange}
+          selectedFilters={selectedFilters}
         >
             <Stack direction="row" alignItems="center" mb={2}>
                 <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -201,10 +204,10 @@ const MessagesPage = (props) => {
             {!messages.loading && messages.items && messages.items.length > 0 && (
                 <Stack justifyContent="center" alignItems="center">
                     <Pagination
-                        count={messages.pagination.totalPages}
-                        page={messages.pagination.currentPage}
-                        onChange={onPageChange}
-                        disabled={messages.loading} />
+                      count={messages.pagination.totalPages}
+                      page={messages.pagination.currentPage}
+                      onChange={onPageChange}
+                      disabled={messages.loading} />
                 </Stack>
             )}
             {messages.loading && (
@@ -213,8 +216,8 @@ const MessagesPage = (props) => {
 
             {messages.error && (
                 <ErrorPanel
-                    title={errorPanelMessage.title}
-                    body={errorPanelMessage.body}
+                  title={errorPanelMessage.title}
+                  body={errorPanelMessage.body}
                 />
             )}
         </BaseMessagePage>

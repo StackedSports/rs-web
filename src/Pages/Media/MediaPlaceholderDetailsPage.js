@@ -167,7 +167,6 @@ export const MediaPlaceholderDetailsPage = () => {
     <MainLayout
       title="Placeholder Details"
       actions={mainActions}
-      loading={loading}
       alert={alert}
     >
 

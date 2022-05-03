@@ -105,7 +105,9 @@ const BaseMessagePage = (props) => {
                 open: props.showPanelFilters,
                 filters: props.panelFilters,
                 onFilterChange: props.onPanelFilterChange,
-                setFilter: props.setFilter
+                setFilter: props.setFilter,
+                selectedFilters: props.selectedFilters
+
             }}
         >
             {props.children}

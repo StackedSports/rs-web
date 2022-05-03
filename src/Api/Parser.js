@@ -85,6 +85,11 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
+    if(filters.birthday){
+        console.log(filters.birthday[0])
+        criteria['dob'] = filters.birthday[0]
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags
@@ -124,7 +129,7 @@ export const getFilterMessagesCriteria = (filters) => {
 
     let criteria = {}
 
-    console.log(filters)
+    //console.log(filters)
 
     if (filters.status) {
         criteria['message_status'] = []
@@ -154,6 +159,9 @@ export const getFilterMessagesCriteria = (filters) => {
     if (filters.tags){
         criteria['tags'] = filters.tags
     }
+    if(filters.send_at_dates){
+        criteria['send_at_dates'] = filters.send_at_dates[0]
+    }
 
     // {
     //     "criteria":{
@@ -177,6 +185,7 @@ export const getFilterMessagesCriteria = (filters) => {
 }
 
 export const getFilterMediasCriteria = (filters) => {
+    console.log(filters)
     if (!filters)
         return null
 
@@ -199,10 +208,15 @@ export const getFilterMediasCriteria = (filters) => {
         })
     }
 
-    // TODO
     if (filters.placeholder)
         criteria['placeholder_id'] = filters.placeholder
 
+    // Blocked by api
+   /*  if (filters.owner) {
+        criteria['owner'] = filters.owner
+    } */
+
+    // TODO
     /*  {
          "per_page": 25,
          "page": 1,

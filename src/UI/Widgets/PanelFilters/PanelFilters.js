@@ -48,7 +48,7 @@ export const PanelFilters = (props) => {
 			if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
-				if (filters[filterName].includes(option)) {
+				if (filters[filterName].find(f => f.id === option.id)) {
 					filters[filterName] = filters[filterName].filter(item => item !== option)
 				} else {
 					filters[filterName].push(option)
@@ -115,6 +115,7 @@ export const PanelFilters = (props) => {
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
 		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
+			console.log(filter.optionsLabel)
 			return option[filter.optionsLabel];
 		} else {
 			return option.name;
@@ -154,7 +155,7 @@ export const PanelFilters = (props) => {
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
 						if (filter.type === 'date')
-							return <DatePicker onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
+							return <DatePicker label={filter.label}  onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
 						else
 							return (
 								<Box key={filterName}>

@@ -9,6 +9,7 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import { AppContext } from 'Context/AppProvider'
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholders } from 'Api/Hooks'
+import { addTagsToMedias } from "Api/Endpoints"
 
 export const AllMediaPlaceholderPage = (props) => {
 
@@ -33,6 +34,7 @@ export const AllMediaPlaceholderPage = (props) => {
 
   const handleTagsDialogConfirm = (selectedTagsIds) => {
     console.log(selectedTagsIds)
+    
   }
    
   const onSendInMessageAction = () => {
@@ -86,8 +88,8 @@ export const AllMediaPlaceholderPage = (props) => {
       <MediaTable
         items={allPlaceholders}
         type='placeholder'
-        loading={placeholders.loading}
         pagination={placeholders.pagination}
+        loading={placeholders.loading}
         view={viewGrid ? 'grid' : 'list'}
         linkTo={mediaRoutes.placeholderDetails}
         onSelectionChange={onSelectionChange}

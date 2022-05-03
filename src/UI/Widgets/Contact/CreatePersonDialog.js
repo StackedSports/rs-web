@@ -70,8 +70,9 @@ export const CreatePersonDialog = (props) => {
         formikHelpers.setSubmitting(true);
         createPerson(contact.id, values)
           .then((res) => {
-            console.log(res)
-            props.onCreated()
+            if (props.onCreated && typeof props.onCreated instanceof Function && res.status === 201)
+              props.onCreated(res.data)
+            handleClose();
           })
           .catch(err => {
             console.log(err)
@@ -108,13 +109,13 @@ export const CreatePersonDialog = (props) => {
         variant="outlined"
         margin="dense"
         SelectProps={{
-          MenuProps:{
-            sx:{maxHeight: "300px"}
+          MenuProps: {
+            sx: { maxHeight: "300px" }
           }
         }}
       >
         {relationshipsTypes.map((option, index) => (
-          <MenuItem key={index} value={index}>
+          <MenuItem key={index} value={index + 1}>
             {option}
           </MenuItem>
         ))}
