@@ -1,7 +1,7 @@
 import { useEffect} from 'react'
 
 import { useUser, useRanks, useContacts, useTags, useContact } from 'Api/Hooks'
-import { getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters } from 'Api/Endpoints'
+import { getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters } from 'Api/Endpoints'
 
 import useArray from 'Hooks/ArrayHooks'
 
@@ -31,8 +31,9 @@ const Test = () => {
         //     .catch(error => {
         //         console.log(error)
         //     })
+        console.log('aaa')
 
-        getFilters()
+        getStats()
             .then(res => {
                 console.log(res)
             })

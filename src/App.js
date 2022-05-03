@@ -62,7 +62,7 @@ function App() {
 						<Route path="/twitter-stream" exact component={TwitterStream} />
 						<Route path="/Media-component" exact component={MediaC} />
 
-						{/* <Route path='/test' component={Test} /> */}
+						<Route path='/test' component={Test} />
 
 						<Route path={routes.contacts.path} component={ContactsRoutes} />
 						<Route path={routes.messages.path} component={MessagesRoutes} />

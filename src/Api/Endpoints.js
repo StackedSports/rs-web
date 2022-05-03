@@ -1140,3 +1140,7 @@ export const linkWithTwitter = () => {
             reject(error)
         })
 }
+
+export const getStats = () => {
+    return GET('stats?start_date=2022-1-01&end_date=2022-4-30')
+}
