@@ -40,7 +40,7 @@ const BaseMessagePage = (props) => {
     const teamMembers = useTeamMembers()
 
     const teamMembersFilterItems = useMemo(() => {
-        if (teamMembers.items) {
+        if (!teamMembers.loading && teamMembers.items) {
             return teamMembers.items.map(member => ({
                 id: member.id,
                 name: getFullName(member),
@@ -48,7 +48,7 @@ const BaseMessagePage = (props) => {
             }))
         }
         return []
-    }, [teamMembers.items])
+    }, [teamMembers.items,teamMembers.loading])
 
 
     const filtersWithTeamMembers = useMemo(() => {

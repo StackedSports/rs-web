@@ -22,6 +22,7 @@ import UserProfile from "./Pages/UserProfile";
 import TweetCreate from "./Pages/TweetCreate";
 import TeamSettings from "./Pages/TeamSettings";
 
+import NewDashboard from "./Pages/Dashboard";
 
 import TwitterStream from './components/TwitterStream/TwitterStream'
 import MediaC from "./components/MediaComponent/Media";
@@ -69,6 +70,7 @@ function App() {
 						<Route path={routes.media.path} component={MediaRoutes} />
 						<Route path={routes.settings.path} component={SettingsRoutes} />
 						<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
+						<Route path={routes.dashboard} component={NewDashboard} />
 					</Switch>
 				</div>
 			</AppProvider>

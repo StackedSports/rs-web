@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { TextField, MenuItem, FormGroup, FormControlLabel, Checkbox } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { FormBaseDialog } from "../Dialogs/FormBaseDialog";
 import { createPerson } from 'Api/Endpoints';
+import { usePeopleTypes } from 'Api/Hooks';
 
 const initialValues = {
   "person_relationship_type_id": "",
@@ -30,37 +31,19 @@ const validationSchema = yup.object().shape({
   "twitter_profile": yup.string()
 })
 
-const relationshipsTypes = [
-  "Mother",
-  "Father",
-  "Grandmother",
-  "Grandfather",
-  "Step Father",
-  "Step Mother",
-  "Guardian",
-  "Coach",
-  "Brother",
-  "Sister",
-  "Girlfriend",
-  "Other",
-  "Boyfriend",
-  "Friend",
-  "Aunt",
-  "Uncle",
-  "Godmother",
-  "Godfather",
-  "Cousin",
-  "Grandparent",
-  "Parent",
-  "Godparent",
-  "Son",
-  "Daughter",
-]
-
 export const CreatePersonDialog = (props) => {
 
   const [contact, setContact] = useState(props.contact || {});
   const [error, setError] = useState(null);
+  const peopleTypes = usePeopleTypes();
+
+  const relationshipsTypesOptions = useMemo(() => {
+    return peopleTypes.items.map(item => (
+      <MenuItem key={item.id} value={item.id}>
+        {item.description}
+      </MenuItem>
+    ))
+  }, [peopleTypes.items])
 
   const formik = useFormik({
     initialValues,
@@ -114,11 +97,7 @@ export const CreatePersonDialog = (props) => {
           }
         }}
       >
-        {relationshipsTypes.map((option, index) => (
-          <MenuItem key={index} value={index + 1}>
-            {option}
-          </MenuItem>
-        ))}
+        {relationshipsTypesOptions}
       </TextField>
 
       <TextField

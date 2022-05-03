@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { TextField, styled, Stack, Box } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { DatePicker as DatePickerPro, DateRangePicker } from '@mui/x-date-pickers-pro'
+import { DateRangePicker } from '@mui/x-date-pickers-pro'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { format } from 'date-fns';
 import Button from 'UI/Widgets/Buttons/Button';
 
 export const DatePicker = (props) => {
@@ -17,10 +18,10 @@ export const DatePicker = (props) => {
     }
 
     const handleCloseCalendar = (newDates) => {
-        console.log(newDates)
+        const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         if (newDates[0] && newDates[1]) {
             if (props.onChange instanceof Function) {
-                props.onChange(newDates.map(date => date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })))
+                props.onChange(newDates.map(date => format(date, formatStyle)))
             }
             setShowCalendar(false);
             setOpen(false);
@@ -32,6 +33,7 @@ export const DatePicker = (props) => {
     }
 
     if (showCalendar) {
+         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         return (
             <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
                 <DateRangePicker
@@ -39,19 +41,19 @@ export const DatePicker = (props) => {
                     clearable
                     allowSameDateSelection
                     //disableCloseOnSelect={true}
-                    inputFormat="MM/dd"
-                    mask='__/__'
+                    inputFormat={formatStyle}
+                    mask={formatStyle.replace(/[^\/]/g, '_')}
                     value={value}
                     onChange={(newValue) => setValue(newValue)}
                     onAccept={(date)=>handleCloseCalendar(date)}
                     renderInput={
                         (startProps, endProps) => (
-                            <StyledInputArea>
+                            <StyledInputArea format={formatStyle}>
                                 <TextField {...startProps} size='small' autoFocus />
                                 <TextField {...endProps} size='small' />
                             </StyledInputArea>
                         )}
-                    toolbarFormat="MM/dd"
+                    toolbarFormat={formatStyle}
                 />
             </LocalizationProvider>
         )
@@ -63,7 +65,8 @@ export const DatePicker = (props) => {
 
 export default DatePicker
 
-const StyledInputArea = styled(Stack)({
+const StyledInputArea = styled(Stack)(({ format }) => ({
+    display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
@@ -82,8 +85,8 @@ const StyledInputArea = styled(Stack)({
 
     '& .MuiInputBase-input': {
         fontWeight: '700',
-        width: '8ch',
+        width: format.length+2+'ch',
         padding: '8px 14px',
     },
 
-})
+}))

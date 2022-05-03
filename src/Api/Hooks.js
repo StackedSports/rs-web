@@ -38,6 +38,7 @@ import {
     filterContacts,
     filterMedias,
     getAllStatus2,
+    getMediaTypes,
 } from 'Api/Endpoints'
 
 import { usePagination } from './Pagination'
@@ -443,7 +444,7 @@ export const usearchiveContacts = (id) => {
 }
 
 export const useTeamMembers = () => {
-    const [teamMembers, setTeamMembers] = useState(null)
+    const [teamMembers, setTeamMembers] = useState([])
     const [loading, setLoading] = useState(true)
 
     const apiResults = useRef(null)
@@ -849,8 +850,8 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
 
         getPlaceholders(pagination.currentPage, pagination.itemsPerPage, filters)
             .then(([placeholders, pagination]) => {
-                console.log('ApiHooks: get placeholders')
-                console.log(placeholders)
+                //console.log('ApiHooks: get placeholders')
+                //console.log(placeholders)
                 // console.log(pagination)
                 setPlaceholders(placeholders)
                 setPagination(pagination)
@@ -917,7 +918,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         if (filters !== initialFilters)
             setFilters(initialFilters)
-    }, [initialFilters])
+    }, [initialFilters]) 
 
     useEffect(() => {
         // console.log('getting media')
@@ -1115,7 +1116,7 @@ export const useCoachesTypes = () => {
 
 
 export const usePeopleTypes = () => {
-    const [peopleTypes, setPeopleTypes] = useState(null)
+    const [peopleTypes, setPeopleTypes] = useState([])
     const [loading, setLoading] = useState(true)
 
 
@@ -1137,6 +1138,35 @@ export const usePeopleTypes = () => {
 
     return {
         items: peopleTypes,
+        loading
+    }
+}
+export const useMediaTypes = () => {
+    const [mediaTypes, setMediaTypes] = useState([])
+    const [loading, setLoading] = useState(true)
+
+
+    useEffect(() => {
+        setLoading(true)
+
+        getMediaTypes()
+            .then(([mediaTypes]) => {
+
+                setMediaTypes(mediaTypes.map(item => ({
+                    ...item,
+                    id: item.key,
+                    name: item.type,
+                })))
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+
+    }, [])
+
+    return {
+        items: mediaTypes,
         loading
     }
 }

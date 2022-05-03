@@ -15,41 +15,7 @@ import { addTagsToMedias, deleteTagsFromMedia } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
-	const { type, value } = useParams()
-	// console.log(type + ' = ' + value)
-
-	const filters = useMemo(() => {
-		console.log('getting filters')
-
-		let filters = {}
-
-		if (type === 'type') {
-			let id = 0
-
-			switch (value) {
-				case 'recent': id = 0; break;
-				case 'image': id = 2; break;
-				case 'video': id = 4; break;
-				case 'gif': id = 3; break;
-				case 'personalized': break;
-			}
-
-			filters['fileType'] = [{ id }]
-		} else if (type === 'owner') {
-			filters['owner'] = [value]
-		}
-
-		/*  {
-		 "per_page": 25,
-		 "page": 1,
-		 //"name":,
-		 "type": 1 // 0: recent_uploads, 1: my_media, 
-		 2: images, 3: gifs, 4: mp4s, 5: pdfs
-		 // "tag_id": [7693] // pass an array of tag ids to search
-		 // "placeholder_id": 1536
-	 }*/
-		return filters
-	}, [type, value])
+ 	const { type, value } = useParams()
 
 	const [allMedias, setAllMedias] = useState([])
 	const [viewGrid, setViewGrid] = useState(true)
@@ -59,7 +25,7 @@ export const AllMediaPage = () => {
 	const filterChanged = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
-	const medias = useMedias(1, 50, filters)
+	const medias = useMedias(1, 50)
 	const app = useContext(AppContext)
 
 	useEffect(() => {
@@ -72,7 +38,7 @@ export const AllMediaPage = () => {
 	}, [type, value])
 
 	useEffect(() => {
-		if (medias.items) {
+		if (!medias.loading && medias.items) {
 			if (filterChanged.current) {
 				filterChanged.current = false
 				setAllMedias(medias.items)
@@ -81,10 +47,10 @@ export const AllMediaPage = () => {
 				setAllMedias(oldMedias => [...oldMedias, ...medias.items])
 			}
 		}
-	}, [medias.items])
+	}, [medias.items,medias.loading])
 
 	const onFilterChange = (filter) => {
-		console.log(filter)
+		console.log("Filter Change",filter)
 		filterChanged.current = true
 		medias.filter(filter)
 	}
