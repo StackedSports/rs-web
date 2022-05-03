@@ -9,7 +9,8 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import PersonAdd from '@mui/icons-material/PersonAdd'
-import Settings from '@mui/icons-material/Settings'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Logout from '@mui/icons-material/Logout'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
@@ -17,6 +18,7 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 import { getFullName } from 'utils/Parser'
 import { Link } from 'react-router-dom'
 import { routes } from 'Routes'
+import { userRoutes } from 'Routes/Routes'
 
 export default function AccountMenu() {
     const auth = React.useContext(AuthContext)
@@ -96,13 +98,15 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-                <MenuItem>
-                    <Avatar
-                        alt={getFullName(auth?.user)}
-                        src={auth.user?.twitter_profile?.profile_image}
-                    />
-                    <Link to={routes.userSettings.path}>My Profile</Link>
-                </MenuItem>
+                <Link to={userRoutes.profile} style={{ color: "inherit" }}>
+                    <MenuItem>
+                        <Avatar
+                            alt={getFullName(auth?.user)}
+                            src={auth.user?.twitter_profile?.profile_image}
+                        />
+                        My Profile
+                    </MenuItem>
+                </Link>
                 <Divider />
                 {/* <MenuItem>
                     <ListItemIcon>
@@ -110,12 +114,22 @@ export default function AccountMenu() {
                     </ListItemIcon>
                     Add another account
                 </MenuItem> */}
-                <MenuItem>
-                    <ListItemIcon>
-                        <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
-                </MenuItem>
+                <Link to={userRoutes.account} style={{ color: "inherit" }}>
+                    <MenuItem>
+                        <ListItemIcon>
+                            <AccountCircleIcon fontSize="small" />
+                        </ListItemIcon>
+                        Account
+                    </MenuItem>
+                </Link>
+                <Link to={userRoutes.notifications} style={{ color: "inherit" }}>
+                    <MenuItem>
+                        <ListItemIcon>
+                            <NotificationsNoneIcon fontSize="small" />
+                        </ListItemIcon>
+                        Notifications
+                    </MenuItem>
+                </Link>
                 <MenuItem onClick={onLogout}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
