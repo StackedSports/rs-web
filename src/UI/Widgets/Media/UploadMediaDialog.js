@@ -556,7 +556,7 @@ export default function UploadMediaDialog(props) {
       
 
     const files = uploadFinished ? failedUploads : dropFiles
-    console.log(associatedPeople)
+    //console.log(associatedPeople)
 
     return (
 		<Dialog

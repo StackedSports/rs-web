@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useHistory } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 
@@ -36,6 +36,7 @@ export default function ContactsProfilePage(props) {
     // const ranks = useRanks()
     // const tags = useTags2()
     // const teamMembers = useTeamMembers()
+    const history = useHistory()
     const contact = useContact(id)
     const boards = useBoards()
 
@@ -95,7 +96,7 @@ export default function ContactsProfilePage(props) {
           topActionName='+ New Contact'
           onTopActionClick={onTopActionClick}
           filtersDisabled
-          onBackClick={() => { }}
+          onBackClick={() => history.goBack()}
           loading={loading}
           redirect={redirect}
         >

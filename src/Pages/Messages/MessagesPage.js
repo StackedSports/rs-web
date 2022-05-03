@@ -13,10 +13,8 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
 import { useMessages, useTeamMembers, useTags } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
-import { fileTypes } from 'utils/FileUtils'
 
 const getTitle = (filterName) => {
-    console.log(filterName)
     switch (filterName) {
         case 'drafts': return 'Drafts'
         case 'pending': return 'Scheduled'
@@ -29,7 +27,7 @@ const getTitle = (filterName) => {
 
 const MessagesPage = (props) => {
     const { filterType, filterValue } = useParams()
-    const lastFilter = useRef(filterValue)
+    const lastFilter = useRef()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
 
@@ -56,7 +54,6 @@ const MessagesPage = (props) => {
 
     useEffect(() => {
         console.log('on filter')
-
         console.log(lastFilter.current)
 
         if (!filterType || lastFilter.current === filterValue)
@@ -68,15 +65,15 @@ const MessagesPage = (props) => {
         if (filterType === 'status') {
             messages.filter({ status: [filterValue] })
         } else if (filterType === 'team_members') {
+            if( !senders.loading)
             setSelectedFilters({
-                sender: [{ ...senders.items.find(sender => sender.id === filterValue) }]
+                sender: [{ ...senders.items.find(sender => sender.id == filterValue) }]
             })
-            messages.filter({ sender: [filterValue] })
         } else {
             messages.filter({ status: [filterValue] })
         }
 
-    }, [filterType, filterValue])
+    }, [filterType, filterValue,senders.loading])
 
     useEffect(() => {
         if (!messages.error)
@@ -148,12 +145,20 @@ const MessagesPage = (props) => {
                 return dates[0] + ' - ' + dates[1]
             },
         },
+        'sent_at_dates': {
+            label: 'Sent At Dates',
+            type: 'date',
+            isUnique: true,
+            optionsLabel: (dates) => {
+                return dates[0] + ' - ' + dates[1]
+            },
+        },
     }
 
     const onFilterChange = (filters) => {
         console.log(filters)
 
-        if (filters.length === 0)
+        if (Object.keys(filters).length === 0)
             messages.clearFilter()
         else {
             if (filters.platform)
@@ -170,12 +175,12 @@ const MessagesPage = (props) => {
 
     return (
         <BaseMessagePage
-          title={getTitle(filterValue)}
-          actions={actions}
-          showPanelFilters={showPanelFilters}
-          panelFilters={panelFilters}
-          onPanelFilterChange={onFilterChange}
-          selectedFilters={selectedFilters}
+            title={getTitle(filterValue)}
+            actions={actions}
+            showPanelFilters={showPanelFilters}
+            panelFilters={panelFilters}
+            onPanelFilterChange={onFilterChange}
+            selectedFilters={selectedFilters}
         >
             <Stack direction="row" alignItems="center" mb={2}>
                 <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -204,10 +209,10 @@ const MessagesPage = (props) => {
             {!messages.loading && messages.items && messages.items.length > 0 && (
                 <Stack justifyContent="center" alignItems="center">
                     <Pagination
-                      count={messages.pagination.totalPages}
-                      page={messages.pagination.currentPage}
-                      onChange={onPageChange}
-                      disabled={messages.loading} />
+                        count={messages.pagination.totalPages}
+                        page={messages.pagination.currentPage}
+                        onChange={onPageChange}
+                        disabled={messages.loading} />
                 </Stack>
             )}
             {messages.loading && (
@@ -216,8 +221,8 @@ const MessagesPage = (props) => {
 
             {messages.error && (
                 <ErrorPanel
-                  title={errorPanelMessage.title}
-                  body={errorPanelMessage.body}
+                    title={errorPanelMessage.title}
+                    body={errorPanelMessage.body}
                 />
             )}
         </BaseMessagePage>

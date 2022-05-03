@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { Collapse, Stack, Box } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
+import lodash from 'lodash';
 /* import { Dropdown, DropdownButton } from 'react-bootstrap'; */
 
 
@@ -19,14 +20,25 @@ import DatePicker from 'UI/Forms/Inputs/DatePicker';
 export const PanelFilters = (props) => {
 
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
+	const lastFilterRef = useRef(selectedFilters);
 
 	useEffect(() => {
-		if(!props.selectedFilters)
+		if (!props.selectedFilters)
 			return
-
+		console.log("changing selected filters")
 		setSelectedFilters(props.selectedFilters)
-	
+
 	}, [props.selectedFilters])
+
+	useEffect(() => {
+		if (lodash.isEqual(lastFilterRef.current, selectedFilters))
+			return
+		console.log("Calling onFilterChange")
+		lastFilterRef.current = selectedFilters
+		console.log(selectedFilters);
+		if (props.onFilterChange && props.onFilterChange instanceof Function)
+			props.onFilterChange(Object.assign({}, selectedFilters))
+	}, [selectedFilters])
 
 	useEffect(() => {
 		if (props.setFilter) {
@@ -61,8 +73,6 @@ export const PanelFilters = (props) => {
 		console.log(filters)
 
 		setSelectedFilters(filters)
-
-		props.onFilterChange(Object.assign({}, filters))
 
 		// return
 		// setSelectedFilters(oldSelectFilters => {
@@ -103,8 +113,6 @@ export const PanelFilters = (props) => {
 				delete newSelectFilters[filterName];
 			}
 
-			props.onFilterChange(Object.assign({}, newSelectFilters));
-
 			return newSelectFilters;
 		})
 	}
@@ -142,7 +150,7 @@ export const PanelFilters = (props) => {
 					selectedFilters[key].map((filter, index) => (
 						<SearchableOptionSelected
 							style={{ marginLeft: 0 }}
-							key={index+key}
+							key={index + key}
 							item={`${props.filters[key].label}: ${getOptionLabel(props.filters[key], filter)}`}
 							disabled={filter.disabled}
 							onRemove={(e) => onRemoveFilter(key, filter)}
@@ -155,7 +163,7 @@ export const PanelFilters = (props) => {
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
 						if (filter.type === 'date')
-							return <DatePicker label={filter.label}  onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
+							return <DatePicker label={filter.label} format={filter.format}  onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
 						else
 							return (
 								<Box key={filterName}>

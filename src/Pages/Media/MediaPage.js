@@ -6,91 +6,58 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags, useTeamMembers } from 'Api/Hooks'
-import { getMediaTypes } from 'Api/Endpoints'
+import { useTags, useTeamMembers, useMediaTypes } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
+    const mediaTypes = useMediaTypes()
 
-    const [mediaTypes, setMediaTypes] = useState([])
-    const [owners, setOwners] = useState([])
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState({})
-
-    useEffect(() => {
-        getMediaTypes().then(res => {
-            console.log(res)
-            setMediaTypes(res[0].map(item => ({
-                id: item.key,
-                name: item.type
-            })))
-        })
-    }, [])
+    const [selectedFilters, setSelectedFilters] = useState()
 
     //Handle with setSelectedFilters from props
     useEffect(() => {
         if (props.replecaSelectPanelFilter) {
             const { type, value } = props.replecaSelectPanelFilter
             if (type === 'type') {
-                setSelectedFilters({
-                    "fileType": [{...mediaTypes.find(item => item.id === value)}],
-                })
+                if (!mediaTypes.loading)
+                    setSelectedFilters({
+                        "fileType": [{ ...mediaTypes.items.find(item => item.id == value) }],
+                    })
             }
             if (type === 'owner') {
+                if (!teamMembers.loading)
+                    console.log(teamMembers.items)
                 setSelectedFilters({
-                    "owner": [{...owners.find(item => item.id === value)}],
+                    "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
                 })
             }
         }
-    }, [props.replecaSelectPanelFilter])
+    }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
 
-    useEffect(() => {
-        if (teamMembers.items?.length > 0)
-            setOwners(teamMembers.items.map(item => ({
-                id: item.id,
-                name: getFullName(item)
-            })))
-    }, [teamMembers.items])
+    const filtersOptions = useMemo(() => {
+        let index = 0
+        return [
+            {
+                id: index,
+                name: 'My Media',
+                items: teamMembers.items.map(item => ({ id: item.id, name: getFullName(item), path: `${mediaRoutes.filters.owner}/${item.id}` }))
+            },
+            ...mediaTypes.items.map(item => ({
+                id: ++index,
+                name: item.name,
+                path: `${mediaRoutes.filters.type}/${item.id}`
+            })),
+            {
+                id: ++index,
+                name: 'Placeholders',
+                path: mediaRoutes.placeholders,
+            }
+        ]
+    }, [mediaTypes.items])
 
-    const filters = [
-        {
-            id: 0,
-            name: 'My Media',
-            items: owners.map(item => ({ id: item.id, name: item.name, path: `${mediaRoutes.filters.owner}/${item.id}` }))
-        },
-        {
-            id: 1,
-            name: 'Recent',
-            path: mediaRoutes.filters.recent,
-        },
-        {
-            id: 2,
-            name: 'Images',
-            path: mediaRoutes.filters.images,
-        },
-        {
-            id: 3,
-            name: 'Videos',
-            path: mediaRoutes.filters.videos,
-        },
-        {
-            id: 4,
-            name: 'Gifs',
-            path: mediaRoutes.filters.gifs,
-        },
-        {
-            id: 5,
-            name: 'Personalized Media',
-            path: mediaRoutes.filters.personalized,
-        },
-        {
-            id: 6,
-            name: 'Placeholders',
-            path: mediaRoutes.placeholders,
-        }
-    ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
@@ -100,7 +67,7 @@ export const MediaPage = (props) => {
     ({
         "fileType": {
             label: 'File Type',
-            options: mediaTypes,
+            options: mediaTypes.items,
             isUnique: true,
         },
         "distributed": {
@@ -109,7 +76,8 @@ export const MediaPage = (props) => {
         },
         "owner": {
             label: 'Owner',
-            options: owners,
+            options: teamMembers.items || [],
+            optionsLabel: (item) => getFullName(item),
         },
         "associatedTo": {
             label: 'Associated To',
@@ -141,7 +109,7 @@ export const MediaPage = (props) => {
             title={props.title || 'Media'}
             topActionName={props.topActionName || '+ Add Media'}
             onTopActionClick={onTopActionClick}
-            filters={filters}
+            filters={filtersOptions}
             onFilterSelected={onFilterSelected}
             actions={props.actions}
             //loading={teamMembers.loading}

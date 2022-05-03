@@ -9,7 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 export const routes = {
     dashboard: {
         title: 'Dashboard',
-        path: '/dashboard',
+        path: '/newdashboard',
         icon: HomeOutlinedIcon
     },
     contacts: {
@@ -75,11 +75,7 @@ export const mediaRoutes = {
     placeholderDetails: '/media/placeholders/details',
     filters: {
         base: '/media/media/filters/:type/:value',
-        recent: '/media/media/filters/type/recent',
-        images: '/media/media/filters/type/image',
-        videos: '/media/media/filters/type/video',
-        gifs: '/media/media/filters/type/gif',
-        personalized: '/media/media/filters/type/personalized',
+        type: '/media/media/filters/type',
         placeholders: '/media/placeholders',
         owner: '/media/media/filters/owner'
     }

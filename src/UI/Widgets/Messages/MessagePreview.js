@@ -40,7 +40,7 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
     //     detailClass += ' TextArea'
 
     return (
-        <Grid container direction={direction} style={style}>
+        <Grid container style={style}>
             <span className="DetailLabel">{label}:</span>
             {labelArray ?
                 value.map(item => (
@@ -142,8 +142,8 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(showMedia)
 
     return (
-        <Grid className="MessagePreview-Container" container direction="column" style={style}>
-            <Grid container direction="row" style={{ marginBottom: 20 }}>
+        <Grid className="MessagePreview-Container" container  style={style}>
+            <Grid container  style={{ marginBottom: 20 }}>
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
                         <MediaPreview

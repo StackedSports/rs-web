@@ -1,4 +1,5 @@
 import { capitalize } from 'utils/Parser'
+import { format } from 'date-fns'
 
 export const getFilterContactsCriteria = (filters) => {
     let criteria = {}
@@ -160,7 +161,10 @@ export const getFilterMessagesCriteria = (filters) => {
         criteria['tags'] = filters.tags
     }
     if(filters.send_at_dates){
-        criteria['send_at_dates'] = filters.send_at_dates[0]
+        criteria['send_at_dates'] = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    }
+    if(filters.sent_at_dates){
+        criteria['sent_at_dates'] = filters.sent_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
 
     // {

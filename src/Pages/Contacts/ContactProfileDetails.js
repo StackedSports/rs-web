@@ -156,7 +156,6 @@ const ContactProfileDetails = (props) => {
 			return app.alert.setInfo('No fields have changed, did not update profile')
 
 		setSavingContactAtIndex(index, true)
-		console.log('aa')
 		updateContact(props.contact.id, parseValues(data))
 			.then(res => {
 				props.onContactUpdated(res.data)

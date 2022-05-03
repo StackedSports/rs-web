@@ -150,6 +150,7 @@ export default function ContactsPage(props) {
         birthday: {
             label: 'Birthday',
             type: 'date',
+            format: 'MM/dd',
             optionsLabel: (dates) => {
                 return dates[0] + ' - ' + dates[1]
             },
@@ -245,7 +246,6 @@ export default function ContactsPage(props) {
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
-
         contacts.filter(filter)
     }
 
