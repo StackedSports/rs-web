@@ -39,6 +39,7 @@ import {
     filterMedias,
     getAllStatus2,
     getMediaTypes,
+    getTeamMember,
 } from 'Api/Endpoints'
 
 import { usePagination } from './Pagination'
@@ -443,9 +444,40 @@ export const usearchiveContacts = (id) => {
     return archivecontact
 }
 
+export const useTeamMember = (id) => {
+    const [teamMember, setTeamMember] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
+
+    useEffect(() => {
+        setLoading(true)
+        getTeamMember(id)
+            .then(([member]) => {
+                // console.log('ApiHooks: getTeamMember')
+                // console.log(member)
+                setTeamMember(member)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => setLoading(false))
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
+
+    return {
+        item: teamMember,
+        loading,
+        refreshData,
+    }
+}
+
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     const apiResults = useRef(null)
 
@@ -464,7 +496,11 @@ export const useTeamMembers = () => {
                 console.log(error)
             })
             .finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     const filter = (param) => {
         if (!teamMembers)
@@ -482,7 +518,8 @@ export const useTeamMembers = () => {
         items: teamMembers,
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        refreshData,
     }
 }
 
