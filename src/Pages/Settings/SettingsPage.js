@@ -50,6 +50,7 @@ export default function SettingsPage(props) {
             topActionName={props.topActionName || null}
             onTopActionClick={props.onTopActionClick}
             filters={filters}
+            alert={props.alert}
             actions={props.actions}
         // onFilterSelected={onFilterSelected}
         >
