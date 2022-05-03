@@ -9,7 +9,7 @@ export default function ContactsTable(props) {
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
 
-    const visibleColumns = useContactTableColumns(props.columnsControl)
+    const visibleColumns = useContactTableColumns(props.columnsControl, props.id)
 
     // const onPageChange = (page, details) => {
     //     console.log(page)

@@ -452,6 +452,7 @@ export default function ContactsPage(props) {
 
 
             <ContactsTable
+              id="contacts-page"
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}

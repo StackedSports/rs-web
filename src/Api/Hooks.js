@@ -1141,9 +1141,9 @@ export const usePeopleTypes = () => {
     }
 }
 
-export const useContactTableColumns = (control) => {
-    console.log(control)
-    const [columns, setColumns] = useState(JSON.parse(localStorage.getItem('contact-table-columns')) || {
+export const useContactTableColumns = (control, id) => {
+    // console.log(control)
+    const [columns, setColumns] = useState(JSON.parse(localStorage.getItem(id + '-table-columns')) || {
         profileImg: control?.profileImg || true,
         fullname: control?.fullname || true,
         firstName: control?.firstName || false,
@@ -1170,10 +1170,10 @@ export const useContactTableColumns = (control) => {
     })
 
     const onChange = (newValue) => {
-        localStorage.setItem('contact-table-columns', JSON.stringify(newValue))
+        localStorage.setItem(id + '-table-columns', JSON.stringify(newValue))
         setColumns(newValue)
     }
-    console.log(columns)
+    // console.log(columns)
     return {
         items: columns,
         onChange

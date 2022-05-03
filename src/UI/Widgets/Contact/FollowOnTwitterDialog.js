@@ -79,6 +79,7 @@ const FollowOnTwitterDialog = (props) => {
         >
           <Typography sx={{ fontWeight: 600 }}>Follow on Twitter:</Typography>
           <ContactsTable
+            id="follow-on-twitter-contacts"
             mini="600px"
             hidePagination
             disableColumnMenu
@@ -96,6 +97,7 @@ const FollowOnTwitterDialog = (props) => {
           <Stack spacing={4}>
             <Typography sx={{ fontWeight: 600 }}>On behalf of User Accounts:</Typography>
             <ContactsTable
+              id="follow-on-twitter-team-members"
               mini="600px"
               hidePagination
               disableColumnMenu
