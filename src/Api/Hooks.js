@@ -446,6 +446,7 @@ export const usearchiveContacts = (id) => {
 export const useTeamMember = (id) => {
     const [teamMember, setTeamMember] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -459,11 +460,16 @@ export const useTeamMember = (id) => {
                 console.log(error)
             })
             .finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         item: teamMember,
-        loading
+        loading,
+        refreshData,
     }
 }
 

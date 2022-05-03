@@ -340,6 +340,15 @@ export const filterContacts = (page, perPage, filters) => {
     return AXIOS('post', 'contacts/filter', data)
 }
 
+export const getTeamMember = (id) => {
+    return AXIOS('get', `team/members/${id}`)
+}
+
+export const deleteTeamMember = (id) => {
+    console.log("deleteTeamMember")
+    return AXIOS('delete', `team/members/${id}`)
+}
+
 export const getTeamMembers = () => {
     return AXIOS('get', `team/members?per_page=100&only_active=true`)
 }
@@ -464,6 +473,13 @@ export const updateUser = (data, idUser) => {
         user: data
     }
     return PUT(`users/${idUser}`, body)
+}
+
+export const updateTeamMember = (data, id) => {
+    const body = {
+        user: data
+    }
+    return PUT(`team/members/${id}`, body)
 }
 
 export const upadateSelectedColumns = (userId, body) => {
