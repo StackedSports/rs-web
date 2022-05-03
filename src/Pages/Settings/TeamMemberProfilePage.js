@@ -1,8 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
@@ -12,17 +13,20 @@ import Box from '@mui/material/Box';
 import { Divider } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
 
-import MainLayout from 'UI/Layouts/MainLayout';
+import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import { useTeamMember } from 'Api/Hooks';
+import { updateTeamMember } from 'Api/Endpoints';
 import { settingsRoutes } from 'Routes/Routes';
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 
 const TeamMemberProfilePage = (props) => {
-
+  const alert = useMainLayoutAlert();
   const { id } = useParams();
-  const teamMember = useTeamMember(id)
+  const teamMember = useTeamMember(id);
   // console.log(teamMember.item)
+
+  const [loading, setLoading] = useState(false);
 
   const filters = [
     { // Category
@@ -61,22 +65,32 @@ const TeamMemberProfilePage = (props) => {
     first_name: teamMember.item?.first_name || "",
     last_name: teamMember.item?.last_name || "",
     email: teamMember.item?.email || "",
-    phone: formatPhoneNumber(teamMember.item?.phone) || "",
+    phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
     // organization: teamMember.item?.team.org.name || ""
   }
 
   const onSubmitForm = (values) => {
-    console.log(values)
-    // let data = {}
-    // Object.keys(values).forEach(key => {
-    //   if (values[key] !== initialValues[key]) {
-    //     if (key === "first_name" || key === "last_name")
-    //       data.name = `${values.first_name} ${values.last_name}`
-    //     else
-    //       data[key] = values[key]
-    //   }
-    // })
-    // updateUser(data, userStorage.id)
+    let data = {}
+    Object.keys(values).forEach(key => {
+      if (values[key] !== initialValues[key]) {
+        data[key] = values[key]
+      }
+    })
+    if (Object.keys(data).length > 0) {
+      setLoading(true)
+      updateTeamMember(data, id)
+        .then(res => {
+          alert.setSuccess("Changes saved successfully!");
+          teamMember.refreshData();
+        })
+        .catch(error => {
+          console.log(error)
+          alert.setError("Failed to save changes.");
+        })
+        .finally(() => setLoading(false))
+    } else {
+      alert.setWarning("No changes to save")
+    }
   }
 
   const onRemovePicture = () => {
@@ -101,6 +115,7 @@ const TeamMemberProfilePage = (props) => {
 
   return (
     <MainLayout
+      alert={alert}
       title={props.title || 'Team Member Profile'}
       topActionName={props.topActionName || null}
       // onTopActionClick={onTopActionClick}
@@ -130,7 +145,7 @@ const TeamMemberProfilePage = (props) => {
               <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
                 <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
-                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.phone}</Typography>
+                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
               </Stack>
               <Stack flex={1} justifyContent="flex-start" alignItems="center">
                 <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={teamMember.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""} />
@@ -249,14 +264,15 @@ const TeamMemberProfilePage = (props) => {
                     <FormHelperText id="organization">Organization</FormHelperText>
                   </FormControl> */}
 
-                  <Button
+                  <LoadingButton
                     type="submit"
+                    loading={loading}
                     variant="contained"
                     onClick={onSaveSettings}
                     sx={{ alignSelf: "center", gridColumn: "1/3" }}
                   >
                     Save Settings
-                  </Button>
+                  </LoadingButton>
                 </Form>
               )}
             </Formik>

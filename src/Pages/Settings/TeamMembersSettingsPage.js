@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import SettingsPage from './SettingsPage';
+import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import TeamMembersTable from 'UI/Tables/TeamMembers/TeamMembersTable';
 
@@ -11,6 +12,7 @@ import { deleteTeamMember } from 'Api/Endpoints';
 
 
 const TeamMembersSettingsPage = () => {
+    const alert = useMainLayoutAlert();
     const teamMembers = useTeamMembers()
     const confirmDialog = useContext(ConfirmDialogContext)
 
@@ -37,9 +39,11 @@ const TeamMembersSettingsPage = () => {
             Promise.all(selectedTeamMembers.map(member => deleteTeamMember(member)))
                 .then(() => {
                     teamMembers.refreshData()
+                    alert.setSuccess("Team members successfully deleted!");
                 })
                 .catch(error => {
                     console.log(error)
+                    alert.setError("Failed to delete team members.");
                 })
         })
     }
@@ -63,6 +67,7 @@ const TeamMembersSettingsPage = () => {
             actions={actions}
             topActionName='+ New Team Member'
             onTopActionClick={onTopActionClick}
+            alert={alert}
         >
             <TeamMembersTable
                 items={teamMembers.items}
