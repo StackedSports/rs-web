@@ -9,7 +9,7 @@ const TeamMembersTable = (props) => {
           items={props.items}
           columns={columns}
           selectionModel={props.selection}
-          onSelectionModelChange={props.onSelectionChange}
+          onSelectionChange={props.onSelectionChange}
           loading={props.loading}
           checkboxSelection
         />
