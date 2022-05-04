@@ -19,18 +19,18 @@ const ContactMessageDetails = (prosp) => {
 		<Stack sx={{ width: "300px" }} spacing={1} alignItems="center" justifyContent="center">
 			<Stack >
 				<ContactMessageStats />
-				<ContactMediaPreview
+				{/* <ContactMediaPreview
 				  id="associated" 
 				  media={contact.associated_media} 
 				  onViewMore={onViewMore}
 				/>
-				<ContactMediaPreview media={contact.sent_media}/>
-				{/* <ContactSentMedia />
-				<ContactAssociatedMedia /> */}
+				<ContactMediaPreview media={contact.sent_media}/> */}
+				<ContactSentMedia />
+				<ContactAssociatedMedia />
 			</Stack>
 			<Stack >
-				{selected === 'associated' && <ContactMediaDetails media={contact.associated_media}/>}
-				<ContactMediaDetails media={contact.sent_media}/>
+				{/* {selected === 'associated' && <ContactMediaDetails media={contact.associated_media}/>}
+				<ContactMediaDetails media={contact.sent_media}/> */}
 			</Stack>
 		</Stack>
 	)
