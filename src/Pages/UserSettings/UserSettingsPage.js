@@ -3,6 +3,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import MainLayout from 'UI/Layouts/MainLayout'
 
 import { userRoutes } from 'Routes/Routes'
+import { useUser } from 'Api/Hooks'
 
 const filters = [
     { // Category
@@ -19,13 +20,17 @@ const filters = [
 
 export default function UserSettingsPage(props) {
 
+    const user = useUser();
+    console.log(user)
 
     return (
         <MainLayout
-            title={props.title || 'User Settings'}
-            topActionName={props.topActionName || null}
-            onTopActionClick={props.onTopActionClick}
             filters={filters}
+            alert={props.alert}
+            loading={props.loading}
+            title={props.title || 'User Settings'}
+            onTopActionClick={props.onTopActionClick}
+            topActionName={props.topActionName || null}
         >
             {/* {React.cloneElement(props.children, { user: user })} */}
             {props.children}

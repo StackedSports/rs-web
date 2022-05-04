@@ -28,6 +28,7 @@ const UserAccountCard = (props) => {
 		// }
 		// console.log(data)
 	}
+	// console.log(user)
 
 	const onUnlinkAccount = () => {
 		console.log("onUnlinkAccount: " + props.provider.name)
