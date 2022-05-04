@@ -19,6 +19,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.1",
     "@mui/x-data-grid": "^5.6.1",
+    "@mui/x-data-grid-pro": "^5.10.0",
     "@mui/x-date-pickers-pro": "^5.0.0-alpha.2",
     "@mui/x-license-pro": "^5.10.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -79,6 +80,7 @@
     ]
   },
   "devDependencies": {
+    "file-loader": "^6.2.0",
     "react-edit-inline": "^1.0.8"
   }
 }

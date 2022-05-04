@@ -3,13 +3,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Collapse, Stack, Box } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import lodash from 'lodash';
-/* import { Dropdown, DropdownButton } from 'react-bootstrap'; */
-
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
 import Dropdown from 'UI/Widgets/Dropdown';
 import Button from '../Buttons/Button';
-import DatePicker from 'UI/Forms/Inputs/DatePicker';
+import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
@@ -163,7 +161,14 @@ export const PanelFilters = (props) => {
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
 						if (filter.type === 'date')
-							return <DatePicker label={filter.label} format={filter.format}  onChange={(date)=>handleOptionsChange(filterName,date,filter)} />
+							return (
+								<DateRangePicker
+								  label={filter.label}
+								  format={filter.format}
+								  onChange={(date) => handleOptionsChange(filterName, date, filter)}
+								  endIcon={<KeyboardArrowDown />}
+								/>
+							)
 						else
 							return (
 								<Box key={filterName}>

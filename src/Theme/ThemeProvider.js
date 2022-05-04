@@ -44,7 +44,7 @@ let theme = createTheme({
             paper: '#FFFFFF',
         },
     },
-    typography
+    typography,
 })
 
 theme = createTheme(theme, {

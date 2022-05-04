@@ -40,6 +40,8 @@ import {
     getAllStatus2,
     getMediaTypes,
     getTeamMember,
+    getTasksQueue,
+    getStats,
 } from 'Api/Endpoints'
 
 import { usePagination } from './Pagination'
@@ -955,7 +957,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         if (filters !== initialFilters)
             setFilters(initialFilters)
-    }, [initialFilters]) 
+    }, [initialFilters])
 
     useEffect(() => {
         // console.log('getting media')
@@ -1205,6 +1207,55 @@ export const useMediaTypes = () => {
     return {
         items: mediaTypes,
         loading
+    }
+}
+
+export const useTaskQueue = (date) => {
+    const [taskQueue, setTaskQueue] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getTasksQueue(date)
+            .then(([taks]) => {
+                setTaskQueue(taks)
+            })
+            .catch(error => {
+                setError(error)
+            })
+            .finally(() => setLoading(false))
+    }, [date])
+
+    return {
+        items: taskQueue,
+        loading,
+        error
+    }
+}
+export const useStats = (startDate,endDate) => {
+    const [stats, setStats] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getStats(startDate,endDate)
+            .then(([stats]) => {
+                setStats(stats?.table)
+            })
+            .catch(error => {
+                setError(error)
+            })
+            .finally(() => setLoading(false))
+    }, [startDate,endDate])
+
+    return {
+        items: stats,
+        loading,
+        error
     }
 }
 

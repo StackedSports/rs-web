@@ -5,7 +5,13 @@ import {
     CssBaseline
 } from '@mui/material';
 
+
 const typography = {
+    fontFamily: [
+        'Proxima Nova',
+        'Roboto',
+        'sans-serif',
+    ].join(','),
     h1: {
         fontSize: '18px',
         color: '#212529',
