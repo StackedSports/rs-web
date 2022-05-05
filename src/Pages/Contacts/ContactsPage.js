@@ -40,6 +40,7 @@ import {
 import {
     addTagsToContacts,
     deleteTagToContact,
+    untagContacts,
 } from 'Api/Endpoints'
 
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
@@ -58,6 +59,7 @@ export default function ContactsPage(props) {
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
     // const [selectedContacts, setSelectedContacts] = useState([])
@@ -267,6 +269,8 @@ export default function ContactsPage(props) {
 
     const onRemoveTagClick = (e) => {
         console.log("removeTag")
+        setOpenSelectTagDialog(true)
+        setSelectTagDialogTitle("Untag Contact")
         // deleteTagToContact()
     }
 
@@ -283,9 +287,9 @@ export default function ContactsPage(props) {
 
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
-        console.log(contactIds)
         // return 
-
+        console.log("onRemoveTagsSelected")
+        console.log(selectedTagsIds, contactIds)
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
@@ -294,6 +298,24 @@ export default function ContactsPage(props) {
                 }
                 else
                     alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
+            })
+            .finally(() => setLoading(false))
+    }
+
+    const onRemoveTagsSelected = (selectedTagsIds) => {
+        // setLoading(true)
+        selectedContacts.saveData(contacts.items)
+        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
+        console.log("onRemoveTagsSelected")
+        console.log(selectedTagsIds, contactIds)
+        untagContacts(selectedTagsIds, contactIds)
+            .then(res => {
+                if (res.error === 0) {
+                    alert.setSuccess('Contacts untagged successfully!')
+                    setOpenSelectTagDialog(false)
+                }
+                else
+                    alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
             .finally(() => setLoading(false))
     }
@@ -399,7 +421,7 @@ export default function ContactsPage(props) {
                             icon: AutoFixHighIcon,
                             options: [
                                 { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count == 0 },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
                                 { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                 { name: 'Archive Contact', onClick: onArchiveContactClick }
                             ]
@@ -409,7 +431,7 @@ export default function ContactsPage(props) {
                         name="Tag"
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
-                        onClick={() => setOpenSelectTagDialog(true)}
+                        onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
                         disabled={selectedContacts.count == 0}
                     />
                     {/* <PanelDropdown
@@ -452,7 +474,7 @@ export default function ContactsPage(props) {
 
 
             <ContactsTable
-              id="contacts-page"
+                id="contacts-page"
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
@@ -478,8 +500,10 @@ export default function ContactsPage(props) {
 
             <SelectTagDialog
                 open={openSelectTagDialog}
+                title={selectTagDialogTitle}
+                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onClose={() => setOpenSelectTagDialog(false)}
-                onConfirm={onTagsSelected}
+                onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
             />
 
             <FollowOnTwitterDialog

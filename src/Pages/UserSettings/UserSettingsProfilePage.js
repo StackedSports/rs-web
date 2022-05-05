@@ -32,7 +32,6 @@ const UserSettingsProfilePage = (props) => {
     console.log(user.item)
   }, [])
 
-
   const initialValues = {
     first_name: user.item?.first_name || "",
     last_name: user.item?.last_name || "",
@@ -127,7 +126,7 @@ const UserSettingsProfilePage = (props) => {
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.organization}</Typography>
               </Stack>
               <Stack flex={1} justifyContent="flex-start" alignItems="center">
-                <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={user?.twitter_profile?.profile_image || ""} />
+                <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={user.item?.twitter_profile?.profile_image || ""} />
               </Stack>
             </Stack>
 

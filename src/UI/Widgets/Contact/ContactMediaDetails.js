@@ -22,7 +22,17 @@ const ContactMediaDetails = (props) => {
   }
 
   return (
-    <Stack sx={{ width: "100%", height: "100%" }} spacing={1} justifyContent="start" alignItems="center">
+    <Stack
+      sx={{
+        width: "100%",
+        height: "100%",
+        overflowY: "auto",
+        height: "100vh"
+      }}
+      spacing={1}
+      justifyContent="start"
+      alignItems="center"
+    >
       <Stack sx={{ width: "100%" }} flex={1} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
         <Button
           onClick={setVisibleContainer}
@@ -37,8 +47,8 @@ const ContactMediaDetails = (props) => {
         cols={2}
         sx={{
           width: "100%",
-          overflow: 'auto',
-          height: '550px',
+          // overflowY: 'auto',
+          // height: 'auto',
         }}
         rowHeight={120}
       >

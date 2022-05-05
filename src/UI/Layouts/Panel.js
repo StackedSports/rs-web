@@ -40,6 +40,7 @@ export const PanelDropdown = ({ action, header }) => {
                   style={{ justifyContent: 'flex-end', color: option.color ? option.color : 'inherit' }}
                   name={option.name}
                   onClick={option.onClick}
+                  disabled={option.disabled}
                 />
             ))}
         </Dropdown.List>

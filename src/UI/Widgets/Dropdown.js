@@ -54,7 +54,7 @@ Dropdown.List = (props) => {
 
 Dropdown.Item = (props) => (
     <span style={props.style}
-      className="DropDown-Item"
+      className={`${props.disabled ? "DropDown-Item-disabled" : "DropDown-Item"}`}
       onClick={props.onClick}
     >
         {props.name}

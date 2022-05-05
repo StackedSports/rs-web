@@ -20,8 +20,15 @@ const filters = [
 
 export default function UserSettingsPage(props) {
 
-    const user = useUser();
-    console.log(user)
+    // const user = useUser();
+    // console.log(user)
+
+    // const childrenWithProps = React.Children.map(props.children, child => {
+    //     if (React.isValidElement(child)) {
+    //         React.cloneElement(child, { user: user })
+    //     }
+    //     return child
+    // });
 
     return (
         <MainLayout
@@ -32,8 +39,9 @@ export default function UserSettingsPage(props) {
             onTopActionClick={props.onTopActionClick}
             topActionName={props.topActionName || null}
         >
-            {/* {React.cloneElement(props.children, { user: user })} */}
             {props.children}
+            {/* <>{childrenWithProps}</> */}
+            {/* {React.cloneElement(props.children, { user: user.item })} */}
         </MainLayout>
     )
 }
