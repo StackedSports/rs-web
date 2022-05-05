@@ -7,8 +7,8 @@ import * as Styled from './Components/Styles/StyledComponents'
 import { Pie, Bar } from 'react-chartjs-2';
 
 export const MessagesGraphs = (props) => {
-  const [leftTimeRangeIndex, setLeftTimeRangeIndex] = useState(0);
-  const [rightTimeRangeIndex, setRightTimeRangeIndex] = useState(0);
+  const [leftTimeRangeIndex, setLeftTimeRangeIndex] = useState(2);
+  const [rightTimeRangeIndex, setRightTimeRangeIndex] = useState(3);
   const [leftGraph, setLeftGraph] = useState([]);
   const [rightGraph, setRightGraph] = useState([]);
 
@@ -29,10 +29,10 @@ export const MessagesGraphs = (props) => {
         backgroundColor: ['#007bff', '#dc3545', '#ffc107'],
         borderColor: ['#007bff', '#dc3545', '#ffc107'],
         borderWidth: 1,
-        data: [3, 19, 3],
+        data: [rightGraph.total_dms, rightGraph.total_personal_texts, rightGraph.total_rs_texts],
       },
     ],
-  }), []);
+  }), [rightGraph]);
 
   const pieConfig = useMemo(() => ({
     labels: ['Twitter DM\'s', 'Personal Texts', 'RS Text'],
@@ -56,7 +56,7 @@ export const MessagesGraphs = (props) => {
       <Grid item xs={12} lg={6} >
         <BaseSection
           sx={{ height: '100%' }}
-          title={`${props.stats[leftTimeRangeIndex]?.label} Messages: ${leftGraph.total_messages}`}
+          title={`${props.stats[leftTimeRangeIndex]?.label} Messages: ${leftGraph.total_messages || ''}`}
           actions={
             <TextField
               size='small'
@@ -82,7 +82,7 @@ export const MessagesGraphs = (props) => {
           {!props.stats[leftTimeRangeIndex].loading ?
             <Pie data={pieConfig} options={{ legend: { position: 'bottom', labels: { padding: 30 } } }} />
             :
-            <Box sx={{ display: 'grid', placeItems: 'center', height: '300px' }}>
+            <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
               <CircularProgress size={80} />
             </Box>
           }
@@ -91,7 +91,7 @@ export const MessagesGraphs = (props) => {
       <Grid item xs={12} lg={6}>
         <BaseSection
           sx={{ height: '100%' }}
-          title='Graphs'
+          title={`${props.stats[rightTimeRangeIndex]?.label} Messages: ${rightGraph.total_messages || ''}`}
           actions={
             <TextField
                size='small'
@@ -117,7 +117,7 @@ export const MessagesGraphs = (props) => {
           {!props.stats[rightTimeRangeIndex].loading ?
             <Bar data={barConfig} options={{ legend: {display:false } }} />
             :
-            <Box sx={{ display: 'grid', placeItems: 'center', height: '300px' }}>
+            <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
               <CircularProgress size={80} />
             </Box>
           }
