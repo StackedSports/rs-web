@@ -28,12 +28,12 @@ export default function SideBar(props) {
     const privateItems = useMemo(() => {
         let items = regularItems
 
-        if(user.email === 'ben@stackedsports.com') {
+        if(user && user.email === 'ben@stackedsports.com') {
             items.splice(4, 0, routes.twitterPosts, routes.twitterStream)
         }
 
         return items
-    }, [user.email])
+    }, [user])
 
     return (
         <div className='SideBar'>
