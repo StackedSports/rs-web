@@ -1164,11 +1164,11 @@ export const followOnTwitter = (data) => {
     AXIOS("post", "twitter_follow", body)
 }
 
-export const getStats = (startDate,endDate) => {
-    if( startDate && endDate )
-    return GET(`stats?startDate=${startDate}&endDate=${endDate}`)
+export const getStats = (startDate, endDate) => {
+    if (startDate && endDate)
+        return GET(`stats?start_date=${startDate}&end_date=${endDate}`)
     else
-    return GET(`stats`)
+        return GET(`stats`)
 }
 
 export const getTasksQueue = (date) => {

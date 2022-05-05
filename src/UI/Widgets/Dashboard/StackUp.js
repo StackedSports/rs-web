@@ -1,82 +1,136 @@
 import { useEffect, useState } from 'react'
-import { Stack, Avatar, Button, Divider, Grid } from '@mui/material'
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { Stack, Avatar, Button, Divider, CircularProgress, Box, TextField, MenuItem } from '@mui/material'
 
+import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
+import StackUpTable from './Components/StackUpTable'
 import { BaseSection } from './Components/BaseSection'
 import * as Styled from './Components/Styles/StyledComponents'
 
-
+// Renders a personal score row
 const Row = ({ user }) => {
     return (
-        <Grid container item columnSpacing={1} alignItems='center' >
-            <Grid item xs={1}>
-                <Styled.Title>
-                    {user.rank ? `${user.rank}.` : ''}
-                </Styled.Title>
-            </Grid>
-            <Grid item xs={1}>
-                <Avatar
-                    alt={user.name}
-                    src={user.image}
-                    sx={{ width: 45, height: 45, justifySelf: 'center' }}
-                />
-            </Grid>
-            <Grid item xs>
-                <Styled.Title sx={{ marginInlineStart: 1 }}>
-                    {user.name}
-                </Styled.Title>
-            </Grid>
-            <Grid item xs={2}>
-                <Styled.Title>
-                    {user.total}
-                </Styled.Title>
-            </Grid>
-        </Grid>
+        <Stack direction='row' gap={1} alignItems='center'>
+            <Styled.Title paddingX={2}>
+                {user.rank ? `${user.rank}.` : ''}
+            </Styled.Title>
+
+            <Avatar
+                alt={user.name}
+                src={user.image}
+                sx={{ width: 30, height: 30, justifySelf: 'center' }}
+            />
+
+            <Styled.Title flex={1} paddingX={.5}>
+                {user.name}
+            </Styled.Title>
+
+            <Styled.Title paddingX={2}>
+                {user.total}
+            </Styled.Title>
+        </Stack>
     )
 }
 
+/**
+ * Renders all the personal scores
+ * @param {Object[]} props.stats - array with all time ranges stats [{id, label,data,loading}] 
+ * @returns 
+ */
 export const StackUp = (props) => {
-    const [stats, setStats] = useState([]);
+    const [usersStats, setUsersStats] = useState([]);
+    const [timeRangeIndex, setTimeRangeIndex] = useState(0);
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        if (!props.stats.loading && !props.stats.error) {
-            const allStats = props.stats.items.users.map(user => user.table)
-            setStats(allStats);
-        }
-    }, [props.stats?.items, props.stats?.loading]);
+        if (props.stats[timeRangeIndex]?.data && !props.stats[timeRangeIndex].loading)
+            setUsersStats(props.stats[timeRangeIndex].data.users.map(user => user.table));
+    }, [props.stats, timeRangeIndex]);
 
-    console.log("all stats", stats);
     return (
         <BaseSection
-            title='Stack Up'
-            actions={<Button variant='outlined' endIcon={<KeyboardArrowDown />} > This Moth</Button>}
+            title='The StackUp'
+            actions={
+                <TextField
+                    id="select-time-range"
+                    inputProps={{ fontWeight: 'bold' }}
+                    label={null}
+                    size='small'
+                    select
+                    value={timeRangeIndex}
+                    onChange={(e) => setTimeRangeIndex(e.target.value)}
+                >
+                    {
+                        props.stats.map(stat =>
+                            <MenuItem
+                                key={stat.id}
+                                value={stat.id}
+                            >
+                                {stat.label}
+                            </MenuItem>
+                        )
+                    }
+                </TextField>
+            }
         >
-            <Stack gap={1} divider={<Divider />}>
-                {stats.slice(0, 4).map((user, index) => (
-                    <Stack key={index} direction='row' gap={1} alignItems='center'>
-                        <Styled.Title paddingX={2}>
-                            {user.rank ? `${user.rank}.` : ''}
-                        </Styled.Title>
+            {props.stats[timeRangeIndex].loading ?
+                <Box sx={{ display: 'grid', placeItems: 'center', height: '250px' }} >
+                    <CircularProgress />
+                </Box>
+                : (
+                    <>
+                        <Stack gap={1} divider={<Divider />}>
+                            {usersStats.slice(0, 4).map((user, index) => (
+                                <Row key={index} user={user} />
+                            ))}
+                        </Stack>
+                        <Button
+                            sx={{ mt: 2, width: '100%', maxWidth: '250px', alignSelf: 'center' }}
+                            onClick={() => setOpenDialog(true)}
+                        >
+                            View Details
+                        </Button>
+                    </>
+                )
+            }
 
-                        <Avatar
-                            alt={user.name}
-                            src={user.image}
-                            sx={{ width: 45, height: 45, justifySelf: 'center' }}
-                        />
-
-                        <Styled.Title flex={1}>
-                            {user.name}
-                        </Styled.Title>
-
-                        <Styled.Title paddingX={2}>
-                            {user.total}
-                        </Styled.Title>
+            <BaseDialog
+                title={(
+                    <Stack direction='row' alignItems='center' justifyContent='space-between'>
+                        <Styled.SectionTitle>The StackUp</Styled.SectionTitle>
+                        <TextField
+                            id="select-time-range-dialog"
+                            inputProps={{ fontWeight: 'bold' }}
+                            label={null}
+                            size='small'
+                            select
+                            value={timeRangeIndex}
+                            onChange={(e) => setTimeRangeIndex(e.target.value)}
+                        >
+                            {
+                                props.stats.map(stat =>
+                                    <MenuItem key={stat.id} value={stat.id} >
+                                        {stat.label}
+                                    </MenuItem>
+                                )
+                            }
+                        </TextField>
                     </Stack>
-                ))}
-            </Stack>
-            <Button variant='text' sx={{ mt: 2, width: '100%', maxWidth: '250px', alignSelf: 'center' }} >
-                View Details
-            </Button>
+                )}
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                maxWidth='lg'
+                cancelLabel='Close'
+                hideActions
+            >
+            <Box height='70vh'>
+                <StackUpTable
+                    rows={usersStats}
+                    height='100%'
+                    getRowId={(row) => row.rank}
+                />
+            </Box>
+            </BaseDialog>
+
         </BaseSection>
     )
 }
