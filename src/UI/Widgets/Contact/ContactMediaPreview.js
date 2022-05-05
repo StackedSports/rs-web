@@ -22,12 +22,13 @@ const ContactMediaPreview = (props) => {
 
   return (
     <Stack
+      flex={1}
       spacing={1}
-      alignItems="center"
+      // alignItems="center"
       sx={{ width: "100%" }}
       justifyContent="start"
     >
-      <Stack sx={{ width: "100%" }} flex={1} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+      <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
         <Typography align='left' variant='subtitle1' component="p">
           {props.title}
         </Typography>

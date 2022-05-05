@@ -27,7 +27,8 @@ const ContactMediaDetails = (props) => {
         width: "100%",
         height: "100%",
         overflowY: "auto",
-        height: "100vh"
+        maxHeight: props.height,
+        // backgroundColor: '#efefef'
       }}
       spacing={1}
       justifyContent="start"

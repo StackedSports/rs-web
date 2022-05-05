@@ -13,8 +13,15 @@ const ContactMessageStats = (props) => {
   }
 
   return (
-    <Stack sx={{ width: "100%" }} flex={1} justifyContent="flex-start" alignItems="center" spacing={2}>
-      <Stack sx={{ width: "100%" }} flex={1} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+    <Stack sx={{ width: "100%" }} flex={1} justifyContent="flex-start" alignItems="center" spacing={2} mb={2}>
+      <Stack sx={{ width: "100%" }}
+        flex={1} 
+        direction="row" 
+        justifyContent="space-between" 
+        alignItems="center" 
+        spacing={1}
+        mb={2}
+      >
         <Typography align='left' variant='subtitle1' component="p">
           Message Stats
         </Typography>
@@ -23,7 +30,7 @@ const ContactMessageStats = (props) => {
 
       {props.loading && <CircularProgress sx={{ width: 36, height: 36 }} />}
 
-      <Stack sx={{ width: "100%" }} direction="row" flex={2} justifyContent="space-evenly" alignItems="center" spacing={1}>
+      <Stack sx={{ width: "100%" }} direction="row" flex={2} justifyContent="space-evenly" alignItems="center" spacing={1} mb={2}>
         <Stack justifyContent="space-between" alignItems="center" spacing={1}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <LaptopIcon />
