@@ -44,7 +44,7 @@ export const PersonalScore = (props) => {
                             DM’s
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.dms ? stats.dms : 'loading...'}
+                            {stats?.dms ? stats.dms : 0}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -53,7 +53,7 @@ export const PersonalScore = (props) => {
                             Personal Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.pts}
+                            {stats?.pts ? stats.pts : 0}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -62,7 +62,7 @@ export const PersonalScore = (props) => {
                             RS Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.rst}
+                            {stats?.rst ? stats.rst : 0}
                         </Styled.SectionTitle>
                     </Grid>
                 </Grid>
