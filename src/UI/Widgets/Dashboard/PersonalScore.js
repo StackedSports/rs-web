@@ -44,7 +44,7 @@ export const PersonalScore = (props) => {
                             DM’s
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.dms}
+                            {stats.dms ? stats.dms : 'loading...'}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>

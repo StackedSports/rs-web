@@ -83,7 +83,7 @@ export const MessagesGraphs = (props) => {
             <Pie data={pieConfig} options={{ legend: { position: 'bottom', labels: { padding: 30 } } }} />
             :
             <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
-              <CircularProgress size={80} />
+              <CircularProgress size={60} />
             </Box>
           }
         </BaseSection>
@@ -118,7 +118,7 @@ export const MessagesGraphs = (props) => {
             <Bar data={barConfig} options={{ legend: {display:false } }} />
             :
             <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
-              <CircularProgress size={80} />
+              <CircularProgress size={60} />
             </Box>
           }
         </BaseSection>
