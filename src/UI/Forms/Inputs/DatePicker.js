@@ -1,92 +1,49 @@
-import { useState } from 'react'
-import { TextField, styled, Stack, Box } from '@mui/material';
-import { KeyboardArrowDown } from '@mui/icons-material';
-import { DateRangePicker } from '@mui/x-date-pickers-pro'
+import { useState, useEffect } from 'react'
+import { TextField, styled } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { format } from 'date-fns';
-import Button from 'UI/Widgets/Buttons/Button';
+import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export const DatePicker = (props) => {
-    const [value, setValue] = useState([null, null]);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(new Date());
 
-    const handleOpenCalendar = () => {
-        setShowCalendar(true);
-        setOpen(true);
-    }
-
-    const handleCloseCalendar = (newDates) => {
-        const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
-        if (newDates[0] && newDates[1]) {
-            if (props.onChange instanceof Function) {
-                props.onChange(newDates.map(date => format(date, formatStyle)))
-            }
-            setShowCalendar(false);
-            setOpen(false);
-        }
-        else {
-            setShowCalendar(false);
-            setOpen(false);
+    const handleChange = (newValue) => {
+        setValue(newValue);
+        if (props.onChange instanceof Function) {
+            props.onChange(newValue);
         }
     }
 
-    if (showCalendar) {
-         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
-        return (
-            <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
-                <DateRangePicker
-                    open={open}
-                    clearable
-                    allowSameDateSelection
-                    //disableCloseOnSelect={true}
-                    inputFormat={formatStyle}
-                    mask={formatStyle.replace(/[^\/]/g, '_')}
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
-                    onAccept={(date)=>handleCloseCalendar(date)}
-                    renderInput={
-                        (startProps, endProps) => (
-                            <StyledInputArea format={formatStyle}>
-                                <TextField {...startProps} size='small' autoFocus />
-                                <TextField {...endProps} size='small' />
-                            </StyledInputArea>
-                        )}
-                    toolbarFormat={formatStyle}
-                />
-            </LocalizationProvider>
-        )
-    } else {
-        return <Button variant='outlined' name={props.label} onClick={handleOpenCalendar} endIcon={<KeyboardArrowDown />} />
-    }
+    useEffect(() => {
+        console.log(value);
+    }, [value]);
 
+
+    return (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <MuiDatePicker
+                label={null}
+                clearable
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => {
+                    return <StyledInput
+                        {...params} size='small'
+                        inputProps={{
+                            ...params.inputProps,      
+                        }}
+                    />
+                }
+                }
+            />
+        </LocalizationProvider>
+    );
 }
 
-export default DatePicker
+export default DatePicker;
 
-const StyledInputArea = styled(Stack)(({ format }) => ({
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'row',
-
-    '& .MuiFormControl-root:first-of-type .MuiInputBase-root': {
-        borderBottomRightRadius: 0,
-        borderTopRightRadius: 0,
-        borderRight: 0,
-    },
-
-    '& .MuiFormControl-root:last-of-type .MuiInputBase-root': {
-        borderBottomLeftRadius: 0,
-        borderTopLeftRadius: 0,
-
-    },
-
+const StyledInput = styled(TextField)(({ theme }) => ({
     '& .MuiInputBase-input': {
-        fontWeight: '700',
-        width: format.length+2+'ch',
-        padding: '8px 14px',
+        width: '9ch',
     },
-
-}))
+}));
