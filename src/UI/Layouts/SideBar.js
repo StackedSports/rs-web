@@ -1,32 +1,43 @@
 import './SideBar.css'
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 
 import { NavLink } from 'react-router-dom'
 
-import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 
 import AccountMenu from 'UI/Widgets/AccountMenu'
-
+import { AuthContext } from 'Context/Auth/AuthProvider'
 import { routes } from 'Routes/Routes'
 
-import { getFullName } from 'utils/Parser'
 
-const items = [
+const regularItems = [
     routes.dashboard,
     routes.contacts,
     routes.messages,
     routes.media,
-    routes.twitterPosts,
-    routes.twitterStream,
+    // routes.twitterPosts,
+    // routes.twitterStream,
     routes.settings
 ]
 
 export default function SideBar(props) {
-    
+    const { user } = useContext(AuthContext)
+
+    // console.log(user)
+
+    const privateItems = useMemo(() => {
+        let items = regularItems
+
+        if(user.email === 'ben@stackedsports.com') {
+            items.splice(4, 0, routes.twitterPosts, routes.twitterStream)
+        }
+
+        return items
+    }, [user.email])
+
     return (
         <div className='SideBar'>
-            {items.map(item => (
+            {privateItems.map(item => (
                 <NavLink key={item.path} className='navLink' activeClassName='selected' to={item.path}>
                     <item.icon className='icon'/>
                     {/* <p className='label'>Dashboard</p> */}
