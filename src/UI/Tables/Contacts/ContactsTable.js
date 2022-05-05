@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { columnsMini, columnsFull } from './DataGridConfig';
@@ -27,7 +27,7 @@ export default function ContactsTable(props) {
 
     return (
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850 }}>
-            <DataGrid sx={{ m: 0 }}
+            <DataGridPro sx={{ m: 0 }}
                 //   rows={props.contacts ? props.contacts : []}
                 rows={props.contacts || []}
                 columns={columns}
