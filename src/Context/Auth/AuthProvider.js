@@ -44,9 +44,6 @@ const AuthProvider = (props) => {
     const logout = () => {
         console.log('logout')
 
-        setUser(null)
-        localStorage.removeItem('user')
-
         apiLogout()
             .then(res => {
                 console.log(res)
@@ -61,6 +58,9 @@ const AuthProvider = (props) => {
                 localStorage.removeItem('user')
             })
         // localStorage.removeItem('user')
+
+        setUser(null)
+        localStorage.removeItem('user')
     }
 
     const utils = useMemo(() => ({
