@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
@@ -10,16 +10,20 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Divider } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
+import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import UserSettingsPage from "./UserSettingsPage";
 import { updateUser } from 'Api/Endpoints';
 import { useUser } from 'Api/Hooks';
 
 const UserSettingsProfilePage = (props) => {
-
-  const user = useUser()
+  const user = useUser();
+  const alert = useMainLayoutAlert();
   const userStorage = JSON.parse(window.localStorage.getItem("user"));
+
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!user.item)
@@ -59,7 +63,20 @@ const UserSettingsProfilePage = (props) => {
           data[key] = values[key]
       }
     })
-    updateUser(data, userStorage.id)
+    if (Object.keys(data).length > 0) {
+      setLoading(true)
+      updateUser(data, userStorage.id)
+        .then(res => {
+          alert.setSuccess("Changes saved successfully!");
+        })
+        .catch(error => {
+          console.log(error)
+          alert.setError("Failed to save changes.");
+        })
+        .finally(() => setLoading(false))
+    } else {
+      alert.setWarning("No changes to save.")
+    }
   }
 
   const disableBtnRemovePicture = () => {
@@ -72,7 +89,9 @@ const UserSettingsProfilePage = (props) => {
 
   return (
     <UserSettingsPage
+      alert={alert}
       title='Profile'
+      loading={loading}
     // topActionName=""
     // onTopActionClick={}
     >
@@ -224,13 +243,14 @@ const UserSettingsProfilePage = (props) => {
                     <FormHelperText id="organization">Organization</FormHelperText>
                   </FormControl>
 
-                  <Button
+                  <LoadingButton
                     type="submit"
+                    loading={loading}
                     variant="contained"
                     onClick={onSaveSettings}
                   >
                     Save Settings
-                  </Button>
+                  </LoadingButton>
                 </Form>
               )}
             </Formik>

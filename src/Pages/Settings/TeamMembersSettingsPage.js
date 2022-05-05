@@ -39,11 +39,11 @@ const TeamMembersSettingsPage = () => {
             Promise.all(selectedTeamMembers.map(member => deleteTeamMember(member)))
                 .then(() => {
                     teamMembers.refreshData()
-                    alert.setSuccess("Team members successfully deleted!");
+                    alert.setSuccess("Team member deleted successfully.");
                 })
                 .catch(error => {
                     console.log(error)
-                    alert.setError("Failed to delete team members.");
+                    alert.setError("Failed to deleted team member.");
                 })
         })
     }
