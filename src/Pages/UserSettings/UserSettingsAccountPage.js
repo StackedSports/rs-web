@@ -8,8 +8,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { Divider } from "@material-ui/core";
 
 import UserSettingsPage from "./UserSettingsPage";
+import { useUser } from 'Api/Hooks';
 
-import { AuthContext } from 'Context/Auth/AuthProvider'
+import { AuthContext } from 'Context/Auth/AuthProvider';
 
 const TWITTER_API = 'https://api.twitter.com/oauth/access_token'
 const authorize_url = 'https://api.twitter.com/oauth/authorize'
@@ -17,7 +18,8 @@ const authorize_url = 'https://api.twitter.com/oauth/authorize'
 const UserAccountCard = (props) => {
 
 	const onLinkAccount = () => {
-		console.log("onLinkAccount: " + props.provider.name)
+		if (!props.account)
+			console.log("onLinkAccount: " + props.provider.name)
 		// const data = {
 		// 	provider: props.provider.name,
 		// 	id: props.user?.id || "",
@@ -28,7 +30,6 @@ const UserAccountCard = (props) => {
 		// }
 		// console.log(data)
 	}
-	// console.log(user)
 
 	const onUnlinkAccount = () => {
 		console.log("onUnlinkAccount: " + props.provider.name)
@@ -40,16 +41,16 @@ const UserAccountCard = (props) => {
 
 	return (
 		<Box sx={{
-		width: "400px",
-		height: "250px",
-		display: 'grid',
-		gridColumnGap: 10,
-		gridTemplateRows: "2fr .1fr .9fr",
-		gridTemplateColumns: "2fr 1fr",
-		border: "#ccc 1px solid",
-		borderRadius: "7px",
-		alignItems: "center",
-		opacity: props.disabled ? .7 : 1,
+			width: "400px",
+			height: "250px",
+			display: 'grid',
+			gridColumnGap: 10,
+			gridTemplateRows: "2fr .1fr .9fr",
+			gridTemplateColumns: "2fr 1fr",
+			border: "#ccc 1px solid",
+			borderRadius: "7px",
+			alignItems: "center",
+			opacity: props.disabled ? .7 : 1,
 		}}>
 			<Stack
 				ml="20px"
@@ -58,16 +59,16 @@ const UserAccountCard = (props) => {
 				justifyContent="space-around"
 			>
 				<Typography component="p" variant="h5" textAlign="start">
-				{props.title}
+					{props.title}
 				</Typography>
 				<Button
-				variant="contained"
-				disabled={props.disabled}
-				onClick={onLinkAccount}
-				style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%" }}
+					variant="contained"
+					disabled={props.disabled}
+					onClick={onLinkAccount}
+					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%" }}
 				>
-				{<props.icon />}
-				{props.account || props.buttonText}
+					{<props.icon />}
+					{props.account || props.buttonText}
 				</Button>
 			</Stack >
 
@@ -81,7 +82,7 @@ const UserAccountCard = (props) => {
 
 			<Button
 				variant="text"
-				disabled={props.disabled}
+				disabled={props.disabled || !props.account}
 				onClick={onUnlinkAccount}
 			>
 				UNLINK
@@ -100,6 +101,8 @@ const UserAccountCard = (props) => {
 
 const UserSettingsAccountPage = (props) => {
 
+	const user = useUser();
+
 	const twitterProvider = {
 		name: "twitter",
 		token: "provider_token",
@@ -110,6 +113,8 @@ const UserSettingsAccountPage = (props) => {
 		token: "provider_token",
 		secret: "provider_secret",
 	}
+
+	console.log(user.item)
 
 	return (
 		<UserSettingsPage title='Account'>
@@ -124,9 +129,9 @@ const UserSettingsAccountPage = (props) => {
 					Communication Channels
 				</Typography>
 				<Typography
-				component="span"
-				variant="subtitle2"
-				sx={{ color: '#ccc', fontWeight: 500 }}
+					component="span"
+					variant="subtitle2"
+					sx={{ color: '#ccc', fontWeight: 500 }}
 				>
 					Your profile information can be edited below
 				</Typography>
@@ -137,65 +142,66 @@ const UserSettingsAccountPage = (props) => {
 
 				{/* ACCOUNT CARDS */}
 				<Stack justifyContent="start" alignItems="start" spacing={2}>
-				<UserAccountCard
-					provider={twitterProvider}
-					account="@JohnSmith21"
-					title="Twitter Account"
-					buttonText="LINK TWITTER"
-					image="https://images.unsplash.com/photo-1520188740392-665a13f453fc?ixlib=rb-1.2.1&ixprovider=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGxpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-					icon={TwitterIcon}
-				/>
+					<UserAccountCard
+						icon={TwitterIcon}
+						title="Twitter Account"
+						buttonText="LINK TWITTER"
+						provider={twitterProvider}
+						account={user.item?.twitter_profile?.screen_name}
+						image={user.item?.twitter_profile?.profile_image}
+					/>
 
-				<UserAccountCard
-					disabled
-					provider={instagramProvider}
-					title="Instagram Account"
-					buttonText="LINK IG"
-					image="https://images.unsplash.com/photo-1520188740392-665a13f453fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGxpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-					icon={InstagramIcon}
-				/>
+					{/* <UserAccountCard
+						disabled
+						icon={InstagramIcon}
+						buttonText="LINK IG"
+						title="Instagram Account"
+						provider={instagramProvider}
+						image={user.item?.instagram_profile?.profile_name}
+						account={user.item?.instagram_profile?.screen_name}
+					/> */}
 				</Stack>
 
 				{/* SMS/MMS CARD */}
 				<Box sx={{
-				width: "400px",
-				height: "250px",
-				display: 'grid',
-				gridTemplateRows: "2fr .1fr .9fr",
-				border: "#ccc 1px solid",
-				borderRadius: "7px",
-				alignItems: "center",
+					width: "400px",
+					height: "250px",
+					display: 'grid',
+					gridTemplateRows: "2fr .1fr .9fr",
+					border: "#ccc 1px solid",
+					borderRadius: "7px",
+					alignItems: "center",
 				}}>
-				<Stack spacing={1} p="20px 20px 0 20px">
-					<Typography variant="h5" >
-						SMS/MMS
-					</Typography>
-					<Typography
-					sx={{
-						color: '#ccc', fontWeight: 500
-					}}>
-						Your profile information can be edited below
-					</Typography>
-					<Typography variant="h5">
-						1 (615) 999.6350
-					</Typography>
-					<Typography
-					sx={{ color: '#ccc', fontWeight: 500 }}
+					<Stack spacing={1} p="20px 20px 0 20px">
+						<Typography variant="h5" >
+							SMS/MMS
+						</Typography>
+						<Typography
+							sx={{
+								color: '#ccc', fontWeight: 500
+							}}>
+							Your profile information can be edited below
+						</Typography>
+						<Typography variant="h5">
+							{user.item?.phone}
+						</Typography>
+						<Typography
+							sx={{ color: '#ccc', fontWeight: 500 }}
+						>
+							To associate a different number to your account contact your account rep.
+						</Typography>
+					</Stack>
+
+					<Divider style={{ marginTop: "7px", gridColumn: "1/2" }} />
+
+					<Button
+						variant="text"
+						disabled={!user.item?.phone}
+						style={{ justifySelf: "end", paddingRight: "20px" }}
+					// onClick={}
 					>
-						To associate a different number to your account contact your account rep.
-					</Typography>
-				</Stack>
-
-				<Divider style={{ marginTop: "7px", gridColumn: "1/2" }} />
-
-				<Button
-					variant="text"
-					disabled
-					style={{ justifySelf: "end", paddingRight: "20px" }}
-				// onClick={}
-				>
-					UNLINK
-				</Button>
+						UNLINK
+					</Button>
 				</Box>
 			</Stack>
 		</UserSettingsPage >

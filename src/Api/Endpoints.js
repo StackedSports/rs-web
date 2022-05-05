@@ -460,6 +460,19 @@ export const getBoard = (id) => {
     return AXIOS('get', `filters/${id}`)
 }
 
+export const updateBoard = (id, data) => {
+    const body = {
+        "filter": data
+    }
+    console.log(body)
+    // return AXIOS('put', `filters/${id}`, body)
+}
+
+export const deleteBoard = (id) => {
+    console.log("delete board", id)
+    return AXIOS('delete', `filters/${id}`)
+}
+
 export const getBoardContacts = (id, page, perPage, filters) => {
     return AXIOS('get', `filters/${id}/contacts?page=${page}&per_page=${perPage}`)
 }

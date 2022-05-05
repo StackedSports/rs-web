@@ -38,9 +38,6 @@ const FollowOnTwitterDialog = (props) => {
     // else
   }
 
-  console.log(selectedTeamMembers)
-  console.log(props.selectedContacts)
-
   return (
     <BaseDialog
       // title="title"
