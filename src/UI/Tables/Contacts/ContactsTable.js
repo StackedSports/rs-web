@@ -29,7 +29,7 @@ export default function ContactsTable(props) {
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850 }}>
             <DataGrid sx={{ m: 0 }}
                 //   rows={props.contacts ? props.contacts : []}
-                rows={props.contacts}
+                rows={props.contacts || []}
                 columns={columns}
                 checkboxSelection
                 selectionModel={props.selection}
