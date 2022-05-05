@@ -48,3 +48,7 @@ code {
   src: local("ProximaNovaSemibold"),
     url("./assets/fonts/ProximaNova-Semibold.otf");
 }
+
+.MuiOutlinedInput-notchedOutline legend {
+            width: unset;
+}

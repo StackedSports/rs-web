@@ -15,19 +15,19 @@ export const PersonalScore = (props) => {
     const [stats, setStats] = useState({});
 
     useEffect(() => {
-        if (!props.stats.loading && !props.stats.error) {
-            const userStats = props.stats.items.users.find(user => user.table.name === getFullName(props.user))
+        if (!props.loading && props.stats) {
+            const userStats = props.stats.users.find(user => user.table.name === getFullName(props.user))
             setStats({ ...userStats.table });
         }
-    }, [props.stats?.items, props.stats?.loading]);
+    }, [props.loading, props.stats]);
 
     return (
         <Stack gap={3}>
-            <BaseSection title={stats.rank ? `${stats.rank}.` : ''}>
+            <BaseSection title={stats.rank ? `${stats.rank}.` : '.'}>
                 <Avatar
                     alt={props.user ? getFullName(props.user) : ''}
                     src={props.user ? props.user.twitter_profile.profile_image : ''}
-                    sx={{ width: 90, height: 90, marginInline: 'auto', mb: 1, border: '5px solid #000' }}
+                    sx={{ width: 90, height: 90, marginInline: 'auto', mb: 1 }}
                 />
                 <Styled.Title textAlign='center' color='text.secondary'>
                     {props.user ? getFullName(props.user) : ''}
@@ -44,7 +44,7 @@ export const PersonalScore = (props) => {
                             DM’s
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.dms}
+                            {stats?.dms ? stats.dms : 0}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -53,7 +53,7 @@ export const PersonalScore = (props) => {
                             Personal Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.pts}
+                            {stats?.pts ? stats.pts : 0}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -62,7 +62,7 @@ export const PersonalScore = (props) => {
                             RS Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats.rst}
+                            {stats?.rst ? stats.rst : 0}
                         </Styled.SectionTitle>
                     </Grid>
                 </Grid>

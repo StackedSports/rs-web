@@ -24,15 +24,10 @@ export const SectionCard = styled(Card)(({ theme }) => ({
         padding: theme.spacing(2),
     },
 
-    '.MuiOutlinedInput-notchedOutline': {
-        '& legend': {
-            width: 'unset',
-        },
-    },
 }));
 
 export const SectionTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.pxToRem(26),
+    fontSize: theme.typography.pxToRem(18),
     fontWeight: 'bold',
     letterSpacing: 0,
     lineHeight: theme.typography.pxToRem(31),
@@ -44,7 +39,7 @@ export const SectionSubTitle = styled(Typography)(({ theme }) => ({
     lineHeight: theme.typography.pxToRem(19),
 }));
 export const Title = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(14),
     fontWeight: 600,
     letterSpacing: 0,
     lineHeight: theme.typography.pxToRem(23),
