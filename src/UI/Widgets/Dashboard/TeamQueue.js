@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Typography, Stack, Box, Card, CardHeader } from "@mui/material"
+import { Grid, Typography, Stack, CircularProgress, Box, Card, CardHeader } from "@mui/material"
 import { Tune, Event } from '@mui/icons-material';
 import { format } from "date-fns";
 
@@ -43,23 +43,30 @@ export const TeamQueue = () => {
         </Stack>
       }
     >
-      {
-        (!tasksQueue.loading && tasksQueue.items.length === 0) ? 
-        (
-          <Box>
-            <Typography variant="h6"> Your task queue is clear!</Typography>
-            <Typography variant="h6"> Consistent messaging is key</Typography>
-            <Typography variant="h6">  to building an engaging audience!</Typography>
-            <Typography variant="h6">  to building an engaging audience!</Typography>
-            <Button variant="contained" color="primary" name='+New' onClick={onNewTaskClick} />
-          </Box>
-        )
-        :
-        <Box maxHeight='300px' >
-        <TasksQueueTable rows={tasksQueue.items} loading={tasksQueue.loading} autoHeight />
+      {tasksQueue.loading && (
+        <Box sx={{ display: 'grid', placeItems: 'center', height: '180px' }} >
+          <CircularProgress />
         </Box>
-      }
-
+      )}
+      {!tasksQueue.loading && tasksQueue.items.length === 0 && (
+        <Stack flex={1} alignItems="center" justifyContent="center">
+          <Typography variant="h6" fontSize={16} fontWeight="bold"> Your task queue is clear!</Typography>
+          <Typography variant="h6" fontSize={16}>Consistent messaging is key to</Typography>
+          <Typography variant="h6" fontSize={16}>building an engaging audience.</Typography>
+          <Button
+            variant="contained" 
+            color="primary" 
+            name='+ New' 
+            sx={{ minWidth: 120, marginTop: 2 }}
+            onClick={onNewTaskClick} 
+          />
+        </Stack>
+      )}
+      {!tasksQueue.loading && tasksQueue.items.length > 0 && (
+        <Box maxHeight='300px' >
+          <TasksQueueTable rows={tasksQueue.items} loading={tasksQueue.loading} autoHeight />
+        </Box>
+      )}
     </BaseSection>
   )
 }
