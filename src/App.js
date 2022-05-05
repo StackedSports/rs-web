@@ -70,7 +70,7 @@ function App() {
 						<Route path={routes.media.path} component={MediaRoutes} />
 						<Route path={routes.settings.path} component={SettingsRoutes} />
 						<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
-						<Route path={routes.dashboard} component={NewDashboard} />
+						<Route path={routes.dashboard.path} component={NewDashboard} />
 					</Switch>
 				</div>
 			</AppProvider>

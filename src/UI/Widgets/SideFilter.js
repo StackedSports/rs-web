@@ -45,26 +45,22 @@ function Category(props) {
                 <ArrowForwardIosIcon className={iconClass} />
             </div>
             <div className={contentClass}>
-                {
-                    props.items.map((item, index) => {
-                        if (item.path)
-                            return (
-                                <NavLink exact className="link" activeClassName="linkActive" to={item.path}>
-                                    <p key={item.id}>
-                                        {item.name}
-                                    </p>
-                                </NavLink>
-                            )
-                        else
-                            return (
-                                <p
-                                    key={item.id}
-                                    onClick={(e) => onItemClick(e, item, index)}
-                                >
-                                    {item.name}
-                                </p>
-                            )
-                    })}
+                {props.items.map((item, index) => {
+                    if (item.path)
+                        return (
+                            <NavLink key={item.id} exact className="link" activeClassName="linkActive" to={item.path}>
+                                <p>{item.name}</p>
+                            </NavLink>
+                        )
+                    else
+                        return (
+                            <p key={item.id}
+                              onClick={(e) => onItemClick(e, item, index)}
+                            >
+                                {item.name}
+                            </p>
+                        )
+                })}
             </div>
         </div>
     )
@@ -73,6 +69,8 @@ function Category(props) {
 export default function SideFilter(props) {
     if (!props.visible)
         return <></>
+
+    // console.log(props.filters)
 
     return (
         <div className='SideFilter'>

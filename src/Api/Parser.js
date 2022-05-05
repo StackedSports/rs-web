@@ -215,6 +215,10 @@ export const getFilterMediasCriteria = (filters) => {
     if (filters.placeholder)
         criteria['placeholder_id'] = filters.placeholder
 
+    if(filters.owner) {
+        criteria['owner_id'] = filters.owner[0].id
+    }
+
     // Blocked by api
    /*  if (filters.owner) {
         criteria['owner'] = filters.owner

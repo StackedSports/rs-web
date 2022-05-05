@@ -35,6 +35,8 @@ export default function SideBar(props) {
         return items
     }, [user])
 
+    // console.log(privateItems)
+
     return (
         <div className='SideBar'>
             {privateItems.map(item => (

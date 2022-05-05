@@ -126,7 +126,7 @@ const ContactProfileDetails = (props) => {
 				case 'position_coach':
 				case 'recruiting_coach':
 				case 'coordinator':
-					newData[`${key}_id`] = data[key].id
+					newData[`${key}_id`] = data[key]?.id || ''
 					break
 				case 'position_tags':
 					newData[key] = data[key].map(position => {
@@ -137,7 +137,7 @@ const ContactProfileDetails = (props) => {
 					})
 					break
 				default:
-					newData[key] = data[key]
+					newData[key] = data[key] || ''
 			}
 		})
 
@@ -155,18 +155,21 @@ const ContactProfileDetails = (props) => {
 		if (!objectNotNull(data))
 			return app.alert.setInfo('No fields have changed, did not update profile')
 
+		console.log('saving contact')
+
 		setSavingContactAtIndex(index, true)
+
 		updateContact(props.contact.id, parseValues(data))
 			.then(res => {
 				props.onContactUpdated(res.data)
 				app.alert.setSuccess('Contact updated successfully!')
 				onAccordionFieldReset(index)
-				// resolve(res.data)
+				console.log(res.data)
 			})
 			.catch(error => {
 				console.log(error)
 				app.alert.setError('Contact failed to update.')
-				// reject(error)
+				// re(error)
 			})
 			.finally(() => setSavingContactAtIndex(index, false))
 
@@ -349,7 +352,7 @@ const ContactProfileDetails = (props) => {
 								getChipLabel={(option) => option.abbreviation}
 								onChange={(newValue) => {
 									console.log(newValue)
-									formikProps.setFieldValue("state", newValue.abbreviation)
+									formikProps.setFieldValue("state", newValue?.abbreviation)
 									onAccordionFieldChange(1)
 								}}
 							/>

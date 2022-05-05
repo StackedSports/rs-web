@@ -66,6 +66,8 @@ export const PanelDropdown = ({ action, header }) => {
 const renderActions = (actions) => {
     if(!actions)
         return <></>
+
+    // console.log(actions)
     
     return (
         actions.map(action => {
@@ -81,7 +83,7 @@ const renderActions = (actions) => {
                 )
             else if(action.type === 'dropdown')
                 return (
-                    <PanelDropdown action={action}/>
+                    <PanelDropdown key={action.name} action={action}/>
                 )
             else
                 return (
