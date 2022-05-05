@@ -26,8 +26,8 @@ export default function SideBar(props) {
     // console.log(user)
 
     const privateItems = useMemo(() => {
-        let items = regularItems
-
+        let items = Object.assign([], regularItems)
+        // return items
         if(user && user.email === 'ben@stackedsports.com') {
             items.splice(4, 0, routes.twitterPosts, routes.twitterStream)
         }
