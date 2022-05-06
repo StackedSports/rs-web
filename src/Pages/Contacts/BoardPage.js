@@ -71,7 +71,6 @@ export default function BoardPage(props) {
 
         let criteria = board.item.criteria
         let filters = {}
-
         Object.keys(criteria).forEach(key => {
             console.log(key)
             console.log(criteria[key])
@@ -103,7 +102,7 @@ export default function BoardPage(props) {
             phone: true
         }
 
-        if(!board.item) {
+        if (!board.item) {
             return columns
         } else {
             // get columsn from criteria
@@ -116,7 +115,7 @@ export default function BoardPage(props) {
             return columns
         }
     }, [board.item])
-    
+
     // console.log(boardContacts)
 
     return (
