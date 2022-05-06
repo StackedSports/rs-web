@@ -27,3 +27,5 @@ export const BaseSection = (props) => {
         </Styled.SectionCard>
     )
 }
+
+export default BaseSection

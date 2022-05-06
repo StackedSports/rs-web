@@ -29,6 +29,7 @@ export const DashboardPage = () => {
     }
   }, [stats.loading, stats.items]);
 
+  // predifined filters dates
   const getArrayOfDates = useCallback(() => {
     const dates = [];
     const today = new Date();
@@ -67,7 +68,7 @@ export const DashboardPage = () => {
   }, [])
 
   // get stats for each date using promise.allSettled
-  useEffect(() => {
+ /*  useEffect(() => {
     const dates = getArrayOfDates();
     const promises = dates.map(date => getStats(date.start, date.end));
     Promise.allSettled(promises)
@@ -101,7 +102,7 @@ export const DashboardPage = () => {
         })
         setLoading(false)
       })
-  }, [getArrayOfDates]);
+  }, [getArrayOfDates]); */
 
   const statsData = useMemo(() => {
     return [
@@ -149,8 +150,6 @@ export const DashboardPage = () => {
       }
     ]
   }, [loading, monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats, stats.loading]);
-
-  console.log(statsData);
 
   const onTopActionClick = () => {
     console.log('onTopActionClick')

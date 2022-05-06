@@ -35,7 +35,7 @@ export const MediaDetailsPage = () => {
     const [itemContact, setItemContact] = useState([])
     const [itemName, setItemName] = useState('')
 
-
+    //http://localhost:3000/media/media/details/327184 test
     useEffect(() => {
         if (media) {
             setItemTags(media.tags)
@@ -102,10 +102,13 @@ export const MediaDetailsPage = () => {
     }
 
     const handleChangeTags = (newTags) => {
-        const differenceTags = lodash.differenceBy(newTags, itemTags, 'id')
-        const differenceTagsIds = differenceTags.map(tag => tag.id)
+        console.log("newTags", newTags)
+        console.log(itemTags)
+        const sameItems = lodash.intersectionBy(itemTags, newTags, 'id')
 
         if (newTags.length > itemTags.length) {
+            const differenceTags = lodash.differenceBy(newTags, sameItems, 'id')
+            const differenceTagsIds = differenceTags.map(tag => tag.id)
             console.log("tag adicionada", differenceTags)
 
             addTagsToMedia(differenceTagsIds, media.id).then(() => {
@@ -115,6 +118,8 @@ export const MediaDetailsPage = () => {
                 alert.setWarning(err.message)
             })
         } else {
+            const differenceTags = lodash.differenceBy(itemTags, sameItems, 'id')
+            const differenceTagsIds = differenceTags.map(tag => tag.id)
             console.log("tag removida", differenceTags)
             deleteTagsFromMedia(differenceTagsIds, media.id).then(() => {
                 setItemTags(newTags)
@@ -126,11 +131,12 @@ export const MediaDetailsPage = () => {
     }
 
     const handleChangeOwner = (owner) => {
+
         if (owner && owner.length > 0) {
-            const newOwner = owner[0]
+            const newOwner = owner.pop()
             updateMedia(media.id, { owner: newOwner.id }).then(() => {
                 setItemOwner([newOwner])
-                alert.setSuccess("Media owner updated")
+                alert.setSuccess("Media owner updated to: " + getFullName(newOwner))
             }
             ).catch(err => {
                 alert.setWarning(err.message)
@@ -140,7 +146,7 @@ export const MediaDetailsPage = () => {
 
     const handleChangePlaceholder = (placeholder) => {
         if (placeholder && placeholder.length > 0) {
-            const newPlaceholder = placeholder[0]
+            const newPlaceholder = placeholder.pop()
             updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then((res) => {
                 setItemPlaceholder([newPlaceholder])
                 alert.setSuccess("Media placeholder updated")
@@ -176,7 +182,7 @@ export const MediaDetailsPage = () => {
     const handleChangeContact = (contact) => {
         // return console.log('change contact')
         if (contact && contact.length > 0) {
-            const newContact = contact[0]
+            const newContact = contact.pop()
 
             // Associate media to contact
             updateMedia(media.id, { team_contact_id: newContact.id })
@@ -221,9 +227,9 @@ export const MediaDetailsPage = () => {
                     <Stack direction='row' flexWrap='wrap' gap={2}>
 
                         <MediaPreview
-                          item={media}
-                          loading={loading}
-                          type='media'
+                            item={media}
+                            loading={loading}
+                            type='media'
                         />
 
                         <Box flex='1 1 auto' >

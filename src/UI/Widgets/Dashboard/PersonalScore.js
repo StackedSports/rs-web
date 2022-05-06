@@ -4,6 +4,7 @@ import { Stack, Avatar, Button, Divider, Grid } from '@mui/material'
 import { BaseSection } from './Components/BaseSection'
 import * as Styled from './Components/Styles/StyledComponents'
 import { getFullName } from 'utils/Parser'
+import { objectNotNull } from 'utils/Validation'
 
 /**
  * 
@@ -15,9 +16,10 @@ export const PersonalScore = (props) => {
     const [stats, setStats] = useState({});
 
     useEffect(() => {
-        if (!props.loading && props.stats) {
-            const userStats = props.stats.users.find(user => user.table.name === getFullName(props.user))
-            setStats({ ...userStats.table });
+        if (!props.loading && objectNotNull(props.stats)) {
+            const userStats = props.stats?.users?.find(user => user?.table?.name === getFullName(props.user))
+            if(userStats)
+            setStats({ ...userStats?.table });
         }
     }, [props.loading, props.stats]);
 

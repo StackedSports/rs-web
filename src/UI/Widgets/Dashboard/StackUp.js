@@ -1,24 +1,34 @@
 import { useEffect, useState } from 'react'
-import { Stack, Avatar, Button, Divider, CircularProgress, Box, TextField, MenuItem } from '@mui/material'
+import { Stack, Avatar, Button, Divider, CircularProgress, Box, TextField, MenuItem, Badge } from '@mui/material'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import StackUpTable from './Components/StackUpTable'
 import { BaseSection } from './Components/BaseSection'
 import * as Styled from './Components/Styles/StyledComponents'
+import { objectNotNull } from 'utils/Validation';
+import SelecRangeDates from './Components/SelecRangeDates'
 
 // Renders a personal score row
 const Row = ({ user }) => {
+    const colorRank = user?.rank == 1 ? '#FFD700' : user?.rank == 2 ? '#C0C0C0' : '#cd7f32'
     return (
         <Stack direction='row' gap={1} alignItems='center'>
             <Styled.Title paddingX={2}>
                 {user.rank ? `${user.rank}.` : ''}
             </Styled.Title>
 
-            <Avatar
-                alt={user.name}
-                src={user.image}
-                sx={{ width: 30, height: 30, justifySelf: 'center' }}
-            />
+            <Badge
+                badgeContent={<EmojiEventsIcon fontSize="small" />}
+                invisible={!(user?.rank >= 1 && user?.rank <= 3)}
+                sx={{ color: colorRank }}
+            >
+                <Avatar
+                    alt={user.name}
+                    src={user.image}
+                    sx={{ width: 30, height: 30, justifySelf: 'center' }}
+                />
+            </Badge>
 
             <Styled.Title flex={1} paddingX={.5}>
                 {user.name}
@@ -42,34 +52,19 @@ export const StackUp = (props) => {
     const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        if (props.stats[timeRangeIndex]?.data && !props.stats[timeRangeIndex].loading)
-            setUsersStats(props.stats[timeRangeIndex].data.users.map(user => user.table));
+        if (objectNotNull(props.stats[timeRangeIndex]?.data) && !props.stats[timeRangeIndex].loading)
+            setUsersStats(props.stats[timeRangeIndex].data?.users.map(user => user.table));
     }, [props.stats, timeRangeIndex]);
 
     return (
         <BaseSection
             title='The StackUp'
             actions={
-                <TextField
-                    id="select-time-range"
-                    inputProps={{ fontWeight: 'bold' }}
-                    label={null}
-                    size='small'
-                    select
+                <SelecRangeDates
                     value={timeRangeIndex}
-                    onChange={(e) => setTimeRangeIndex(e.target.value)}
-                >
-                    {
-                        props.stats.map(stat =>
-                            <MenuItem
-                                key={stat.id}
-                                value={stat.id}
-                            >
-                                {stat.label}
-                            </MenuItem>
-                        )
-                    }
-                </TextField>
+                    onChange={(index) => setTimeRangeIndex(index)}
+                    options={props.stats}
+                />
             }
         >
             {props.stats[timeRangeIndex].loading ?
@@ -78,7 +73,7 @@ export const StackUp = (props) => {
                 </Box>
                 : (
                     <>
-                        <Stack gap={1} divider={<Divider />}>
+                        <Stack gap={2} divider={<Divider />}>
                             {usersStats.slice(0, 4).map((user, index) => (
                                 <Row key={index} user={user} />
                             ))}
@@ -122,13 +117,13 @@ export const StackUp = (props) => {
                 cancelLabel='Close'
                 hideActions
             >
-            <Box height='70vh'>
-                <StackUpTable
-                    rows={usersStats}
-                    height='100%'
-                    getRowId={(row) => row.rank}
-                />
-            </Box>
+                <Box height='70vh'>
+                    <StackUpTable
+                        rows={usersStats}
+                        height='100%'
+                        getRowId={(row) => row.rank}
+                    />
+                </Box>
             </BaseDialog>
 
         </BaseSection>

@@ -1,14 +1,15 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Grid, TextField, MenuItem, CircularProgress, Box } from '@mui/material'
 
-import { BaseSection } from './Components/BaseSection'
+import BaseSection from './Components/BaseSection'
+import SelecRangeDates from './Components/SelecRangeDates'
 import * as Styled from './Components/Styles/StyledComponents'
 
 import { Pie, Bar } from 'react-chartjs-2';
 
 export const MessagesGraphs = (props) => {
-  const [leftTimeRangeIndex, setLeftTimeRangeIndex] = useState(2);
-  const [rightTimeRangeIndex, setRightTimeRangeIndex] = useState(3);
+  const [leftTimeRangeIndex, setLeftTimeRangeIndex] = useState(0);
+  const [rightTimeRangeIndex, setRightTimeRangeIndex] = useState(0);
   const [leftGraph, setLeftGraph] = useState([]);
   const [rightGraph, setRightGraph] = useState([]);
 
@@ -58,25 +59,11 @@ export const MessagesGraphs = (props) => {
           sx={{ height: '100%' }}
           title={`${props.stats[leftTimeRangeIndex]?.label} Messages: ${leftGraph.total_messages || ''}`}
           actions={
-            <TextField
-              size='small'
-              inputProps={{ fontWeight: 'bold' }}
-              label={null}
-              select
+            <SelecRangeDates
               value={leftTimeRangeIndex}
-              onChange={(e) => setLeftTimeRangeIndex(e.target.value)}
-            >
-              {
-                props.stats.map(stat =>
-                  <MenuItem
-                    key={stat.id}
-                    value={stat.id}
-                  >
-                    {stat.label}
-                  </MenuItem>
-                )
-              }
-            </TextField>
+              onChange={(index) => setLeftTimeRangeIndex(index)}
+              options={props.stats}
+            />
           }
         >
           {!props.stats[leftTimeRangeIndex].loading ?
@@ -93,29 +80,15 @@ export const MessagesGraphs = (props) => {
           sx={{ height: '100%' }}
           title={`${props.stats[rightTimeRangeIndex]?.label} Messages: ${rightGraph.total_messages || ''}`}
           actions={
-            <TextField
-               size='small'
-              inputProps={{ fontWeight: 'bold' }}
-              label={null}
-              select
+            <SelecRangeDates
               value={rightTimeRangeIndex}
-              onChange={(e) => setRightTimeRangeIndex(e.target.value)}
-            >
-              {
-                props.stats.map(stat =>
-                  <MenuItem
-                    key={stat.id}
-                    value={stat.id}
-                  >
-                    {stat.label}
-                  </MenuItem>
-                )
-              }
-            </TextField>
+              onChange={(index) => setRightTimeRangeIndex(index)}
+              options={props.stats}
+            />
           }
         >
           {!props.stats[rightTimeRangeIndex].loading ?
-            <Bar data={barConfig} options={{ legend: {display:false } }} />
+            <Bar data={barConfig} options={{ legend: { display: false } }} />
             :
             <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
               <CircularProgress size={60} />
