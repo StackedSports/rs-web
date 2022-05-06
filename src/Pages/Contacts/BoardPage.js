@@ -32,27 +32,6 @@ const parseCriteriaNames = (criteria) => {
     }
 }
 
-const parseSelectedColumnsNames = (column) => {
-    switch (column) {
-        case "first_name":
-            return "firstName"
-        case "last_name":
-            return "lastName"
-        case "twitter":
-            return "twitterProfile", "profileImg"
-        case "grad_year":
-            return "gradYear"
-        case "team_positions":
-            return "position"
-        case "last_messaged_at":
-            return "lastMessaged"
-        case 'created_at':
-            return "createdAt"
-        default:
-            return column
-    }
-}
-
 export default function BoardPage(props) {
     const app = useContext(AppContext);
 
@@ -116,24 +95,6 @@ export default function BoardPage(props) {
         return filters
     }, [board.item])
 
-    let selectedColumns = {}
-    board.item?.settings?.selected_columns.forEach(column => {
-        const key = parseSelectedColumnsNames(column)
-        selectedColumns[key] = true
-    })
-
-    // const visibleTableColumns = {
-    //     profileImg: false,//
-    //     // fullname: true,(default)
-    //     twitterName: true,
-    //     phone: true,
-    //     state: true,
-    //     school: true,
-    //     gradYear: true,
-    //     rank: true,
-    //     timeZone: true,
-    // }
-
     const visibleTableColumns = useMemo(() => {
         let columns = {
             profileImg: true,
@@ -150,7 +111,7 @@ export default function BoardPage(props) {
                 columns[parseCriteriaNames(key)] = true
             })
 
-            console.log('board column = ', columns)
+            // console.log('board column = ', columns)
 
             return columns
         }
