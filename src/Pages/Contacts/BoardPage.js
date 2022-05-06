@@ -46,7 +46,7 @@ const parseSelectedColumnsNames = (column) => {
             return "position"
         case "last_messaged_at":
             return "lastMessaged"
-        case "created_at":
+        case 'created_at':
             return "createdAt"
         default:
             return column
@@ -121,18 +121,54 @@ export default function BoardPage(props) {
         const key = parseSelectedColumnsNames(column)
         selectedColumns[key] = true
     })
-    console.log(boardContacts)
+
+    // const visibleTableColumns = {
+    //     profileImg: false,//
+    //     // fullname: true,(default)
+    //     twitterName: true,
+    //     phone: true,
+    //     state: true,
+    //     school: true,
+    //     gradYear: true,
+    //     rank: true,
+    //     timeZone: true,
+    // }
+
+    const visibleTableColumns = useMemo(() => {
+        let columns = {
+            profileImg: true,
+            fullName: true,
+            twitterName: true,
+            phone: true
+        }
+
+        if(!board.item) {
+            return columns
+        } else {
+            // get columsn from criteria
+            Object.keys(board.item.criteria).forEach(key => {
+                columns[parseCriteriaNames(key)] = true
+            })
+
+            console.log('board column = ', columns)
+
+            return columns
+        }
+    }, [board.item])
+    
+    // console.log(boardContacts)
 
     return (
         <BaseContactsPage
             title={title}
             id={board.item?.id}
+            tableId={`board-${boardId}-page`}
             contacts={boardContacts}
             enableSendMessageWithoutSelection
             onSendMessage={onSendMessage}
             selectedFilters={selectedFilters}
             disabledMainActions
-            columnsControl={selectedColumns}
+            columnsControl={visibleTableColumns}
         />
     )
 }

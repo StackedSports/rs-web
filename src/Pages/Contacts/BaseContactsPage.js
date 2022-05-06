@@ -460,7 +460,7 @@ export default function BaseContactsPage(props) {
             </Stack>
 
             <ContactsTable
-                id={props.id}
+                id={props.tableId}
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
