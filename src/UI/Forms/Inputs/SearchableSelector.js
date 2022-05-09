@@ -72,6 +72,7 @@ export default function SearchableSelector(props) {
                     fullWidth
                     onKeyPress={(event) => {
                         //params.onKeyPress(event)
+                        if(props.onKeyPress instanceof Function)
                         props.onKeyPress(event)
                     }}
                 />

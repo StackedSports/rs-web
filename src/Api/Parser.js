@@ -86,7 +86,7 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if(filters.birthday){
+    if (filters.birthday) {
         console.log(filters.birthday[0])
         criteria['dob'] = filters.birthday[0]
     }
@@ -157,14 +157,18 @@ export const getFilterMessagesCriteria = (filters) => {
     if (filters.recipient_status) {
         criteria['recipient_status'] = filters.recipient_status
     }
-    if (filters.tags){
+    if (filters.tags) {
         criteria['tags'] = filters.tags
     }
-    if(filters.send_at_dates){
-        criteria['send_at_dates'] = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    if (filters.send_at_dates) {
+        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null)
+            criteria['send_at_dates'] = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
-    if(filters.sent_at_dates){
+    if (filters.sent_at_dates) {
         criteria['sent_at_dates'] = filters.sent_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    }
+    if (filters.message_status) {
+        criteria['message_status'] = filters.message_status
     }
 
     // {
@@ -215,14 +219,14 @@ export const getFilterMediasCriteria = (filters) => {
     if (filters.placeholder)
         criteria['placeholder_id'] = filters.placeholder
 
-    if(filters.owner) {
+    if (filters.owner) {
         criteria['owner_id'] = filters.owner[0].id
     }
 
     // Blocked by api
-   /*  if (filters.owner) {
-        criteria['owner'] = filters.owner
-    } */
+    /*  if (filters.owner) {
+         criteria['owner'] = filters.owner
+     } */
 
     // TODO
     /*  {

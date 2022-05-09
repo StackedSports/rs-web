@@ -1065,7 +1065,7 @@ export const useMessageRecipients = (id, refresh, currentPage, itemsPerPage) => 
 
 export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
-    const [messages, setMessages] = useState(null)
+    const [messages, setMessages] = useState([])
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
 
