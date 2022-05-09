@@ -25,6 +25,7 @@ import {
     useStatuses,
     useRanks,
     useGradYears,
+    useBoard,
     useBoards,
     useTags,
     usePositions,
@@ -35,6 +36,7 @@ import {
     addTagsToContacts,
     deleteBoard,
     deleteTagToContact,
+    untagContacts,
     updateBoard,
 } from 'Api/Endpoints';
 
@@ -73,11 +75,29 @@ export default function BaseContactsPage(props) {
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
+    const board = useBoard(props.boardInfo?.id)
 
     useEffect(() => {
         if (props.selectedFilters)
             setSelectedFilters(props.selectedFilters)
     }, [props.selectedFilters])
+
+    useEffect(() => {
+        let filters = {}
+        Object.keys(selectedFilters).forEach(key => {
+            // console.log(key)
+            // console.log(selectedFilters[key])
+            if (!filters[key])
+                filters[key] = []
+
+            selectedFilters[key].forEach(item => {
+                const criteria = { ...item, disabled: !editBoard }
+                filters[key].push(criteria)
+            })
+        })
+        setSelectedFilters(filters)
+
+    }, [editBoard])
 
     useEffect(() => {
         if (!contacts.items)
@@ -211,9 +231,9 @@ export default function BaseContactsPage(props) {
         //     id: '3',
         //     name: 'User Boards',
         //     items: [
-        //         // Filters
-        //         // { id: '0', name: 'Scheduled' },
-        //         // { id: '1', name: 'In Progress' },
+        //          Filters
+        //          { id: '0', name: 'Scheduled' },
+        //          { id: '1', name: 'In Progress' },
         //     ]
         // },
     ]
@@ -273,29 +293,25 @@ export default function BaseContactsPage(props) {
     const onEditBoard = (data) => {
         console.log("onEditBoard")
         setEditBoard(true)
-        const body = {
-            name: data.name,
-            is_shared: data.is_shared,
-            criteria: selectedFilters
-        }
-        console.log(body)
-        // updateBoard(props.id, data)
-        //     .then(res => {
-        //         alert.setSuccess('Board edited  successfully!')
-        //         boards.refreshData()
-        // setEditBoard(false)
+    }
 
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //         alert.setError('Failed to edit board.')
-        //     })
-        //     .finally(() => setLoading(false))
+    const boardEditedSuccess = (res) => {
+        setOpenCreateBoardDialog(false)
+        alert.setSuccess('Board edited successfully!')
+        // board.refreshData()
+        boards.refreshData()
+        setShowPanelFilters(false)
+        setEditBoard(false)
+    }
+
+    const boardEditedFailure = (error) => {
+        alert.setError('Failed to edit board.')
+        // setEditBoard(false)
     }
 
     const onDeleteBoard = (e) => {
         const title = "Delete Board"
-        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+        confirmDialog.show(title, "You cannot undo this action. Are you sure you want to continue? ", () => {
             // console.log("onDeleteBoard")
             setLoading(true)
             deleteBoard(props.id)
@@ -358,16 +374,7 @@ export default function BaseContactsPage(props) {
 
         setEditBoard(false)
         setOpenCreateBoardDialog(false)
-        const selectedFiltersNotChange = Object.keys(props?.selectedFilters).every(key => {
-            if (!Object.keys(selectedFilters).includes(key))
-                return false
-            if (props?.selectedFilters[key].length != selectedFilters[key].length)
-                return false
-
-            return true
-        })
-        if (selectedFiltersNotChange)
-            setSelectedFilters(props.selectedFilters)
+        setSelectedFilters(props.selectedFilters)
     }
 
     console.log("selectedFilters", selectedFilters)
@@ -504,11 +511,14 @@ export default function BaseContactsPage(props) {
             />
 
             <CreateBoardDialog
-                open={openCreateBoardDialog}
-                selectedFilters={selectedFilters}
-                title={editBoard ? "Edit Board" : "Create Board"}
-                onClose={onCloseBoardDialog}
                 onEditBoard={onEditBoard}
+                boardInfo={props.boardInfo}
+                boardEditedSuccess={boardEditedSuccess}
+                boardEditedFailure={boardEditedFailure}
+                open={openCreateBoardDialog}
+                onClose={onCloseBoardDialog}
+                selectedFilters={selectedFilters}
+                title={editBoard ? `Edit Board: ${props.boardInfo?.name}` : "Create Board"}
                 confirmAction={editBoard ? "Edit Board" : "Create Board"}
             />
 

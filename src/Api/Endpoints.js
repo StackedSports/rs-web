@@ -462,10 +462,13 @@ export const getBoard = (id) => {
 
 export const updateBoard = (id, data) => {
     const body = {
-        "filter": data
+        filter: {
+            ...data,
+            criteria: { ...getFilterContactsCriteria(data.criteria) }
+        }
     }
     console.log(body)
-    // return AXIOS('put', `filters/${id}`, body)
+    return AXIOS('put', `filters/${id}`, body)
 }
 
 export const deleteBoard = (id) => {
@@ -780,7 +783,7 @@ export const addTagsToContact = (tagIds, contactId) => {
     return POST(`contacts/${contactId}/add_tags`, body)
 }
 
-export const untagContact = (tagIds, contactsIds) => {
+export const untagContact = (tagIds, contactId) => {
     let body = {
         contact: {
             tag_ids: tagIds
@@ -803,7 +806,7 @@ export const untagContacts = (tagIds, contactIds) => {
         let count = contactIds.length
 
         contactIds.forEach(contactId => {
-            addTagsToContact(tagIds, contactId)
+            untagContact(tagIds, contactId)
                 .then(res => {
                     console.log(res)
                     success++
@@ -1174,7 +1177,8 @@ export const followOnTwitter = (data) => {
     const body = {
         twitter_follow: data
     }
-    AXIOS("post", "twitter_follow", body)
+    console.log(body)
+    return AXIOS("post", "twitter_follow", body)
 }
 
 export const getStats = (startDate, endDate) => {

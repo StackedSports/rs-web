@@ -486,10 +486,12 @@ export default function ContactsPage(props) {
             />
 
             <CreateBoardDialog
+                title="Create Board"
+                confirmAction="Create Board"
                 open={openCreateBoardDialog}
-                onClose={() => setOpenCreateBoardDialog(false)}
-                selectedFilters={selectedFilters}
                 onBoardCreated={onBoardCreated}
+                selectedFilters={selectedFilters}
+                onClose={() => setOpenCreateBoardDialog(false)}
             />
 
             <CreateContactDialog

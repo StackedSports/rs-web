@@ -2,6 +2,10 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+// import Button as ButtonMUI from '@mui/material/Button';
+import { Collapse, List, ListItem } from '@material-ui/core';
+import { ListItemButton } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import * as Yup from "yup";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
@@ -60,6 +64,8 @@ const ContactProfileDetails = (props) => {
 	const [showSaveButton, setShowSaveButton] = useState([false, false, false, false, false, false, false, false])
 	const [openNewFamilyMemberDialog, setOpenNewFamilyMemberDialog] = useState(false)
 	const [openNewOpponentDialog, setOpenNewOpponentDialog] = useState(false)
+
+	const [openCollapsePeople, setOpenCollapsePeople] = useState(false)
 
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
@@ -263,8 +269,8 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onRelationshipCreated = (relationship) => {
-		console.log("new relationship Created ",relationship)
-		
+		console.log("new relationship Created ", relationship)
+
 	}
 
 	return (
@@ -514,9 +520,26 @@ const ContactProfileDetails = (props) => {
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 4, formikProps)}
 							items={[
-								{ label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
+								// { label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
 							]}
 						>
+							<Button
+								name="People"
+								type="button"
+								variant='contained'
+								endIcon={<ArrowDropDownIcon />}
+								onClick={() => setOpenCollapsePeople(!openCollapsePeople)}
+							/>
+							<Collapse in={openCollapsePeople} timeout="auto" unmountOnExit>
+								<List /* dense="dense" */>
+									{props.contact?.relationships?.map(people => {
+										<ListItemButton key={people.id}>
+											{people.first_name + " " + people.last_name}
+										</ListItemButton>
+									})
+									}
+								</List>
+							</Collapse>
 							<Button
 								name="Add new relationship"
 								type="button"
