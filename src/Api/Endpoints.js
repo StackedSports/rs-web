@@ -1174,7 +1174,14 @@ export const followOnTwitter = (data) => {
     const body = {
         twitter_follow: data
     }
-    AXIOS("post", "twitter_follow", body)
+
+    return new Promise((resolve, reject) => {
+        AXIOS("post", "twitter_follow", body)
+            .then(([res, pagination]) => {
+                resolve(res)
+            })
+            .catch(err => reject(err))
+    })
 }
 
 export const getStats = (startDate, endDate) => {

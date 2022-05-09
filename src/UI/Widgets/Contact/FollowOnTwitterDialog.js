@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Box, Divider } from '@material-ui/core';
 import { Stack, Typography } from '@mui/material';
 
@@ -7,9 +7,12 @@ import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
 import { followOnTwitter } from 'Api/Endpoints';
 
+import { AppContext } from 'Context/AppProvider';
 
 const FollowOnTwitterDialog = (props) => {
+  const app = useContext(AppContext)
 
+  const [following, setFollowing] = useState(false)
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([]);
 
   const contacts = props.contacts?.filter(contact => {
@@ -29,12 +32,33 @@ const FollowOnTwitterDialog = (props) => {
 
   const onConfirm = () => {
     console.log("onConfirm FollowOnTwitterDialog")
+
+    if(following)
+      return
+
     const data = {
       user_ids: selectedTeamMembers,
       contact_ids: props.selectedContacts
     }
-    if (data.user_ids.length > 0 || data.contact_ids.length > 0)
-      followOnTwitter(data)
+
+    if (data.user_ids.length <= 0 || data.contact_ids.length <= 0)
+      return
+
+    setFollowing(true)
+    
+    followOnTwitter(data)
+      .then(res => {
+        console.log(res)
+
+        //if(res.followed_contacts.length > 0)
+
+        app.alert.setSuccess('It worked')
+      })
+      .catch(error => {
+        console.log(error)
+        app.alert.setError('It did not work')
+      })
+      .finally(() => setFollowing(false))
     // else
   }
 
@@ -44,6 +68,8 @@ const FollowOnTwitterDialog = (props) => {
       maxWidth="lg"
       open={props.open}
       onConfirm={onConfirm}
+      actionDisabled={selectedTeamMembers.length === 0}
+      actionLoading={following}
       onClose={props.onClose}
       confirmLabel="Run Follow Script"
     >

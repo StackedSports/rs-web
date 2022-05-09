@@ -49,6 +49,8 @@ const BaseDialog = (props) => {
               <Button
                 variant="contained"
                 name={props.confirmLabel || "Confirm"}
+                disabled={props.actionDisabled}
+                loading={props.actionLoading}
                 onClick={props.onConfirm}
               />
             )}
