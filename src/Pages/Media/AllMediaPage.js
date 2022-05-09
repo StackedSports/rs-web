@@ -17,7 +17,7 @@ import { mediaRoutes } from "Routes/Routes"
 export const AllMediaPage = () => {
  	const { type, value } = useParams()
 
-	const [allMedias, setAllMedias] = useState([])
+	// const [allMedias, setAllMedias] = useState([])
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
@@ -25,7 +25,7 @@ export const AllMediaPage = () => {
 	const filterChanged = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
-	const medias = useMedias(1, 50)
+	const medias = useMedias(1, 25)
 	const app = useContext(AppContext)
 
 	useEffect(() => {
@@ -37,17 +37,17 @@ export const AllMediaPage = () => {
 		)
 	}, [type, value])
 
-	useEffect(() => {
-		if (!medias.loading && medias.items) {
-			if (filterChanged.current) {
-				filterChanged.current = false
-				setAllMedias(medias.items)
-			}
-			else {
-				setAllMedias(oldMedias => [...oldMedias, ...medias.items])
-			}
-		}
-	}, [medias.items,medias.loading])
+	// useEffect(() => {
+	// 	if (!medias.loading && medias.items) {
+	// 		if (filterChanged.current) {
+	// 			filterChanged.current = false
+	// 			setAllMedias(medias.items)
+	// 		}
+	// 		else {
+	// 			setAllMedias(oldMedias => [...oldMedias, ...medias.items])
+	// 		}
+	// 	}
+	// }, [medias.items, medias.loading])
 
 	const onFilterChange = (filter) => {
 		console.log("Filter Change",filter)
@@ -136,14 +136,14 @@ export const AllMediaPage = () => {
 				<Typography fontWeight='bold' gutterBottom>
 					Showing  {' '}
 					<Typography component='span' color='primary' fontWeight='bold'>
-						{allMedias?.length + " of " + medias.pagination.totalItems}
+						{medias.items?.length + " of " + medias.pagination.totalItems}
 					</Typography>
 					{' '} medias
 				</Typography>
 			)}
 
 			<MediaTable
-				items={allMedias}
+				items={medias.items}
 				pagination={medias.pagination}
 				loading={medias.loading}
 				view={viewGrid ? 'grid' : 'list'}

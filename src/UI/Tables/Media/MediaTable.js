@@ -133,6 +133,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             props.pagination.getPage(props.pagination.currentPage + 1)
         }
     }
+    
     const isLastPage = props?.pagination?.currentPage === props?.pagination?.totalPages
 
     return (
