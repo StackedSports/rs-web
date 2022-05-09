@@ -52,7 +52,7 @@ const MessagesPage = (props) => {
         else if (filterType === 'team_members')
             // return { status: 'all', sender: [filterValue] }
             filter['sender'] = [filterValue]
-        else
+        else if(filterValue)
             // return { status: [filterValue] }
             filter.status = [filterValue]
 
