@@ -8,9 +8,11 @@ import { useContactTableColumns } from 'Api/Hooks'
 export default function ContactsTable(props) {
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
+    // console.log(props.columnsControl)
 
     const visibleColumns = useContactTableColumns(props.columnsControl, props.id)
-
+    
+    // console.log(visibleColumns)
     // const onPageChange = (page, details) => {
     //     console.log(page)
     //     props.pagination?.getPage(page + 1)

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 
 import { useParams } from "react-router-dom"
 import Stack from '@mui/material/Stack'
@@ -10,7 +10,7 @@ import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
-
+import { AuthContext } from 'Context/Auth/AuthProvider'
 import { useMessages, useTeamMembers, useTags } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
 
@@ -26,6 +26,8 @@ const getTitle = (filterName) => {
 }
 
 const MessagesPage = (props) => {
+    const { user } = useContext(AuthContext)
+
     const { filterType, filterValue } = useParams()
     const lastFilter = useRef()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -35,14 +37,26 @@ const MessagesPage = (props) => {
     const tags = useTags()
 
     const messageFilter = useMemo(() => {
-        if (!filterType)
-            return { status: 'all' }
-        else if (filterType === 'status' && filterValue === 'finished')
-            return { status: 'finished' }
+        console.log(user)
+
+        let filter = {
+            status: 'all',
+            includeTeam: user.role === 'Admin' ? true : false
+        }
+
+        // if (!filterType)
+        //     return { status: 'all' }
+        if (filterType === 'status' && filterValue === 'finished')
+            // return { status: 'finished' }
+            filter.status = 'finished'
         else if (filterType === 'team_members')
-            return { status: 'all', sender: [filterValue] }
+            // return { status: 'all', sender: [filterValue] }
+            filter['sender'] = [filterValue]
         else
-            return { status: [filterValue] }
+            // return { status: [filterValue] }
+            filter.status = [filterValue]
+
+        return filter
     }, [filterType, filterValue])
 
     // console.log(filter)

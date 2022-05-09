@@ -32,27 +32,6 @@ const parseCriteriaNames = (criteria) => {
     }
 }
 
-const parseSelectedColumnsNames = (column) => {
-    switch (column) {
-        case "first_name":
-            return "firstName"
-        case "last_name":
-            return "lastName"
-        case "twitter":
-            return "twitterProfile", "profileImg"
-        case "grad_year":
-            return "gradYear"
-        case "team_positions":
-            return "position"
-        case "last_messaged_at":
-            return "lastMessaged"
-        case "created_at":
-            return "createdAt"
-        default:
-            return column
-    }
-}
-
 export default function BoardPage(props) {
     const app = useContext(AppContext);
 
@@ -116,23 +95,41 @@ export default function BoardPage(props) {
         return filters
     }, [board.item])
 
-    let selectedColumns = {}
-    board.item?.settings?.selected_columns.forEach(column => {
-        const key = parseSelectedColumnsNames(column)
-        selectedColumns[key] = true
-    })
-    console.log(boardContacts)
+    const visibleTableColumns = useMemo(() => {
+        let columns = {
+            profileImg: true,
+            fullName: true,
+            twitterName: true,
+            phone: true
+        }
+
+        if(!board.item) {
+            return columns
+        } else {
+            // get columsn from criteria
+            Object.keys(board.item.criteria).forEach(key => {
+                columns[parseCriteriaNames(key)] = true
+            })
+
+            // console.log('board column = ', columns)
+
+            return columns
+        }
+    }, [board.item])
+    
+    // console.log(boardContacts)
 
     return (
         <BaseContactsPage
             title={title}
             id={board.item?.id}
+            tableId={`board-${boardId}-page`}
             contacts={boardContacts}
             enableSendMessageWithoutSelection
             onSendMessage={onSendMessage}
             selectedFilters={selectedFilters}
             disabledMainActions
-            columnsControl={selectedColumns}
+            columnsControl={visibleTableColumns}
         />
     )
 }

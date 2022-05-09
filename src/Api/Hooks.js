@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 import {
     getUser,
@@ -1259,39 +1259,56 @@ export const useStats = (startDate,endDate) => {
     }
 }
 
+const getStoredColumns = (id) => JSON.parse(localStorage.getItem(id + '-table-columns'))
+
+const getColumns = (control) => ({
+    profileImg: control?.profileImg || true,
+    fullname: control?.fullname || true,
+    firstName: control?.firstName || false,
+    lastName: control?.lastName || false,
+    nickName: control?.nickName || false,
+    twitterName: control?.twitterName || false,
+    phone: control?.phone || false,
+    state: control?.state || false,
+    school: control?.school || false,
+    gradYear: control?.gradYear || false,
+    position: control?.position || false,
+    areaCoach: control?.areaCoach || false,
+    positionCoach: control?.positionCoach || false,
+    recruitingCoach: control?.recruitingCoach || false,
+    status: control?.status || false,
+    status2: control?.status2 || false,
+    tags: control?.tags || false,
+    rank: control?.rank || false,
+    // lastMessaged: false,
+    // mostActiveTime: false,
+    // dateAdded: false,
+    timeZone: control?.timeZone || false,
+    birthday: control?.birthday || false,
+})
+
 export const useContactTableColumns = (control, id) => {
-    // console.log(control)
-    const [columns, setColumns] = useState(JSON.parse(localStorage.getItem(id + '-table-columns')) || {
-        profileImg: control?.profileImg || true,
-        fullname: control?.fullname || true,
-        firstName: control?.firstName || false,
-        lastName: control?.lastName || false,
-        nickName: control?.nickName || false,
-        twitterName: control?.twitterName || false,
-        phone: control?.phone || false,
-        state: control?.state || false,
-        school: control?.school || false,
-        gradYear: control?.gradYear || false,
-        position: control?.position || false,
-        areaCoach: control?.areaCoach || false,
-        positionCoach: control?.positionCoach || false,
-        recruitingCoach: control?.recruitingCoach || false,
-        status: control?.status || false,
-        status2: control?.status2 || false,
-        tags: control?.tags || false,
-        rank: control?.rank || false,
-        // lastMessaged: false,
-        // mostActiveTime: false,
-        // dateAdded: false,
-        timeZone: control?.timeZone || false,
-        birthday: control?.birthday || false,
-    })
+    const storedColumns = useMemo(() => getStoredColumns(id), [id])
+
+    const [columns, setColumns] = useState(storedColumns ?
+        storedColumns : getColumns(control))
+
+    useEffect(() => {
+        if(!objectNotNull(control))
+            return
+
+        if(!storedColumns)
+            setColumns(getColumns(control))
+    }, [control])
 
     const onChange = (newValue) => {
+        console.log(newValue)
         localStorage.setItem(id + '-table-columns', JSON.stringify(newValue))
         setColumns(newValue)
     }
-    // console.log(columns)
+
+    // console.log('state', columns)
+
     return {
         items: columns,
         onChange
