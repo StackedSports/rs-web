@@ -52,6 +52,8 @@ export const StackUp = (props) => {
     const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
+        if (props.stats[timeRangeIndex].data === null && !props.stats[timeRangeIndex].loading)
+            props.stats[timeRangeIndex].fetch();
         if (objectNotNull(props.stats[timeRangeIndex]?.data) && !props.stats[timeRangeIndex].loading)
             setUsersStats(props.stats[timeRangeIndex].data?.users.map(user => user.table));
     }, [props.stats, timeRangeIndex]);
@@ -122,6 +124,7 @@ export const StackUp = (props) => {
                         rows={usersStats}
                         height='100%'
                         getRowId={(row) => row.rank}
+                        loading={props.stats[timeRangeIndex].loading}
                     />
                 </Box>
             </BaseDialog>

@@ -21,6 +21,9 @@ export const BaseSection = (props) => {
                     action={props.actions}
                 />
             )}
+            {props.filter && <Box px={2}>
+                {props.filter}
+            </Box>}
             <CardContent>
                 {props.children}
             </CardContent>

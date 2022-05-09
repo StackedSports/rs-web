@@ -17,23 +17,30 @@ import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
  */
 export const PanelFilters = (props) => {
 
+	const externalChange = useRef(false);
+	const firstRender = useRef(true);
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
-	const lastFilterRef = useRef(selectedFilters);
 
 	useEffect(() => {
 		if (!props.selectedFilters)
 			return
-		console.log("changing selected filters")
+		console.log("external Change", props.selectedFilters)
+		externalChange.current = true;
 		setSelectedFilters(props.selectedFilters)
 
 	}, [props.selectedFilters])
 
 	useEffect(() => {
-		if (lodash.isEqual(lastFilterRef.current, selectedFilters))
+		if (firstRender.current) {
+			firstRender.current = false;
 			return
+		}
+
+		if (externalChange.current) {
+			externalChange.current = false;
+			return
+		}
 		console.log("Calling onFilterChange")
-		lastFilterRef.current = selectedFilters
-		console.log(selectedFilters);
 		if (props.onFilterChange && props.onFilterChange instanceof Function)
 			props.onFilterChange(Object.assign({}, selectedFilters))
 	}, [selectedFilters])
@@ -163,10 +170,10 @@ export const PanelFilters = (props) => {
 						if (filter.type === 'date')
 							return (
 								<DateRangePicker
-								  label={filter.label}
-								  format={filter.format}
-								  onChange={(date) => handleOptionsChange(filterName, date, filter)}
-								  endIcon={<KeyboardArrowDown />}
+									label={filter.label}
+									format={filter.format}
+									onChange={(date) => handleOptionsChange(filterName, date, filter)}
+									endIcon={<KeyboardArrowDown />}
 								/>
 							)
 						else

@@ -7,6 +7,7 @@ import lodash from "lodash"
 export default function SearchableSelector(props) {
     const [value, setValue] = useState(props.multiple ? [] : null)
     const [options, setOptions] = useState([])
+    console.log(options)
 
     useEffect(() => {
         if (!props.options)
@@ -22,7 +23,10 @@ export default function SearchableSelector(props) {
             return
 
         setOptions(oldOptions => {
-            return lodash.uniqBy(oldOptions.concat(props.options), 'id')
+            console.log("adding value", props.value)
+            console.log("oldOptions", oldOptions)
+            console.log(lodash.uniqBy([...oldOptions, ...props.value], 'id'))
+            return lodash.uniqBy(oldOptions.concat(props.value), 'id')
         })
         setValue(props.value)
         // if props.value changed

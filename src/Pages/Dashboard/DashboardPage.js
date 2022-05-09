@@ -1,10 +1,10 @@
 import { useContext, useState, useCallback, useEffect, useMemo } from 'react';
-import { Typography, Grid, Stack } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import { format, startOfQuarter, endOfQuarter, subMonths, startOfYear, endOfYear, subYears, startOfMonth, endOfMonth, subDays } from 'date-fns';
 
 import SecondaryLayout from '../../UI/Layouts/SecondaryLayout';
 import { AuthContext } from 'Context/Auth/AuthProvider';
-import { PersonalScore, TeamQueue, StackUp,MessagesGraphs } from 'UI/Widgets/Dashboard'
+import { PersonalScore, TeamQueue, StackUp, MessagesGraphs } from 'UI/Widgets/Dashboard'
 
 import { getStats } from 'Api/Endpoints'
 import { useStats } from 'Api/Hooks';
@@ -12,27 +12,29 @@ import { getFullName } from 'utils/Parser';
 
 export const DashboardPage = () => {
   const { user } = useContext(AuthContext);
+  const [monthlyStats, setMontlyStats] = useState({ data: null, loading: true });
+  const [quarterlyStats, setQuarterlyStats] = useState({ data: null, loading: false });
+  const [yearlyStats, setYearlyStats] = useState({ data: null, loading: false });
+  const [lastMonthStats, setLastMonthStates] = useState({ data: null, loading: false });
+  const [lastQuarterStats, setLastQuarterStates] = useState({ data: null, loading: false });
+  const [lastYearStats, setLastYearStates] = useState({ data: null, loading: false });
+  const [last30DaysStats, setLast30DaysStats] = useState({ data: null, loading: false });
   const stats = useStats();
-  const [monthlyStats, setMontlyStats] = useState(null);
-  const [quarterlyStats, setQuarterlyStats] = useState(null);
-  const [yearlyStats, setYearlyStats] = useState(null);
-  const [lastMonthStats, setLastMonthStates] = useState(null);
-  const [lastQuarterStats, setLastQuarterStates] = useState(null);
-  const [lastYearStats, setLastYearStates] = useState(null);
-  const [last30DaysStats, setLast30DaysStats] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  //Fetch this month stats first for faster loading
+  // first fetch stats for this month when component is mounted
   useEffect(() => {
-    if (!stats.loading && stats.items) {
-      setMontlyStats(stats.items);
-    }
+    if (!stats.loading)
+      setMontlyStats({ data: stats.items, loading: false });
   }, [stats.loading, stats.items]);
 
   // predifined filters dates
   const getArrayOfDates = useCallback(() => {
     const dates = [];
     const today = new Date();
+
+    // this month
+    const monthStart = format(startOfMonth(today), 'yyyy-MM-dd');
+    const monthEnd = format(endOfMonth(today), 'yyyy-MM-dd');
 
     // this quarter
     const quarterStart = format(startOfQuarter(today), 'yyyy-MM-dd')
@@ -58,6 +60,7 @@ export const DashboardPage = () => {
     const last30Start = format(subDays(today, 30), 'yyyy-MM-dd')
     const last30End = format(today, 'yyyy-MM-dd')
 
+    dates.push({ start: monthStart, end: monthEnd });
     dates.push({ start: last30Start, end: last30End });
     dates.push({ start: quarterStart, end: quarterEnd });
     dates.push({ start: yearStart, end: yearEnd });
@@ -68,88 +71,127 @@ export const DashboardPage = () => {
   }, [])
 
   // get stats for each date using promise.allSettled
- /*  useEffect(() => {
-    const dates = getArrayOfDates();
-    const promises = dates.map(date => getStats(date.start, date.end));
-    Promise.allSettled(promises)
-      .then(results => {
-        results.forEach((result, index) => {
-          if (result.status === 'fulfilled') {
-            const { table } = result.value[0];
-            switch (index) {
-              case 0:
-                setLast30DaysStats(table);
-                break;
-              case 1:
-                setQuarterlyStats(table);
-                break;
-              case 2:
-                setYearlyStats(table);
-                break;
-              case 3:
-                setLastMonthStates(table);
-                break;
-              case 4:
-                setLastQuarterStates(table);
-                break;
-              case 5:
-                setLastYearStates(table);
-                break;
-              default:
-                break;
-            }
-          }
-        })
-        setLoading(false)
-      })
-  }, [getArrayOfDates]); */
+  /*  useEffect(() => {
+     const dates = getArrayOfDates();
+     const promises = dates.map(date => getStats(date.start, date.end));
+     Promise.allSettled(promises)
+       .then(results => {
+         results.forEach((result, index) => {
+           if (result.status === 'fulfilled') {
+             const { table } = result.value[0];
+             switch (index) {
+               case 0:
+                 setLast30DaysStats(table);
+                 break;
+               case 1:
+                 setQuarterlyStats(table);
+                 break;
+               case 2:
+                 setYearlyStats(table);
+                 break;
+               case 3:
+                 setLastMonthStates(table);
+                 break;
+               case 4:
+                 setLastQuarterStates(table);
+                 break;
+               case 5:
+                 setLastYearStates(table);
+                 break;
+               default:
+                 break;
+             }
+           }
+         })
+         setLoading(false)
+       })
+   }, [getArrayOfDates]); */
 
+  // Fetch stats for each period, used in useMemo, is it batter use useReducer?
+  const getStatsForDate = (index) => {
+    const arrayOfDates = getArrayOfDates();
+    let setState = null;
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        setState = setLast30DaysStats;
+        break;
+      case 2:
+        setState = setQuarterlyStats;
+        break;
+      case 3:
+        setState = setYearlyStats;
+        break;
+      case 4:
+        setState = setLastMonthStates;
+        break;
+      case 5:
+        setState = setLastQuarterStates;
+        break;
+      case 6:
+        setState = setLastYearStates;
+        break;
+      default:
+        null;
+    }
+    if (setState === null) return
+    setState({ data: null, loading: true });
+    getStats(arrayOfDates[index].start, arrayOfDates[index].end).then(([res]) => {
+      setState({ data: { ...res.table }, loading: false })
+    }).catch(() => {
+      setState({ data: null, loading: false })
+    })
+  }
+
+  // array of all stats by period
   const statsData = useMemo(() => {
     return [
       {
         id: 0,
         label: 'This Month',
-        data: monthlyStats,
-        loading: stats.loading,
+        fetch: () => getStatsForDate(0),
+        ...monthlyStats,
+
       },
       {
         id: 1,
         label: 'Last 30 Days',
-        data: last30DaysStats,
-        loading: loading,
+        fetch: () => getStatsForDate(1),
+        ...last30DaysStats,
       },
       {
         id: 2,
         label: 'This Quarter',
-        data: quarterlyStats,
-        loading: loading,
+        fetch: () => getStatsForDate(2),
+        ...quarterlyStats,
       },
       {
         id: 3,
         label: 'This Year',
-        data: yearlyStats,
-        loading: loading,
+        fetch: () => getStatsForDate(3),
+        ...yearlyStats,
       },
       {
         id: 4,
         label: 'Last Month',
-        data: lastMonthStats,
-        loading: loading,
+        fetch: () => getStatsForDate(4),
+        ...lastMonthStats,
       },
       {
         id: 5,
         label: 'Last Quarter',
-        data: lastQuarterStats,
-        loading: loading,
+        fetch: () => getStatsForDate(5),
+        ...lastQuarterStats,
       },
       {
         id: 6,
         label: 'Last Year',
-        data: lastYearStats,
-        loading: loading,
+        fetch: () => getStatsForDate(6),
+        ...lastYearStats,
       }
     ]
-  }, [loading, monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats, stats.loading]);
+  }, [monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats]);
 
   const onTopActionClick = () => {
     console.log('onTopActionClick')
@@ -168,7 +210,7 @@ export const DashboardPage = () => {
         </Grid>
 
         <Grid item xs={12} lg={4} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <PersonalScore user={user} stats={monthlyStats} loading={stats.loading} />
+          <PersonalScore user={user} stats={monthlyStats} />
           <StackUp stats={statsData} />
         </Grid>
       </Grid>

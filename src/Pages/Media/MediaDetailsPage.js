@@ -12,7 +12,8 @@ import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useMedia, useContacts, useTags, usePlaceholders, usePlaceholder, useTeamMembers } from "Api/Hooks"
+import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
+import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
@@ -35,14 +36,27 @@ export const MediaDetailsPage = () => {
     const [itemContact, setItemContact] = useState([])
     const [itemName, setItemName] = useState('')
 
+    // http://localhost:3000/media/media/details/353525 remove placeholder test
     //http://localhost:3000/media/media/details/327184 test
     useEffect(() => {
-        if (media) {
+        let mounted = true
+        if (media && mounted) {
             setItemTags(media.tags)
             setItemOwner([media.owner])
             setItemName(media.name)
+            setItemContact([media.contact])
+
+            if (media.media_placeholder_id)
+                getPlaceholder(media.media_placeholder_id).then(placeholder => {
+                    if (mounted)
+                        setItemPlaceholder([placeholder[0]])
+                })
+        }
+        return () => {
+            mounted = false
         }
     }, [media])
+
 
     //find way to get placeholder
 
@@ -154,7 +168,12 @@ export const MediaDetailsPage = () => {
                 alert.setWarning(err.message)
             })
         } else {
-            // TODO REMOVER PLACEHOLDER
+            updateMediaForm(media.id, { media_placeholder_id: "" }).then((res) => {
+                setItemPlaceholder([])
+                alert.setSuccess("Media placeholder removed")
+            }).catch(err => {
+                alert.setWarning(err.message)
+            })
         }
     }
 
@@ -194,7 +213,14 @@ export const MediaDetailsPage = () => {
                     alert.setWarning(err.message)
                 })
         } else {
-            // TODO REMOVER CONTATO
+            updateMedia(media.id, { team_contact_id: null })
+                .then(() => {
+                    setItemContact([])
+                    alert.setSuccess("Media contact deleted")
+                }
+                ).catch(err => {
+                    alert.setWarning(err.message)
+                })
         }
     }
 
