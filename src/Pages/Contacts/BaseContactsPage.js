@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
@@ -29,23 +29,25 @@ import {
     useTags,
     usePositions,
     useTeamMembers,
-} from 'Api/Hooks'
+} from 'Api/Hooks';
 
 import {
     addTagsToContacts,
     deleteBoard,
     deleteTagToContact,
     updateBoard,
-} from 'Api/Endpoints'
+} from 'Api/Endpoints';
 
-import { contactsRoutes, messageRoutes } from 'Routes/Routes'
+import { contactsRoutes, messageRoutes } from 'Routes/Routes';
 
-import { timeZones, states } from 'utils/Data'
+import { timeZones, states } from 'utils/Data';
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
 export default function BaseContactsPage(props) {
     const [redirect, setRedirect] = useState('')
 
     const contacts = useMemo(() => props.contacts, [props.contacts])
+    const confirmDialog = useContext(ConfirmDialogContext)
 
     const [loading, setLoading] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
@@ -54,6 +56,7 @@ export default function BaseContactsPage(props) {
     const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
+    const [editBoard, setEditBoard] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -70,6 +73,11 @@ export default function BaseContactsPage(props) {
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
+
+    useEffect(() => {
+        if (props.selectedFilters)
+            setSelectedFilters(props.selectedFilters)
+    }, [props.selectedFilters])
 
     useEffect(() => {
         if (!contacts.items)
@@ -262,42 +270,46 @@ export default function BaseContactsPage(props) {
 
     }
 
-    const onEditBoard = (e) => {
+    const onEditBoard = (data) => {
         console.log("onEditBoard")
-        const data = {
-            name: "Test Board",
-            is_shared: false,
-            criteria: {
-                // tags: ["rs staff & test accounts"],
-                // years: [2023, 2024],
-                states: ["TN"]
-            }
+        setEditBoard(true)
+        const body = {
+            name: data.name,
+            is_shared: data.is_shared,
+            criteria: selectedFilters
         }
-        updateBoard(props.id, data)
-            .then(res => {
-                alert.setSuccess('Board edited  successfully!')
-                boards.refreshData()
-            })
-            .catch(error => {
-                console.log(error)
-                alert.setError('Failed to edit board.')
-            })
-            .finally(() => setLoading(false))
+        console.log(body)
+        // updateBoard(props.id, data)
+        //     .then(res => {
+        //         alert.setSuccess('Board edited  successfully!')
+        //         boards.refreshData()
+        // setEditBoard(false)
+
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //         alert.setError('Failed to edit board.')
+        //     })
+        //     .finally(() => setLoading(false))
     }
 
     const onDeleteBoard = (e) => {
-        console.log("onDeleteBoard")
-        setLoading(true)
-        deleteBoard(props.id)
-            .then(res => {
-                alert.setSuccess('Board deleted successfully!')
-                boards.refreshData()
-            })
-            .catch(error => {
-                console.log(error)
-                alert.setError('Failed to delete board.')
-            })
-            .finally(() => setLoading(false))
+        const title = "Delete Board"
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+            // console.log("onDeleteBoard")
+            setLoading(true)
+            deleteBoard(props.id)
+                .then(res => {
+                    alert.setSuccess('Board deleted successfully!')
+                    boards.refreshData()
+                    setRedirect(contactsRoutes.all)
+                })
+                .catch(error => {
+                    console.log(error)
+                    alert.setError('Failed to delete board.')
+                })
+                .finally(() => setLoading(false))
+        })
     }
 
     const onTagsSelected = (selectedTagsIds) => {
@@ -340,6 +352,27 @@ export default function BaseContactsPage(props) {
         contacts.pagination.getPage(page)
     }
 
+    const onCloseBoardDialog = () => {
+        if (editBoard)
+            setShowPanelFilters(false)
+
+        setEditBoard(false)
+        setOpenCreateBoardDialog(false)
+        const selectedFiltersNotChange = Object.keys(props?.selectedFilters).every(key => {
+            if (!Object.keys(selectedFilters).includes(key))
+                return false
+            if (props?.selectedFilters[key].length != selectedFilters[key].length)
+                return false
+
+            return true
+        })
+        if (selectedFiltersNotChange)
+            setSelectedFilters(props.selectedFilters)
+    }
+
+    console.log("selectedFilters", selectedFilters)
+    console.log("props.selectedFilters", props.selectedFilters)
+
     return (
         <MainLayout
             title={props.title || 'Contacts'}
@@ -347,7 +380,7 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             alert={alert}
-            actions={props.disabledMainActions ? [] : mainActions}
+            actions={props.disabledMainActions && !editBoard ? [] : mainActions}
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
@@ -355,7 +388,7 @@ export default function BaseContactsPage(props) {
                 open: props.showPanelFilters || showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                selectedFilters: props.selectedFilters
+                selectedFilters: selectedFilters
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>
@@ -472,8 +505,11 @@ export default function BaseContactsPage(props) {
 
             <CreateBoardDialog
                 open={openCreateBoardDialog}
-                onClose={() => setOpenCreateBoardDialog(false)}
                 selectedFilters={selectedFilters}
+                title={editBoard ? "Edit Board" : "Create Board"}
+                onClose={onCloseBoardDialog}
+                onEditBoard={onEditBoard}
+                confirmAction={editBoard ? "Edit Board" : "Create Board"}
             />
 
             <SelectTagDialog

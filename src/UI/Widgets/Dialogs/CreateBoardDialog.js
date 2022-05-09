@@ -46,17 +46,26 @@ export const CreateBoardDialog = (props) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, formikHelpers) => {
-      createNewBoard(values, props.selectedFilters)
-        .then((res) => {
-          console.log(values, res)
-          props.onBoardCreated()
-        })
-        .catch(error => {
-          formikHelpers.isSubmitting = false
-          setError(error)
-        })
+      if (props.title.includes("Edit")) {
+        onEditBoard(values)
+        formikHelpers.setSubmitting(false)
+      } else {
+        createNewBoard(values, props.selectedFilters)
+          .then((res) => {
+            console.log(values, res)
+            props.onBoardCreated()
+          })
+          .catch(error => {
+            formikHelpers.setSubmitting(false)
+            setError(error)
+          })
+      }
     }
   });
+
+  const onEditBoard = (data) => {
+    props.onEditBoard(data)
+  }
 
   const handleClose = (e, reason) => {
     if (reason && reason == "backdropClick")
@@ -84,7 +93,7 @@ export const CreateBoardDialog = (props) => {
           fontWeight: 'bold !important',
         }}
       >
-        Create Board
+        {props.title}
       </DialogTitle>
 
       <DialogContent>
@@ -179,7 +188,7 @@ export const CreateBoardDialog = (props) => {
             type='submit'
             endIcon={<People />}
           >
-            Create Board
+            {props.confirmAction}
           </LoadingButton>
         </Stack>
       </DialogContent>
