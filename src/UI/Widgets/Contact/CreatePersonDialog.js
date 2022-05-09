@@ -58,7 +58,6 @@ export const CreatePersonDialog = (props) => {
             handleClose();
           })
           .catch(err => {
-            console.log(err)
             setError(err)
           }).finally(() => {
             formikHelpers.setSubmitting(false);

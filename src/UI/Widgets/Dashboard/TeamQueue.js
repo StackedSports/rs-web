@@ -1,27 +1,29 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Grid, Typography, Stack, Box } from "@mui/material"
 import { Tune, Event } from '@mui/icons-material';
-import { format } from "date-fns";
 import lodash from "lodash";
 
 import { SectionSubTitle } from "./Components/Styles/StyledComponents"
 import { BaseSection } from "./Components/BaseSection";
-import DatePicker from "UI/Forms/Inputs/DatePicker"
 import Button from "../Buttons/Button"
 import TasksQueueTable from "UI/Tables/TasksQueue/TasksQueueTable";
+import PanelFilters from "../PanelFilters";
 
-import { useMessages } from "Api/Hooks";
+import { AuthContext } from "Context/Auth/AuthProvider";
+import { useMessages, useTeamMembers } from "Api/Hooks";
+import { getFullName } from "utils/Parser";
 
 export const TeamQueue = () => {
-  const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [loadedRows, setLoadedRows] = useState([]);
   const filterChanged = useRef(false);
-  const firstRender = useRef(true);
-  const [filterSender, setFilterSender] = useState(null);
-  const [filterStatus, setFilterStatus] = useState(null);
-  const [filterType, setFilterType] = useState(null);
+  const [openFilters, setOpenFilters] = useState(false);
+  const { user } = useContext(AuthContext);
 
-  const messages = useMessages(1, 10, { message_status: ['Pending', "in progress"] });
+
+  const baseFilter = { message_status: ['Pending', "in progress"], includeTeam: user.role === "Admin" };
+
+  const messages = useMessages(1, 10, baseFilter);
+  const senders = useTeamMembers();
 
   useEffect(() => {
     if (!messages.loading) {
@@ -36,47 +38,60 @@ export const TeamQueue = () => {
 
   }, [messages.items, messages.loading]);
 
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    if (date) {
-      messages.filter({ message_status: ['Pending', "in progress"], send_at_dates: [[date, date]] });
-    } else {
-      messages.filter({ message_status: ['Pending', "in progress"] });
-    }
-  }, [date]);
-
-
   const onNewTaskClick = () => {
     console.log("onNewTaskClick");
   }
 
   const onFilterClick = () => {
-    console.log("onFilterClick");
+    setOpenFilters(!openFilters);
   }
 
-  const onDateChange = (newDate) => {
-    if (format(newDate, "yyyy-MM-dd") === date) return;
-    filterChanged.current = true;
-    setDate(format(newDate, "yyyy-MM-dd"))
+  const filtersOptions = {
+    sender: {
+      label: "Sender",
+      options: senders.items,
+      optionsLabel: (sender) => getFullName(sender),
+    },
+    platform: {
+      label: "Type",
+      options: [
+        { id: 1, name: "Twitter", value: "Twitter" },
+        { id: 2, name: "Personal Text", value: "Personal Text" },
+        { id: 3, name: "RS Text", value: "RS Text" },
+      ]
+    }
   }
 
+  const onFilterChange = (filters) => {
+    const filter = lodash.cloneDeep(baseFilter);
+    if (filters.sender)
+      filter.sender = filters.sender.map(sender => sender.id);
+    if (filters.platform)
+      filter.platform = filters.platform.map(platform => platform.value);
+    messages.filter(filter);
+  }
 
   return (
     <BaseSection
       title='Team Queue'
       subtitle={
-        <SectionSubTitle >
-          You have {" "} <SectionSubTitle component="span" color='primary'>{messages.pagination.totalItems} items</SectionSubTitle> in your queue
-        </SectionSubTitle>
+        <>
+          <SectionSubTitle >
+            You have {" "} <SectionSubTitle component="span" color='primary'>{messages.pagination.totalItems} items</SectionSubTitle> in your queue
+          </SectionSubTitle>
+        </>
       }
       actions={
         <Stack gap={2} direction='row'>
-          <DatePicker onChange={onDateChange} disableFuture />
           <Button variant="outlined" name='Filter' endIcon={<Tune />} onClick={onFilterClick} />
         </Stack>
+      }
+      filter={
+        <PanelFilters
+          open={openFilters}
+          filters={filtersOptions}
+          onFilterChange={onFilterChange}
+        />
       }
     >
       {!messages.loading && messages.items.length === 0 && (
@@ -94,7 +109,7 @@ export const TeamQueue = () => {
         </Stack>
       )}
       {(messages.items.length !== 0 || messages.loading) && (
-        <Box height={Math.min(messages.items.length + 2,6) * 56 + 'px'} >
+        <Box height={Math.min(messages.items.length + 2, 6) * 56 + 'px'} >
           <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={messages.loading} />
         </Box>
       )}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Stack, Avatar, Button, Divider, Grid } from '@mui/material'
+import { Stack, Avatar, Button, Divider, Grid, CircularProgress } from '@mui/material'
 
 import { BaseSection } from './Components/BaseSection'
 import * as Styled from './Components/Styles/StyledComponents'
@@ -16,13 +16,12 @@ export const PersonalScore = (props) => {
     const [stats, setStats] = useState({});
 
     useEffect(() => {
-        if (!props.loading && objectNotNull(props.stats)) {
-            const userStats = props.stats?.users?.find(user => user?.table?.name === getFullName(props.user))
-            if(userStats)
-            setStats({ ...userStats?.table });
+        if (!props.stats.loading && objectNotNull(props.stats)) {
+            const userStats = props.stats.data?.users?.find(user => user?.table?.name === getFullName(props.user))
+            if (userStats)
+                setStats({ ...userStats?.table });
         }
-    }, [props.loading, props.stats]);
-
+    }, [props.stats]);
     return (
         <Stack gap={3}>
             <BaseSection title={stats.rank ? `${stats.rank}.` : '.'}>
@@ -46,7 +45,7 @@ export const PersonalScore = (props) => {
                             DM’s
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats?.dms ? stats.dms : 0}
+                            {props.stats.loading ? <CircularProgress size={20} /> : stats.dms}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -55,7 +54,7 @@ export const PersonalScore = (props) => {
                             Personal Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats?.pts ? stats.pts : 0}
+                            {props.stats.loading ? <CircularProgress size={20} /> : stats.pts}
                         </Styled.SectionTitle>
                         <Divider orientation='vertical' absolute />
                     </Grid>
@@ -64,7 +63,7 @@ export const PersonalScore = (props) => {
                             RS Text
                         </Styled.Title>
                         <Styled.SectionTitle>
-                            {stats?.rst ? stats.rst : 0}
+                            {props.stats.loading ? <CircularProgress size={20} /> : stats.rst}
                         </Styled.SectionTitle>
                     </Grid>
                 </Grid>

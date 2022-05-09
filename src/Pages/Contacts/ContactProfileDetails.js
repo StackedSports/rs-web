@@ -263,8 +263,9 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onRelationshipCreated = (relationship) => {
-		console.log("new relationship Created ",relationship)
-		
+		console.log("new relationship Created ", relationship)
+		app.alert.setSuccess(`New relationship created: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
+
 	}
 
 	return (
