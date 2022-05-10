@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { Grid, Typography, Stack, Box } from "@mui/material"
-import { Tune, Event } from '@mui/icons-material';
+import { Tune, Event, KeyboardArrowDown } from '@mui/icons-material';
 import lodash from "lodash";
+import { useHistory } from "react-router-dom";
 
 import { SectionSubTitle } from "./Components/Styles/StyledComponents"
 import { BaseSection } from "./Components/BaseSection";
 import Button from "../Buttons/Button"
 import TasksQueueTable from "UI/Tables/TasksQueue/TasksQueueTable";
+import DateRangePicker from "UI/Forms/Inputs/DateRangePicker";
 import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
@@ -16,14 +18,24 @@ import { getFullName } from "utils/Parser";
 export const TeamQueue = () => {
   const [loadedRows, setLoadedRows] = useState([]);
   const filterChanged = useRef(false);
+  const lastFilter = useRef({});
+  const firstRender = useRef(true);
   const [openFilters, setOpenFilters] = useState(false);
+  const [dates, setDates] = useState([null, null]);
   const { user } = useContext(AuthContext);
-
-
-  const baseFilter = { message_status: ['Pending', "in progress"], includeTeam: user.role === "Admin" };
-
-  const messages = useMessages(1, 10, baseFilter);
   const senders = useTeamMembers();
+  const history = useHistory();
+
+  const getBaseFilter = () => {
+    if (dates.includes(null))
+      return ({ message_status: ['Pending', "in progress"], includeTeam: user.role === "Admin" });
+    else
+      return ({ message_status: ['Pending', "in progress"], includeTeam: user.role === "Admin", send_at_dates: [dates] });
+  };
+
+  //console.log("queue date", dates)
+
+  const messages = useMessages(1, 10, getBaseFilter());
 
   useEffect(() => {
     if (!messages.loading) {
@@ -38,8 +50,29 @@ export const TeamQueue = () => {
 
   }, [messages.items, messages.loading]);
 
+  useEffect(() => {
+    // we don't want to run this on first render
+    if (firstRender.current) {
+      firstRender.current = false;
+      return
+    }
+    if (dates[0] && dates[1]) {
+      filterChanged.current = true;
+      lastFilter.current = { ...lastFilter.current, ...getBaseFilter() };
+      messages.filter(lastFilter.current);
+    }
+    else {
+      filterChanged.current = true;
+      if (lastFilter.current instanceof Object)
+        delete lastFilter.current['send_at_dates'];
+      messages.filter({ ...lastFilter.current, ...getBaseFilter() });
+    }
+  }, [dates]);
+
+
+  // create a new message
   const onNewTaskClick = () => {
-    console.log("onNewTaskClick");
+    history.push("messages/create");
   }
 
   const onFilterClick = () => {
@@ -63,11 +96,13 @@ export const TeamQueue = () => {
   }
 
   const onFilterChange = (filters) => {
-    const filter = lodash.cloneDeep(baseFilter);
+    filterChanged.current = filters;
+    const filter = lodash.cloneDeep(getBaseFilter());
     if (filters.sender)
       filter.sender = filters.sender.map(sender => sender.id);
     if (filters.platform)
       filter.platform = filters.platform.map(platform => platform.value);
+    lastFilter.current = filter;
     messages.filter(filter);
   }
 
@@ -83,6 +118,13 @@ export const TeamQueue = () => {
       }
       actions={
         <Stack gap={2} direction='row'>
+          <DateRangePicker
+            label={dates.includes(null) ? "Filter by date" : dates.join(" - ")}
+            endIcon={<KeyboardArrowDown />}
+            startIcon={<Event color="primary" />}
+            onChange={setDates}
+
+          />
           <Button variant="outlined" name='Filter' endIcon={<Tune />} onClick={onFilterClick} />
         </Stack>
       }

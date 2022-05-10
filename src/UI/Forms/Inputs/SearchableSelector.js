@@ -7,7 +7,6 @@ import lodash from "lodash"
 export default function SearchableSelector(props) {
     const [value, setValue] = useState(props.multiple ? [] : null)
     const [options, setOptions] = useState([])
-    console.log(options)
 
     useEffect(() => {
         if (!props.options)
@@ -23,9 +22,6 @@ export default function SearchableSelector(props) {
             return
 
         setOptions(oldOptions => {
-            console.log("adding value", props.value)
-            console.log("oldOptions", oldOptions)
-            console.log(lodash.uniqBy([...oldOptions, ...props.value], 'id'))
             return lodash.uniqBy(oldOptions.concat(props.value), 'id')
         })
         setValue(props.value)
@@ -56,7 +52,7 @@ export default function SearchableSelector(props) {
 
     return (
         <Autocomplete
-          style={props.style}
+            style={props.style}
             multiple={props.multiple || false}
             options={props.options || []}
             selectOnFocus={props.selectOnFocus || true}
@@ -76,24 +72,24 @@ export default function SearchableSelector(props) {
                     fullWidth
                     onKeyPress={(event) => {
                         //params.onKeyPress(event)
-                        if(props.onKeyPress instanceof Function)
-                        props.onKeyPress(event)
+                        if (props.onKeyPress instanceof Function)
+                            props.onKeyPress(event)
                     }}
                 />
             )}
             renderTags={(tagValue, getTagProps) => {
                 return tagValue.map((option, index) => (
                     <Tag
-                      variant={props.variant || 'outlined'}
-                      {...getTagProps({ index })}
-                      avatar={props.getChipAvatar ? (
-                        <Avatar
-                          alt={getChipLabel(option)} 
-                          src={props.getChipAvatar(option)}
-                        />
-                      ) : null}
-                      label={getChipLabel(option)}
-                      deleteIcon={<Clear />}
+                        variant={props.variant || 'outlined'}
+                        {...getTagProps({ index })}
+                        avatar={props.getChipAvatar ? (
+                            <Avatar
+                                alt={getChipLabel(option)}
+                                src={props.getChipAvatar(option)}
+                            />
+                        ) : null}
+                        label={getChipLabel(option)}
+                        deleteIcon={<Clear />}
                     />
                 ));
             }}

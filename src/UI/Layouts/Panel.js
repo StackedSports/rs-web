@@ -49,6 +49,7 @@ export const PanelDropdown = ({ action, header }) => {
     return (
         <Dropdown
           header={header}
+          disabled={action.disabled}
           content={content}
           style={{
             marginLeft: 10

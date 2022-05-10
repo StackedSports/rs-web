@@ -42,8 +42,9 @@ export const MainMediaPage = (props) => {
         setSelectedPlaceholders(selection)
     }
 
+    //TODO
     const onArchiveAction = async () => {
-        const response = await archiveMedias(selectItems)
+        // const response = await archiveMedias(selectedMedias)
         console.log("response", response)
     }
 
@@ -72,7 +73,7 @@ export const MainMediaPage = (props) => {
             filter: {},
             option: tag
         }
-        
+
         setAddFilter(filter)
     }
 
@@ -91,7 +92,7 @@ export const MainMediaPage = (props) => {
             options: [
                 { name: 'Send in Message', onClick: () => { console.log("clicked") } },
                 { name: 'Download', onClick: onDownloadAction },
-                { name: 'Archive Media', onClick: onArchiveAction },
+                { name: 'Archive Media', onClick: onArchiveAction, disabled: selectedMedias.length === 0 || selectedPlaceholders.length === 0 },
                 { name: 'Untag', onClick: () => { console.log("clicked") } },
             ]
         },

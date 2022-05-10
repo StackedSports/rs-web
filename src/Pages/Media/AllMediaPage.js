@@ -4,6 +4,7 @@ import { Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
 
 import { AppContext } from 'Context/AppProvider'
+import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -11,11 +12,11 @@ import { archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
-import { addTagsToMedias, deleteTagsFromMedia } from "Api/Endpoints"
+import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
- 	const { type, value } = useParams()
+	const { type, value } = useParams()
 
 	// const [allMedias, setAllMedias] = useState([])
 	const [viewGrid, setViewGrid] = useState(true)
@@ -23,10 +24,12 @@ export const AllMediaPage = () => {
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
 	const filterChanged = useRef(false)
+	const isTagDialogFunctionRemove = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
 	const medias = useMedias(1, 25)
 	const app = useContext(AppContext)
+	const confirmDialog = useContext(ConfirmDialogContext)
 
 	useEffect(() => {
 		setReplaceSelectedPanelFilter(
@@ -50,7 +53,7 @@ export const AllMediaPage = () => {
 	// }, [medias.items, medias.loading])
 
 	const onFilterChange = (filter) => {
-		console.log("Filter Change",filter)
+		console.log("Filter Change", filter)
 		filterChanged.current = true
 		medias.filter(filter)
 	}
@@ -60,11 +63,42 @@ export const AllMediaPage = () => {
 	}
 
 	const archiveMedia = () => {
-		console.log(archiveMedias(selectedMedias))
+		confirmDialog.show('Archive Media',
+			`Are you sure you want to archive the selected media: ${medias.items.filter(m => selectedMedias.some(id => id === m.id)).map(m => m.name || m.file_name).join(', ')} ?`,
+			async () => {
+				const { success, error } = await archiveMedias(selectedMedias)
+				if (error.count === 0)
+					app.alert.setSuccess('Media archived successfully')
+				else if (success.count === 0)
+					app.alert.setError('An error occurred while archiving medias')
+				else
+					app.alert.setWarning(`Some medias (${error.count}) could not be archived`)
+			})
 	}
 
-	const handleTagsDialogConfirm = (selectedTagsIds) => {
-		const result = addTagsToMedias(selectedTagsIds, selectedMedias)
+	const handleTagsDialogConfirm = async (selectedTagsIds) => {
+		setOpenSelectTagDialog(false)
+		if (isTagDialogFunctionRemove.current) {
+			confirmDialog.show('Remove Tags',
+				`Are you sure you want to remove the selected tags (${selectedTagsIds.length}) ?`,
+				async () => {
+					const { success, error } = await deleteTagsFromMedias(selectedTagsIds, selectedMedias)
+					if (error.count === 0)
+						app.alert.setSuccess('Tags removed successfully')
+					else if (success.count === 0)
+						app.alert.setError('An error occurred while removing tags')
+					else
+						app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+				})
+		} else {
+			const { success, error } = await addTagsToMedias(selectedTagsIds, selectedMedias)
+			if (error.count === 0)
+				app.alert.setSuccess('Tags added successfully')
+			else if (success.count === 0)
+				app.alert.setError('An error occurred while adding tags')
+			else
+				app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+		}
 	}
 
 	const onDownloadAction = () => {
@@ -83,10 +117,23 @@ export const AllMediaPage = () => {
 		}
 	}
 
-	// does it remove all tags?
+	const onTagAction = () => {
+		if (selectedMedias.length > 0) {
+			isTagDialogFunctionRemove.current = false
+			setOpenSelectTagDialog(true)
+		}
+	}
+
 	const onUntagAction = () => {
 		if (selectedMedias.length > 0) {
+			isTagDialogFunctionRemove.current = true
+			setOpenSelectTagDialog(true)
 		}
+	}
+
+	const onSendInMessageAction = () => {
+		// how to send in message? only one media?
+		//app.sendMediaInMessage(media, 'media')
 	}
 
 	const mainActions = [
@@ -101,18 +148,19 @@ export const AllMediaPage = () => {
 			icon: AutoFixHigh,
 			variant: 'outlined',
 			type: 'dropdown',
+			disabled: selectedMedias.length === 0,
 			options: [
-				{ name: 'Send in Message', onClick: () => { console.log("clicked") } },
+				{ name: 'Send in Message', onClick: onSendInMessageAction },
 				{ name: 'Download', onClick: onDownloadAction },
 				{ name: 'Archive Media', onClick: archiveMedia },
-				{ name: 'Untag', onClick: () => { console.log("clicked") } },
+				{ name: 'Untag', onClick: onUntagAction },
 			]
 		},
 		{
 			name: 'Tag',
 			icon: LocalOfferOutlined,
 			variant: 'outlined',
-			onClick: () => setOpenSelectTagDialog(true),
+			onClick: onTagAction,
 			disabled: selectedMedias.length === 0,
 		},
 		{
@@ -143,19 +191,20 @@ export const AllMediaPage = () => {
 			)}
 
 			<MediaTable
-				items={medias.items}
-				pagination={medias.pagination}
-				loading={medias.loading}
-				view={viewGrid ? 'grid' : 'list'}
-				linkTo={mediaRoutes.mediaDetails}
-				onSelectionChange={onSelectionChange}
-				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
+			  items={medias.items}
+			  pagination={medias.pagination}
+			  loading={medias.loading}
+			  view={viewGrid ? 'grid' : 'list'}
+			  linkTo={mediaRoutes.mediaDetails}
+			  onSelectionChange={onSelectionChange}
+			  onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>
 
 			<SelectTagDialog
-				open={openSelectTagDialog}
-				onClose={() => setOpenSelectTagDialog(false)}
-				onConfirm={handleTagsDialogConfirm}
+			  open={openSelectTagDialog}
+			  onClose={() => setOpenSelectTagDialog(false)}
+			  onConfirm={handleTagsDialogConfirm}
+			  title={isTagDialogFunctionRemove.current ? 'Untag' : 'Add Tag'}
 			/>
 
 		</MediaPage>

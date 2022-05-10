@@ -1,8 +1,6 @@
-import { Link } from 'react-router-dom'
 import { Tooltip, Typography } from '@mui/material';
 
 import { formatDate, formatPhoneNumber } from 'utils/Parser'
-import { contactsRoutes } from 'Routes/Routes'
 
 import AvatarImg from "images/avatar.png";
 
@@ -44,14 +42,9 @@ const fullName = {
     resizable: true,
     valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
-        <Tooltip title={params.value} placement='right-start'>
-            <Link
-                style={{ color: 'inherit' }}
-                to={`${contactsRoutes.profile}/${params.row.id}`}
-            >
-                {params.value}
-            </Link>
-        </Tooltip>
+            <Tooltip title={params.value} placement='right-start'>
+                <Typography fontSize={14} noWrap sx={{cursor:'pointer'}} >{params.value}</Typography>
+            </Tooltip>
     ),
 }
 

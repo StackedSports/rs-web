@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { TextField, styled, Stack, Box } from '@mui/material';
-import { DateRangePicker as MuiDateRangePicker } from '@mui/x-date-pickers-pro'
+import { DateRangePicker as MuiDateRangePicker, DesktopDateRangePicker } from '@mui/x-date-pickers-pro'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { format } from 'date-fns';
+import { format, isEqual } from 'date-fns';
 import Button from 'UI/Widgets/Buttons/Button';
 
 /**
@@ -25,9 +25,12 @@ export const DateRangePicker = (props) => {
 
     const handleCloseCalendar = (newDates) => {
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
-        if (newDates[0] && newDates[1]) {
+        if (!value.every((date, index) => isEqual(date, newDates[index]) || date === newDates[index])) {
             if (props.onChange instanceof Function) {
-                props.onChange(newDates.map(date => format(date, formatStyle)))
+                if (newDates[0] && newDates[1])
+                    props.onChange(newDates.map(date => format(date, formatStyle)))
+                else
+                    props.onChange(newDates)
             }
             setShowCalendar(false);
             setOpen(false);
@@ -42,7 +45,7 @@ export const DateRangePicker = (props) => {
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         return (
             <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
-                <MuiDateRangePicker
+                <DesktopDateRangePicker
                     open={open}
                     clearable
                     allowSameDateSelection
@@ -53,12 +56,15 @@ export const DateRangePicker = (props) => {
                     onChange={(newValue) => setValue(newValue)}
                     onAccept={(date) => handleCloseCalendar(date)}
                     renderInput={
-                        (startProps, endProps) => (
-                            <StyledInputArea format={formatStyle}>
-                                <TextField {...startProps} size='small' autoFocus />
-                                <TextField {...endProps} size='small' />
-                            </StyledInputArea>
-                        )}
+                        (startProps, endProps) => {
+                            //console.log(startProps,endProps)
+                            return (
+                                <StyledInputArea format={formatStyle}>
+                                    <TextField {...startProps} size='small' autoFocus />
+                                    <TextField {...endProps} size='small' />
+                                </StyledInputArea>
+                            )
+                        }}
                     toolbarFormat={formatStyle}
                 />
             </LocalizationProvider>
