@@ -46,6 +46,7 @@ export const CreateBoardDialog = (props) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, formikHelpers) => {
+      // console.log(values)
       if (props.title.includes("Edit")) {
         const data = {
           ...values,

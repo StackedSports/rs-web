@@ -52,6 +52,7 @@ export default function BaseContactsPage(props) {
     const confirmDialog = useContext(ConfirmDialogContext)
 
     const [loading, setLoading] = useState(false)
+    const [loadingTags, setLoadingTags] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
     const [teamBoards, setTeamBoards] = useState([])
 
@@ -82,22 +83,22 @@ export default function BaseContactsPage(props) {
             setSelectedFilters(props.selectedFilters)
     }, [props.selectedFilters])
 
-    useEffect(() => {
-        let filters = {}
-        Object.keys(selectedFilters).forEach(key => {
-            // console.log(key)
-            // console.log(selectedFilters[key])
-            if (!filters[key])
-                filters[key] = []
+    // useEffect(() => {//enable remove filter button when editing board
+    //     let filters = {}
+    //     Object.keys(selectedFilters).forEach(key => {
+    //         // console.log(key)
+    //         // console.log(selectedFilters[key])
+    //         if (!filters[key])
+    //             filters[key] = []
 
-            selectedFilters[key].forEach(item => {
-                const criteria = { ...item, disabled: !editBoard }
-                filters[key].push(criteria)
-            })
-        })
-        setSelectedFilters(filters)
+    //         selectedFilters[key].forEach(item => {
+    //             const criteria = { ...item, disabled: !editBoard }
+    //             filters[key].push(criteria)
+    //         })
+    //     })
+    //     setSelectedFilters(filters)
 
-    }, [editBoard])
+    // }, [editBoard])
 
     useEffect(() => {
         if (!contacts.items)
@@ -290,9 +291,10 @@ export default function BaseContactsPage(props) {
 
     }
 
-    const onEditBoard = (data) => {
+    const onEditBoard = () => {
         console.log("onEditBoard")
         setEditBoard(true)
+        setOpenCreateBoardDialog(true)
     }
 
     const boardEditedSuccess = (res) => {
@@ -329,11 +331,12 @@ export default function BaseContactsPage(props) {
     }
 
     const onTagsSelected = (selectedTagsIds) => {
-        // setLoading(true)
+        setLoadingTags(true)
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
-        console.log("onRemoveTagsSelected")
-        console.log(selectedTagsIds, contactIds)
+
+        // console.log(selectedTagsIds, contactIds)
+
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
@@ -343,15 +346,16 @@ export default function BaseContactsPage(props) {
                 else
                     alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingTags(false))
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
-        // setLoading(true)
+        setLoadingTags(true)
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
-        console.log("onRemoveTagsSelected")
-        console.log(selectedTagsIds, contactIds)
+
+        // console.log(selectedTagsIds, contactIds)
+
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
@@ -361,7 +365,7 @@ export default function BaseContactsPage(props) {
                 else
                     alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingTags(false))
     }
 
     const onPageChange = (page) => {
@@ -387,7 +391,8 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             alert={alert}
-            actions={props.disabledMainActions && !editBoard ? [] : mainActions}
+            actions={props.disabledMainActions ? [] : mainActions}
+            // actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
@@ -513,20 +518,21 @@ export default function BaseContactsPage(props) {
             <CreateBoardDialog
                 onEditBoard={onEditBoard}
                 boardInfo={props.boardInfo}
-                boardEditedSuccess={boardEditedSuccess}
-                boardEditedFailure={boardEditedFailure}
                 open={openCreateBoardDialog}
                 onClose={onCloseBoardDialog}
                 selectedFilters={selectedFilters}
-                title={editBoard ? `Edit Board: ${props.boardInfo?.name}` : "Create Board"}
+                boardEditedSuccess={boardEditedSuccess}
+                boardEditedFailure={boardEditedFailure}
                 confirmAction={editBoard ? "Edit Board" : "Create Board"}
+                title={editBoard ? `Edit Board: ${props.boardInfo?.name}` : "Create Board"}
             />
 
             <SelectTagDialog
                 open={openSelectTagDialog}
+                actionLoading={loadingTags}
                 title={selectTagDialogTitle}
-                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onClose={() => setOpenSelectTagDialog(false)}
+                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
             />
         </MainLayout>

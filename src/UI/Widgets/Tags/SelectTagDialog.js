@@ -84,7 +84,7 @@ const SelectTagDialog = (props) => {
             // title={props.title || 'Select Tag'}
             confirmLabel={props.confirmLabel}
             cancelLabel={props.cancelLabel}
-
+            actionLoading={props.actionLoading}
         >
             <Stack 
               direction="row" 

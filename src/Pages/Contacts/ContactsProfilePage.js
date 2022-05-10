@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams,useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 
@@ -93,23 +93,23 @@ export default function ContactsProfilePage(props) {
 
     return (
         <MainLayout
-          topActionName='+ New Contact'
-          onTopActionClick={onTopActionClick}
-          filtersDisabled
-          onBackClick={() => history.goBack()}
-          loading={loading}
-          redirect={redirect}
+            topActionName='+ New Contact'
+            onTopActionClick={onTopActionClick}
+            filtersDisabled
+            onBackClick={() => history.goBack()}
+            loading={loading}
+            redirect={redirect}
         >
             <Stack
-              flex={1}
-              direction="row"
-              spacing={1}
+                flex={1}
+                direction="row"
+                spacing={1}
             >
                 <ContactProfileDetails
-                  loading={contact.loading}
-                  contact={updatedContact || contact.item}
-                  refreshContact={() => contact.refreshData()}
-                  onContactUpdated={onContactUpdated}
+                    loading={contact.loading}
+                    contact={updatedContact || contact.item}
+                    refreshContact={() => contact.refreshData()}
+                    onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />
                 <ContactMessageDetails />

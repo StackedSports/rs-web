@@ -68,6 +68,7 @@ export default function ContactsPage(props) {
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
     const [loading, setLoading] = useState(false)
+    const [loadingTags, setLoadingTags] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
     const [teamBoards, setTeamBoards] = useState([])
 
@@ -283,13 +284,13 @@ export default function ContactsPage(props) {
     }
 
     const onTagsSelected = (selectedTagsIds) => {
-        setLoading(true)
+        setLoadingTags(true)
 
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
-        // return 
-        console.log("onRemoveTagsSelected")
-        console.log(selectedTagsIds, contactIds)
+
+        // console.log(selectedTagsIds, contactIds)
+
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
@@ -299,15 +300,17 @@ export default function ContactsPage(props) {
                 else
                     alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingTags(false))
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
-        // setLoading(true)
+        // console.log("onRemoveTagsSelected")
+        setLoadingTags(true)
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
-        console.log("onRemoveTagsSelected")
-        console.log(selectedTagsIds, contactIds)
+
+        // console.log(selectedTagsIds, contactIds)
+
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
@@ -317,7 +320,7 @@ export default function ContactsPage(props) {
                 else
                     alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingTags(false))
     }
 
     const onBoardCreated = () => {
@@ -502,9 +505,10 @@ export default function ContactsPage(props) {
 
             <SelectTagDialog
                 open={openSelectTagDialog}
+                actionLoading={loadingTags}
                 title={selectTagDialogTitle}
-                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onClose={() => setOpenSelectTagDialog(false)}
+                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
             />
 

@@ -41,6 +41,7 @@ const BaseDialog = (props) => {
           <DialogActions sx={{ mt: 1 }}>
 
             <Button
+              disabled={props.actionLoading}
               name={props.cancelLabel || 'Cancel'}
               onClick={props.secondaryAction || props.onClose}
             />
