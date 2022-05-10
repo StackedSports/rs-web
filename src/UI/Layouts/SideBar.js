@@ -9,16 +9,15 @@ import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { routes } from 'Routes/Routes'
 
-
 const regularItems = [
     routes.dashboard,
     routes.contacts,
     routes.messages,
     routes.media,
+    routes.tweet,
     // routes.twitterPosts,
     // routes.twitterStream,
     routes.settings,
-    routes.tweet
 ]
 
 export default function SideBar(props) {
