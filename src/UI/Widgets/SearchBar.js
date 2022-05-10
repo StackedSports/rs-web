@@ -104,7 +104,7 @@ export default function SearchBar(props) {
               onKeyPress={onKeyPress}
               placeholder={props.placeholder}/>
             {input && input !== '' && (
-                <ClearIcon onClick={onClear} style={{ fontSize: 18 }}/>
+                <ClearIcon onClick={onClear} style={{ fontSize: 18, cursor: props.cursorClearIcon || "default", }}/>
             )}
         </div>
     )

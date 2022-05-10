@@ -17,7 +17,8 @@ const regularItems = [
     routes.media,
     // routes.twitterPosts,
     // routes.twitterStream,
-    routes.settings
+    routes.settings,
+    routes.tweet
 ]
 
 export default function SideBar(props) {
@@ -28,7 +29,7 @@ export default function SideBar(props) {
     const privateItems = useMemo(() => {
         let items = Object.assign([], regularItems)
         // return items
-        if(user && user.email === 'ben@stackedsports.com') {
+        if (user && user.email === 'ben@stackedsports.com') {
             items.splice(4, 0, routes.twitterPosts, routes.twitterStream)
         }
 
@@ -41,17 +42,17 @@ export default function SideBar(props) {
         <div className='SideBar'>
             {privateItems.map(item => (
                 <NavLink key={item.path} className='navLink' activeClassName='selected' to={item.path}>
-                    <item.icon className='icon'/>
+                    <item.icon className='icon' />
                     {/* <p className='label'>Dashboard</p> */}
                 </NavLink>
             ))}
             <Stack
-              flex={1} 
-              alignItems="center" 
-              justifyContent="flex-end"
-              mb={2}
+                flex={1}
+                alignItems="center"
+                justifyContent="flex-end"
+                mb={2}
             >
-                <AccountMenu/>
+                <AccountMenu />
             </Stack>
         </div>
     )

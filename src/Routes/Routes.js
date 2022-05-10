@@ -5,6 +5,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 
 export const routes = {
     dashboard: {
@@ -39,12 +40,17 @@ export const routes = {
     },
     settings: {
         title: 'Settings',
-        path: '/settings', // /settings
+        path: '/settings', //settings
         icon: SettingsIcon
+    },
+    tweet: {
+        title: 'Tweet',
+        path: '/tweet-ranking',
+        icon: StackedBarChartIcon
     },
     userSettings: {
         title: ' User Settings',
-        path: '/user', //
+        path: '/user',
         // icon: SettingsIcon
     },
 }
@@ -120,4 +126,9 @@ export const userRoutes = {
     profile: "/user/profile",
     account: "/user/account",
     notifications: "/user/notifications",
+}
+
+export const tweetRoutes = {
+    search: "/tweet-ranking",
+    tweets: "/tweet-ranking",
 }

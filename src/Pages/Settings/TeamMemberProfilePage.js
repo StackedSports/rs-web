@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -21,6 +21,7 @@ import { settingsRoutes } from 'Routes/Routes';
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 
 const TeamMemberProfilePage = (props) => {
+  const history = useHistory()
   const alert = useMainLayoutAlert();
   const { id } = useParams();
   const teamMember = useTeamMember(id);
@@ -28,38 +29,38 @@ const TeamMemberProfilePage = (props) => {
 
   const [loading, setLoading] = useState(false);
 
-  const filters = [
-    { // Category
-      id: '0',
-      name: 'General',
-      items: [
-        // Filters
-        { id: '0', name: 'Organization', path: settingsRoutes.main },
-        { id: 'team-members', name: 'Team Members', path: settingsRoutes.general.members },
-      ]
-    },
-    { // Category
-      id: '1',
-      name: 'Configurations',
-      items: [
-        // Filters
-        { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
-        { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
-        { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
-        { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
-      ]
-    },
-    {// Category
-      id: '2',
-      name: 'Tags',
-      items: [
-        // Filters
-        { id: 'media-tags', name: 'Media Tags', path: settingsRoutes.tags.mediaTags },
-        { id: 'contacts-tags', name: 'Contacts Tags', path: settingsRoutes.tags.contactsTags },
-        { id: 'message-tags', name: 'Message Tags', path: settingsRoutes.tags.messageTags },
-      ]
-    }
-  ]
+  // const filters = [
+  //   { // Category
+  //     id: '0',
+  //     name: 'General',
+  //     items: [
+  //       // Filters
+  //       { id: '0', name: 'Organization', path: settingsRoutes.main },
+  //       { id: 'team-members', name: 'Team Members', path: settingsRoutes.general.members },
+  //     ]
+  //   },
+  //   { // Category
+  //     id: '1',
+  //     name: 'Configurations',
+  //     items: [
+  //       // Filters
+  //       { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
+  //       { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
+  //       { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
+  //       { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
+  //     ]
+  //   },
+  //   {// Category
+  //     id: '2',
+  //     name: 'Tags',
+  //     items: [
+  //       // Filters
+  //       { id: 'media-tags', name: 'Media Tags', path: settingsRoutes.tags.mediaTags },
+  //       { id: 'contacts-tags', name: 'Contacts Tags', path: settingsRoutes.tags.contactsTags },
+  //       { id: 'message-tags', name: 'Message Tags', path: settingsRoutes.tags.messageTags },
+  //     ]
+  //   }
+  // ]
 
   const initialValues = {
     first_name: teamMember.item?.first_name || "",
@@ -118,8 +119,10 @@ const TeamMemberProfilePage = (props) => {
       alert={alert}
       title={props.title || 'Team Member Profile'}
       topActionName={props.topActionName || null}
+      onBackClick={() => history.goBack()}
+      filtersDisabled
+      // filters={filters}
       // onTopActionClick={onTopActionClick}
-      filters={filters}
     >
       {teamMember.loading ?
         <Stack

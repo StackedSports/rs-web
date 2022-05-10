@@ -35,7 +35,8 @@ import {
 	MediaRoutes,
 	SettingsRoutes,
 	UserSettingsRoutes,
-	routes
+	routes,
+	TweetRoutes
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
@@ -71,6 +72,7 @@ function App() {
 						<Route path={routes.settings.path} component={SettingsRoutes} />
 						<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 						<Route path={routes.dashboard.path} component={NewDashboard} />
+						<Route path={routes.tweet.path} component={TweetRoutes} />
 					</Switch>
 				</div>
 			</AppProvider>
