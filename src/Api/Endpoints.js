@@ -1004,15 +1004,13 @@ export const archiveMedias = async (mediasIds) => {
     }
     return new Promise((resolve, reject) => {
         if (!mediasIds instanceof Array)
-            return reject(new Error("Both mediaIds and tagIds must be an array"))
+            return reject(new Error("mediaIds must be an array"))
         Promise.allSettled(mediasIds.map(mediaId => archiveMedia(mediaId))).
             then(results => {
                 results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
-                        result.value.then((res) => {
-                            response.success.count++
-                            response.success.id.push(mediasIds[index])
-                        })
+                        response.success.count++
+                        response.success.id.push(mediasIds[index])
                     }
                     else {
                         response.error.count++
@@ -1066,10 +1064,8 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
             then(results => {
                 results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
-                        result.value.then(res => {
-                            response.success.count++
-                            response.success.id.push(mediaIds[index])
-                        })
+                        response.success.count++
+                        response.success.id.push(mediaIds[index])
                     }
                     else {
                         response.error.count++
@@ -1096,6 +1092,39 @@ export const deleteTagsFromMedia = (tagsId, mediaId) => {
     }
 
     return DELETE(`media/${mediaId}/remove_tags`, body)
+}
+
+export const deleteTagsFromMedias = (tagsId, mediasIds) => {
+    let response = {
+        success: {
+            count: 0,
+            id: []
+        },
+        error: {
+            count: 0,
+            id: []
+        }
+    }
+    return new Promise((resolve, reject) => {
+        if (!mediasIds instanceof Array && !tagsId instanceof Array)
+            return reject(new Error("Both mediasIds and tagsId must be an array"))
+
+        Promise.allSettled(mediasIds.map(mediaId => addTagsToMedia(tagsId, mediaId))).
+            then(results => {
+                results.forEach((result, index) => {
+                    if (result.status === 'fulfilled') {
+                        response.success.count++
+                        response.success.id.push(mediasIds[index])
+                    }
+                    else {
+                        response.error.count++
+                        response.error.id.push(mediasIds[index])
+                    }
+                })
+            }).finally(() => {
+                resolve(response)
+            })
+    })
 }
 
 /**

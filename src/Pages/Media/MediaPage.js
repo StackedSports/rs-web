@@ -60,7 +60,7 @@ export const MediaPage = (props) => {
 
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
+        console.log('Filter ' + filter[categoryIndex].items[filterIndex].name + ' selected from ' + filter[categoryIndex].name)
     }
 
     const panelFiltersData = useMemo(() =>

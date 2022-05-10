@@ -194,6 +194,7 @@ export const DashboardPage = () => {
   }, [monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats]);
 
   const onTopActionClick = () => {
+    //TODO
     console.log('onTopActionClick')
   }
 
@@ -204,7 +205,7 @@ export const DashboardPage = () => {
     >
       <Grid container spacing={3}>
         <Grid item xs={12} lg={8} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Typography variant="h4" fontWeight='bold'>Welcome Back {getFullName(user)} </Typography>
+          <Typography variant="h5" fontWeight='bold'>Welcome Back {getFullName(user)} </Typography>
           <TeamQueue />
           <MessagesGraphs stats={statsData} />
         </Grid>

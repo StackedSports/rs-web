@@ -165,7 +165,8 @@ export const getFilterMessagesCriteria = (filters) => {
             criteria['send_at_dates'] = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
     if (filters.sent_at_dates) {
-        criteria['sent_at_dates'] = filters.sent_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null)
+            criteria['sent_at_dates'] = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
     if (filters.message_status) {
         criteria['message_status'] = filters.message_status

@@ -9,21 +9,22 @@ const Dropdown = (props) => {
     }
 
     const onHeaderClick = (e) => {
-        setDisplayContent(!displayContent)
+        if (!props.disabled)
+            setDisplayContent(!displayContent)
         // console.log('display content')
     }
 
     const onHeaderBlur = (e) => {
-        if(props.dismissOnClick)
+        if (props.dismissOnClick)
             setTimeout(() => setDisplayContent(false), props.dismissDelay || 200)
         // console.log('drop on blur')
     }
 
     let className = 'DropDown-Content'
 
-    if(displayContent && !props.disabled)
+    if (displayContent && !props.disabled)
         className += ' Visible'
-    else if(props.disabled)
+    else if (props.disabled)
         className = 'DropDown-Content-Disabled'
 
     // console.log('dropdown' + className)
@@ -32,13 +33,13 @@ const Dropdown = (props) => {
     return (
         <div className='DropDown' onMouseLeave={onMouseLeave} style={props.style}>
             <div tabIndex={0}
-              className='DropDown-Header'
-              onClick={onHeaderClick}
-              onBlur={onHeaderBlur}>
-                <props.header/>
+                className='DropDown-Header'
+                onClick={onHeaderClick}
+                onBlur={onHeaderBlur}>
+                <props.header />
             </div>
             <div className={className} style={props.contentStyle}>
-                <props.content/>
+                <props.content />
             </div>
         </div>
     )
@@ -54,8 +55,8 @@ Dropdown.List = (props) => {
 
 Dropdown.Item = (props) => (
     <span style={props.style}
-      className={`${props.disabled ? "DropDown-Item-disabled" : "DropDown-Item"}`}
-      onClick={props.onClick}
+        className={`${props.disabled ? "DropDown-Item-disabled" : "DropDown-Item"}`}
+        onClick={props.onClick}
     >
         {props.name}
     </span>
