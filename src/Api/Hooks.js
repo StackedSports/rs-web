@@ -162,6 +162,7 @@ export const useTagsWithMessage = () => {
 export const useBoard = (id) => {
     const [board, setBoard] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -173,11 +174,16 @@ export const useBoard = (id) => {
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))
-    }, [id])
+    }, [id, refresh])
+
+    const refreshData = () => {
+        setRefresh(old => !old)
+    }
 
     return {
         item: board,
-        loading
+        refreshData,
+        loading,
     }
 }
 
@@ -1234,7 +1240,7 @@ export const useTaskQueue = (date) => {
         error
     }
 }
-export const useStats = (startDate,endDate) => {
+export const useStats = (startDate, endDate) => {
     const [stats, setStats] = useState({})
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -1242,7 +1248,7 @@ export const useStats = (startDate,endDate) => {
     useEffect(() => {
         setLoading(true)
 
-        getStats(startDate,endDate)
+        getStats(startDate, endDate)
             .then(([stats]) => {
                 setStats(stats?.table)
             })
@@ -1250,7 +1256,7 @@ export const useStats = (startDate,endDate) => {
                 setError(error)
             })
             .finally(() => setLoading(false))
-    }, [startDate,endDate])
+    }, [startDate, endDate])
 
     return {
         items: stats,
@@ -1294,10 +1300,10 @@ export const useContactTableColumns = (control, id) => {
         storedColumns : getColumns(control))
 
     useEffect(() => {
-        if(!objectNotNull(control))
+        if (!objectNotNull(control))
             return
 
-        if(!storedColumns)
+        if (!storedColumns)
             setColumns(getColumns(control))
     }, [control])
 

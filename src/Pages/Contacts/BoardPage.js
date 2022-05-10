@@ -45,7 +45,7 @@ export default function BoardPage(props) {
     useEffect(() => {
         if (board.item)
             console.log("board: ", board.item)
-
+        console.log("board.item", board.item)
     }, [board.item])
 
     const title = useMemo(() => {
@@ -70,6 +70,7 @@ export default function BoardPage(props) {
             return null
 
         let criteria = board.item.criteria
+        console.log(criteria)
         let filters = {}
         Object.keys(criteria).forEach(key => {
             console.log(key)
@@ -89,7 +90,7 @@ export default function BoardPage(props) {
             })
         })
 
-        console.log(filters)
+        // console.log("filters", filters)
 
         return filters
     }, [board.item])
@@ -118,10 +119,17 @@ export default function BoardPage(props) {
 
     // console.log(boardContacts)
 
+    const boardInfo = {
+        id: board.item?.id,
+        name: board.item?.name,
+        is_shared: board.item?.is_shared,
+    }
+
     return (
         <BaseContactsPage
             title={title}
             id={board.item?.id}
+            boardInfo={boardInfo}
             tableId={`board-${boardId}-page`}
             contacts={boardContacts}
             enableSendMessageWithoutSelection

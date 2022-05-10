@@ -18,7 +18,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import Button from '../Buttons/Button'
-import { createNewBoard } from 'Api/Endpoints'
+import { createNewBoard, updateBoard } from 'Api/Endpoints'
 
 
 const validationSchema = yup.object({
@@ -47,8 +47,22 @@ export const CreateBoardDialog = (props) => {
     validationSchema: validationSchema,
     onSubmit: (values, formikHelpers) => {
       if (props.title.includes("Edit")) {
-        onEditBoard(values)
-        formikHelpers.setSubmitting(false)
+        const data = {
+          ...values,
+          criteria: props.selectedFilters
+        }
+        // console.log(data)
+        updateBoard(props.boardInfo?.id, data)
+          .then(res => {
+            console.log(res)
+            props.boardEditedSuccess(res)
+          })
+          .catch(error => {
+            console.log(error)
+            props.boardEditedFailure(error)
+          })
+          .finally(() => formikHelpers.setSubmitting(false))
+
       } else {
         createNewBoard(values, props.selectedFilters)
           .then((res) => {
@@ -62,10 +76,6 @@ export const CreateBoardDialog = (props) => {
       }
     }
   });
-
-  const onEditBoard = (data) => {
-    props.onEditBoard(data)
-  }
 
   const handleClose = (e, reason) => {
     if (reason && reason == "backdropClick")
@@ -108,7 +118,6 @@ export const CreateBoardDialog = (props) => {
           </Alert>
         )}
 
-
         <TextField
           margin='dense'
           id='name'
@@ -140,6 +149,7 @@ export const CreateBoardDialog = (props) => {
             const filter = props.selectedFilters[key];
             return (
               <Typography
+                key={key}
                 component='span'
                 color='text.primary'
                 fontWeight='700 !important'
