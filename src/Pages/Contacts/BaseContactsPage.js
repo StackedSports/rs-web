@@ -7,8 +7,9 @@ import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
+import MainLayout from 'UI/Layouts/MainLayout';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 
@@ -44,9 +45,12 @@ import { contactsRoutes, messageRoutes } from 'Routes/Routes';
 
 import { timeZones, states } from 'utils/Data';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import { AppContext } from 'Context/AppProvider';
+
 
 export default function BaseContactsPage(props) {
     const [redirect, setRedirect] = useState('')
+    const app = useContext(AppContext)
 
     const contacts = useMemo(() => props.contacts, [props.contacts])
     const confirmDialog = useContext(ConfirmDialogContext)
@@ -55,8 +59,6 @@ export default function BaseContactsPage(props) {
     const [loadingTags, setLoadingTags] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
     const [teamBoards, setTeamBoards] = useState([])
-
-    const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [editBoard, setEditBoard] = useState(false)
@@ -299,7 +301,7 @@ export default function BaseContactsPage(props) {
 
     const boardEditedSuccess = (res) => {
         setOpenCreateBoardDialog(false)
-        alert.setSuccess('Board edited successfully!')
+         app.alert.setSuccess('Board edited successfully!')
         // board.refreshData()
         boards.refreshData()
         setShowPanelFilters(false)
@@ -307,7 +309,7 @@ export default function BaseContactsPage(props) {
     }
 
     const boardEditedFailure = (error) => {
-        alert.setError('Failed to edit board.')
+         app.alert.setError('Failed to edit board.')
         // setEditBoard(false)
     }
 
@@ -318,13 +320,13 @@ export default function BaseContactsPage(props) {
             setLoading(true)
             deleteBoard(props.id)
                 .then(res => {
-                    alert.setSuccess('Board deleted successfully!')
+                    app.alert.setSuccess('Board deleted successfully!')
                     boards.refreshData()
                     setRedirect(contactsRoutes.all)
                 })
                 .catch(error => {
                     console.log(error)
-                    alert.setError('Failed to delete board.')
+                     app.alert.setError('Failed to delete board.')
                 })
                 .finally(() => setLoading(false))
         })
@@ -340,11 +342,11 @@ export default function BaseContactsPage(props) {
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                    alert.setSuccess('Contacts tagged successfully!')
+                     app.alert.setSuccess('Contacts tagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                    alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
+                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
@@ -359,11 +361,11 @@ export default function BaseContactsPage(props) {
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                    alert.setSuccess('Contacts untagged successfully!')
+                     app.alert.setSuccess('Contacts untagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                    alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
+                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
@@ -390,7 +392,6 @@ export default function BaseContactsPage(props) {
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
             filters={filters}
-            alert={alert}
             actions={props.disabledMainActions ? [] : mainActions}
             // actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
             onFilterSelected={onFilterSelected}
@@ -443,12 +444,38 @@ export default function BaseContactsPage(props) {
                             icon: AutoFixHighIcon,
                             options: props.title.includes("Board") ?
                                 [
+                                    //     { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                    //     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                    //     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                    //     { name: 'Archive Contact', onClick: onArchiveContactClick },
+                                    { name: 'Edit Board', onClick: onEditBoard },
+                                    { name: 'Delete Board', onClick: onDeleteBoard },
+                                ]
+                                :
+                                [
+                                    //     { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                    //     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                    //     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                    //     { name: 'Archive Contact', onClick: onArchiveContactClick },
+                                ]
+                        }}
+                    />
+                    <PanelDropdown
+                        action={{
+                            id: 'selected-contacts-actions',
+                            name: `${selectedContacts.count} selected contact${selectedContacts.count > 1 ? "s" : ""}`,
+                            type: 'dropdown',
+                            variant: 'contained',
+                            icon: ArrowDropDownIcon,
+                            disabled: selectedContacts.count === 0,
+                            options: props.title.includes("Board") ?
+                                [
                                     { name: 'Export as CSV', onClick: onExportAsCSVClick },
                                     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
                                     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                     { name: 'Archive Contact', onClick: onArchiveContactClick },
-                                    { name: 'Edit Board', onClick: onEditBoard },
-                                    { name: 'Delete Board', onClick: onDeleteBoard },
+                                    // { name: 'Edit Board', onClick: onEditBoard },
+                                    // { name: 'Delete Board', onClick: onDeleteBoard },
                                 ]
                                 :
                                 [
