@@ -1,6 +1,7 @@
 import { useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { Typography, Grid } from '@mui/material';
 import { format, startOfQuarter, endOfQuarter, subMonths, startOfYear, endOfYear, subYears, startOfMonth, endOfMonth, subDays } from 'date-fns';
+import { useHistory } from 'react-router-dom';
 
 import SecondaryLayout from '../../UI/Layouts/SecondaryLayout';
 import { AuthContext } from 'Context/Auth/AuthProvider';
@@ -11,6 +12,7 @@ import { useStats } from 'Api/Hooks';
 import { getFullName } from 'utils/Parser';
 
 export const DashboardPage = () => {
+  const history = useHistory();
   const { user } = useContext(AuthContext);
   const [monthlyStats, setMontlyStats] = useState({ data: null, loading: true });
   const [quarterlyStats, setQuarterlyStats] = useState({ data: null, loading: false });
@@ -194,8 +196,7 @@ export const DashboardPage = () => {
   }, [monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats]);
 
   const onTopActionClick = () => {
-    //TODO
-    console.log('onTopActionClick')
+     history.push("messages/create");
   }
 
   return (

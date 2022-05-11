@@ -1109,7 +1109,7 @@ export const deleteTagsFromMedias = (tagsId, mediasIds) => {
         if (!mediasIds instanceof Array && !tagsId instanceof Array)
             return reject(new Error("Both mediasIds and tagsId must be an array"))
 
-        Promise.allSettled(mediasIds.map(mediaId => addTagsToMedia(tagsId, mediaId))).
+        Promise.allSettled(mediasIds.map(mediaId => deleteTagsFromMedia(tagsId, mediaId))).
             then(results => {
                 results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
