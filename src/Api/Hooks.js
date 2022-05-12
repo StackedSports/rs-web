@@ -52,6 +52,7 @@ export const useUser = () => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -66,12 +67,16 @@ export const useUser = () => {
                 setError(error)
             })
             .finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshUser = () => setRefresh(!refresh)
+
 
     return {
         item: user,
         loading,
         error,
+        refresh: refreshUser,
     }
 }
 
@@ -141,7 +146,7 @@ export const useTagsWithContacts = () => {
                 // console.log(tags)
                 setTags(tags)
             })
-            .catch(error =>{
+            .catch(error => {
                 console.log(error)
                 setError(error)
             })

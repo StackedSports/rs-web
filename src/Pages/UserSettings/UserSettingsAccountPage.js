@@ -12,7 +12,6 @@ import { useUser } from 'Api/Hooks';
 import { AuthContext } from 'Context/Auth/AuthProvider';
 import { linkWithTwitter } from 'Api/Endpoints';
 
-const provider = new TwitterAuthProvider();
 
 const UserAccountCard = (props) => {
 
@@ -28,16 +27,15 @@ const UserAccountCard = (props) => {
 		// 	secret: props.provider.secret || "",
 		// }
 		// console.log(data)
+		const provider = new TwitterAuthProvider();
 		const auth = getAuth();
+
 		signInWithPopup(auth, provider)
 			.then((result) => {
-				// This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-				// You can use these server side with your app's credentials to access the Twitter API.
 				console.log(result)
 				const credential = TwitterAuthProvider.credentialFromResult(result);
 				const token = credential.accessToken;
 				const secret = credential.secret;
-				console.log("Token e secret", token, secret)
 
 				// The signed-in user info.
 				const handle = result.user?.reloadUserInfo?.screenName;
@@ -46,6 +44,8 @@ const UserAccountCard = (props) => {
 
 				linkWithTwitter({ token, secret, email, handle, id }).then((result) => {
 					console.log(result)
+					if (props.refreshUser && props.refreshUser instanceof Function)
+						props.refreshUser()
 				}).catch((error) => {
 					console.log(error)
 				})
@@ -175,12 +175,13 @@ const UserSettingsAccountPage = (props) => {
 				{/* ACCOUNT CARDS */}
 				<Stack justifyContent="start" alignItems="start" spacing={2}>
 					<UserAccountCard
-						icon={TwitterIcon}
-						title="Twitter Account"
-						buttonText="LINK TWITTER"
-						provider={twitterProvider}
-						account={user.item?.twitter_profile?.screen_name}
-						image={user.item?.twitter_profile?.profile_image}
+					  icon={TwitterIcon}
+					  title="Twitter Account"
+					  buttonText="LINK TWITTER"
+					  provider={twitterProvider}
+					  account={user.item?.twitter_profile?.screen_name}
+					  image={user.item?.twitter_profile?.profile_image}
+					  refreshUser={() => user.refresh()}
 					/>
 
 					{/* <UserAccountCard
@@ -236,7 +237,7 @@ const UserSettingsAccountPage = (props) => {
 					</Button>
 				</Box>
 			</Stack>
-		</UserSettingsPage >
+		</UserSettingsPage>
 	)
 }
 
