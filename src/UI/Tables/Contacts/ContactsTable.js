@@ -36,6 +36,7 @@ export default function ContactsTable(props) {
                     '.contact-full-name-link:hover': { textDecoration: 'underline', cursor: 'pointer' }
                 }}
                 //   rows={props.contacts ? props.contacts : []}
+                apiRef={props.apiRef}
                 rows={props.contacts || []}
                 columns={columns}
                 checkboxSelection
