@@ -272,10 +272,15 @@ const ContactProfileDetails = (props) => {
 		formikProps.resetForm()
 	}
 
-	const onRelationshipCreated = (relationship) => {
-		console.log("new relationship Created ", relationship)
-		app.alert.setSuccess(`New relationship created: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
-
+	const onSuccessRelationship = (relationship) => {
+		if (familyMember) {
+			console.log("relationship updated ", relationship)
+			app.alert.setSuccess(`Relationship updated: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
+		} else {
+			console.log("new relationship Created ", relationship)
+			app.alert.setSuccess(`New relationship created: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
+		}
+		props.refreshContact()
 	}
 
 	const onViewPerson = (person) => {
@@ -296,7 +301,7 @@ const ContactProfileDetails = (props) => {
 				open={openNewFamilyMemberDialog}
 				onClose={() => setOpenNewFamilyMemberDialog(false)}
 				contact={props.contact}
-				onCreated={onRelationshipCreated}
+				onSuccess={onSuccessRelationship}
 				person={familyMember}
 			/>
 

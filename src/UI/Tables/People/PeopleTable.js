@@ -1,6 +1,4 @@
-import { Grid } from "@mui/material"
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { columnsMini, columnsFull } from './PeopleTableConfig';
 
