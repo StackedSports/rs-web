@@ -186,7 +186,7 @@ const UserSettingsAccountPage = (props) => {
 						title="Twitter Account"
 						buttonText="LINK TWITTER"
 						provider={twitterProvider}
-						account={user.item?.twitter_profile?.screen_name}
+						account={user.item?.twitter_profile?.screen_name ? `@${user.item?.twitter_profile?.screen_name}` : null}
 						image={user.item?.twitter_profile?.profile_image}
 						userId={user.item?.id}
 						refreshUser={() => user.refresh()}
