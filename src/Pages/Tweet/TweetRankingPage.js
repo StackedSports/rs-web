@@ -1,249 +1,167 @@
 
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useRef } from 'react'
+import axios from 'axios'
 
 import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@material-ui/core';
-import { Stack } from '@mui/material';
-import Button from 'UI/Widgets/Buttons/Button';
-import Collapse from '@mui/material/Collapse';
+import { Stack } from '@mui/material'
+import Collapse from '@mui/material/Collapse'
 
-import SearchBar from 'UI/Widgets/SearchBar';
-import TweetPage from './TweetPage';
+import { addDoc, setDoc, collection, doc, onSnapshot } from 'firebase/firestore'
+
+import { db } from 'Api/Firebase'
+
+import SearchBar from 'UI/Widgets/SearchBar'
+import Button from 'UI/Widgets/Buttons/Button'
+import TweetPage from './TweetPage'
+
+import TweetDetails from './Components/TweetDetails'
 
 const TweetRankingPage = (props) => {
+	const [input, setInput] = useState('https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A')
+	const [tweetId, setTweetId] = useState('1521517935155679237')
+	
+	const [tweet, setTweet] = useState({})
+	const [openTweet, setOpenTweet] = useState(true)
 
-  const [input, setInput] = useState('')
-  const [tweet, setTweet] = useState({})
-  const [openTweet, setOpenTweet] = useState(false)
+	const listener = useRef(null)
 
-  const onTopActionClick = () => {
-    console.log("onTopActionClick")
-  }
+	useEffect(() => {
+		if(!tweetId || tweetId === '')
+			return
 
-  const onTweetSearch = async () => {
-    console.log("onTweetSearch")
-    console.log(input)
-    setOpenTweet(!openTweet)
-    // let response = await axios.get(input)
+		// console.log('testing firestore')
 
-    // console.log(response)
-    // setTweet(response.data)
-  }
+		// addDoc(collection(db, 'logs'), {
+		// 		message: 'Hey test success'
+		// 	})
+		// 	.then(res => {
+		// 		console.log(res)
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err)
+		// 	})
 
-  const onClear = () => {
-    console.log("onClear")
-    setInput("")
-  }
+	}, [tweetId])
 
-  const onAddAnotherTweet = () => {
-    console.log("onAddAnotherTweet")
+	useEffect(() => {
+		if(!listener.current)
+			return
 
-  }
+		return () => listener.current()
+	}, [listener.current])
 
-  const onSaveTweet = () => {
-    console.log("onSaveTweet")
+	const onTopActionClick = () => {
+		console.log("onTopActionClick")
+	}
 
-  }
+	const onTweetSearch = () => {
+		console.log("onTweetSearch")
+		console.log(input)
+		setOpenTweet(!openTweet)
+	}
 
-  console.log(input)
+	const onSearchChange = (input) => {
+		setInput(input)
+	}
 
-  return (
-    <TweetPage
-      title="Post Deep Dive"
-      topActionName="+ New Search"
-      onTopActionClick={onTopActionClick}
-    >
-      <Stack spacing={3}>
+	const onSearchTweet = (value) => {
+		// TODO
 
-        <Stack spacing={3}>
-          <Divider />
+		let parts = value.split('/')
+		console.log(parts)
 
-          <SearchBar
-            style={{
-              width: "100%",
-              // border: '1px solid #ddd'
-            }}
-            searchOnChange
-            onClear={onClear}
-            cursorClearIcon="pointer"
-            placeholder="Search Tweet"
-            onSearch={(value) => setInput(value)}
-          />
-          <Button
-            variant="contained"
-            name="Analyze Tweet"
-            onClick={onTweetSearch}
-            style={{
-              alignSelf: "end",
-              width: "max-content",
-            }}
-          // startIcon={}
-          />
+		// https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A
 
-          {!openTweet && <Divider />}
-        </Stack>
+		let queryParams = value.split('/').slice(-1)
+		// console.log(queryParams[0])
+		let tweetId = queryParams[0].split('?')[0]
 
-        <Button
-          name="+ Add Another"
-          onClick={onAddAnotherTweet}
-          style={{
-            alignSelf: "end",
-            width: "max-content",
-          }}
-        />
+		console.log(tweetId)
+		setTweetId(tweetId)
+		setOpenTweet(true)
 
-        <Collapse
-          in={openTweet}
-          style={{
-            border: '1px solid #ddd'
-          }}>
+		const requestRef = doc(collection(db, 'requests'))
+		setDoc(requestRef, { tweetId, id: requestRef.id })
+			.then(() => {
+				console.log('request made')
+			})
+			.catch(err => console.log(err))
 
-          <Stack ml={10} direction="row">
+		const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
+			const log = logRef.data()
 
-            <Stack
-              sx={{
-                borderLeft: "1px solid #ddd",
-                borderRight: "1px solid #ddd",
-              }}
-              p={5}
-              flex={1}
-              spacing={4}
-            >
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography
-                  variant="subtitle1"
-                  style={{ textAlign: "center" }}
-                >
-                  Tweet Details
-                </Typography>
+			console.log(log)
+		})
 
-                <Button
-                  variant="contained"
-                  name="+ Save"
-                  onClick={onSaveTweet}
-                  style={{
-                    width: "max-content",
-                  }}
-                />
-              </Stack>
-              {/* 
-              <Stack sx={{ maxWidth: 345 }}>
-                <Stack direction="row" spacing={2}>
-                  <Avatar sx={{ width: "76px" }} aria-label="recipe">
-                    R
-                  </Avatar>
-                  <Stack>
-                    <Typography variant="body2" color="text.secondary">
-                      Geaorgia Football
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      @GeorgiaFootball
-                    </Typography>
-                  </Stack>
+		listener.current = unsub
+	}
 
-                </Stack>
+	const onAnalyzeClick = (e) => {
+		onSearchTweet(input)
+	}
 
-                <Stack>
+	const onAddAnotherTweet = () => {
+		console.log("onAddAnotherTweet")
+	}
 
-                </Stack>
 
-                <Stack>
-                  <Typography variant="body2" color="text.secondary">
-                    Lorem
-                  </Typography>
-                </Stack>
-              </Stack> */}
+	return (
+		<TweetPage
+		  title="Post Deep Dive"
+		  topActionName="+ New Search"
+		  onTopActionClick={onTopActionClick}
+		>
+			<Stack spacing={3}>
+				<Divider />
 
-            </Stack>
+				<SearchBar
+				  style={{
+					width: "100%",
+					// border: '1px solid #ddd'
+					}}
+				  value={input}
+				  searchOnChange
+				  onChange={onSearchChange}
+				  cursorClearIcon="pointer"
+				  placeholder="Search Tweet"
+				  onSearch={onSearchTweet}
+				/>
+				
+				{input !== '' && 
+					<Button
+					  variant="contained"
+					  name="Analyze Tweet"
+					  onClick={onAnalyzeClick}
+					  style={{
+						alignSelf: "end",
+						width: "max-content",
+					  }}
+					/>
+				}
 
-            <Box
-              flex={.5}
-              sx={{
-                display: "grid",
-                gridGap: "20px",
-                alignItems: "center",
-                justifyItems: "center",
-                gridTemplateRows: "1fr 2fr 1fr",
-              }}
-            >
-              <Box sx={{ width: "100%" }}>
-                <Typography
-                  variant="subtitle1"
-                  style={{ width: "100%", textAlign: "center" }}
-                >
-                  Contact Engagment Stats
-                </Typography>
-                <Divider />
-              </Box>
+				{/* {!openTweet && <Divider />} */}
 
-              <Stack spacing={3}>
-                <Box>
-                  <Typography
-                    variant="h6"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    35%
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    Retweet Rate (10/86)
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography
-                    variant="h6"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    8%
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    Quote Tweet Rate (1/7)
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography
-                    variant="h6"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    84%
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    style={{ width: "100%", textAlign: "center" }}
-                  >
-                    Likes Rate (598/746)
-                  </Typography>
-                </Box>
-              </Stack>
+				{/* <Button
+				name="+ Add Another"
+				onClick={onAddAnotherTweet}
+				style={{
+					alignSelf: "end",
+					width: "max-content",
+				}}
+				/> */}
 
-              <Box sx={{ width: "100%" }}>
-                <Divider />
-                <Typography
-                  variant="subtitle1"
-                  style={{ width: "100%", textAlign: "center" }}
-                >
-                  Board Engagment Status
-                </Typography>
-                <Divider />
-              </Box>
+				<Collapse
+				  in={openTweet}
+				  style={{
+					border: '1px solid #ddd'
+				  }}
+				>
+				  	<TweetDetails tweetId={tweetId}/>
+				</Collapse>
 
-            </Box>
-          </Stack>
-
-        </Collapse>
-
-      </Stack >
-    </TweetPage >
-  )
+			</Stack >
+		</TweetPage >
+	)
 }
 
 export default TweetRankingPage;

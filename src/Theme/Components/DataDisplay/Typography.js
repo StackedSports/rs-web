@@ -17,12 +17,19 @@ const typography = {
         color: '#212529',
         fontWeight: 'bold'
     },
+
     info: {
         color: '#999',
     },
     'info-bold': {
         color: '#212529',
         fontWeight: 'bold'
+    },
+    typography: {
+        'info-bold': {
+            color: '#212529',
+            fontWeight: 'bold'
+        }
     }
 }
 
