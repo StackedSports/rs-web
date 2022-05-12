@@ -10,72 +10,69 @@ import UserSettingsPage from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';
+import { AppContext } from 'Context/AppProvider';
 import { linkWithTwitter, unLinkTwitter } from 'Api/Endpoints';
 
 
 const UserAccountCard = (props) => {
+	const app = useContext(AppContext);
 
 	const onLinkAccount = () => {
-		if (!props.account)
-			console.log("onLinkAccount: " + props.provider.name)
-		// const data = {
-		// 	provider: props.provider.name,
-		// 	id: props.user?.id || "",
-		// 	handle: props.user?.user_handle || "",
-		// 	email: props.user?.email || "",
-		// 	token: props.provider.token || "",
-		// 	secret: props.provider.secret || "",
-		// }
-		// console.log(data)
-		const provider = new TwitterAuthProvider();
-		const auth = getAuth();
+		if (!props.account) {
+			const provider = new TwitterAuthProvider();
+			const auth = getAuth();
 
-		signInWithPopup(auth, provider)
-			.then((result) => {
-				console.log(result)
-				const credential = TwitterAuthProvider.credentialFromResult(result);
-				const token = credential.accessToken;
-				const secret = credential.secret;
-
-				// The signed-in user info.
-				const handle = result.user?.reloadUserInfo?.screenName;
-				const email = result.user?.email
-				const id = result.user?.providerData[0]?.uid
-
-				linkWithTwitter({ token, secret, email, handle, id }).then((result) => {
+			signInWithPopup(auth, provider)
+				.then((result) => {
 					console.log(result)
-					if (props.refreshUser && props.refreshUser instanceof Function)
-						props.refreshUser()
-				}).catch((error) => {
-					console.log(error)
-				})
+					const credential = TwitterAuthProvider.credentialFromResult(result);
+					const token = credential.accessToken;
+					const secret = credential.secret;
 
-			}).catch((error) => {
-				// Handle Errors here.
-				console.log("error", error)
-				const errorCode = error.code;
-				console.log("error code", error)
-				const errorMessage = error.message;
-				console.log("errorMessage", errorMessage)
-				// The email of the user's account used.
-				const email = error.email;
-				// ...
-			});
+					// The signed-in user info.
+					const handle = result.user?.reloadUserInfo?.screenName;
+					const email = result.user?.email
+					const id = result.user?.providerData[0]?.uid
+
+					linkWithTwitter({ token, secret, email, handle, id }).then((result) => {
+						console.log(result)
+						app.alert.setSuccess('Account linked successfully');
+						if (props.refreshUser && props.refreshUser instanceof Function)
+							props.refreshUser()
+					}).catch((error) => {
+						console.log(error)
+						app.alert.setError(`Account linking failed ${error}`);
+					})
+
+				}).catch((error) => {
+					// Handle Errors here.
+					//const errorCode = error.code;
+					//console.log("error code", error)
+					const errorMessage = error.message;
+					//console.log("errorMessage", errorMessage)
+					app.alert.setError(`Account linking failed: ${errorMessage}`);
+				});
+		} else {
+			//console.log("user is already linked")
+		}
 	}
 
 	const onUnlinkAccount = () => {
-		console.log(props.userId)
-		unLinkTwitter(props.userId).then((result) => {
-			console.log(result)
-			if (props.refreshUser && props.refreshUser instanceof Function)
-				props.refreshUser()
-		}).catch((error) => {
-			console.log(error)
-		})
+		if (props.account) {
+			unLinkTwitter(props.userId).then((result) => {
+				//console.log(result)
+				app.alert.setSuccess('Your account has been unlinked');
+				if (props.refreshUser && props.refreshUser instanceof Function)
+					props.refreshUser()
+			}).catch((error) => {
+				//console.log(error)
+				app.alert.setError(`Account unlinking failed: ${error.message}`);
+			})
+		}
 	}
 
 	const onUsePhoto = () => {
-		console.log("onUsePhoto: " + props.provider.name)
+		console.log("onUsePhoto: ")
 	}
 
 	return (
@@ -103,8 +100,10 @@ const UserAccountCard = (props) => {
 				<Button
 					variant="contained"
 					disabled={props.disabled}
+					disableRipple={props.disabled || props.account}
+					disableElevation={props.disabled || props.account}
 					onClick={onLinkAccount}
-					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%" }}
+					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%", textTransform: "none" }}
 				>
 					{<props.icon />}
 					{props.account || props.buttonText}
@@ -142,11 +141,6 @@ const UserSettingsAccountPage = (props) => {
 
 	const user = useUser();
 
-	const twitterProvider = {
-		name: "twitter",
-		token: "provider_token",
-		secret: "provider_secret",
-	}
 	const instagramProvider = {
 		name: "instagram",
 		token: "provider_token",
