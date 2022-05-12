@@ -36,11 +36,13 @@ import {
 	SettingsRoutes,
 	UserSettingsRoutes,
 	routes,
-	TweetRoutes
+	TweetRoutes,
+	ChatRoutes
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
 import AppProvider from 'Context/AppProvider'
+import { chatRoutes } from "Routes/Routes";
 
 function App() {
 	return (
@@ -73,6 +75,7 @@ function App() {
 						<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 						<Route path={routes.dashboard.path} component={NewDashboard} />
 						<Route path={routes.tweet.path} component={TweetRoutes} />
+						<Route path={chatRoutes.all} component={ChatRoutes} />
 					</Switch>
 				</div>
 			</AppProvider>

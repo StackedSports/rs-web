@@ -9,6 +9,16 @@
     /* max-width: 1200px; */
 }
 
+.PainelBlank {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    /* max-width: 1200px; */
+}
+
 .Panel .Header {
     display: flex;
     flex-direction: row;

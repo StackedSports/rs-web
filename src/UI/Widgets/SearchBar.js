@@ -17,17 +17,17 @@ export const MiniSearchBar = (props) => {
         setInput(e.target.value)
 
         // TODO: this is broken for some reason
-        if(props.searchOnChange) {
-            if(e.target.value === '')
+        if (props.searchOnChange) {
+            if (e.target.value === '')
                 props.onClear()
             else
                 props.onSearch(e.target.value)
         }
-            
+
     }
 
     const onKeyPress = (e) => {
-        if(e.key === 'Enter')
+        if (e.key === 'Enter')
             props.onSearch(input)
     }
 
@@ -35,15 +35,15 @@ export const MiniSearchBar = (props) => {
         setInput('')
         setExpanded(false)
 
-        if(props.onClear)
+        if (props.onClear)
             props.onClear()
     }
 
     const onBoxClick = () => {
-        if(!expanded) {
+        if (!expanded) {
             setExpanded(true)
 
-            if(inputRef.current) {
+            if (inputRef.current) {
                 setTimeout(() => inputRef.current.focus(), 200)
             }
         }
@@ -51,17 +51,17 @@ export const MiniSearchBar = (props) => {
 
     return (
         <StyledBox expanded={expanded} onClick={onBoxClick}>
-            <StyledSearchIcon expanded={expanded}/>
+            <StyledSearchIcon expanded={expanded} />
             <StyledTextInput
-              ref={inputRef}
-              expanded={expanded}
-              type='text'
-              value={input}
-              onChange={onInputChange}
-              onKeyPress={onKeyPress}
-              placeholder={props.placeholder}
+                ref={inputRef}
+                expanded={expanded}
+                type='text'
+                value={input}
+                onChange={onInputChange}
+                onKeyPress={onKeyPress}
+                placeholder={props.placeholder}
             />
-            {expanded && <StyledClearIcon expanded={expanded} onClick={onClear}/>}
+            {expanded && <StyledClearIcon expanded={expanded} onClick={onClear} />}
         </StyledBox>
     )
 }
@@ -73,39 +73,40 @@ export default function SearchBar(props) {
         setInput(e.target.value)
 
         // TODO: this is broken for some reason
-        if(props.searchOnChange) {
-            if(e.target.value === '')
+        if (props.searchOnChange) {
+            if (e.target.value === '')
                 props.onClear()
             else
                 props.onSearch(e.target.value)
         }
-            
+
     }
 
     const onKeyPress = (e) => {
-        if(e.key === 'Enter')
+        if (e.key === 'Enter')
             props.onSearch(input)
     }
 
     const onClear = (e) => {
         setInput('')
 
-        if(props.onClear)
+        if (props.onClear)
             props.onClear()
     }
 
     return (
         <div className='SearchBar' style={props.style}>
-            <SearchOutlinedIcon/>
+            <SearchOutlinedIcon />
             <input
-              type='text'
-              value={input}
-              onChange={onInputChange}
-              onKeyPress={onKeyPress}
-              placeholder={props.placeholder}/>
-            {input && input !== '' && (
-                <ClearIcon onClick={onClear} style={{ fontSize: 18, cursor: props.cursorClearIcon || "default", }}/>
+                type='text'
+                value={input}
+                onChange={onInputChange}
+                onKeyPress={onKeyPress}
+                placeholder={props.placeholder} />
+            {!props.icon && input && input !== '' && (
+                <ClearIcon onClick={onClear} style={{ fontSize: 18, cursor: props.cursorClearIcon || "default", }} />
             )}
+            {props.icon && <props.icon style={{ fontSize: 18, cursor: props.cursorClearIcon || "default", }} />}
         </div>
     )
 }
