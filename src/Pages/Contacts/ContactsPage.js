@@ -265,7 +265,7 @@ export default function ContactsPage(props) {
     }
 
     const onExportAsCSVClick = (e) => {
-
+        console.log("export as csv")
     }
 
     const onRemoveTagClick = (e) => {

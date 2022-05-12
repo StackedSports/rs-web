@@ -10,7 +10,7 @@ import UserSettingsPage from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';
-import { linkWithTwitter } from 'Api/Endpoints';
+import { linkWithTwitter, unLinkTwitter } from 'Api/Endpoints';
 
 
 const UserAccountCard = (props) => {
@@ -64,7 +64,14 @@ const UserAccountCard = (props) => {
 	}
 
 	const onUnlinkAccount = () => {
-		console.log("onUnlinkAccount: " + props.provider.name)
+		console.log(props.userId)
+		unLinkTwitter(props.userId).then((result) => {
+			console.log(result)
+			if (props.refreshUser && props.refreshUser instanceof Function)
+				props.refreshUser()
+		}).catch((error) => {
+			console.log(error)
+		})
 	}
 
 	const onUsePhoto = () => {
@@ -175,13 +182,14 @@ const UserSettingsAccountPage = (props) => {
 				{/* ACCOUNT CARDS */}
 				<Stack justifyContent="start" alignItems="start" spacing={2}>
 					<UserAccountCard
-					  icon={TwitterIcon}
-					  title="Twitter Account"
-					  buttonText="LINK TWITTER"
-					  provider={twitterProvider}
-					  account={user.item?.twitter_profile?.screen_name}
-					  image={user.item?.twitter_profile?.profile_image}
-					  refreshUser={() => user.refresh()}
+						icon={TwitterIcon}
+						title="Twitter Account"
+						buttonText="LINK TWITTER"
+						provider={twitterProvider}
+						account={user.item?.twitter_profile?.screen_name}
+						image={user.item?.twitter_profile?.profile_image}
+						userId={user.item?.id}
+						refreshUser={() => user.refresh()}
 					/>
 
 					{/* <UserAccountCard

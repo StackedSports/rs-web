@@ -1184,6 +1184,10 @@ export const linkWithTwitter = ({ token, secret, email, handle, id }) => {
     return POST('oauth/link', body)
 }
 
+export const unLinkTwitter = (userId) => {
+    return DELETE(`users/${userId}/unlink_twitter`)
+}
+
 export const followOnTwitter = (data) => {
     const body = {
         twitter_follow: data
