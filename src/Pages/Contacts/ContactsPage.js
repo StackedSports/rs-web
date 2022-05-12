@@ -7,8 +7,9 @@ import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
+import MainLayout from 'UI/Layouts/MainLayout';
 import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
@@ -54,7 +55,6 @@ export default function ContactsPage(props) {
 
     const contacts = useContacts()
     const status2 = useStatus2()
-    const alert = useMainLayoutAlert()
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
@@ -294,11 +294,11 @@ export default function ContactsPage(props) {
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                    alert.setSuccess('Contacts tagged successfully!')
+                    app.alert.setSuccess('Contacts tagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                    alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
+                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
@@ -314,11 +314,11 @@ export default function ContactsPage(props) {
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                    alert.setSuccess('Contacts untagged successfully!')
+                    app.alert.setSuccess('Contacts untagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                    alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
+                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
@@ -326,11 +326,11 @@ export default function ContactsPage(props) {
     const onBoardCreated = () => {
         setOpenCreateBoardDialog(false)
         boards.refreshData()
-        alert.setSuccess('Board created successfully!')
+        app.alert.setSuccess('Board created successfully!')
     }
 
     const onContactCreated = () => {
-        alert.setSuccess('Contact created successfully!')
+        app.alert.setSuccess('Contact created successfully!')
     }
 
     const onPageChange = (page) => {
@@ -369,7 +369,6 @@ export default function ContactsPage(props) {
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
             filters={filters}
-            alert={alert}
             actions={mainActions}
             onFilterSelected={onFilterSelected}
             loading={loading}
@@ -423,8 +422,24 @@ export default function ContactsPage(props) {
                             variant: 'outlined',
                             icon: AutoFixHighIcon,
                             options: [
+                                // { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                // { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                // { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                // { name: 'Archive Contact', onClick: onArchiveContactClick }
+                            ]
+                        }}
+                    />
+                    <PanelDropdown
+                        action={{
+                            id: 'selected-contacts-actions',
+                            name: `${selectedContacts.count} selected contact${selectedContacts.count > 1 ? "s" : ""}`,
+                            type: 'dropdown',
+                            variant: 'contained',
+                            icon: ArrowDropDownIcon,
+                            disabled: selectedContacts.count === 0,
+                            options: [
                                 { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick },
                                 { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                 { name: 'Archive Contact', onClick: onArchiveContactClick }
                             ]

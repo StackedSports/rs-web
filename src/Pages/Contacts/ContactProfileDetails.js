@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Collapse, List, ListItem } from '@material-ui/core';
 import { ListItemButton } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Yup from "yup";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
@@ -33,6 +34,7 @@ import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { objectNotNull } from 'utils/Validation'
 import { getStringListOfIds } from 'utils/Helper'
 import Button from 'UI/Widgets/Buttons/Button';
+import PeopleDialog from 'UI/Widgets/Dialogs/PeopleDialog';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -63,6 +65,8 @@ const ContactProfileDetails = (props) => {
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
 	const [showSaveButton, setShowSaveButton] = useState([false, false, false, false, false, false, false, false])
 	const [openNewFamilyMemberDialog, setOpenNewFamilyMemberDialog] = useState(false)
+	const [openPeopleDialog, setOpenPeopleDialog] = useState(false)
+	const [familyMember, setFamilyMember] = useState(null)
 	const [openNewOpponentDialog, setOpenNewOpponentDialog] = useState(false)
 
 	const [openCollapsePeople, setOpenCollapsePeople] = useState(false)
@@ -274,6 +278,12 @@ const ContactProfileDetails = (props) => {
 
 	}
 
+	const onViewPerson = (person) => {
+		setFamilyMember(person)
+		console.log(person)
+		setOpenNewFamilyMemberDialog(true)
+	}
+
 	return (
 		<Stack
 			pr={1}
@@ -287,6 +297,7 @@ const ContactProfileDetails = (props) => {
 				onClose={() => setOpenNewFamilyMemberDialog(false)}
 				contact={props.contact}
 				onCreated={onRelationshipCreated}
+				person={familyMember}
 			/>
 
 			<CreateOpponentDialog
@@ -294,6 +305,13 @@ const ContactProfileDetails = (props) => {
 				onClose={() => setOpenNewOpponentDialog(false)}
 				contact={props.contact}
 			//onCreated ={onOpponentCreated  }
+			/>
+
+			<PeopleDialog
+				open={openPeopleDialog}
+				onViewPerson={onViewPerson}
+				people={props.contact?.relationships}
+				onClose={setOpenPeopleDialog}
 			/>
 
 			<Formik
@@ -525,19 +543,54 @@ const ContactProfileDetails = (props) => {
 							]}
 						>
 							<Button
-								name="People"
+								name="View People"
 								type="button"
 								variant='contained'
 								endIcon={<ArrowDropDownIcon />}
 								onClick={() => setOpenCollapsePeople(!openCollapsePeople)}
 							/>
-							<Collapse in={openCollapsePeople} timeout="auto" unmountOnExit>
-								<List /* dense="dense" */>
-									{props.contact?.relationships?.map(people => {
-										<ListItemButton key={people.id}>
-											{people.first_name + " " + people.last_name}
-										</ListItemButton>
-									})
+							<Collapse
+								style={{
+									position: "relative",
+								}}
+								timeout="auto"
+								unmountOnExit
+								in={openCollapsePeople}
+							>
+								<List
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										// width: "100%",
+										// position: "absolute",
+										// zIndex: 1000,
+										// backgroundColor: "#ffff"
+									}}
+								>
+									{props.contact?.relationships?.filter((person, index) => index < 3 && person)
+										.map(person => {
+											return (
+												<ListItemButton
+													key={person.id}
+													onClick={() => onViewPerson(person)}
+												>
+													{person.first_name + " " + person.last_name}
+												</ListItemButton>
+											)
+										})
+									}
+									{props.contact?.relationships?.length > 3 &&
+										<Button
+											style={{
+												alignSelf: "center",
+												width: "max-content",
+											}}
+											type="button"
+											name="View More..."
+											variant='outlined'
+											// endIcon={<MoreHorizIcon />}
+											onClick={() => setOpenPeopleDialog(true)}
+										/>
 									}
 								</List>
 							</Collapse>
@@ -545,7 +598,7 @@ const ContactProfileDetails = (props) => {
 								name="Add new relationship"
 								type="button"
 								variant='contained'
-								onClick={() => setOpenNewFamilyMemberDialog(true)}
+								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
 							/>
 						</AccordionComponent>
 					</Form>
