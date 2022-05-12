@@ -1109,7 +1109,7 @@ export const deleteTagsFromMedias = (tagsId, mediasIds) => {
         if (!mediasIds instanceof Array && !tagsId instanceof Array)
             return reject(new Error("Both mediasIds and tagsId must be an array"))
 
-        Promise.allSettled(mediasIds.map(mediaId => addTagsToMedia(tagsId, mediaId))).
+        Promise.allSettled(mediasIds.map(mediaId => deleteTagsFromMedia(tagsId, mediaId))).
             then(results => {
                 results.forEach((result, index) => {
                     if (result.status === 'fulfilled') {
@@ -1168,38 +1168,24 @@ export const createOpponent = (contactId, data) => {
     return POST(`contacts/${contactId}/opponents`, body)
 }
 
-export const linkWithTwitter = () => {
-
-    //return GET(`messages?page=${page}&per_page=${perPage}`, data)
-
-    console.log(body)
-
-
-    const HEADERS = {
-        Accept: "application/json; version=1",
-        "Content-Type": "application/json",
-        Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-        "X-Auth-Token": JSON.parse(localStorage.getItem("user")).token,
+export const linkWithTwitter = ({ token, secret, email, handle, id }) => {
+    const body = {
+        "oauth": {
+            "provider": "twitter",
+            "id": id,
+            "handle": handle,
+            "email": email,
+            "token": token,
+            "secret": secret,
+            "primary": true // Can pass true to set/update the primary social account 
+        }
     }
 
-    const config = {
-        headers: HEADERS,
-        // params: JSON.stringify(body)
-        params: body
-    }
+    return POST('oauth/link', body)
+}
 
-    axios.get(URL + url, config)
-        .then(res => {
-            //console.log(res)
-            if (res.status === 200 || res.status === 204 || res.status === 201) {
-                let pagination = getPagination(res)
-                resolve([res.data, pagination])
-            } else
-                reject(res)
-        })
-        .catch(error => {
-            reject(error)
-        })
+export const unLinkTwitter = (userId) => {
+    return DELETE(`users/${userId}/unlink_twitter`)
 }
 
 export const followOnTwitter = (data) => {

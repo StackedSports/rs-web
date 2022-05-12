@@ -51,6 +51,8 @@ import { objectNotNull } from 'utils/Validation'
 export const useUser = () => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -60,19 +62,28 @@ export const useUser = () => {
                 // console.log(user)
                 setUser(user)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
-    }, [])
+    }, [refresh])
+
+    const refreshUser = () => setRefresh(!refresh)
+
 
     return {
         item: user,
-        loading
+        loading,
+        error,
+        refresh: refreshUser,
     }
 }
 
 export const usePlatform = () => {
     const [platform, setPlatform] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -82,19 +93,24 @@ export const usePlatform = () => {
                 console.log(platforms)
                 setPlatform(platforms)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
     }, [])
 
     return {
         items: platform,
-        loading
+        loading,
+        error,
     }
 }
 
 export const useTagsWithMedia = () => {
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -102,20 +118,25 @@ export const useTagsWithMedia = () => {
             .then(([tags]) => {
                 setTags(tags)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
 
     }, [])
 
     return {
         items: tags,
-        loading
+        loading,
+        error,
     }
 }
 
 export const useTagsWithContacts = () => {
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -125,20 +146,25 @@ export const useTagsWithContacts = () => {
                 // console.log(tags)
                 setTags(tags)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
 
     }, [])
 
     return {
         items: tags,
-        loading
+        loading,
+        error,
     }
 }
 
 export const useTagsWithMessage = () => {
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -147,14 +173,18 @@ export const useTagsWithMessage = () => {
                 // console.log(tags)
                 setTags(tags)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
 
     }, [])
 
     return {
         items: tags,
-        loading
+        loading,
+        error,
     }
 }
 
@@ -163,6 +193,7 @@ export const useBoard = (id) => {
     const [board, setBoard] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -172,7 +203,10 @@ export const useBoard = (id) => {
                 // console.log(board)
                 setBoard(board)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
             .finally(() => setLoading(false))
     }, [id, refresh])
 
@@ -184,6 +218,7 @@ export const useBoard = (id) => {
         item: board,
         refreshData,
         loading,
+        error,
     }
 }
 
@@ -191,6 +226,7 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
@@ -209,6 +245,7 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => {
                 setLoading(false)
@@ -230,7 +267,8 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
         pagination,
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        error,
     }
 }
 
@@ -272,6 +310,7 @@ export const useTags = () => {
 export const useTags2 = () => {
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     const tagsRes = useRef()
 
@@ -288,6 +327,7 @@ export const useTags2 = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [])
@@ -311,7 +351,8 @@ export const useTags2 = () => {
         items: tags,
         loading,
         search,
-        clearSearch
+        clearSearch,
+        error,
     }
 }
 
@@ -319,6 +360,7 @@ export const useContact = (id) => {
     const [contact, setContact] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
 
     useEffect(() => {
@@ -332,6 +374,7 @@ export const useContact = (id) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [id, refresh])
@@ -343,7 +386,8 @@ export const useContact = (id) => {
     return {
         item: contact,
         loading,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
@@ -351,6 +395,7 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
@@ -369,6 +414,7 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => {
                 setLoading(false)
@@ -390,7 +436,8 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
         pagination,
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        error,
     }
 }
 
@@ -456,6 +503,7 @@ export const useTeamMember = (id) => {
     const [teamMember, setTeamMember] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -467,6 +515,7 @@ export const useTeamMember = (id) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [refresh])
@@ -479,6 +528,7 @@ export const useTeamMember = (id) => {
         item: teamMember,
         loading,
         refreshData,
+        error,
     }
 }
 
@@ -486,6 +536,7 @@ export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     const apiResults = useRef(null)
 
@@ -502,6 +553,7 @@ export const useTeamMembers = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [refresh])
@@ -528,6 +580,7 @@ export const useTeamMembers = () => {
         filter,
         clearFilter,
         refreshData,
+        error,
     }
 }
 
@@ -537,6 +590,7 @@ export const useRanks = () => {
     const [ranks, setRanks] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -561,7 +615,8 @@ export const useRanks = () => {
     return {
         items: ranks,
         loading,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
@@ -632,6 +687,7 @@ export const useBoards = () => {
     const [boards, setBoards] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -644,6 +700,7 @@ export const useBoards = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -666,7 +723,8 @@ export const useBoards = () => {
         loading,
         filter,
         clearFilter,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
@@ -730,6 +788,7 @@ export const useStatus2 = () => {
 export const useGradYears = () => {
     const [GradYears, setGradYears] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -742,12 +801,14 @@ export const useGradYears = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             }).finally(() => setLoading(false))
     }, [])
 
     return {
         items: GradYears,
         loading,
+        error,
     }
 }
 
@@ -774,6 +835,7 @@ export const usePositions = () => {
     const [Positions, setPositions] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -785,6 +847,7 @@ export const usePositions = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             }).finally(() => setLoading(false))
     }, [refresh])
 
@@ -795,7 +858,8 @@ export const usePositions = () => {
     return {
         items: Positions,
         loading,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
@@ -803,6 +867,7 @@ export const useStatuses = () => {
     const [statuses, setStatuses] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -814,6 +879,7 @@ export const useStatuses = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             }).finally(() => setLoading(false))
     }, [refresh])
 
@@ -824,7 +890,8 @@ export const useStatuses = () => {
     return {
         items: statuses,
         loading,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
@@ -832,6 +899,7 @@ export const useSnippets = () => {
     const [snippets, setSnippets] = useState(null)
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -843,6 +911,7 @@ export const useSnippets = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             }).finally(() => setLoading(false))
     }, [refresh])
 
@@ -853,13 +922,15 @@ export const useSnippets = () => {
     return {
         items: snippets,
         loading,
-        refreshData
+        refreshData,
+        error,
     }
 }
 
 export const usePlaceholder = (id) => {
     const [placeholder, setPlaceholder] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -872,13 +943,15 @@ export const usePlaceholder = (id) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [id])
 
     return {
         item: placeholder,
-        loading
+        loading,
+        error,
     }
 }
 
@@ -886,6 +959,7 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
     const [placeholders, setPlaceholders] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
@@ -903,6 +977,7 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [pagination.currentPage, filters])
@@ -921,13 +996,15 @@ export const usePlaceholders = (currentPage, itemsPerPage) => {
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        error,
     }
 }
 
 export const useMedia = (id) => {
     const [media, setMedia] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -940,13 +1017,15 @@ export const useMedia = (id) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
     }, [id])
 
     return {
         item: media,
-        loading
+        loading,
+        error,
     }
 }
 
@@ -954,6 +1033,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [loading, setLoading] = useState(true)
     const [media, setMedia] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
 
     // console.log(initialFilters)
     // TODO: testing filter
@@ -980,6 +1060,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -999,7 +1080,8 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
         pagination,//: {...pagination, getPage: paginationUtils.getPage },
         loading,
         filter,
-        clearFilter
+        clearFilter,
+        error,
     }
 }
 
@@ -1135,7 +1217,7 @@ export const useCoaches = () => {
 export const useCoachesTypes = () => {
     const [coachesTypes, setCoachesTypes] = useState(null)
     const [loading, setLoading] = useState(true)
-
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -1148,6 +1230,7 @@ export const useCoachesTypes = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -1155,7 +1238,8 @@ export const useCoachesTypes = () => {
 
     return {
         items: coachesTypes,
-        loading
+        loading,
+        error
     }
 }
 
@@ -1163,6 +1247,7 @@ export const useCoachesTypes = () => {
 export const usePeopleTypes = () => {
     const [peopleTypes, setPeopleTypes] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
 
     useEffect(() => {
@@ -1170,12 +1255,12 @@ export const usePeopleTypes = () => {
 
         getPeopleTypes()
             .then(([PeopleTypes]) => {
-
-                console.log(PeopleTypes)
+                //console.log(PeopleTypes)
                 setPeopleTypes(PeopleTypes)
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -1183,13 +1268,14 @@ export const usePeopleTypes = () => {
 
     return {
         items: peopleTypes,
-        loading
+        loading,
+        error
     }
 }
 export const useMediaTypes = () => {
     const [mediaTypes, setMediaTypes] = useState([])
     const [loading, setLoading] = useState(true)
-
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setLoading(true)
@@ -1205,6 +1291,7 @@ export const useMediaTypes = () => {
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
             .finally(() => setLoading(false))
 
@@ -1212,7 +1299,8 @@ export const useMediaTypes = () => {
 
     return {
         items: mediaTypes,
-        loading
+        loading,
+        error
     }
 }
 
@@ -1329,8 +1417,8 @@ export const useContactTableColumns = (control, id) => {
 ///////////////////////*********************/////////////////
 export const useMyContacts = (page) => {
 
-
     const [contacts, setContacts] = useState(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         getAllContactsEnd(page)
@@ -1357,10 +1445,7 @@ export const useMyContacts = (page) => {
             })
             .catch(error => {
                 console.log(error)
-
-
-
-
+                setError(error)
             })
     }, [])
 

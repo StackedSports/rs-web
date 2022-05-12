@@ -1,42 +1,78 @@
 import { useContext } from 'react'
 
-import { Stack, Typography } from "@mui/material";
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { Stack, Typography, Button, Box, Divider } from "@mui/material";
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { Divider } from "@material-ui/core";
+
+import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
 import UserSettingsPage from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';
+import { AppContext } from 'Context/AppProvider';
+import { linkWithTwitter, unLinkTwitter } from 'Api/Endpoints';
 
-const TWITTER_API = 'https://api.twitter.com/oauth/access_token'
-const authorize_url = 'https://api.twitter.com/oauth/authorize'
 
 const UserAccountCard = (props) => {
+	const app = useContext(AppContext);
 
 	const onLinkAccount = () => {
-		if (!props.account)
-			console.log("onLinkAccount: " + props.provider.name)
-		// const data = {
-		// 	provider: props.provider.name,
-		// 	id: props.user?.id || "",
-		// 	handle: props.user?.user_handle || "",
-		// 	email: props.user?.email || "",
-		// 	token: props.provider.token || "",
-		// 	secret: props.provider.secret || "",
-		// }
-		// console.log(data)
+		if (!props.account) {
+			const provider = new TwitterAuthProvider();
+			const auth = getAuth();
+
+			signInWithPopup(auth, provider)
+				.then((result) => {
+					console.log(result)
+					const credential = TwitterAuthProvider.credentialFromResult(result);
+					const token = credential.accessToken;
+					const secret = credential.secret;
+
+					// The signed-in user info.
+					const handle = result.user?.reloadUserInfo?.screenName;
+					const email = result.user?.email
+					const id = result.user?.providerData[0]?.uid
+
+					linkWithTwitter({ token, secret, email, handle, id }).then((result) => {
+						console.log(result)
+						app.alert.setSuccess('Account linked successfully');
+						if (props.refreshUser && props.refreshUser instanceof Function)
+							props.refreshUser()
+					}).catch((error) => {
+						console.log(error)
+						app.alert.setError(`Account linking failed ${error}`);
+					})
+
+				}).catch((error) => {
+					// Handle Errors here.
+					//const errorCode = error.code;
+					//console.log("error code", error)
+					const errorMessage = error.message;
+					//console.log("errorMessage", errorMessage)
+					app.alert.setError(`Account linking failed: ${errorMessage}`);
+				});
+		} else {
+			//console.log("user is already linked")
+		}
 	}
 
 	const onUnlinkAccount = () => {
-		console.log("onUnlinkAccount: " + props.provider.name)
+		if (props.account) {
+			unLinkTwitter(props.userId).then((result) => {
+				//console.log(result)
+				app.alert.setSuccess('Your account has been unlinked');
+				if (props.refreshUser && props.refreshUser instanceof Function)
+					props.refreshUser()
+			}).catch((error) => {
+				//console.log(error)
+				app.alert.setError(`Account unlinking failed: ${error.message}`);
+			})
+		}
 	}
 
 	const onUsePhoto = () => {
-		console.log("onUsePhoto: " + props.provider.name)
+		console.log("onUsePhoto: ")
 	}
 
 	return (
@@ -64,13 +100,15 @@ const UserAccountCard = (props) => {
 				<Button
 					variant="contained"
 					disabled={props.disabled}
+					disableRipple={props.disabled || props.account}
+					disableElevation={props.disabled || props.account}
 					onClick={onLinkAccount}
-					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%" }}
+					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%", textTransform: "none" }}
 				>
 					{<props.icon />}
 					{props.account || props.buttonText}
 				</Button>
-			</Stack >
+			</Stack>
 
 			<img
 				style={{ width: "140px", height: "140px", borderRadius: "7px", margin: "20px 20px 0" }}
@@ -95,7 +133,7 @@ const UserAccountCard = (props) => {
 			>
 				USE THIS PHOTO
 			</Button>
-		</Box >
+		</Box>
 	)
 }
 
@@ -103,11 +141,6 @@ const UserSettingsAccountPage = (props) => {
 
 	const user = useUser();
 
-	const twitterProvider = {
-		name: "twitter",
-		token: "provider_token",
-		secret: "provider_secret",
-	}
 	const instagramProvider = {
 		name: "instagram",
 		token: "provider_token",
@@ -147,8 +180,10 @@ const UserSettingsAccountPage = (props) => {
 						title="Twitter Account"
 						buttonText="LINK TWITTER"
 						provider={twitterProvider}
-						account={user.item?.twitter_profile?.screen_name}
+						account={user.item?.twitter_profile?.screen_name ? `@${user.item?.twitter_profile?.screen_name}` : null}
 						image={user.item?.twitter_profile?.profile_image}
+						userId={user.item?.id}
+						refreshUser={() => user.refresh()}
 					/>
 
 					{/* <UserAccountCard
@@ -204,7 +239,7 @@ const UserSettingsAccountPage = (props) => {
 					</Button>
 				</Box>
 			</Stack>
-		</UserSettingsPage >
+		</UserSettingsPage>
 	)
 }
 

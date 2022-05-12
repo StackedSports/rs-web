@@ -4,17 +4,14 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { columnsMini, columnsFull } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
-import { useHistory } from "react-router-dom";
-import { contactsRoutes } from 'Routes/Routes';
 
 export default function ContactsTable(props) {
-    const history = useHistory();
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
     // console.log(props.columnsControl)
 
     const visibleColumns = useContactTableColumns(props.columnsControl, props.id)
-    
+
     // console.log(visibleColumns)
     // const onPageChange = (page, details) => {
     //     console.log(page)
@@ -26,11 +23,6 @@ export default function ContactsTable(props) {
         visibleColumns.onChange(newModel)
     }
 
-    const onCellClick = ({ field, row }) => {
-        if (field === 'fullName') {
-            history.push(`${contactsRoutes.profile}/${row.id}`)
-        }
-    }
 
     const onPageChange = (e, page) => {
         props.onPageChange(page)
@@ -38,8 +30,13 @@ export default function ContactsTable(props) {
 
     return (
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850 }}>
-            <DataGridPro sx={{ m: 0 }}
+            <DataGridPro
+                sx={{
+                    m: 0,
+                    '.contact-full-name-link:hover': { textDecoration: 'underline', cursor: 'pointer' }
+                }}
                 //   rows={props.contacts ? props.contacts : []}
+                apiRef={props.apiRef}
                 rows={props.contacts || []}
                 columns={columns}
                 checkboxSelection
@@ -60,7 +57,6 @@ export default function ContactsTable(props) {
                 disableColumnSelector={props.disableColumnSelector}
                 disableColumnFilter={props.disableColumnFilter}
                 disableColumnMenu={props.disableColumnMenu}
-                onCellClick={onCellClick}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
 

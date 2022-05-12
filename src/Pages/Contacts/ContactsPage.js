@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import Stack from '@mui/material/Stack';
 import { AccountBox, Tune } from '@material-ui/icons';
@@ -50,6 +51,7 @@ import { timeZones, states } from 'utils/Data'
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
+    const gridApiRef = useGridApiRef();
 
     const [redirect, setRedirect] = useState('')
 
@@ -265,7 +267,7 @@ export default function ContactsPage(props) {
     }
 
     const onExportAsCSVClick = (e) => {
-
+        gridApiRef.current.exportDataAsCsv()
     }
 
     const onRemoveTagClick = (e) => {
@@ -501,6 +503,7 @@ export default function ContactsPage(props) {
                 onSelectionChange={onContactsSelectionChange}
                 onPageChange={onPageChange}
                 onSortingChange={onSortingChange}
+                apiRef={gridApiRef}
             />
 
             <CreateBoardDialog
