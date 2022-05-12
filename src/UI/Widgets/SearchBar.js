@@ -67,10 +67,13 @@ export const MiniSearchBar = (props) => {
 }
 
 export default function SearchBar(props) {
-    const [input, setInput] = useState('')
+    const [input, setInput] = useState(props.value || '')
 
     const onInputChange = (e) => {
         setInput(e.target.value)
+
+        if(props.onChange)
+            props.onChange(e.target.value)
 
         // TODO: this is broken for some reason
         if(props.searchOnChange) {
@@ -89,6 +92,9 @@ export default function SearchBar(props) {
 
     const onClear = (e) => {
         setInput('')
+
+        if(props.onChange)
+            props.onChange('')
 
         if(props.onClear)
             props.onClear()
