@@ -1,19 +1,18 @@
 import { useContext } from 'react'
 
-import { Stack, Typography } from "@mui/material";
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { Stack, Typography, Button, Box, Divider } from "@mui/material";
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { Divider } from "@material-ui/core";
+
+import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
 import UserSettingsPage from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';
+import { linkWithTwitter } from 'Api/Endpoints';
 
-const TWITTER_API = 'https://api.twitter.com/oauth/access_token'
-const authorize_url = 'https://api.twitter.com/oauth/authorize'
+const provider = new TwitterAuthProvider();
 
 const UserAccountCard = (props) => {
 
@@ -29,6 +28,39 @@ const UserAccountCard = (props) => {
 		// 	secret: props.provider.secret || "",
 		// }
 		// console.log(data)
+		const auth = getAuth();
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				// This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+				// You can use these server side with your app's credentials to access the Twitter API.
+				console.log(result)
+				const credential = TwitterAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				const secret = credential.secret;
+				console.log("Token e secret", token, secret)
+
+				// The signed-in user info.
+				const handle = result.user?.reloadUserInfo?.screenName;
+				const email = result.user?.email
+				const id = result.user?.providerData[0]?.uid
+
+				linkWithTwitter({ token, secret, email, handle, id }).then((result) => {
+					console.log(result)
+				}).catch((error) => {
+					console.log(error)
+				})
+
+			}).catch((error) => {
+				// Handle Errors here.
+				console.log("error", error)
+				const errorCode = error.code;
+				console.log("error code", error)
+				const errorMessage = error.message;
+				console.log("errorMessage", errorMessage)
+				// The email of the user's account used.
+				const email = error.email;
+				// ...
+			});
 	}
 
 	const onUnlinkAccount = () => {
@@ -70,7 +102,7 @@ const UserAccountCard = (props) => {
 					{<props.icon />}
 					{props.account || props.buttonText}
 				</Button>
-			</Stack >
+			</Stack>
 
 			<img
 				style={{ width: "140px", height: "140px", borderRadius: "7px", margin: "20px 20px 0" }}
@@ -95,7 +127,7 @@ const UserAccountCard = (props) => {
 			>
 				USE THIS PHOTO
 			</Button>
-		</Box >
+		</Box>
 	)
 }
 
