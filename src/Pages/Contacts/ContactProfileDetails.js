@@ -77,7 +77,10 @@ const ContactProfileDetails = (props) => {
 	const ranks = useRanks()
 	const tags = useTags2()
 
-	console.log(props.contact)
+	useEffect(() => {
+		if(props.contact)
+			console.log(props.contact)
+	}, [props.contact])
 
 	const initialValues = useMemo(() => ({
 		general: {
@@ -138,14 +141,14 @@ const ContactProfileDetails = (props) => {
 				case 'coordinator':
 					newData[`${key}_id`] = data[key]?.id || ''
 					break
-				case 'position_tags':
-					newData[key] = data[key].map(position => {
-						if (typeof position === 'string')
-							return position
-						else
-							return position.abbreviation
-					})
-					break
+				// case 'position_tags':
+				// 	newData[key] = data[key].map(position => {
+				// 		if (typeof position === 'string')
+				// 			return position
+				// 		else
+				// 			return position.abbreviation
+				// 	})
+				// 	break
 				default:
 					newData[key] = data[key] || ''
 			}
@@ -218,8 +221,73 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onUpdatePositions = (values, actions) => {
-		onUpdateContact(values, 'positions', 3)
+		console.log(values)
+		console.log(initialValues.positions)
+
+		let data = {
+			// include: ['ca', 'ba'],
+			// exclude: ['as']
+		}
+
+		console.log('hello')
+
+		// Add position from values (formik) to our data object
+		// if they don't already exist in the initial position values
+		values.position_tags.forEach(newPosition => {
+			let found = false
+			
+			initialValues.positions.position_tags.every(currentPosition => {
+				if(newPosition === currentPosition) {
+					found = true
+					return false
+				}
+
+				return true
+			})
+
+			if(!found) {
+				if(!data.include)
+					data['include'] = []
+
+				data.include.push(newPosition)
+			}
+		})
+
+		// Add position to remove if they are present in initial values
+		// but are not present in values
+		initialValues.positions.position_tags.forEach(currentPosition => {
+			let found = false
+			
+			values.position_tags.every(newPosition => {
+				if(newPosition === currentPosition) {
+					found = true
+					return false
+				}
+
+				return true
+			})
+
+			if(!found) {
+				if(!data.exclude)
+					data['exclude'] = []
+
+				data.exclude.push(currentPosition)
+			}
+		})
+
+		console.log(data)
+
+
+		// return
+		onUpdateContact({ position_tags: data }, 'positions', 3)
 	}
+
+	const parsedPositions = useMemo(() => {
+		if(!positions.items)
+			return []
+
+		return positions.items.map(position => position.abbreviation)
+	}, [positions.items])
 
 	const onUpdateRelationships = (values, actions) => {
 		onUpdateContact(values, 'relationships', 4)
@@ -506,12 +574,13 @@ const ContactProfileDetails = (props) => {
 								variant="contained"
 								multiple
 								value={formikProps.values.position_tags}
-								options={positions.items || []}
+								options={parsedPositions}
 								loading={positions.loading}
-								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								isOptionEqualToValue={(option, value) => option === value}
 								getOptionLabel={(option) => option.abbreviation || option}
 								getChipLabel={(option) => option.abbreviation || option}
 								onChange={(newValue) => {
+									console.log('on change', newValue)
 									formikProps.setFieldValue("position_tags", newValue)
 									onAccordionFieldChange(3)
 								}}

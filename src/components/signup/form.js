@@ -77,7 +77,7 @@ export default function Signin() {
         if (res.statusText === "Created") {
           console.log("This is the resonse of login", res.data);
           localStorage.setItem("user", JSON.stringify(res.data));
-          console.log(localStorage.getItem("user"));
+          // console.log(localStorage.getItem("user"));
           setLoading(false);
           notifyUser("User Registered Successfully!!");
         }
@@ -161,7 +161,7 @@ export default function Signin() {
                   placeholder="Your Email"
                   value={email}
                   onChange={(e) => {
-                    console.log("This is password", e.target.value);
+                    // console.log("This is password", e.target.value);
                     setEmail(e.target.value);
                   }}
                 ></FormInput>
@@ -182,7 +182,7 @@ export default function Signin() {
                   required
                   value={password}
                   onChange={(e) => {
-                    console.log("This is password", e.target.value);
+                    // console.log("This is password", e.target.value);
                     setPassword(e.target.value);
                   }}
                   placeholder="Your Password"

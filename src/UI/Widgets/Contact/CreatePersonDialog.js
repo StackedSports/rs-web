@@ -26,8 +26,8 @@ export const CreatePersonDialog = (props) => {
     "twitter_profile": props.person?.twitter_profile || ""
   }
 
-  console.log(props.person)
-  console.log(initialValues)
+  // console.log(props.person)
+  // console.log(initialValues)
 
   const validationSchema = yup.object().shape({
     "person_relationship_type_id": yup.number().required("Required"),
