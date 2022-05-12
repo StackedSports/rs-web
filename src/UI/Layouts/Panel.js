@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import {default as ArrowBack} from '@mui/icons-material/ArrowBackIos';
+import { default as ArrowBack } from '@mui/icons-material/ArrowBackIos';
 
 // import Button from '@mui/material/Button';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
@@ -15,15 +15,15 @@ import DrawerIcon from "images/drawer_contact.png";
 
 export const PanelDropdown = ({ action, header }) => {
 
-    if(!header) {
+    if (!header) {
         //console.log('ok')
         header = () => (
             <Button
                 style={{ marginLeft: 0 }}
                 key={action.name}
                 name={action.name}
-                variant={action.variant} 
-                endIcon={<action.icon/>}
+                variant={action.variant}
+                endIcon={<action.icon />}
                 textColor={action.textColor}
                 disabled={action.disabled}
             />
@@ -36,11 +36,11 @@ export const PanelDropdown = ({ action, header }) => {
         <Dropdown.List style={{ alignItems: 'flex-end' }}>
             {action.options && action.options.map(option => (
                 <Dropdown.Item
-                  key={option.name}
-                  style={{ justifyContent: 'flex-end', color: option.color ? option.color : 'inherit' }}
-                  name={option.name}
-                  onClick={option.onClick}
-                  disabled={option.disabled}
+                    key={option.name}
+                    style={{ justifyContent: 'flex-end', color: option.color ? option.color : 'inherit' }}
+                    name={option.name}
+                    onClick={option.onClick}
+                    disabled={option.disabled}
                 />
             ))}
         </Dropdown.List>
@@ -48,56 +48,56 @@ export const PanelDropdown = ({ action, header }) => {
 
     return (
         <Dropdown
-          header={header}
-          disabled={action.disabled}
-          content={content}
-          style={{
-            marginLeft: 10
-          }}
-          contentStyle={{
-            minHeight: 0,
-            right: 0,
-            overflowY: 'hidden',
-            minWidth: 170,
-          }}
+            header={header}
+            disabled={action.disabled}
+            content={content}
+            style={{
+                marginLeft: 10
+            }}
+            contentStyle={{
+                minHeight: 0,
+                right: 0,
+                overflowY: 'hidden',
+                minWidth: 170,
+            }}
         />
     )
 }
 
 
 const renderActions = (actions) => {
-    if(!actions)
+    if (!actions)
         return <></>
 
     // console.log(actions)
-    
+
     return (
         actions.map(action => {
-            if(action.type === 'icon')
+            if (action.type === 'icon')
                 return (
                     <IconButton
-                      style={{ marginLeft: 20, marginRight: 10 }}
-                      key={action.name}
-                      name={action.name}
-                      Icon={action.icon}
-                      onClick={action.onClick}
+                        style={{ marginLeft: 20, marginRight: 10 }}
+                        key={action.name}
+                        name={action.name}
+                        Icon={action.icon}
+                        onClick={action.onClick}
                     />
                 )
-            else if(action.type === 'dropdown')
+            else if (action.type === 'dropdown')
                 return (
-                    <PanelDropdown key={action.name} action={action}/>
+                    <PanelDropdown key={action.name} action={action} />
                 )
             else
                 return (
-                    <Button 
-                      style={{ marginLeft: 10 }}
-                      key={action.name}
-                      name={action.name}
-                      variant={action.variant} 
-                      endIcon={<action.icon/>}
-                      onClick={action.onClick}
-                      disabled={action.disabled}
-                      color={action.color}
+                    <Button
+                        style={{ marginLeft: 10 }}
+                        key={action.name}
+                        name={action.name}
+                        variant={action.variant}
+                        endIcon={<action.icon />}
+                        onClick={action.onClick}
+                        disabled={action.disabled}
+                        color={action.color}
                     />
                 )
         })
@@ -110,22 +110,24 @@ export default function Panel(props) {
     const Icon = props.menuOpen ? MenuOpenIcon : MenuIcon
 
     const showBackBtn = useMemo(() => props.onBackClick ? true : false, [props.onBackClick])
-    const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled]) 
+    const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled])
 
     return (
-        <div className='Panel'>
-            <div style={{ marginBottom: 10 }}>
-                <div className='Header'>
-                    {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick}/>}
-                    {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick}/>}
-                    <h2 className='Title'>{props.title}</h2>
-                    <div className="JustifyRight">
-                        {renderActions(props.actions)}
+        <div className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} >
+            {!props.hideHeader &&
+                <div style={{ marginBottom: 10 }}>
+                    <div className='Header'>
+                        {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick} />}
+                        {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick} />}
+                        <h2 className='Title'>{props.title}</h2>
+                        <div className="JustifyRight">
+                            {renderActions(props.actions)}
+                        </div>
                     </div>
+                    <PanelFilters {...props.propsPanelFilters} />
                 </div>
-                <PanelFilters {...props.propsPanelFilters}/>
-            </div>
-            {props.children}  
+            }
+            {props.children}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
-
+import { Link } from 'react-router-dom'
 import './TopBar.css'
 
 import { BiChat, BiBell } from "react-icons/bi";
@@ -16,7 +16,7 @@ export default function TopBar(props) {
     const [teamLogo, setTeamLogo] = useState(DefaultTeamLogo)
 
     useEffect(() => {
-        if(!user || !user?.team)
+        if (!user || !user?.team)
             return
 
         setTeamLogo(user.team.org.logo.original)
@@ -29,7 +29,7 @@ export default function TopBar(props) {
     return (
         <div className='TopBar'>
             <div className='TeamLogo'>
-                <img src={teamLogo} onError={onTeamLogoError}/>
+                <img src={teamLogo} onError={onTeamLogoError} />
             </div>
             {props.actionTitle && (
                 <div className='Button' onClick={props.onActionClick}>
@@ -37,10 +37,11 @@ export default function TopBar(props) {
                 </div>
             )}
             <div className='FlexRight'>
-                <SearchBar placeholder='Power search'/>
-                <BiBell className='IconBtn'/>
-                <BiChat className='IconBtn'/>
-                <img className='Logo' src={Logo}/>
+                <SearchBar placeholder='Power search' />
+                <BiBell className='IconBtn' />
+                <Link to="/new-chat"><BiChat className='IconBtn' /></Link>
+                {/* <BiChat className='IconBtn' /> */}
+                <img className='Logo' src={Logo} />
             </div>
         </div>
     )

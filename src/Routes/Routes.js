@@ -132,3 +132,7 @@ export const tweetRoutes = {
     search: "/tweet-ranking",
     tweets: "/tweet-ranking",
 }
+
+export const chatRoutes = {
+    all: "/new-chat",
+}

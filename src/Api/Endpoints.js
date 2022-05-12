@@ -1161,6 +1161,13 @@ export const createPerson = (contactId, data) => {
     return POST(`contacts/${contactId}/people`, body)
 }
 
+export const updatePerson = (contactId, personId, data) => {
+    const body = {
+        person: { ...data }
+    }
+    return PUT(`contacts/${contactId}/people/${personId}`, body)
+}
+
 export const createOpponent = (contactId, data) => {
     const body = {
         opponents: { ...data }

@@ -4,42 +4,38 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { FormBaseDialog } from "../Dialogs/FormBaseDialog";
-import { createPerson } from 'Api/Endpoints';
+import { createPerson, updatePerson } from 'Api/Endpoints';
 import { usePeopleTypes } from 'Api/Hooks';
+
+const initialValues = {
+  "person_relationship_type_id": "",
+  "first_name": "",
+  "last_name": "",
+  "phone": "",
+  "email": "",
+  "lives_with": false,
+  "active_in_life": false,
+  "top_influencer": false,
+  "twitter_profile": ""
+}
+
+const validationSchema = yup.object().shape({
+  "person_relationship_type_id": yup.number().required("Required"),
+  "first_name": yup.string().required("Required"),
+  "last_name": yup.string().required("Required"),
+  "phone": yup.string(),
+  "email": yup.string().email("Invalid email address"),
+  "lives_with": yup.boolean(),
+  "active_in_life": yup.boolean(),
+  "top_influencer": yup.boolean(),
+  "twitter_profile": yup.string()
+})
 
 export const CreatePersonDialog = (props) => {
 
   const [contact, setContact] = useState(props.contact || {});
-  // const [person, setPerson] = useState(props.person || {});
   const [error, setError] = useState(null);
   const peopleTypes = usePeopleTypes();
-
-  const initialValues = {
-    "person_relationship_type_id": props.person?.person_relationship_type?.id || "",
-    "first_name": props.person?.first_name || "",
-    "last_name": props.person?.last_name || "",
-    "phone": props.person?.phone || "",
-    "email": props.person?.email || "",
-    "lives_with": props.person?.lives_with || false,
-    "active_in_life": props.person?.active_in_life || false,
-    "top_influencer": props.person?.top_influencer || false,
-    "twitter_profile": props.person?.twitter_profile || ""
-  }
-
-  // console.log(props.person)
-  // console.log(initialValues)
-
-  const validationSchema = yup.object().shape({
-    "person_relationship_type_id": yup.number().required("Required"),
-    "first_name": yup.string().required("Required"),
-    "last_name": yup.string().required("Required"),
-    "phone": yup.string(),
-    "email": yup.string().email("Invalid email address"),
-    "lives_with": yup.boolean(),
-    "active_in_life": yup.boolean(),
-    "top_influencer": yup.boolean(),
-    "twitter_profile": yup.string()
-  })
 
   const relationshipsTypesOptions = useMemo(() => {
     return peopleTypes.items.map(item => (
@@ -53,12 +49,30 @@ export const CreatePersonDialog = (props) => {
     initialValues,
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      if (contact.id) {
+      if (props.person) {
+        console.log("update person")
+        formikHelpers.setSubmitting(true);
+        updatePerson(contact.id, props.person.id, values)
+          .then((res) => {
+            // console.log(res)
+            // if (onCreated && typeof props.onSuccess instanceof Function && res.status === 201)
+            props.onSuccess(res.data)
+            handleClose();
+          })
+          .catch(err => {
+            setError(err)
+          }).finally(() => {
+            formikHelpers.setSubmitting(false);
+          })
+      }
+      if (contact.id && !props.person) {
+        console.log("create person")
         formikHelpers.setSubmitting(true);
         createPerson(contact.id, values)
           .then((res) => {
-            if (onCreated && typeof props.onCreated instanceof Function && res.status === 201)
-              props.onCreated(res.data)
+            // console.log(res)
+            // if (onCreated && typeof props.onSuccess instanceof Function && res.status === 201)
+            props.onSuccess(res.data)
             handleClose();
           })
           .catch(err => {
@@ -69,6 +83,24 @@ export const CreatePersonDialog = (props) => {
       }
     }
   })
+
+  useEffect(() => {
+    if (props.open && props.person) {
+      console.log(props.person)
+      formik.setValues({
+        "person_relationship_type_id": props.person?.person_relationship_type_id,
+        "first_name": props.person?.first_name,
+        "last_name": props.person?.last_name,
+        "phone": props.person?.phone,
+        "email": props.person?.email,
+        "lives_with": props.person?.lives_with,
+        "active_in_life": props.person?.active_in_life,
+        "top_influencer": props.person?.top_influencer,
+        "twitter_profile": props.person?.twitter_profile
+      })
+    }
+  }, [props.person])
+
 
   const handleClose = () => {
     props.onClose();

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import {
   Dialog,
@@ -78,6 +78,16 @@ export const CreateBoardDialog = (props) => {
     }
   });
 
+  useEffect(() => {
+    if (props.boardInfo) {
+      formik.setValues({
+        name: props.boardInfo.name,
+        is_shared: props.boardInfo.is_shared,
+      })
+    }
+  }, [props.boardInfo])
+
+
   const handleClose = (e, reason) => {
     if (reason && reason == "backdropClick")
       return;
@@ -85,6 +95,8 @@ export const CreateBoardDialog = (props) => {
     formik.resetForm()
     props.onClose()
   }
+
+  console.log(props.boardInfo)
 
   const selectedFiltersKeys = useMemo(() => Object.keys(props.selectedFilters), [props.selectedFilters])
   // console.log(props.selectedFilters)
