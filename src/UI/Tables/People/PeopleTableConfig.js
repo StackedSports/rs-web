@@ -129,7 +129,7 @@ const livesWith = {
     valueGetter: (params) => params.row.lives_with ? params.row.lives_with : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
-            <Typography fontSize={14} noWrap >{params.value ? "YES" : "NO"}</Typography>
+            <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
         </Tooltip>
     ),
 }
@@ -168,7 +168,7 @@ const topInfluencer = {
     valueGetter: (params) => params.row.top_influencer ? params.row.top_influencer : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
-            <Typography fontSize={14} noWrap >{params.value ? "YES" : "NO"}</Typography>
+            <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
         </Tooltip>
     ),
 }
@@ -192,8 +192,8 @@ export const columnsMini = [
     fullName,
     email,
     phone,
-    livesWith,
     relationshipType,
+    livesWith,
     topInfluencer,
 ]
 
@@ -204,9 +204,9 @@ export const columnsFull = [
     lastName,
     email,
     phone,
-    livesWith,
-    createdAt,
     relationshipType,
+    livesWith,
     topInfluencer,
     updatedAt,
+    createdAt,
 ]

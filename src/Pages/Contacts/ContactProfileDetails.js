@@ -612,6 +612,52 @@ const ContactProfileDetails = (props) => {
 							]}
 						>
 							<Button
+								name="Add new relationship"
+								type="button"
+								variant='contained'
+								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
+							/>
+							
+							<List
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									// width: "100%",
+									// position: "absolute",
+									// zIndex: 1000,
+									// backgroundColor: "#ffff"
+								}}
+							>
+								{props.contact?.relationships?.filter((person, index) => index < 3 && person)
+									.map(person => {
+										return (
+											<ListItemButton
+												key={person.id}
+												onClick={() => onViewPerson(person)}
+											>
+												<Stack direction="row" flex={1}>
+													<Stack flex={1}>{person.first_name + " " + person.last_name}</Stack>
+													<Stack>{person.relationship_type.description}</Stack>
+												</Stack>
+											</ListItemButton>
+										)
+									})
+								}
+								{props.contact?.relationships?.length > 3 &&
+									<Button
+										style={{
+											alignSelf: "center",
+											width: "max-content",
+										}}
+										type="button"
+										name="View More..."
+										variant='outlined'
+										// endIcon={<MoreHorizIcon />}
+										onClick={() => setOpenPeopleDialog(true)}
+									/>
+								}
+							</List>
+							{/* <Button
 								name="View People"
 								type="button"
 								variant='contained'
@@ -626,49 +672,9 @@ const ContactProfileDetails = (props) => {
 								unmountOnExit
 								in={openCollapsePeople}
 							>
-								<List
-									style={{
-										display: "flex",
-										flexDirection: "column",
-										// width: "100%",
-										// position: "absolute",
-										// zIndex: 1000,
-										// backgroundColor: "#ffff"
-									}}
-								>
-									{props.contact?.relationships?.filter((person, index) => index < 3 && person)
-										.map(person => {
-											return (
-												<ListItemButton
-													key={person.id}
-													onClick={() => onViewPerson(person)}
-												>
-													{person.first_name + " " + person.last_name}
-												</ListItemButton>
-											)
-										})
-									}
-									{props.contact?.relationships?.length > 3 &&
-										<Button
-											style={{
-												alignSelf: "center",
-												width: "max-content",
-											}}
-											type="button"
-											name="View More..."
-											variant='outlined'
-											// endIcon={<MoreHorizIcon />}
-											onClick={() => setOpenPeopleDialog(true)}
-										/>
-									}
-								</List>
-							</Collapse>
-							<Button
-								name="Add new relationship"
-								type="button"
-								variant='contained'
-								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
-							/>
+								
+							</Collapse> */}
+							
 						</AccordionComponent>
 					</Form>
 				)}
