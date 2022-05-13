@@ -17,6 +17,7 @@ export const MiniSearchBar = (props) => {
         setInput(e.target.value)
 
         // TODO: this is broken for some reason
+        
         if (props.searchOnChange) {
             if (e.target.value === '')
                 props.onClear()
