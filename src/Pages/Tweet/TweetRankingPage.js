@@ -12,6 +12,7 @@ import { db } from 'Api/Firebase'
 
 import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
+import RenderIf from 'UI/Widgets/RenderIf'
 import TweetPage from './TweetPage'
 
 import TweetDetails from './Components/TweetDetails'
@@ -126,8 +127,8 @@ const TweetRankingPage = (props) => {
 				  placeholder="Search Tweet"
 				  onSearch={onSearchTweet}
 				/>
-				
-				{input !== '' && 
+
+				<RenderIf condition={input !== ''}>
 					<Button
 					  variant="contained"
 					  name="Analyze Tweet"
@@ -137,7 +138,19 @@ const TweetRankingPage = (props) => {
 						width: "max-content",
 					  }}
 					/>
-				}
+				</RenderIf>
+				
+				{/* {input !== '' && 
+					<Button
+					  variant="contained"
+					  name="Analyze Tweet"
+					  onClick={onAnalyzeClick}
+					  style={{
+						alignSelf: "end",
+						width: "max-content",
+					  }}
+					/>
+				} */}
 
 				{/* {!openTweet && <Divider />} */}
 
