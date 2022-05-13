@@ -477,7 +477,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
         criteria: {
             ...getFilterMessagesCriteria(filters),
-            include_team: filters.includeTeam ? 'true' : 'false'
+            include_team: filters?.includeTeam ? 'true' : 'false'
         }
     }
 
