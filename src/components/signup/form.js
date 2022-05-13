@@ -55,7 +55,7 @@ export default function Signin() {
   const classes = useStyles();
 
   const auth = useContext(AuthContext)
-  
+
   const [redirect, setRedirect] = useState(null)
 
   const [checked, setChecked] = useState(false);
@@ -105,19 +105,29 @@ export default function Signin() {
       },
       (error) => {
         // console.log("this is error", error.JSON());
-          console.log('error = ',error);
+        console.log('error = ', error);
         notifyUser("Something went wrong please try again");
         setLoading(false);
       }
     );
   };
 
-  useEffect(() => {}, []);
+  const loginUserUsingTwitter = () => {
+    setLoading(true);
+    auth.loginWithTwitter().then(
+      (res) => {
+        setRedirect('/contacts')
+      }).finally(() => {
+        setLoading(false);
+      })
+  }
+
+  useEffect(() => { }, []);
 
   const notifyUser = (data) => toast(data);
 
-  if(redirect)
-    return <Redirect to={redirect}/>
+  if (redirect)
+    return <Redirect to={redirect} />
 
   return (
     <>
@@ -245,7 +255,12 @@ export default function Signin() {
               <Or>
                 <Forgotpassword>or</Forgotpassword>
               </Or>
-              <FormButton3>
+              <FormButton3
+                onClick={(e) => {
+                  e.preventDefault();
+                  loginUserUsingTwitter();
+                }}
+              >
                 <TwitterButtonText>
                   {" "}
                   <FaTwitter
