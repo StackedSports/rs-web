@@ -17,6 +17,7 @@ const AuthProvider = (props) => {
 
     useEffect(() => {
         // console.log(app.location)
+
         // save current location so when the user signs in
         // we redirect them to that location
         if (!user && app.location.pathname !== '/')
@@ -88,6 +89,7 @@ const AuthProvider = (props) => {
                 setUser(null)
                 localStorage.removeItem('user')
             })
+            .finally(() => app.redirect('/'))
         // localStorage.removeItem('user')
 
         setUser(null)
