@@ -9,6 +9,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
+import RenderIf from "UI/Widgets/RenderIf"
 
 import { AppContext } from 'Context/AppProvider'
 
@@ -271,6 +272,9 @@ export const MediaDetailsPage = () => {
                             <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
                             <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
                             <DetailsPreview label="File Size:" value={fileSizeFormatted} />
+                            <RenderIf condition={media?.discarded_at}>
+                                <DetailsPreview label="Archived on :" value={formatDate(media.discarded_at)} />
+                            </RenderIf>
 
                             <Stack direction='row' gap={2} alignItems='center'>
                                 <Typography variant="info">

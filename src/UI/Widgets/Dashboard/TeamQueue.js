@@ -28,9 +28,9 @@ export const TeamQueue = () => {
 
   const getBaseFilter = () => {
     if (dates.includes(null))
-      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user.role === "Admin" });
+      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin" });
     else
-      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user.role === "Admin", send_at_dates: [dates] });
+      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin", send_at_dates: [dates] });
   };
 
   //console.log("queue date", dates)

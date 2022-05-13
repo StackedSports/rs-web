@@ -216,35 +216,6 @@ export const login = (email, password) => {
     //return POST('login', { email, password })
 }
 
-export const oauthLogin = (data) => {
-    return new Promise((resolve, reject) => {
-        let body = JSON.stringify({ oauth: data })
-        console.log("oauthLogin")
-
-        const HEADERS = {
-            Accept: "application/json; version=1",
-            "Content-Type": "application/json",
-            // Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
-        }
-
-        const config = {
-            headers: HEADERS
-        }
-
-        axios.post(URL + 'oauth/login', body, config)
-            .then(res => {
-                console.log(res)
-                if (res.status === 200 || res.status === 204 || res.status === 201)
-                    resolve(res)
-                else
-                    reject(res)
-            })
-            .catch(error => {
-                reject(error)
-            })
-    })
-}
-
 export const logout = () => {
     return POST('logout')
 }
@@ -506,7 +477,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
         criteria: {
             ...getFilterMessagesCriteria(filters),
-            include_team: filters.includeTeam ? 'true' : 'false'
+            include_team: filters?.includeTeam ? 'true' : 'false'
         }
     }
 
@@ -1173,6 +1144,44 @@ export const createOpponent = (contactId, data) => {
         opponents: { ...data }
     }
     return POST(`contacts/${contactId}/opponents`, body)
+}
+
+export const loginWithTwitter = ({ token, secret, email, handle, id }) => {
+    const body = {
+        "oauth": {
+            "provider": "twitter",
+            "id": id,
+            "handle": handle,
+            "email": email,
+            "token": token,
+            "secret": secret,
+        }
+    }
+    return new Promise((resolve, reject) => {
+
+
+        const HEADERS = {
+            Accept: "application/json; version=1",
+            "Content-Type": "application/json",
+            Authorization: "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452",
+        }
+
+        const config = {
+            headers: HEADERS
+        }
+
+        axios.post(URL + 'oauth/login', body, config)
+            .then(res => {
+                console.log(res)
+                if (res.status === 200 || res.status === 204 || res.status === 201)
+                    resolve(res)
+                else
+                    reject(res)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
 }
 
 export const linkWithTwitter = ({ token, secret, email, handle, id }) => {
