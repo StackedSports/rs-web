@@ -7,8 +7,9 @@ import { Stack } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
 import { addDoc, setDoc, collection, doc, onSnapshot } from 'firebase/firestore'
+import { httpsCallable } from 'firebase/functions'
 
-import { db } from 'Api/Firebase'
+import { db, functions } from 'Api/Firebase'
 
 import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
@@ -18,8 +19,8 @@ import TweetPage from './TweetPage'
 import TweetDetails from './Components/TweetDetails'
 
 const TweetRankingPage = (props) => {
-	const [input, setInput] = useState('https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A')
-	const [tweetId, setTweetId] = useState('1521517935155679237')
+	const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
+	const [tweetId, setTweetId] = useState('1523330156374282240')
 	
 	const [tweet, setTweet] = useState({})
 	const [openTweet, setOpenTweet] = useState(true)
@@ -80,6 +81,15 @@ const TweetRankingPage = (props) => {
 		console.log(tweetId)
 		setTweetId(tweetId)
 		setOpenTweet(true)
+
+		const getTweetData = httpsCallable(functions, 'getTweetData')
+		getTweetData({ tweetId })
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
 
 		const requestRef = doc(collection(db, 'requests'))
 		setDoc(requestRef, { tweetId, id: requestRef.id })
@@ -171,7 +181,6 @@ const TweetRankingPage = (props) => {
 				>
 				  	<TweetDetails tweetId={tweetId}/>
 				</Collapse>
-
 			</Stack >
 		</TweetPage >
 	)
