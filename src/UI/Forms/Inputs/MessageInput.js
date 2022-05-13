@@ -416,7 +416,7 @@ const EmojiPicker = (props) => {
     }
 
     return (
-        <div className="EmojiPicker-Container" >
+        <div className="EmojiPicker-Container" style={props.style}>
             <Emoji emoji="grinning" size={28} onClick={onClick}/>
             {showPicker && (
                 <div
@@ -501,6 +501,59 @@ const InputText = (props) => {
     )
 }
 
+const InputChat = (props) => {
+    const textArea = useRef()
+
+    const onChange = (e) => {
+        props.onChange(e.target.value)
+    }
+
+    const replaceSelectionWith = (substring) => {
+        let string = `${props.value}`
+        let start = textArea.current.selectionStart
+        let end = textArea.current.selectionEnd
+
+        props.onChange(stringSplice(string, start, start - end, substring))
+    }
+
+    const onEmojiSelected = (emoji) => {
+        replaceSelectionWith(emoji.native)
+    }
+
+    return (
+        <div style={{ position: "relative", ...props.style }}>
+            <div
+              style={{ 
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+            }}
+            >
+                <EmojiPicker onEmojiSelected={onEmojiSelected}/>
+            </div>
+            <textarea
+              ref={textArea}
+              className='TextArea-chat'
+              type='text'
+              rows='10'
+              placeholder={props.placeholder}
+              value={props.value}
+              onChange={onChange}
+            />
+            <span 
+              style={{ 
+                // color: props.value.length >= maxLength ? 'red' : '#bbb',
+                marginTop: "20px",
+                fontSize: 12,
+                color: "#dadada",
+              }}
+            >
+                {props.footerText}
+            </span>
+        </div>
+    )
+}
+
 
 const Input = (props) => {
     // console.log('type = ' + props.type)
@@ -510,6 +563,7 @@ const Input = (props) => {
         case 'receiver': return <InputReceivers {...props}/>
         case 'time': return <InputTime {...props}/>
         case 'media': return <InputMedia {...props}/>
+        case 'chat': return <InputChat {...props}/>
         case 'text':
         default: return <InputText {...props}/>
     }
@@ -529,9 +583,11 @@ export default function MessageInput(props) {
 
     return (
         <div className={containerClass}>
-            <div className='Label'>
-                <p>{props.label}</p>
-            </div>
+           {!props.hideLabel && 
+                <div className='Label'>
+                    <p>{props.label}</p>
+                </div>
+            }
             <div className={inputClass}>
                 <Input type={props.type} {...props}/>
             </div>
