@@ -431,22 +431,25 @@ export default function ContactsPage(props) {
                             ]
                         }}
                     />
-                    <PanelDropdown
-                        action={{
-                            id: 'selected-contacts-actions',
-                            name: `${selectedContacts.count} selected contact${selectedContacts.count > 1 ? "s" : ""}`,
-                            type: 'dropdown',
-                            variant: 'contained',
-                            icon: ArrowDropDownIcon,
-                            disabled: selectedContacts.count === 0,
-                            options: [
-                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                { name: 'Archive Contact', onClick: onArchiveContactClick }
-                            ]
-                        }}
-                    />
+                    {selectedContacts.count > 0 &&
+                        <PanelDropdown
+                            action={{
+                                id: 'selected-contacts-actions',
+                                name: `${selectedContacts.count} selected contact${selectedContacts.count > 1 ? "s" : ""}`,
+                                type: 'dropdown',
+                                variant: 'contained',
+                                icon: ArrowDropDownIcon,
+                                style: {
+                                    whiteSpace: "nowrap",
+                                },
+                                options: [
+                                    { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                    { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                    { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                ]
+                            }}
+                        />}
                     <Button
                         name="Tag"
                         variant="outlined"
