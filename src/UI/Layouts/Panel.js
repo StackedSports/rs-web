@@ -19,7 +19,7 @@ export const PanelDropdown = ({ action, header }) => {
         //console.log('ok')
         header = () => (
             <Button
-                style={{ marginLeft: 0 }}
+                style={{ marginLeft: 0, ...action.style }}
                 key={action.name}
                 name={action.name}
                 variant={action.variant}
