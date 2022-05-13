@@ -179,7 +179,7 @@ const UserSettingsAccountPage = (props) => {
 						icon={TwitterIcon}
 						title="Twitter Account"
 						buttonText="LINK TWITTER"
-						provider={twitterProvider}
+						provider={'twitterProvider'}
 						account={user.item?.twitter_profile?.screen_name ? `@${user.item?.twitter_profile?.screen_name}` : null}
 						image={user.item?.twitter_profile?.profile_image}
 						userId={user.item?.id}
