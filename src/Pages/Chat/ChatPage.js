@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -7,6 +7,9 @@ import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import TuneIcon from '@mui/icons-material/Tune';
+import { ListItemButton, Stack } from "@mui/material";
+import { Avatar, List, ListItem, Typography } from '@material-ui/core';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
@@ -14,15 +17,88 @@ import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
 
 import SideFilter from 'UI/Widgets/SideFilter';
-import { ListItemButton, Stack } from "@mui/material";
-import { Avatar, List, ListItem, Typography } from '@material-ui/core';
 import SearchBar from 'UI/Widgets/SearchBar';
 // import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import ConversationChat from './Components/ConversationChat';
+
+
+const changeItemPosition = (arr, from, to) => {
+  let el = arr[from]
+  arr.splice(from, 1)
+  return arr.splice(to, 0, el);
+};
+
+const ChatListItem = (props) => {
+
+  const [showIconClose, setShowIconClose] = useState(false)
+
+  const onArchiveConversation = (conversation) => {
+    props.onArchiveConversation(conversation)
+  }
+
+  return (
+    <ListItemButton
+      sx={{
+        padding: "15px",
+        position: "relative",
+        borderTop: "solid 1px #dadada",
+        borderBottom: "solid 1px #dadada",
+      }}
+      key={props.conversation?.id}
+      onMouseEnter={() => setShowIconClose(true)}
+      onMouseLeave={() => setShowIconClose(false)}
+      onClick={() => props.onViewConversation(props.conversation)}
+    >
+      <Stack flex={1} direction="row" spacing={2} alignItems="center">
+        <CloseIcon sx={{
+          visibility: showIconClose ? "visible" : "hidden",
+          transition: "visibility .2s ease",
+          position: "absolute",
+          marginRight: "15px",
+          right: 0,
+          zIndex: 1,
+        }}
+          onClick={() => onArchiveConversation(props.conversation)}
+        />
+        <Avatar style={{
+          width: "56px",
+          height: "56px",
+        }}
+          aria-label="recipe"
+          src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+        />
+        <Stack flex={1} sx={{ position: "relative" }}>
+          <Typography style={{
+            position: "absolute",
+            right: 0,
+          }}
+            variant="body2"
+          >
+            <b>11:23 am</b>
+          </Typography>
+
+          <Typography variant="body1">
+            <b>{props.conversation?.name}</b>
+          </Typography>
+          <Typography variant="body2" color="#dadada">
+            @charles
+          </Typography>
+          <Typography variant="body2" color="#dadada">
+            There Ways To Get Travel Disco...
+          </Typography>
+        </Stack>
+      </Stack>
+    </ListItemButton>
+  )
+}
+
 export default function ChatPage(props) {
+  const confirmDialog = useContext(ConfirmDialogContext)
 
   const [displayFilters, setDisplayFilters] = useState(true)
-  const [messageViewer, setMessageViewer] = useState([])
+  const [conversationViewer, setConversationViewer] = useState([])
 
   const onTopActionClick = () => {
     console.log("onTopActionClick")
@@ -33,16 +109,28 @@ export default function ChatPage(props) {
     setDisplayFilters(!displayFilters)
   }
 
-  const onViewMessage = (message, index) => {
-    console.log("onMenuIconClick")
-    if (!messageViewer.includes(message)) {
-      console.log("messageViewer.includes(message)")
-      messageViewer.unshift(message)
+  const onViewConversation = (conversation) => {
+    let index = 0
+    const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
+    if (conv.length === 0) {
+
+      setConversationViewer([conversation, ...conversationViewer])
     } else {
-      messageViewer.splice(0, 0, messageViewer.splice(index, 1)[0])//change position message
+      console.log("contains")
+      // index = conversationViewer.indexOf(conversation)
+      // console.log(conv)
     }
+    // console.log(conversation, index)
+    // changeItemPosition(conversationViewer, index, 0)
   }
-  console.log(messageViewer)
+
+  const onCloseConversation = (conversation) => {
+    const index = conversationViewer.indexOf(conversation)
+    conversationViewer.splice(index, 1)
+    setConversationViewer([...conversationViewer])
+  }
+
+  console.log(conversationViewer)
 
   const onChatSearch = (searchTerm) => {
     console.log("onChatSearch", searchTerm)
@@ -52,18 +140,55 @@ export default function ChatPage(props) {
     console.log("onChatSearchClear")
   }
 
+  const onArchiveConversation = (conversation) => {
+    const title = "Archive Conversation"
+    confirmDialog.show(title, "Are you sure you would like to archive this conversation? ", () => {
+      console.log("archiveConversation", conversation)
+
+    })
+  }
+
   const Icon = displayFilters ? MenuOpenIcon : MenuIcon
 
   const filters = [
-    { // Category
+    {
       id: 'Ben Graves',
       name: 'Ben Graves',
       items: [
-        // Filters
-        // { id: '0', name: 'New (Last 30 days)' },
         { id: '0', name: '@BG615', /* path: contactsRoutes.all */ },
         { id: '1', name: '615.999.9999', /* path: contactsRoutes.all */ }
       ]
+    },
+  ]
+
+  const conversations = [
+    {
+      id: '0',
+      name: 'Luke Burke 1',
+    },
+    {
+      id: '1',
+      name: 'Luke Burke 2',
+    },
+    {
+      id: '2',
+      name: 'Luke Burke 3',
+    },
+    {
+      id: '3',
+      name: 'Luke Burke 4',
+    },
+    {
+      id: '4',
+      name: 'Luke Burke 5',
+    },
+    {
+      id: '5',
+      name: 'Luke Burke 6',
+    },
+    {
+      id: '6',
+      name: 'Luke Burke 7',
     },
   ]
 
@@ -81,13 +206,14 @@ export default function ChatPage(props) {
           collapsed={true}
           onFilterSelected={props.onFilterSelected}
         />
-        <Panel
-          hideHeader
-        >
+        <Panel hideHeader>
           <Stack flex={1} direction="row">
 
-            <Stack sx={{
-              width: "350px",
+            <Stack sx={{//conversation summary list
+              width: "370px",
+              height: "100vh",
+              overflowY: "scroll",
+              border: "red solid 1px",
               borderRadius: "5px",
               border: "solid 1px #dadada",
             }} >
@@ -117,55 +243,33 @@ export default function ChatPage(props) {
                   />
                 </ListItem>
 
-                {/* {messages.map((message, index) => {
-                  return ( */}
-                    <ListItemButton
-                      sx={{
-                        padding: "15px",
-                        borderTop: "solid 1px #dadada",
-                        borderBottom: "solid 1px #dadada",
-                      }}
-                      // key={message.id}
-                      onClick={onViewMessage}
-                    >
-                      <Stack flex={1} direction="row" spacing={2} alignItems="center">
-                        <Avatar style={{
-                          width: "56px",
-                          height: "56px",
-                        }}
-                          aria-label="recipe"
-                          src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
-                        />
-                        <Stack flex={1} sx={{ position: "relative" }}>
-                          <Typography style={{
-                            position: "absolute",
-                            right: 0,
-                          }}
-                            variant="body2"
-                          >
-                            <b>11:23 am</b>
-                          </Typography>
-
-                          <Typography variant="body1">
-                            <b>Luke Burke</b>
-                          </Typography>
-                          <Typography variant="body2" color="#dadada">
-                            @charles
-                          </Typography>
-                          <Typography variant="body2" color="#dadada">
-                            There Ways To Get Travel Disco...
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                    </ListItemButton>
-                  {/* )
-                })
-                } */}
+                {conversations.map(conversation => (
+                  <ChatListItem
+                    conversation={conversation}
+                    onViewConversation={onViewConversation}
+                    onArchiveConversation={onArchiveConversation}
+                  />
+                ))
+                }
               </List>
             </Stack>
 
-            <Stack flex={1}>
-
+            <Stack sx={{//conversation details container
+              maxWidth: displayFilters ? "700px" : "900px",
+              overflowX: "scroll",
+            }}
+              flex={1}
+              spacing={2}
+              direction="row"
+              flexWrap="nowrap"
+            >
+              {conversationViewer.map(conversation => (
+                <ConversationChat
+                  conversation={conversation}
+                  onCloseConversation={onCloseConversation}
+                />
+              ))
+              }
 
             </Stack>
 
