@@ -37,6 +37,7 @@ const TagsList = (props) => {
             {props.tags && props.tags.map((tag, index) => (
                 <Tag
                 //   style={{ margin: 0, margin }}
+                  key={index}
                   name={tag.name}
                   onRemove={(e) => props.onRemoveTag(tag, index)}
                 />

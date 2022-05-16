@@ -76,7 +76,7 @@ export default function SearchBar(props) {
     }
 
     const onKeyPress = (e) => {
-        if (e.key === 'Enter')
+        if (e.key === 'Enter' && props.onSearch instanceof Function)
             props.onSearch(input)
     }
 
