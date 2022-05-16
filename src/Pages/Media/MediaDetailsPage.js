@@ -273,7 +273,7 @@ export const MediaDetailsPage = () => {
                             <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
                             <DetailsPreview label="File Size:" value={fileSizeFormatted} />
                             <RenderIf condition={media?.discarded_at}>
-                                <DetailsPreview label="Archived on :" value={formatDate(media.discarded_at)} />
+                                <DetailsPreview label="Archived on :" value={formatDate(media?.discarded_at)} />
                             </RenderIf>
 
                             <Stack direction='row' gap={2} alignItems='center'>

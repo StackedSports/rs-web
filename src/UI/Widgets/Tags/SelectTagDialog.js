@@ -1,14 +1,16 @@
 import { useEffect, useState, useContext } from 'react'
 
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography, Box } from '@mui/material'
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import SearchBar from 'UI/Widgets/SearchBar'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
 import TagsList from 'UI/Widgets/Tags/TagsList'
+import RenderIf from '../RenderIf'
 
 import { AppContext } from 'Context/AppProvider'
 import { useTags2 } from 'Api/Hooks'
+import Button from '../Buttons/Button'
 
 const SelectTagDialog = (props) => {
     const app = useContext(AppContext)
@@ -16,12 +18,14 @@ const SelectTagDialog = (props) => {
 
     const [selectedTags, setSelectedTags] = useState([])
     const [tagsSelected, setTagsSelected] = useState([])
+    const [search, setSearch] = useState('')
+    console.log(tagsSelected)
 
     useEffect(() => {
         if (!tags.items)
             return
 
-        // console.log(tags.items)
+        console.log(tags.items)
     }, [tags.items])
 
     // useEffect(() => {
@@ -63,14 +67,10 @@ const SelectTagDialog = (props) => {
     }
 
     const onTagSearch = (input) => {
-        console.log(input)
-
+        setSearch(input)
         tags.search(input)
     }
 
-    const onClearSearch = () => {
-        tags.clearSearch()
-    }
 
     const onConfirm = () => {
         if (selectedTags.length === 0) {
@@ -80,6 +80,14 @@ const SelectTagDialog = (props) => {
         props.onConfirm(selectedTags)
         setSelectedTags([])
         setTagsSelected([])
+    }
+
+    const onCreateTag = () =>{
+        const newTag = { id: `new-${search}`, name: search }
+        setSelectedTags(currentTags => [...currentTags, newTag.id])
+        setTagsSelected(currentTags => [...currentTags, newTag])
+        setSearch('')
+        tags.search('')
     }
 
     return (
@@ -105,13 +113,13 @@ const SelectTagDialog = (props) => {
                 </Stack>
 
                 <SearchBar
-                    style={{
-                        border: '1px solid #ddd'
-                    }}
-                    placeholder="Search Tags"
-                    onSearch={onTagSearch}
-                    onClear={onClearSearch}
-                    searchOnChange
+                  style={{
+                      border: '1px solid #ddd'
+                  }}
+                  placeholder="Search or Create New"
+                  //onSearch={onTagSearch}
+                  //onClear={onClearSearch}
+                  onChange = {onTagSearch}
                 />
             </Stack>
 
@@ -120,13 +128,26 @@ const SelectTagDialog = (props) => {
                 tags={tagsSelected}
                 onRemoveTag={onRemoveTag}
             />
-            <TagsTable
-                mini
-                tags={tags.items}
-                selection={selectedTags}
-                onSelectionChange={onSelectedTagsChange}
-                loading={tags.loading}
-            />
+            <RenderIf condition={tags.items?.length === 0}>
+                <Box textAlign='center'>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                        No tags found. Would you like to create a new one?
+                    </Typography>
+                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                        {search}
+                    </Typography>
+                    <Button onClick={onCreateTag} name='Create Tag' variant='contained'/>
+                </Box>
+            </RenderIf>
+            <RenderIf condition={tags.items?.length > 0}>
+                <TagsTable
+                  mini
+                  tags={tags.items}
+                  selection={selectedTags}
+                  onSelectionChange={onSelectedTagsChange}
+                  loading={tags.loading}
+                />
+            </RenderIf>
         </BaseDialog>
     )
 }

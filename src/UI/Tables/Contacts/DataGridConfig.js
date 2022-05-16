@@ -1,8 +1,6 @@
 import { Tooltip, Typography,Box } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 import { formatDate, formatPhoneNumber } from 'utils/Parser'
-import { contactsRoutes } from 'Routes/Routes';
 
 import AvatarImg from "images/avatar.png";
 
@@ -44,11 +42,9 @@ const fullName = {
     resizable: true,
     valueGetter: (params) => getFullName(params.row),
     renderCell: (params) => (
-        <Box sx={{width:'100%', color:'inherit'}} component={Link} to={`${contactsRoutes.profile}/${params.row.id}`}>
         <Tooltip title={params.value} placement='right-start'>
             <Typography component='span' fontSize={14} noWrap >{params.value}</Typography>
         </Tooltip>
-        </Box>
     ),
 }
 

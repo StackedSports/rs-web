@@ -1,10 +1,8 @@
 import './SearchBar.css'
 import { useState, useRef } from 'react'
 
-import { Box } from '@material-ui/core';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
-import { styled, TextField, Autocomplete, Chip, Avatar } from "@mui/material"
 
 import { StyledBox, StyledSearchIcon, StyledTextInput, StyledClearIcon } from './SearchBarStyled'
 
@@ -16,8 +14,7 @@ export const MiniSearchBar = (props) => {
     const onInputChange = (e) => {
         setInput(e.target.value)
 
-        // TODO: this is broken for some reason
-        
+
         if (props.searchOnChange) {
             if (e.target.value === '')
                 props.onClear()
@@ -28,7 +25,7 @@ export const MiniSearchBar = (props) => {
     }
 
     const onKeyPress = (e) => {
-        if (e.key === 'Enter')
+        if (e.key === 'Enter' && props.onSearch)
             props.onSearch(input)
     }
 
@@ -73,16 +70,8 @@ export default function SearchBar(props) {
     const onInputChange = (e) => {
         setInput(e.target.value)
 
-        if(props.onChange)
+        if (props.onChange && props.onChange instanceof Function)
             props.onChange(e.target.value)
-
-        // TODO: this is broken for some reason
-        if (props.searchOnChange) {
-            if (e.target.value === '')
-                props.onClear()
-            else
-                props.onSearch(e.target.value)
-        }
 
     }
 
@@ -93,11 +82,11 @@ export default function SearchBar(props) {
 
     const onClear = (e) => {
         setInput('')
-        
-        if(props.onChange)
+
+        if (props.onChange)
             props.onChange('')
 
-        if(props.onClear)
+        if (props.onClear)
             props.onClear()
     }
 
