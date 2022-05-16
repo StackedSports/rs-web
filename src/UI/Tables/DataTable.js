@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 
 import { Stack } from '@mui/material'
+import { DataGrid } from "@mui/x-data-grid";
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination'
 

@@ -1,11 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 
-import { Stack, Typography, Box } from '@mui/material'
-import {
-    DataGridPro,
-    useGridApiRef,
-    gridVisibleRowCountSelector
-} from "@mui/x-data-grid-pro";
+import { Stack, Typography,Box } from '@mui/material'
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import SearchBar from 'UI/Widgets/SearchBar'
@@ -20,20 +15,16 @@ import Button from '../Buttons/Button'
 const SelectTagDialog = (props) => {
     const app = useContext(AppContext)
     const tags = useTags2()
-    const gridApiRef = useGridApiRef();
 
+    const [tagsTable, setTagsTable] = useState([])
     const [selectedTags, setSelectedTags] = useState([])
-    const [cacheSelectedTags, setCacheSelectedTags] = useState([])
     const [search, setSearch] = useState('')
-    const [visibleRows, setVisibleRows] = useState()
     const [filterModel, setFilterModel] = useState();
 
-console.log(visibleRows)
     useEffect(() => {
         if (!tags.items)
             return
-
-        //console.log(tags.items)
+        setTagsTable(tags.items)
     }, [tags.items])
 
     // useEffect(() => {
@@ -49,7 +40,6 @@ console.log(visibleRows)
 
     const onRemoveTag = (tag, index) => {
         setSelectedTags(oldSelectedTags => oldSelectedTags.filter(item => item != tag.id))
-        setCacheSelectedTags(oldTagsSelected => oldTagsSelected.filter(item => item.id != tag.id))
     }
 
     const onTagSearch = (input) => {
@@ -72,26 +62,24 @@ console.log(visibleRows)
         }
         props.onConfirm(selectedTags)
         setSelectedTags([])
-        setCacheSelectedTags([])
     }
 
     const onClose = () => {
         setSelectedTags([])
-        setCacheSelectedTags([])
         props.onClose()
     }
 
     const onCreateTag = () => {
         const newTag = { id: `new-${search}`, name: search }
+        setTagsTable(currentTags=>[...currentTags, newTag])
         setSelectedTags(currentTags => [...currentTags, newTag.id])
-        setCacheSelectedTags(currentTags => [...currentTags, newTag])
         setSearch('')
         tags.search('')
     }
 
-    const CustomNoRowsOverlay = () => {
+    const NoResultsOverlay = () => {
         return (
-            <Box textAlign='center'>
+            <Stack alignItems='center' justifyContent='center' height='100%'>
                 <Typography variant="h6" component="h3" gutterBottom>
                     No tags found. Would you like to create a new one?
                 </Typography>
@@ -99,7 +87,7 @@ console.log(visibleRows)
                     {search}
                 </Typography>
                 <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
-            </Box>
+            </Stack>
         )
     }
 
@@ -119,7 +107,7 @@ console.log(visibleRows)
                 direction="row"
                 flex={1}
                 alignItems="center"
-                sx={{ marginBottom: cacheSelectedTags.length > 0 ? 1 : 2 }}
+                sx={{ marginBottom: selectedTags.length > 0 ? 1 : 2 }}
             >
                 <Stack flex={1}>
                     <Typography variant="h1" component="h3">
@@ -140,10 +128,10 @@ console.log(visibleRows)
 
             <TagsList
                 // style={{ marginBottom: 5 }}
-                tags={tags.items?.filter(tag => selectedTags.some(selectedId => selectedId == tag.id))}
+                tags={tagsTable?.filter(tag => selectedTags.some(selectedId => selectedId == tag.id))}
                 onRemoveTag={onRemoveTag}
             />
-            <RenderIf condition={tags.items?.length === 0 || visibleRows === 0}>
+            <RenderIf condition={tagsTable?.length === 0}>
                 <Box textAlign='center'>
                     <Typography variant="h6" component="h3" gutterBottom>
                         No tags found. Would you like to create a new one?
@@ -154,17 +142,18 @@ console.log(visibleRows)
                     <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
                 </Box>
             </RenderIf>
-            <RenderIf condition={tags.items?.length > 0 && (visibleRows > 0 || visibleRows === undefined)}>
+            <RenderIf condition={tagsTable?.length > 0}>
                 <TagsTable
-                    apiRef={gridApiRef}
-                    onStateChange={(state) => setVisibleRows(gridVisibleRowCountSelector(state))}
                     mini
-                    tags={tags.items}
+                    tags={tagsTable}
                     selection={selectedTags}
                     onSelectionChange={onSelectedTagsChange}
                     loading={tags.loading}
                     onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
                     filterModel={filterModel}
+                    components={{
+                        NoResultsOverlay: NoResultsOverlay,
+                    }}
                 />
             </RenderIf>
         </BaseDialog>
