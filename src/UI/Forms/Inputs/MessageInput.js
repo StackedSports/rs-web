@@ -27,7 +27,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker, Emoji } from 'emoji-mart'
 
 import Dropdown from 'UI/Widgets/Dropdown'
-import {SearchableOptionListItem} from 'UI/Forms/Inputs/SearchableOptions'
+import { SearchableOptionListItem } from 'UI/Forms/Inputs/SearchableOptions'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 
 import { constructProperty } from 'utils/Parser'
@@ -41,16 +41,16 @@ const platforms = [
 
 const InputSelector = (props) => {
     const onClick = (e) => {
-        if(props.onClick) {
+        if (props.onClick) {
             props.onClick(e)
         }
     }
 
     return (
         <div style={props.style} className={props.large ? 'Container Large' : 'Container'}
-          onClick={onClick}
+            onClick={onClick}
         >
-            <props.icon className='Icon'/>
+            <props.icon className='Icon' />
             <div className='Name'>{props.name}</div>
         </div>
     )
@@ -58,11 +58,11 @@ const InputSelector = (props) => {
 
 const InputSelected = (props) => {
     const onClick = (e) => {
-        if(props.onClick)
+        if (props.onClick)
             props.onClick(e)
     }
 
-    if(props.variant === 'media' || props.variant === 'placeholder') {
+    if (props.variant === 'media' || props.variant === 'placeholder') {
         const getSrc = {
             media: (media) => media.urls.thumb,
             placeholder: (placeholder) => placeholder.media[0].urls.thumb
@@ -72,25 +72,25 @@ const InputSelected = (props) => {
             <div style={props.style} className={'MediaPreview'} onClick={onClick}>
                 {/* <img className="MediaSelected" src={getSrc[props.variant](props.item)}/> */}
                 <MediaPreview
-                //   mini
+                    //   mini
                     item={props.item}
                     // loading={loading}
                     type={props.variant}
                 />
-                <CloseIcon className='Clear ClearSelected' onClick={props.onRemove}/>
+                <CloseIcon className='Clear ClearSelected' onClick={props.onRemove} />
             </div>
         )
     }
 
     return (
         <div style={props.style} className={props.large ? 'Container Large' : 'Container'} onClick={onClick}>
-            {props.type == 'contact' ? 
-                props.img ? <img className='Image' src={props.img}/> : <></>
-             : (
-                <props.icon className='Icon'/>
-            )}
+            {props.type == 'contact' ?
+                props.img ? <img className='Image' src={props.img} /> : <></>
+                : (
+                    <props.icon className='Icon' />
+                )}
             <div className='Name'>{props.name}</div>
-            <CloseIcon className='Clear' onClick={props.onRemove}/>
+            <CloseIcon className='Clear' onClick={props.onRemove} />
         </div>
     )
 }
@@ -109,42 +109,42 @@ const InputPlatform = (props) => {
     useEffect(() => {
         let tmp = []
 
-        if(props.platforms) {
-            if(props.platforms.twitter) {
+        if (props.platforms) {
+            if (props.platforms.twitter) {
                 tmp.push(platforms[0])
             }
 
             tmp.push(platforms[1])
-            
-            if(props.platforms.rs) {
+
+            if (props.platforms.rs) {
                 tmp.push(platforms[2])
             }
         }
-        
+
         // tmp.push(platforms[2])
 
         setAvailablePlatforms(tmp)
     }, [props.platforms])
 
-    if(props.selected) {
+    if (props.selected) {
         selectedPlatform = platforms.find(plat => plat.name === props.selected)
     }
 
     const header = () => props.selected ? (
-        <InputSelected icon={selectedPlatform.icon} name={selectedPlatform.name} onRemove={props.onRemove}/>
+        <InputSelected icon={selectedPlatform.icon} name={selectedPlatform.name} onRemove={props.onRemove} />
     ) : (
-        <InputSelector icon={FaEnvelope} name='Message Type'/>
+        <InputSelector icon={FaEnvelope} name='Message Type' />
     )
 
     const content = () => (
         <Dropdown.List>
             {availablePlatforms.map((platform, index) => (
                 <SearchableOptionListItem
-                  key={platform.name}
-                  item={platform.name}
-                  icon={platform.icon}
-                  iconSize={18}
-                  onSelected={(e) => props.onSelected(platform.name)}
+                    key={platform.name}
+                    item={platform.name}
+                    icon={platform.icon}
+                    iconSize={18}
+                    onSelected={(e) => props.onSelected(platform.name)}
                 />
             ))}
         </Dropdown.List>
@@ -152,26 +152,26 @@ const InputPlatform = (props) => {
 
     return (
         <Dropdown
-          header={header}
-          content={content}
-          contentStyle={{ minHeight: 0, overflowY: 'auto' }}
-          disabled={props.selected ? true : false}
+            header={header}
+            content={content}
+            contentStyle={{ minHeight: 0, overflowY: 'auto' }}
+            disabled={props.selected ? true : false}
         />
     )
 }
 
 const InputSenders = (props) => {
-    const header = () => <InputSelector icon={FaPlus} name={props.name}/>
+    const header = () => <InputSelector icon={FaPlus} name={props.name} />
 
     const content = () => (
         <Dropdown.List>
             {props.contacts && props.contacts.map((contact, index) => (
                 <SearchableOptionListItem
-                  key={contact.id}
-                  item={contact}
-                  imgDef={typeof contact == 'string' ? null : 'twitter_profile.profile_image'}
-                  nameDef={['first_name', 'last_name']}
-                  onSelected={(e) => props.onSelected(contact)}
+                    key={contact.id}
+                    item={contact}
+                    imgDef={typeof contact == 'string' ? null : 'twitter_profile.profile_image'}
+                    nameDef={['first_name', 'last_name']}
+                    onSelected={(e) => props.onSelected(contact)}
                 />
             ))}
         </Dropdown.List>
@@ -181,28 +181,28 @@ const InputSenders = (props) => {
         <div className='Row'>
             {props.canAddMore && (
                 <Dropdown
-                  header={header}
-                  content={content}
-                  disabled={false}
-                  contentStyle={{
-                      maxHeight: 335,
-                      width: 280
-                  }}
+                    header={header}
+                    content={content}
+                    disabled={false}
+                    contentStyle={{
+                        maxHeight: 335,
+                        width: 280
+                    }}
                 />
             )}
             {props.selected && props.selected.length > 0 && (
                 props.selected.map((selection, index) => (
                     <div className='Row'>
                         <InputSelected
-                          type='contact' 
-                          img={typeof selection == 'string' ? null : constructProperty(selection, 'twitter_profile.profile_image')}
-                          name={constructProperty(selection, ['first_name', 'last_name'])}
-                          onRemove={(e) => props.onRemove(index)}/>
+                            type='contact'
+                            img={typeof selection == 'string' ? null : constructProperty(selection, 'twitter_profile.profile_image')}
+                            name={constructProperty(selection, ['first_name', 'last_name'])}
+                            onRemove={(e) => props.onRemove(index)} />
                         {index == 0 && props.selected.length > 1 && typeof selection == 'string' && <p className='Or'>OR</p>}
                     </div>
                 ))
             )}
-            
+
         </div>
     )
 }
@@ -213,20 +213,20 @@ const ReceiverSelectionGroup = (props) => {
             {props.selection && (
                 props.selection.length < 4 ? (
                     props.selection.map((item, index) => (
-                        <InputSelected key={item.id} style={{marginBottom: 10}}
-                          type='contact' 
-                          img={constructProperty(item, props.imgDef)}
-                          name={constructProperty(item, props.nameDef)}
-                          onClick={(e) => props.onSelectedClick(index, item.id, props.type)}
-                          onRemove={(e) => props.onRemove(index, item.id, props.type, e)}/>
+                        <InputSelected key={item.id} style={{ marginBottom: 10 }}
+                            type='contact'
+                            img={constructProperty(item, props.imgDef)}
+                            name={constructProperty(item, props.nameDef)}
+                            onClick={(e) => props.onSelectedClick(index, item.id, props.type)}
+                            onRemove={(e) => props.onRemove(index, item.id, props.type, e)} />
                     ))
                 ) : (
-                    <InputSelected style={{marginBottom: 10}}
-                    type='contact' 
-                    img={null}
-                    name={`${props.selection.length} ${props.label}`}
-                    onClick={(e) => props.onSelectedClick('all', 'all', props.type)}
-                    onRemove={(e) => props.onRemove('all', 'all', props.type, e)}/>
+                    <InputSelected style={{ marginBottom: 10 }}
+                        type='contact'
+                        img={null}
+                        name={`${props.selection.length} ${props.label}`}
+                        onClick={(e) => props.onSelectedClick('all', 'all', props.type)}
+                        onRemove={(e) => props.onRemove('all', 'all', props.type, e)} />
                 )
             )}
         </div>
@@ -238,86 +238,86 @@ const InputReceivers = (props) => {
     // selected
     let showMargin = false
 
-    if(props.selected) {
+    if (props.selected) {
         let lengths = props.selected.privateBoards.length
             + props.selected.teamBoards.length
             + props.selected.contacts.length
             + props.selected.recipients.length
 
-        if(lengths > 0)
+        if (lengths > 0)
             showMargin = true
     }
 
     return (
         <div className='Row'>
-            <InputSelector style={{marginBottom: showMargin ? 10 : 0}} icon={FaPlus} name={props.name} onClick={props.onClick}/>
+            <InputSelector style={{ marginBottom: showMargin ? 10 : 0 }} icon={FaPlus} name={props.name} onClick={props.onClick} />
             {props.selected && (
                 <ReceiverSelectionGroup
-                  selection={props.selected.privateBoards}
-                  label='Private Boards'
-                  type='privateBoards'
-                  imgDef={null}
-                  nameDef={'name'}
-                  onSelectedClick={props.onSelectedClick}
-                  onRemove={props.onRemove}
+                    selection={props.selected.privateBoards}
+                    label='Private Boards'
+                    type='privateBoards'
+                    imgDef={null}
+                    nameDef={'name'}
+                    onSelectedClick={props.onSelectedClick}
+                    onRemove={props.onRemove}
                 />
             )}
             {props.selected && (
                 <ReceiverSelectionGroup
-                  selection={props.selected.teamBoards}
-                  label='Team Boards'
-                  type='teamBoards'
-                  imgDef={null}
-                  nameDef={'name'}
-                  onSelectedClick={props.onSelectedClick}
-                  onRemove={props.onRemove}
+                    selection={props.selected.teamBoards}
+                    label='Team Boards'
+                    type='teamBoards'
+                    imgDef={null}
+                    nameDef={'name'}
+                    onSelectedClick={props.onSelectedClick}
+                    onRemove={props.onRemove}
                 />
             )}
             {props.selected && (
                 <ReceiverSelectionGroup
-                  selection={props.selected.contacts}
-                  label='Contacts'
-                  type='contacts'
-                  imgDef={'twitter_profile.profile_image'}
-                  nameDef={['first_name', 'last_name']}
-                  onSelectedClick={props.onSelectedClick}
-                  onRemove={props.onRemove}
+                    selection={props.selected.contacts}
+                    label='Contacts'
+                    type='contacts'
+                    imgDef={'twitter_profile.profile_image'}
+                    nameDef={['first_name', 'last_name']}
+                    onSelectedClick={props.onSelectedClick}
+                    onRemove={props.onRemove}
                 />
             )}
             {props.selected && (
                 <ReceiverSelectionGroup
-                  selection={props.selected.recipients}
-                  label='Message Recipients'
-                  type='recipients'
-                  imgDef={'profile_image'}
-                  nameDef={['first_name', 'last_name']}
-                  onSelectedClick={props.onSelectedClick}
-                  onRemove={props.onRemove}
+                    selection={props.selected.recipients}
+                    label='Message Recipients'
+                    type='recipients'
+                    imgDef={'profile_image'}
+                    nameDef={['first_name', 'last_name']}
+                    onSelectedClick={props.onSelectedClick}
+                    onRemove={props.onRemove}
                 />
             )}
         </div>
-        
+
     )
 }
 
-const InputTime = (props) =>  <InputSelector icon={FaCalendarAlt} name={props.name} onClick={props.onClick}/>
+const InputTime = (props) => <InputSelector icon={FaCalendarAlt} name={props.name} onClick={props.onClick} />
 
-const InputMedia = (props) =>  {
-    if(props.selected) {
+const InputMedia = (props) => {
+    if (props.selected) {
         return (
             <InputSelected
-              variant={props.selected.type}
-              item={props.selected.item}
-              onClick={props.onSelectedClick}
-              onRemove={props.onRemove}/>
+                variant={props.selected.type}
+                item={props.selected.item}
+                onClick={props.onSelectedClick}
+                onRemove={props.onRemove} />
         )
     } else {
         return (
             <InputSelector
-              icon={FaPlus}
-              name='Add Media'
-              large
-              onClick={props.onClick}/>  
+                icon={FaPlus}
+                name='Add Media'
+                large
+                onClick={props.onClick} />
         )
     }
 }
@@ -326,9 +326,9 @@ const TextPlaceholders = (props) => {
     const [placeholders, setPlaceholders] = useState([])
 
     useEffect(() => {
-        if(!props.placeholders)
+        if (!props.placeholders)
             return
-        
+
         let tmp = []
 
         Object.keys(props.placeholders).forEach(key => {
@@ -340,7 +340,7 @@ const TextPlaceholders = (props) => {
     }, [props.placeholders])
 
     const header = () => (
-        <InputSelector icon={FaPlus} name="Text Placeholders"/>
+        <InputSelector icon={FaPlus} name="Text Placeholders" />
     )
 
     // console.log(placeholders)
@@ -359,19 +359,19 @@ const TextPlaceholders = (props) => {
 
     return (
         <Dropdown
-          header={header}
-          content={content}
-          dismissOnClick
-          dismissDelay={200}
+            header={header}
+            content={content}
+            dismissOnClick
+            dismissDelay={200}
         />
     )
 }
 
 const Snippets = ({ snippets, onSelected }) => {
-    
+
 
     const header = () => (
-        <InputSelector icon={FaPlus} name="Snippets"/>
+        <InputSelector icon={FaPlus} name="Snippets" />
     )
 
     // console.log(placeholders)
@@ -390,10 +390,10 @@ const Snippets = ({ snippets, onSelected }) => {
 
     return (
         <Dropdown
-          header={header}
-          content={content}
-          dismissOnClick
-          dismissDelay={200}
+            header={header}
+            content={content}
+            dismissOnClick
+            dismissDelay={200}
         />
     )
 }
@@ -417,19 +417,19 @@ const EmojiPicker = (props) => {
 
     return (
         <div className="EmojiPicker-Container" style={props.style}>
-            <Emoji emoji="grinning" size={28} onClick={onClick}/>
+            <Emoji emoji="grinning" size={28} onClick={onClick} />
             {showPicker && (
                 <div
-                  style={{ position: 'absolute', top: '40px', left: '0px' }}
-                  onMouseLeave={onMouseLeave}>
-                    <Picker 
+                    style={{ position: 'absolute', top: '40px', left: '0px' }}
+                    onMouseLeave={onMouseLeave}>
+                    <Picker
                         showPreview={false}
                         //   useButton={false}
                         title="Pick your emoji"
                         emoji="grinning"
                         perLine={10}
                         onSelect={onSelect}
-                        />
+                    />
                 </div>
             )}
         </div>
@@ -469,31 +469,31 @@ const InputText = (props) => {
 
     return (
         <div>
-            <div className="Row" style={{maringBottom: 20}}>
+            <div className="Row" style={{ maringBottom: 20 }}>
                 <TextPlaceholders
-                  placeholders={props.textPlaceholders}
-                  onSelected={onPlaceholderSelected}
+                    placeholders={props.textPlaceholders}
+                    onSelected={onPlaceholderSelected}
                 />
                 <Snippets
-                  snippets={props.snippets}
-                  onSelected={onSnippetSelected}
+                    snippets={props.snippets}
+                    onSelected={onSnippetSelected}
                 />
-                <EmojiPicker onEmojiSelected={onEmojiSelected}/>
+                <EmojiPicker onEmojiSelected={onEmojiSelected} />
             </div>
             <textarea
-              ref={textArea}
-              className='TextArea'
-              type='text'
-              rows='10'
-              placeholder={props.placeholder}
-              value={props.value}
-              onChange={onChange}
+                ref={textArea}
+                className='TextArea'
+                type='text'
+                rows='10'
+                placeholder={props.placeholder}
+                value={props.value}
+                onChange={onChange}
             />
-            <span 
-              style={{ 
-                color: props.value.length >= maxLength ? 'red' : '#bbb',
-                fontSize: 14
-              }}
+            <span
+                style={{
+                    color: props.value.length >= maxLength ? 'red' : '#bbb',
+                    fontSize: 14
+                }}
             >
                 Message length {props.value.length}/{maxLength}
             </span>
@@ -521,32 +521,30 @@ const InputChat = (props) => {
     }
 
     return (
-        <div style={{ position: "relative", ...props.style }}>
-            <div
-              style={{ 
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
+        <div style={props.style}>
+            <EmojiPicker style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
             }}
-            >
-                <EmojiPicker onEmojiSelected={onEmojiSelected}/>
-            </div>
-            <textarea
-              ref={textArea}
-              className='TextArea-chat'
-              type='text'
-              rows='10'
-              placeholder={props.placeholder}
-              value={props.value}
-              onChange={onChange}
+                onEmojiSelected={onEmojiSelected}
             />
-            <span 
-              style={{ 
-                // color: props.value.length >= maxLength ? 'red' : '#bbb',
-                marginTop: "20px",
-                fontSize: 12,
-                color: "#dadada",
-              }}
+            <textarea
+                ref={textArea}
+                className='TextArea-chat'
+                type='text'
+                rows='10'
+                placeholder={props.placeholder}
+                value={props.value}
+                onChange={onChange}
+            />
+            <span
+                style={{
+                    // color: props.value.length >= maxLength ? 'red' : '#bbb',
+                    marginTop: "20px",
+                    fontSize: 12,
+                    color: "#dadada",
+                }}
             >
                 {props.footerText}
             </span>
@@ -557,15 +555,15 @@ const InputChat = (props) => {
 
 const Input = (props) => {
     // console.log('type = ' + props.type)
-    switch(props.type) {
-        case 'platform': return <InputPlatform {...props}/>
-        case 'sender': return <InputSenders {...props}/>
-        case 'receiver': return <InputReceivers {...props}/>
-        case 'time': return <InputTime {...props}/>
-        case 'media': return <InputMedia {...props}/>
-        case 'chat': return <InputChat {...props}/>
+    switch (props.type) {
+        case 'platform': return <InputPlatform {...props} />
+        case 'sender': return <InputSenders {...props} />
+        case 'receiver': return <InputReceivers {...props} />
+        case 'time': return <InputTime {...props} />
+        case 'media': return <InputMedia {...props} />
+        case 'chat': return <InputChat {...props} />
         case 'text':
-        default: return <InputText {...props}/>
+        default: return <InputText {...props} />
     }
 }
 
@@ -576,20 +574,20 @@ export default function MessageInput(props) {
     let containerClass = 'MessageInput'
     let inputClass = 'Input'
 
-    if(props.type === 'media' || props.type === 'text'){
+    if (props.type === 'media' || props.type === 'text' || props.type === 'chat') {
         containerClass += ' Large'
         inputClass += ' Flex1'
     }
 
     return (
         <div className={containerClass}>
-           {!props.hideLabel && 
+            {!props.hideLabel &&
                 <div className='Label'>
                     <p>{props.label}</p>
                 </div>
             }
             <div className={inputClass}>
-                <Input type={props.type} {...props}/>
+                <Input type={props.type} {...props} />
             </div>
         </div>
     )

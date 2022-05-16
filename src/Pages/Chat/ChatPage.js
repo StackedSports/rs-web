@@ -165,6 +165,11 @@ export default function ChatPage(props) {
     {
       id: '0',
       name: 'Luke Burke 1',
+      messages: [
+        {
+          id: "0",
+        }
+      ]
     },
     {
       id: '1',
