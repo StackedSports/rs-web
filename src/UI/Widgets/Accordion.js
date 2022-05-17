@@ -17,7 +17,6 @@ export default function AccordionComponent(props) {
 	const handleChange = (accordionId, event, newExpanded) => {
 		props.setExpanded(newExpanded ? accordionId : false);
 	};
-
 	return (
 		<Accordion
 			sx={{ width: '100%' }}
@@ -39,7 +38,7 @@ export default function AccordionComponent(props) {
 					</Typography>
 					<LoadingButton
 						style={{ visibility: props.showSaveButton && !props.saving ? "visible" : "hidden" }}
-						loadingPosition="start"
+						//loadingPosition="start"
 						// startIcon={<SaveIcon />}
 						variant="outlined"
 						onClick={props.onDiscard} 
@@ -49,7 +48,7 @@ export default function AccordionComponent(props) {
 					<LoadingButton
 						style={{ visibility: props.showSaveButton ? "visible" : "hidden" }}
 						loading={props.saving}
-						loadingPosition="start"
+						//loadingPosition="start"
 						// startIcon={<SaveIcon />}
 						variant="contained"
 						type="submit"
@@ -87,6 +86,8 @@ export default function AccordionComponent(props) {
 									variant={item.variant || 'outlined'}
 									component={item.component}
 									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
+									//error={ Boolean(item.error)}
+        							//helperText={ item.error}
 								/>
 								{item.touch && <ErrorMessage name={item.name} />}
 							</>

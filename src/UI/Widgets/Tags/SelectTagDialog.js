@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 
-import { Stack, Typography,Box } from '@mui/material'
+import { Stack, Typography, Box } from '@mui/material'
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import SearchBar from 'UI/Widgets/SearchBar'
@@ -12,6 +12,13 @@ import { AppContext } from 'Context/AppProvider'
 import { useTags2 } from 'Api/Hooks'
 import Button from '../Buttons/Button'
 
+/**
+ * 
+ * @param {Function} onConfirm  - Callback to be called when the user confirms the selection, parameter selection ids 
+ * @param {Function} onClose   - Callback to be called when the user cancels the selection
+ * @param {boolean} isAddTag - can add new tags if not present in the list, new selected tags will be added with id = new-{name}
+ * @returns 
+ */
 const SelectTagDialog = (props) => {
     const app = useContext(AppContext)
     const tags = useTags2()
@@ -33,6 +40,15 @@ const SelectTagDialog = (props) => {
 
     //     console.log(contact) 
     // }, [contact])
+
+    useEffect(() => {
+        if (!filterModel) {
+            setSearch('')
+            return
+        }
+        setSearch(filterModel?.items[0]?.value)
+    }, [filterModel])
+
 
     const onSelectedTagsChange = (selection) => {
         setSelectedTags(selection)
@@ -66,31 +82,48 @@ const SelectTagDialog = (props) => {
 
     const onClose = () => {
         setSelectedTags([])
+        setSearch('')
+        setFilterModel({ items: [] })
         props.onClose()
     }
 
     const onCreateTag = () => {
         const newTag = { id: `new-${search}`, name: search }
-        setTagsTable(currentTags=>[...currentTags, newTag])
+        setTagsTable(currentTags => [...currentTags, newTag])
         setSelectedTags(currentTags => [...currentTags, newTag.id])
-        setSearch('')
-        tags.search('')
+    }
+
+    const NoRowsOverlay = () => {
+        return (
+            <Stack alignItems='center' justifyContent='center' height='100%'>
+                <Typography variant="h6" component="h3" gutterBottom>
+                    No tags found. {props.isAddTag && 'Would you like to create a new one?'}
+                </Typography>
+                <RenderIf condition={props.isAddTag}>
+                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                        {search}
+                    </Typography>
+                    <Button onClick={onCreateTag} name='Create Tag' variant='contained' sx={{ zIndex: 10 }} />
+                </RenderIf>
+            </Stack>
+        )
     }
 
     const NoResultsOverlay = () => {
         return (
             <Stack alignItems='center' justifyContent='center' height='100%'>
                 <Typography variant="h6" component="h3" gutterBottom>
-                    No tags found. Would you like to create a new one?
+                    No tags found. {props.isAddTag && 'Would you like to create a new one?'}
                 </Typography>
-                <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
-                    {search}
-                </Typography>
-                <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
+                <RenderIf condition={props.isAddTag}>
+                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                        {search}
+                    </Typography>
+                    <Button onClick={onCreateTag} name='Create Tag' variant='contained' sx={{ zIndex: 10 }} />
+                </RenderIf>
             </Stack>
         )
     }
-
 
     return (
         <BaseDialog
@@ -98,7 +131,6 @@ const SelectTagDialog = (props) => {
             open={props.open}
             onConfirm={onConfirm}
             onClose={onClose}
-            // title={props.title || 'Select Tag'}
             confirmLabel={props.confirmLabel}
             cancelLabel={props.cancelLabel}
             actionLoading={props.actionLoading}
@@ -120,8 +152,7 @@ const SelectTagDialog = (props) => {
                         border: '1px solid #ddd'
                     }}
                     placeholder="Search or Create New"
-                    //onSearch={onTagSearch}
-                    //onClear={onClearSearch}
+                    value={search}
                     onChange={onTagSearch}
                 />
             </Stack>
@@ -131,31 +162,19 @@ const SelectTagDialog = (props) => {
                 tags={tagsTable?.filter(tag => selectedTags.some(selectedId => selectedId == tag.id))}
                 onRemoveTag={onRemoveTag}
             />
-            <RenderIf condition={tagsTable?.length === 0}>
-                <Box textAlign='center'>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                        No tags found. Would you like to create a new one?
-                    </Typography>
-                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
-                        {search}
-                    </Typography>
-                    <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
-                </Box>
-            </RenderIf>
-            <RenderIf condition={tagsTable?.length > 0}>
-                <TagsTable
-                    mini
-                    tags={tagsTable}
-                    selection={selectedTags}
-                    onSelectionChange={onSelectedTagsChange}
-                    loading={tags.loading}
-                    onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
-                    filterModel={filterModel}
-                    components={{
-                        NoResultsOverlay: NoResultsOverlay,
-                    }}
-                />
-            </RenderIf>
+            <TagsTable
+                mini
+                tags={tagsTable}
+                selection={selectedTags}
+                onSelectionChange={onSelectedTagsChange}
+                loading={tags.loading}
+                onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
+                filterModel={filterModel}
+                components={{
+                    NoResultsOverlay: NoResultsOverlay,
+                    NoRowsOverlay: NoRowsOverlay,
+                }}
+            />
         </BaseDialog>
     )
 }
