@@ -1,17 +1,27 @@
 import './SearchBar.css'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
 
+import { debounce } from '@mui/material';
 import { StyledBox, StyledSearchIcon, StyledTextInput, StyledClearIcon } from './SearchBarStyled'
 
 export const MiniSearchBar = (props) => {
     const [expanded, setExpanded] = useState(false)
     const [input, setInput] = useState('')
     const inputRef = useRef(null)
+    const isInternalChange = useRef(false)
+
+    useEffect(() => {
+        if (props.value !== undefined && !isInternalChange.current)
+            setInput(props.value)
+        isInternalChange.current = false
+    }, [props.value])
+
 
     const onInputChange = (e) => {
+        isInternalChange.current = true
         setInput(e.target.value)
 
 
@@ -32,6 +42,7 @@ export const MiniSearchBar = (props) => {
     const onClear = (e) => {
         setInput('')
         setExpanded(false)
+        isInternalChange.current = true
 
         if (props.onClear)
             props.onClear()
@@ -66,8 +77,16 @@ export const MiniSearchBar = (props) => {
 
 export default function SearchBar(props) {
     const [input, setInput] = useState(props.value || '')
+    const isInternalChange = useRef(false)
+
+    useEffect(() => {
+        if (props.value !== undefined && !isInternalChange.current)
+            setInput(props.value)
+        isInternalChange.current = false
+    }, [props.value])
 
     const onInputChange = (e) => {
+        isInternalChange.current = true
         setInput(e.target.value)
 
         if (props.onChange && props.onChange instanceof Function)
@@ -81,6 +100,7 @@ export default function SearchBar(props) {
     }
 
     const onClear = (e) => {
+        isInternalChange.current = true
         setInput('')
 
         if (props.onChange)

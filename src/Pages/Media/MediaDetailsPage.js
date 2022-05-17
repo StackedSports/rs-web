@@ -10,6 +10,7 @@ import DetailsPreview from "UI/DataDisplay/DetailsPreview"
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 import RenderIf from "UI/Widgets/RenderIf"
+import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
 import { AppContext } from 'Context/AppProvider'
 
@@ -36,6 +37,7 @@ export const MediaDetailsPage = () => {
     const [itemPlaceholder, setItemPlaceholder] = useState([])
     const [itemContact, setItemContact] = useState([])
     const [itemName, setItemName] = useState('')
+    const [openImageModal, setOpenImageModal] = useState(false)
 
     // http://localhost:3000/media/media/details/353525 remove placeholder test
     //http://localhost:3000/media/media/details/327184 test
@@ -43,9 +45,9 @@ export const MediaDetailsPage = () => {
         let mounted = true
         if (media && mounted) {
             setItemTags(media.tags)
-            setItemOwner([media.owner])
+            setItemOwner(media.owner ? [media.owner] : [])
             setItemName(media.name)
-            setItemContact([media.contact])
+            setItemContact(media.contact ? [media.contact] : [])
 
             if (media.media_placeholder_id)
                 getPlaceholder(media.media_placeholder_id).then(placeholder => {
@@ -58,7 +60,7 @@ export const MediaDetailsPage = () => {
         }
     }, [media])
 
-
+    console.log("item contact", itemContact)
     //find way to get placeholder
 
     const onArchiveAction = () => {
@@ -257,6 +259,7 @@ export const MediaDetailsPage = () => {
                             item={media}
                             loading={loading}
                             type='media'
+                            onClick={() => setOpenImageModal(true)}
                         />
 
                         <Box flex='1 1 auto' >
@@ -448,6 +451,11 @@ export const MediaDetailsPage = () => {
                     </MediaStatsColumn>
                 </GridItemRight>
             </Grid>
+            <MediaCarousel
+                items={[media?.urls?.original]}
+                index={openImageModal ? 0 : null}
+                onClose={() => setOpenImageModal(false)}
+            />
         </MainLayout>
     )
 }

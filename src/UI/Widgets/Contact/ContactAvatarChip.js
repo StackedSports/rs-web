@@ -3,7 +3,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import styled from 'styled-components';
+import { styled } from '@mui/material';
 import { useState } from 'react';
 
 import { formatPhoneNumber } from 'utils/Parser';
@@ -16,7 +16,7 @@ const ContactAvatarChip = (props) => {
 
   // }
 
-  const Options = styled.div`
+  const Options = styled("div")`
     width: 100%;
     display: ${showOptions ? "flex" : "none"};
     flex-direction: column;

@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import Stack from '@mui/material/Stack';
@@ -41,6 +40,7 @@ import {
 
 import {
     addTagsToContacts,
+    addTagToContact,
     deleteTagToContact,
     untagContacts,
 } from 'Api/Endpoints'
@@ -171,7 +171,7 @@ export default function ContactsPage(props) {
         },
     }), [status, ranks, gradYears, tags, positions, status2])
 
-    console.log('status2 = ', status2)
+    //console.log('status2 = ', status2)
 
     const visibleTableRows = {
         profileImg: false,//
@@ -287,24 +287,69 @@ export default function ContactsPage(props) {
 
     }
 
-    const onTagsSelected = (selectedTagsIds) => {
+    const onTagsSelected = async (selectedTagsIds) => {
         setLoadingTags(true)
+
+        let responseResult = { success: 0, error: 0 }
 
         selectedContacts.saveData(contacts.items)
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
 
-        // console.log(selectedTagsIds, contactIds)
+        // separate new Tags and already existing tags
+        const [newTagsNames, alreadyExistingTags] = selectedTagsIds.reduce(([newTagsNames, alreadyExistingTags], selectedTagIds) => {
+            return selectedTagIds.toString().startsWith('new') ?
+                [newTagsNames.concat(selectedTagIds.replace('new-', '')), alreadyExistingTags] :
+                [newTagsNames, alreadyExistingTags.concat(selectedTagIds)]
+        }, [[], []])
 
-        addTagsToContacts(selectedTagsIds, contactIds)
-            .then(res => {
-                if (res.error === 0) {
-                    app.alert.setSuccess('Contacts tagged successfully!')
-                    setOpenSelectTagDialog(false)
-                }
-                else
-                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
-            })
-            .finally(() => setLoadingTags(false))
+
+        // we check if there are new tags to create and create and add them
+        if (newTagsNames.length > 0) {
+            // combine each contact with the new tags
+            const newTagContacts = contactIds.map(contactId => newTagsNames.map(tagName => [tagName, contactId])).flat()
+            console.log('newTagContacts = ', newTagContacts)
+            // create and add new tags ( no problem if there are duplicates api will handle it )
+            await Promise.allSettled(newTagContacts.map(([tagName, contactId]) => addTagToContact(tagName, contactId))).
+                then(results => {
+                    results.forEach((result, index) => {
+                        if (result.status === 'fulfilled') {
+                            responseResult.success++
+                        }
+                        else {
+                            responseResult.error++
+                        }
+                    })
+                })
+        }
+        // if there are already existing tags, we just add them to the contacts
+        if (alreadyExistingTags.length > 0) {
+            addTagsToContacts(alreadyExistingTags, contactIds)
+                .then(res => {
+                    responseResult.success += res.success
+                    responseResult.error += res.error
+                })
+        }
+
+        // now the responseResult contains the number of success and error
+        if (responseResult.error === 0) {
+            app.alert.setSuccess('Contacts tagged successfully!')
+            setOpenSelectTagDialog(false)
+        }
+        else
+            app.alert.setWarning(`${responseResult.success} tags were added . ${res.error} tags failed to be added.`)
+
+        setLoadingTags(false)
+
+        /*  addTagsToContacts(selectedTagsIds, contactIds)
+             .then(res => {
+                 if (res.error === 0) {
+                     app.alert.setSuccess('Contacts tagged successfully!')
+                     setOpenSelectTagDialog(false)
+                 }
+                 else
+                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
+             })
+             .finally(() => setLoadingTags(false)) */
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
@@ -533,6 +578,7 @@ export default function ContactsPage(props) {
                 onClose={() => setOpenSelectTagDialog(false)}
                 confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
+                isAddTag={!selectTagDialogTitle.includes("Untag")}
             />
 
             <FollowOnTwitterDialog

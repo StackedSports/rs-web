@@ -805,6 +805,15 @@ export const untagContacts = (tagIds, contactIds) => {
     })
 }
 
+export const addTagToContact = (tagName, contactId) => {
+    let body = {
+        contact: {
+            tag: tagName
+        }
+    }
+    return POST(`contacts/${contactId}/add_tag`, body)
+}
+
 export const addTagsToContacts = (tagIds, contactIds) => {
     return new Promise((resolve, reject) => {
         let total = contactIds.length

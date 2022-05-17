@@ -5,15 +5,15 @@ import TextField from '@mui/material/TextField';
 // import Button as ButtonMUI from '@mui/material/Button';
 import { Collapse, List, ListItem } from '@material-ui/core';
 import { ListItemButton } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Yup from "yup";
+import { parse, isDate } from "date-fns";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
+import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states } from 'utils/Data';
 import {
@@ -47,15 +47,20 @@ const formValidation = Yup.object().shape({
 	// email: Yup.string().email("Invalid email"),
 })
 
+const detailsFormValidation = Yup.object().shape({
+	dob: Yup.date().max(new Date(), "Date of birth must be in the past").transform((value, originalValue) => {
+		console.log("Parse data", value, originalValue)
+		return isDate(originalValue) ? originalValue : parse(originalValue, "yyyy/MM/dd", new Date())
+	}).typeError("Format must be yyyy/MM/dd")
+})
+
 const ContactProfileDetails = (props) => {
 	if (props.loading)
 		return (
 			<Stack
 				pr={1}
 				spacing={1}
-				sx={{ width: '350px', height: '100%' }}
-				overflowY="auto"
-				style={{ borderRight: "#efefef  1px solid" }}
+				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
 			>
 				<LoadingPanel />
 			</Stack>
@@ -94,11 +99,12 @@ const ContactProfileDetails = (props) => {
 			twitter_handle: props.contact?.twitter_profile?.screen_name || "",
 		},
 		details: {
-			graduation_year: props.contact?.grad_year || "",
-			high_school: props.contact?.high_school || "",
-			state: props.contact?.state || "",
-			status: props.contact?.status?.status || '',
-			rank: props.contact?.rank?.rank || "",
+			dob: props.contact?.dob && props.contact.dob.replaceAll("-","/"),
+			graduation_year: props.contact?.grad_year,
+			high_school: props.contact?.high_school,
+			state: props.contact?.state,
+			status: props.contact?.status?.status,
+			rank: props.contact?.rank?.rank,
 		},
 		coaches: {
 			position_coach: props.contact?.position_coach,
@@ -445,9 +451,7 @@ const ContactProfileDetails = (props) => {
 		<Stack
 			pr={1}
 			spacing={1}
-			sx={{ width: '350px', height: '100%' }}
-			overflowY="auto"
-			style={{ borderRight: "#efefef  1px solid" }}
+			sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
 		>
 			<CreatePersonDialog
 				open={openNewFamilyMemberDialog}
@@ -505,6 +509,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
+				validationSchema={detailsFormValidation}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -520,8 +525,28 @@ const ContactProfileDetails = (props) => {
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 1, formikProps)}
 							items={[
-								{ label: 'Graduation Year', name: 'graduation_year', type: "number", value: formikProps.values.graduation_year, component: TextField },
-								{ label: 'Current School', name: 'high_school', value: formikProps.values.high_school, component: TextField },
+								{
+									label: 'Birthday',
+									name: 'dob',
+									value: formikProps.values.dob,
+									component: TextField,
+									error: formikProps.errors.dob,
+									touch: formikProps.touched.dob,
+									placeholder:'YYYY/MM/DD'
+								},
+								{
+									label: 'Graduation Year',
+									name: 'graduation_year',
+									type: "number",
+									value: formikProps.values.graduation_year,
+									component: TextField
+								},
+								{
+									label: 'Current School',
+									name: 'high_school',
+									value: formikProps.values.high_school,
+									component: TextField,
+								},
 							]}
 						>
 							<SearchableSelector
