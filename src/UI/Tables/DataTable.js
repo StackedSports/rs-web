@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 
 import { Stack } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination'
 
 
@@ -41,8 +42,10 @@ const DataTable = (props) => {
 
     return (
         <Stack spacing={2} style={{ width: '100%', ...style }}>
-            <DataGrid sx={{ m: 0 }}
+            <DataGridPro sx={{ m: 0 }}
                 //   rows={props.contacts ? props.contacts : []}
+              apiRef={props.apiRef}
+              onStateChange={props.onStateChange}
               autoHeight={props.mini ? false : true}
               disableSelectionOnClick={props.disableSelectionOnClick ? true : false}
               rows={props.items}
@@ -58,6 +61,9 @@ const DataTable = (props) => {
               rowsPerPageOptions={[props.rowsPerPageOptions || 50]}
               onCellClick={props.onCellClick}
               onRowClick={props.onRowClick}
+              onFilterModelChange={props.onFilterModelChange}
+              filterModel={props.filterModel}
+              components = {props.components}
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}

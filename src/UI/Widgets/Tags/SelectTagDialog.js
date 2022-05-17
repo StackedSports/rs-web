@@ -1,27 +1,30 @@
 import { useEffect, useState, useContext } from 'react'
 
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography,Box } from '@mui/material'
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog'
 import SearchBar from 'UI/Widgets/SearchBar'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
 import TagsList from 'UI/Widgets/Tags/TagsList'
+import RenderIf from '../RenderIf'
 
 import { AppContext } from 'Context/AppProvider'
 import { useTags2 } from 'Api/Hooks'
+import Button from '../Buttons/Button'
 
 const SelectTagDialog = (props) => {
     const app = useContext(AppContext)
     const tags = useTags2()
 
+    const [tagsTable, setTagsTable] = useState([])
     const [selectedTags, setSelectedTags] = useState([])
-    const [tagsSelected, setTagsSelected] = useState([])
+    const [search, setSearch] = useState('')
+    const [filterModel, setFilterModel] = useState();
 
     useEffect(() => {
         if (!tags.items)
             return
-
-        // console.log(tags.items)
+        setTagsTable(tags.items)
     }, [tags.items])
 
     // useEffect(() => {
@@ -33,43 +36,23 @@ const SelectTagDialog = (props) => {
 
     const onSelectedTagsChange = (selection) => {
         setSelectedTags(selection)
-
-        let count = selection.length
-        let tmp = []
-
-        tags.items.every(tag => {
-            selection.every(selectedId => {
-                if (tag.id == selectedId) {
-                    tmp.push(tag)
-                    count--
-                    return false
-                }
-
-                return true
-            })
-
-            if (count === 0)
-                return false
-
-            return true
-        })
-
-        setTagsSelected(tmp)
     }
 
     const onRemoveTag = (tag, index) => {
         setSelectedTags(oldSelectedTags => oldSelectedTags.filter(item => item != tag.id))
-        setTagsSelected(oldTagsSelected => oldTagsSelected.filter(item => item.id != tag.id))
     }
 
     const onTagSearch = (input) => {
-        console.log(input)
-
-        tags.search(input)
-    }
-
-    const onClearSearch = () => {
-        tags.clearSearch()
+        setSearch(input)
+        setFilterModel({
+            items: [
+                {
+                    "columnField": "name",
+                    "operatorValue": "contains",
+                    "value": input,
+                },
+            ],
+        })
     }
 
     const onConfirm = () => {
@@ -79,14 +62,42 @@ const SelectTagDialog = (props) => {
         }
         props.onConfirm(selectedTags)
         setSelectedTags([])
-        setTagsSelected([])
     }
+
+    const onClose = () => {
+        setSelectedTags([])
+        props.onClose()
+    }
+
+    const onCreateTag = () => {
+        const newTag = { id: `new-${search}`, name: search }
+        setTagsTable(currentTags=>[...currentTags, newTag])
+        setSelectedTags(currentTags => [...currentTags, newTag.id])
+        setSearch('')
+        tags.search('')
+    }
+
+    const NoResultsOverlay = () => {
+        return (
+            <Stack alignItems='center' justifyContent='center' height='100%'>
+                <Typography variant="h6" component="h3" gutterBottom>
+                    No tags found. Would you like to create a new one?
+                </Typography>
+                <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                    {search}
+                </Typography>
+                <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
+            </Stack>
+        )
+    }
+
 
     return (
         <BaseDialog
+            keepMounted
             open={props.open}
             onConfirm={onConfirm}
-            onClose={props.onClose}
+            onClose={onClose}
             // title={props.title || 'Select Tag'}
             confirmLabel={props.confirmLabel}
             cancelLabel={props.cancelLabel}
@@ -96,7 +107,7 @@ const SelectTagDialog = (props) => {
                 direction="row"
                 flex={1}
                 alignItems="center"
-                sx={{ marginBottom: tagsSelected.length > 0 ? 1 : 2 }}
+                sx={{ marginBottom: selectedTags.length > 0 ? 1 : 2 }}
             >
                 <Stack flex={1}>
                     <Typography variant="h1" component="h3">
@@ -108,25 +119,43 @@ const SelectTagDialog = (props) => {
                     style={{
                         border: '1px solid #ddd'
                     }}
-                    placeholder="Search Tags"
-                    onSearch={onTagSearch}
-                    onClear={onClearSearch}
-                    searchOnChange
+                    placeholder="Search or Create New"
+                    //onSearch={onTagSearch}
+                    //onClear={onClearSearch}
+                    onChange={onTagSearch}
                 />
             </Stack>
 
             <TagsList
                 // style={{ marginBottom: 5 }}
-                tags={tagsSelected}
+                tags={tagsTable?.filter(tag => selectedTags.some(selectedId => selectedId == tag.id))}
                 onRemoveTag={onRemoveTag}
             />
-            <TagsTable
-                mini
-                tags={tags.items}
-                selection={selectedTags}
-                onSelectionChange={onSelectedTagsChange}
-                loading={tags.loading}
-            />
+            <RenderIf condition={tagsTable?.length === 0}>
+                <Box textAlign='center'>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                        No tags found. Would you like to create a new one?
+                    </Typography>
+                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                        {search}
+                    </Typography>
+                    <Button onClick={onCreateTag} name='Create Tag' variant='contained' />
+                </Box>
+            </RenderIf>
+            <RenderIf condition={tagsTable?.length > 0}>
+                <TagsTable
+                    mini
+                    tags={tagsTable}
+                    selection={selectedTags}
+                    onSelectionChange={onSelectedTagsChange}
+                    loading={tags.loading}
+                    onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
+                    filterModel={filterModel}
+                    components={{
+                        NoResultsOverlay: NoResultsOverlay,
+                    }}
+                />
+            </RenderIf>
         </BaseDialog>
     )
 }

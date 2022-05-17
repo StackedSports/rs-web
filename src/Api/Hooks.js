@@ -320,7 +320,7 @@ export const useTags2 = () => {
         getTags()
             .then(([tags, pagination]) => {
                 // console.log('ApiHooks: getTags -----')
-                // console.log(tags)
+                 console.log(tags)
                 // console.log(pagination)
                 setTags(tags)
                 tagsRes.current = tags
@@ -333,17 +333,10 @@ export const useTags2 = () => {
     }, [])
 
     const search = (value) => {
-        let tmp = []
-
-        tagsRes.current.forEach(tag => {
-            if (tag.name.toLowerCase().includes(value.toLowerCase()))
-                tmp.push(tag)
-        })
-
-        setTags(tmp)
-    }
-
-    const clearSearch = () => {
+        if(value && value.length > 0) {
+            const filteredTags = tagsRes.current.filter(tag => tag.name.toLowerCase().includes(value.toLowerCase()))
+            setTags(filteredTags)
+        }else
         setTags(tagsRes.current)
     }
 
@@ -351,7 +344,6 @@ export const useTags2 = () => {
         items: tags,
         loading,
         search,
-        clearSearch,
         error,
     }
 }

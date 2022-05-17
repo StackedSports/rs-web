@@ -2,10 +2,13 @@ import { Grid } from "@mui/material"
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { contactsRoutes } from 'Routes/Routes';
+import { useHistory } from "react-router-dom";
 import { columnsMini, columnsFull } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 
 export default function ContactsTable(props) {
+    const history = useHistory();
     // const columns = props.mini ? columnsMini : columnsFull
     const columns = columnsFull
     // console.log(props.columnsControl)
@@ -28,12 +31,17 @@ export default function ContactsTable(props) {
         props.onPageChange(page)
     }
 
+    const onCellClick = (row) => {
+        if (row.field != '__check__')
+            history.push(`${contactsRoutes.profile}/${row.id}`)
+    }
+
     return (
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850 }}>
             <DataGridPro
                 sx={{
                     m: 0,
-                    '.contact-full-name-link:hover': { textDecoration: 'underline', cursor: 'pointer' }
+                    '.MuiDataGrid-row:hover': { cursor: 'pointer' }
                 }}
                 //   rows={props.contacts ? props.contacts : []}
                 apiRef={props.apiRef}
@@ -57,6 +65,7 @@ export default function ContactsTable(props) {
                 disableColumnSelector={props.disableColumnSelector}
                 disableColumnFilter={props.disableColumnFilter}
                 disableColumnMenu={props.disableColumnMenu}
+                onCellClick={onCellClick}
             //   disableColumnMenu={true}
             //   disableColumnSelector={true}
 

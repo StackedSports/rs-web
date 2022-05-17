@@ -96,7 +96,7 @@ export const CreateBoardDialog = (props) => {
     props.onClose()
   }
 
-  console.log(props.boardInfo)
+  //console.log(props.boardInfo)
 
   const selectedFiltersKeys = useMemo(() => Object.keys(props.selectedFilters), [props.selectedFilters])
   // console.log(props.selectedFilters)
