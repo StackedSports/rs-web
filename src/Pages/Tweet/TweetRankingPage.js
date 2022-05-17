@@ -30,6 +30,7 @@ const TweetRankingPage = (props) => {
 	const [openTweet, setOpenTweet] = useState(true)
 
 	const listener = useRef(null)
+	const listener2 = useRef(null)
 
 	console.log(user)
 
@@ -55,7 +56,12 @@ const TweetRankingPage = (props) => {
 		if(!listener.current)
 			return
 
-		return () => listener.current()
+		return () => {
+			if(listener.curent)
+				listener.current()
+			if(listener2.current)
+				listener2.current()
+		}
 	}, [listener.current])
 
 	const onTopActionClick = () => {
@@ -74,6 +80,8 @@ const TweetRankingPage = (props) => {
 
 	const onSearchTweet = (value) => {
 		// TODO
+
+		return
 
 		let parts = value.split('/')
 		console.log(parts)
@@ -142,6 +150,12 @@ const TweetRankingPage = (props) => {
 		})
 
 		listener.current = unsub
+
+		const unsub2 = onSnapshot(doc(db, 'logs', 'testing'), (snapshot) => {
+			console.log(snapshot.data())
+		})
+
+		listener2.current = unsub2
 
 		return
 
