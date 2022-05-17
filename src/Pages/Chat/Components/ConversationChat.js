@@ -1,19 +1,77 @@
 import { useState } from 'react';
-const { Stack } = require("@mui/material")
-const { Avatar, Typography } = require("@material-ui/core")
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import {
+  Avatar,
+  Typography,
+  Box,
+  List,
+  ListItem,
+} from "@material-ui/core";
 import CloseIcon from '@mui/icons-material/Close';
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
+import Checkbox from '@mui/material/Checkbox';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CircleUnchecked from "@material-ui/icons/RadioButtonUnchecked";
 
-import { Divider } from 'UI';
 import Button from 'UI/Widgets/Buttons/Button';
+import { PanelDropdown } from 'UI/Layouts/Panel';
 
+
+const TextMessage = (props) => {
+
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    props.onCheck(event.target.checked)
+  };
+
+  return (
+    <ListItem>
+      {props.actionActive &&
+        <Checkbox
+          sx={{
+            "& .MuiSvgIcon-root": {
+              borderRadius: "50%"
+            }
+          }}
+          checked={checked}
+          onChange={handleChange}
+          icon={<CircleUnchecked />}
+          checkedIcon={<CheckCircleIcon sx={{ color: "#006644" }} />}
+        />
+      }
+      <Typography style={{
+        padding: "10px",
+        color: props.owner ? "#fff" : "#000",
+        backgroundColor: props.owner ? "#3871DA" : "#f1f0f0",
+        borderRadius: props.owner ? "20px 20px 0 20px" : "20px 20px 20px 0",
+      }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </Typography>
+      {props.owner &&
+        <Avatar style={{
+          margin: 10,
+          width: "26px",
+          height: "26px",
+          alignSelf: "flex-end",
+        }}
+          aria-label="recipe"
+          src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+        />}
+    </ListItem >
+  )
+}
 
 const ConversationChat = (props) => {
 
   const [textMessage, setTextMessage] = useState("")
+  const [checkedMessages, setCheckedMessages] = useState([])
+  const [clickActionButton, setClickActionButton] = useState(false)
 
   const onCloseConversation = (conversation) => {
     props.onCloseConversation(conversation)
@@ -23,7 +81,37 @@ const ConversationChat = (props) => {
     setTextMessage(value)
   }
 
-  console.log(textMessage)
+  const onAddImage = () => {
+
+  }
+
+  const onActionClick = () => {
+    setClickActionButton(true)
+
+  }
+
+  const onCancelClick = () => {
+    setCheckedMessages([])
+    setClickActionButton(false)
+  }
+
+  const onSyncMessageClick = () => {
+
+  }
+
+  const onExportCSV = () => {
+
+  }
+
+  const onArchiveMessage = () => {
+
+  }
+
+  const onCheckMessages = (message) => {
+    setCheckedMessages([...checkedMessages, message])
+  }
+
+  console.log(checkedMessages)
 
   return (
     <Stack sx={{//conversation chat
@@ -81,6 +169,7 @@ const ConversationChat = (props) => {
       <Stack p="20px">
         <MessageInput
           style={{
+            position: "relative",
             width: "100%",
             height: "110px",
           }}
@@ -89,7 +178,7 @@ const ConversationChat = (props) => {
           placeholder='Type your message here'
           value={textMessage}
           onChange={onTextAreaChange}
-          footerText="Luke is typing..."
+          footerText={`${props.conversation.name} is typing...`}
         />
 
         <Stack sx={{
@@ -99,28 +188,37 @@ const ConversationChat = (props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Stack direction="row" alignItems="center">
+          <Box display="flex" flex={1}>
             <InsertPhotoIcon
               sx={{
                 cursor: "pointer"
               }}
-            // onClick={ }
+              onClick={onAddImage}
             />
-            {/* <Divider orientation="vertical" variant="middle" /> */}
+            <Divider
+              flexItem
+              orientation="vertical"
+              style={{ marginLeft: "10px", marginRight: "10px" }}
+            />
+
             <AutoFixHighIcon
               sx={{
                 cursor: "pointer"
               }}
             // onClick={ }
             />
-            {/* <Divider orientation="vertical" variant="middle" /> */}
+            <Divider
+              flexItem
+              orientation="vertical"
+              style={{ marginLeft: "10px", marginRight: "10px" }}
+            />
             <ContentCutIcon
               sx={{
                 cursor: "pointer"
               }}
             // onClick={ }
             />
-          </Stack>
+          </Box>
           <Button name="Send" variant="contained" />
         </Stack>
 
@@ -128,8 +226,59 @@ const ConversationChat = (props) => {
 
       <Divider />
 
-      <Stack>
+      <Stack flex={2}>
 
+        <Stack /* actions */
+          sx={{
+            width: "100%",
+          }}
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Button sx={{
+            visibility: clickActionButton ? "visible" : "hidden",
+          }}
+            name="Cancel"
+            variant="text"
+            onClick={onCancelClick}
+          />
+          {checkedMessages.length === 0 ?
+            <Button
+              name="Action"
+              variant="text"
+              onClick={onActionClick}
+            />
+            :
+            <PanelDropdown
+              action={{
+                name: 'Action',
+                variant: 'text',
+                options: [
+                  { name: 'Sync with CRM', onClick: onSyncMessageClick },
+                  { name: 'Export as CSV', onClick: onExportCSV },
+                  { name: 'Archive', onClick: onArchiveMessage, color: "red" },
+                ]
+              }}
+            />
+          }
+        </Stack>
+
+        <List style={{}}>
+          {/* {props.conversation?.messages.map(message => ( */}
+          <TextMessage
+            owner
+            onCheck={onCheckMessages}
+            // message={message}
+            actionActive={clickActionButton}
+          />
+          <TextMessage
+            // message={message}
+            onCheck={onCheckMessages}
+            actionActive={clickActionButton}
+          />
+          {/* ))
+          } */}
+        </List>
       </Stack>
 
     </Stack>

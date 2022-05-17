@@ -23,7 +23,7 @@ export const PanelDropdown = ({ action, header }) => {
                 key={action.name}
                 name={action.name}
                 variant={action.variant}
-                endIcon={<action.icon />}
+                endIcon={action.icon && <action.icon />}
                 textColor={action.textColor}
                 disabled={action.disabled}
             />
