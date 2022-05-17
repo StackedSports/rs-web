@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
 import { Dialog, DialogContent, styled, Fab } from "@mui/material"
 import { Close, NavigateBefore, NavigateNext } from "@mui/icons-material"
+import RenderIf from "UI/Widgets/RenderIf"
 
 /**
  * 
  * @param {string} props.items array of url strings
+ * @param {number} props.index index of the current item (you can use this to open the carousel at a specific index or close it if null) 
  */
 export const MediaCarousel = (props) => {
 
@@ -49,12 +51,16 @@ export const MediaCarousel = (props) => {
         <Fab className='closeFab' onClick={onClose}>
           <Close />
         </Fab>
-        <Fab className='next' onClick={onClickNext}>
-          <NavigateNext />
-        </Fab>
-        <Fab className='previous' onClick={onClickPrevious}>
-          <NavigateBefore />
-        </Fab>
+        <RenderIf condition={props.items && props.items.length > 1}>
+          <Fab className='next' onClick={onClickNext}>
+            <NavigateNext />
+          </Fab>
+        </RenderIf>
+        <RenderIf condition={props.items && props.items.length > 1}>
+          <Fab className='previous' onClick={onClickPrevious}>
+            <NavigateBefore />
+          </Fab>
+        </RenderIf>
         <img src={url} />
       </DialogContent>
     </StyledDialog>
@@ -64,6 +70,10 @@ export const MediaCarousel = (props) => {
 export default MediaCarousel
 
 const StyledDialog = styled(Dialog)({
+
+  '.MuiDialogContent-root': {
+    padding: 5,
+  },
 
   'img': {
     width: '100%',

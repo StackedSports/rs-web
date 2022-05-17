@@ -5,8 +5,6 @@ import TextField from '@mui/material/TextField';
 // import Button as ButtonMUI from '@mui/material/Button';
 import { Collapse, List, ListItem } from '@material-ui/core';
 import { ListItemButton } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Yup from "yup";
 import { parse, isDate } from "date-fns";
 
@@ -15,6 +13,7 @@ import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
+import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states } from 'utils/Data';
 import {
@@ -448,7 +447,8 @@ const ContactProfileDetails = (props) => {
 									value: formikProps.values.dob,
 									component: TextField,
 									error: formikProps.errors.dob,
-									touch: formikProps.touched.dob
+									touch: formikProps.touched.dob,
+									placeholder:'YYYY/MM/DD'
 								},
 								{
 									label: 'Graduation Year',

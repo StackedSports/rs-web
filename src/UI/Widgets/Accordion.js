@@ -86,6 +86,7 @@ export default function AccordionComponent(props) {
 									variant={item.variant || 'outlined'}
 									component={item.component}
 									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
+									placeholder={item.placeholder}
 									//error={ Boolean(item.error)}
         							//helperText={ item.error}
 								/>
