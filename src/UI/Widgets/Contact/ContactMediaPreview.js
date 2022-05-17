@@ -16,8 +16,8 @@ const ContactMediaPreview = (props) => {
     props.onViewMore(props.id, "containerMedia")
   }
 
-  const onMediaClick = (url) => {
-    setCarouselIndex(props.media.indexOf(url))
+  const onMediaClick = (media) => {
+    setCarouselIndex(props.media.indexOf(media))
   }
 
   return (
@@ -35,31 +35,41 @@ const ContactMediaPreview = (props) => {
         <Button
           variant="text"
           onClick={onViewMore}
+          disabled={!props.media?.length >= 1}
           endIcon={<ArrowForwardIosIcon sx={{ cursor: "pointer" }} />}
         >
-          {props.media?.length}
+          {props.media?.length || 0}
         </Button>
       </Stack>
-
-      <ImageList sx={{ width: "100%" }} cols={2} rowHeight={120} >
-        {props.media?.filter((url, index) => index < 2 && url).map(url => (
-          <ImageListItem
-            key={url}
-            onClick={() => onMediaClick(url)}
-            style={{ margin: 15, cursor: "pointer", }}
-          >
-            <img
-              loading="lazy"
-              alt="media"
-              style={{ borderRadius: 5 }}
-              src={`${url}?w=164&h=164&fit=crop&auto=format`}
-              srcSet={`${url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            />
-          </ImageListItem>
-        ))
-        }
-      </ImageList>
-      <MediaCarousel
+      {props.media?.length > 0 ? (
+        <ImageList sx={{ width: "100%" }} cols={2} rowHeight={120} >
+          {props.media?.filter((media, index) => index < 2 && media)
+            .map((media, index) => (
+              <ImageListItem
+                key={media}
+                onClick={() => onMediaClick(media)}
+                style={{ margin: 15, cursor: "pointer", }}
+              >
+                <img
+                  loading="lazy"
+                  alt={`${props.title} ${index}`}
+                  style={{ borderRadius: 5 }}
+                  src={media}
+                  srcSet={media}
+                // src={`${media}?w=164&h=164&fit=crop&auto=format`}
+                // srcSet={`${media}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                />
+              </ImageListItem>
+            ))
+          }
+        </ImageList>
+      )
+        :
+        <Typography style={{ flex: 1, alignSelf: "center" }} variant="body2">
+          No media to show
+        </Typography>
+      }
+      < MediaCarousel
         index={carouselIndex}
         items={props.media}
         onClose={() => setCarouselIndex(null)}
