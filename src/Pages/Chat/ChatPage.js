@@ -209,7 +209,7 @@ export default function ChatPage(props) {
           visible={displayFilters}
           filters={filters}
           collapsed={true}
-          onFilterSelected={props.onFilterSelected}
+          // onFilterSelected={onFilterSelected}
         />
         <Panel hideHeader>
           <Stack flex={1} direction="row">

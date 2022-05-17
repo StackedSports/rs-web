@@ -25,6 +25,8 @@ import {
 } from 'Api/Hooks'
 
 import {
+	addTagsToContact,
+	untagContact,
 	updateContact,
 } from 'Api/Endpoints'
 
@@ -78,7 +80,7 @@ const ContactProfileDetails = (props) => {
 	const tags = useTags2()
 
 	useEffect(() => {
-		if(props.contact)
+		if (props.contact)
 			console.log(props.contact)
 	}, [props.contact])
 
@@ -235,9 +237,9 @@ const ContactProfileDetails = (props) => {
 		// if they don't already exist in the initial position values
 		values.position_tags.forEach(newPosition => {
 			let found = false
-			
+
 			initialValues.positions.position_tags.every(currentPosition => {
-				if(newPosition === currentPosition) {
+				if (newPosition === currentPosition) {
 					found = true
 					return false
 				}
@@ -245,8 +247,8 @@ const ContactProfileDetails = (props) => {
 				return true
 			})
 
-			if(!found) {
-				if(!data.include)
+			if (!found) {
+				if (!data.include)
 					data['include'] = []
 
 				data.include.push(newPosition)
@@ -257,9 +259,9 @@ const ContactProfileDetails = (props) => {
 		// but are not present in values
 		initialValues.positions.position_tags.forEach(currentPosition => {
 			let found = false
-			
+
 			values.position_tags.every(newPosition => {
-				if(newPosition === currentPosition) {
+				if (newPosition === currentPosition) {
 					found = true
 					return false
 				}
@@ -267,8 +269,8 @@ const ContactProfileDetails = (props) => {
 				return true
 			})
 
-			if(!found) {
-				if(!data.exclude)
+			if (!found) {
+				if (!data.exclude)
 					data['exclude'] = []
 
 				data.exclude.push(currentPosition)
@@ -283,7 +285,7 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const parsedPositions = useMemo(() => {
-		if(!positions.items)
+		if (!positions.items)
 			return []
 
 		return positions.items.map(position => position.abbreviation)
@@ -302,7 +304,89 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onUpdateTags = (values, actions) => {
-		onUpdateContact(values, 'tags', 7)
+
+		console.log(values)
+		console.log(initialValues.tags)
+		const indexAccordion = 7
+		let data = {
+			// includeTagsIds: ['379', '15110'],
+			// excludeTagsIds: ['14834']
+		}
+
+		values.tags.forEach(newTag => {
+			let found = false
+
+			initialValues.tags.tags.every(currentTag => {
+				if (newTag === currentTag) {
+					found = true
+					return false
+				}
+
+				return true
+			})
+
+			if (!found) {
+				if (!data.includeTagsIds)
+					data['includeTagsIds'] = []
+
+				data.includeTagsIds.push(newTag.id)
+			}
+		})
+
+		initialValues.tags.tags.forEach(currentTag => {
+			let found = false
+
+			values.tags.every(newTag => {
+				if (newTag === currentTag) {
+					found = true
+					return false
+				}
+
+				return true
+			})
+
+			if (!found) {
+				if (!data.excludeTagsIds)
+					data['excludeTagsIds'] = []
+
+				data.excludeTagsIds.push(currentTag.id)
+			}
+		})
+
+		console.log(data)
+
+		if (data.includeTagsIds) {
+			console.log("includeTagsIds", data.includeTagsIds)
+			setSavingContactAtIndex(indexAccordion, true)
+			addTagsToContact(data.includeTagsIds, props.contact.id)
+				.then(res => {
+					props.onContactUpdated({ ...props.contact, tags: values.tags })
+					app.alert.setSuccess('Contact updated successfully!')
+					onAccordionFieldReset(indexAccordion)
+				})
+				.catch(error => {
+					console.log(error)
+					app.alert.setError('Contact failed to update.')
+				})
+				.finally(() => setSavingContactAtIndex(indexAccordion, false))
+		}
+
+		if (data.excludeTagsIds) {
+			console.log("excludeTagsIds", data.excludeTagsIds)
+			setSavingContactAtIndex(indexAccordion, true)
+			untagContact(data.excludeTagsIds, props.contact.id)
+				.then(res => {
+					props.onContactUpdated({ ...props.contact, tags: values.tags })
+					app.alert.setSuccess('Contact updated successfully!')
+					onAccordionFieldReset(indexAccordion)
+				})
+				.catch(error => {
+					console.log(error)
+					app.alert.setError('Contact failed to update.')
+				})
+				.finally(() => setSavingContactAtIndex(indexAccordion, false))
+		}
+
 	}
 
 	const onAccordionFieldChange = (index) => {
@@ -622,7 +706,7 @@ const ContactProfileDetails = (props) => {
 								variant='contained'
 								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
 							/>
-							
+
 							<List
 								style={{
 									display: "flex",
@@ -679,7 +763,7 @@ const ContactProfileDetails = (props) => {
 							>
 								
 							</Collapse> */}
-							
+
 						</AccordionComponent>
 					</Form>
 				)}
