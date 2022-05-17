@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import axios from 'axios'
 
 import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@material-ui/core';
@@ -18,7 +18,11 @@ import TweetPage from './TweetPage'
 
 import TweetDetails from './Components/TweetDetails'
 
+import { AuthContext } from 'Context/Auth/AuthProvider'
+
 const TweetRankingPage = (props) => {
+	const { user } = useContext(AuthContext)
+
 	const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
 	const [tweetId, setTweetId] = useState('1523330156374282240')
 	
@@ -26,6 +30,8 @@ const TweetRankingPage = (props) => {
 	const [openTweet, setOpenTweet] = useState(true)
 
 	const listener = useRef(null)
+
+	console.log(user)
 
 	useEffect(() => {
 		if(!tweetId || tweetId === '')
@@ -82,29 +88,79 @@ const TweetRankingPage = (props) => {
 		setTweetId(tweetId)
 		setOpenTweet(true)
 
-		const getTweetData = httpsCallable(functions, 'getTweetData')
-		getTweetData({ tweetId })
-			.then(res => {
-				console.log(res)
+		// const getTweetData = httpsCallable(functions, 'getTweetData')
+		// getTweetData({ tweetId, userToken: user.token })
+		// 	.then(res => {
+		// 		console.log(res)
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err)
+		// 	})
+
+		// const tweetDataRequestRef = doc(collection(db, 'tweetDataRequests'))
+		// setDoc(tweetDataRequestRef, { id: tweetDataRequestRef.id, tweetId })
+		// 	.then(() => {
+		// 		console.log('tweet data request made')
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err)
+		// 	})
+
+		// const unsub = onSnapshot(doc(db, 'tweetDataResponses', tweetDataRequestRef.id), (tweetDataRef) => {
+		// 	const tweetDataResponse = tweetDataRef.data()
+		// 	console.log('got tweet data response')
+		// 	console.log(tweetDataResponse)
+		// })
+
+		// listener.current = unsub
+
+		const contactsRequestRef = doc(collection(db, 'requestSyncContacts'))
+		setDoc(contactsRequestRef, { id: contactsRequestRef.id, userToken: user.token, orgId: user.team.org.id })
+			.then(() => {
+				console.log('contacts request made')
 			})
 			.catch(err => {
 				console.log(err)
 			})
 
-		const requestRef = doc(collection(db, 'requests'))
-		setDoc(requestRef, { tweetId, id: requestRef.id })
-			.then(() => {
-				console.log('request made')
-			})
-			.catch(err => console.log(err))
+		let lastStatus = ''
 
-		const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
-			const log = logRef.data()
+		const unsub = onSnapshot(doc(db, 'syncContactsResponse', contactsRequestRef.id), (snapshot) => {
+			const data = snapshot.data()
+			// console.log('got contacts data response')
+			console.log(data)
 
-			console.log(log)
+			if(data) {
+				if(lastStatus != data.status) {
+					lastStatus = data.status
+					console.log(data.status)
+				}
+
+				if(data.message)
+					console.log(data.message)
+			}
 		})
 
 		listener.current = unsub
+
+		return
+
+		// user.team.org.id
+
+		// const requestRef = doc(collection(db, 'requests'))
+		// setDoc(requestRef, { tweetId, id: requestRef.id, userToken: user.token })
+		// 	.then(() => {
+		// 		console.log('request made')
+		// 	})
+		// 	.catch(err => console.log(err))
+
+		// const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
+		// 	const log = logRef.data()
+
+		// 	console.log(log)
+		// })
+
+		// listener.current = unsub
 	}
 
 	const onAnalyzeClick = (e) => {

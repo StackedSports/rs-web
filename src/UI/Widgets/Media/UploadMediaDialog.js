@@ -330,7 +330,7 @@ export default function UploadMediaDialog(props) {
 				.then(res => {
 					console.log(res)
 
-					handleUpload(res.data)
+					handleUpload(res.data.id)
 				})
 				.catch(error => {
 					console.log(error)
