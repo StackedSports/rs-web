@@ -25,8 +25,6 @@ export default function ContactsProfilePage(props) {
 
     const [redirect, setRedirect] = useState('')
 
-    const alert = useMainLayoutAlert()
-
     const [loading, setLoading] = useState(false)
 
     // handle filters options
@@ -56,8 +54,6 @@ export default function ContactsProfilePage(props) {
     // console.log(contactPositions)
 
     // const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
-
-
 
     // const mainActions = [
     //     {
@@ -112,7 +108,7 @@ export default function ContactsProfilePage(props) {
                     onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />
-                <ContactMessageDetails />
+                <ContactMessageDetails contact={updatedContact || contact.item} />
             </Stack>
         </MainLayout>
     )
