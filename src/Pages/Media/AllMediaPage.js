@@ -8,12 +8,13 @@ import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
-import { archiveMedias } from "Api/Endpoints"
+import { addNewTagsToMedia, archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
 import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
+import { separeteNewTagsNameFromExistingTagsIds } from "utils/Helper"
 
 export const AllMediaPage = () => {
 	const { type, value } = useParams()
@@ -22,9 +23,10 @@ export const AllMediaPage = () => {
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+	const [loadingTags, setLoadingTags] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
 	const filterChanged = useRef(false)
-	const isTagDialogFunctionRemove = useRef(false)
+	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
 	const medias = useMedias(1, 25)
@@ -32,15 +34,14 @@ export const AllMediaPage = () => {
 	const confirmDialog = useContext(ConfirmDialogContext)
 
 	useEffect(() => {
-		console.log("AllMediaPage: useEffect")
-		if(type && value){
-			console.log("setando filtro do painel lateral")
-		setReplaceSelectedPanelFilter(
-			{
-				type: type,
-				value: value
-			}
-		)}
+		if (type && value) {
+			setReplaceSelectedPanelFilter(
+				{
+					type: type,
+					value: value
+				}
+			)
+		}
 	}, [type, value])
 
 	// useEffect(() => {
@@ -79,28 +80,47 @@ export const AllMediaPage = () => {
 			})
 	}
 
-	const handleTagsDialogConfirm = async (selectedTagsIds) => {
+	//How to display erros
+	const onAddTagsToMedias = async (tagsIds) => {
+		setLoadingTags(true)
+
+		// separate new Tags and already existing tags
+		const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(tagsIds)
+
+		const res = await Promise.all(selectedMedias.map(mediaId => addNewTagsToMedia(newTagsNames, mediaId)))
+		console.log("res", res)
+
+		const { success, error } = await addTagsToMedias(alreadyExistingTags, selectedMedias)
+		if (error.count === 0)
+			app.alert.setSuccess('Tags added successfully')
+		else if (success.count === 0)
+			app.alert.setError('An error occurred while adding tags')
+		else
+			app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+
+		setLoadingTags(false)
+	}
+
+	const onDeleteTagsFromMedias = async (tagsIds) => {
+		confirmDialog.show('Remove Tags',
+			`Are you sure you want to remove the selected tags (${tagsIds.length}) ?`,
+			async () => {
+				const { success, error } = await deleteTagsFromMedias(tagsIds, selectedMedias)
+				if (error.count === 0)
+					app.alert.setSuccess('Tags removed successfully')
+				else if (success.count === 0)
+					app.alert.setError('An error occurred while removing tags')
+				else
+					app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+			})
+	}
+
+	const handleTagsDialogConfirm = (selectedTagsIds) => {
 		setOpenSelectTagDialog(false)
-		if (isTagDialogFunctionRemove.current) {
-			confirmDialog.show('Remove Tags',
-				`Are you sure you want to remove the selected tags (${selectedTagsIds.length}) ?`,
-				async () => {
-					const { success, error } = await deleteTagsFromMedias(selectedTagsIds, selectedMedias)
-					if (error.count === 0)
-						app.alert.setSuccess('Tags removed successfully')
-					else if (success.count === 0)
-						app.alert.setError('An error occurred while removing tags')
-					else
-						app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
-				})
+		if (isTagDialogFunctionRemoveRef.current) {
+			onDeleteTagsFromMedias(selectedTagsIds)
 		} else {
-			const { success, error } = await addTagsToMedias(selectedTagsIds, selectedMedias)
-			if (error.count === 0)
-				app.alert.setSuccess('Tags added successfully')
-			else if (success.count === 0)
-				app.alert.setError('An error occurred while adding tags')
-			else
-				app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+			onAddTagsToMedias(selectedTagsIds)
 		}
 	}
 
@@ -122,14 +142,14 @@ export const AllMediaPage = () => {
 
 	const onTagAction = () => {
 		if (selectedMedias.length > 0) {
-			isTagDialogFunctionRemove.current = false
+			isTagDialogFunctionRemoveRef.current = false
 			setOpenSelectTagDialog(true)
 		}
 	}
 
 	const onUntagAction = () => {
 		if (selectedMedias.length > 0) {
-			isTagDialogFunctionRemove.current = true
+			isTagDialogFunctionRemoveRef.current = true
 			setOpenSelectTagDialog(true)
 		}
 	}
@@ -194,20 +214,22 @@ export const AllMediaPage = () => {
 			)}
 
 			<MediaTable
-			  items={medias.items}
-			  pagination={medias.pagination}
-			  loading={medias.loading}
-			  view={viewGrid ? 'grid' : 'list'}
-			  linkTo={mediaRoutes.mediaDetails}
-			  onSelectionChange={onSelectionChange}
-			  onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
+				items={medias.items}
+				pagination={medias.pagination}
+				loading={medias.loading}
+				view={viewGrid ? 'grid' : 'list'}
+				linkTo={mediaRoutes.mediaDetails}
+				onSelectionChange={onSelectionChange}
+				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>
 
 			<SelectTagDialog
-			  open={openSelectTagDialog}
-			  onClose={() => setOpenSelectTagDialog(false)}
-			  onConfirm={handleTagsDialogConfirm}
-			  title={isTagDialogFunctionRemove.current ? 'Untag' : 'Add Tag'}
+				open={openSelectTagDialog}
+				onClose={() => setOpenSelectTagDialog(false)}
+				onConfirm={handleTagsDialogConfirm}
+				actionLoading={loadingTags}
+				title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
+				isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
 			/>
 
 		</MediaPage>

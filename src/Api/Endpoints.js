@@ -22,7 +22,7 @@ const URL = "https://api.recruitsuite.co/api/";
 
 const makeError = (code, message) => { code, message }
 
-const AXIOS = (method, url, body,cancelToken) => {
+const AXIOS = (method, url, body, cancelToken) => {
     // const { user } = useContext(AuthContext)
 
     return new Promise((resolve, reject) => {
@@ -574,33 +574,19 @@ export const uploadMedia = (media) => {
 }
 
 export const addTagToMedia = (mediaId, tag) => {
-    return new Promise((resolve, reject) => {
-        let headers = getHeaders()
-
-        let formdata = new FormData();
-        formdata.append("media[tag]", tag);
-
-        let requestOptions = {
-            method: 'POST',
-            headers: headers,
-            body: formdata,
-            redirect: 'follow'
-        };
-
-        fetch(URL + "media/" + mediaId + "/add_tag", requestOptions)
-            //.then(response => response.json())
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
+    const body = {
+        media: { tag }
+    }
+    return POST(`media/${mediaId}/add_tag`, body)
 }
 
 export const getMedia = (id) => {
     return AXIOS('get', `media/${id}`)
 }
 
-export const getMedias = (page, perPage,{cancelToken}) => {
+export const getMedias = (page, perPage, { cancelToken }) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
-    return AXIOS('get', `media?page=${page}&per_page=${perPage}`,{},cancelToken)
+    return AXIOS('get', `media?page=${page}&per_page=${perPage}`, {}, cancelToken)
 }
 
 export const filterMedias = (page, perPage, filters) => {
@@ -612,7 +598,7 @@ export const filterMedias = (page, perPage, filters) => {
 
     console.log(data)
 
-    return AXIOS('post', 'media/search', data,filters.cancelToken)
+    return AXIOS('post', 'media/search', data, filters.cancelToken)
 }
 
 export const deleteMedia = (mediaId) => {
@@ -1001,6 +987,33 @@ export const archiveMedias = async (mediasIds) => {
             }).finally(() => {
                 resolve(response)
             })
+    })
+}
+
+
+export const addNewTagsToMedia = (tagsName, mediaId) => {
+    let error = 0
+    let success = 0
+
+    return new Promise((resolve, reject) => {
+        Promise.allSettled(tagsName.map(tagName => addTagToMedia(mediaId, tagName))).
+            then(results => {
+                results.forEach((result, index) => {
+                    if (result.status === 'fulfilled') {
+                        success++
+                    }
+                    else {
+                        error++
+                        console.log(result)
+                    }
+                })
+            }).finally(() => {
+                resolve({
+                    success,
+                    error
+                })
+            }
+            )
     })
 }
 

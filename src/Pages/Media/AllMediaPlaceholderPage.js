@@ -11,7 +11,8 @@ import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholders } from 'Api/Hooks'
-import { addTagsToMedias,deleteTagsFromMedias } from "Api/Endpoints"
+import { addNewTagsToMedia, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
+import { separeteNewTagsNameFromExistingTagsIds } from "utils/Helper"
 
 export const AllMediaPlaceholderPage = (props) => {
 
@@ -36,8 +37,40 @@ export const AllMediaPlaceholderPage = (props) => {
     setSelectedPlaceholdersIds(selection)
   }
 
+  const onAddTagsToMedias = async (tagsIds, mediasIds) => {
+    const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(tagsIds)
+
+    const res = await Promise.all(mediasIds.map(mediaId => addNewTagsToMedia(newTagsNames, mediaId)))
+		console.log("res", res)
+
+    const { success, error } = await addTagsToMedias(alreadyExistingTags, mediasIds)
+    if (error.count === 0)
+      app.alert.setSuccess('Tags added successfully')
+    else if (success.count === 0)
+      app.alert.setError('An error occurred while adding tags')
+    else
+      app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+
+  }
+
+  const onDeleteTagsFromMedias = async (tagsIds, mediasIds) => {
+    confirmDialog.show('Remove Tags',
+      `Are you sure you want to remove the selected tags (${tagsIds.length}) ?`,
+      async () => {
+        const { success, error } = await deleteTagsFromMedias(tagsIds, mediasIds)
+        if (error.count === 0)
+          app.alert.setSuccess('Tags removed successfully')
+        else if (success.count === 0)
+          app.alert.setError('An error occurred while removing tags')
+        else
+          app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+      })
+  }
+
   const handleTagsDialogConfirm = async (selectedTagsIds) => {
 
+    setOpenSelectTagDialog(false)
+    // getting all medias from selected placeholders
     const mediasFromSelectedPlaceholders = allPlaceholders.
       filter(placeholders => selectedPlaceholdersIds.includes(placeholders.id)).
       map(placeholder => placeholder.media).
@@ -45,27 +78,10 @@ export const AllMediaPlaceholderPage = (props) => {
 
     const uniqueMediasIds = lodash.uniqBy(mediasFromSelectedPlaceholders, 'id').map(media => media.id)
 
-    setOpenSelectTagDialog(false)
     if (isTagDialogFunctionRemove.current) {
-      confirmDialog.show('Remove Tags',
-        `Are you sure you want to remove the selected tags (${selectedTagsIds.length}) ?`,
-        async () => {
-          const { success, error } = await deleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
-          if (error.count === 0)
-            app.alert.setSuccess('Tags removed successfully')
-          else if (success.count === 0)
-            app.alert.setError('An error occurred while removing tags')
-          else
-            app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
-        })
+      onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
     } else {
-      const { success, error } = await addTagsToMedias(selectedTagsIds, uniqueMediasIds)
-      if (error.count === 0)
-        app.alert.setSuccess('Tags added successfully')
-      else if (success.count === 0)
-        app.alert.setError('An error occurred while adding tags')
-      else
-        app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+      onAddTagsToMedias(selectedTagsIds, uniqueMediasIds)
     }
   }
 

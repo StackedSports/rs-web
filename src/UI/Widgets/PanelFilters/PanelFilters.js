@@ -152,6 +152,7 @@ export const PanelFilters = (props) => {
 								<DateRangePicker
 									label={filter.label}
 									format={filter.format}
+									disableFuture={filter.disableFuture}
 									onChange={(date) => handleOptionsChange(filterName, date, filter)}
 									endIcon={<KeyboardArrowDown />}
 								/>

@@ -84,7 +84,12 @@ export const MediaPage = (props) => {
         },
         "dateUploaded": {
             label: 'Date Uploaded',
-            options: [],
+            type: 'date',
+            optionsLabel: (dates) => {
+                return dates[0] + ' - ' + dates[1]
+            },
+            disableFuture: true,
+            isUnique: true
         },
         "tag": {
             label: 'Tag',

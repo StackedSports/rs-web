@@ -49,6 +49,7 @@ export const DateRangePicker = (props) => {
                     open={open}
                     clearable
                     allowSameDateSelection
+                    disableFuture={props.disableFuture}
                     //disableCloseOnSelect={true}
                     inputFormat={formatStyle}
                     mask={formatStyle.replace(/[^\/]/g, '_')}
