@@ -465,7 +465,7 @@ export default function ContactsPage(props) {
                         onSearch={onContactSearch}
                         onClear={onContactSearchClear}
                     />
-                    <PanelDropdown
+                    {/* <PanelDropdown
                         action={{
                             name: 'Actions',
                             variant: 'outlined',
@@ -477,7 +477,7 @@ export default function ContactsPage(props) {
                                 // { name: 'Archive Contact', onClick: onArchiveContactClick }
                             ]
                         }}
-                    />
+                    /> */}
                     {selectedContacts.count > 0 &&
                         <PanelDropdown
                             action={{
