@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { isEqual } from 'lodash'
+import axios from "axios";
 
 import {
     getUser,
@@ -320,7 +322,7 @@ export const useTags2 = () => {
         getTags()
             .then(([tags, pagination]) => {
                 // console.log('ApiHooks: getTags -----')
-                 console.log(tags)
+                // console.log(tags)
                 // console.log(pagination)
                 setTags(tags)
                 tagsRes.current = tags
@@ -333,11 +335,11 @@ export const useTags2 = () => {
     }, [])
 
     const search = (value) => {
-        if(value && value.length > 0) {
+        if (value && value.length > 0) {
             const filteredTags = tagsRes.current.filter(tag => tag.name.toLowerCase().includes(value.toLowerCase()))
             setTags(filteredTags)
-        }else
-        setTags(tagsRes.current)
+        } else
+            setTags(tagsRes.current)
     }
 
     return {
@@ -1026,6 +1028,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [media, setMedia] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
+    const cancelToken = useRef(axios.CancelToken.source())
 
     // console.log(initialFilters)
     // TODO: testing filter
@@ -1033,17 +1036,19 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     // console.log(filters)
 
     useEffect(() => {
-        if (filters !== initialFilters)
+        if (initialFilters && !isEqual(filters, initialFilters))
             setFilters(initialFilters)
     }, [initialFilters])
 
     useEffect(() => {
         // console.log('getting media')
         setLoading(true)
+        
+       cancelToken.current = axios.CancelToken.source()
 
         const get = objectNotNull(filters) ? filterMedias : getMedias
 
-        get(pagination.currentPage, pagination.itemsPerPage, filters)
+        get(pagination.currentPage, pagination.itemsPerPage, {...filters, cancelToken: cancelToken.current.token})
             .then(([media, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -1055,6 +1060,8 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
                 setError(error)
             })
             .finally(() => setLoading(false))
+
+        return () => cancelToken.current.cancel("useEffect cleanup")
 
     }, [pagination.currentPage, filters])
 

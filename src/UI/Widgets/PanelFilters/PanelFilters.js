@@ -17,15 +17,16 @@ import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
  */
 export const PanelFilters = (props) => {
 
-	const externalChange = useRef(false);
+	const isInternalChange = useRef(false);
 	const firstRender = useRef(true);
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
 	useEffect(() => {
-		if (!props.selectedFilters)
+		if (!props.selectedFilters || lodash.isEqual(props.selectedFilters, selectedFilters)) {
+			console.log("No changes detected");
 			return
-		console.log("external Change", props.selectedFilters)
-		externalChange.current = true;
+		}
+		console.log("external Change happens", props.selectedFilters)
 		setSelectedFilters(props.selectedFilters)
 
 	}, [props.selectedFilters])
@@ -36,10 +37,6 @@ export const PanelFilters = (props) => {
 			return
 		}
 
-		if (externalChange.current) {
-			externalChange.current = false;
-			return
-		}
 		console.log("Calling onFilterChange")
 		if (props.onFilterChange && props.onFilterChange instanceof Function)
 			props.onFilterChange(Object.assign({}, selectedFilters))
@@ -69,46 +66,26 @@ export const PanelFilters = (props) => {
 				filters[filterName] = [option]
 			} else {
 				if (filters[filterName].find(f => f.id === option.id)) {
-					filters[filterName] = filters[filterName].filter(item => item !== option)
+					console.log("repetido")
+					filters[filterName] = filters[filterName].filter(item => item.id !== option.id)
 				} else {
+					console.log("adicionado")
 					filters[filterName].push(option)
 				}
 			}
 		} else {
+			console.log("Novo")
 			filters[filterName] = [option]
+		}
+
+		if (filters[filterName].length === 0) {
+			delete filters[filterName];
 		}
 
 		console.log(filters)
 
 		setSelectedFilters(filters)
 
-		// return
-		// setSelectedFilters(oldSelectFilters => {
-		//   const newSelectFilters = { ...oldSelectFilters };
-		//   newSelectFilters[filter.name] || (newSelectFilters[filter.name] = []);
-
-		//   if (newSelectFilters[filter.name].includes(filter)) {
-		//     newSelectFilters[filter.name] = newSelectFilters[filter.name].filter(item => item !== filter);
-		//   } else {
-		//     newSelectFilters[filter.name].push(filter);
-		//   }
-
-		//   if (filter.isUnique) {
-		//     newSelectFilters[filter.name] = newSelectFilters[filter.name].slice(-1);
-		//   }
-
-		//   if (newSelectFilters[filter.name].length === 0) {
-		//     delete newSelectFilters[filter.name];
-		//   }
-
-		//   if (filter.isUnique && newSelectFilters[filter.name]) {
-		//     props.onFilterChange({ ...newSelectFilters, [filter.name]: newSelectFilters[filter.name][0] });
-		//   } else {
-		//     props.onFilterChange(newSelectFilters);
-		//   }
-
-		//   return newSelectFilters;
-		// })
 	}
 
 	const onRemoveFilter = (filterName, filter) => {

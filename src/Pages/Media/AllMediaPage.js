@@ -32,12 +32,15 @@ export const AllMediaPage = () => {
 	const confirmDialog = useContext(ConfirmDialogContext)
 
 	useEffect(() => {
+		console.log("AllMediaPage: useEffect")
+		if(type && value){
+			console.log("setando filtro do painel lateral")
 		setReplaceSelectedPanelFilter(
 			{
 				type: type,
 				value: value
 			}
-		)
+		)}
 	}, [type, value])
 
 	// useEffect(() => {

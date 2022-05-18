@@ -29,10 +29,9 @@ export const MediaPage = (props) => {
             }
             if (type === 'owner') {
                 if (!teamMembers.loading)
-                    console.log(teamMembers.items)
-                setSelectedFilters({
-                    "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
-                })
+                    setSelectedFilters({
+                        "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
+                    })
             }
         }
     }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
