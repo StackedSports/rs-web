@@ -798,9 +798,6 @@ export default function MessageCreatePage(props) {
               onSelected={onPlatformSelected}
               onRemove={onPlatformRemove}
             />
-            
-
-            
 
             <MessageInput
               type='time'
