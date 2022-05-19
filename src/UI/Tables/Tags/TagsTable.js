@@ -18,6 +18,7 @@ const TagsTable = (props) => {
           filterModel={props.filterModel}
           components = {props.components}
           checkboxSelection
+          hidePagination
         />
     )
 }

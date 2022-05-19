@@ -111,15 +111,20 @@ const SelectTagDialog = (props) => {
 
     const NoResultsOverlay = () => {
         return (
-            <Stack alignItems='center' justifyContent='center' height='100%'>
+            <Stack alignItems='center' justifyContent='center' height='100%' spacing={2}>
                 <Typography variant="h6" component="h3" gutterBottom>
                     No tags found. {props.isAddTag && 'Would you like to create a new one?'}
                 </Typography>
                 <RenderIf condition={props.isAddTag}>
-                    <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
+                    {/* <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
                         {search}
-                    </Typography>
-                    <Button onClick={onCreateTag} name='Create Tag' variant='contained' sx={{ zIndex: 10 }} />
+                    </Typography> */}
+                    <Button 
+                      onClick={onCreateTag} 
+                      name={`Create Tag "${search}"`} 
+                      variant='contained' 
+                      sx={{ zIndex: 10 }} 
+                    />
                 </RenderIf>
             </Stack>
         )

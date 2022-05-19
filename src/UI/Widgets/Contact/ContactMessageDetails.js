@@ -29,7 +29,12 @@ const ContactMessageDetails = (props) => {
 	const urlsAssociatedMedia = props.contact?.associated_media?.map(media => media.urls?.original)
 
 	return (
-		<Stack ref={self} sx={{ width: "300px" }} alignItems="center" justifyContent="start">
+		<Stack ref={self} 
+		  sx={{ width: "300px", borderLeft: "#efefef  1px solid" }} 
+		  alignItems="center" 
+		  justifyContent="start"
+		  pl={1}
+		>
 			<Collapse flex={1} in={visibleContainer === "preview"} sx={{ height: '100%', display: 'flex' }}>
 				<Stack spacing={2} flex={1} sx={{ height: '100%' }}>
 					<ContactMessageStats />

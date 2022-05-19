@@ -24,7 +24,7 @@ const AuthProvider = (props) => {
             app.redirect('/')
         else if (user && app.location.pathname === '/') {
             // console.log('hey')
-            app.redirect('/contacts')
+            app.redirect('/dashboard')
         }
 
     }, [user, app.location])
