@@ -25,7 +25,8 @@ const ContactMediaPreview = (props) => {
       flex={1}
       spacing={1}
       // alignItems="center"
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", borderTop: "#efefef  1px solid" }}
+      pt={1}
       justifyContent="start"
     >
       <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
