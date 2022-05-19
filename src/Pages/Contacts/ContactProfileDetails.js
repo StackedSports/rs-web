@@ -544,7 +544,7 @@ const ContactProfileDetails = (props) => {
 							<DatePicker
 								label='Birthday'
 								name='dob'
-								placeholder='YYYY/MM/DD'
+								format = 'MM/dd/yyyy'
 								value={formikProps.values.dob}
 								onChange={(e) => {
 									formikProps.setFieldValue('dob', e)

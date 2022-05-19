@@ -20,7 +20,7 @@ const BaseMessagePage = (props) => {
             }))
         }
         return []
-    }, [teamMembers.items,teamMembers.loading])
+    }, [teamMembers.items, teamMembers.loading])
 
 
     const filtersWithTeamMembers = useMemo(() => {
@@ -51,7 +51,6 @@ const BaseMessagePage = (props) => {
             }
         ]
     }, [teamMembersFilterItems])
-
 
     const onTopActionClick = (e) => {
         console.log('top action click')

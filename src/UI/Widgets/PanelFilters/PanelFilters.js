@@ -17,7 +17,6 @@ import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
  */
 export const PanelFilters = (props) => {
 
-	const isInternalChange = useRef(false);
 	const firstRender = useRef(true);
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
@@ -52,8 +51,8 @@ export const PanelFilters = (props) => {
 	}, [props.setFilter]);
 
 	const handleOptionsChange = (filterName, option, filter) => {
-		console.log(filterName)
-		console.log(option)
+		//console.log(filterName)
+		//console.log(option)
 
 		let filters = Object.assign({}, selectedFilters)
 
@@ -78,7 +77,7 @@ export const PanelFilters = (props) => {
 			delete filters[filterName];
 		}
 
-		console.log(filters)
+		//console.log(filters)
 
 		setSelectedFilters(filters)
 
@@ -104,7 +103,6 @@ export const PanelFilters = (props) => {
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
 		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
-			console.log(filter.optionsLabel)
 			return option[filter.optionsLabel];
 		} else {
 			return option.name;
@@ -143,9 +141,12 @@ export const PanelFilters = (props) => {
 				<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
-						if (filter.type === 'date')
+
+						if (filter.type === 'hidden') return
+						else if (filter.type === 'date')
 							return (
 								<DateRangePicker
+									key={filterName}
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}

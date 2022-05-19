@@ -169,7 +169,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }}/>
                 </div>
-                <Grid item direction="column">
+                <Grid item >
                     <h3>Message Stats</h3>
 
                     {messageStats && (

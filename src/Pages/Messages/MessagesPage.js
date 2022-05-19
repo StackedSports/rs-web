@@ -14,6 +14,7 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 import { useMessages, useTeamMembers, useTags } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
 
+
 const getTitle = (filterName) => {
     switch (filterName) {
         case 'drafts': return 'Drafts'
@@ -25,69 +26,19 @@ const getTitle = (filterName) => {
     }
 }
 
+
 const MessagesPage = (props) => {
     const { user } = useContext(AuthContext)
-
-    const { filterType, filterValue } = useParams()
-    const lastFilter = useRef()
-    const [showPanelFilters, setShowPanelFilters] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState()
-
     const senders = useTeamMembers()
     const tags = useTags()
 
-    const messageFilter = useMemo(() => {
-        console.log(user)
+    const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user.role.includes('Admin') }
+    const messages = useMessages(1, 10, DEFAULT_MESSAGE_FILTER)
 
-        let filter = {
-            status: 'all',
-            includeTeam: user.role === 'Admin' ? true : false
-        }
-
-        // if (!filterType)
-        //     return { status: 'all' }
-        if (filterType === 'status' && filterValue === 'finished')
-            // return { status: 'finished' }
-            filter.status = 'finished'
-        else if (filterType === 'team_members')
-            // return { status: 'all', sender: [filterValue] }
-            filter['sender'] = [filterValue]
-        else if(filterValue)
-            // return { status: [filterValue] }
-            filter.status = [filterValue]
-
-        return filter
-    }, [filterType, filterValue])
-
-    // console.log(filter)
-    const messages = useMessages(1, 10, messageFilter)
-
+    const { filterType, filterValue } = useParams()
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
+    const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
-
-    // console.log(messages.items)
-
-    useEffect(() => {
-        console.log('on filter')
-        console.log(lastFilter.current)
-
-        if (!filterType || lastFilter.current === filterValue)
-            return
-
-        console.log('filtering for ' + filterValue)
-        lastFilter.current = filterValue
-
-        if (filterType === 'status') {
-            messages.filter({ status: [filterValue] })
-        } else if (filterType === 'team_members') {
-            if( !senders.loading)
-            setSelectedFilters({
-                sender: [{ ...senders.items.find(sender => sender.id == filterValue) }]
-            })
-        } else {
-            messages.filter({ status: [filterValue] })
-        }
-
-    }, [filterType, filterValue,senders.loading])
 
     useEffect(() => {
         if (!messages.error)
@@ -132,7 +83,7 @@ const MessagesPage = (props) => {
         })
     }
 
-    const panelFilters = {
+    const panelFilters = useMemo(() => ({
         'platform': {
             label: 'Platform',
             options: [{ id: 1, name: 'Twitter' }, { id: 2, name: 'Personal Text' }, { id: 3, name: 'RS Text' }],
@@ -167,14 +118,39 @@ const MessagesPage = (props) => {
                 return dates[0] + ' - ' + dates[1]
             },
         },
-    }
+        'status': {
+            label: 'Status',
+            type: 'hidden',
+            isUnique: true,
+            options: [{ id: 'all', name: 'All' }, { id: 'drafts', name: 'Drafts' }, { id: 'scheduled', name: 'Scheduled' }, { id: 'in_progress', name: 'In Progress' }, { id: 'finished', name: 'Finished' }, { id: 'archived', name: 'Archived' }],
+        }
+    }), [senders.items, tags])
+
+
+    //Controls the filters through the props
+    useEffect(() => {
+        if (filterType === 'status') {
+            const statusValue = panelFilters.status.options.find(status => status.id === filterValue)
+            console.log(statusValue)
+            statusValue && setSelectedFilters({
+                status: [statusValue]
+            })
+        }
+        if (filterType === 'team_members' && !senders.loading && senders.items) {
+            const senderValue = panelFilters.sender.options.find(sender => sender.id === filterValue)
+            senderValue && setSelectedFilters({
+                sender: [senderValue]
+            })
+        }
+
+    }, [filterType, filterValue, senders.loading, senders.items])
 
     const onFilterChange = (filters) => {
-        console.log(filters)
-
+        // console.log(filters)
         if (Object.keys(filters).length === 0)
-            messages.clearFilter()
+            messages.filter(DEFAULT_MESSAGE_FILTER)
         else {
+            filters.includeTeam = user.role.includes('Admin')
             if (filters.platform)
                 filters.platform = filters.platform.map(platform => platform.name)
             if (filters.sender)
@@ -183,6 +159,8 @@ const MessagesPage = (props) => {
                 filters.recipient_status = filters.recipient_status.map(status => status.name)
             if (filters.tags)
                 filters.tags = filters.tags.map(tag => tag.name)
+            if (filters.status)
+                filters.status = filters.status[0].id
             messages.filter(filters)
         }
     }
@@ -217,7 +195,7 @@ const MessagesPage = (props) => {
             {messages.items && messages.items.map((message, index) => {
                 // console.log('rendering message ' + index)
                 return (
-                    <MessagePreview message={message} mini style={styles.divider} link />
+                    <MessagePreview key={index} message={message} mini style={styles.divider} link />
                 )
             })}
             {!messages.loading && messages.items && messages.items.length > 0 && (
