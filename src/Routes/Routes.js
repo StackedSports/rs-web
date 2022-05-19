@@ -10,7 +10,7 @@ import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 export const routes = {
     dashboard: {
         title: 'Dashboard',
-        path: '/newdashboard',
+        path: '/dashboard',
         icon: HomeOutlinedIcon
     },
     contacts: {
@@ -129,8 +129,10 @@ export const userRoutes = {
 }
 
 export const tweetRoutes = {
-    search: "/tweet-ranking",
+    ranking: "/tweet-ranking",
+    search: "/tweet-search",
     tweets: "/tweet-ranking",
+    create: "/new-tweet-create",
 }
 
 export const chatRoutes = {

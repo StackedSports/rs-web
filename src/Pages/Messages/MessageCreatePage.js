@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 
 import { useParams } from "react-router-dom"
 import Snackbar from '@mui/material/Snackbar';
@@ -12,6 +12,7 @@ import MessageInput from 'UI/Forms/Inputs/MessageInput'
 import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
+import { AppContext } from 'Context/AppProvider';
 
 import useArray from 'Hooks/ArrayHooks'
 
@@ -20,9 +21,9 @@ import { useUser, useTeamMembers, useTextPlaceholders, useSnippets } from 'Api/H
 import { getBoards, getBoard, filterContacts, createMessage, updateMessage } from 'Api/Endpoints'
 import { updateContact } from 'ApiHelper'
 
-import { 
-    coachTypes, 
-    isSelectedCoachType, 
+import {
+    coachTypes,
+    isSelectedCoachType,
     getCoachValue,
     getRecipientSelectedBoards,
     getRecipientSelectedContacts
@@ -30,16 +31,19 @@ import {
 import { formatDate } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
+import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog';
 
 
 export default function MessageCreatePage(props) {
+    const app = useContext(AppContext)
+
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
     // const ranks = useRanks()
 
     const { control } = useParams()
     // const fromContactsId = useRef(props.match?.params?.contacts)
-    
+
 
     // TODO: user should be coming from user context, not from
     // fetching the api
@@ -77,6 +81,7 @@ export default function MessageCreatePage(props) {
     const [mediaSelected, setMediaSelected] = useState(null)
     const [mediaRemoved, setMediaRemoved] = useState(null)
     const [showMediaDialog, setShowMediaDialog] = useState(false)
+    const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
 
     // TextArea
     // const textArea = useRef(null)
@@ -93,9 +98,9 @@ export default function MessageCreatePage(props) {
     const [redirect, setRedirect] = useState('')
 
     useEffect(() => {
-        if(!control)
+        if (!control)
             return
-        
+
         console.log(control)
 
         let payload = JSON.parse(localStorage.getItem('new-message-payload'))
@@ -108,23 +113,23 @@ export default function MessageCreatePage(props) {
         let newPrivateBoards = []
         let newTeamBoards = []
 
-        if(payload.recipients) {
+        if (payload.recipients) {
             newRecipients = payload.recipients
         }
 
-        if(payload.contacts) {
+        if (payload.contacts) {
             newContacts = payload.contacts
         }
 
-        if(payload.privateBoard) {
+        if (payload.privateBoard) {
             newPrivateBoards.push(payload.privateBoard)
         }
 
-        if(payload.teamBoard) {
+        if (payload.teamBoard) {
             newTeamBoards.push(payload.teamBoard)
         }
 
-        if(payload.media) {
+        if (payload.media) {
             setMediaSelected(payload.media)
         }
 
@@ -140,43 +145,43 @@ export default function MessageCreatePage(props) {
     }, [control])
 
     useEffect(() => {
-        if(props.platformSelected)
+        if (props.platformSelected)
             setPlatformSelected(props.platformSelected)
 
     }, [props.platformSelected])
 
     useEffect(() => {
-        if(props.senderSelected)
+        if (props.senderSelected)
             setSenderSelected.all(props.senderSelected)
-            
+
     }, [props.senderSelected])
 
     // Recipients from Props
     useEffect(() => {
         console.log(props.recipientSelected)
 
-        if(props.recipientSelected)
+        if (props.recipientSelected)
             setRecipientSelected(props.recipientSelected)
-            
+
     }, [props.recipientSelected])
 
     useEffect(() => {
-        if(props.sendAt)
+        if (props.sendAt)
             setSendAt(props.sendAt)
-            
+
     }, [props.sendAt])
 
     // Media from Props
     useEffect(() => {
-        if(props.mediaSelected)
+        if (props.mediaSelected)
             setMediaSelected(props.mediaSelected)
-            
+
     }, [props.mediaSelected])
 
     useEffect(() => {
-        if(props.textMessage)
+        if (props.textMessage)
             setTextMessage(props.textMessage)
-            
+
     }, [props.textMessage])
 
     // console.log(snippets)
@@ -193,9 +198,9 @@ export default function MessageCreatePage(props) {
     useEffect(() => {
         // console.log(teamMembers.items)
 
-        if(!teamMembers.items)
+        if (!teamMembers.items)
             return
-        
+
         setSendContacts(coachTypes.concat(teamMembers.items))
 
     }, [teamMembers.items])
@@ -204,12 +209,12 @@ export default function MessageCreatePage(props) {
         // if(!user)
         //     return
         console.log('set platforms for user')
-        
+
         let platforms = {
             twitter: true,
             text: true
         }
-        
+
         // if(user) {
         //     platforms['twitter'] = true
         // }
@@ -218,16 +223,16 @@ export default function MessageCreatePage(props) {
         // }
 
         setPlatforms(platforms)
-        
+
     }
 
     const setPlatformsForTeamMember = (teamMember) => {
         let platforms = {}
-        
-        if(teamMember.twitter_profile && teamMember.twitter_profile.screen_name) {
+
+        if (teamMember.twitter_profile && teamMember.twitter_profile.screen_name) {
             platforms['twitter'] = true
         }
-        if(teamMember.sms_number) {
+        if (teamMember.sms_number) {
             platforms['rs'] = true
         }
 
@@ -248,7 +253,7 @@ export default function MessageCreatePage(props) {
     const clearPlatforms = () => {
         setPlatforms({})
 
-        if(platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
+        if (platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
             setPlatformSelected(null)
 
         // platformSelected(null)
@@ -269,10 +274,10 @@ export default function MessageCreatePage(props) {
 
         // If only selection is a coach type, we need to clear the available platforms
         // and inform the user
-        if(senderSelected.length === 0 && typeof sender === 'string') {
+        if (senderSelected.length === 0 && typeof sender === 'string') {
             clearPlatforms()
 
-            if(platformSelected) {
+            if (platformSelected) {
                 //setPlatformSelected(null)
                 //showErrorMessage('You must select a Platform')
             }
@@ -282,12 +287,12 @@ export default function MessageCreatePage(props) {
 
         // If selected is a team member, we need to validate the platforms based on
         // its properties
-        if(typeof sender !== 'string') {
+        if (typeof sender !== 'string') {
             setPlatformsForTeamMember(sender)
         }
 
-        if(senderSelected.length > 0) {
-            if(typeof senderSelected[0] === 'string') {
+        if (senderSelected.length > 0) {
+            if (typeof senderSelected[0] === 'string') {
                 // Sender at position 0 is a Coach, so we need to merge platforms
                 // availble with coache's platforms.
             }
@@ -315,17 +320,17 @@ export default function MessageCreatePage(props) {
         //     return index
         // }
 
-        if(typeof sender == 'string') {
+        if (typeof sender == 'string') {
             // console.log('sender = ' + sender)
 
-            if(senderSelected.length == 0)
+            if (senderSelected.length == 0)
                 return setSenderSelected.push(sender)
             else {
                 let index = -1
                 // let index = getCoachIndex()
 
                 senderSelected.every((selected, i) => {
-                    if(isSelectedCoachType(selected)) {
+                    if (isSelectedCoachType(selected)) {
                         index = i
                         return false
                     }
@@ -334,24 +339,24 @@ export default function MessageCreatePage(props) {
                 })
 
                 // console.log(index)
-                
-                if(index === -1)
+
+                if (index === -1)
                     setSenderSelected.unshift(sender)
                 else
                     setSenderSelected.put(sender, index)
-                
+
             }
         } else {
             // console.log('sender id = ' + sender.id)
 
-            if(senderSelected.length == 0)
+            if (senderSelected.length == 0)
                 setSenderSelected.push(sender)
             else {
                 let index = -1
                 // let index = getCoachIndex()
 
                 senderSelected.every((selected, i) => {
-                    if(!isSelectedCoachType(selected)) {
+                    if (!isSelectedCoachType(selected)) {
                         index = i
                         return false
                     }
@@ -360,17 +365,17 @@ export default function MessageCreatePage(props) {
                 })
 
                 // console.log(index)
-                
-                if(index === -1)
+
+                if (index === -1)
                     setSenderSelected.push(sender)
                 else
                     setSenderSelected.put(sender, index)
-                
+
             }
 
             // console.log(sender)
 
-            
+
         }
     }
 
@@ -380,7 +385,7 @@ export default function MessageCreatePage(props) {
 
         // If we are removing a team member from the selection, we need
         // to reset the available platforms
-        if(typeof senderSelected[index] !== 'string') {
+        if (typeof senderSelected[index] !== 'string') {
             clearPlatforms()
             // console.log(platformSelected)
         }
@@ -402,7 +407,7 @@ export default function MessageCreatePage(props) {
     const onReceiverSelectedClick = (index, type) => {
         console.log('Clicked on ' + index + ' from ' + type)
 
-        if(type === 'recipients')
+        if (type === 'recipients')
             return
 
         setReceiverDialogTab(receiverDialogTabs[type])
@@ -419,7 +424,7 @@ export default function MessageCreatePage(props) {
 
         let tmp = Object.assign({}, recipientSelected)
 
-        if(index === 'all') {
+        if (index === 'all') {
             // If index is equal all, it means we need to remove all the selected items
             tmp[type] = []
         } else {
@@ -428,7 +433,7 @@ export default function MessageCreatePage(props) {
         }
 
         console.log(tmp)
-        
+
         setRecipientSelected(tmp)
     }
 
@@ -476,10 +481,10 @@ export default function MessageCreatePage(props) {
     const onCreateMessage = (control) => {
         console.log('create message: ' + control)
 
-        if(loading)
+        if (loading)
             return
 
-        if(control !== 'save' && control !== 'preview')
+        if (control !== 'save' && control !== 'preview')
             return
 
         const save = control === 'save'
@@ -511,7 +516,7 @@ export default function MessageCreatePage(props) {
         //     .then(result => {
         //         console.log(result)
         //         let message = result.data
-                
+
         //         if(save)
         //             setRedirect(`${messageRoutes.all}`)
         //         else
@@ -533,10 +538,10 @@ export default function MessageCreatePage(props) {
 
         // Twitter, SMS, Personal Text
 
-        if(platformSelected) {
-            
+        if (platformSelected) {
+
             const getPlatf = (plat) => {
-                switch(plat) {
+                switch (plat) {
                     case 'Twitter Dm': return 'Twitter'
                     case 'SMS/MMS': return 'SMS'
                     default: return plat
@@ -550,7 +555,7 @@ export default function MessageCreatePage(props) {
             return showErrorMessage('You must select a Platform')
         }
 
-        if(senderSelected && senderSelected.length > 0) {
+        if (senderSelected && senderSelected.length > 0) {
             // Sender is optional in the api. If no sender is selected, message will be sent as current user.
             // On the other hand, sender can be set to a coach type or team member id. Coach selected
             // will always be at senderSelected index 0. So we can test to see if the item at index
@@ -560,14 +565,14 @@ export default function MessageCreatePage(props) {
             // If senderSelected index 1 contains a team member obj, then we need to also add a
             // user_id field to messageData with the selected team member id.
 
-            if(senderSelected.length === 1 && typeof senderSelected[0] === 'string') {
+            if (senderSelected.length === 1 && typeof senderSelected[0] === 'string') {
                 return showErrorMessage('You must add a Sender in case the selected Coach is not available')
             }
 
-            if(typeof senderSelected[0] === 'string') {
+            if (typeof senderSelected[0] === 'string') {
                 // This selection is a type of coach. Add coach value to messageData
                 messageData['send_as_coach'] = getCoachValue(senderSelected[0])
-            } else if(senderSelected[0].id) { // && senderSelected[0].role && senderSelected[0].team) {
+            } else if (senderSelected[0].id) { // && senderSelected[0].role && senderSelected[0].team) {
                 // If selection is a team member
                 // It would be a good idea if we could test to see if the selection is in fact
                 // a team member. Altough I believe that is already done in the server
@@ -575,17 +580,17 @@ export default function MessageCreatePage(props) {
             }
 
             // Test second selected
-            if(senderSelected[1] && senderSelected[1].id) { // && senderSelected[1].role && senderSelected[1].team) {
+            if (senderSelected[1] && senderSelected[1].id) { // && senderSelected[1].role && senderSelected[1].team) {
                 messageData['user_id'] = senderSelected[1].id
             }
         } else {
             // We are requiring this field so it becomes more clear to the user who is being set
             // as the sender of the message
-            if(!save)
+            if (!save)
                 return showErrorMessage('You must add a Sender')
         }
 
-        if(recipientSelected) {
+        if (recipientSelected) {
             // Recipients is required. It needs to be either boards or contacts. It can also be both.
             // The messageData requires a comma delimited list of strings of ids, for both boards
             // or contacts. To send the boards, we use filter_ids field. For contacts, contact_ids.
@@ -594,17 +599,17 @@ export default function MessageCreatePage(props) {
 
             // console.log(`contacts = ${contactsSelected}`)
             // console.log(`boards = ${boardsSelected}`)
-            
+
             // If both lists are empty, throw an error
-            if(contactsSelected === '' && boardsSelected === '')
+            if (contactsSelected === '' && boardsSelected === '')
                 return showErrorMessage('You must add at least one Recipient')
 
             // Add contacts list if it's not empty
-            if(contactsSelected !== '')
+            if (contactsSelected !== '')
                 messageData['contact_ids'] = contactsSelected
-            
+
             // Add boards list if it's not empty
-            if(boardsSelected !== '')
+            if (boardsSelected !== '')
                 messageData['filter_ids'] = boardsSelected
 
         } else {
@@ -612,32 +617,32 @@ export default function MessageCreatePage(props) {
             return showErrorMessage('You must add at least one Recipient')
         }
 
-        if(sendAt) {
+        if (sendAt) {
             // Send at is optional. If no send_at field is provided to messageData, the server
             // will try to send the message right away. In the client, sendAt can either be
             // 'ASAP' or a js Date.
 
             // Only add send_at if our selection is an object of type Date
-            if(Object.prototype.toString.call(sendAt) === '[object Date]')
+            if (Object.prototype.toString.call(sendAt) === '[object Date]')
                 messageData['send_at'] = sendAt
         }
 
         // Message requires either a body or media attachment. They can't be both empty
-        if(textMessage === '' && !mediaSelected)
+        if (textMessage === '' && !mediaSelected)
             return showErrorMessage('Message must either have a Text Message or a Media attachment')
-        
-        if(textMessage !== '') {
+
+        if (textMessage !== '') {
             // Adds message as body to messageData
             messageData['body'] = textMessage
         }
 
-        if(mediaSelected) {
+        if (mediaSelected) {
             // Our mediaSelected is an object containing a type 'media' || 'placeholder' and
             // the actual item of its respective type.
 
-            if(mediaSelected.type === 'media')
+            if (mediaSelected.type === 'media')
                 messageData['media_id'] = mediaSelected.item.id.toString()
-            else if(mediaSelected.type === 'placeholder')
+            else if (mediaSelected.type === 'placeholder')
                 messageData['media_placeholder_id'] = mediaSelected.item.id.toString()
         }
 
@@ -647,22 +652,22 @@ export default function MessageCreatePage(props) {
 
         // return
 
-        if(save && Object.keys(messageData).length === 0)
+        if (save && Object.keys(messageData).length === 0)
             return showErrorMessage(`Can't save an empty message`)
-        
+
         setLoading(true)
 
         // const endpoint = props.edit ? updateMessage : createMessage
 
-        if(props.edit) {
+        if (props.edit) {
             console.log('Update Message')
             // return
             updateMessage(props.messageId, messageData)
                 .then(result => {
                     console.log(result)
                     let message = result.data
-                    
-                    if(save)
+
+                    if (save)
                         setRedirect(`${messageRoutes.all}`)
                     else
                         setRedirect(`${messageRoutes.details}/${props.messageId}`)
@@ -672,7 +677,7 @@ export default function MessageCreatePage(props) {
                 .catch(error => {
                     console.log(error)
 
-                    if(save)
+                    if (save)
                         showErrorMessage('We could not update your message')
                     else
                         showErrorMessage('Something went wrong. We could not update your message')
@@ -686,8 +691,8 @@ export default function MessageCreatePage(props) {
                 .then(result => {
                     console.log(result)
                     let message = result.data
-                    
-                    if(save)
+
+                    if (save)
                         setRedirect(`${messageRoutes.all}`)
                     else
                         setRedirect(`${messageRoutes.details}/${message.id}`)
@@ -697,7 +702,7 @@ export default function MessageCreatePage(props) {
                 .catch(error => {
                     console.log(error)
 
-                    if(save)
+                    if (save)
                         showErrorMessage('We could not save your message')
                     else
                         showErrorMessage('Something went wrong. We could not create your message')
@@ -717,6 +722,39 @@ export default function MessageCreatePage(props) {
         setError(error => ({ ...error, show: false }))
     }
 
+    // const handleImportFiles = (file) => {
+    //     let tempFiles = []
+    //     let tempAssociated = []
+    //     let tempUploadStatus = []
+
+    //     let pushedCount = 0
+
+    //     console.log(file)
+
+    //     if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
+    //         || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
+    //         // 5MB for image and 15MB for videos
+
+    //         tempFiles.push(file)
+    //         tempAssociated.push("loading")
+    //         tempUploadStatus.push("none")
+    //     }
+
+
+    //     if (tempFiles.length === 0) {
+    //        app.alert.push("File not added because it does not match the file upload criteria")
+
+    //     }
+
+
+
+    // }
+
+    // const onDrop = (e) => {
+    //     e.preventDefault();
+    //     handleImportFiles(e.dataTransfer.files)
+    // }
+
     // console.log(senderSelected)
 
     const panelActions = [
@@ -728,104 +766,109 @@ export default function MessageCreatePage(props) {
     let platformOptions = []
 
     // if()
-    
+
 
     return (
         <BaseMessagePage
-          title='Create Message'
-          topActionName='+ New Message'
-          actions={panelActions}
-          redirect={redirect}
-          loading={loading || props.loading}
+            title='Create Message'
+            topActionName='+ New Message'
+            actions={panelActions}
+            redirect={redirect}
+            loading={loading || props.loading}
         >
             <Snackbar
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              open={error.show}
-              autoHideDuration={6000}
-              onClose={onErrorClose}>
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                open={error.show}
+                autoHideDuration={6000}
+                onClose={onErrorClose}>
                 <MuiAlert variant="filled" onClose={onErrorClose} severity="error" sx={{ width: '100%' }}>
                     {error.message}
                 </MuiAlert>
             </Snackbar>
 
             <ReceiverSelectDialog
-              open={showReceiverDialog}
-              currentTab={receiverDialogTab}
-              removedItem={receiverRemoved}
-              onSelected={onReceiverSelected}
-              onClose={() => setShowReceiverDialog(false)}
+                open={showReceiverDialog}
+                currentTab={receiverDialogTab}
+                removedItem={receiverRemoved}
+                onSelected={onReceiverSelected}
+                onClose={() => setShowReceiverDialog(false)}
             />
 
             <DateTimePicker
-              open={showTimePicker}
-              onSave={onDateTimeSave}
-              onClose={() => setShowTimePicker(false)}
-            /> 
+                open={showTimePicker}
+                onSave={onDateTimeSave}
+                onClose={() => setShowTimePicker(false)}
+            />
 
             <MediaSelectDialog
-              open={showMediaDialog}
-              removedItem={mediaRemoved}
-              onSelected={onMediaSelected}
-              onClose={() => setShowMediaDialog(false)}
+                open={showMediaDialog}
+                removedItem={mediaRemoved}
+                onSelected={onMediaSelected}
+                onClose={() => setShowMediaDialog(false)}
+            />
+
+            <UploadMediaDialog
+                open={uploadDialogOpen}
+                onClose={() => setUploadDialogOpen(false)}
             />
 
             <MessageInput
-              type='sender'
-              label='Send from:'
-              name='Add Sender'
-              contacts={sendContacts}
-              selected={senderSelected}
-              onSelected={onSenderSelected}
-              onRemove={onSenderRemove}
-              canAddMore={senderSelected.length < 2}
+                type='sender'
+                label='Send from:'
+                name='Add Sender'
+                contacts={sendContacts}
+                selected={senderSelected}
+                onSelected={onSenderSelected}
+                onRemove={onSenderRemove}
+                canAddMore={senderSelected.length < 2}
             />
 
             <MessageInput
-              type='receiver' 
-              label='Send to:' 
-              name='Add Recipient' 
-              selected={recipientSelected}
-              onSelectedClick={onReceiverSelectedClick}
-              onRemove={onRemoveReceiver}
-              onClick={() => setShowReceiverDialog(true)}
+                type='receiver'
+                label='Send to:'
+                name='Add Recipient'
+                selected={recipientSelected}
+                onSelectedClick={onReceiverSelectedClick}
+                onRemove={onRemoveReceiver}
+                onClick={() => setShowReceiverDialog(true)}
             />
 
             <MessageInput
-              type='platform'
-              label='Send as:'
-              platforms={platforms}
-              selected={platformSelected}
-              onSelected={onPlatformSelected}
-              onRemove={onPlatformRemove}
+                type='platform'
+                label='Send as:'
+                platforms={platforms}
+                selected={platformSelected}
+                onSelected={onPlatformSelected}
+                onRemove={onPlatformRemove}
             />
 
             <MessageInput
-              type='time'
-              label='Begin Sending At:'
-              name={sendAt === 'ASAP' ? sendAt : formatDate(sendAt, 'full', 'short')}
-              onClick={() => setShowTimePicker(true)}
+                type='time'
+                label='Begin Sending At:'
+                name={sendAt === 'ASAP' ? sendAt : formatDate(sendAt, 'full', 'short')}
+                onClick={() => setShowTimePicker(true)}
             />
 
             <MessageInput
-              type='media'
-              label='Add Media:'
-              selected={mediaSelected}
-              onSelectedClick={onMediaSelectedClick}
-              onRemove={onRemoveMedia}
-              onClick={() => setShowMediaDialog(true)}
+                type='media'
+                label='Add Media:'
+                selected={mediaSelected}
+                onSelectedClick={onMediaSelectedClick}
+                onRemove={onRemoveMedia}
+                onClick={() => setUploadDialogOpen(true) /* setShowMediaDialog(true) */}
             />
 
             <MessageInput
-              type='text'
-              label='Message Text:'
-              placeholder='Type your message here'
-              snippets={snippets}
-              textPlaceholders={textPlaceholders}
-              value={textMessage}
-              onChange={onTextAreaChange}
-              />
-            
-            <div style={{ marginBottom: 50 }}/>
+                type='text'
+                label='Message Text:'
+                placeholder='Type your message here'
+                snippets={snippets}
+                textPlaceholders={textPlaceholders}
+                value={textMessage}
+                onChange={onTextAreaChange}
+            />
+
+            <div style={{ marginBottom: 50 }} />
         </BaseMessagePage>
     )
 }
