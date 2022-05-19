@@ -22,7 +22,7 @@ const URL = "https://api.recruitsuite.co/api/";
 
 const makeError = (code, message) => { code, message }
 
-const AXIOS = (method, url, body) => {
+const AXIOS = (method, url, body, cancelToken) => {
     // const { user } = useContext(AuthContext)
 
     return new Promise((resolve, reject) => {
@@ -47,6 +47,7 @@ const AXIOS = (method, url, body) => {
                 // Cookie:
                 //     "ahoy_visit=be028ec4-d074-4dde-8218-f166f678ee87; _memcache-recruitsuite_session=d8ee35c9e0cd796c691901ada77a8bf6",
             },
+            cancelToken: cancelToken,
             data
         })
             .then(res => {
@@ -573,33 +574,19 @@ export const uploadMedia = (media) => {
 }
 
 export const addTagToMedia = (mediaId, tag) => {
-    return new Promise((resolve, reject) => {
-        let headers = getHeaders()
-
-        let formdata = new FormData();
-        formdata.append("media[tag]", tag);
-
-        let requestOptions = {
-            method: 'POST',
-            headers: headers,
-            body: formdata,
-            redirect: 'follow'
-        };
-
-        fetch(URL + "media/" + mediaId + "/add_tag", requestOptions)
-            //.then(response => response.json())
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
+    const body = {
+        media: { tag }
+    }
+    return POST(`media/${mediaId}/add_tag`, body)
 }
 
 export const getMedia = (id) => {
     return AXIOS('get', `media/${id}`)
 }
 
-export const getMedias = (page, perPage) => {
+export const getMedias = (page, perPage, { cancelToken }) => {
     // console.log(`get media page ${page} items per page ${perPage}`)
-    return AXIOS('get', `media?page=${page}&per_page=${perPage}`)
+    return AXIOS('get', `media?page=${page}&per_page=${perPage}`, {}, cancelToken)
 }
 
 export const filterMedias = (page, perPage, filters) => {
@@ -611,7 +598,7 @@ export const filterMedias = (page, perPage, filters) => {
 
     console.log(data)
 
-    return AXIOS('post', 'media/search', data)
+    return AXIOS('post', 'media/search', data, filters.cancelToken)
 }
 
 export const deleteMedia = (mediaId) => {
@@ -1000,6 +987,33 @@ export const archiveMedias = async (mediasIds) => {
             }).finally(() => {
                 resolve(response)
             })
+    })
+}
+
+
+export const addNewTagsToMedia = (tagsName, mediaId) => {
+    let error = 0
+    let success = 0
+
+    return new Promise((resolve, reject) => {
+        Promise.allSettled(tagsName.map(tagName => addTagToMedia(mediaId, tagName))).
+            then(results => {
+                results.forEach((result, index) => {
+                    if (result.status === 'fulfilled') {
+                        success++
+                    }
+                    else {
+                        error++
+                        console.log(result)
+                    }
+                })
+            }).finally(() => {
+                resolve({
+                    success,
+                    error
+                })
+            }
+            )
     })
 }
 

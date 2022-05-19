@@ -47,12 +47,12 @@ const formValidation = Yup.object().shape({
 	// email: Yup.string().email("Invalid email"),
 })
 
-const detailsFormValidation = Yup.object().shape({
+/* const detailsFormValidation = Yup.object().shape({
 	dob: Yup.date().max(new Date(), "Date of birth must be in the past").transform((value, originalValue) => {
-		console.log("Parse data", value, originalValue)
+		//console.log("Parse data", value, originalValue)
 		return isDate(originalValue) ? originalValue : parse(originalValue, "yyyy/MM/dd", new Date())
 	}).typeError("Format must be yyyy/MM/dd")
-})
+}) */
 
 const ContactProfileDetails = (props) => {
 	if (props.loading)
@@ -99,7 +99,7 @@ const ContactProfileDetails = (props) => {
 			twitter_handle: props.contact?.twitter_profile?.screen_name || "",
 		},
 		details: {
-			dob: props.contact?.dob && props.contact.dob.replaceAll("-","/"),
+			dob: props.contact?.dob && props.contact.dob.replaceAll("-", "/"),
 			graduation_year: props.contact?.grad_year,
 			high_school: props.contact?.high_school,
 			state: props.contact?.state,
@@ -509,7 +509,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
-				validationSchema={detailsFormValidation}
+			//validationSchema={detailsFormValidation}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -525,15 +525,7 @@ const ContactProfileDetails = (props) => {
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 1, formikProps)}
 							items={[
-								{
-									label: 'Birthday',
-									name: 'dob',
-									value: formikProps.values.dob,
-									component: TextField,
-									error: formikProps.errors.dob,
-									touch: formikProps.touched.dob,
-									placeholder:'YYYY/MM/DD'
-								},
+
 								{
 									label: 'Graduation Year',
 									name: 'graduation_year',
@@ -549,12 +541,22 @@ const ContactProfileDetails = (props) => {
 								},
 							]}
 						>
+							<DatePicker
+								label='Birthday'
+								name='dob'
+								placeholder='YYYY/MM/DD'
+								value={formikProps.values.dob}
+								onChange={(e) => {
+									formikProps.setFieldValue('dob', e)
+									onAccordionFieldChange(1)
+								}}
+							/>
 							<SearchableSelector
 								label="State"
 								placeholder="Search"
 								value={formikProps.values.state}
 								options={states || []}
-								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								isOptionEqualToValue={(option, value) => option?.abbreviation === value}
 								getOptionLabel={(option) => option.abbreviation || option || ""}
 								getChipLabel={(option) => option.abbreviation}
 								onChange={(newValue) => {
@@ -571,7 +573,7 @@ const ContactProfileDetails = (props) => {
 								value={formikProps.values.status}
 								options={status.items || []}
 								loading={status.loading}
-								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								isOptionEqualToValue={(option, value) => option?.status === value}
 								getOptionLabel={(option) => option.status || option || ""}
 								onChange={(newValue) => {
 									console.log(newValue)
@@ -587,7 +589,7 @@ const ContactProfileDetails = (props) => {
 								value={formikProps.values.rank}
 								options={ranks.items || []}
 								loading={ranks.loading}
-								isOptionEqualToValue={(option, value) => option?.id === value?.id}
+								isOptionEqualToValue={(option, value) => option?.rank === value}
 								getOptionLabel={(option) => option.rank || option}
 								getChipLabel={(option) => option.rank}
 								onChange={(newValue) => {
