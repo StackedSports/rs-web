@@ -18,7 +18,14 @@ import useArray from 'Hooks/ArrayHooks'
 
 
 import { useUser, useTeamMembers, useTextPlaceholders, useSnippets } from 'Api/Hooks'
-import { getBoards, getBoard, filterContacts, createMessage, updateMessage } from 'Api/Endpoints'
+import {
+    getBoards,
+    getBoard,
+    filterContacts,
+    createMessage,
+    updateMessage,
+    uploadMedia
+} from 'Api/Endpoints'
 import { updateContact } from 'ApiHelper'
 
 import {
@@ -444,8 +451,23 @@ export default function MessageCreatePage(props) {
         })
         setMediaRemoved('')
         setShowMediaDialog(false)
+        setUploadDialogOpen(false)
     }
 
+    const onUploadMedia = (media, setUploadingMedia) => {
+        uploadMedia(media)
+            .then(res => {
+                app.alert.setSuccess("Uploaded media successfully!")
+                console.log(res)
+                onMediaSelected(res, "media")
+            })
+            .catch(error => {
+                app.alert.setError("Failed to upload media.")
+                console.log(error)
+            })
+            .finally(() => setUploadingMedia(false))
+    }
+    
     const onMediaSelectedClick = (e) => {
         setShowMediaDialog(true)
     }
@@ -803,12 +825,15 @@ export default function MessageCreatePage(props) {
             <MediaSelectDialog
                 open={showMediaDialog}
                 removedItem={mediaRemoved}
+                uniqueSelection
                 onSelected={onMediaSelected}
                 onClose={() => setShowMediaDialog(false)}
             />
 
             <UploadMediaDialog
                 open={uploadDialogOpen}
+                onUploadMedia={onUploadMedia}
+                browseOption={setShowMediaDialog}
                 onClose={() => setUploadDialogOpen(false)}
             />
 

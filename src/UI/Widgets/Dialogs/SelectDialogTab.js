@@ -144,6 +144,7 @@ export default function SelectDialogTab(props) {
                           disableElevation
                             // color="#3871da"
                           variant="contained"
+                          disabled={props.disableOnConfirmSelection}
                         >
                             Add Selection
                         </Button>
