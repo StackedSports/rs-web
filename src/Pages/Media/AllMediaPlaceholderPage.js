@@ -20,7 +20,8 @@ export const AllMediaPlaceholderPage = (props) => {
   const [viewGrid, setViewGrid] = useState(true)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
   const [selectedPlaceholdersIds, setSelectedPlaceholdersIds] = useState([])
-  const isTagDialogFunctionRemove = useRef(false)
+  const isTagDialogFunctionRemoveRef = useRef(false)
+  const [loadingTags, setLoadingTags] = useState(false)
 
   const app = useContext(AppContext)
   const confirmDialog = useContext(ConfirmDialogContext)
@@ -38,6 +39,7 @@ export const AllMediaPlaceholderPage = (props) => {
   }
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
+    setLoadingTags(true)
     const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(tagsIds)
 
     const res = await Promise.all(mediasIds.map(mediaId => addNewTagsToMedia(newTagsNames, mediaId)))
@@ -50,7 +52,7 @@ export const AllMediaPlaceholderPage = (props) => {
       app.alert.setError('An error occurred while adding tags')
     else
       app.alert.setWarning(`Some tags (${error.count}) could not be added`)
-
+    setLoadingTags(false)
   }
 
   const onDeleteTagsFromMedias = async (tagsIds, mediasIds) => {
@@ -78,7 +80,7 @@ export const AllMediaPlaceholderPage = (props) => {
 
     const uniqueMediasIds = lodash.uniqBy(mediasFromSelectedPlaceholders, 'id').map(media => media.id)
 
-    if (isTagDialogFunctionRemove.current) {
+    if (isTagDialogFunctionRemoveRef.current) {
       onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
     } else {
       onAddTagsToMedias(selectedTagsIds, uniqueMediasIds)
@@ -87,14 +89,14 @@ export const AllMediaPlaceholderPage = (props) => {
 
   const onTagAction = () => {
     if (selectedPlaceholdersIds.length > 0) {
-      isTagDialogFunctionRemove.current = false
+      isTagDialogFunctionRemoveRef.current = false
       setOpenSelectTagDialog(true)
     }
   }
 
   const onUntagAction = () => {
     if (selectedPlaceholdersIds.length > 0) {
-      isTagDialogFunctionRemove.current = true
+      isTagDialogFunctionRemoveRef.current = true
       setOpenSelectTagDialog(true)
     }
   }
@@ -163,6 +165,9 @@ export const AllMediaPlaceholderPage = (props) => {
         open={openSelectTagDialog}
         onClose={() => setOpenSelectTagDialog(false)}
         onConfirm={handleTagsDialogConfirm}
+        actionLoading={loadingTags}
+        title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
+        isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
       />
 
     </MediaPage>

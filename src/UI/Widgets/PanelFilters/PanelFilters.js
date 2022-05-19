@@ -23,10 +23,10 @@ export const PanelFilters = (props) => {
 
 	useEffect(() => {
 		if (!props.selectedFilters || lodash.isEqual(props.selectedFilters, selectedFilters)) {
-			console.log("No changes detected");
+			//console.log("No changes detected");
 			return
 		}
-		console.log("external Change happens", props.selectedFilters)
+		//console.log("external Change happens", props.selectedFilters)
 		setSelectedFilters(props.selectedFilters)
 
 	}, [props.selectedFilters])
@@ -37,14 +37,13 @@ export const PanelFilters = (props) => {
 			return
 		}
 
-		console.log("Calling onFilterChange")
+		//console.log("Calling onFilterChange")
 		if (props.onFilterChange && props.onFilterChange instanceof Function)
 			props.onFilterChange(Object.assign({}, selectedFilters))
 	}, [selectedFilters])
 
 	useEffect(() => {
 		if (props.setFilter) {
-			console.log(props.setFilter);
 			const { filterName, filter, option } = props.setFilter;
 			if (filterName && filter && option) {
 				handleOptionsChange(filterName, option, filter);
@@ -66,19 +65,16 @@ export const PanelFilters = (props) => {
 				filters[filterName] = [option]
 			} else {
 				if (filters[filterName].find(f => f.id === option.id)) {
-					console.log("repetido")
 					filters[filterName] = filters[filterName].filter(item => item.id !== option.id)
 				} else {
-					console.log("adicionado")
 					filters[filterName].push(option)
 				}
 			}
 		} else {
-			console.log("Novo")
 			filters[filterName] = [option]
 		}
 
-		if (filters[filterName].length === 0) {
+		if (filters[filterName] && filters[filterName].length === 0) {
 			delete filters[filterName];
 		}
 

@@ -70,7 +70,7 @@ const ContactMediaPreview = (props) => {
           No media to show
         </Typography>
       }
-      < MediaCarousel
+      <MediaCarousel
         index={carouselIndex}
         items={props.media}
         onClose={() => setCarouselIndex(null)}

@@ -223,6 +223,9 @@ export const getFilterMediasCriteria = (filters) => {
     if (filters.owner) {
         criteria['owner_id'] = filters.owner[0].id
     }
+    if(filters.dateUploaded){
+        criteria['created_at'] = filters.dateUploaded[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    }
 
     // Blocked by api
     /*  if (filters.owner) {

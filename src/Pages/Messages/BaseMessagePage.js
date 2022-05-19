@@ -7,34 +7,6 @@ import { getFullName } from 'utils/Parser'
 import { messageRoutes } from 'Routes/Routes'
 import { useTeamMembers } from 'Api/Hooks'
 
-
-/* const filters = [
-    {
-        id: 'create',
-        name: 'Message Create',
-        items: [
-            { id: 'draft', name: 'Drafts', path: messageRoutes.filters.drafts },
-        ]
-    },
-    { // Category
-        id: '0',
-        name: 'Messages',
-        items: [
-            { id: 'all', name: 'All Messages', path: messageRoutes.all },
-            { id: '0', name: 'Scheduled', path: messageRoutes.filters.scheduled },
-            { id: '1', name: 'In Progress', path: messageRoutes.filters.inProgress },
-            { id: '2', name: 'Finished', path: messageRoutes.filters.finished },
-            // { id: 'errors', name: 'Error', path: messageRoutes.filters.error },
-            { id: '3', name: 'Archived', path: messageRoutes.filters.archived },
-        ]
-    },
-    {
-        id: '1',
-        name: 'Team Members',
-        items: teamMembersFilterItems
-    }
-] */
-
 const BaseMessagePage = (props) => {
     const [redirect, setRedirect] = useState('')
     const teamMembers = useTeamMembers()
@@ -60,7 +32,7 @@ const BaseMessagePage = (props) => {
                     { id: 'draft', name: 'Drafts', path: messageRoutes.filters.drafts },
                 ]
             },
-            { // Category
+            {
                 id: '0',
                 name: 'Messages',
                 items: [
