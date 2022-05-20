@@ -5,6 +5,9 @@ import './TweetDisplay.css'
 
 import { Box, TextField, Stack } from '@mui/material'
 
+import RenderIf from 'UI/Widgets/RenderIf'
+import LoadingPanel from 'UI/Widgets/LoadingPanel'
+
 const TweetDisplay = (props) => {
     const [loading, setLoading] = useState(false)
 
@@ -58,7 +61,9 @@ const TweetDisplay = (props) => {
 
     return (
         <Box alignItems="center" justifyContent="center">
-            {loading && <p>Loading...</p>}
+            <RenderIf condition={loading}>
+                <LoadingPanel/>
+            </RenderIf>
             {loading && (
                 <TweetEmbed 
                   // className={tweetLoading ? '' : 'TweetEmbed'}

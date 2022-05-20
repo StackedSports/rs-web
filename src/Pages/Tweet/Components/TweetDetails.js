@@ -96,14 +96,20 @@ const TweetDetails = (props) => {
                         Tweet Details
                     </Typography>
 
-                    <Button
-                    variant="contained"
-                    name="+ Save"
-                    onClick={onSaveTweet}
-                    style={{
-                        width: "max-content",
-                    }}
-                    />
+                    <RenderIf condition={props.showSaveButton}>
+                        <Button
+                          variant="contained"
+                          name={props.details.saved ? 'Saved!' : 'Save'}
+                          onClick={props.onSaveTweet}
+                          loading={props.saving}
+                          style={{
+                            width: "max-content",
+                          }}
+                        />
+                    </RenderIf>
+
+
+                    
                 </Stack>
 
                 <TweetDisplay tweetId={props.tweetId}/>

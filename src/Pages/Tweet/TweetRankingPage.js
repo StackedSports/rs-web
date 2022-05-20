@@ -6,7 +6,7 @@ import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typogra
 import { Stack } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
-import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, updateDoc, query, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 
 import { db, functions } from 'Api/Firebase'
@@ -26,12 +26,16 @@ const TweetRankingPage = (props) => {
 	// const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
 	// const [tweetId, setTweetId] = useState('1523330156374282240')
 
-	const [input, setInput] = useState('https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg')
+	// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
+
+	const [input, setInput] = useState('')
 	const [tweetId, setTweetId] = useState(null)
 	// const [tweetDetails, setTweetDetails] = useState(null)
 
 	const [analyzesLoading, setAnalyzesLoading] = useState(false)
 	const [analyzesDetails, setAnalyzesDetails] = useState(false)
+
+	const [savingTweet, setSavingTweet] = useState(false)
 
 	const [tweet, setTweet] = useState({})
 	const [openTweet, setOpenTweet] = useState(true)
@@ -39,7 +43,7 @@ const TweetRankingPage = (props) => {
 	const listener = useRef(null)
 	const listener2 = useRef(null)
 
-	console.log(user)
+	// console.log(user)
 
 	useEffect(() => {
 		if(!tweetId || tweetId === '')
@@ -71,9 +75,6 @@ const TweetRankingPage = (props) => {
 		}
 	}, [listener.current])
 
-	const onTopActionClick = () => {
-		console.log("onTopActionClick")
-	}
 
 	const onTweetSearch = () => {
 		console.log("onTweetSearch")
@@ -92,9 +93,9 @@ const TweetRankingPage = (props) => {
 
 		// let parts = value.split('/')
 
-		let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
-		let parts = tweet.split('/')
-		console.log(parts)
+		// let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
+		// let parts = tweet.split('/')
+		// console.log(parts)
 
 		// https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A
 
@@ -252,12 +253,28 @@ const TweetRankingPage = (props) => {
 		console.log("onAddAnotherTweet")
 	}
 
+	const onSaveTweet = (e) => {
+		return
+
+		setSavingTweet(true)
+
+		const tweetRef = doc(db, 'orgs', user.team.org.id, 'tweet-ranking', tweetId)
+		updateDoc(tweetRef, { saved: true })
+			.then(() => {
+
+			})
+			.catch(err => {
+
+			})
+			.finally(() => {
+				setSavingTweet(false)
+			})
+	}
+
 
 	return (
 		<TweetPage
 		  title="Post Deep Dive"
-		  topActionName="+ New Search"
-		  onTopActionClick={onTopActionClick}
 		>
 			<Stack spacing={3}>
 				<Divider />
@@ -285,6 +302,20 @@ const TweetRankingPage = (props) => {
 						width: "max-content",
 					  }}
 					/>
+				</RenderIf>
+
+				<RenderIf condition={!tweetId || tweetId === ''}>
+					<Stack sx={{  }} alignItems="center" justifyContent="center">
+                        <p style={{ fontWeight: 'bold', marginTop: 20 }}> 
+                            Paste a Tweet link above to get started
+                        </p>
+                        <p style={{ fontSize: 16, margin: 0 }}>
+                            We will analyze your tweet against your Contacts
+                        </p>
+                        <p style={{ fontSize: 16, margin: 0 }}>
+                            so you can see who is engaging with your content
+                        </p>
+                    </Stack>
 				</RenderIf>
 				
 				{/* {input !== '' && 
@@ -318,9 +349,12 @@ const TweetRankingPage = (props) => {
 					  }}
 					>
 						<TweetDetails 
-							tweetId={tweetId}
-							loading={analyzesLoading}
-							details={analyzesDetails}
+						  tweetId={tweetId}
+						  loading={analyzesLoading}
+						  details={analyzesDetails}
+						  saving={savingTweet}
+						  onSaveTweet={onSaveTweet}
+						//   showSaveButton
 						/>
 					</Stack>
 				</RenderIf>
