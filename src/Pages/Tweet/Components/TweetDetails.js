@@ -5,6 +5,7 @@ import {
 import { Stack } from '@mui/material';
 
 import Button from 'UI/Widgets/Buttons/Button';
+import RenderIf from 'UI/Widgets/RenderIf'
 
 import TweetDisplay from './TweetDisplay'
 
@@ -35,6 +36,7 @@ const TweetDetails = (props) => {
 		console.log("onSaveTweet")
 	}
 
+    const { metrics, likers, retweeters } = props.details
 
     return (
         <Stack ml={10} direction="row">
@@ -88,8 +90,8 @@ const TweetDetails = (props) => {
                 <Stack spacing={3} p={2}>
                     <Stat
                       label="Retweet Rate"
-                      value={10}
-                      total={86}
+                      value={retweeters?.found || 0}
+                      total={metrics?.retweets || 0}
                     />
                     {/* <Stat
                       label="Quote Tweet Rate"
@@ -98,11 +100,25 @@ const TweetDetails = (props) => {
                     /> */}
                     <Stat
                       label="Likes Rate"
-                      value={55}
-                      total={156}
+                      value={likers?.found || 0}
+                      total={metrics?.likes || 0}
                     />
+
+                    <RenderIf condition={likers}>
+                        <Typography
+                            variant="subtitle2"
+                            style={{ width: "100%", textAlign: "center" }}
+                        >
+                            {`Fetched: ${likers?.fetched}, analyzed: ${likers?.analyzed}, found: ${likers?.found}`}
+                        </Typography>
+                    </RenderIf>
+                    
                     
                 </Stack>
+
+                <Divider/>
+
+                
 
                 {/* <Box sx={{ width: "100%" }}>
                     <Divider />

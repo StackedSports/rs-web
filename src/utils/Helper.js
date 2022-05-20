@@ -48,3 +48,18 @@ export const getStringListOfIds = (items) => {
 
     return string
 }
+
+/**
+ * Fuction to help separate new tags name from existing tags id from SelectTagDialog with isAddTag = true
+ * @param {Array} selectedTagsIds from SelectTagDialog 
+ * @returns {Array} [newTagsNames, existingTagsIds]
+ */
+export const separeteNewTagsNameFromExistingTagsIds = (selectedTags) => {
+    const [newTagsNames, alreadyExistingTags] = selectedTags.reduce(([newTagsNames, alreadyExistingTags], selectedTagIds) => {
+            return selectedTagIds.toString().startsWith('new') ?
+                [newTagsNames.concat(selectedTagIds.replace('new-', '')), alreadyExistingTags] :
+                [newTagsNames, alreadyExistingTags.concat(selectedTagIds)]
+        }, [[], []])
+
+    return [newTagsNames, alreadyExistingTags]
+}

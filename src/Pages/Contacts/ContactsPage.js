@@ -48,6 +48,7 @@ import {
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
+import { separeteNewTagsNameFromExistingTagsIds } from 'utils/Helper';
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
@@ -296,12 +297,7 @@ export default function ContactsPage(props) {
         let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
 
         // separate new Tags and already existing tags
-        const [newTagsNames, alreadyExistingTags] = selectedTagsIds.reduce(([newTagsNames, alreadyExistingTags], selectedTagIds) => {
-            return selectedTagIds.toString().startsWith('new') ?
-                [newTagsNames.concat(selectedTagIds.replace('new-', '')), alreadyExistingTags] :
-                [newTagsNames, alreadyExistingTags.concat(selectedTagIds)]
-        }, [[], []])
-
+        const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(selectedTagsIds)
 
         // we check if there are new tags to create and create and add them
         if (newTagsNames.length > 0) {

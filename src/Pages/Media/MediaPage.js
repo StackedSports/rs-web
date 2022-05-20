@@ -29,10 +29,9 @@ export const MediaPage = (props) => {
             }
             if (type === 'owner') {
                 if (!teamMembers.loading)
-                    console.log(teamMembers.items)
-                setSelectedFilters({
-                    "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
-                })
+                    setSelectedFilters({
+                        "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
+                    })
             }
         }
     }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
@@ -85,7 +84,12 @@ export const MediaPage = (props) => {
         },
         "dateUploaded": {
             label: 'Date Uploaded',
-            options: [],
+            type: 'date',
+            optionsLabel: (dates) => {
+                return dates[0] + ' - ' + dates[1]
+            },
+            disableFuture: true,
+            isUnique: true
         },
         "tag": {
             label: 'Tag',

@@ -3,42 +3,46 @@ import { TextField, styled } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
-import { format } from 'date-fns';
+import { format, isDate, isValid } from 'date-fns';
 
 export const DatePicker = (props) => {
-    const [value, setValue] = useState(new Date());
+    const [value, setValue] = useState(null);
 
-    
     const handleChange = (newValue) => {
-
-        if (value && format(newValue, "yyyy-MM-dd") === format(new Date(value), "yyyy-MM-dd")) return;
-        console.log("handleChange");
         setValue(newValue);
+        if (!isValid(newValue) || !isDate(newValue) || !isValid(value) || !isDate(value )) return;
+        if (value && format(newValue, "yyyy-MM-dd") === format(new Date(value), "yyyy-MM-dd")) {
+            //console.log("same date");
+            return
+        }
+        //console.log("handleChange");
         if (props.onChange instanceof Function) {
-            console.log("date picker changed")
+            console.log("date picker changed to:", newValue)
             props.onChange(newValue);
         }
     }
 
     useEffect(() => {
-        if (props.value instanceof Date)
-            setValue(props.value);
+        //console.log(props.value);
+        if (props.value) {
+            isDate(props.value) ? setValue(props.value) : setValue(new Date(props.value));
+        }
     }, [props.value]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <MuiDatePicker
-                label={null}
+                label={props.label}
                 clearable
                 value={value}
                 onChange={handleChange}
                 disableFuture={props.disableFuture}
+                inputFormat="yyyy/MM/dd"
+                mask={"yyyy/MM/dd".replace(/[^\/]/g, '_')}
                 renderInput={(params) => {
                     return <StyledInput
-                        {...params} size='small'
-                        inputProps={{
-                            ...params.inputProps,
-                        }}
+                        {...params} 
+                        //size='small'
                     />
                 }
                 }
@@ -50,7 +54,5 @@ export const DatePicker = (props) => {
 export default DatePicker;
 
 const StyledInput = styled(TextField)(({ theme }) => ({
-    '& .MuiInputBase-input': {
-        width: '9ch',
-    },
+    
 }));

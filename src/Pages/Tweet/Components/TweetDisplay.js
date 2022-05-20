@@ -16,7 +16,7 @@ const TweetDisplay = (props) => {
 
     const [refresh, setRefresh] = useState(false)
     
-    console.log(tweetWidget)
+    // console.log(tweetWidget)
 
     useEffect(() => {
         if(!props.tweetId || (props.tweetId === lastId.current && tweetWidget))
@@ -51,10 +51,10 @@ const TweetDisplay = (props) => {
 		setLoading(false)
 	}
 
-    console.log(tweetContainer.current?.offsetWidth)
-    console.log(tweetContainer.current?.offsetWidth || 0)
-    console.log(((tweetContainer.current?.offsetWidth || 0) - 500 ))
-    console.log((tweetContainer.current?.offsetWidth || 0 - 500 ) / 2)
+    // console.log(tweetContainer.current?.offsetWidth)
+    // console.log(tweetContainer.current?.offsetWidth || 0)
+    // console.log(((tweetContainer.current?.offsetWidth || 0) - 500 ))
+    // console.log((tweetContainer.current?.offsetWidth || 0 - 500 ) / 2)
 
     return (
         <Box alignItems="center" justifyContent="center">

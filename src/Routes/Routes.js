@@ -10,7 +10,7 @@ import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 export const routes = {
     dashboard: {
         title: 'Dashboard',
-        path: '/newdashboard',
+        path: '/dashboard',
         icon: HomeOutlinedIcon
     },
     contacts: {

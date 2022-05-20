@@ -23,9 +23,16 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 const TweetRankingPage = (props) => {
 	const { user } = useContext(AuthContext)
 
-	const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
-	const [tweetId, setTweetId] = useState('1523330156374282240')
-	
+	// const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
+	// const [tweetId, setTweetId] = useState('1523330156374282240')
+
+	const [input, setInput] = useState('https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg')
+	const [tweetId, setTweetId] = useState('1526584454629601282')
+	// const [tweetDetails, setTweetDetails] = useState(null)
+
+	const [analyzesLoading, setAnalyzesLoading] = useState(false)
+	const [analyzesDetails, setAnalyzesDetails] = useState(false)
+
 	const [tweet, setTweet] = useState({})
 	const [openTweet, setOpenTweet] = useState(true)
 
@@ -81,9 +88,12 @@ const TweetRankingPage = (props) => {
 	const onSearchTweet = (value) => {
 		// TODO
 
-		return
+		// return
 
-		let parts = value.split('/')
+		// let parts = value.split('/')
+
+		let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
+		let parts = tweet.split('/')
 		console.log(parts)
 
 		// https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A
@@ -95,6 +105,8 @@ const TweetRankingPage = (props) => {
 		console.log(tweetId)
 		setTweetId(tweetId)
 		setOpenTweet(true)
+
+		analyzeTweet(tweetId)
 
 		// const getTweetData = httpsCallable(functions, 'getTweetData')
 		// getTweetData({ tweetId, userToken: user.token })
@@ -122,6 +134,56 @@ const TweetRankingPage = (props) => {
 
 		// listener.current = unsub
 
+		// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
+
+		
+
+		return
+
+		// user.team.org.id
+
+		// const requestRef = doc(collection(db, 'requests'))
+		// setDoc(requestRef, { tweetId, id: requestRef.id, userToken: user.token })
+		// 	.then(() => {
+		// 		console.log('request made')
+		// 	})
+		// 	.catch(err => console.log(err))
+
+		// const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
+		// 	const log = logRef.data()
+
+		// 	console.log(log)
+		// })
+
+		// listener.current = unsub
+	}
+	
+	const analyzeTweet = (tweetId) => {
+
+		// 'requests/tweet/ranking/{id}'
+
+		const requestRef = doc(collection(db, 'requests', 'tweet', 'ranking'))
+		setDoc(requestRef, { tweetId, id: requestRef.id, orgId: user.team.org.id })
+			.then(() => {
+				console.log('analyzes request made')
+				setAnalyzesLoading(true)
+			})
+			.catch(err => console.log(err))
+
+		const resultRef = doc(db, 'requests', 'tweet', 'ranking', requestRef.id, 'results', 'result')
+		const unsub = onSnapshot(resultRef,	snapshot => {
+			const data = snapshot.data()
+			console.log(data)
+
+			if(data) {
+				setAnalyzesDetails(data)
+			}
+		})
+
+		listener.current = unsub
+	}
+
+	const syncContacts = () => {
 		const contactsRequestRef = doc(collection(db, 'requestSyncContacts'))
 		setDoc(contactsRequestRef, { id: contactsRequestRef.id, userToken: user.token, orgId: user.team.org.id })
 			.then(() => {
@@ -156,25 +218,6 @@ const TweetRankingPage = (props) => {
 		})
 
 		listener2.current = unsub2
-
-		return
-
-		// user.team.org.id
-
-		// const requestRef = doc(collection(db, 'requests'))
-		// setDoc(requestRef, { tweetId, id: requestRef.id, userToken: user.token })
-		// 	.then(() => {
-		// 		console.log('request made')
-		// 	})
-		// 	.catch(err => console.log(err))
-
-		// const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
-		// 	const log = logRef.data()
-
-		// 	console.log(log)
-		// })
-
-		// listener.current = unsub
 	}
 
 	const onAnalyzeClick = (e) => {
@@ -249,7 +292,11 @@ const TweetRankingPage = (props) => {
 					border: '1px solid #ddd'
 				  }}
 				>
-				  	<TweetDetails tweetId={tweetId}/>
+				  	<TweetDetails 
+					  tweetId={tweetId}
+					  loading={analyzesLoading}
+					  details={analyzesDetails}
+					/>
 				</Collapse>
 			</Stack >
 		</TweetPage >
