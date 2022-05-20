@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 
 import { useParams } from "react-router-dom"
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
 import CheckIcon from '@mui/icons-material/Check'
 import SendIcon from '@mui/icons-material/Send'
 
@@ -12,7 +12,9 @@ import MessageInput from 'UI/Forms/Inputs/MessageInput'
 import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
-import { AppContext } from 'Context/AppProvider';
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
+
+import { AppContext } from 'Context/AppProvider'
 
 import useArray from 'Hooks/ArrayHooks'
 
@@ -38,11 +40,11 @@ import {
 import { formatDate } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
-import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog';
-
 
 export default function MessageCreatePage(props) {
+    const user = useUser()
     const app = useContext(AppContext)
+    const confirmDialog = useContext(ConfirmDialogContext)
 
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
@@ -88,7 +90,7 @@ export default function MessageCreatePage(props) {
     const [mediaSelected, setMediaSelected] = useState(null)
     const [mediaRemoved, setMediaRemoved] = useState(null)
     const [showMediaDialog, setShowMediaDialog] = useState(false)
-    const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
+    const [uploadingMedia, setUploadingMedia] = useState(false)
 
     // TextArea
     // const textArea = useRef(null)
@@ -103,6 +105,15 @@ export default function MessageCreatePage(props) {
     })
 
     const [redirect, setRedirect] = useState('')
+
+    useEffect(() => {
+
+        if (!user.item)
+            return
+        // const owner = Object.assign({}, user.item)
+        // delete owner.token
+        // console.log(owner)
+    }, [user.item])
 
     useEffect(() => {
         if (!control)
@@ -451,10 +462,17 @@ export default function MessageCreatePage(props) {
         })
         setMediaRemoved('')
         setShowMediaDialog(false)
-        setUploadDialogOpen(false)
+        // setUploadDialogOpen(false)
     }
+    console.log("mediaSelected", mediaSelected)
+    const onUploadMedia = (file) => {
+        setUploadingMedia(true)
+        const media = {
+            file: file,
+            owner: user.item?.id
+        }
+        // console.log(media)
 
-    const onUploadMedia = (media, setUploadingMedia) => {
         uploadMedia(media)
             .then(res => {
                 app.alert.setSuccess("Uploaded media successfully!")
@@ -467,7 +485,7 @@ export default function MessageCreatePage(props) {
             })
             .finally(() => setUploadingMedia(false))
     }
-    
+
     const onMediaSelectedClick = (e) => {
         setShowMediaDialog(true)
     }
@@ -744,38 +762,26 @@ export default function MessageCreatePage(props) {
         setError(error => ({ ...error, show: false }))
     }
 
-    // const handleImportFiles = (file) => {
-    //     let tempFiles = []
-    //     let tempAssociated = []
-    //     let tempUploadStatus = []
+    const handleImportFiles = (file) => {
+        console.log(file)
 
-    //     let pushedCount = 0
+        if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
+            || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
+            // 5MB for image and 15MB for videos
+            const title = `Upload Media: ${file.name}`
+            confirmDialog.show(title, "Upload this media?", () => {
+                onUploadMedia(file)
+            })
+        } else {
+            app.alert.setWarning("File not added because it does not match the file upload criteria")
+            return
+        }
+    }
 
-    //     console.log(file)
-
-    //     if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-    //         || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
-    //         // 5MB for image and 15MB for videos
-
-    //         tempFiles.push(file)
-    //         tempAssociated.push("loading")
-    //         tempUploadStatus.push("none")
-    //     }
-
-
-    //     if (tempFiles.length === 0) {
-    //        app.alert.push("File not added because it does not match the file upload criteria")
-
-    //     }
-
-
-
-    // }
-
-    // const onDrop = (e) => {
-    //     e.preventDefault();
-    //     handleImportFiles(e.dataTransfer.files)
-    // }
+    const onDrop = (e) => {
+        e.preventDefault();
+        handleImportFiles(e.dataTransfer.files[0])
+    }
 
     // console.log(senderSelected)
 
@@ -830,13 +836,6 @@ export default function MessageCreatePage(props) {
                 onClose={() => setShowMediaDialog(false)}
             />
 
-            <UploadMediaDialog
-                open={uploadDialogOpen}
-                onUploadMedia={onUploadMedia}
-                browseOption={setShowMediaDialog}
-                onClose={() => setUploadDialogOpen(false)}
-            />
-
             <MessageInput
                 type='sender'
                 label='Send from:'
@@ -876,11 +875,14 @@ export default function MessageCreatePage(props) {
 
             <MessageInput
                 type='media'
+                onDrop={onDrop}
                 label='Add Media:'
+                loading={uploadingMedia}
                 selected={mediaSelected}
-                onSelectedClick={onMediaSelectedClick}
                 onRemove={onRemoveMedia}
-                onClick={() => setUploadDialogOpen(true) /* setShowMediaDialog(true) */}
+                browseAction={setShowMediaDialog}
+                onSelectedClick={onMediaSelectedClick}
+                onClick={() => setShowMediaDialog(true)}
             />
 
             <MessageInput

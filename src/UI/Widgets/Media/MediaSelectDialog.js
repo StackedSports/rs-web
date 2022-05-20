@@ -65,7 +65,7 @@ export default function MediaSelectDialog(props) {
         console.log(selected)
         if (props.uniqueSelection && selection.length > 1) {
             app.alert.setWarning("It is not possible to select more than one media.")
-            // setDisableOnConfirmSelection(true)
+            setDisableOnConfirmSelection(true)
         } else {
             setDisableOnConfirmSelection(false)
             setSelectedItem(selected)

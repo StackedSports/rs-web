@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Dialog } from "@material-ui/core"
 import { Grid, Stack, debounce } from "@mui/material"
@@ -21,7 +21,6 @@ import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import MediaInputTitle from 'UI/Forms/Inputs/MediaInputTitle'
 
 import useAlerts from 'Hooks/AlertHooks'
-import { useUser } from 'Api/Hooks'
 
 import { formatDate, getFullName } from "utils/Parser"
 
@@ -42,10 +41,10 @@ import {
 	addTagToMedia
 } from 'Api/Endpoints'
 
-const FileDropZone = (props) => {
+export const FileDropZone = (props) => {
 
 	const onBrowseClick = () => {
-		props.browseOption ? props.browseOption(true) : document.getElementById("browse").click()
+		props.browseAction ? props.browseAction(true) : document.getElementById("browse").click()
 	}
 
 	return (
@@ -76,7 +75,7 @@ const FileDropZone = (props) => {
 					style={{ color: "#6aa8f4", cursor: "pointer" }}
 					onClick={onBrowseClick}
 				>
-					{/* props.browseOption ? "message" : */} Browse
+					{/* props.browseAction ? "message" : */} Browse
 				</span>{" "}
 				your files here
 			</p>
@@ -112,7 +111,6 @@ const dummyAssociatedPeople = [
 ]
 
 export default function UploadMediaDialog(props) {
-	const user = useUser();
 	const teamMembers = useTeamMembers()
 	const tags = useTags2()
 	const placeholders = usePlaceholders(1, 25)
@@ -124,20 +122,6 @@ export default function UploadMediaDialog(props) {
 
 	const [uploadStatus, setUploadStatus] = useState(dummyUploadProgress)
 	const [uploadingMedia, setUploadingMedia] = useState(false)
-
-	useEffect(() => {
-		//
-		if (!props.onUploadMedia && !user.item)
-			return
-
-		const owner = Object.assign({}, user.item)
-		delete owner.token
-		owner.disabled = true
-		console.log(owner)
-		setSelectedOwner([owner])
-
-	}, [user.item])
-
 
 	// Media
 	const [dropFiles, setDropFiles] = useState(dummyFiles);
@@ -248,64 +232,64 @@ export default function UploadMediaDialog(props) {
 				tempFiles.push(file)
 				tempAssociated.push("loading")
 				tempUploadStatus.push("none")
-            }
-        }
+			}
+		}
 
-        if (files.length != tempFiles.length) {
-            setAlerts.push("One or more files were not added since they do not match the file upload criteria")
+		if (files.length != tempFiles.length) {
+			setAlerts.push("One or more files were not added since they do not match the file upload criteria")
 
-            // setMediaAlert({
-            //   message: ,
-            //   visible: true
-            // })
-        }
+			// setMediaAlert({
+			//   message: ,
+			//   visible: true
+			// })
+		}
 
-        const initialAssociated = Object.assign([], associatedPeople)
-        const initialUploadStatus = Object.assign([], uploadStatus)
+		const initialAssociated = Object.assign([], associatedPeople)
+		const initialUploadStatus = Object.assign([], uploadStatus)
 
-        handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)   
-            .then(() => {
+		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+			.then(() => {
 
-                //console.log(tempFiles)
-                //console.log(tempAssociated)
+				//console.log(tempFiles)
+				//console.log(tempAssociated)
 
-                setAssociatedPeople(initialAssociated.concat(tempAssociated))
-                setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
-                // setDropFiles(dropFiles.concat(tempFiles));
-            })
+				setAssociatedPeople(initialAssociated.concat(tempAssociated))
+				setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
+				// setDropFiles(dropFiles.concat(tempFiles));
+			})
 
-        setAssociatedPeople(associatedPeople.concat(tempAssociated))
-        setDropFiles(dropFiles.concat(tempFiles));
-        setUploadStatus(uploadStatus.concat(tempUploadStatus))
-        // setAssociatedPeople(associated)
-        // setDropFiles(tempFiles);
-    }
+		setAssociatedPeople(associatedPeople.concat(tempAssociated))
+		setDropFiles(dropFiles.concat(tempFiles));
+		setUploadStatus(uploadStatus.concat(tempUploadStatus))
+		// setAssociatedPeople(associated)
+		// setDropFiles(tempFiles);
+	}
 
-    const handleFileChange = (e) => {
-        handleImportFiles(e.target.files)
-        return
-    }
+	const handleFileChange = (e) => {
+		handleImportFiles(e.target.files)
+		return
+	}
 
-    const onDrop = (e) => {
-        e.preventDefault();
-        handleImportFiles(e.dataTransfer.files)
-    }
+	const onDrop = (e) => {
+		e.preventDefault();
+		handleImportFiles(e.dataTransfer.files)
+	}
 
-    const deleteMedia = (index) => {
-        let tempFiles = Object.assign([], dropFiles)
-        let tempAssociated = Object.assign([], associatedPeople)
-        let tempUploadStatus = Object.assign([], uploadStatus)
-    
-        tempFiles.splice(index, 1)
-        tempAssociated.splice(index, 1)
-        tempUploadStatus.splice(index, 1)
-    
-        setDropFiles(tempFiles)
-        setAssociatedPeople(tempAssociated)
-        setUploadStatus(tempUploadStatus)
-    }
-    
-    const onUploadMedia = () => {
+	const deleteMedia = (index) => {
+		let tempFiles = Object.assign([], dropFiles)
+		let tempAssociated = Object.assign([], associatedPeople)
+		let tempUploadStatus = Object.assign([], uploadStatus)
+
+		tempFiles.splice(index, 1)
+		tempAssociated.splice(index, 1)
+		tempUploadStatus.splice(index, 1)
+
+		setDropFiles(tempFiles)
+		setAssociatedPeople(tempAssociated)
+		setUploadStatus(tempUploadStatus)
+	}
+
+	const onUploadMedia = () => {
 		// console.log(selectedTags)
 
 		// return
@@ -371,89 +355,77 @@ export default function UploadMediaDialog(props) {
 
 		setUploadingMedia(true)
 
-		if (props.onUploadMedia) {
-			// console.log(dropFiles)
-			// console.log(Object.assign({}, dropFiles[0]})
+		dropFiles.forEach((file, index) => {
 			let media = {
-				file: dropFiles[0],
-				owner: selectedOwner[0]?.id.toString()
+				file,
+				owner: selectedOwner[0]?.id.toString(),
+				placeholder: withPlaceholder || selectedPlaceholders[0]?.id.toString(),
+				contact: associatedPeople[index]?.id.toString(),
+				selectedTags: selectedTags
 			}
 
-			props.onUploadMedia(media, setUploadingMedia)
-		} else {
+			// console.log("upload " + index)
+			console.log(media)
 
-			dropFiles.forEach((file, index) => {
-				let media = {
-					file,
-					owner: selectedOwner[0]?.id.toString(),
-					placeholder: withPlaceholder || selectedPlaceholders[0]?.id.toString(),
-					contact: associatedPeople[index]?.id.toString(),
-					selectedTags: selectedTags
-				}
+			//return
 
-				// console.log("upload " + index)
-				console.log(media)
+			tempUploadStatus[index] = "uploading"
+			setUploadStatus(tempUploadStatus)
 
-				//return
+			// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
 
-				tempUploadStatus[index] = "uploading"
-				setUploadStatus(tempUploadStatus)
+			uploadMedia(media)
+				.then(res => {
+					// console.log(res)
 
-				// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
+					let mediaRes = res
 
-				uploadMedia(media)
-					.then(res => {
-						// console.log(res)
+					let temp2 = Object.assign([], tempUploadStatus)
+					tempUploadStatus[index] = "success"
+					temp2[index] = "success"
+					setUploadStatus(temp2)
+					// console.log(temp2)
 
-						let mediaRes = res
+					successCount++
 
-						let temp2 = Object.assign([], tempUploadStatus)
-						tempUploadStatus[index] = "success"
-						temp2[index] = "success"
-						setUploadStatus(temp2)
-						// console.log(temp2)
-
-						successCount++
-
-						selectedTags.forEach(tag => {
-							//if(typeof tag.id == "string" && tag.id.includes("new-")) {
-							addTagToMedia(mediaRes.id, tag.name)
-								.then(res => {
-									//console.log(res)
-								})
-								.catch(error => {
-									//console.log(error)
-								})
-							//}
-						})
-
-						// last id 314852
+					selectedTags.forEach(tag => {
+						//if(typeof tag.id == "string" && tag.id.includes("new-")) {
+						addTagToMedia(mediaRes.id, tag.name)
+							.then(res => {
+								//console.log(res)
+							})
+							.catch(error => {
+								//console.log(error)
+							})
+						//}
 					})
-					.catch(error => {
-						// console.log(error)
 
-						let temp2 = Object.assign([], tempUploadStatus)
-						temp2[index] = "failed"
-						tempUploadStatus[index] = "failed"
-						setUploadStatus(temp2)
-						// console.log(temp2)
+					// last id 314852
+				})
+				.catch(error => {
+					// console.log(error)
 
-						failedCount++
+					let temp2 = Object.assign([], tempUploadStatus)
+					temp2[index] = "failed"
+					tempUploadStatus[index] = "failed"
+					setUploadStatus(temp2)
+					// console.log(temp2)
 
-						//tempUploadStatus[index] = "failed"
-						//setUploadStatus(tempUploadStatus)
-					})
-					.finally(() => {
-						//setUploadStatus(tempUploadStatus)
-						count--
+					failedCount++
 
-						if (count == 0) {
-							setUploadingMedia(false)
-							onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
-						}
-					})
-			})
-		}
+					//tempUploadStatus[index] = "failed"
+					//setUploadStatus(tempUploadStatus)
+				})
+				.finally(() => {
+					//setUploadStatus(tempUploadStatus)
+					count--
+
+					if (count == 0) {
+						setUploadingMedia(false)
+						onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
+					}
+				})
+		})
 	}
 
 	const onUploadFinished = (tempUploadStatus, successCount, failedCount, totalCount) => {
@@ -753,7 +725,6 @@ export default function UploadMediaDialog(props) {
 				{!uploadFinished &&
 					<FileDropZone
 						style={{ marginTop: dropFiles.length == 0 ? 30 : 0 }}
-						browseOption={props.browseOption}
 						onDrop={onDrop}
 					/>
 				}
