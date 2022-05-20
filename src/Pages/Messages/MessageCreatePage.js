@@ -12,7 +12,6 @@ import MessageInput from 'UI/Forms/Inputs/MessageInput'
 import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
-import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
 import { AppContext } from 'Context/AppProvider'
 
@@ -44,7 +43,6 @@ import { messageRoutes } from 'Routes/Routes'
 export default function MessageCreatePage(props) {
     const user = useUser()
     const app = useContext(AppContext)
-    const confirmDialog = useContext(ConfirmDialogContext)
 
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
@@ -462,11 +460,9 @@ export default function MessageCreatePage(props) {
         })
         setMediaRemoved('')
         setShowMediaDialog(false)
-        // setUploadDialogOpen(false)
     }
-    console.log("mediaSelected", mediaSelected)
+
     const onUploadMedia = (file) => {
-        setUploadingMedia(true)
         const media = {
             file: file,
             owner: user.item?.id
@@ -764,15 +760,16 @@ export default function MessageCreatePage(props) {
 
     const handleImportFiles = (file) => {
         console.log(file)
-
+        setUploadingMedia(true)
+        
         if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-            || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
+        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
             // 5MB for image and 15MB for videos
-            const title = `Upload Media: ${file.name}`
-            confirmDialog.show(title, "Upload this media?", () => {
-                onUploadMedia(file)
-            })
+            
+            onUploadMedia(file)
+            
         } else {
+            setUploadingMedia(false)
             app.alert.setWarning("File not added because it does not match the file upload criteria")
             return
         }

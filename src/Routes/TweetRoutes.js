@@ -5,7 +5,7 @@ import {
   TweetCreatePage
 } from 'Pages/Tweet';
 
-import { tweetRoutes } from './Routes';
+import { routes, tweetRoutes } from './Routes';
 
 const TweetRoutes = (props) => (
   <>

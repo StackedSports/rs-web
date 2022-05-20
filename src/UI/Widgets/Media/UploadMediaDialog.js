@@ -75,9 +75,9 @@ export const FileDropZone = (props) => {
 					style={{ color: "#6aa8f4", cursor: "pointer" }}
 					onClick={onBrowseClick}
 				>
-					{/* props.browseAction ? "message" : */} Browse
+					Browse
 				</span>{" "}
-				your files here
+				your {props.browseAction ? "Media Library" : "files here"}
 			</p>
 		</Stack>
 	);

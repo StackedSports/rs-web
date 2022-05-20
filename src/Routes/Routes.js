@@ -45,7 +45,7 @@ export const routes = {
     },
     tweet: {
         title: 'Tweet',
-        path: '/tweet-ranking',
+        path: '/tweet',
         icon: StackedBarChartIcon
     },
     userSettings: {
@@ -129,10 +129,11 @@ export const userRoutes = {
 }
 
 export const tweetRoutes = {
-    ranking: "/tweet-ranking",
+    // ranking: "/tweet/ranking",
+    ranking: "/tweet",
     search: "/tweet-search",
     tweets: "/tweet-ranking",
-    create: "/new-tweet-create",
+    create: "/tweet/create",
 }
 
 export const chatRoutes = {
