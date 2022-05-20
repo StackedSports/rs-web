@@ -6,7 +6,6 @@ import {
     useGridApiContext,
     useGridSelector,
 } from '@mui/x-data-grid-pro';
-import { DataGrid } from "@mui/x-data-grid";
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
@@ -34,7 +33,7 @@ export default function ContactsTableServerMode({
         pagination.getPage(page + 1)
     }
 
-    const onCellClick = (row) => {
+    const redirectToDetailsPage = (row) => {
         if (row.field != '__check__')
             history.push(`${contactsRoutes.profile}/${row.id}`)
     }
@@ -53,20 +52,18 @@ export default function ContactsTableServerMode({
                 columns={columns}
                 paginationMode='server'
                 sortingMode='server'
-                filterMode='server'
+                // filterMode='server' it need to be implemented, so filter is desabled
+                disableColumnFilter
                 pagination
                 pageSize={pagination?.itemsPerPage}
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
                 columnVisibilityModel={visibleColumns.items}
                 onPageChange={onPageChange}
-                onSelectionModelChange={(newSelectionModel) => {
-                    console.log(newSelectionModel);
-                }}
                 components={{
                     Pagination: CustomPagination,
                     Footer: CustomFooter
                 }}
-                onCellClick={redirectToDetails && onCellClick}
+                onCellClick={redirectToDetails && redirectToDetailsPage}
                 {...restOfProps}
             />
         </Stack>
@@ -90,7 +87,7 @@ function CustomPagination(props) {
 
 //Custom mui data grid footer
 function CustomFooter() {
-    return <Stack direction={'row'} sx={{ p: 1 }} justifyContent='center'>
+    return <Stack direction={'row'} sx={{ p: 1, borderColor: 'divider' }} justifyContent='center' borderTop={1} >
         <Box>
             <CustomPagination />
         </Box>
