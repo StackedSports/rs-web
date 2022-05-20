@@ -17,16 +17,15 @@ import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
  */
 export const PanelFilters = (props) => {
 
-	const isInternalChange = useRef(false);
 	const firstRender = useRef(true);
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
 	useEffect(() => {
 		if (!props.selectedFilters || lodash.isEqual(props.selectedFilters, selectedFilters)) {
-			console.log("No changes detected");
+			//console.log("No changes detected");
 			return
 		}
-		console.log("external Change happens", props.selectedFilters)
+		//console.log("external Change happens", props.selectedFilters)
 		setSelectedFilters(props.selectedFilters)
 
 	}, [props.selectedFilters])
@@ -37,14 +36,13 @@ export const PanelFilters = (props) => {
 			return
 		}
 
-		console.log("Calling onFilterChange")
+		//console.log("Calling onFilterChange")
 		if (props.onFilterChange && props.onFilterChange instanceof Function)
 			props.onFilterChange(Object.assign({}, selectedFilters))
 	}, [selectedFilters])
 
 	useEffect(() => {
 		if (props.setFilter) {
-			console.log(props.setFilter);
 			const { filterName, filter, option } = props.setFilter;
 			if (filterName && filter && option) {
 				handleOptionsChange(filterName, option, filter);
@@ -53,8 +51,8 @@ export const PanelFilters = (props) => {
 	}, [props.setFilter]);
 
 	const handleOptionsChange = (filterName, option, filter) => {
-		console.log(filterName)
-		console.log(option)
+		//console.log(filterName)
+		//console.log(option)
 
 		let filters = Object.assign({}, selectedFilters)
 
@@ -66,23 +64,20 @@ export const PanelFilters = (props) => {
 				filters[filterName] = [option]
 			} else {
 				if (filters[filterName].find(f => f.id === option.id)) {
-					console.log("repetido")
 					filters[filterName] = filters[filterName].filter(item => item.id !== option.id)
 				} else {
-					console.log("adicionado")
 					filters[filterName].push(option)
 				}
 			}
 		} else {
-			console.log("Novo")
 			filters[filterName] = [option]
 		}
 
-		if (filters[filterName].length === 0) {
+		if (filters[filterName] && filters[filterName].length === 0) {
 			delete filters[filterName];
 		}
 
-		console.log(filters)
+		//console.log(filters)
 
 		setSelectedFilters(filters)
 
@@ -108,7 +103,6 @@ export const PanelFilters = (props) => {
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
 		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
-			console.log(filter.optionsLabel)
 			return option[filter.optionsLabel];
 		} else {
 			return option.name;
@@ -147,9 +141,12 @@ export const PanelFilters = (props) => {
 				<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters[filterName];
-						if (filter.type === 'date')
+
+						if (filter.type === 'hidden') return
+						else if (filter.type === 'date')
 							return (
 								<DateRangePicker
+									key={filterName}
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}

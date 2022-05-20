@@ -66,7 +66,7 @@ export const AllMediaPage = () => {
 		setSelectedMedias(selection)
 	}
 
-	const archiveMedia = () => {
+	const onArchiveMedia = () => {
 		confirmDialog.show('Archive Media',
 			`Are you sure you want to archive the selected media: ${medias.items.filter(m => selectedMedias.some(id => id === m.id)).map(m => m.name || m.file_name).join(', ')} ?`,
 			async () => {
@@ -175,7 +175,7 @@ export const AllMediaPage = () => {
 			options: [
 				{ name: 'Send in Message', onClick: onSendInMessageAction },
 				{ name: 'Download', onClick: onDownloadAction },
-				{ name: 'Archive Media', onClick: archiveMedia },
+				{ name: 'Archive Media', onClick: onArchiveMedia },
 				{ name: 'Untag', onClick: onUntagAction },
 			]
 		},

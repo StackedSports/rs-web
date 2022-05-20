@@ -7,11 +7,12 @@ import { format, isDate, isValid } from 'date-fns';
 
 export const DatePicker = (props) => {
     const [value, setValue] = useState(null);
+    const [formatStyle, setFormatStyle] = useState(props.format ? props.format : 'MM/dd/yyyy');
 
     const handleChange = (newValue) => {
         setValue(newValue);
         if (!isValid(newValue) || !isDate(newValue) || !isValid(value) || !isDate(value )) return;
-        if (value && format(newValue, "yyyy-MM-dd") === format(new Date(value), "yyyy-MM-dd")) {
+        if (value && format(newValue, formatStyle) === format(new Date(value), formatStyle)) {
             //console.log("same date");
             return
         }
@@ -37,8 +38,8 @@ export const DatePicker = (props) => {
                 value={value}
                 onChange={handleChange}
                 disableFuture={props.disableFuture}
-                inputFormat="yyyy/MM/dd"
-                mask={"yyyy/MM/dd".replace(/[^\/]/g, '_')}
+                inputFormat={formatStyle}
+                mask={formatStyle.replace(/[^\/]/g, '_')}
                 renderInput={(params) => {
                     return <StyledInput
                         {...params} 

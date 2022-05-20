@@ -96,7 +96,7 @@ const DELETE = (url, body) => {
     })
 }
 
-const GET = (url, body) => {
+const GET = (url, body,cancelToken) => {
     return new Promise((resolve, reject) => {
         //const data = JSON.stringify(body);
 
@@ -112,7 +112,8 @@ const GET = (url, body) => {
         const config = {
             headers: HEADERS,
             // params: JSON.stringify(body)
-            params: body
+            params: body,
+            cancelToken: cancelToken
         }
 
         axios.get(URL + url, config)
@@ -496,7 +497,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
 
     console.log(data)
 
-    return GET(`messages?page=${page}&per_page=${perPage}`, data)
+    return GET(`messages?page=${page}&per_page=${perPage}`, data, filters.cancelToken)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)
 }
 
