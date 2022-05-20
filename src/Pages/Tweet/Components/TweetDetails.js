@@ -31,12 +31,47 @@ const Stat = (props) => (
     </Stack>
 )
 
+const Status = ({ status }) => (
+    <Stack>
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Status: ${status?.status}`}
+        </Typography>  
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Message: ${status?.message}`}
+        </Typography>  
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Fetched: ${status?.fetched}`}
+        </Typography>   
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Analyzed: ${status?.analyzed}`}
+        </Typography>   
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Found: ${status?.found}`}
+        </Typography> 
+    </Stack>
+)
+
 const TweetDetails = (props) => {
     const onSaveTweet = () => {
 		console.log("onSaveTweet")
 	}
 
-    const { metrics, likers, retweeters } = props.details
+    const { metrics, likes, retweets } = props.details
 
     return (
         <Stack ml={10} direction="row">
@@ -90,9 +125,13 @@ const TweetDetails = (props) => {
                 <Stack spacing={3} p={2}>
                     <Stat
                       label="Retweet Rate"
-                      value={retweeters?.found || 0}
+                      value={retweets?.found || 0}
                       total={metrics?.retweets || 0}
                     />
+
+                    <RenderIf condition={retweets}>
+                        <Status status={retweets}/>
+                    </RenderIf>
                     {/* <Stat
                       label="Quote Tweet Rate"
                       value={10}
@@ -100,17 +139,12 @@ const TweetDetails = (props) => {
                     /> */}
                     <Stat
                       label="Likes Rate"
-                      value={likers?.found || 0}
+                      value={likes?.found || 0}
                       total={metrics?.likes || 0}
                     />
 
-                    <RenderIf condition={likers}>
-                        <Typography
-                            variant="subtitle2"
-                            style={{ width: "100%", textAlign: "center" }}
-                        >
-                            {`Fetched: ${likers?.fetched}, analyzed: ${likers?.analyzed}, found: ${likers?.found}`}
-                        </Typography>
+                    <RenderIf condition={likes}>
+                        <Status status={likes}/>
                     </RenderIf>
                     
                     

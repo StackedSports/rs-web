@@ -6,7 +6,7 @@ import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typogra
 import { Stack } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
-import { addDoc, setDoc, collection, doc, onSnapshot } from 'firebase/firestore'
+import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 
 import { db, functions } from 'Api/Firebase'
@@ -27,7 +27,7 @@ const TweetRankingPage = (props) => {
 	// const [tweetId, setTweetId] = useState('1523330156374282240')
 
 	const [input, setInput] = useState('https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg')
-	const [tweetId, setTweetId] = useState('1526584454629601282')
+	const [tweetId, setTweetId] = useState(null)
 	// const [tweetDetails, setTweetDetails] = useState(null)
 
 	const [analyzesLoading, setAnalyzesLoading] = useState(false)
@@ -100,13 +100,42 @@ const TweetRankingPage = (props) => {
 
 		let queryParams = value.split('/').slice(-1)
 		// console.log(queryParams[0])
-		let tweetId = queryParams[0].split('?')[0]
+		let inputTweetId = queryParams[0].split('?')[0]
 
-		console.log(tweetId)
-		setTweetId(tweetId)
+		console.log(inputTweetId)
+
+		if(tweetId === inputTweetId) {
+			console.log('tweet has already been requested')
+			return
+		}
+
+		console.log('ids didnt match')
+
+		// return
+
+		setTweetId(inputTweetId)
 		setOpenTweet(true)
 
-		analyzeTweet(tweetId)
+		// Check to see if analyzes exists
+
+		let once = true
+
+		const resultRef = doc(db, 'orgs', user.team.org.id, 'tweet-ranking', inputTweetId)
+		const unsub = onSnapshot(resultRef,	snapshot => {
+			const data = snapshot.data()
+			console.log(data)
+
+			if(data) {
+				setAnalyzesDetails(data)
+			} else if(once) {
+				once = false
+				analyzeTweet(inputTweetId, resultRef)
+			}
+		})
+
+		listener.current = unsub
+
+		
 
 		// const getTweetData = httpsCallable(functions, 'getTweetData')
 		// getTweetData({ tweetId, userToken: user.token })
@@ -158,29 +187,24 @@ const TweetRankingPage = (props) => {
 		// listener.current = unsub
 	}
 	
-	const analyzeTweet = (tweetId) => {
+	const analyzeTweet = (tweetId, requestRef) => {
 
 		// 'requests/tweet/ranking/{id}'
 
-		const requestRef = doc(collection(db, 'requests', 'tweet', 'ranking'))
-		setDoc(requestRef, { tweetId, id: requestRef.id, orgId: user.team.org.id })
+		// orgs/{orgId}/tweet-ranking/{requestId}
+
+		
+
+		const orgId = user.team.org.id
+
+		// const requestRef = doc(collection(db, 'orgs', orgId, 'tweet-ranking'))
+		// const requestRef = doc(db, 'orgs', orgId, 'tweet-ranking', tweetId)
+		setDoc(requestRef, { tweetId, id: tweetId, orgId })
 			.then(() => {
 				console.log('analyzes request made')
 				setAnalyzesLoading(true)
 			})
 			.catch(err => console.log(err))
-
-		const resultRef = doc(db, 'requests', 'tweet', 'ranking', requestRef.id, 'results', 'result')
-		const unsub = onSnapshot(resultRef,	snapshot => {
-			const data = snapshot.data()
-			console.log(data)
-
-			if(data) {
-				setAnalyzesDetails(data)
-			}
-		})
-
-		listener.current = unsub
 	}
 
 	const syncContacts = () => {
@@ -286,18 +310,20 @@ const TweetRankingPage = (props) => {
 				}}
 				/> */}
 
-				<Collapse
-				  in={openTweet}
-				  style={{
-					border: '1px solid #ddd'
-				  }}
-				>
-				  	<TweetDetails 
-					  tweetId={tweetId}
-					  loading={analyzesLoading}
-					  details={analyzesDetails}
-					/>
-				</Collapse>
+				<RenderIf condition={tweetId && tweetId !== ''}>
+					<Stack
+						// in={openTweet}
+					  style={{
+						border: '1px solid #ddd'
+					  }}
+					>
+						<TweetDetails 
+							tweetId={tweetId}
+							loading={analyzesLoading}
+							details={analyzesDetails}
+						/>
+					</Stack>
+				</RenderIf>
 			</Stack >
 		</TweetPage >
 	)
