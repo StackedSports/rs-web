@@ -49,6 +49,7 @@ import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
 import { separeteNewTagsNameFromExistingTagsIds } from 'utils/Helper';
+import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
@@ -65,8 +66,8 @@ export default function ContactsPage(props) {
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
-    // const [selectedContacts, setSelectedContacts] = useState([])
-    const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
+    const [selectedContacts, setSelectedContacts] = useState([])
+    // const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
@@ -258,14 +259,14 @@ export default function ContactsPage(props) {
     }
 
     const onContactsSelectionChange = (selection) => {
-        // setSelectedContacts(selected)
-        selectedContacts.onSelectionChange(selection)
+        setSelectedContacts(selection)
+        //selectedContacts.onSelectionChange(selection)
     }
 
     const onSendMessageClick = (e) => {
         console.log(selectedContacts)
 
-        selectedContacts.saveData(contacts.items)
+       // selectedContacts.saveData(contacts.items)
         app.sendMessageToContacts(selectedContacts.getDataSelected())
     }
 
@@ -392,6 +393,7 @@ export default function ContactsPage(props) {
     }
 
     const onSortingChange = (sorting, details) => {
+        console.log(sorting, details)
         const filter = {}
 
         if (sorting.length === 0)
@@ -539,7 +541,7 @@ export default function ContactsPage(props) {
             </Stack>
 
 
-            <ContactsTable
+            {/*    <ContactsTable
                 id="contacts-page"
                 contacts={contacts.items}
                 pagination={contacts.pagination}
@@ -550,6 +552,17 @@ export default function ContactsPage(props) {
                 onPageChange={onPageChange}
                 onSortingChange={onSortingChange}
                 apiRef={gridApiRef}
+            /> */}
+
+            <ContactsTableServerMode
+                id="contacts-page"
+                redirectToDetails
+                contacts={contacts.items}
+                pagination={contacts.pagination}
+                columnsControl={visibleTableRows}
+                loading={contacts.loading}
+                apiRef={gridApiRef}
+                onSortModelChange={onSortingChange}
             />
 
             <CreateBoardDialog
