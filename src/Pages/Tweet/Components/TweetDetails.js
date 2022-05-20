@@ -147,20 +147,6 @@ const TweetDetails = (props) => {
 
                 <Stack spacing={3} p={2}>
                     <Stat
-                      label="Retweet Rate"
-                      value={retweets?.found || 0}
-                      total={metrics?.retweets || 0}
-                    />
-
-                    <RenderIf condition={retweets}>
-                        <Status status={retweets}/>
-                    </RenderIf>
-                    {/* <Stat
-                      label="Quote Tweet Rate"
-                      value={10}
-                      total={86}
-                    /> */}
-                    <Stat
                       label="Likes Rate"
                       value={likes?.found || 0}
                       total={metrics?.likes || 0}
@@ -170,7 +156,15 @@ const TweetDetails = (props) => {
                         <Status status={likes}/>
                     </RenderIf>
                     
-                    
+                    <Stat
+                      label="Retweet Rate"
+                      value={retweets?.found || 0}
+                      total={metrics?.retweets || 0}
+                    />
+
+                    <RenderIf condition={retweets}>
+                        <Status status={retweets}/>
+                    </RenderIf>
                 </Stack>
 
                 <Divider/>
