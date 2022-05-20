@@ -342,7 +342,7 @@ const InputMedia = (props) => {
                 </Stack>
                 :
                 <FileDropZone
-                    style={{ margin: 0 }}
+                    style={{ margin: 0, padding: '50px 0' }}
                     browseAction={props.browseAction}
                     onDrop={props.onDrop}
                 />
