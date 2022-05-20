@@ -265,9 +265,9 @@ export default function UploadMediaDialog(props) {
         return
     }
 
-    const onDrop = (ev) => {
-        ev.preventDefault();
-        handleImportFiles(ev.dataTransfer.files)
+    const onDrop = (e) => {
+        e.preventDefault();
+        handleImportFiles(e.dataTransfer.files)
     }
 
     const deleteMedia = (index) => {

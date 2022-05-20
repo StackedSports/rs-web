@@ -29,7 +29,7 @@ export default function TweetPage(props) {
             title={props.title || 'Tweet'}
             topActionName={props.topActionName || null}
             onTopActionClick={props.onTopActionClick}
-            filters={filters}
+            filters={props.filters || filters}
             alert={props.alert}
             actions={props.actions}
         // onFilterSelected={onFilterSelected}

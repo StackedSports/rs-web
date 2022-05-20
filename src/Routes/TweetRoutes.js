@@ -1,14 +1,23 @@
 import { Route } from 'react-router-dom';
 
-import TweetRankingPage from 'Pages/Tweet/TweetRankingPage';
-import { routes } from './Routes';
+import {
+  TweetRankingPage,
+  TweetCreatePage
+} from 'Pages/Tweet';
+
+import { tweetRoutes } from './Routes';
 
 const TweetRoutes = (props) => (
   <>
     <Route
       exact
-      path={routes.tweet.path}
+      path={tweetRoutes.ranking}
       component={TweetRankingPage}
+    />
+    <Route
+      exact
+      path={tweetRoutes.create}
+      component={TweetCreatePage}
     />
   </>
 )
