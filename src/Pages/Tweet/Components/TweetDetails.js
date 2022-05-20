@@ -18,15 +18,32 @@ const Stat = (props) => (
     <Stack>
         <Typography
             variant="h6"
-            style={{ width: "100%", textAlign: "center", fontWeight: 'bold' }}
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 36 }}
         >
             {`${round(props.value / props.total * 100)}%`}
         </Typography>
         <Typography
             variant="subtitle2"
-            style={{ width: "100%", textAlign: "center" }}
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 18 }}
         >
             {`${props.label} (${props.value}/${props.total})`}
+        </Typography>
+    </Stack>
+)
+
+const Count = (props) => (
+    <Stack>
+        <Typography
+            variant="h6"
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 16 }}
+        >
+            {props.value}
+        </Typography>
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 14 }}
+        >
+            {props.label}
         </Typography>
     </Stack>
 )
@@ -158,7 +175,14 @@ const TweetDetails = (props) => {
 
                 <Divider/>
 
-                
+                <RenderIf condition={metrics}>
+                    <Stack mt={2} direction="row" flex={1} justifyContent="space-around">
+                        <Count label="Likes" value={metrics?.likes}/>
+                        <Count label="Retweets" value={metrics?.retweets}/>
+                        <Count label="Quotes" value={metrics?.quotes}/>
+                        <Count label="Replies" value={metrics?.replies}/>
+                    </Stack>
+                </RenderIf>
 
                 {/* <Box sx={{ width: "100%" }}>
                     <Divider />
