@@ -67,7 +67,6 @@ export default function ContactsPage(props) {
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
-    //const [selectedContacts, setSelectedContacts] = useState([])
     const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
 
@@ -384,7 +383,7 @@ export default function ContactsPage(props) {
     }
 
     const onPageChange = (page) => {
-        selectedContacts.saveData(contacts.items)
+       // selectedContacts.saveData(contacts.items)
         contacts.pagination.getPage(page)
     }
 
@@ -413,7 +412,6 @@ export default function ContactsPage(props) {
         contacts.filter(filter)
     }
 
-
     return (
         <MainLayout
             title='Contacts'
@@ -441,13 +439,13 @@ export default function ContactsPage(props) {
                             {' '}contacts
                         </span>
                     </Stack>
-                    {multipageSelection.selectedCount > 0 &&
+                    {multipageSelection.count > 0 &&
                         <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
                                 <span style={{ color: '#3871DA' }}>
-                                    {multipageSelection.selectedCount}
+                                    {multipageSelection.count}
                                 </span>
-                                {' '}contact{multipageSelection.selectedCount > 1 && "s"} selected
+                                {' '}contact{multipageSelection.count > 1 && "s"} selected
                             </span>
                         </Stack>
                     }
@@ -458,7 +456,7 @@ export default function ContactsPage(props) {
                         variant="contained"
                         endIcon={<SendIcon />}
                         onClick={onSendMessageClick}
-                        disabled={multipageSelection.selectedCount == 0}
+                        disabled={multipageSelection.count == 0}
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
@@ -480,11 +478,11 @@ export default function ContactsPage(props) {
                             ]
                         }}
                     /> */}
-                    {multipageSelection.selectedCount > 0 &&
+                    {multipageSelection.count > 0 &&
                         <PanelDropdown
                             action={{
                                 id: 'selected-contacts-actions',
-                                name: `${multipageSelection.selectedCount} selected contact${multipageSelection.selectedCount > 1 ? "s" : ""}`,
+                                name: `${multipageSelection.count} selected contact${multipageSelection.count > 1 ? "s" : ""}`,
                                 type: 'dropdown',
                                 variant: 'contained',
                                 icon: ArrowDropDownIcon,
@@ -504,7 +502,7 @@ export default function ContactsPage(props) {
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
                         onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
-                        disabled={multipageSelection.selectedCount == 0}
+                        disabled={multipageSelection.count == 0}
                     />
                     {/* <PanelDropdown
                         header={() => (
@@ -559,7 +557,6 @@ export default function ContactsPage(props) {
             /> */}
 
             <ContactsTableServerMode
-                id="contacts-page"
                 redirectToDetails
                 contacts={contacts.items}
                 pagination={contacts.pagination}
@@ -567,8 +564,7 @@ export default function ContactsPage(props) {
                 loading={contacts.loading}
                 apiRef={gridApiRef}
                 onSortModelChange={onSortingChange}
-                onSelectionModelChange={multipageSelection.onSelectionModelChange}
-                selectionModel={multipageSelection.selectionModel}
+                 {...multipageSelection}
             />
 
             <CreateBoardDialog
@@ -603,8 +599,8 @@ export default function ContactsPage(props) {
                 teamMembers={teamMembers.items}
                 pagination={contacts.pagination}
                 onSortingChange={onSortingChange}
-                selectedContacts={selectedContacts.items}
-                onSelectionChange={onContactsSelectionChange}
+                selectedContacts={multipageSelection.selectionModel}
+                onSelectionChange={multipageSelection.onSelectionModelChange}
                 onClose={() => setOpenFollowOnTwitterDialog(false)}
             // onConfirm={}
             />

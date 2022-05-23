@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react'
+import { useReducer } from 'react'
 import lodash from 'lodash'
 
 const initialState = {
@@ -8,6 +8,7 @@ const initialState = {
 }
 
 const reducer = (state, action) => {
+    // add and remove are to handle with on selection model change of mui data grid, internal use only
     switch (action.type) {
         case 'add':
             return {
@@ -20,8 +21,15 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 selectedIds: action.selectedIds,
-                selectedData: state.selectedData.filter(data => !action.data.includes(data) ),
+                selectedData: state.selectedData.filter(data => !action.data.includes(data)),
                 count: action.selectedIds.length,
+            }
+        case 'removeById':
+            return {
+                ...state,
+                selectedIds: state.selectedIds.filter(id => id !== action.id),
+                selectedData: state.selectedData.filter(data => data.id !== action.id),
+                count: state.selectedIds.filter(id => id !== action.id).length,
             }
         case 'clear':
             return {
@@ -52,14 +60,14 @@ export default function useMultiPageSelection_V2(data) {
             const removedData = data.filter(item => removedIds.includes(item.id))
             dispatch({ type: 'remove', selectedIds: selection, data: removedData })
         }
-
     }
 
     return {
         selectionModel: state.selectedIds,
-        selectedCount: state.count,
+        count: state.count,
         selectedData: state.selectedData,
         onSelectionModelChange,
+        remove: (id) => dispatch({ type: 'removeById', id }),
         clear: () => dispatch({ type: 'clear' }),
     }
 
