@@ -1,28 +1,23 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
-import Stack from '@mui/material/Stack';
-import { AccountBox, Tune } from '@material-ui/icons';
+import { Stack, IconButton } from '@mui/material';
+import { AccountBox, Tune, Clear } from '@material-ui/icons';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import MainLayout from 'UI/Layouts/MainLayout';
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 
 import { AppContext } from 'Context/AppProvider'
-import { mapSorting } from 'UI/Tables/Contacts/DataGridConfig'
 
-import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
@@ -67,8 +62,6 @@ export default function ContactsPage(props) {
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
-    //const [selectedContacts, setSelectedContacts] = useState([])
-    const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -260,16 +253,11 @@ export default function ContactsPage(props) {
         contacts.filter(filter)
     }
 
-    const onContactsSelectionChange = (selection) => {
-        //setSelectedContacts(selection)
-        selectedContacts.onSelectionChange(selection)
-    }
-
     const onSendMessageClick = (e) => {
         // console.log(selectedContacts)
         // selectedContacts.saveData(contacts.items)
 
-       // app.sendMessageToContacts(selectedContacts.getDataSelected())
+        // app.sendMessageToContacts(selectedContacts.getDataSelected())
         app.sendMessageToContacts(multipageSelection.selectedData)
     }
 
@@ -340,17 +328,6 @@ export default function ContactsPage(props) {
             app.alert.setWarning(`${responseResult.success} tags were added . ${res.error} tags failed to be added.`)
 
         setLoadingTags(false)
-
-        /*  addTagsToContacts(selectedTagsIds, contactIds)
-             .then(res => {
-                 if (res.error === 0) {
-                     app.alert.setSuccess('Contacts tagged successfully!')
-                     setOpenSelectTagDialog(false)
-                 }
-                 else
-                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
-             })
-             .finally(() => setLoadingTags(false)) */
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
@@ -383,11 +360,6 @@ export default function ContactsPage(props) {
         app.alert.setSuccess('Contact created successfully!')
     }
 
-    const onPageChange = (page) => {
-        selectedContacts.saveData(contacts.items)
-        contacts.pagination.getPage(page)
-    }
-
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
     }
@@ -412,7 +384,6 @@ export default function ContactsPage(props) {
             filter.sort_column = 'first_name'
         contacts.filter(filter)
     }
-
 
     return (
         <MainLayout
@@ -441,14 +412,17 @@ export default function ContactsPage(props) {
                             {' '}contacts
                         </span>
                     </Stack>
-                    {multipageSelection.selectedCount > 0 &&
-                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                    {multipageSelection.count > 0 &&
+                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center">
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
-                                <span style={{ color: '#3871DA' }}>
-                                    {multipageSelection.selectedCount}
+                                <span >
+                                    {multipageSelection.count}
                                 </span>
-                                {' '}contact{multipageSelection.selectedCount > 1 && "s"} selected
+                                {' '}contact{multipageSelection.count > 1 && "s"} selected
                             </span>
+                            <IconButton size='small' sx={{color:'#3871DA'}} onClick={() => multipageSelection.clear()}>
+                                <Clear fontSize="inherit" />
+                            </IconButton>
                         </Stack>
                     }
                 </Stack>
@@ -458,7 +432,7 @@ export default function ContactsPage(props) {
                         variant="contained"
                         endIcon={<SendIcon />}
                         onClick={onSendMessageClick}
-                        disabled={multipageSelection.selectedCount == 0}
+                        disabled={multipageSelection.count == 0}
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
@@ -480,11 +454,11 @@ export default function ContactsPage(props) {
                             ]
                         }}
                     /> */}
-                    {multipageSelection.selectedCount > 0 &&
+                    {multipageSelection.count > 0 &&
                         <PanelDropdown
                             action={{
                                 id: 'selected-contacts-actions',
-                                name: `${multipageSelection.selectedCount} selected contact${multipageSelection.selectedCount > 1 ? "s" : ""}`,
+                                name: `${multipageSelection.count} selected contact${multipageSelection.count > 1 ? "s" : ""}`,
                                 type: 'dropdown',
                                 variant: 'contained',
                                 icon: ArrowDropDownIcon,
@@ -504,7 +478,7 @@ export default function ContactsPage(props) {
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
                         onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
-                        disabled={multipageSelection.selectedCount == 0}
+                        disabled={multipageSelection.count == 0}
                     />
                     {/* <PanelDropdown
                         header={() => (
@@ -559,7 +533,6 @@ export default function ContactsPage(props) {
             /> */}
 
             <ContactsTableServerMode
-                id="contacts-page"
                 redirectToDetails
                 contacts={contacts.items}
                 pagination={contacts.pagination}
@@ -567,8 +540,7 @@ export default function ContactsPage(props) {
                 loading={contacts.loading}
                 apiRef={gridApiRef}
                 onSortModelChange={onSortingChange}
-                onSelectionModelChange={multipageSelection.onSelectionModelChange}
-                selectionModel={multipageSelection.selectionModel}
+                {...multipageSelection}
             />
 
             <CreateBoardDialog
@@ -598,15 +570,11 @@ export default function ContactsPage(props) {
 
             <FollowOnTwitterDialog
                 open={openFollowOnTwitterDialog}
-                contacts={contacts.items}
-                onPageChange={onPageChange}
+                contacts={multipageSelection.selectedData}
                 teamMembers={teamMembers.items}
-                pagination={contacts.pagination}
-                onSortingChange={onSortingChange}
-                selectedContacts={selectedContacts.items}
-                onSelectionChange={onContactsSelectionChange}
+                selectedContacts={multipageSelection.selectionModel}
+                onSelectionChange={multipageSelection.onSelectionModelChange}
                 onClose={() => setOpenFollowOnTwitterDialog(false)}
-            // onConfirm={}
             />
         </MainLayout>
     )

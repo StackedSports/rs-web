@@ -1,41 +1,70 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 import lodash from 'lodash'
 
+const initialState = {
+    selectedIds: [],
+    selectedData: [],
+    count: 0,
+}
+
+const reducer = (state, action) => {
+    // add and remove are to handle with on selection model change of mui data grid, internal use only
+    switch (action.type) {
+        case 'add':
+            return {
+                ...state,
+                selectedIds: action.selectedIds,
+                selectedData: [...state.selectedData, ...action.data],
+                count: action.selectedIds.length,
+            }
+        case 'remove':
+            return {
+                ...state,
+                selectedIds: action.selectedIds,
+                selectedData: state.selectedData.filter(data => action.selectedIds.includes(data.id)),
+                count: action.selectedIds.length,
+            }
+        case 'removeById':
+            return {
+                ...state,
+                selectedIds: state.selectedIds.filter(id => id !== action.id),
+                selectedData: state.selectedData.filter(data => data.id !== action.id),
+                count: state.selectedIds.filter(id => id !== action.id).length,
+            }
+        case 'clear':
+            return {
+                ...state,
+                selectedIds: [],
+                selectedData: [],
+                count: 0,
+            }
+        default:
+            throw new Error()
+    }
+}
+
 export default function useMultiPageSelection_V2(data) {
-    const [selectedCount, setSelectedCount] = useState(0)
-    const [selectedIds, setSelectedIds] = useState([])
-    const [selectedData, setSelectedData] = useState([])
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const onSelectionModelChange = (selection) => {
-
-        let newIds = lodash.difference(selection, selectedIds)
-        let removedIds = lodash.difference(selectedIds, selection)
+        let newIds = lodash.difference(selection, state.selectedIds)
 
         if (data && newIds.length > 0) {
             const newData = data.filter(item => newIds.includes(item.id))
-            setSelectedData(oldData => [...oldData, ...newData])
+            dispatch({ type: 'add', selectedIds: selection, data: newData })
         }
-        if (data && removedIds.length > 0) {
-            const removedData = data.filter(item => removedIds.includes(item.id))
-            setSelectedData(oldData => oldData.filter(item => !removedData.includes(item)))
+        else {
+            dispatch({ type: 'remove', selectedIds: selection })
         }
-
-        setSelectedIds(selection)
-        setSelectedCount(selection.length)
-    }
-
-    const clear = () => {
-        setSelectedIds([])
-        setSelectedData([])
-        setSelectedCount(0)
     }
 
     return {
-        selectionModel: selectedIds,
-        selectedCount,
-        selectedData,
+        selectionModel: state.selectedIds,
+        count: state.count,
+        selectedData: state.selectedData,
         onSelectionModelChange,
-        clear,
+        remove: (id) => dispatch({ type: 'removeById', id }),
+        clear: () => dispatch({ type: 'clear' }),
     }
 
 }

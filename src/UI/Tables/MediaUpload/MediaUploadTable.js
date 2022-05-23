@@ -129,10 +129,10 @@ export const MediaTableItemLoading = (props) => {
 
 export const MediaUploadStatus = (props) => {
     switch(props.status) {
-        case "none": return <p style={{color: "#aaa", width: 240}}></p>
-        case "ready": return <p style={{color: "#aaa", width: 240}}>Ready To Upload</p>
-        case "failed": return <p style={{color: "red", width: 240}}>Failed To Upload</p>
-        case "success": return <p style={{color: "green", width: 240}}>Upload Successfull!</p>
+        case "none": return <p style={{color: "#aaa", width: 200}}></p>
+        case "ready": return <p style={{color: "#aaa", width: 200}}>Ready To Upload</p>
+        case "failed": return <p style={{color: "red", width: 200}}>Failed To Upload</p>
+        case "success": return <p style={{color: "green", width: 200}}>Upload Successfull!</p>
     
         case "uploading":
             return (

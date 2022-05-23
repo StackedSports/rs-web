@@ -16,7 +16,7 @@ export default function ContactsTableServerMode({
     contacts,
     pagination,
     id,
-    mini,
+    height,
     redirectToDetails,
     columnsControl,
     ...restOfProps
@@ -39,7 +39,7 @@ export default function ContactsTableServerMode({
     }
 
     return (
-        <Stack flex={1} sx={{ minHeight: '500px' }}>
+        <Stack flex={height ? 0 : 1} sx={{ minHeight: '55vh', height: height ? height : '100%' }}>
             <DataGridPro
                 sx={{
                     m: 0,
@@ -50,8 +50,8 @@ export default function ContactsTableServerMode({
                 rows={contacts || []}
                 rowCount={pagination?.totalItems}
                 columns={columns}
-                paginationMode='server'
-                sortingMode='server'
+                paginationMode={pagination && 'server'}
+                sortingMode={pagination && 'server'}
                 // filterMode='server' it need to be implemented, so filter is desabled
                 disableColumnFilter
                 pagination

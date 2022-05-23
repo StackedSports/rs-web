@@ -1,13 +1,8 @@
 import { useState } from 'react'
 
-import { Dialog } from "@material-ui/core"
-import { Grid, Stack, debounce } from "@mui/material"
-
-import MuiAlert from "@material-ui/lab/Alert";
+import { Dialog, Grid, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { Button as MuiButton } from '@mui/material';
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { LoadingButton } from '@mui/lab';
 
 import Upload from "images/Upload.PNG"
@@ -170,7 +165,7 @@ export default function UploadMediaDialog(props) {
 
 							// using timeout so state can be updated before next setAlerts call
 							setTimeout(() => {
-								setAlerts.push("One or more files were not associated to a contact based on their file name because the search for contact returned with multiple contacts")
+								setAlerts.push("One or more files were not associated to a contact based on their file name")
 							}, 200 * index)
 
 							// setMediaAlert({
@@ -232,64 +227,66 @@ export default function UploadMediaDialog(props) {
 				tempFiles.push(file)
 				tempAssociated.push("loading")
 				tempUploadStatus.push("none")
-            }
-        }
+			}
+		}
 
-        if (files.length != tempFiles.length) {
-            setAlerts.push("One or more files were not added since they do not match the file upload criteria")
+		if (files.length != tempFiles.length) {
+			setAlerts.push("One or more files were not added since they do not match the file upload criteria")
 
-            // setMediaAlert({
-            //   message: ,
-            //   visible: true
-            // })
-        }
+			// setMediaAlert({
+			//   message: ,
+			//   visible: true
+			// })
+		}
 
-        const initialAssociated = Object.assign([], associatedPeople)
-        const initialUploadStatus = Object.assign([], uploadStatus)
+		const initialAssociated = Object.assign([], associatedPeople)
+		const initialUploadStatus = Object.assign([], uploadStatus)
 
-        handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)   
-            .then(() => {
+		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
+			.then(() => {
 
-                //console.log(tempFiles)
-                //console.log(tempAssociated)
+				//console.log(tempFiles)
+				//console.log(tempAssociated)
 
-                setAssociatedPeople(initialAssociated.concat(tempAssociated))
-                setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
-                // setDropFiles(dropFiles.concat(tempFiles));
-            })
+				setAssociatedPeople(initialAssociated.concat(tempAssociated))
+				setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
+				// setDropFiles(dropFiles.concat(tempFiles));
+			})
 
-        setAssociatedPeople(associatedPeople.concat(tempAssociated))
-        setDropFiles(dropFiles.concat(tempFiles));
-        setUploadStatus(uploadStatus.concat(tempUploadStatus))
-        // setAssociatedPeople(associated)
-        // setDropFiles(tempFiles);
-    }
+		setAssociatedPeople(associatedPeople.concat(tempAssociated))
+		setDropFiles(dropFiles.concat(tempFiles));
+		setUploadStatus(uploadStatus.concat(tempUploadStatus))
+		// setAssociatedPeople(associated)
+		// setDropFiles(tempFiles);
+	}
 
-    const handleFileChange = (e) => {
-        handleImportFiles(e.target.files)
-        return
-    }
+	const handleFileChange = (e) => {
+		handleImportFiles(e.target.files)
+		return
+	}
 
-    const onDrop = (e) => {
-        e.preventDefault();
-        handleImportFiles(e.dataTransfer.files)
-    }
+	const onDrop = (e) => {
+		e.preventDefault();
+		handleImportFiles(e.dataTransfer.files)
+	}
 
-    const deleteMedia = (index) => {
-        let tempFiles = Object.assign([], dropFiles)
-        let tempAssociated = Object.assign([], associatedPeople)
-        let tempUploadStatus = Object.assign([], uploadStatus)
-    
-        tempFiles.splice(index, 1)
-        tempAssociated.splice(index, 1)
-        tempUploadStatus.splice(index, 1)
-    
-        setDropFiles(tempFiles)
-        setAssociatedPeople(tempAssociated)
-        setUploadStatus(tempUploadStatus)
-    }
-    
-    const onUploadMedia = () => {
+	const deleteMedia = (index) => {
+		let tempFiles = Object.assign([], dropFiles)
+		let tempAssociated = Object.assign([], associatedPeople)
+		let tempUploadStatus = Object.assign([], uploadStatus)
+
+		tempFiles.splice(index, 1)
+		tempAssociated.splice(index, 1)
+		tempUploadStatus.splice(index, 1)
+
+		setDropFiles(tempFiles)
+		setAssociatedPeople(tempAssociated)
+		setUploadStatus(tempUploadStatus)
+	}
+
+	const onUploadMedia = () => {
 		// console.log(selectedTags)
 
 		// return
@@ -300,10 +297,10 @@ export default function UploadMediaDialog(props) {
 		}
 
 		// TODO: uncomment this
-		// if (dropFiles.length == 0) {
-		// 	setAlerts.push("You forgot to import media files to upload")
-		// 	return
-		// }
+		if (dropFiles.length == 0) {
+			setAlerts.push("You forgot to import media files to upload")
+			return
+		}
 
 		// uploadingMedia
 		// associatedPeople
@@ -480,10 +477,6 @@ export default function UploadMediaDialog(props) {
 		setAssociatedPeople(temp)
 	}
 
-	const Alert = (props) => {
-		return <MuiAlert elevation={6} variant="filled" {...props} />;
-	}
-
 	const onOwnerChange = (owner) => {
 		if (owner.length <= 1) {
 			setSelectedOwner(owner)
@@ -512,11 +505,8 @@ export default function UploadMediaDialog(props) {
 		setSelectedTags(tags)
 	}
 
-	const onTagsInputChange = debounce(input => {
-		if (input && input !== '')
-			tags.search(input)
-		else
-			tags.clearSearch()
+	const onTagsInputChange = debounce((value) => {
+		tags.search(value)
 	})
 
 	const onTagsKeyPress = (event) => {
@@ -566,7 +556,7 @@ export default function UploadMediaDialog(props) {
 	return (
 		<Dialog
 			maxWidth="md"
-			fullWidth={true}
+			fullWidth
 			scroll={"body"}
 			open={props.open}
 			onClose={props.onClose}
@@ -575,7 +565,6 @@ export default function UploadMediaDialog(props) {
 				type="file"
 				name="image"
 				id={"browse"}
-				className="form-control"
 				multiple
 				style={{ display: "none" }}
 				// value={post.image.name}
@@ -668,27 +657,17 @@ export default function UploadMediaDialog(props) {
 				{/* {dropFiles.length < 1 && <FileDropZone/>} */}
 
 				{alerts.length > 0 &&
-					<div
-						style={{
-							// marginTop: 16,
-							transform: "translateY(15px)",
-							marginBottom: 0,
-							width: "100%",
-							border: "1px solid #dbe2ed",
-							borderRadius: 4,
-						}}
-					>
-						{alerts.map((alert, index) => (
-							<Alert key={alert.id}
-								style={{ boxShadow: "0 0 transparent" }}
-								variant="standard"
-								severity="warning"
-								onClose={() => onMediaAlertClose(index)}
-							>
-								{alert.message}
-							</Alert>
-						))}
-					</div>
+
+					alerts.map((alert, index) => (
+						<Alert
+							key={alert.id}
+							severity="info"
+							sx={{ mt: 2 }}
+							onClose={() => onMediaAlertClose(index)}
+						>
+							{alert.message}
+						</Alert>
+					))
 				}
 
 				{files.length > 0 &&
@@ -759,7 +738,6 @@ export default function UploadMediaDialog(props) {
 					loading={uploadingMedia}
 					endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }} />}
 					disableElevation
-					// color="#3871da"
 					variant="contained"
 				>
 					{uploadFinished ? "OK" : "Upload"}

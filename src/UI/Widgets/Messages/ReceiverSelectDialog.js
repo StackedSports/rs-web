@@ -1,29 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
 
-import {
-    Grid,
-    Dialog,
-} from "@material-ui/core"
 
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import Tab from '@mui/material/Tab';
 import TabPanel from '@mui/lab/TabPanel';
-import { Button } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, IconButton } from '@mui/material';
+
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
-
 import SearchBar from 'UI/Widgets/SearchBar'
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
+//import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
+import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 
 import useArray from 'Hooks/ArrayHooks';
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import { useContacts, useBoards } from 'Api/Hooks';
 
 import { findByIds } from 'utils/Helper'
+import { Clear } from '@material-ui/icons';
 
 export const tabs = {
     privateBoard: 0,
@@ -37,23 +32,30 @@ const myTabs = [
     { id: 2, label: 'Contacts' }
 ]
 
-const getSelectionLabel = (privateCount, teamCount, contactCount) => {
-    if(privateCount == 0 && teamCount == 0 && contactCount == 0)
+const getSelectionLabel = (privateCount, teamCount, contactCount,clearSelection) => {
+    if (privateCount == 0 && teamCount == 0 && contactCount == 0)
         return ''
 
     let selectionLabel = privateCount > 0 ? `${privateCount} Private Boards` : ''
 
-    if(teamCount > 0) {
+    if (teamCount > 0) {
         let prefix = selectionLabel == '' ? '' : ', '
         selectionLabel += prefix + `${teamCount} Team Boards`
     }
 
-    if(contactCount > 0) {
+    if (contactCount > 0) {
         let prefix = selectionLabel == '' ? '' : ', '
         selectionLabel += prefix + `${contactCount} Contacts`
     }
 
-    return 'Selected: ' + selectionLabel
+    return (
+        <>
+            Selected: {selectionLabel}
+            <IconButton size='small' color='inherit' onClick={clearSelection}>
+                <Clear fontSize="inherit" />
+            </IconButton>
+        </>
+    )
 }
 
 
@@ -70,7 +72,8 @@ export default function ReceiverSelectDialog(props) {
     // having to iterate over selected ids for contacts we already retrieved
     // the data from. So here's a hook for that!
     // 
-    const mpSelection = useMultiPageSelection(contacts.pagination.currentPage)
+    //const mpSelection = useMultiPageSelection(contacts.pagination.currentPage)
+    const multipageSelection = useMultiPageSelection_V2(contacts.items)
     // 
 
     // Boards
@@ -87,7 +90,7 @@ export default function ReceiverSelectDialog(props) {
     // console.log(boards)
 
     useEffect(() => {
-        if(!boards.items)
+        if (!boards.items)
             return
 
         let tempTeam = []
@@ -95,7 +98,7 @@ export default function ReceiverSelectDialog(props) {
 
         boards.items.forEach(board => {
             let array = board.is_shared ? tempTeam : tempPrivate
-            array.push(board) 
+            array.push(board)
         })
 
         setPrivateBoards.all(tempPrivate)
@@ -104,9 +107,9 @@ export default function ReceiverSelectDialog(props) {
     }, [boards.items])
 
     useEffect(() => {
-        if(!props.removedItem)
+        if (!props.removedItem)
             return
-    
+
 
         let { index, type, id } = props.removedItem
 
@@ -119,65 +122,68 @@ export default function ReceiverSelectDialog(props) {
         }
 
         // type = privateBoards | teamBoards | contacts
-        switch(type) {
-            case 'privateBoards': 
+        switch (type) {
+            case 'privateBoards':
                 tmp = Object.assign([], selectedPrivateBoards)
                 set = setSelectedPrivateBoards
                 break
-            case 'teamBoards': 
+            case 'teamBoards':
                 tmp = Object.assign([], selectedTeamBoards)
                 set = setSelectedTeamBoards
                 break
-            case 'contacts': 
+            case 'contacts':
                 tmp = Object.assign([], selectedContacts)
                 set = setSelectedContacts
                 break
             default: return
         }
 
-        if(index === 'all')
+        if (index === 'all')
             tmp = []
         else
             tmp.splice(index, 1)
 
         console.log(tmp)
 
-        if(type === 'contacts') {
-            if(index === 'all') {
+        if (type === 'contacts') {
+            if (index === 'all') {
                 // paginatedContactsSelection.current = {}
                 // setContactsSelectionCount(0)
-                mpSelection.clear()
+                //mpSelection.clear()
+                multipageSelection.clear()
             } else {
                 // removeContactFromPaginatedSelection(id)
                 // setContactsSelectionCount(contactsSelectionCount - 1)
-                mpSelection.remove(id)
+                //mpSelection.remove(id)
+                multipageSelection.remove(id)
             }
-        } 
-        
+        }
+
         set(tmp)
-        
+
     }, [props.removedItem])
 
-    const onContactsSelectionChange = (selection) => {
-        console.log('onSelectionChange')
-
-        // mpSelection, mpSelectedCount, mpUtils
-        mpSelection.onSelectionChange(selection)
-
-        return
-
-        
-    }
-
-    const onContactsPageChange = (page) => {
-        console.log('onPageChange')
-
-        // mpSelection, mpSelectedCount, mpUtils
-        mpSelection.saveData(contacts.items)
-
-        contacts.pagination.getPage(page)
-
-    }
+    /*     const onContactsSelectionChange = (selection) => {
+            console.log('onSelectionChange')
+    
+            // mpSelection, mpSelectedCount, mpUtils
+            mpSelection.onSelectionChange(selection)
+    
+            return
+    
+    
+        }
+    
+        const onContactsPageChange = (page) => {
+            console.log('onPageChange')
+    
+            // 
+            , mpSelectedCount, mpUtils
+            mpSelection.saveData(contacts.items)
+    
+            contacts.pagination.getPage(page)
+    
+        } */
 
     const onSearch = (searchTerm, tabIndex) => {
         contacts.filter({ search: searchTerm })
@@ -194,8 +200,9 @@ export default function ReceiverSelectDialog(props) {
         const selectionTeam = findByIds(selectedTeamBoards, teamBoards)
 
         // For the contacts, we need to add the selected contacts from previous pages  
-        mpSelection.saveData(contacts.items)
-        let selectionContact = mpSelection.getDataSelected()     
+        //mpSelection.saveData(contacts.items)
+        //let selectionContact = mpSelection.getDataSelected()
+        let selectionContact = multipageSelection.selectedData
 
         // console.log(selectionPrivate)
         // console.log(selectionTeam)
@@ -204,11 +211,24 @@ export default function ReceiverSelectDialog(props) {
         props.onSelected(selectionPrivate, selectionTeam, selectionContact)
     }
 
+    const clearAllSelections = () => {
+        multipageSelection.clear()
+        setSelectedContacts([])
+        setSelectedPrivateBoards([])
+        setSelectedTeamBoards([])
+    }
+
+    const onClose = () => {
+        props.onClose()
+        clearAllSelections()
+    }
+
     const selectionLabel = getSelectionLabel(
         selectedPrivateBoards.length,
         selectedTeamBoards.length,
-        mpSelection.count)
-    
+        multipageSelection.count,
+        clearAllSelections)
+
     return (
         <SelectDialogTab
             tabs={myTabs}
@@ -222,31 +242,30 @@ export default function ReceiverSelectDialog(props) {
             <TabPanel value={0} index={0}>
                 <BoardsTable mini
                     contacts={privateBoards}
-                    pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50}}
+                    pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50 }}
                     loading={false}
                     selection={selectedPrivateBoards}
                     onSelectionChange={(newSelection) => setSelectedPrivateBoards(newSelection)}
-                    />
+                />
             </TabPanel>
             <TabPanel value={1} index={1}>
                 <BoardsTable mini
                     contacts={teamBoards}
-                    pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50}}
+                    pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50 }}
                     loading={false}
                     selection={selectedTeamBoards}
                     onSelectionChange={(newSelection) => setSelectedTeamBoards(newSelection)}
-                    />
+                />
             </TabPanel>
-            <TabPanel value={2} index={2}> 
-                <ContactsTable mini
+            <TabPanel value={2} index={2}>
+                <ContactsTableServerMode
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}
-                    selection={mpSelection.items} // selectedContacts
-                    onSelectionChange={onContactsSelectionChange}
-                    onPageChange={onContactsPageChange}/>
+                    {...multipageSelection}
+                />
             </TabPanel>
         </SelectDialogTab>
-    )    
+    )
 
 }
