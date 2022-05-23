@@ -3,6 +3,7 @@ import './MessagePreview.css'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Grid } from "@material-ui/core"
+import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import Typography from 'UI/Widgets/Typography'
@@ -23,9 +24,9 @@ import { objectNotNull } from 'utils/Validation'
 import { messageRoutes } from 'Routes/Routes'
 
 const getRecipientsLabel = (message) => {
-    if(message.recipient_count === 0)
+    if (message.recipient_count === 0)
         return '--'
-    
+
     return `${message.recipient_count} Recipients`
 }
 
@@ -44,35 +45,36 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
             <span className="DetailLabel">{label}:</span>
             {labelArray ?
                 value.map(item => (
-                    <span   style={{marginRight: '0.2em'}}
-                      className={status ? `MessageDetailValue ${removeSpaces(status)}` : 'MessageDetailValue'}
-                    >  
+                    <span style={{ marginRight: '0.2em' }}
+                        className={status ? `MessageDetailValue ${removeSpaces(status)}` : 'MessageDetailValue'}
+                    >
                         {item}
                     </span>
                 ))
-            :   (
-                <span
-                  className={status ? `${detailClass} ${removeSpaces(status)}` : detailClass}
-                >  
-                    {value}
-                </span>
-            )}
+                : (
+                    <span
+                        className={status ? `${detailClass} ${removeSpaces(status)}` : detailClass}
+                    >
+                        {value}
+                    </span>
+                )}
         </Grid>
     )
 }
 
-const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
-    if(!message) 
+const MessagePreview = ({ message, recipients, mini = false, style, link = false, cancelingMessage = false, onCancelMessage, ...props }) => {
+    console.log("message", message)
+    if (!message)
         return (
             <div style={{ height: 300 }}>
-                {props.loading &&  <LoadingOverlay/>}
+                {props.loading && <LoadingOverlay />}
             </div>
         )
 
     const [messageStats, setMessageStats] = useState(null)
 
     useEffect(() => {
-        if(!recipients)
+        if (!recipients)
             return
 
         let total = recipients?.count || 0
@@ -106,10 +108,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     const getPlaceholder = () => {
         console.log(recipients)
 
-        if(!recipients) {
+        if (!recipients) {
             // console.log({ ...message.media_placeholder, media: message.media_placeholder_preview })
 
-            let media = message.media_placeholder_preview?.map(url => ({ urls: { thumb: url }}))
+            let media = message.media_placeholder_preview?.map(url => ({ urls: { thumb: url } }))
 
             return { ...message.media_placeholder, media }
         }
@@ -117,20 +119,20 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         let mediaFiles = []
 
         const pushMedia = (recipient, medias) => {
-            if(objectNotNull(recipient.media))
+            if (objectNotNull(recipient.media))
                 medias.push(recipient.media)
 
-            if(medias.length === 3)
+            if (medias.length === 3)
                 return false
             else
                 return true
         }
-        
-        if(recipients.contact_list.length > 0) {
+
+        if (recipients.contact_list.length > 0) {
             recipients.contact_list.every(recipient => pushMedia(recipient, mediaFiles))
         }
 
-        if(mediaFiles.length < 3) {
+        if (mediaFiles.length < 3) {
             recipients.filter_list.every(filter => {
                 return filter.contacts.every(recipient => pushMedia(recipient, mediaFiles))
             })
@@ -145,60 +147,75 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     }
 
     // const mediaPlaceholder = useMemo(() => {
-        
+
     // }, [message, recipients])
 
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
 
+    const onCancelMessageClick = () => {
+        onCancelMessage(message.id)
+        console.log(cancelingMessage)
+    }
+
     return (
-        <Grid className="MessagePreview-Container" container  style={style}>
-            <Grid container  style={{ marginBottom: 20 }}>
+        <Grid className="MessagePreview-Container" container style={style}>
+            <Grid container style={{ marginBottom: 20 }}>
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
                         <MediaPreview
-                          cardStyle={{ marginLeft: 15, marginRight: 15 }}
-                          type={hasMedia ? 'media' : 'placeholder'}
-                          item={hasMedia ? message.media : getPlaceholder()}/>
+                            cardStyle={{ marginLeft: 15, marginRight: 15 }}
+                            type={hasMedia ? 'media' : 'placeholder'}
+                            item={hasMedia ? message.media : getPlaceholder()} />
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
                     <h3>Message Details</h3>
 
-                    <Details
-                      label="Status"
-                      value={getMessageStatusLabel(message.status)}
-                      status={getMessageStatusLabel(message.status)}
-                    />
-                    <Details label="Sender" value={getMessageSenderLabel(message)}/>
-                    <Details label="Recipient(s)" value={getRecipientsLabel(message)}/>
-                    {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
-                    <Details label="Send As" value={getMessagePlatformLabel(message.platform)}/>
-                    <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')}/>
-                    <Details label="Tags" value={message.tags || '--'}/>
+                    {(message.status.includes("In Progress") || message.status.includes("Scheduled")) &&
+                        <LoadingButton
+                            variant="contained"
+                            onClick={onCancelMessageClick}
+                            loading={cancelingMessage}
+                        >
+                            Cancel Message
+                        </LoadingButton>
+                    }
 
-                    <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }}/>
+                    <Details
+                        label="Status"
+                        value={getMessageStatusLabel(message.status)}
+                        status={getMessageStatusLabel(message.status)}
+                    />
+                    <Details label="Sender" value={getMessageSenderLabel(message)} />
+                    <Details label="Recipient(s)" value={getRecipientsLabel(message)} />
+                    {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
+                    <Details label="Send As" value={getMessagePlatformLabel(message.platform)} />
+                    <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')} />
+                    <Details label="Tags" value={message.tags || '--'} />
+
+                    <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }} />
                 </div>
                 <Grid item >
                     <h3>Message Stats</h3>
 
                     {messageStats && (
                         <Grid container direction="column" alignItems="center" style={{ marginTop: 10, marginBottom: 30 }}>
-                            <Typography size={26} weight="bold" text={`${messageStats.delivery}%`}/>
-                            <Typography text={`Delivery Rate (${messageStats.sent}/${messageStats.total})`}/>
+                            <Typography size={26} weight="bold" text={`${messageStats.delivery}%`} />
+                            <Typography text={`Delivery Rate (${messageStats.sent}/${messageStats.total})`} />
                         </Grid>
                     )}
-                    
-                    
+
+
                     {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
                 </Grid>
             </Grid>
-            
-            {!mini && <Label label={`Queud by ${getFullName(message.sender)} at ${formatDate(message.created_at, 'medium', 'short')}`}/>}
+
+            {!mini && <Label label={`Queud by ${getFullName(message.sender)} at ${formatDate(message.created_at, 'medium', 'short')}`} />}
         </Grid>
     )
-} 
+}
 
 export default MessagePreview
 
