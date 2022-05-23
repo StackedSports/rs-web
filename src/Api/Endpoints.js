@@ -96,7 +96,7 @@ const DELETE = (url, body) => {
     })
 }
 
-const GET = (url, body,cancelToken) => {
+const GET = (url, body, cancelToken) => {
     return new Promise((resolve, reject) => {
         //const data = JSON.stringify(body);
 
@@ -663,6 +663,12 @@ export const updateMessage = (messageId, data) => {
     }
 
     return PUT(`messages/${messageId}`, body)
+}
+
+export const cancelMessage = (messageId) => {
+
+    return PUT(`messages/${messageId}/cancel`)
+
 }
 
 export const removeRecipient = (messageId, recipientId) => {
