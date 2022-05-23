@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import SendIcon from '@mui/icons-material/Send'
+import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
@@ -38,7 +39,6 @@ const MessageDetailsPage = (props) => {
 
     const messageId = useRef(props.match.params.id)
     const [loading, setLoading] = useState(false)
-    const [cancelingMessage, setCancelingMessage] = useState(false)
 
     const [redirect, setRedirect] = useState('')
     const [refresh, setRefresh] = useState(false)
@@ -58,8 +58,8 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
-    console.log(message.item)
-    console.log(recipients.items)
+    // console.log(message.item)
+    // console.log(recipients.items)
 
     useEffect(() => {
         if (!message.error)
@@ -82,8 +82,6 @@ const MessageDetailsPage = (props) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
-    const onActionClick = () => { }
-
     const onEditMessageClick = () => {
         console.log('edit message')
         setRedirect(`${messageRoutes.edit}/${message.item.id}`)
@@ -95,21 +93,24 @@ const MessageDetailsPage = (props) => {
         setRedirect(`${messageRoutes.all}`)
     }
 
-    function onCancelMessage(messageId) {
-        console.log("onCancelMessage", messageId)
+    const onCancelMessage = (e) => {
+        console.log("onCancelMessage", messageId.current)
 
-        setCancelingMessage(true)
+        setLoading(true)
 
-        cancelMessage(messageId)
+        cancelMessage(messageId.current)
             .then(res => {
                 console.log(res)
-                alert.setSuccess('Message sending canceled!')
+                alert.setSuccess('Message canceled!')
             })
             .catch(error => {
                 console.log(error)
-                alert.setError('Error canceling message sending.')
+                alert.setError('Error canceling message.')
             })
-            .finally(() => setCancelingMessage(false))
+            .finally(() => {
+                setLoading(false)
+                refreshMessage()
+            })
     }
 
     const onDeleteMessageClick = () => {
@@ -178,7 +179,7 @@ const MessageDetailsPage = (props) => {
         sendMessage(message.item.id)
             .then(res => {
                 console.log(res)
-                alert.setSuccess('Message sent successfully!')
+                alert.setSuccess('Message queued successfully!')
             })
             .catch(error => {
                 console.log(error)
@@ -193,7 +194,7 @@ const MessageDetailsPage = (props) => {
         sendMessage(message.item.id)
             .then(res => {
                 console.log(res)
-                alert.setSuccess('Message successfully scheduled!')
+                alert.setSuccess('Message scheduled successfully!')
             })
             .catch(error => {
                 console.log(error)
@@ -202,14 +203,7 @@ const MessageDetailsPage = (props) => {
             .finally(() => refreshMessage())
     }
 
-    // TODO: we could parse the message data's recipients object into a format
-    // that is more suited for the kinds of things we need to do in the client.
-    // This remove recipients function could be optmized because of that.
     const onRemoveRecipients = () => {
-        // console.log(selection)
-
-        // console.log(message.item)
-
         setLoading(true)
 
         removeRecipients(message.item.id, selectedRecipients.items)
@@ -227,10 +221,7 @@ const MessageDetailsPage = (props) => {
                             + `${result.errorCount} recipeints failed to be removed.`)
 
 
-                    //removeFromSelection(result.removedRecipients)
-                    // setTimeout(() => {
                     refreshMessage()
-                    // }, 1500)
                 }
             })
             .catch(error => {
@@ -375,17 +366,7 @@ const MessageDetailsPage = (props) => {
             { name: 'Delete Message', color: 'red', onClick: onDeleteMessageClick }
         ]
 
-        const sentOptions = [
-            { name: 'Tag', onClick: onTagMessageClick },
-            { name: 'Archive', onClick: onArchiveMessageClick }
-        ]
-
-        const archivedOptions = [
-            { name: 'Tag', onClick: onTagMessageClick },
-            { name: 'Unarchive', onClick: onUnarchiveMessageClick }
-        ]
-
-        const errorOptions = [
+        const commonOptions = [
             { name: 'Tag', onClick: onTagMessageClick },
             { name: 'Archive', onClick: onArchiveMessageClick }
         ]
@@ -400,15 +381,10 @@ const MessageDetailsPage = (props) => {
                 break
             case 'Sent':
             case 'Completed':
-                options = sentOptions
-                showAction = true
-                break
             case 'Archived':
-                options = archivedOptions
-                showAction = true
-                break
             case 'Error':
-                options = errorOptions
+            case 'Cancelled':
+                options = commonOptions
                 showAction = true
                 break
             case 'Deleted':
@@ -455,6 +431,10 @@ const MessageDetailsPage = (props) => {
             actions.push(recipientActions)
         }
 
+        if(message.item.status === 'In Progress' || message.item.status === 'Pending') {
+            actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
+        }
+
         return actions
     }, [message.item, selectedRecipients.items, selectedRecipients.count])
 
@@ -494,8 +474,6 @@ const MessageDetailsPage = (props) => {
                 recipients={recipients.items}
                 style={{ marginBottom: 20 }}
                 loading={message.loading}
-                onCancelMessage={onCancelMessage}
-                cancelingMessage={cancelingMessage}
             />
 
             <MessageRecipientsTable

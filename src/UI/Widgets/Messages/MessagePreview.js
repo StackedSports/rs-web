@@ -173,7 +173,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                 <div className="MessagePreview-DetailsPanel">
                     <h3>Message Details</h3>
 
-                    {(message.status.includes("In Progress") || message.status.includes("Scheduled")) &&
+                    {/* {(message.status.includes("In Progress") || message.status.includes("Scheduled")) &&
                         <LoadingButton
                             variant="contained"
                             onClick={onCancelMessageClick}
@@ -181,7 +181,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                         >
                             Cancel Message
                         </LoadingButton>
-                    }
+                    } */}
 
                     <Details
                         label="Status"
