@@ -15,9 +15,9 @@ import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
+//import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
-import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+//import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
@@ -64,7 +64,7 @@ export default function BaseContactsPage(props) {
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
-    const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
+    //const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
     const [selectedFilters, setSelectedFilters] = useState({})
 
@@ -373,10 +373,10 @@ export default function BaseContactsPage(props) {
             .finally(() => setLoadingTags(false))
     }
 
-    const onPageChange = (page) => {
+/*     const onPageChange = (page) => {
         contacts.pagination.getPage(page)
     }
-
+ */
     const onCloseBoardDialog = () => {
         if (editBoard)
             setShowPanelFilters(false)
@@ -436,7 +436,7 @@ export default function BaseContactsPage(props) {
                         endIcon={<SendIcon />}
                         onClick={onSendMessageClick}
                         disabled={props.enableSendMessageWithoutSelection ?
-                            false : selectedContacts.count == 0}
+                            false : contactsMultipageSelection.count == 0}
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
@@ -466,15 +466,15 @@ export default function BaseContactsPage(props) {
                     <PanelDropdown
                         action={{
                             id: 'selected-contacts-actions',
-                            name: `${selectedContacts.count} selected contact${selectedContacts.count > 1 ? "s" : ""}`,
+                            name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
                             type: 'dropdown',
                             variant: 'contained',
                             icon: ArrowDropDownIcon,
-                            disabled: selectedContacts.count === 0,
+                            disabled: contactsMultipageSelection.count === 0,
                             options: props.title.includes("Board") ?
                                 [
                                     { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: contactsMultipageSelection.count === 0 },
                                     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                     { name: 'Archive Contact', onClick: onArchiveContactClick },
                                     // { name: 'Edit Board', onClick: onEditBoard },
@@ -483,7 +483,7 @@ export default function BaseContactsPage(props) {
                                 :
                                 [
                                     { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
+                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: contactsMultipageSelection.count === 0 },
                                     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                     { name: 'Archive Contact', onClick: onArchiveContactClick },
                                 ]
@@ -494,7 +494,7 @@ export default function BaseContactsPage(props) {
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
                         onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
-                        disabled={selectedContacts.count == 0}
+                        disabled={contactsMultipageSelection.count == 0}
                     />
                     {/* <PanelDropdown
                         header={() => (
@@ -534,7 +534,7 @@ export default function BaseContactsPage(props) {
                 </Stack>
             </Stack>
 
-            <ContactsTable
+         {/*    <ContactsTable
                 id={props.tableId}
                 contacts={contacts.items}
                 pagination={contacts.pagination}
@@ -543,12 +543,14 @@ export default function BaseContactsPage(props) {
                 onSelectionChange={onContactsSelectionChange}
                 onPageChange={onPageChange}
                 columnsControl={props.columnsControl}
-            />
+            /> */}
+
             <ContactsTableServerMode
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
                 columnsControl={props.columnsControl}
+                {...contactsMultipageSelection}
             />
 
             <CreateBoardDialog

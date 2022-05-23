@@ -10,7 +10,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 
 import SearchBar from 'UI/Widgets/SearchBar'
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
+//import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 
@@ -240,13 +240,6 @@ export default function ReceiverSelectDialog(props) {
                 />
             </TabPanel>
             <TabPanel value={2} index={2}>
-                {/* <ContactsTable mini
-                    contacts={contacts.items}
-                    pagination={contacts.pagination}
-                    loading={contacts.loading}
-                    selection={mpSelection.items} // selectedContacts
-                    onSelectionChange={onContactsSelectionChange}
-                    onPageChange={onContactsPageChange}/> */}
                 <ContactsTableServerMode
                     contacts={contacts.items}
                     pagination={contacts.pagination}

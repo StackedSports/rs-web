@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
-import Stack from '@mui/material/Stack';
-import { AccountBox, Tune } from '@material-ui/icons';
+import { Stack, IconButton } from '@mui/material';
+import { AccountBox, Tune, Clear } from '@material-ui/icons';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -11,7 +11,7 @@ import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
@@ -328,17 +328,6 @@ export default function ContactsPage(props) {
             app.alert.setWarning(`${responseResult.success} tags were added . ${res.error} tags failed to be added.`)
 
         setLoadingTags(false)
-
-        /*  addTagsToContacts(selectedTagsIds, contactIds)
-             .then(res => {
-                 if (res.error === 0) {
-                     app.alert.setSuccess('Contacts tagged successfully!')
-                     setOpenSelectTagDialog(false)
-                 }
-                 else
-                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
-             })
-             .finally(() => setLoadingTags(false)) */
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
@@ -369,11 +358,6 @@ export default function ContactsPage(props) {
 
     const onContactCreated = () => {
         app.alert.setSuccess('Contact created successfully!')
-    }
-
-    const onPageChange = (page) => {
-        // selectedContacts.saveData(contacts.items)
-        contacts.pagination.getPage(page)
     }
 
     const onContactSearch = (searchTerm) => {
@@ -436,6 +420,9 @@ export default function ContactsPage(props) {
                                 </span>
                                 {' '}contact{multipageSelection.count > 1 && "s"} selected
                             </span>
+                            <IconButton size='small' color='error' onClick={() => multipageSelection.clear()}>
+                                <Clear fontSize="inherit"  />
+                            </IconButton>
                         </Stack>
                     }
                 </Stack>

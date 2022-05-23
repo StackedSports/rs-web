@@ -39,7 +39,7 @@ export default function ContactsTableServerMode({
     }
 
     return (
-        <Stack flex={height ? 0 : 1} sx={{ minHeight: '500px', height: height ? height : '100%' }}>
+        <Stack flex={height ? 0 : 1} sx={{ minHeight: '55vh', height: height ? height : '100%' }}>
             <DataGridPro
                 sx={{
                     m: 0,

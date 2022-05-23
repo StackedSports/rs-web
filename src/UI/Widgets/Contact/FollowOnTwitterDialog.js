@@ -94,7 +94,7 @@ const FollowOnTwitterDialog = (props) => {
 
         <Stack
           flex={1}
-          spacing={4}
+          spacing={2}
         >
           <Typography sx={{ fontWeight: 600 }}>Follow on Twitter:</Typography>
           <ContactsTableServerMode
@@ -112,7 +112,7 @@ const FollowOnTwitterDialog = (props) => {
         </Stack>
 
         <Stack flex={1} spacing={1} >
-          <Stack spacing={4}>
+          <Stack spacing={2}>
             <Typography sx={{ fontWeight: 600 }}>On behalf of User Accounts:</Typography>
             <ContactsTableServerMode
               id="follow-on-twitter-team-members"
