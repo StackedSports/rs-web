@@ -761,13 +761,13 @@ export default function MessageCreatePage(props) {
     const handleImportFiles = (file) => {
         console.log(file)
         setUploadingMedia(true)
-        
+
         if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-        || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
+            || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
             // 5MB for image and 15MB for videos
-            
+
             onUploadMedia(file)
-            
+
         } else {
             setUploadingMedia(false)
             app.alert.setWarning("File not added because it does not match the file upload criteria")
@@ -777,7 +777,11 @@ export default function MessageCreatePage(props) {
 
     const onDrop = (e) => {
         e.preventDefault();
-        handleImportFiles(e.dataTransfer.files[0])
+        if (e.dataTransfer.files.length > 1) {
+            app.alert.setWarning("It is not possible to select more than one media.")
+        } else {
+            handleImportFiles(e.dataTransfer.files[0])
+        }
     }
 
     // console.log(senderSelected)
