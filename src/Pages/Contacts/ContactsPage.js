@@ -413,15 +413,15 @@ export default function ContactsPage(props) {
                         </span>
                     </Stack>
                     {multipageSelection.count > 0 &&
-                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center">
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
                                 <span style={{ color: '#3871DA' }}>
                                     {multipageSelection.count}
                                 </span>
                                 {' '}contact{multipageSelection.count > 1 && "s"} selected
                             </span>
-                            <IconButton size='small' color='error' onClick={() => multipageSelection.clear()}>
-                                <Clear fontSize="inherit"  />
+                            <IconButton size='small' sx={{color:'#3871DA'}} onClick={() => multipageSelection.clear()}>
+                                <Clear fontSize="inherit" />
                             </IconButton>
                         </Stack>
                     }
