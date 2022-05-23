@@ -415,7 +415,7 @@ export default function ContactsPage(props) {
                     {multipageSelection.count > 0 &&
                         <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center">
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
-                                <span style={{ color: '#3871DA' }}>
+                                <span >
                                     {multipageSelection.count}
                                 </span>
                                 {' '}contact{multipageSelection.count > 1 && "s"} selected

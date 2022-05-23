@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import Tab from '@mui/material/Tab';
+
 import TabPanel from '@mui/lab/TabPanel';
-import { Button } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, IconButton } from '@mui/material';
+
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
-
 import SearchBar from 'UI/Widgets/SearchBar'
 //import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
@@ -21,6 +18,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import { useContacts, useBoards } from 'Api/Hooks';
 
 import { findByIds } from 'utils/Helper'
+import { Clear } from '@material-ui/icons';
 
 export const tabs = {
     privateBoard: 0,
@@ -34,7 +32,7 @@ const myTabs = [
     { id: 2, label: 'Contacts' }
 ]
 
-const getSelectionLabel = (privateCount, teamCount, contactCount) => {
+const getSelectionLabel = (privateCount, teamCount, contactCount,clearSelection) => {
     if (privateCount == 0 && teamCount == 0 && contactCount == 0)
         return ''
 
@@ -50,7 +48,14 @@ const getSelectionLabel = (privateCount, teamCount, contactCount) => {
         selectionLabel += prefix + `${contactCount} Contacts`
     }
 
-    return 'Selected: ' + selectionLabel
+    return (
+        <>
+            Selected: {selectionLabel}
+            <IconButton size='small' color='inherit' onClick={clearSelection}>
+                <Clear fontSize="inherit" />
+            </IconButton>
+        </>
+    )
 }
 
 
@@ -206,10 +211,23 @@ export default function ReceiverSelectDialog(props) {
         props.onSelected(selectionPrivate, selectionTeam, selectionContact)
     }
 
+    const clearAllSelections = () => {
+        multipageSelection.clear()
+        setSelectedContacts([])
+        setSelectedPrivateBoards([])
+        setSelectedTeamBoards([])
+    }
+
+    const onClose = () => {
+        props.onClose()
+        clearAllSelections()
+    }
+
     const selectionLabel = getSelectionLabel(
         selectedPrivateBoards.length,
         selectedTeamBoards.length,
-        multipageSelection.count)
+        multipageSelection.count,
+        clearAllSelections)
 
     return (
         <SelectDialogTab

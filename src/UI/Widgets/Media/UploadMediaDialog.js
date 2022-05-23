@@ -1,13 +1,8 @@
 import { useState } from 'react'
 
-import { Dialog } from "@material-ui/core"
-import { Grid, Stack, debounce } from "@mui/material"
-
-import MuiAlert from "@material-ui/lab/Alert";
+import { Dialog, Grid, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { Button as MuiButton } from '@mui/material';
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { LoadingButton } from '@mui/lab';
 
 import Upload from "images/Upload.PNG"
@@ -248,7 +243,7 @@ export default function UploadMediaDialog(props) {
 		const initialUploadStatus = Object.assign([], uploadStatus)
 
 		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
-        handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)   
+		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
 		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
 			.then(() => {
 
@@ -570,7 +565,6 @@ export default function UploadMediaDialog(props) {
 				type="file"
 				name="image"
 				id={"browse"}
-				className="form-control"
 				multiple
 				style={{ display: "none" }}
 				// value={post.image.name}
@@ -665,16 +659,14 @@ export default function UploadMediaDialog(props) {
 				{alerts.length > 0 &&
 
 					alerts.map((alert, index) => (
-						<MuiAlert
+						<Alert
 							key={alert.id}
-							variant="outlined"
-							elevation={0}
-							severity="warning"
+							severity="info"
 							sx={{ mt: 2 }}
 							onClose={() => onMediaAlertClose(index)}
 						>
 							{alert.message}
-						</MuiAlert>
+						</Alert>
 					))
 				}
 
@@ -746,7 +738,6 @@ export default function UploadMediaDialog(props) {
 					loading={uploadingMedia}
 					endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }} />}
 					disableElevation
-					// color="#3871da"
 					variant="contained"
 				>
 					{uploadFinished ? "OK" : "Upload"}
