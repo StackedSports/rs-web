@@ -45,7 +45,6 @@ const reducer = (state, action) => {
 
 export default function useMultiPageSelection_V2(data) {
     const [state, dispatch] = useReducer(reducer, initialState)
-    console.log(state)
 
     const onSelectionModelChange = (selection) => {
 
