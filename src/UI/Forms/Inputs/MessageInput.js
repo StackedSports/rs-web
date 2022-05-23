@@ -32,6 +32,9 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
+import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
+import { CircularProgress } from '@material-ui/core';
+import { Stack } from '@mui/material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
@@ -302,6 +305,26 @@ const InputReceivers = (props) => {
 
 const InputTime = (props) => <InputSelector icon={FaCalendarAlt} name={props.name} onClick={props.onClick} />
 
+// const InputMedia = (props) => {
+//     if (props.selected) {
+//         return (
+//             <InputSelected
+//                 variant={props.selected.type}
+//                 item={props.selected.item}
+//                 onClick={props.onSelectedClick}
+//                 onRemove={props.onRemove} />
+//         )
+//     } else {
+//         return (
+//             <InputSelector
+//                 icon={FaPlus}
+//                 name='Add Media'
+//                 large
+//                 onClick={props.onClick} />
+//         )
+//     }
+// }
+
 const InputMedia = (props) => {
     if (props.selected) {
         return (
@@ -313,11 +336,17 @@ const InputMedia = (props) => {
         )
     } else {
         return (
-            <InputSelector
-                icon={FaPlus}
-                name='Add Media'
-                large
-                onClick={props.onClick} />
+            props.loading ?
+                <Stack flex={1} alignItems="center" justifyContent="center">
+                    <CircularProgress style={{ margin: "0 auto" }} />
+                </Stack>
+                :
+                <FileDropZone
+                    style={{ margin: 0, padding: '50px 0' }}
+                    browseAction={props.browseAction}
+                    onDrop={props.onDrop}
+                />
+
         )
     }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 import TabList from '@mui/lab/TabList';
 import Tab from '@mui/material/Tab';
@@ -11,8 +11,11 @@ import MediaTable from 'UI/Tables/Media/MediaTable'
 import { usePlaceholders, useBoards, useMedias } from 'Api/Hooks'
 
 import useArray from 'Hooks/ArrayHooks';
+import { AppContext } from 'Context/AppProvider';
+
 
 import { findById } from 'utils/Helper'
+import { FaBullseye } from 'react-icons/fa';
 
 const tabs = [
     { id: 0, label: 'Media' },
@@ -20,6 +23,7 @@ const tabs = [
 ]
 
 export default function MediaSelectDialog(props) {
+    const app = useContext(AppContext)
     const placeholders = usePlaceholders(1, 25)
     const [placeholderSelectedId, setPlaceholderSelectedId] = useState('')
     // console.log(paginationConfig(1, 25))
@@ -31,18 +35,19 @@ export default function MediaSelectDialog(props) {
     const [selectionLabel, setSelectionLabel] = useState('')
     const [selectedItem, setSelectedItem] = useState(null)
     const [selectedType, setSelectedType] = useState('')
+    const [disableOnConfirmSelection, setDisableOnConfirmSelection] = useState(false)
 
     useEffect(() => {
-        if(mediaSelectedId === props.removedItem) {
+        if (mediaSelectedId === props.removedItem) {
             setMediaSelectedId('')
             setSelectionLabel('')
-        } else if(placeholderSelectedId === props.removedItem) {
+        } else if (placeholderSelectedId === props.removedItem) {
             setPlaceholderSelectedId('')
             setSelectionLabel('')
         }
 
     }, [props.removedItem])
-    
+
     const onConfirmSelection = (e) => {
         console.log('on confirm selection')
         props.onSelected(Object.assign({}, selectedItem), selectedType)
@@ -58,9 +63,15 @@ export default function MediaSelectDialog(props) {
 
         let selected = findById(selectedId, media.items)
         console.log(selected)
-        setSelectedItem(selected)
+        if (props.uniqueSelection && selection.length > 1) {
+            app.alert.setWarning("It is not possible to select more than one media.")
+            setDisableOnConfirmSelection(true)
+        } else {
+            setDisableOnConfirmSelection(false)
+            setSelectedItem(selected)
+        }
     }
-    
+
     const onPlaceholderSelectionChange = (selection) => {
         let selectedId = selection[0]
 
@@ -92,36 +103,37 @@ export default function MediaSelectDialog(props) {
 
     return (
         <SelectDialogTab
-          tabs={tabs}
-          tabsMarginLeft={18}
-          selectionLabel={selectionLabel}
-        //   loading={media.loading}
-          open={props.open}
-          onConfirmSelection={onConfirmSelection}
-          onSearch={onSearch}
-          onClearSearch={onClearSearch}
-          onClose={props.onClose}
+            tabs={tabs}
+            tabsMarginLeft={18}
+            selectionLabel={selectionLabel}
+            //   loading={media.loading}
+            open={props.open}
+            onConfirmSelection={onConfirmSelection}
+            onSearch={onSearch}
+            onClearSearch={onClearSearch}
+            onClose={props.onClose}
+            disableOnConfirmSelection={disableOnConfirmSelection}
         >
             <TabPanel value={0} index={0}>
-                <MediaTable mini 
-                  items={media.items}
-                  loading={media.loading}
-                  view={'grid'}
-                  type="media"
-                  onSelectionChange={onMediaSelectionChange}
-                  disablePagination
+                <MediaTable mini
+                    items={media.items}
+                    loading={media.loading}
+                    view={'grid'}
+                    type="media"
+                    onSelectionChange={onMediaSelectionChange}
+                    disablePagination
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
                 <MediaTable mini
-                  items={placeholders.items}
-                  loading={placeholders.loading}
-                  view={'grid'}
-                  type="placeholder"
-                  onSelectionChange={onPlaceholderSelectionChange}
-                  disablePagination
+                    items={placeholders.items}
+                    loading={placeholders.loading}
+                    view={'grid'}
+                    type="placeholder"
+                    onSelectionChange={onPlaceholderSelectionChange}
+                    disablePagination
                 />
             </TabPanel>
         </SelectDialogTab>
-    )    
+    )
 }

@@ -18,16 +18,68 @@ const Stat = (props) => (
     <Stack>
         <Typography
             variant="h6"
-            style={{ width: "100%", textAlign: "center", fontWeight: 'bold' }}
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 36 }}
         >
             {`${round(props.value / props.total * 100)}%`}
         </Typography>
         <Typography
             variant="subtitle2"
-            style={{ width: "100%", textAlign: "center" }}
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 18 }}
         >
             {`${props.label} (${props.value}/${props.total})`}
         </Typography>
+    </Stack>
+)
+
+const Count = (props) => (
+    <Stack>
+        <Typography
+            variant="h6"
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 16 }}
+        >
+            {props.value}
+        </Typography>
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 14 }}
+        >
+            {props.label}
+        </Typography>
+    </Stack>
+)
+
+const Status = ({ status }) => (
+    <Stack>
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Status: ${status?.status}`}
+        </Typography>  
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Message: ${status?.message}`}
+        </Typography>  
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Fetched: ${status?.fetched}`}
+        </Typography>   
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Analyzed: ${status?.analyzed}`}
+        </Typography>   
+        <Typography
+            variant="subtitle2"
+            style={{ width: "100%", textAlign: "center" }}
+        >
+            {`Found: ${status?.found}`}
+        </Typography> 
     </Stack>
 )
 
@@ -36,7 +88,7 @@ const TweetDetails = (props) => {
 		console.log("onSaveTweet")
 	}
 
-    const { metrics, likers, retweeters } = props.details
+    const { metrics, likes, retweets } = props.details
 
     return (
         <Stack ml={10} direction="row">
@@ -61,14 +113,20 @@ const TweetDetails = (props) => {
                         Tweet Details
                     </Typography>
 
-                    <Button
-                    variant="contained"
-                    name="+ Save"
-                    onClick={onSaveTweet}
-                    style={{
-                        width: "max-content",
-                    }}
-                    />
+                    <RenderIf condition={props.showSaveButton}>
+                        <Button
+                          variant="contained"
+                          name={props.details.saved ? 'Saved!' : 'Save'}
+                          onClick={props.onSaveTweet}
+                          loading={props.saving}
+                          style={{
+                            width: "max-content",
+                          }}
+                        />
+                    </RenderIf>
+
+
+                    
                 </Stack>
 
                 <TweetDisplay tweetId={props.tweetId}/>
@@ -90,9 +148,13 @@ const TweetDetails = (props) => {
                 <Stack spacing={3} p={2}>
                     <Stat
                       label="Retweet Rate"
-                      value={retweeters?.found || 0}
+                      value={retweets?.found || 0}
                       total={metrics?.retweets || 0}
                     />
+
+                    <RenderIf condition={retweets}>
+                        <Status status={retweets}/>
+                    </RenderIf>
                     {/* <Stat
                       label="Quote Tweet Rate"
                       value={10}
@@ -100,17 +162,12 @@ const TweetDetails = (props) => {
                     /> */}
                     <Stat
                       label="Likes Rate"
-                      value={likers?.found || 0}
+                      value={likes?.found || 0}
                       total={metrics?.likes || 0}
                     />
 
-                    <RenderIf condition={likers}>
-                        <Typography
-                            variant="subtitle2"
-                            style={{ width: "100%", textAlign: "center" }}
-                        >
-                            {`Fetched: ${likers?.fetched}, analyzed: ${likers?.analyzed}, found: ${likers?.found}`}
-                        </Typography>
+                    <RenderIf condition={likes}>
+                        <Status status={likes}/>
                     </RenderIf>
                     
                     
@@ -118,7 +175,14 @@ const TweetDetails = (props) => {
 
                 <Divider/>
 
-                
+                <RenderIf condition={metrics}>
+                    <Stack mt={2} direction="row" flex={1} justifyContent="space-around">
+                        <Count label="Likes" value={metrics?.likes}/>
+                        <Count label="Retweets" value={metrics?.retweets}/>
+                        <Count label="Quotes" value={metrics?.quotes}/>
+                        <Count label="Replies" value={metrics?.replies}/>
+                    </Stack>
+                </RenderIf>
 
                 {/* <Box sx={{ width: "100%" }}>
                     <Divider />
