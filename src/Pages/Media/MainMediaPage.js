@@ -44,7 +44,7 @@ export const MainMediaPage = (props) => {
 
     //TODO
     const onArchiveAction = async () => {
-        // const response = await archiveMedias(selectedMedias)
+        const response = await archiveMedias(selectedMedias)
         console.log("response", response)
     }
 
