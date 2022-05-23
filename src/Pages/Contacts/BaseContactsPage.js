@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import { AccountBox, Tune } from '@material-ui/icons';
@@ -10,17 +9,16 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import MainLayout from 'UI/Layouts/MainLayout';
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
-
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
+import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
     useStatuses,
@@ -67,6 +65,7 @@ export default function BaseContactsPage(props) {
     const [showPanelFilters, setShowPanelFilters] = useState(false)
 
     const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
+    const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
     const [selectedFilters, setSelectedFilters] = useState({})
 
 
@@ -257,16 +256,18 @@ export default function BaseContactsPage(props) {
         contacts.filter(filter)
     }
 
-    const onContactsSelectionChange = (selection) => {
+/*     const onContactsSelectionChange = (selection) => {
         // setSelectedContacts(selected)
         selectedContacts.onSelectionChange(selection)
-    }
+    } */
 
     const onSendMessageClick = (e) => {
-        console.log(selectedContacts)
+        /* console.log(selectedContacts)
 
         selectedContacts.saveData(contacts.items)
-        let selectedData = selectedContacts.getDataSelected()
+        let selectedData = selectedContacts.getDataSelected() */
+        let selectedData = contactsMultipageSelection.selectedData 
+
 
         if (props.onSendMessage)
             props.onSendMessage(selectedData)
@@ -301,7 +302,7 @@ export default function BaseContactsPage(props) {
 
     const boardEditedSuccess = (res) => {
         setOpenCreateBoardDialog(false)
-         app.alert.setSuccess('Board edited successfully!')
+        app.alert.setSuccess('Board edited successfully!')
         // board.refreshData()
         boards.refreshData()
         setShowPanelFilters(false)
@@ -309,7 +310,7 @@ export default function BaseContactsPage(props) {
     }
 
     const boardEditedFailure = (error) => {
-         app.alert.setError('Failed to edit board.')
+        app.alert.setError('Failed to edit board.')
         // setEditBoard(false)
     }
 
@@ -326,7 +327,7 @@ export default function BaseContactsPage(props) {
                 })
                 .catch(error => {
                     console.log(error)
-                     app.alert.setError('Failed to delete board.')
+                    app.alert.setError('Failed to delete board.')
                 })
                 .finally(() => setLoading(false))
         })
@@ -334,38 +335,40 @@ export default function BaseContactsPage(props) {
 
     const onTagsSelected = (selectedTagsIds) => {
         setLoadingTags(true)
-        selectedContacts.saveData(contacts.items)
-        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
+/*         selectedContacts.saveData(contacts.items)
+        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
+        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
 
         // console.log(selectedTagsIds, contactIds)
 
         addTagsToContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                     app.alert.setSuccess('Contacts tagged successfully!')
+                    app.alert.setSuccess('Contacts tagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
+                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
 
     const onRemoveTagsSelected = (selectedTagsIds) => {
         setLoadingTags(true)
-        selectedContacts.saveData(contacts.items)
-        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
+        /* selectedContacts.saveData(contacts.items)
+        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
+        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
 
         // console.log(selectedTagsIds, contactIds)
 
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
                 if (res.error === 0) {
-                     app.alert.setSuccess('Contacts untagged successfully!')
+                    app.alert.setSuccess('Contacts untagged successfully!')
                     setOpenSelectTagDialog(false)
                 }
                 else
-                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
+                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
             .finally(() => setLoadingTags(false))
     }
@@ -415,13 +418,13 @@ export default function BaseContactsPage(props) {
                             {' '}contacts
                         </span>
                     </Stack>
-                    {selectedContacts.count > 0 &&
+                    {contactsMultipageSelection.count > 0 &&
                         <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
                                 <span style={{ color: '#3871DA' }}>
-                                    {selectedContacts.count}
+                                    {contactsMultipageSelection.count}
                                 </span>
-                                {' '}contact{selectedContacts.count > 1 && "s"} selected
+                                {' '}contact{contactsMultipageSelection.count > 1 && "s"} selected
                             </span>
                         </Stack>
                     }
@@ -539,6 +542,12 @@ export default function BaseContactsPage(props) {
                 selection={selectedContacts.items}
                 onSelectionChange={onContactsSelectionChange}
                 onPageChange={onPageChange}
+                columnsControl={props.columnsControl}
+            />
+            <ContactsTableServerMode
+                contacts={contacts.items}
+                pagination={contacts.pagination}
+                loading={contacts.loading}
                 columnsControl={props.columnsControl}
             />
 

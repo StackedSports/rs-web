@@ -3,7 +3,6 @@ import { Box, Divider } from '@material-ui/core';
 import { Stack, Typography } from '@mui/material';
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog';
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 
 import { followOnTwitter } from 'Api/Endpoints';
@@ -16,11 +15,6 @@ const FollowOnTwitterDialog = (props) => {
   const [following, setFollowing] = useState(false)
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([]);
 
-
-  const contacts = props.contacts?.filter(contact => {
-    if (props.selectedContacts.includes(contact.id))
-      return contact
-  })
 
   const onSelectionChange = (selected) => {
     setSelectedTeamMembers(selected)
@@ -110,10 +104,10 @@ const FollowOnTwitterDialog = (props) => {
             disableColumnMenu
             disableColumnFilter
             disableColumnSelector
-            contacts={contacts}
+            contacts={props.contacts}
             columnsControl={visibleTableRows}
-            onSelectionModelChange={props.selectedContacts}
-            onSelectionChange={props.onSelectionChange}
+            selectionModel={props.selectedContacts}
+            onSelectionModelChange={props.onSelectionChange}
           />
         </Stack>
 
@@ -135,8 +129,6 @@ const FollowOnTwitterDialog = (props) => {
           </Stack>
           <Typography sx={{ fontWeight: 500 }}>Select the accounts you would like to have follow the selected contacts.</Typography>
         </Stack>
-
-        {/* <Divider style={{ gridColumn: "1/3" }} /> */}
 
       </Box>
 

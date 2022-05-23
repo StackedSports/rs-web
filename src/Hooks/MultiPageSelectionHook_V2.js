@@ -21,7 +21,7 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 selectedIds: action.selectedIds,
-                selectedData: state.selectedData.filter(data => !action.data.includes(data)),
+                selectedData: state.selectedData.filter(data => action.selectedIds.includes(data.id)),
                 count: action.selectedIds.length,
             }
         case 'removeById':
@@ -47,17 +47,14 @@ export default function useMultiPageSelection_V2(data) {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const onSelectionModelChange = (selection) => {
-
         let newIds = lodash.difference(selection, state.selectedIds)
-        let removedIds = lodash.difference(state.selectedIds, selection)
 
         if (data && newIds.length > 0) {
             const newData = data.filter(item => newIds.includes(item.id))
             dispatch({ type: 'add', selectedIds: selection, data: newData })
         }
-        if (data && removedIds.length > 0) {
-            const removedData = data.filter(item => removedIds.includes(item.id))
-            dispatch({ type: 'remove', selectedIds: selection, data: removedData })
+        else {
+            dispatch({ type: 'remove', selectedIds: selection })
         }
     }
 

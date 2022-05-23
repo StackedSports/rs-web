@@ -5,12 +5,9 @@ import Stack from '@mui/material/Stack';
 import { AccountBox, Tune } from '@material-ui/icons';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import MainLayout from 'UI/Layouts/MainLayout';
-import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
@@ -20,9 +17,7 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 
 import { AppContext } from 'Context/AppProvider'
-import { mapSorting } from 'UI/Tables/Contacts/DataGridConfig'
 
-import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
@@ -67,7 +62,6 @@ export default function ContactsPage(props) {
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
-    const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -259,16 +253,11 @@ export default function ContactsPage(props) {
         contacts.filter(filter)
     }
 
-    const onContactsSelectionChange = (selection) => {
-        //setSelectedContacts(selection)
-        selectedContacts.onSelectionChange(selection)
-    }
-
     const onSendMessageClick = (e) => {
         // console.log(selectedContacts)
         // selectedContacts.saveData(contacts.items)
 
-       // app.sendMessageToContacts(selectedContacts.getDataSelected())
+        // app.sendMessageToContacts(selectedContacts.getDataSelected())
         app.sendMessageToContacts(multipageSelection.selectedData)
     }
 
@@ -383,7 +372,7 @@ export default function ContactsPage(props) {
     }
 
     const onPageChange = (page) => {
-       // selectedContacts.saveData(contacts.items)
+        // selectedContacts.saveData(contacts.items)
         contacts.pagination.getPage(page)
     }
 
@@ -564,7 +553,7 @@ export default function ContactsPage(props) {
                 loading={contacts.loading}
                 apiRef={gridApiRef}
                 onSortModelChange={onSortingChange}
-                 {...multipageSelection}
+                {...multipageSelection}
             />
 
             <CreateBoardDialog
@@ -594,15 +583,11 @@ export default function ContactsPage(props) {
 
             <FollowOnTwitterDialog
                 open={openFollowOnTwitterDialog}
-                contacts={contacts.items}
-                onPageChange={onPageChange}
+                contacts={multipageSelection.selectedData}
                 teamMembers={teamMembers.items}
-                pagination={contacts.pagination}
-                onSortingChange={onSortingChange}
                 selectedContacts={multipageSelection.selectionModel}
                 onSelectionChange={multipageSelection.onSelectionModelChange}
                 onClose={() => setOpenFollowOnTwitterDialog(false)}
-            // onConfirm={}
             />
         </MainLayout>
     )

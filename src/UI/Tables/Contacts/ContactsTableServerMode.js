@@ -50,8 +50,8 @@ export default function ContactsTableServerMode({
                 rows={contacts || []}
                 rowCount={pagination?.totalItems}
                 columns={columns}
-                paginationMode='server'
-                sortingMode='server'
+                paginationMode={pagination && 'server'}
+                sortingMode={pagination && 'server'}
                 // filterMode='server' it need to be implemented, so filter is desabled
                 disableColumnFilter
                 pagination
