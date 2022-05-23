@@ -39,7 +39,6 @@ export const MediaDetailsPage = () => {
     const [itemName, setItemName] = useState('')
     const [openImageModal, setOpenImageModal] = useState(false)
 
-    // http://localhost:3000/media/media/details/353525 remove placeholder test
     //http://localhost:3000/media/media/details/327184 test
     useEffect(() => {
         let mounted = true
@@ -154,6 +153,14 @@ export const MediaDetailsPage = () => {
             updateMedia(media.id, { owner: newOwner.id }).then(() => {
                 setItemOwner([newOwner])
                 alert.setSuccess("Media owner updated to: " + getFullName(newOwner))
+            }
+            ).catch(err => {
+                alert.setWarning(err.message)
+            })
+        } else {
+            updateMedia(media.id, { owner: null }).then(() => {
+                setItemOwner([])
+                alert.setSuccess("Media owner removed")
             }
             ).catch(err => {
                 alert.setWarning(err.message)

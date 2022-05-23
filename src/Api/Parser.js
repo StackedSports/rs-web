@@ -142,9 +142,7 @@ export const getFilterMessagesCriteria = (filters) => {
             criteria['message_status'] = [`Error`, `Sent`, `Completed`, `Cancelled`]
             // criteria['message_status'] = [`Sent`]
         } else {
-            filters.status.forEach(status => {
-                criteria['message_status'].push(getStatus(status))
-            })
+            criteria['message_status'].push(getStatus(filters.status))
         }
     }
 
@@ -222,6 +220,9 @@ export const getFilterMediasCriteria = (filters) => {
 
     if (filters.owner) {
         criteria['owner_id'] = filters.owner[0].id
+    }
+    if (filters.dateUploaded) {
+        criteria['created_at'] = filters.dateUploaded[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
 
     // Blocked by api

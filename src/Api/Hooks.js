@@ -1043,12 +1043,12 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         // console.log('getting media')
         setLoading(true)
-        
-       cancelToken.current = axios.CancelToken.source()
+
+        cancelToken.current = axios.CancelToken.source()
 
         const get = objectNotNull(filters) ? filterMedias : getMedias
 
-        get(pagination.currentPage, pagination.itemsPerPage, {...filters, cancelToken: cancelToken.current.token})
+        get(pagination.currentPage, pagination.itemsPerPage, { ...filters, cancelToken: cancelToken.current.token })
             .then(([media, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -1155,13 +1155,15 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [messages, setMessages] = useState([])
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
+    const cancelToken = useRef(axios.CancelToken.source())
 
     const [filters, setFilters] = useState(initialFilters || null)
 
     useEffect(() => {
         setLoading(true)
+        cancelToken.current = axios.CancelToken.source()
 
-        getMessages(pagination.currentPage, pagination.itemsPerPage, filters)
+        getMessages(pagination.currentPage, pagination.itemsPerPage, { ...filters, cancelToken: cancelToken.current.token })
             .then(([messages, pagination]) => {
                 //console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
@@ -1169,10 +1171,12 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
                 setPagination(pagination)
             })
             .catch(error => {
-                console.log(error)
-                setError(error)
+                if (!axios.isCancel(error))
+                    setError(error)
             })
             .finally(() => setLoading(false))
+
+        return () => cancelToken.current.cancel("useEffect cleanup")
 
     }, [pagination.currentPage, filters])
 

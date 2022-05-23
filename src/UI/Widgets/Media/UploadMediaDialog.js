@@ -232,64 +232,64 @@ export default function UploadMediaDialog(props) {
 				tempFiles.push(file)
 				tempAssociated.push("loading")
 				tempUploadStatus.push("none")
-			}
-		}
+            }
+        }
 
-		if (files.length != tempFiles.length) {
-			setAlerts.push("One or more files were not added since they do not match the file upload criteria")
+        if (files.length != tempFiles.length) {
+            setAlerts.push("One or more files were not added since they do not match the file upload criteria")
 
-			// setMediaAlert({
-			//   message: ,
-			//   visible: true
-			// })
-		}
+            // setMediaAlert({
+            //   message: ,
+            //   visible: true
+            // })
+        }
 
-		const initialAssociated = Object.assign([], associatedPeople)
-		const initialUploadStatus = Object.assign([], uploadStatus)
+        const initialAssociated = Object.assign([], associatedPeople)
+        const initialUploadStatus = Object.assign([], uploadStatus)
 
-		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
-			.then(() => {
+        handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)   
+            .then(() => {
 
-				//console.log(tempFiles)
-				//console.log(tempAssociated)
+                //console.log(tempFiles)
+                //console.log(tempAssociated)
 
-				setAssociatedPeople(initialAssociated.concat(tempAssociated))
-				setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
-				// setDropFiles(dropFiles.concat(tempFiles));
-			})
+                setAssociatedPeople(initialAssociated.concat(tempAssociated))
+                setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
+                // setDropFiles(dropFiles.concat(tempFiles));
+            })
 
-		setAssociatedPeople(associatedPeople.concat(tempAssociated))
-		setDropFiles(dropFiles.concat(tempFiles));
-		setUploadStatus(uploadStatus.concat(tempUploadStatus))
-		// setAssociatedPeople(associated)
-		// setDropFiles(tempFiles);
-	}
+        setAssociatedPeople(associatedPeople.concat(tempAssociated))
+        setDropFiles(dropFiles.concat(tempFiles));
+        setUploadStatus(uploadStatus.concat(tempUploadStatus))
+        // setAssociatedPeople(associated)
+        // setDropFiles(tempFiles);
+    }
 
-	const handleFileChange = (e) => {
-		handleImportFiles(e.target.files)
-		return
-	}
+    const handleFileChange = (e) => {
+        handleImportFiles(e.target.files)
+        return
+    }
 
-	const onDrop = (e) => {
-		e.preventDefault();
-		handleImportFiles(e.dataTransfer.files)
-	}
+    const onDrop = (e) => {
+        e.preventDefault();
+        handleImportFiles(e.dataTransfer.files)
+    }
 
-	const deleteMedia = (index) => {
-		let tempFiles = Object.assign([], dropFiles)
-		let tempAssociated = Object.assign([], associatedPeople)
-		let tempUploadStatus = Object.assign([], uploadStatus)
-
-		tempFiles.splice(index, 1)
-		tempAssociated.splice(index, 1)
-		tempUploadStatus.splice(index, 1)
-
-		setDropFiles(tempFiles)
-		setAssociatedPeople(tempAssociated)
-		setUploadStatus(tempUploadStatus)
-	}
-
-	const onUploadMedia = () => {
+    const deleteMedia = (index) => {
+        let tempFiles = Object.assign([], dropFiles)
+        let tempAssociated = Object.assign([], associatedPeople)
+        let tempUploadStatus = Object.assign([], uploadStatus)
+    
+        tempFiles.splice(index, 1)
+        tempAssociated.splice(index, 1)
+        tempUploadStatus.splice(index, 1)
+    
+        setDropFiles(tempFiles)
+        setAssociatedPeople(tempAssociated)
+        setUploadStatus(tempUploadStatus)
+    }
+    
+    const onUploadMedia = () => {
 		// console.log(selectedTags)
 
 		// return

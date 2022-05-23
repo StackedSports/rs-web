@@ -103,9 +103,16 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
     const showMedia = hasMedia || hasMediaPlaceholder
 
-    const mediaPlaceholder = useMemo(() => {
-        if(!recipients)
-            return message.media_placeholder
+    const getPlaceholder = () => {
+        console.log(recipients)
+
+        if(!recipients) {
+            // console.log({ ...message.media_placeholder, media: message.media_placeholder_preview })
+
+            let media = message.media_placeholder_preview?.map(url => ({ urls: { thumb: url }}))
+
+            return { ...message.media_placeholder, media }
+        }
 
         let mediaFiles = []
 
@@ -135,7 +142,11 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             ...message.media_placeholder,
             media: mediaFiles
         }
-    }, [message, recipients])
+    }
+
+    // const mediaPlaceholder = useMemo(() => {
+        
+    // }, [message, recipients])
 
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
@@ -149,7 +160,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                         <MediaPreview
                           cardStyle={{ marginLeft: 15, marginRight: 15 }}
                           type={hasMedia ? 'media' : 'placeholder'}
-                          item={hasMedia ? message.media : mediaPlaceholder}/>
+                          item={hasMedia ? message.media : getPlaceholder()}/>
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
@@ -169,7 +180,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }}/>
                 </div>
-                <Grid item direction="column">
+                <Grid item >
                     <h3>Message Stats</h3>
 
                     {messageStats && (
@@ -190,3 +201,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 } 
 
 export default MessagePreview
+
+// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/q896zrr42f5zxwz5401cifq9gdmc/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T175218Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=6fc5249be04f6f06b46552661cbb367446b344f7e881c358254e2f707dc3943c
+
+// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/j3unrjgqooyvhbw04v6eovyp8qxl/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T170242Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=d4f37780c8a08657cd480f8b10abb79aa6ddfe795aa66ca69b0c80b29ef58899

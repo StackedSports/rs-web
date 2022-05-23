@@ -6,7 +6,7 @@ import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typogra
 import { Stack } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
-import { addDoc, setDoc, collection, doc, onSnapshot } from 'firebase/firestore'
+import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, updateDoc, query, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 
 import { db, functions } from 'Api/Firebase'
@@ -26,12 +26,16 @@ const TweetRankingPage = (props) => {
 	// const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
 	// const [tweetId, setTweetId] = useState('1523330156374282240')
 
-	const [input, setInput] = useState('https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg')
-	const [tweetId, setTweetId] = useState('1526584454629601282')
+	// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
+
+	const [input, setInput] = useState('')
+	const [tweetId, setTweetId] = useState(null)
 	// const [tweetDetails, setTweetDetails] = useState(null)
 
 	const [analyzesLoading, setAnalyzesLoading] = useState(false)
 	const [analyzesDetails, setAnalyzesDetails] = useState(false)
+
+	const [savingTweet, setSavingTweet] = useState(false)
 
 	const [tweet, setTweet] = useState({})
 	const [openTweet, setOpenTweet] = useState(true)
@@ -39,7 +43,7 @@ const TweetRankingPage = (props) => {
 	const listener = useRef(null)
 	const listener2 = useRef(null)
 
-	console.log(user)
+	// console.log(user)
 
 	useEffect(() => {
 		if(!tweetId || tweetId === '')
@@ -71,9 +75,6 @@ const TweetRankingPage = (props) => {
 		}
 	}, [listener.current])
 
-	const onTopActionClick = () => {
-		console.log("onTopActionClick")
-	}
 
 	const onTweetSearch = () => {
 		console.log("onTweetSearch")
@@ -92,21 +93,50 @@ const TweetRankingPage = (props) => {
 
 		// let parts = value.split('/')
 
-		let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
-		let parts = tweet.split('/')
-		console.log(parts)
+		// let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
+		// let parts = tweet.split('/')
+		// console.log(parts)
 
 		// https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A
 
 		let queryParams = value.split('/').slice(-1)
 		// console.log(queryParams[0])
-		let tweetId = queryParams[0].split('?')[0]
+		let inputTweetId = queryParams[0].split('?')[0]
 
-		console.log(tweetId)
-		setTweetId(tweetId)
+		console.log(inputTweetId)
+
+		if(tweetId === inputTweetId) {
+			console.log('tweet has already been requested')
+			return
+		}
+
+		console.log('ids didnt match')
+
+		// return
+
+		setTweetId(inputTweetId)
 		setOpenTweet(true)
 
-		analyzeTweet(tweetId)
+		// Check to see if analyzes exists
+
+		let once = true
+
+		const resultRef = doc(db, 'orgs', user.team.org.id, 'tweet-ranking', inputTweetId)
+		const unsub = onSnapshot(resultRef,	snapshot => {
+			const data = snapshot.data()
+			console.log(data)
+
+			if(data) {
+				setAnalyzesDetails(data)
+			} else if(once) {
+				once = false
+				analyzeTweet(inputTweetId, resultRef)
+			}
+		})
+
+		listener.current = unsub
+
+		
 
 		// const getTweetData = httpsCallable(functions, 'getTweetData')
 		// getTweetData({ tweetId, userToken: user.token })
@@ -158,29 +188,24 @@ const TweetRankingPage = (props) => {
 		// listener.current = unsub
 	}
 	
-	const analyzeTweet = (tweetId) => {
+	const analyzeTweet = (tweetId, requestRef) => {
 
 		// 'requests/tweet/ranking/{id}'
 
-		const requestRef = doc(collection(db, 'requests', 'tweet', 'ranking'))
-		setDoc(requestRef, { tweetId, id: requestRef.id, orgId: user.team.org.id })
+		// orgs/{orgId}/tweet-ranking/{requestId}
+
+		
+
+		const orgId = user.team.org.id
+
+		// const requestRef = doc(collection(db, 'orgs', orgId, 'tweet-ranking'))
+		// const requestRef = doc(db, 'orgs', orgId, 'tweet-ranking', tweetId)
+		setDoc(requestRef, { tweetId, id: tweetId, orgId })
 			.then(() => {
 				console.log('analyzes request made')
 				setAnalyzesLoading(true)
 			})
 			.catch(err => console.log(err))
-
-		const resultRef = doc(db, 'requests', 'tweet', 'ranking', requestRef.id, 'results', 'result')
-		const unsub = onSnapshot(resultRef,	snapshot => {
-			const data = snapshot.data()
-			console.log(data)
-
-			if(data) {
-				setAnalyzesDetails(data)
-			}
-		})
-
-		listener.current = unsub
 	}
 
 	const syncContacts = () => {
@@ -228,12 +253,28 @@ const TweetRankingPage = (props) => {
 		console.log("onAddAnotherTweet")
 	}
 
+	const onSaveTweet = (e) => {
+		return
+
+		setSavingTweet(true)
+
+		const tweetRef = doc(db, 'orgs', user.team.org.id, 'tweet-ranking', tweetId)
+		updateDoc(tweetRef, { saved: true })
+			.then(() => {
+
+			})
+			.catch(err => {
+
+			})
+			.finally(() => {
+				setSavingTweet(false)
+			})
+	}
+
 
 	return (
 		<TweetPage
 		  title="Post Deep Dive"
-		  topActionName="+ New Search"
-		  onTopActionClick={onTopActionClick}
 		>
 			<Stack spacing={3}>
 				<Divider />
@@ -262,6 +303,20 @@ const TweetRankingPage = (props) => {
 					  }}
 					/>
 				</RenderIf>
+
+				<RenderIf condition={!tweetId || tweetId === ''}>
+					<Stack sx={{  }} alignItems="center" justifyContent="center">
+                        <p style={{ fontWeight: 'bold', marginTop: 20 }}> 
+                            Paste a Tweet link above to get started
+                        </p>
+                        <p style={{ fontSize: 16, margin: 0 }}>
+                            We will analyze your tweet against your Contacts
+                        </p>
+                        <p style={{ fontSize: 16, margin: 0 }}>
+                            so you can see who is engaging with your content
+                        </p>
+                    </Stack>
+				</RenderIf>
 				
 				{/* {input !== '' && 
 					<Button
@@ -286,18 +341,23 @@ const TweetRankingPage = (props) => {
 				}}
 				/> */}
 
-				<Collapse
-				  in={openTweet}
-				  style={{
-					border: '1px solid #ddd'
-				  }}
-				>
-				  	<TweetDetails 
-					  tweetId={tweetId}
-					  loading={analyzesLoading}
-					  details={analyzesDetails}
-					/>
-				</Collapse>
+				<RenderIf condition={tweetId && tweetId !== ''}>
+					<Stack
+						// in={openTweet}
+					  style={{
+						border: '1px solid #ddd'
+					  }}
+					>
+						<TweetDetails 
+						  tweetId={tweetId}
+						  loading={analyzesLoading}
+						  details={analyzesDetails}
+						  saving={savingTweet}
+						  onSaveTweet={onSaveTweet}
+						//   showSaveButton
+						/>
+					</Stack>
+				</RenderIf>
 			</Stack >
 		</TweetPage >
 	)
