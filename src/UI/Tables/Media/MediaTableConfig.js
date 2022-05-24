@@ -11,9 +11,9 @@ const nameMedia = {
     flex: 3,
     valueGetter: (params) => params.row.name || params.row.file_name,
     renderCell: (params) => (
-        <Link 
-          style={{ color:'inherit' }} 
-          to={`${mediaRoutes.mediaDetails}/${params.row.id}`}
+        <Link
+            style={{ color: 'inherit' }}
+            to={`${mediaRoutes.mediaDetails}/${params.row.id}`}
         >
             {params.value}
         </Link>
@@ -26,14 +26,21 @@ const namePlaceholder = {
     // width: 150,
     flex: 3,
     valueGetter: (params) => params.row.name || params.row.file_name,
-    renderCell: (params) => <Link style={{color:'inherit', textDecoration:'none'}} to={`${mediaRoutes.placeholderDetails}/${params.row.id}`}>{params.value}</Link>,
+    renderCell: (params) => <Link style={{ color: 'inherit', textDecoration: 'none' }} to={`${mediaRoutes.placeholderDetails}/${params.row.id}`}>{params.value}</Link>,
 }
 
 const placeholderMediaCount = {
     field: 'media',
     headerName: 'File Count',
-    flex:1,
+    flex: 1,
     valueGetter: (params) => params.row.media.length,
+}
+
+const associatedTo = {
+    field: 'associatedTo',
+    headerName: 'Associated to',
+    flex: 2,
+    valueGetter: (params) => params.row.contact ? params.row.contact.first_name + ' ' + params.row.contact.last_name : ''
 }
 
 const file = {
@@ -42,11 +49,11 @@ const file = {
     // width: 100,
     flex: 1,
     renderCell: (params) => (
-        <img 
-          height="50px" 
-          width="50px" 
-          style={{ objectFit: 'contain' }} 
-          src={params.value?.original} 
+        <img
+            height="50px"
+            width="50px"
+            style={{ objectFit: 'contain' }}
+            src={params.value?.original}
         />
     ),
 }
@@ -62,7 +69,7 @@ const owner = {
 
 const updatedAt = {
     field: 'updated_at',
-    type:'date',
+    type: 'date',
     headerName: 'Last Modified',
     valueGetter: (params) => formatDate(new Date(params.value), 'short', 'short'),
     flex: 1,
@@ -72,6 +79,7 @@ const updatedAt = {
 // Reusing same properties
 export const columnsMedias = [
     nameMedia,
+    associatedTo,
     file,
     owner,
     updatedAt,

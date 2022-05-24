@@ -170,7 +170,7 @@ const MessageDetailsPage = (props) => {
         setDisplayTagDialog(true)
         setTagging('message')
     }
-
+    console.log(message.item)
     const onSendMessageClick = () => {
         console.log('send')
 
@@ -431,7 +431,7 @@ const MessageDetailsPage = (props) => {
             actions.push(recipientActions)
         }
 
-        if(message.item.status === 'In Progress' || message.item.status === 'Pending') {
+        if (message.item.status === 'In Progress' || message.item.status === 'Pending') {
             actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
         }
 
