@@ -579,7 +579,7 @@ export default function MessageCreatePage(props) {
             const getPlatf = (plat) => {
                 switch (plat) {
                     case 'Twitter Dm': return 'Twitter'
-                    case 'SMS/MMS': return 'SMS'
+                    case 'SMS/MMS': return 'RS Text'
                     default: return plat
                 }
             }

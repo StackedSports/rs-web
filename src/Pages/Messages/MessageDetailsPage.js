@@ -176,7 +176,7 @@ const MessageDetailsPage = (props) => {
 
         // return
 
-        sendMessage(message.item.id)
+        sendMessage(message.item)
             .then(res => {
                 console.log(res)
                 alert.setSuccess('Message queued successfully!')

@@ -714,8 +714,18 @@ export const removeRecipients = (messageId, recipientsId) => {
     })
 }
 
-export const sendMessage = (messageId) => {
-    return updateMessage(messageId, { status: 'Pending' })
+export const sendMessage = (message) => {
+    let payload = {
+        status: 'Pending',
+        user_id: message.sender.id,
+    }
+
+    if(message.send_as_coach)
+        payload['send_as_coach'] = message.send_as_coach
+
+    // console.log(payload)
+
+    return updateMessage(message.id, payload)
 }
 
 export const deleteMessage = (messageId) => {
