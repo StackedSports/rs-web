@@ -29,8 +29,8 @@ const OrganizationSettingsPage = (props) => {
     console.log(user)
 
     const initialValues = {
-        organization: user.team.org.name,
-        teamName: user.team.org.nickname,
+        organization: user?.team.org.name,
+        teamName: user?.team.org.nickname,
         address: "",
         city: "",
         state: "",

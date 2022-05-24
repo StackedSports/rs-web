@@ -79,6 +79,7 @@ const AuthProvider = (props) => {
         apiLogout()
             .then(res => {
                 console.log(res)
+                app.redirect('/')
                 setUser(null)
                 localStorage.removeItem('user')
             })
@@ -86,10 +87,11 @@ const AuthProvider = (props) => {
                 console.log(error)
                 // TODO: only temporary, don't know if this should
                 // still be here
+                app.redirect('/')
                 setUser(null)
                 localStorage.removeItem('user')
             })
-            .finally(() => app.redirect('/'))
+            // .finally(() => app.redirect('/'))
         // localStorage.removeItem('user')
 
         setUser(null)

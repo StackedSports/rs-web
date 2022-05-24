@@ -48,7 +48,7 @@ const DataTable = (props) => {
               onStateChange={props.onStateChange}
               autoHeight={props.mini ? false : true}
               disableSelectionOnClick={props.disableSelectionOnClick ? true : false}
-              rows={props.items}
+              rows={props.items || []}
               columns={props.columns}
               checkboxSelection={props.checkboxSelection}
               selectionModel={props.selection}
