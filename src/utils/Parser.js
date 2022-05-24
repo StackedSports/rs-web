@@ -3,36 +3,36 @@ import { getHours, getMinutes } from "date-fns";
 import { getCoachLabel } from "./Data";
 
 export const formatPhoneNumber = (str) => {
-	if(!str) return ''
+	if (!str) return ''
 
 	// console.log(str)
 
-    //Filter only numbers from the input
-    let cleaned = ("" + str).replace(/\D/g, "");
+	//Filter only numbers from the input
+	let cleaned = ("" + str).replace(/\D/g, "");
 
-    //Check if the input is of correct
-    let match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+	//Check if the input is of correct
+	let match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
 
-    if (match) {
-      //Remove the matched extension code
-      //Change this to format for any country code.
-      let intlCode = match[1] ? "+1 " : "";
-      return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
-    }
+	if (match) {
+		//Remove the matched extension code
+		//Change this to format for any country code.
+		let intlCode = match[1] ? "+1 " : "";
+		return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+	}
 
-    return str;
+	return str;
 };
 
 export const constructProperty = (item, def) => {
-	if(typeof item == 'string') {
+	if (typeof item == 'string') {
 		return item
 	}
 
-	if(!def) {
+	if (!def) {
 		return null
 	}
 
-	if(typeof def == 'string' && def.includes('.')) {
+	if (typeof def == 'string' && def.includes('.')) {
 		let parts = def.split('.')
 
 		let tmp = item
@@ -42,7 +42,7 @@ export const constructProperty = (item, def) => {
 		return tmp
 	}
 
-	if(typeof def == 'string') {
+	if (typeof def == 'string') {
 		return item[def]
 	}
 
@@ -62,10 +62,10 @@ export const constructProperty = (item, def) => {
 
 export const getHour = (date) => {
 	let h = date.getHours()
-	
-	if(h > 12)
+
+	if (h > 12)
 		return h - 12
-	else if(h == 0)
+	else if (h == 0)
 		return 12
 	else
 		return h
@@ -73,8 +73,8 @@ export const getHour = (date) => {
 
 export const getPeriod = (date) => {
 	let h = date.getHours()
-	
-	if(h > 12)
+
+	if (h > 12)
 		return 'PM'
 	else
 		return 'AM'
@@ -89,36 +89,78 @@ export const deconstructDate = (date) => {
 }
 
 export const getFullName = (contact) => {
-	if(!contact)
+	if (!contact)
 		return ''
 
-	if(contact.full_name)
+	if (contact.full_name)
 		return contact.full_name
 
 	return `${contact.first_name || ''} ${contact.last_name || ''}`
 }
 
-export const getMessageStatusLabel = (status) => {
-	if(status === 'Pending')
-		return 'Scheduled'
-	else
-		return status
+// export const getMessageStatusLabel = (status) => {
+// 	if(status === 'Pending')
+// 		return 'Scheduled'
+// 	else
+// 		return status
+// }
+export const getMessageStatusLabel = (status, platform) => {
+	let message = status
+	switch (true) {
+		case (status === 'Error' && platform === 'Twitter DM'):
+			message = 'Message Failed - Error'
+			break;
+		// case (status === 'Error' && platform === 'Twitter DM'):
+		//     message = 'Complete with some errors'//??
+		//     break;
+		case (status === 'Error' && platform === 'Twitter')://
+			message = 'Message Failed - Error'
+			break;
+		case (status === 'Sent' && platform === 'Twitter DM'):
+			message = 'Message Completed'
+			break;
+		case (status === 'Complete' && platform === 'Personal Text'):
+			message = 'Message Complete'
+			break;
+		case (status === 'Error' && platform === 'Personal Text'):
+			message = 'Message Completed'
+			break;
+		case (status === 'In Progress' && platform === 'Personal Text'):
+			message = 'Message ready to be sent by sender.'
+			break;
+		case (status === 'Cancelled' && platform === 'Personal Text'):
+			message = 'Completed with some skipped messages'
+			break;
+		case (status === 'Deleted' && platform === 'All'):
+			message = 'Message Archived'
+			break;
+		case (status === 'Draft' && platform === 'All'):
+			message = 'Draft'
+			break;
+		case (status === 'Pending' && platform === 'All'):
+			message = 'Message Scheduled'
+			breack;
+		case (status === 'In Progress' && platform === 'MS & TW DM'):
+			message = 'Message sending in progress.'
+			breack;
+	}
+	return message
 }
 export const getMessagePlatformLabel = (platform) => {
-	if(!platform)
+	if (!platform)
 		return '--'
 
-	switch(platform.name) {
+	switch (platform.name) {
 		case 'Twitter': return 'Twitter Dm'
 		default: return platform.name
 	}
 }
 export const getMessageSenderPlatformLabel = (message) => {
-	if(!message.platform)
+	if (!message.platform)
 		return ''
 
 	//console.log(`--${message.platform.name}--`)
-	switch(message.platform.name) {
+	switch (message.platform.name) {
 		case 'Twitter': return `(@${message.sender.twitter_profile.screen_name})`
 		default: return `(${formatPhoneNumber(message.sender.phone)})`
 	}
@@ -128,7 +170,7 @@ export const getMessageSenderLabel = (message) => {
 	let coach = getCoachLabel(message.send_as_coach)
 	let sender = `${getFullName(message.sender)} ${getMessageSenderPlatformLabel(message)}`
 
-	if(coach !== '')
+	if (coach !== '')
 		return `${coach} or ${sender}`
 	else
 		return `${sender}`
@@ -138,13 +180,13 @@ export const getMessageRecipientsLabel = (recipients) => {
 	let list = []
 	let label = ''
 
-	if(recipients.filter_list) {
+	if (recipients.filter_list) {
 		recipients.filter_list.forEach(filter => {
 			list.push(filter.name)
 		})
 	}
 
-	if(recipients.contact_list) {
+	if (recipients.contact_list) {
 		recipients.contact_list.forEach(contact => {
 			list.push(getFullName(contact))
 		})
@@ -153,7 +195,7 @@ export const getMessageRecipientsLabel = (recipients) => {
 	list.forEach((item, index) => {
 		label += item
 
-		if(index < list.length - 1)
+		if (index < list.length - 1)
 			label += ', '
 	})
 
@@ -161,20 +203,20 @@ export const getMessageRecipientsLabel = (recipients) => {
 }
 
 export const getMessageRecipientsLabelArray = (recipients) => {
-	if(!recipients)
+	if (!recipients)
 		return ['--']
 
 	let list = []
 	let array = []
 
-	if(recipients.filter_list && recipients.filter_list) {
+	if (recipients.filter_list && recipients.filter_list) {
 		recipients.filter_list.forEach(filter => {
 			list.push(`${filter.name} (${filter.contacts.length})`)
 		})
 	}
 
-	if(recipients.contact_list && recipients.contact_list) {
-		if(recipients.contact_list.length > 5) {
+	if (recipients.contact_list && recipients.contact_list) {
+		if (recipients.contact_list.length > 5) {
 			list.push(`${recipients.contact_list.length} Individual Contacts`)
 		} else {
 			recipients.contact_list.forEach(contact => {
@@ -183,13 +225,13 @@ export const getMessageRecipientsLabelArray = (recipients) => {
 		}
 	}
 
-	if(list.length === 0)
+	if (list.length === 0)
 		return ['--']
 
 	list.forEach((item, index) => {
 		let label = item
 
-		if(index < list.length - 1)
+		if (index < list.length - 1)
 			label += ', '
 
 		array.push(label)
@@ -199,19 +241,19 @@ export const getMessageRecipientsLabelArray = (recipients) => {
 }
 
 export const getMessageRecipientResponseLabel = (response) => {
-	if(response === 'You cannot send messages to this user.')
+	if (response === 'You cannot send messages to this user.')
 		return 'You cannot send messages to this user - Check follow status'
-	else 
+	else
 		return response
 }
 
 export const formatDate = (date, dateStyle, timeStyle) => {
-	if(!date)
+	if (!date)
 		return ''
 
 	let d = date
 
-	if(typeof date === 'string')
+	if (typeof date === 'string')
 		d = new Date(date)
 
 	return d.toLocaleString('en-US', { dateStyle, timeStyle })

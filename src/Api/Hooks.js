@@ -110,7 +110,7 @@ export const usePlatform = () => {
 }
 
 export const useTagsWithMedia = () => {
-    const [tags, setTags] = useState(null)
+    const [tags, setTags] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -136,7 +136,7 @@ export const useTagsWithMedia = () => {
 }
 
 export const useTagsWithContacts = () => {
-    const [tags, setTags] = useState(null)
+    const [tags, setTags] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -164,7 +164,7 @@ export const useTagsWithContacts = () => {
 }
 
 export const useTagsWithMessage = () => {
-    const [tags, setTags] = useState(null)
+    const [tags, setTags] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -581,7 +581,7 @@ export const useTeamMembers = () => {
 
 
 export const useRanks = () => {
-    const [ranks, setRanks] = useState(null)
+    const [ranks, setRanks] = useState([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
     const [error, setError] = useState(null)
@@ -780,7 +780,7 @@ export const useStatus2 = () => {
 
 // TODO:
 export const useGradYears = () => {
-    const [GradYears, setGradYears] = useState(null)
+    const [GradYears, setGradYears] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -826,7 +826,7 @@ export const useTextPlaceholders = () => {
 
 // TODO:
 export const usePositions = () => {
-    const [Positions, setPositions] = useState(null)
+    const [Positions, setPositions] = useState([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
     const [error, setError] = useState(null)
@@ -858,7 +858,7 @@ export const usePositions = () => {
 }
 
 export const useStatuses = () => {
-    const [statuses, setStatuses] = useState(null)
+    const [statuses, setStatuses] = useState([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
     const [error, setError] = useState(null)
@@ -890,7 +890,7 @@ export const useStatuses = () => {
 }
 
 export const useSnippets = () => {
-    const [snippets, setSnippets] = useState(null)
+    const [snippets, setSnippets] = useState([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
     const [error, setError] = useState(null)
@@ -1218,7 +1218,7 @@ export const useCoaches = () => {
 }
 
 export const useCoachesTypes = () => {
-    const [coachesTypes, setCoachesTypes] = useState(null)
+    const [coachesTypes, setCoachesTypes] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
