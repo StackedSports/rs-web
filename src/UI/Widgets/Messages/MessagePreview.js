@@ -62,8 +62,8 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
     )
 }
 
-const MessagePreview = ({ message, recipients, mini = false, style, link = false, cancelingMessage = false, onCancelMessage, ...props }) => {
-    console.log("message", message)
+const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
+
     if (!message)
         return (
             <div style={{ height: 300 }}>
@@ -72,7 +72,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         )
 
     const [messageStats, setMessageStats] = useState(null)
-
+    console.log(message)
     useEffect(() => {
         if (!recipients)
             return
@@ -154,11 +154,6 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
 
-    const onCancelMessageClick = () => {
-        onCancelMessage(message.id)
-        console.log(cancelingMessage)
-    }
-
     return (
         <Grid className="MessagePreview-Container" container style={style}>
             <Grid container style={{ marginBottom: 20 }}>
@@ -173,19 +168,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                 <div className="MessagePreview-DetailsPanel">
                     <h3>Message Details</h3>
 
-                    {/* {(message.status.includes("In Progress") || message.status.includes("Scheduled")) &&
-                        <LoadingButton
-                            variant="contained"
-                            onClick={onCancelMessageClick}
-                            loading={cancelingMessage}
-                        >
-                            Cancel Message
-                        </LoadingButton>
-                    } */}
-
                     <Details
                         label="Status"
-                        value={getMessageStatusLabel(message.status)}
+                        // value={getMessageStatusLabel(message.status)}
+                        value={getMessageStatusLabel(message.status, message.platform.name)}
                         status={getMessageStatusLabel(message.status)}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
