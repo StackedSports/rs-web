@@ -24,6 +24,7 @@ export const DateRangePicker = (props) => {
     }
 
     const handleCloseCalendar = (newDates) => {
+        console.log(newDates);
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         if (!value.every((date, index) => isEqual(date, newDates[index]) || date === newDates[index])) {
             if (props.onChange instanceof Function) {
@@ -45,7 +46,7 @@ export const DateRangePicker = (props) => {
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         return (
             <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
-                <DesktopDateRangePicker
+                <MuiDateRangePicker
                     open={open}
                     clearable
                     allowSameDateSelection

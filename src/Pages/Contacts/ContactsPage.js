@@ -36,6 +36,7 @@ import {
 
 import {
     addTagsToContacts,
+    addTagsToContactsWithNewTags,
     addTagToContact,
     deleteTagToContact,
     untagContacts,
@@ -283,49 +284,14 @@ export default function ContactsPage(props) {
     const onTagsSelected = async (selectedTagsIds) => {
         setLoadingTags(true)
 
-        let responseResult = { success: 0, error: 0 }
-
-        //selectedContacts.saveData(contacts.items)
-        //let contactIds = selectedContacts.getDataSelected().map(contact => contact.id)
         let contactIds = multipageSelection.selectedData.map(contact => contact.id)
 
-        // separate new Tags and already existing tags
-        const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(selectedTagsIds)
+        const res = await addTagsToContactsWithNewTags(selectedTagsIds, contactIds)
 
-        // we check if there are new tags to create and create and add them
-        if (newTagsNames.length > 0) {
-            // combine each contact with the new tags
-            const newTagContacts = contactIds.map(contactId => newTagsNames.map(tagName => [tagName, contactId])).flat()
-            console.log('newTagContacts = ', newTagContacts)
-            // create and add new tags ( no problem if there are duplicates api will handle it )
-            await Promise.allSettled(newTagContacts.map(([tagName, contactId]) => addTagToContact(tagName, contactId))).
-                then(results => {
-                    results.forEach((result, index) => {
-                        if (result.status === 'fulfilled') {
-                            responseResult.success++
-                        }
-                        else {
-                            responseResult.error++
-                        }
-                    })
-                })
-        }
-        // if there are already existing tags, we just add them to the contacts
-        if (alreadyExistingTags.length > 0) {
-            addTagsToContacts(alreadyExistingTags, contactIds)
-                .then(res => {
-                    responseResult.success += res.success
-                    responseResult.error += res.error
-                })
-        }
-
-        // now the responseResult contains the number of success and error
-        if (responseResult.error === 0) {
+        if (res.error.count === 0)
             app.alert.setSuccess('Contacts tagged successfully!')
-            setOpenSelectTagDialog(false)
-        }
         else
-            app.alert.setWarning(`${responseResult.success} tags were added . ${res.error} tags failed to be added.`)
+           app.alert.setWarning(`${res.success.count} out of ${multipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
 
         setLoadingTags(false)
     }
@@ -420,7 +386,7 @@ export default function ContactsPage(props) {
                                 </span>
                                 {' '}contact{multipageSelection.count > 1 && "s"} selected
                             </span>
-                            <IconButton size='small' sx={{color:'#3871DA'}} onClick={() => multipageSelection.clear()}>
+                            <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => multipageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
                         </Stack>

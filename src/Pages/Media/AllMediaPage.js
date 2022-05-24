@@ -70,13 +70,15 @@ export const AllMediaPage = () => {
 		confirmDialog.show('Archive Media',
 			`Are you sure you want to archive the selected media: ${medias.items.filter(m => selectedMedias.some(id => id === m.id)).map(m => m.name || m.file_name).join(', ')} ?`,
 			async () => {
-				const { success, error } = await archiveMedias(selectedMedias)
-				if (error.count === 0)
-					app.alert.setSuccess('Media archived successfully')
-				else if (success.count === 0)
-					app.alert.setError('An error occurred while archiving medias')
-				else
-					app.alert.setWarning(`Some medias (${error.count}) could not be archived`)
+				const mediasCount = selectedMedias.length
+				const response = await archiveMedias(selectedMedias)
+				if (response.error.count === 0)
+					app.alert.setSuccess(`${mediasCount} media${mediasCount > 0 ? 's' : ''} archived`)
+				else {
+					app.alert.setError(`Something went wrong, ${response.error.count} media${response.error.count > 1 ? 's' : ''} not archived`)
+					if (response.error.status.includes(422))
+						app.alert.setError(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
+				}
 			})
 	}
 

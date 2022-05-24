@@ -708,8 +708,6 @@ export default function UploadMediaDialog(props) {
 					/>
 				}
 
-				<Grid item md={5} xs={5}></Grid>
-
 			</Stack>
 
 			<Stack direction="row" justifyContent="flex-end" margin={2}>

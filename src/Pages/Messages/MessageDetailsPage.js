@@ -26,7 +26,8 @@ import {
     removeRecipients,
     addTagsToMessage,
     addTagsToContacts,
-    cancelMessage
+    cancelMessage,
+    addTagsToContactsWithNewTags,
 } from 'Api/Endpoints'
 
 import { messageRoutes } from 'Routes/Routes'
@@ -285,21 +286,29 @@ const MessageDetailsPage = (props) => {
             .finally(() => setLoading(false))
     }
 
-    const tagRecipients = (selectedTags) => {
+    const tagRecipients = async (selectedTags) => {
         setLoading(true)
 
-        addTagsToContacts(selectedTags, selectedRecipients.items)
-            .then(res => {
-                console.log(res)
+        const res = await addTagsToContactsWithNewTags(selectedTags, selectedRecipients.items)
+        if (res.error.count === 0)
+            alert.setSuccess('Recipients tagged successfully!')
+        else
+            alert.setWarning(`${res.success.count} out of ${selectedRecipients.items.length} recipients were tagged successfully. ${res.error.count} recipients failed to be tagged.`)
 
-                if (res.error === 0)
-                    alert.setSuccess('Recipients tagged successfully!')
-                else
-                    alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+        setLoading(false)
+
+        /*       addTagsToContacts(selectedTags, selectedRecipients.items)
+                  .then(res => {
+                      console.log(res)
+      
+                      if(res.error === 0)
+                          alert.setSuccess('Recipients tagged successfully!')
+                      else
+                          alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
+                  })
+                  .finally(() => {
+                      setLoading(false)
+                  }) */
     }
 
     const onSendNewMessageWithContacts = () => {
@@ -460,6 +469,7 @@ const MessageDetailsPage = (props) => {
                 open={displayTagDialog}
                 onClose={() => setDisplayTagDialog(false)}
                 onConfirm={onTagsSelected}
+                isAddTag
             />
 
             {message.error && (

@@ -121,7 +121,7 @@ const FollowOnTwitterDialog = (props) => {
               disableColumnMenu
               disableColumnFilter
               disableColumnSelector
-              contacts={props.teamMembers}
+              contacts={props.teamMembers.filter(member => member.twitter_profile.screen_name != null)}
               selection={selectedTeamMembers}
               columnsControl={visibleTableRows}
               onSelectionChange={onSelectionChange}

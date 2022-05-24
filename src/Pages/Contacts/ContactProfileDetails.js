@@ -47,12 +47,9 @@ const formValidation = Yup.object().shape({
 	// email: Yup.string().email("Invalid email"),
 })
 
-/* const detailsFormValidation = Yup.object().shape({
-	dob: Yup.date().max(new Date(), "Date of birth must be in the past").transform((value, originalValue) => {
-		//console.log("Parse data", value, originalValue)
-		return isDate(originalValue) ? originalValue : parse(originalValue, "yyyy/MM/dd", new Date())
-	}).typeError("Format must be yyyy/MM/dd")
-}) */
+const detailsFormValidation = Yup.object().shape({
+	dob: Yup.date().max(new Date(), "Date of birth must be in the past").typeError("Format must be yyyy/MM/dd")
+})
 
 const ContactProfileDetails = (props) => {
 	if (props.loading)
@@ -509,7 +506,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
-			//validationSchema={detailsFormValidation}
+				validationSchema={detailsFormValidation}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -545,6 +542,7 @@ const ContactProfileDetails = (props) => {
 								label='Birthday'
 								name='dob'
 								format = 'MM/dd/yyyy'
+								disableFuture
 								value={formikProps.values.dob}
 								onChange={(e) => {
 									formikProps.setFieldValue('dob', e)
