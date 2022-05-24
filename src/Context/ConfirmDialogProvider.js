@@ -4,7 +4,7 @@ import ConfirmDialog from 'UI/Widgets/Dialogs/ConfirmDialog';
 /**
  * @param {function} show - The function to call to show the dialog 
  */
-const ConfirmDialogContext = createContext();
+export const ConfirmDialogContext = createContext();
 
 export const ConfirmDialogProvider = ({ children }) => {
     const [message, setMessage] = useState("");

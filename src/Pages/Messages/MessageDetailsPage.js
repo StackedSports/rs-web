@@ -17,14 +17,15 @@ import { AppContext } from 'Context/AppProvider'
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
 import { useMessage, useMessageRecipients } from 'Api/Hooks'
-import { 
+import {
     sendMessage,
     deleteMessage,
     archiveMessage,
     updateMessage,
     removeRecipients,
     addTagsToMessage,
-    addTagsToContacts
+    addTagsToContacts,
+    addTagsToContactsWithNewTags,
 } from 'Api/Endpoints'
 
 import { messageRoutes } from 'Routes/Routes'
@@ -40,7 +41,7 @@ const MessageDetailsPage = (props) => {
 
     const [redirect, setRedirect] = useState('')
     const [refresh, setRefresh] = useState(false)
-    
+
     const message = useMessage(messageId.current, refresh)
     const recipients = useMessageRecipients(messageId.current, refresh, 1, 25)
     // console.log(recipients)
@@ -56,13 +57,13 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
-    console.log(message.item)
-    console.log(recipients.items) 
+    //console.log(message.item)
+    //console.log(recipients.items)
 
     useEffect(() => {
-        if(!message.error)
+        if (!message.error)
             return
-        
+
         setErrorPanelMessage({
             title: `${message.error.response.status} ${message.error.response.statusText}`,
             body: message.error.response.data.errors[0].message
@@ -80,7 +81,7 @@ const MessageDetailsPage = (props) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
-    const onActionClick = () => {}
+    const onActionClick = () => { }
 
     const onEditMessageClick = () => {
         console.log('edit message')
@@ -108,7 +109,7 @@ const MessageDetailsPage = (props) => {
                 setTimeout(() => {
                     setRedirect(`${messageRoutes.all}`)
                 }, 1700)
-                
+
             })
             .catch(error => {
                 console.log(error)
@@ -116,12 +117,12 @@ const MessageDetailsPage = (props) => {
                 alert.setError('Something happened and we could not delete your message')
             })
 
-    } 
-    
+    }
+
     const onArchiveMessageClick = () => {
         console.log('archive message')
 
-        
+
         console.log(message.item.id)
 
         // return
@@ -144,7 +145,7 @@ const MessageDetailsPage = (props) => {
     const onUnarchiveMessageClick = () => {
         console.log('unarchive')
     }
-    
+
     const onTagMessageClick = () => {
         console.log('tag message')
         setDisplayTagDialog(true)
@@ -190,32 +191,32 @@ const MessageDetailsPage = (props) => {
         setLoading(true)
 
         removeRecipients(message.item.id, selectedRecipients.items)
-                .then(result => {
-                    console.log(result)
-                    // let message = result.data
+            .then(result => {
+                console.log(result)
+                // let message = result.data
 
-                    if(result.successCount === 0) {
-                        alert.setError('Could not remove recipients')
-                    } else {
-                        if(result.errorCount === 0)
-                            alert.setSuccess('Recipients removed successfully!')
-                        else
-                            alert.setWarning(`${result.successCount} recipients removed successfully. `
-                                + `${result.errorCount} recipeints failed to be removed.`)
-                            
-                        
-                        //removeFromSelection(result.removedRecipients)
-                        // setTimeout(() => {
-                            refreshMessage()
-                        // }, 1500)
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-
+                if (result.successCount === 0) {
                     alert.setError('Could not remove recipients')
-                })
-                .finally(() => setLoading(false))
+                } else {
+                    if (result.errorCount === 0)
+                        alert.setSuccess('Recipients removed successfully!')
+                    else
+                        alert.setWarning(`${result.successCount} recipients removed successfully. `
+                            + `${result.errorCount} recipeints failed to be removed.`)
+
+
+                    //removeFromSelection(result.removedRecipients)
+                    // setTimeout(() => {
+                    refreshMessage()
+                    // }, 1500)
+                }
+            })
+            .catch(error => {
+                console.log(error)
+
+                alert.setError('Could not remove recipients')
+            })
+            .finally(() => setLoading(false))
 
     }
 
@@ -245,13 +246,13 @@ const MessageDetailsPage = (props) => {
 
         // return
 
-        if(tagging === 'message')
+        if (tagging === 'message')
             tagMessage(selectedTags)
-        else if(tagging === 'recipients')
+        else if (tagging === 'recipients')
             tagRecipients(selectedTags)
 
         setDisplayTagDialog(false)
-        
+
     }
 
     const tagMessage = (selectedTags) => {
@@ -265,38 +266,46 @@ const MessageDetailsPage = (props) => {
             })
             .catch(error => {
                 console.log(error)
-                
+
                 alert.setError('Message could not be tagget')
             })
             .finally(() => setLoading(false))
     }
 
-    const tagRecipients = (selectedTags) => {
+    const tagRecipients = async (selectedTags) => {
         setLoading(true)
 
-        addTagsToContacts(selectedTags, selectedRecipients.items)
-            .then(res => {
-                console.log(res)
+        const res = await addTagsToContactsWithNewTags(selectedTags, selectedRecipients.items)
+        if (res.error.count === 0)
+            alert.setSuccess('Recipients tagged successfully!')
+        else
+            alert.setWarning(`${res.success.count} out of ${selectedRecipients.items.length} recipients were tagged successfully. ${res.error.count} recipients failed to be tagged.`)
 
-                if(res.error === 0)
-                    alert.setSuccess('Recipients tagged successfully!')
-                else
-                    alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+        setLoading(false)
+
+        /*       addTagsToContacts(selectedTags, selectedRecipients.items)
+                  .then(res => {
+                      console.log(res)
+      
+                      if(res.error === 0)
+                          alert.setSuccess('Recipients tagged successfully!')
+                      else
+                          alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
+                  })
+                  .finally(() => {
+                      setLoading(false)
+                  }) */
     }
 
     const onSendNewMessageWithContacts = () => {
         let tmp = []
 
-        if(recipients.items.filter_list)
+        if (recipients.items.filter_list)
             recipients.items.filter_list.forEach(filter => {
                 tmp = tmp.concat(filter.contacts)
             })
 
-        if(recipients.items.contact_list)
+        if (recipients.items.contact_list)
             tmp = tmp.concat(recipients.items.contact_list)
 
         selectedRecipients.saveData(tmp)
@@ -307,9 +316,9 @@ const MessageDetailsPage = (props) => {
         let data = selectedRecipients.getDataSelected()
         console.log(data)
 
-        if(data) {
+        if (data) {
             app.sendMessageToRecipients(data)
-        } 
+        }
     }
 
     const onRecipientsPageChange = (page) => {
@@ -321,12 +330,12 @@ const MessageDetailsPage = (props) => {
         // or do a manual parse here
         let tmp = []
 
-        if(recipients.items.filter_list)
+        if (recipients.items.filter_list)
             recipients.items.filter_list.forEach(filter => {
                 tmp = tmp.concat(filter.contacts)
             })
 
-        if(recipients.items.contact_list)
+        if (recipients.items.contact_list)
             tmp = tmp.concat(recipients.items.contact_list)
 
         selectedRecipients.saveData(tmp)
@@ -338,7 +347,7 @@ const MessageDetailsPage = (props) => {
     const mainActions = useMemo(() => {
         let actions = []
 
-        if(!message.item)
+        if (!message.item)
             return actions
 
         let now = new Date(Date.now())
@@ -349,7 +358,7 @@ const MessageDetailsPage = (props) => {
         const draftOptions = [
             { name: 'Edit', onClick: onEditMessageClick },
             { name: 'Save As Draft & Exit', onClick: onSaveMessageAndExitClick },
-            { name: 'Delete Message', color: 'red', onClick: onDeleteMessageClick } 
+            { name: 'Delete Message', color: 'red', onClick: onDeleteMessageClick }
         ]
 
         const sentOptions = [
@@ -366,16 +375,16 @@ const MessageDetailsPage = (props) => {
             { name: 'Tag', onClick: onTagMessageClick },
             { name: 'Archive', onClick: onArchiveMessageClick }
         ]
-        
+
         // const options = message.item.status === 'Draft' ? draftOptions : sentOptions
         let showAction = false
 
-        switch(message.item.status) {
+        switch (message.item.status) {
             case 'Draft':
                 options = draftOptions
                 showAction = true
                 break
-            case 'Sent': 
+            case 'Sent':
             case 'Completed':
                 options = sentOptions
                 showAction = true
@@ -392,30 +401,30 @@ const MessageDetailsPage = (props) => {
                 break
         }
 
-        let action = { 
+        let action = {
             name: 'Action', type: 'dropdown', variant: 'outlined', icon: AutoFixHighIcon,
             options
         }
-    
+
         actions = [
             { name: 'Refresh', variant: 'text', icon: RefreshIcon, onClick: refreshMessage }, // type: icon
         ]
 
-        if(showAction)
+        if (showAction)
             actions.push(action)
-    
-        if(selectedRecipients.count == 0 && message.item.status === 'Draft') {
-            if(now.getTime() > sendDate.getTime()) {
+
+        if (selectedRecipients.count == 0 && message.item.status === 'Draft') {
+            if (now.getTime() > sendDate.getTime()) {
                 actions.push({ name: 'Send', variant: 'contained', icon: SendIcon, onClick: onSendMessageClick })
             } else {
                 actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: onScheduleMessageClick })
             }
-        } else if(selectedRecipients.count > 0) {
-            let recipientActions = { 
+        } else if (selectedRecipients.count > 0) {
+            let recipientActions = {
                 id: 'Recipients Action',
                 name: `${selectedRecipients.count} Recipients Selected`,
                 type: 'dropdown',
-                variant: 'contained', 
+                variant: 'contained',
                 icon: ArrowDropDownIcon,
                 disabled: recipients.loading,
                 options: [
@@ -424,8 +433,8 @@ const MessageDetailsPage = (props) => {
                 ]
             }
 
-            if(message.item.status === 'Draft')
-                recipientActions.options.push({ 
+            if (message.item.status === 'Draft')
+                recipientActions.options.push({
                     name: 'Remove', color: 'red', onClick: onRemoveRecipients
                 })
 
@@ -444,45 +453,46 @@ const MessageDetailsPage = (props) => {
 
     return (
         <BaseMessagePage
-          title='Message Preview'
-          topActionName='+ New Message'
-          onTopActionClick={onTopActionClick}
-          alert={alert}
-          actions={mainActions}
-          loading={message.loading || loading}
-          redirect={redirect}
-          onFilterSelected={onFilterSelected}
+            title='Message Preview'
+            topActionName='+ New Message'
+            onTopActionClick={onTopActionClick}
+            alert={alert}
+            actions={mainActions}
+            loading={message.loading || loading}
+            redirect={redirect}
+            onFilterSelected={onFilterSelected}
         >
             <SelectTagDialog
-              open={displayTagDialog}
-              onClose={() => setDisplayTagDialog(false)}
-              onConfirm={onTagsSelected}
+                open={displayTagDialog}
+                onClose={() => setDisplayTagDialog(false)}
+                onConfirm={onTagsSelected}
+                isAddTag
             />
 
             {message.error && (
                 <ErrorPanel
-                  title={errorPanelMessage.title}
-                  body={errorPanelMessage.body}
+                    title={errorPanelMessage.title}
+                    body={errorPanelMessage.body}
                 />
             )}
 
-            <MessagePreview 
-              message={message.item} 
-              recipients={recipients.items}
-              style={{ marginBottom: 20 }}
-              loading={message.loading}
+            <MessagePreview
+                message={message.item}
+                recipients={recipients.items}
+                style={{ marginBottom: 20 }}
+                loading={message.loading}
             />
 
-            <MessageRecipientsTable 
-              selection={selectedRecipients.items}
-              onSelectionChange={onSelectedRecipientsChange}
-              platform={message.item?.platform}
-              recipients={recipients.items}
-              loading={!message.loading && recipients.loading}
-              hasCoach={message.item?.send_as_coach}
-              hasMedia={hasMedia || hasMediaPlaceholder}
-              pagination={recipients.pagination}
-              onPageChange={onRecipientsPageChange}
+            <MessageRecipientsTable
+                selection={selectedRecipients.items}
+                onSelectionChange={onSelectedRecipientsChange}
+                platform={message.item?.platform}
+                recipients={recipients.items}
+                loading={!message.loading && recipients.loading}
+                hasCoach={message.item?.send_as_coach}
+                hasMedia={hasMedia || hasMediaPlaceholder}
+                pagination={recipients.pagination}
+                onPageChange={onRecipientsPageChange}
             />
         </BaseMessagePage>
     )

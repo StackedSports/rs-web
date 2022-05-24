@@ -10,6 +10,7 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import MediaPage from './MediaPage'
 
 import { AppContext } from 'Context/AppProvider'
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
 import { archiveMedias, addTagsToMedias } from "Api/Endpoints"
@@ -17,6 +18,7 @@ import { mediaRoutes } from 'Routes/Routes';
 
 export const MainMediaPage = (props) => {
     const app = useContext(AppContext)
+    const confirmDialog = useContext(ConfirmDialogContext)
     const media = useMedias(1, 6)
     const placeholders = usePlaceholders(1, 6)
     const tags = useTags()
@@ -42,10 +44,22 @@ export const MainMediaPage = (props) => {
         setSelectedPlaceholders(selection)
     }
 
-    //TODO
+    // TODO Archive Placeholders, API blocked
     const onArchiveAction = async () => {
-        const response = await archiveMedias(selectedMedias)
-        console.log("response", response)
+        const mediasCount = selectedMedias.length
+        confirmDialog.show("Archive",
+            `Are you sure you want to archive ${mediasCount} media${mediasCount > 0 ? 's' : ''}?`,
+            async () => {
+                const response = await archiveMedias(selectedMedias)
+                if (response.error.count === 0)
+                    app.alert.setSuccess(`${mediasCount} media${mediasCount > 0 ? 's' : ''} archived`)
+                else {
+                    app.alert.setError(`Something went wrong, ${response.error.count} media${response.error.count > 1 ? 's' : ''} not archived`)
+                    if (response.error.status.includes(422))
+                        app.alert.setError(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
+                }
+            }
+        )
     }
 
     const onDownloadAction = () => {
@@ -63,6 +77,7 @@ export const MainMediaPage = (props) => {
         }
     }
 
+    //TODO
     const handleTagsDialogConfirm = (selectedTagsIds) => {
         const result = addTagsToMedias(selectedTagsIds, selectedMedias)
     }
@@ -92,7 +107,7 @@ export const MainMediaPage = (props) => {
             options: [
                 { name: 'Send in Message', onClick: () => { console.log("clicked") } },
                 { name: 'Download', onClick: onDownloadAction },
-                { name: 'Archive Media', onClick: onArchiveAction, disabled: selectedMedias.length === 0 || selectedPlaceholders.length === 0 },
+                { name: 'Archive Media', onClick: onArchiveAction, disabled: selectedMedias.length === 0 },
                 { name: 'Untag', onClick: () => { console.log("clicked") } },
             ]
         },

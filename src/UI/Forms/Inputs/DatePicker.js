@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { TextField, styled } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers-pro';
 import { format, isDate, isValid } from 'date-fns';
 
 export const DatePicker = (props) => {
@@ -11,14 +11,20 @@ export const DatePicker = (props) => {
 
     const handleChange = (newValue) => {
         setValue(newValue);
-        if (!isValid(newValue) || !isDate(newValue) || !isValid(value) || !isDate(value )) return;
+        if (newValue === null && value !== null)
+            if (props.onChange instanceof Function) {
+                props.onChange(newValue);
+                return
+            }
+
+        if (!isValid(newValue) || !isDate(newValue) || !isValid(value) || !isDate(value)) return;
         if (value && format(newValue, formatStyle) === format(new Date(value), formatStyle)) {
             //console.log("same date");
             return
         }
-        //console.log("handleChange");
+        console.log("handleChange");
         if (props.onChange instanceof Function) {
-            console.log("date picker changed to:", newValue)
+            //console.log("date picker changed to:", newValue)
             props.onChange(newValue);
         }
     }
@@ -35,6 +41,7 @@ export const DatePicker = (props) => {
             <MuiDatePicker
                 label={props.label}
                 clearable
+                closeOnSelect
                 value={value}
                 onChange={handleChange}
                 disableFuture={props.disableFuture}
@@ -42,8 +49,8 @@ export const DatePicker = (props) => {
                 mask={formatStyle.replace(/[^\/]/g, '_')}
                 renderInput={(params) => {
                     return <StyledInput
-                        {...params} 
-                        //size='small'
+                        {...params}
+                    //size='small'
                     />
                 }
                 }
@@ -55,5 +62,5 @@ export const DatePicker = (props) => {
 export default DatePicker;
 
 const StyledInput = styled(TextField)(({ theme }) => ({
-    
+
 }));

@@ -13,6 +13,7 @@ import {
 import { objectNotNull } from 'utils/Validation'
 
 import { getPagination } from './Pagination'
+import { separeteNewTagsNameFromExistingTagsIds } from "utils/Helper";
 
 // initializing axios-curlirize with your axios instance
 // curlirize(axios);    
@@ -96,7 +97,7 @@ const DELETE = (url, body) => {
     })
 }
 
-const GET = (url, body,cancelToken) => {
+const GET = (url, body, cancelToken) => {
     return new Promise((resolve, reject) => {
         //const data = JSON.stringify(body);
 
@@ -575,6 +576,7 @@ export const uploadMedia = (media) => {
 }
 
 export const addTagToMedia = (mediaId, tag) => {
+    console.log(tag)
     const body = {
         media: { tag }
     }
@@ -802,6 +804,61 @@ export const addTagToContact = (tagName, contactId) => {
     return POST(`contacts/${contactId}/add_tag`, body)
 }
 
+export const addTagsToContactsWithNewTags = async (tags, contactIds) => {
+    return new Promise((resolve, reject) => {
+        let response = {
+            success: {
+                count: 0,
+                id: []
+            },
+            error: {
+                count: 0,
+                id: []
+            }
+        }
+
+        let promises = []
+        const [newTags, existingTags] = separeteNewTagsNameFromExistingTagsIds(tags)
+
+        if (newTags.length > 0) {
+            //add every new tag to every contact
+            const contactsTags = contactIds.reduce((acc, contactId) => {
+                acc[contactId] = newTags
+                return acc
+            }, {})
+            const newTagsPromises = Object.keys(contactsTags).map(contactId => contactsTags[contactId].map(tagName =>
+                [contactId, addTagToContact(tagName, contactId)])).flat()
+            promises = [...promises, ...newTagsPromises]
+        }
+
+
+        if (existingTags.length > 0) {
+            const existingPromises = contactIds.map(contactId => [contactId, addTagsToContact(existingTags, contactId)])
+            promises = [...promises, ...existingPromises]
+        }
+
+        Promise.allSettled(promises.map(([contactId, promise]) => promise)).then(results => {
+            const resultStatus = results.reduce((acc, result, index) => {
+                const contactId = promises[index][0]
+                acc[contactId] = acc[contactId] || []
+                acc[contactId].push(result)
+                return acc
+            }, {})
+
+            Object.keys(resultStatus).forEach(contactId => {
+                if (resultStatus[contactId].some(result => result.status === 'rejected')) {
+                    response.error.count++
+                    response.error.id.push(contactId)
+                } else {
+                    response.success.count++
+                    response.success.id.push(contactId)
+                }
+            })
+            resolve(response)
+        })
+    })
+}
+
 export const addTagsToContacts = (tagIds, contactIds) => {
     return new Promise((resolve, reject) => {
         let total = contactIds.length
@@ -967,7 +1024,8 @@ export const archiveMedias = async (mediasIds) => {
         },
         error: {
             count: 0,
-            id: []
+            id: [],
+            status:[],
         }
     }
     return new Promise((resolve, reject) => {
@@ -983,6 +1041,7 @@ export const archiveMedias = async (mediasIds) => {
                     else {
                         response.error.count++
                         response.error.id.push(mediasIds[index])
+                        response.error.status.push(result.reason.response.status)
                     }
                 })
             }).finally(() => {

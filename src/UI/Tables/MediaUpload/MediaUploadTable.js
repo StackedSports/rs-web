@@ -202,7 +202,7 @@ export const MediaUploadItem = (props) => {
             options={props.options}
             loading={props.optionsLoading}
             value={props.optionSelected || []}
-            label="+ Associate Contact"
+            label={null}
             placeholder="Search Contact"
             getOptionLabel={(option) => getFullName(option)}
             getChipLabel={(option) => getFullName(option)}
