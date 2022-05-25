@@ -11,8 +11,31 @@ export const DatePicker = (props) => {
 
     const handleChange = (newValue) => {
         console.log("called handleChange", newValue);
+<<<<<<< HEAD
         setValue(newValue);
         props.onChange(newValue);
+=======
+        console.log(isValid(newValue), isDate(newValue), isValid(value), isDate(value));
+        setValue(newValue);
+        props.onChange(newValue);
+       /*  if (newValue === null && value !== null)
+            if (props.onChange instanceof Function) {
+                console.log("date picker changed to:", newValue)
+                props.onChange(newValue);
+                return
+            }
+
+        if (!isValid(newValue) || !isDate(newValue) || !isValid(value) || !isDate(value)) return;
+        if (value && format(newValue, formatStyle) === format(new Date(value), formatStyle)) {
+            //console.log("same date");
+            return
+        }
+        console.log("handleChange");
+        if (props.onChange instanceof Function) {
+            console.log("date picker changed to:", newValue)
+            props.onChange(newValue);
+        } */
+>>>>>>> 7ac99fcfb5bb550b1a438b219bd038b42aa796d0
     }
 
     useEffect(() => {
