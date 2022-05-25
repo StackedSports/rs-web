@@ -107,16 +107,16 @@ export const getFullName = (contact) => {
 export const getMessageStatusLabel = (status, platform) => {
 	let message = status
 	switch (true) {
-		case (status === 'Error' && platform === 'Twitter DM'):
+		case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Failed - Error'
 			break;
-		// case (status === 'Error' && platform === 'Twitter DM'):
+		// case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text')):
 		//     message = 'Complete with some errors'//??
 		//     break;
-		case (status === 'Error' && platform === 'Twitter')://
+		case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text'))://
 			message = 'Message Failed - Error'
 			break;
-		case (status === 'Sent' && platform === 'Twitter DM'):
+		case (status === 'Sent' && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Completed'
 			break;
 		case (status === 'Complete' && platform === 'Personal Text'):
@@ -131,18 +131,18 @@ export const getMessageStatusLabel = (status, platform) => {
 		case (status === 'Cancelled' && platform === 'Personal Text'):
 			message = 'Completed with some skipped messages'
 			break;
-		case (status === 'Deleted' && platform === 'All'):
+		case (status === 'Deleted'):
 			message = 'Message Archived'
 			break;
-		case (status === 'Draft' && platform === 'All'):
+		case (status === 'Draft'):
 			message = 'Draft'
 			break;
-		case (status === 'Pending' && platform === 'All'):
+		case (status === 'Pending'):
 			message = 'Message Scheduled'
-			breack;
-		case (status === 'In Progress' && platform === 'MS & TW DM'):
+			break;
+		case (status === 'In Progress' && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message sending in progress.'
-			breack;
+			break;
 	}
 	return message
 }
