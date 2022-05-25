@@ -761,21 +761,31 @@ export const useStatus = () => {
     return status
 }
 export const useStatus2 = () => {
-    const [status, setstatus] = useState([])
+    const [status, setStatus] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
+        setLoading(true)
+        
         getAllStatus2()
             .then((res) => {
                 //console.log('ApiHooks: getstatus2 -----')
                 //console.log(status)
-                // setstatus(res)
+                setStatus(res)
             })
             .catch(error => {
                 console.log(error)
+                setError(error)
             })
+            .finally(() => setLoading(false))
     }, [])
 
-    return status
+    return {
+        items: status,
+        loading,
+        error
+    }
 }
 
 // TODO:

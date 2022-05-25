@@ -22,6 +22,7 @@ import {
 	useStatuses,
 	useRanks,
 	useTags2,
+	useStatus2,
 } from 'Api/Hooks'
 
 import {
@@ -78,6 +79,7 @@ const ContactProfileDetails = (props) => {
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
 	const status = useStatuses()
+	const status2 = useStatus2()
 	const ranks = useRanks()
 	const tags = useTags2()
 
@@ -101,6 +103,7 @@ const ContactProfileDetails = (props) => {
 			high_school: props.contact?.high_school,
 			state: props.contact?.state,
 			status: props.contact?.status?.status,
+			// status_2: props.contact?.status_2,
 			rank: props.contact?.rank?.rank,
 		},
 		coaches: {
@@ -579,6 +582,22 @@ const ContactProfileDetails = (props) => {
 									onAccordionFieldChange(1)
 								}}
 							/>
+							
+							{/* <SearchableSelector
+								label="Status2"
+								placeholder="Search"
+								// multiple
+								value={formikProps.values.status_2}
+								options={status2.items || []}
+								loading={status2.loading}
+								isOptionEqualToValue={(option, value) => option?.status === value}
+								getOptionLabel={(option) => option.status || option || ""}
+								onChange={(newValue) => {
+									console.log(newValue)
+									formikProps.setFieldValue('status_2', newValue)
+									onAccordionFieldChange(1)
+								}}
+							/> */}
 
 							<SearchableSelector
 								label="Rank"
