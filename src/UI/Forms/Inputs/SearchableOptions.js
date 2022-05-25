@@ -152,6 +152,7 @@ export const SearchableOptionListItem = (props) => {
 		  style={{
 			height: 60,
 			marginLeft: 0,
+			paddingInline: '4px',
 			// marginTop: -12,
 			cursor: "pointer",
 		  }}
@@ -186,6 +187,11 @@ export const SearchableOptionListItem = (props) => {
 				margin: 0,
 				fontWeight: 600,
 				marginLeft: 12,
+				overflow: 'hidden',
+      			textOverflow: 'ellipsis',
+      			display: '-webkit-box',
+      			WebkitLineClamp: '2',
+      			WebkitBoxOrient: 'vertical',
 			  }}
 			>
 				{constructProperty(props.item, props.nameDef)}

@@ -24,10 +24,10 @@ const tabs = [
 
 export default function MediaSelectDialog(props) {
     const app = useContext(AppContext)
-    const placeholders = usePlaceholders(1, 25)
+    const placeholders = usePlaceholders(1, 24)
     const [placeholderSelectedId, setPlaceholderSelectedId] = useState('')
     // console.log(paginationConfig(1, 25))
-    const media = useMedias(1, 25)
+    const media = useMedias(1, 24)
     const [mediaSelectedId, setMediaSelectedId] = useState('')
     // console.log(media)
     // console.log(mediaPagination)
@@ -118,20 +118,24 @@ export default function MediaSelectDialog(props) {
                 <MediaTable mini
                     items={media.items}
                     loading={media.loading}
+                    pagination={media.pagination}
                     view={'grid'}
                     type="media"
                     onSelectionChange={onMediaSelectionChange}
-                    disablePagination
+                    lg={3}
+                    xl={3}
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
                 <MediaTable mini
                     items={placeholders.items}
                     loading={placeholders.loading}
+                    pagination={placeholders.pagination}
                     view={'grid'}
                     type="placeholder"
                     onSelectionChange={onPlaceholderSelectionChange}
-                    disablePagination
+                    lg={3}
+                    xl={3}
                 />
             </TabPanel>
         </SelectDialogTab>
