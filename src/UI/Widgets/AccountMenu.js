@@ -122,14 +122,14 @@ export default function AccountMenu() {
                         Account
                     </MenuItem>
                 </Link>
-                <Link to={userRoutes.notifications} style={{ color: "inherit" }}>
+                {/* <Link to={userRoutes.notifications} style={{ color: "inherit" }}>
                     <MenuItem>
                         <ListItemIcon>
                             <NotificationsNoneIcon fontSize="small" />
                         </ListItemIcon>
                         Notifications
                     </MenuItem>
-                </Link>
+                </Link> */}
                 <MenuItem onClick={onLogout}>
                     <ListItemIcon>
                         <Logout fontSize="small" />

@@ -25,11 +25,11 @@ const UserSettingsRoutes = (props) => (
       path={userRoutes.account}
       component={UserSettingsAccountPage}
     />
-    <Route
+    {/* <Route
       exact
       path={userRoutes.notifications}
       component={UserSettingsNotificationsPage}
-    />
+    /> */}
     {/* <Route
       exact
       path={userRoutes.twitterLinkCallback}
