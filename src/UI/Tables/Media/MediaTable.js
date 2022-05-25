@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
-import { Box, CircularProgress, Pagination } from '@mui/material'
+import { Box, CircularProgress, Pagination, styled } from '@mui/material'
 
 
 
@@ -21,6 +21,8 @@ import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
  */
 const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
+
+    const refScrollTopTable = useRef(null)
 
     // const selection = useArray(null, 'v2')
     const [selection, setSelection] = useState([])
@@ -123,7 +125,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             props.onSelectionChange(selection)
     }
 
-    const onSendClick =(item) =>{
+    const onSendClick = (item) => {
         if (props.onSendClick)
             props.onSendClick(item)
     }
@@ -133,28 +135,32 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             props.pagination.getPage(props.pagination.currentPage + 1)
         }
     }
-    
-    const isLastPage = props?.pagination?.currentPage === props?.pagination?.totalPages
+
+    // scroll to top of element ref
+    const scrollToTop = () => {
+        if (refScrollTopTable.current)
+            refScrollTopTable.current.scrollIntoView({ behavior: 'smooth' })
+    }
 
     return (
-        <Box width='100%' height={props.mini ? 500 : 'fit-content'} flex={1} pb={2}>
-            <Box>
+        <Box width='100%' height={props.mini ? 500 : 'fit-content'} flex={1} pb={2} ref={refScrollTopTable}>
+            <Box position='relative'>
                 {!props.loading && props.items && props.items.length === 0 && (
                     <span>No media available</span>
                 )}
                 {view === 'grid' ? (
                     <MediaGrid
-                      type={type}
-                      items={props.items}
-                      linkTo={props.linkTo}
-                      selectedControl={selectedControl}
-                      onSelectedChange={onMediaSelectedChange}
-                      onSendClick={props.onSendClick}
-                      xs={props.xs} 
-                      sm={props.sm} 
-                      md={props.md} 
-                      lg={props.lg} 
-                      xl={props.xl}
+                        type={type}
+                        items={props.items}
+                        linkTo={props.linkTo}
+                        selectedControl={selectedControl}
+                        onSelectedChange={onMediaSelectedChange}
+                        onSendClick={props.onSendClick}
+                        xs={props.xs}
+                        sm={props.sm}
+                        md={props.md}
+                        lg={props.lg}
+                        xl={props.xl}
                     />
                 ) : (
                     <DataTable
@@ -168,19 +174,17 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         onCellClick={onCellClick}
                     />
                 )}
+                <StyledLoadingOverlay isLoading={props.loading} display='flex' justifyContent='center'>
+                    <CircularProgress sx={{ position: 'fixed', left: '50%', top: '50%' }} />
+                </StyledLoadingOverlay>
             </Box>
-            {props.loading && (
-                <Box display='flex' justifyContent='center' mt={2} sx={{ height: 100 }}>
-                    <CircularProgress />
-                </Box>
-            )}
-            {(props.pagination && !props.loading && props.items?.length > 0) 
+            {(props.pagination && props.items?.length > 0)
                 && (
                     <Box display='flex' justifyContent='center' mt={2}>
                         <Pagination
                             count={props.pagination.totalPages}
                             page={props.pagination.currentPage}
-                            onChange={(event, page) => props.pagination.getPage(page)}
+                            onChange={(event, page) => { scrollToTop(); props.pagination.getPage(page) }}
                         />
                     </Box>
                 )
@@ -197,3 +201,14 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
 }
 
 export default MediaTable
+
+const StyledLoadingOverlay = styled(Box)(({ theme, isLoading }) => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    transition: 'opacity 0.3s ease-in-out',
+    visibility: isLoading ? 'visible' : 'hidden',
+}));
