@@ -28,6 +28,7 @@ import {
     addTagsToContacts,
     cancelMessage,
     addTagsToContactsWithNewTags,
+    addTagsToMessagesWithNewTags,
 } from 'Api/Endpoints'
 
 import { messageRoutes } from 'Routes/Routes'
@@ -272,7 +273,7 @@ const MessageDetailsPage = (props) => {
     const tagMessage = (selectedTags) => {
         setLoading(true)
 
-        addTagsToMessage(selectedTags, message.item.id)
+        addTagsToMessagesWithNewTags(selectedTags, message.item.id)
             .then(res => {
                 console.log(res)
 
