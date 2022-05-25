@@ -66,7 +66,8 @@ const TeamMemberProfilePage = (props) => {
     first_name: teamMember.item?.first_name || "",
     last_name: teamMember.item?.last_name || "",
     email: teamMember.item?.email || "",
-    phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
+    // phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
+    phone: teamMember.item?.sms_number || "",
     // organization: teamMember.item?.team.org.name || ""
   }
 
@@ -77,6 +78,7 @@ const TeamMemberProfilePage = (props) => {
         data[key] = values[key]
       }
     })
+    console.log("data", data)
     if (Object.keys(data).length > 0) {
       setLoading(true)
       updateTeamMember(data, id)
@@ -93,7 +95,7 @@ const TeamMemberProfilePage = (props) => {
       alert.setWarning("No changes to save")
     }
   }
-
+  console.log(teamMember.item)
   const onRemovePicture = () => {
     console.log("onRemovePicture")
   }
@@ -121,8 +123,8 @@ const TeamMemberProfilePage = (props) => {
       topActionName={props.topActionName || null}
       onBackClick={() => history.goBack()}
       filtersDisabled
-      // filters={filters}
-      // onTopActionClick={onTopActionClick}
+    // filters={filters}
+    // onTopActionClick={onTopActionClick}
     >
       {teamMember.loading ?
         <Stack
