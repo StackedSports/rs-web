@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Collapse, List, ListItem } from '@material-ui/core';
 import { ListItemButton } from '@mui/material';
 import * as Yup from "yup";
-import { parse, isDate } from "date-fns";
+import { parse, isDate, subYears } from "date-fns";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
@@ -48,7 +48,10 @@ const formValidation = Yup.object().shape({
 })
 
 const detailsFormValidation = Yup.object().shape({
-	dob: Yup.date().max(new Date(), "Date of birth must be in the past").typeError("Format must be yyyy/MM/dd")
+	dob: Yup.date()
+		.max(new Date(), "Date of birth must be in the past")
+		.min(subYears(new Date(), 120), `Date of birth must be at least 120 years old`)
+		.typeError("Format must be MM/DD/YYYY")
 })
 
 const ContactProfileDetails = (props) => {
@@ -541,13 +544,15 @@ const ContactProfileDetails = (props) => {
 							<DatePicker
 								label='Birthday'
 								name='dob'
-								format = 'MM/dd/yyyy'
+								format='MM/dd/yyyy'
 								disableFuture
+								minDate={subYears(new Date(), 120)}
 								value={formikProps.values.dob}
 								onChange={(e) => {
-									formikProps.setFieldValue('dob', e)
+									formikProps.setFieldValue('dob', e, true)
 									onAccordionFieldChange(1)
 								}}
+								helperText={formikProps.errors.dob ? formikProps.errors.dob : ''}
 							/>
 							<SearchableSelector
 								label="State"
