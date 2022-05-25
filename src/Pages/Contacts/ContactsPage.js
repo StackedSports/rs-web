@@ -165,11 +165,11 @@ export default function ContactsPage(props) {
         },
         status2: {
             label: 'Status 2',
-            options: status2
+            options: status2.items || []
         },
     }), [status, ranks, gradYears, tags, positions, status2])
 
-    //console.log('status2 = ', status2)
+    // console.log('status2 = ', status2.items)
 
     const visibleTableRows = {
         profileImg: false,//

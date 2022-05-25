@@ -218,7 +218,7 @@ const UserSettingsAccountPage = (props) => {
 							Your profile information can be edited below
 						</Typography>
 						<Typography variant="h5">
-							{user.item?.phone}
+							{user.item?.sms_number}
 						</Typography>
 						<Typography
 							sx={{ color: '#ccc', fontWeight: 500 }}
@@ -231,7 +231,7 @@ const UserSettingsAccountPage = (props) => {
 
 					<Button
 						variant="text"
-						disabled={!user.item?.phone}
+						disabled={!user.item?.sms_number}
 						style={{ justifySelf: "end", paddingRight: "20px" }}
 					// onClick={}
 					>

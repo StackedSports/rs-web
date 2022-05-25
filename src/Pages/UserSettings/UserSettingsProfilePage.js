@@ -36,7 +36,7 @@ const UserSettingsProfilePage = (props) => {
     first_name: user.item?.first_name || "",
     last_name: user.item?.last_name || "",
     email: user.item?.email || "",
-    phone: formatPhoneNumber(user.item?.phone) || "",
+    phone: user.item?.sms_number || "",
     organization: user.item?.team.org.name || ""
   }
 
@@ -122,7 +122,7 @@ const UserSettingsProfilePage = (props) => {
               <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
                 <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
-                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.phone}</Typography>
+                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.organization}</Typography>
               </Stack>
               <Stack flex={1} justifyContent="flex-start" alignItems="center">

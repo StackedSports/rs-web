@@ -13,7 +13,7 @@ const filters = [
             // Filters
             { id: '0', name: 'Profile', path: userRoutes.profile },
             { id: '1', name: 'Account', path: userRoutes.account },
-            { id: '2', name: 'Notifications', path: userRoutes.notifications },
+            // { id: '2', name: 'Notifications', path: userRoutes.notifications },
         ]
     },
 ]
