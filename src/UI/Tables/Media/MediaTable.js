@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
-import { Box, CircularProgress } from '@mui/material'
+import { Box, CircularProgress, Pagination } from '@mui/material'
 
 
 
@@ -164,7 +164,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         onSelectionChange={onDataTableSelectionChange}
                         checkboxSelection
                         disableSelectionOnClick
-                        hidePagination={disablePagination}
+                        hidePagination={true}
                         onCellClick={onCellClick}
                     />
                 )}
@@ -174,8 +174,18 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <CircularProgress />
                 </Box>
             )}
-            {(props.pagination && !isLastPage && !props.loading && props.items?.length > 0) 
-                && <Button name='Load More' onClick={onLoadMore} />}
+            {(props.pagination && !props.loading && props.items?.length > 0) 
+                && (
+                    <Box display='flex' justifyContent='center' mt={2}>
+                        <Pagination
+                            count={props.pagination.totalPages}
+                            page={props.pagination.currentPage}
+                            onChange={(event, page) => props.pagination.getPage(page)}
+                        />
+                    </Box>
+                )
+            }
+
             <MediaCarousel
                 index={carouselIndex}
                 items={props?.items?.map(item => item?.urls?.original)}

@@ -7,7 +7,7 @@ export const findByIds = (ids, items) => {
 
     ids.forEach(id => {
         items.every(item => {
-            if(item.id === id) {
+            if (item.id === id) {
                 results.push(item)
                 return false
             }
@@ -23,7 +23,7 @@ export const findById = (id, items) => {
     let found = null
 
     items.every(item => {
-        if(item.id === id) {
+        if (item.id === id) {
             found = item
             return false
         }
@@ -42,7 +42,7 @@ export const getStringListOfIds = (items) => {
 
         // if board is not last, add the a comma and space
         // before next board
-        if(index !== items.length - 1)
+        if (index !== items.length - 1)
             string += ','
     })
 
@@ -56,10 +56,10 @@ export const getStringListOfIds = (items) => {
  */
 export const separeteNewTagsNameFromExistingTagsIds = (selectedTags) => {
     const [newTagsNames, alreadyExistingTags] = selectedTags.reduce(([newTagsNames, alreadyExistingTags], selectedTagIds) => {
-            return selectedTagIds.toString().startsWith('new') ?
-                [newTagsNames.concat(selectedTagIds.replace('new-', '')), alreadyExistingTags] :
-                [newTagsNames, alreadyExistingTags.concat(selectedTagIds)]
-        }, [[], []])
+        return selectedTagIds.toString().trim().startsWith('new') ?
+            [newTagsNames.concat(selectedTagIds.replace('new-', '').trim()), alreadyExistingTags] :
+            [newTagsNames, alreadyExistingTags.concat(selectedTagIds)]
+    }, [[], []])
 
     return [newTagsNames, alreadyExistingTags]
 }

@@ -722,7 +722,7 @@ export const sendMessage = (message) => {
         user_id: message.sender.id,
     }
 
-    if(message.send_as_coach)
+    if (message.send_as_coach)
         payload['send_as_coach'] = message.send_as_coach
 
     // console.log(payload)
@@ -740,6 +740,15 @@ export const archiveMessage = (messageId) => {
     //return DELETE(`messages/${messageId}`, { message: { status: 'archived'} })
 }
 
+export const addTagMessage = (tagName, messageId) => {
+    let body = {
+        message: {
+            tag: tagName
+        }
+    }
+    return POST(`messages/${messageId}/add_tag`, body)
+}
+
 export const addTagsToMessage = (tagIds, messageId) => {
     let body = {
         message: {
@@ -748,6 +757,21 @@ export const addTagsToMessage = (tagIds, messageId) => {
     }
 
     return POST(`messages/${messageId}/add_tags`, body)
+}
+
+export const addTagsToMessagesWithNewTags = (tagIds, messageId) => {
+    const [newTags, existingTagIds] = separeteNewTagsNameFromExistingTagsIds(tagIds)
+    let promises = []
+
+    if (newTags.length > 0) {
+        newTags.forEach(tagName => {
+            promises.push(addTagMessage(tagName, messageId))
+        })
+    }
+    if (existingTagIds.length > 0) {
+        promises.push(addTagsToMessage(existingTagIds, messageId))
+    }
+    return Promise.all(promises)
 }
 
 export const addTagsToContact = (tagIds, contactId) => {
@@ -1041,7 +1065,7 @@ export const archiveMedias = async (mediasIds) => {
         error: {
             count: 0,
             id: [],
-            status:[],
+            status: [],
         }
     }
     return new Promise((resolve, reject) => {
