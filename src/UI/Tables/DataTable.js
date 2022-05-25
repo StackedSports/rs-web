@@ -64,6 +64,7 @@ const DataTable = (props) => {
               onFilterModelChange={props.onFilterModelChange}
               filterModel={props.filterModel}
               components = {props.components}
+              keepNonExistentRowsSelected
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}

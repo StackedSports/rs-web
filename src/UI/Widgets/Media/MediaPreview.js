@@ -266,7 +266,7 @@ const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
         width: '100%',
         height: '100%',
         backgroundColor: 'rgba(0,0,0,0.6)',
-        zIndex: 1,
+        zIndex: 0,
     } : '',
 
 }));
@@ -275,12 +275,12 @@ const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     left: 0,
-    zIndex: 2,
+    zIndex: 1,
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    zIndex: 2,
+    zIndex: 1,
 }));
