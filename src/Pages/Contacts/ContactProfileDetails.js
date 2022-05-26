@@ -86,6 +86,8 @@ const ContactProfileDetails = (props) => {
 	const ranks = useRanks()
 	const tags = useTags2()
 
+	console.log(status2)
+
 	useEffect(() => {
 		if (props.contact)
 			console.log(props.contact)
@@ -106,7 +108,7 @@ const ContactProfileDetails = (props) => {
 			high_school: props.contact?.high_school,
 			state: props.contact?.state,
 			status: props.contact?.status?.status,
-			// status_2: props.contact?.status_2,
+			status_2: props.contact?.status_2 || "",
 			rank: props.contact?.rank?.rank,
 		},
 		coaches: {
@@ -224,6 +226,7 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onUpdateDetails = (values, actions) => {
+		console.log(values)
 		onUpdateContact(values, 'details', 1)
 	}
 
@@ -450,6 +453,12 @@ const ContactProfileDetails = (props) => {
 		setOpenNewFamilyMemberDialog(true)
 	}
 
+	const onStatus2Change = (setFieldValue, value) => {
+		console.log(value)
+		onAccordionFieldChange(1)
+		setFieldValue('status_2', value)
+	}
+
 	return (
 		<Stack
 			pr={1}
@@ -587,22 +596,26 @@ const ContactProfileDetails = (props) => {
 									onAccordionFieldChange(1)
 								}}
 							/>
-							
-							{/* <SearchableSelector
+
+							<SearchableSelector
 								label="Status2"
 								placeholder="Search"
 								// multiple
 								value={formikProps.values.status_2}
 								options={status2.items || []}
 								loading={status2.loading}
-								isOptionEqualToValue={(option, value) => option?.status === value}
-								getOptionLabel={(option) => option.status || option || ""}
-								onChange={(newValue) => {
-									console.log(newValue)
-									formikProps.setFieldValue('status_2', newValue)
-									onAccordionFieldChange(1)
+								isOptionEqualToValue={(option, value) => option === value}
+								getOptionLabel={(option) => option || ""}
+								onInputChange={(e, newValue) => {
+									onStatus2Change(formikProps.setFieldValue, newValue)
 								}}
-							/> */}
+								onChange={(newValue) => {
+									// console.log(newValue)
+									// formikProps.setFieldValue('status_2', newValue)
+									// onAccordionFieldChange(1)
+									onStatus2Change(formikProps.setFieldValue, newValue)
+								}}
+							/>
 
 							<SearchableSelector
 								label="Rank"

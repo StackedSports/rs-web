@@ -35,6 +35,7 @@ import {
 	uploadMedia,
 	addTagToMedia
 } from 'Api/Endpoints'
+import { Tooltip } from '@material-ui/core';
 
 export const FileDropZone = (props) => {
 
@@ -602,61 +603,88 @@ export default function UploadMediaDialog(props) {
 						<Stack flex={1}>
 							<MediaInputTitle title="Owner" />
 
-							<SearchableSelector
-								multiple
-								options={teamMembers.items}
-								loading={teamMembers.loading}
-								value={selectedOwner}
-								label="+ Add Owner"
-								placeholder="Search Owner"
-								getOptionLabel={(option) => getFullName(option)}
-								getChipLabel={(option) => getFullName(option)}
-								getChipAvatar={(option) => option.twitter_profile?.profile_image}
-								onInputChange={(event, newInputValue) => onOwnerInputChange(newInputValue)}
-								onChange={onOwnerChange}
-							/>
+							<Tooltip
+								arrow
+								placement="top-end"
+								title="Assigning an owner to your media upload enables the media owner to select “My Media” in the media library, and filter out all media owned by them."
+							>
+								<Stack flex={1}>
+									<SearchableSelector
+										multiple
+										options={teamMembers.items}
+										loading={teamMembers.loading}
+										value={selectedOwner}
+										label="+ Add Owner (Optional)"
+										placeholder="Search Owner"
+										getOptionLabel={(option) => getFullName(option)}
+										getChipLabel={(option) => getFullName(option)}
+										getChipAvatar={(option) => option.twitter_profile?.profile_image}
+										onInputChange={(event, newInputValue) => onOwnerInputChange(newInputValue)}
+										onChange={onOwnerChange}
+									/>
+								</Stack>
+							</Tooltip>
 						</Stack>
+
 						<Stack flex={1}>
 							<MediaInputTitle title="Tags" />
 
-							<SearchableSelector
-								multiple
-								options={tags.items}
-								loading={tags.loading}
-								value={selectedTags}
-								label="+ Add Tag"
-								placeholder="Search Tags"
-								onChange={onTagsChange}
-								getOptionLabel={(option) => option?.name || ''}
-								getChipLabel={(option) => option.name}
-								onInputChange={(event, newInputValue) => onTagsInputChange(newInputValue)}
-								onKeyPress={onTagsKeyPress}
-							/>
+							<Tooltip
+								arrow
+								placement="top-end"
+								title="Add a tag to your media for better organisation and easier filtering. (Think of a tag like adding media to a folder)"
+							>
+								<Stack flex={1}>
+									<SearchableSelector
+										multiple
+										options={tags.items}
+										loading={tags.loading}
+										value={selectedTags}
+										label="+ Add Tag (Optional)"
+										placeholder="Search Tags"
+										onChange={onTagsChange}
+										getOptionLabel={(option) => option?.name || ''}
+										getChipLabel={(option) => option.name}
+										onInputChange={(event, newInputValue) => onTagsInputChange(newInputValue)}
+										onKeyPress={onTagsKeyPress}
+									/>
+								</Stack>
+							</Tooltip>
 						</Stack>
+
 
 						<Stack flex={1}>
 							<MediaInputTitle title="Associate to placeholder or create new" />
 
-							<SearchableSelector
-								multiple
-								options={placeholders.items}
-								loading={placeholders.loading}
-								value={selectedPlaceholders}
-								label="+ Add Media Placeholder"
-								placeholder="Search Placeholder"
-								onChange={onPlaceholdersChange}
-								getOptionLabel={(option) => option?.name || ''}
-								getChipLabel={(option) => option.name}
-								onInputChange={(event, newInputValue) => onPlaceholdersInputChange(newInputValue)}
-								onKeyPress={onPlaceholdersKeyPress}
-							/>
+							<Tooltip
+								arrow
+								placement="top-end"
+								title="Create a new placeholder or add media to an existing placeholder for sending personalised media to contacts. "
+							>
+								<Stack flex={1}>
+									<SearchableSelector
+										multiple
+										options={placeholders.items}
+										loading={placeholders.loading}
+										value={selectedPlaceholders}
+										label="+ Add Media Placeholder (For personalized media)"
+										placeholder="Search Placeholder"
+										onChange={onPlaceholdersChange}
+										getOptionLabel={(option) => option?.name || ''}
+										getChipLabel={(option) => option.name}
+										onInputChange={(event, newInputValue) => onPlaceholdersInputChange(newInputValue)}
+										onKeyPress={onPlaceholdersKeyPress}
+									/>
+								</Stack>
+							</Tooltip>
 						</Stack>
 					</Stack>
 				}
 
 				{/* {dropFiles.length < 1 && <FileDropZone/>} */}
 
-				{alerts.length > 0 &&
+				{
+					alerts.length > 0 &&
 
 					alerts.map((alert, index) => (
 						<Alert
@@ -670,7 +698,8 @@ export default function UploadMediaDialog(props) {
 					))
 				}
 
-				{files.length > 0 &&
+				{
+					files.length > 0 &&
 					<div
 						style={{
 							marginTop: 32,
@@ -701,14 +730,15 @@ export default function UploadMediaDialog(props) {
 					</div>
 				}
 
-				{!uploadFinished &&
+				{
+					!uploadFinished &&
 					<FileDropZone
 						style={{ marginTop: dropFiles.length == 0 ? 30 : 0 }}
 						onDrop={onDrop}
 					/>
 				}
 
-			</Stack>
+			</Stack >
 
 			<Stack direction="row" justifyContent="flex-end" margin={2}>
 				<MuiButton
@@ -741,6 +771,6 @@ export default function UploadMediaDialog(props) {
 					{uploadFinished ? "OK" : "Upload"}
 				</LoadingButton>
 			</Stack>
-		</Dialog>
+		</Dialog >
 	)
 }
