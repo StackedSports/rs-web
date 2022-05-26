@@ -1,10 +1,10 @@
-import { getFullName } from "utils/Parser"
-import format from "date-fns/format"
+import { getFullName, formatDateWithoutUTC } from "utils/Parser"
+import { format } from "date-fns"
 
 const SendTime = {
     field: 'send_at',
     headerName: 'Send Time',
-    valueGetter: (params) => params.row?.send_at ? format(new Date(params.row.send_at),'Pp') : '',
+    valueGetter: (params) =>params.row?.send_at ? format(formatDateWithoutUTC(params.row.send_at), 'Pp') : '',
     flex: 1
 }
 const Sender = {

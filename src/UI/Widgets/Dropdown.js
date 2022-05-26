@@ -27,9 +27,6 @@ const Dropdown = (props) => {
     else if (props.disabled)
         className = 'DropDown-Content-Disabled'
 
-    // console.log('dropdown' + className)
-
-
     return (
         <div className='DropDown' onMouseLeave={onMouseLeave} style={props.style}>
             <div tabIndex={0}

@@ -293,7 +293,6 @@ export const addUser = (body) => {
 }
 export const useTags = () => {
     const [tags, setTags] = useState(null)
-
     useEffect(() => {
         getTags()
             .then(([tags]) => {
