@@ -59,7 +59,7 @@ const MessageRecipientsTable = (props) => {
         console.log(page)
         props.onPageChange(page)
     }
-    //console.log("contacts", contacts)
+    console.log("contacts", contacts)
 
     const onCellClick = ({ field, row }) => {
         if (field === 'media') 
