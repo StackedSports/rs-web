@@ -7,12 +7,12 @@ import Stack from '@mui/material/Stack'
 
 import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { routes } from 'Routes/Routes'
+import { routes, messageRoutes } from 'Routes/Routes'
 
 const regularItems = [
     routes.dashboard,
     routes.contacts,
-    routes.messages,
+    { ...routes.messages, path: messageRoutes.create },
     routes.media,
     routes.tweet,
     // routes.twitterPosts,
