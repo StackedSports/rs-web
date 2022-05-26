@@ -259,6 +259,11 @@ export const formatDate = (date, dateStyle, timeStyle) => {
 	return d.toLocaleString('en-US', { dateStyle, timeStyle })
 }
 
+export const formatDateWithoutUTC = (isoDate) =>{
+	const date = new Date(isoDate)
+	return new Date (date.valueOf() + date.getTimezoneOffset() * 60000)
+}
+
 export const removeSpaces = (string) => string.replace(/\s/g, '')
 
 export const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1)

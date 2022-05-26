@@ -305,7 +305,7 @@ const birthday = {
     headerName: 'Birthday ',
     flex: 1,
     minWidth: 100,
-    valueGetter: (params) => params.row.dob ? new Date(params.row.dob) : '',
+    valueGetter: (params) => params.row.dob ? new Date(params.row.dob.split('-')) : '',
     renderCell: (params) => (
         <Tooltip title={formatDate(params.value, 'short')} placement='right-start'>
             <Typography fontSize={14} noWrap >{formatDate(params.value, 'short')}</Typography>

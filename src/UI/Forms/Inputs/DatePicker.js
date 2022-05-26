@@ -30,9 +30,6 @@ export const DatePicker = (props) => {
                 value={value}
                 minDate={props.minDate}
                 onChange={handleChange}
-                onError={(error) => {
-                    console.log(error);
-                }}
                 disableFuture={props.disableFuture}
                 inputFormat={formatStyle}
                 mask={formatStyle.replace(/[^\/]/g, '_')}

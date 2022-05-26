@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TextField, styled, Stack, Box } from '@mui/material';
+import { TextField, styled, Stack } from '@mui/material';
 import { DateRangePicker as MuiDateRangePicker, DesktopDateRangePicker } from '@mui/x-date-pickers-pro'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -51,12 +51,12 @@ export const DateRangePicker = (props) => {
                     clearable
                     allowSameDateSelection
                     disableFuture={props.disableFuture}
-                    //disableCloseOnSelect={true}
                     inputFormat={formatStyle}
                     mask={formatStyle.replace(/[^\/]/g, '_')}
                     value={value}
                     onChange={(newValue) => setValue(newValue)}
                     onAccept={(date) => handleCloseCalendar(date)}
+                    onClose={() => { setOpen(false); setShowCalendar(false) }}
                     renderInput={
                         (startProps, endProps) => {
                             //console.log(startProps,endProps)

@@ -5,9 +5,8 @@ import { KeyboardArrowDown } from '@mui/icons-material';
 import lodash from 'lodash';
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
-import Dropdown from 'UI/Widgets/Dropdown';
-import Button from '../Buttons/Button';
 import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
+import { Dropdown } from './Dropdown';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
@@ -97,7 +96,6 @@ export const PanelFilters = (props) => {
 		})
 	}
 
-
 	const getOptionLabel = (filter, option) => {
 
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
@@ -108,19 +106,6 @@ export const PanelFilters = (props) => {
 			return option.name;
 		}
 	}
-
-	const getContent = (filter, filterName) => {
-
-		return (<Dropdown.List>
-			{filter.options.map((option) => (
-				<Dropdown.Item
-					key={option.id}
-					name={getOptionLabel(filter, option)}
-					onClick={() => handleOptionsChange(filterName, option, filter)}
-				/>
-			))}
-		</Dropdown.List>);
-	};
 
 	return (
 		<>
@@ -156,12 +141,11 @@ export const PanelFilters = (props) => {
 							)
 						else
 							return (
-								<Box key={filterName}>
-									<Dropdown
-										header={() => <Button name={filter.label} variant='outlined' endIcon={<KeyboardArrowDown />} />}
-										content={() => getContent(filter, filterName)}
-									/>
-								</Box>
+								<Dropdown
+									{...filter}
+									onClick={(option) => handleOptionsChange(filterName, option, filter)}
+									getOptionLabel={(option) => getOptionLabel(filter, option)}
+								/>
 							)
 					})}
 				</Stack>

@@ -6,12 +6,12 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags, useTeamMembers, useMediaTypes } from 'Api/Hooks'
+import { useTags2, useTeamMembers, useMediaTypes } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
 import { Alert } from '@mui/material'
 
 export const MediaPage = (props) => {
-    const tags = useTags()
+    const tags = useTags2()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
 
@@ -94,9 +94,11 @@ export const MediaPage = (props) => {
         },
         "tag": {
             label: 'Tag',
-            options: tags || [],
+            options: tags.items || [],
+            type:'search',
+            onSearch: (search) => tags.search(search),
         },
-    }), [tags, mediaTypes])
+    }), [tags.items, mediaTypes])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
