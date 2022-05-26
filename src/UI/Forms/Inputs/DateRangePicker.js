@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TextField, styled, Stack, Box } from '@mui/material';
+import { TextField, styled, Stack, Box, ClickAwayListener } from '@mui/material';
 import { DateRangePicker as MuiDateRangePicker, DesktopDateRangePicker } from '@mui/x-date-pickers-pro'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -45,31 +45,33 @@ export const DateRangePicker = (props) => {
     if (showCalendar) {
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         return (
-            <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
-                <MuiDateRangePicker
-                    open={open}
-                    clearable
-                    allowSameDateSelection
-                    disableFuture={props.disableFuture}
-                    //disableCloseOnSelect={true}
-                    inputFormat={formatStyle}
-                    mask={formatStyle.replace(/[^\/]/g, '_')}
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
-                    onAccept={(date) => handleCloseCalendar(date)}
-                    renderInput={
-                        (startProps, endProps) => {
-                            //console.log(startProps,endProps)
-                            return (
-                                <StyledInputArea format={formatStyle}>
-                                    <TextField {...startProps} size='small' autoFocus />
-                                    <TextField {...endProps} size='small' />
-                                </StyledInputArea>
-                            )
-                        }}
-                    toolbarFormat={formatStyle}
-                />
-            </LocalizationProvider>
+            <ClickAwayListener>
+                <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
+                    <MuiDateRangePicker
+                        open={open}
+                        clearable
+                        allowSameDateSelection
+                        disableFuture={props.disableFuture}
+                        //disableCloseOnSelect={true}
+                        inputFormat={formatStyle}
+                        mask={formatStyle.replace(/[^\/]/g, '_')}
+                        value={value}
+                        onChange={(newValue) => setValue(newValue)}
+                        onAccept={(date) => handleCloseCalendar(date)}
+                        renderInput={
+                            (startProps, endProps) => {
+                                //console.log(startProps,endProps)
+                                return (
+                                    <StyledInputArea format={formatStyle}>
+                                        <TextField {...startProps} size='small' autoFocus />
+                                        <TextField {...endProps} size='small' />
+                                    </StyledInputArea>
+                                )
+                            }}
+                        toolbarFormat={formatStyle}
+                    />
+                </LocalizationProvider>
+            </ClickAwayListener>
         )
     } else {
         return <Button
