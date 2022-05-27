@@ -12,7 +12,7 @@ import { deleteTeamMember } from 'Api/Endpoints';
 
 
 const TeamMembersSettingsPage = () => {
-    const alert = useMainLayoutAlert();
+    const alert = useMainLayoutAlert()
     const teamMembers = useTeamMembers()
     const confirmDialog = useContext(ConfirmDialogContext)
 
