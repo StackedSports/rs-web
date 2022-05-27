@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
@@ -6,14 +6,14 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags2, useTeamMembers, useMediaTypes } from 'Api/Hooks'
+import { useTags2, useTeamMembers, useMediaTypes, useContacts } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
-import { Alert } from '@mui/material'
 
 export const MediaPage = (props) => {
     const tags = useTags2()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
+    const contacts = useContacts()
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
@@ -43,7 +43,11 @@ export const MediaPage = (props) => {
             {
                 id: index,
                 name: 'My Media',
-                items: teamMembers.items.map(item => ({ id: item.id, name: getFullName(item), path: `${mediaRoutes.filters.owner}/${item.id}` }))
+                items: teamMembers.items.map(item => ({
+                    id: item.id,
+                    name: getFullName(item),
+                    path: `${mediaRoutes.filters.owner}/${item.id}`
+                }))
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
@@ -56,12 +60,7 @@ export const MediaPage = (props) => {
                 path: mediaRoutes.placeholders,
             }
         ]
-    }, [mediaTypes.items])
-
-
-    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filter[categoryIndex].items[filterIndex].name + ' selected from ' + filter[categoryIndex].name)
-    }
+    }, [mediaTypes.items, teamMembers.items])
 
     const panelFiltersData = useMemo(() =>
     ({
@@ -79,9 +78,12 @@ export const MediaPage = (props) => {
             options: teamMembers.items || [],
             optionsLabel: (item) => getFullName(item),
         },
-        "associatedTo": {
+        "contact_id": {
             label: 'Associated To',
-            options: [],
+            options: contacts.items || [],
+            optionsLabel: (item) => getFullName(item),
+            onSearch: (value) => value ==='' ? contacts.clearFilter() : contacts.filter({search: value}),
+            loading: contacts.loading,
         },
         "dateUploaded": {
             label: 'Date Uploaded',
@@ -95,13 +97,11 @@ export const MediaPage = (props) => {
         "tag": {
             label: 'Tag',
             options: tags.items || [],
-            type:'search',
             onSearch: (search) => tags.search(search),
         },
-    }), [tags.items, mediaTypes])
+    }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items,contacts.loading])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
         setUploadDialogOpen(true)
     }
 
@@ -110,14 +110,12 @@ export const MediaPage = (props) => {
         props.filter(filter)
     }
 
-
     return (
         <MainLayout
             title={props.title || 'Media'}
             topActionName={props.topActionName || '+ Add Media'}
             onTopActionClick={onTopActionClick}
             filters={filtersOptions}
-            onFilterSelected={onFilterSelected}
             actions={props.actions}
             //loading={teamMembers.loading}
             propsPanelFilters={{

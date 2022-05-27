@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react"
-import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted } from '@mui/icons-material'
-import { Typography } from "@mui/material"
+import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted, Clear } from '@mui/icons-material'
+import { Typography, Box, IconButton } from "@mui/material"
 import lodash from "lodash"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -11,12 +11,11 @@ import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholders } from 'Api/Hooks'
-import { addNewTagsToMedia, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
-import { separeteNewTagsNameFromExistingTagsIds } from "utils/Helper"
+import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
+import RenderIf from "UI/Widgets/RenderIf"
 
 export const AllMediaPlaceholderPage = (props) => {
 
-  const [allPlaceholders, setAllPlaceholders] = useState([])
   const [viewGrid, setViewGrid] = useState(true)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
   const [selectedPlaceholdersIds, setSelectedPlaceholdersIds] = useState([])
@@ -25,34 +24,30 @@ export const AllMediaPlaceholderPage = (props) => {
 
   const app = useContext(AppContext)
   const confirmDialog = useContext(ConfirmDialogContext)
-  const placeholders = usePlaceholders(1, 25)
+  const placeholders = usePlaceholders(1, 24)
   console.log(placeholders.items)
 
-  useEffect(() => {
-    if (placeholders.items) {
-      setAllPlaceholders(oldMedias => [...oldMedias, ...placeholders.items])
-    }
-  }, [placeholders.items])
+  /*   useEffect(() => {
+      if (placeholders.items) {
+        setAllPlaceholders(oldMedias => [...oldMedias, ...placeholders.items])
+      }
+    }, [placeholders.items]) */
 
   const onSelectionChange = (selection) => {
     setSelectedPlaceholdersIds(selection)
   }
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
-    setLoadingTags(true)
-    const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(tagsIds)
 
-    const res = await Promise.all(mediasIds.map(mediaId => addNewTagsToMedia(newTagsNames, mediaId)))
-		console.log("res", res)
-
-    const { success, error } = await addTagsToMedias(alreadyExistingTags, mediasIds)
-    if (error.count === 0)
+    const { success, error } = await addTagsToMedias(tagsIds, mediasIds)
+    if (error.count === 0) {
       app.alert.setSuccess('Tags added successfully')
+      setOpenSelectTagDialog(false)
+    }
     else if (success.count === 0)
       app.alert.setError('An error occurred while adding tags')
     else
       app.alert.setWarning(`Some tags (${error.count}) could not be added`)
-    setLoadingTags(false)
   }
 
   const onDeleteTagsFromMedias = async (tagsIds, mediasIds) => {
@@ -60,8 +55,10 @@ export const AllMediaPlaceholderPage = (props) => {
       `Are you sure you want to remove the selected tags (${tagsIds.length}) ?`,
       async () => {
         const { success, error } = await deleteTagsFromMedias(tagsIds, mediasIds)
-        if (error.count === 0)
+        if (error.count === 0) {
           app.alert.setSuccess('Tags removed successfully')
+          setOpenSelectTagDialog(false)
+        }
         else if (success.count === 0)
           app.alert.setError('An error occurred while removing tags')
         else
@@ -71,9 +68,9 @@ export const AllMediaPlaceholderPage = (props) => {
 
   const handleTagsDialogConfirm = async (selectedTagsIds) => {
 
-    setOpenSelectTagDialog(false)
+    setLoadingTags(true)
     // getting all medias from selected placeholders
-    const mediasFromSelectedPlaceholders = allPlaceholders.
+    const mediasFromSelectedPlaceholders = placeholders.items.
       filter(placeholders => selectedPlaceholdersIds.includes(placeholders.id)).
       map(placeholder => placeholder.media).
       flat()
@@ -81,10 +78,11 @@ export const AllMediaPlaceholderPage = (props) => {
     const uniqueMediasIds = lodash.uniqBy(mediasFromSelectedPlaceholders, 'id').map(media => media.id)
 
     if (isTagDialogFunctionRemoveRef.current) {
-      onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
+      await onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
     } else {
-      onAddTagsToMedias(selectedTagsIds, uniqueMediasIds)
+      await onAddTagsToMedias(selectedTagsIds, uniqueMediasIds)
     }
+    setLoadingTags(false)
   }
 
   const onTagAction = () => {
@@ -101,9 +99,24 @@ export const AllMediaPlaceholderPage = (props) => {
     }
   }
 
+  //TODO how to archive placeholder?
+  const onArchivePlaceholder = () => {
+    app.alert.setWarning('Archive Placeholder not implemented yet')
+  }
+
   const onSendInMessageAction = () => {
-    // should send all selected medias in a message?
-    /*  app.sendMediaInMessage(placeholder, 'placeholder') */
+    if (selectedPlaceholdersIds.length !== 1)
+      app.alert.setWarning('Please select only one media placeholder to send in message')
+    else {
+      const placeholder = placeholders.items.find(p => selectedPlaceholdersIds[0] === p.id)
+      if (placeholder)
+        app.sendMediaInMessage(placeholder, 'placeholder')
+    }
+  }
+
+  //TODO: find way to download all medias at once ( zip file? )
+  const onDownloadAction = () => {
+    console.log("Download action")
   }
 
   const mainActions = [
@@ -120,9 +133,9 @@ export const AllMediaPlaceholderPage = (props) => {
       type: 'dropdown',
       disabled: selectedPlaceholdersIds.length === 0,
       options: [
-        { name: 'Send in Message', onClick: () => { console.log("clicked") } },
-        { name: 'Download', onClick: () => { console.log("clicked") } },
-        { name: 'Archive Media', onClick: () => { console.log("clicked") } },
+        { name: 'Send in Message', onClick: onSendInMessageAction },
+        { name: 'Download', onClick: onDownloadAction },
+        { name: 'Archive Media', onClick: onArchivePlaceholder },
         { name: 'Untag', onClick: onUntagAction },
       ]
     },
@@ -140,18 +153,27 @@ export const AllMediaPlaceholderPage = (props) => {
       title="Placeholders"
       actions={mainActions}
     >
-      {!placeholders.loading && (placeholders.items && placeholders.items.length > 0) && (
-        <Typography fontWeight='bold' gutterBottom>
-          Showing  {' '}
+
+      <RenderIf condition={placeholders.items && placeholders.items.length > 0}>
+        <Typography fontWeight='bold'>
+          You have
           <Typography component='span' color='primary' fontWeight='bold'>
-            {allPlaceholders?.length + " of " + placeholders.pagination.totalItems}
+            {` ${placeholders.pagination.totalItems || 0} `}
           </Typography>
-          {' '} placeholders
+          placeholders
         </Typography>
-      )}
+        <RenderIf condition={selectedPlaceholdersIds.length > 0}>
+          <Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'}>
+            {`${selectedPlaceholdersIds.length} placeholder${selectedPlaceholdersIds.length > 1 ? "s" : ""} selected`}
+            <IconButton size='small' color='primary' onClick={() => setSelectedPlaceholdersIds([])}>
+              <Clear fontSize="inherit" />
+            </IconButton>
+          </Typography>
+        </RenderIf>
+      </RenderIf>
 
       <MediaTable
-        items={allPlaceholders}
+        items={placeholders.items || []}
         type='placeholder'
         pagination={placeholders.pagination}
         loading={placeholders.loading}

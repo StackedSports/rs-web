@@ -175,7 +175,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     />
                 )}
                 <StyledLoadingOverlay isLoading={props.loading} display='flex' justifyContent='center'>
-                    <CircularProgress sx={{ position: 'fixed', left: '50%', top: '50%' }} />
+                    <CircularProgress sx={{ position: 'sticky', left: '50%', top: '50%' }} />
                 </StyledLoadingOverlay>
             </Box>
             {(props.pagination && props.items?.length > 0)
@@ -211,4 +211,5 @@ const StyledLoadingOverlay = styled(Box)(({ theme, isLoading }) => ({
     backgroundColor: 'rgba(255, 255, 255, 0.6)',
     transition: 'opacity 0.3s ease-in-out',
     visibility: isLoading ? 'visible' : 'hidden',
+    zIndex: 30,
 }));

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import ConfirmDialogContext from "Context/ConfirmDialogProvider";
 
 export const ConfirmDialog = () => {
-    const {title, message, onSubmit, close } = useContext(ConfirmDialogContext);
+    const { title, message, onSubmit, close } = useContext(ConfirmDialogContext);
 
     return (
         <BaseDialog
@@ -22,6 +22,7 @@ export const ConfirmDialog = () => {
             }}
             confirmLabel="Cancel"
             cancelLabel="Confirm"
+            sx={{ zIndex: theme => theme.zIndex.modal + 1 }}
         >
             <Typography>{message}</Typography>
         </BaseDialog>

@@ -17,6 +17,7 @@ const BaseDialog = (props) => {
       fullWidth
       open={props.open}
       onClose={props.onClose}
+      sx={props.sx}
     >
       {props.title && <DialogTitle sx={{ mr: '40px' }} >{props.title}</DialogTitle>}
 

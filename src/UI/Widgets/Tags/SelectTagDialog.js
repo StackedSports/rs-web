@@ -34,13 +34,6 @@ const SelectTagDialog = (props) => {
         setTagsTable(tags.items)
     }, [tags.items])
 
-    // useEffect(() => {
-    //     if(!contact)
-    //         return
-
-    //     console.log(contact) 
-    // }, [contact])
-
     useEffect(() => {
         if (!filterModel) {
             setSearch('')
@@ -48,6 +41,11 @@ const SelectTagDialog = (props) => {
         }
         setSearch(filterModel?.items[0]?.value)
     }, [filterModel])
+
+    useEffect(() => {
+        if (props.open)
+            setSelectedTags([])
+    }, [props.open])
 
 
     const onSelectedTagsChange = (selection) => {
@@ -77,7 +75,6 @@ const SelectTagDialog = (props) => {
             return
         }
         props.onConfirm(selectedTags)
-        setSelectedTags([])
     }
 
     const onClose = () => {
@@ -119,11 +116,11 @@ const SelectTagDialog = (props) => {
                     {/* <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
                         {search}
                     </Typography> */}
-                    <Button 
-                      onClick={onCreateTag} 
-                      name={`Create Tag "${search}"`} 
-                      variant='contained' 
-                      sx={{ zIndex: 10 }} 
+                    <Button
+                        onClick={onCreateTag}
+                        name={`Create Tag "${search}"`}
+                        variant='contained'
+                        sx={{ zIndex: 10 }}
                     />
                 </RenderIf>
             </Stack>

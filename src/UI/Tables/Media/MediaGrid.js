@@ -7,7 +7,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 export default function MediaGrid(props) {
     // console.log(props.items)
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} mt={.5}>
             {props.items && props.items.map((item, index) => (
                 <Grid key={(item.hashid || item.id) + (item.name || item.file_name)}
                   item 

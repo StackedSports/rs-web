@@ -27,11 +27,11 @@ import {
     useRanks,
     useGradYears,
     useBoards,
-    useTags,
     usePositions,
     useTeamMembers,
     useUser,
-    useStatus2
+    useStatus2,
+    useTags2
 } from 'Api/Hooks'
 
 import {
@@ -47,6 +47,7 @@ import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 import { timeZones, states } from 'utils/Data'
 import { separeteNewTagsNameFromExistingTagsIds } from 'utils/Helper';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
+import { getFullName } from 'utils/Parser';
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
@@ -77,7 +78,7 @@ export default function ContactsPage(props) {
     const status = useStatuses()
     const ranks = useRanks()
     const gradYears = useGradYears()
-    const tags = useTags()
+    const tags = useTags2()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
@@ -119,12 +120,13 @@ export default function ContactsPage(props) {
     ({
         status: {
             label: 'Status',
-            options: status.items?.map(item => ({ id: item.id, name: item.status })) || [],
-            type: 'status'
+            options: status.items || [],
+            optionsLabel: 'status'
         },
         rank: {
             label: 'Rank',
-            options: ranks.items?.map(item => ({ id: item.id, name: item.rank })) || [],
+            options: ranks.items || [],
+            optionsLabel: 'rank'
         },
         gradYear: {
             label: 'Grad Year',
@@ -132,7 +134,8 @@ export default function ContactsPage(props) {
         },
         tags: {
             label: 'Tags',
-            options: tags || [],
+            options: tags.items || [],
+            onSearch: (search) => tags.search(search),
         },
         position: {
             label: 'Position',
@@ -140,11 +143,13 @@ export default function ContactsPage(props) {
         },
         areaCoach: {
             label: 'Area Coach',
-            options: teamMembersItems
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option)
         },
         positionCoach: {
             label: 'Position Coach',
-            options: teamMembersItems
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option)
         },
         timeZone: {
             label: 'Time Zone',
@@ -167,9 +172,7 @@ export default function ContactsPage(props) {
             label: 'Status 2',
             options: status2.items || []
         },
-    }), [status, ranks, gradYears, tags, positions, status2])
-
-    // console.log('status2 = ', status2.items)
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
     const visibleTableRows = {
         profileImg: false,//
@@ -291,7 +294,7 @@ export default function ContactsPage(props) {
         if (res.error.count === 0)
             app.alert.setSuccess('Contacts tagged successfully!')
         else
-           app.alert.setWarning(`${res.success.count} out of ${multipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
+            app.alert.setWarning(`${res.success.count} out of ${multipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
 
         setLoadingTags(false)
     }
@@ -407,19 +410,6 @@ export default function ContactsPage(props) {
                         onSearch={onContactSearch}
                         onClear={onContactSearchClear}
                     />
-                    {/* <PanelDropdown
-                        action={{
-                            name: 'Actions',
-                            variant: 'outlined',
-                            icon: AutoFixHighIcon,
-                            options: [
-                                // { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                // { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
-                                // { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                // { name: 'Archive Contact', onClick: onArchiveContactClick }
-                            ]
-                        }}
-                    /> */}
                     {multipageSelection.count > 0 &&
                         <PanelDropdown
                             action={{
@@ -483,20 +473,6 @@ export default function ContactsPage(props) {
                     /> */}
                 </Stack>
             </Stack>
-
-
-            {/*    <ContactsTable
-                id="contacts-page"
-                contacts={contacts.items}
-                pagination={contacts.pagination}
-                loading={contacts.loading}
-                selection={selectedContacts.items}
-                columnsControl={visibleTableRows}
-                onSelectionChange={onContactsSelectionChange}
-                onPageChange={onPageChange}
-                onSortingChange={onSortingChange}
-                apiRef={gridApiRef}
-            /> */}
 
             <ContactsTableServerMode
                 redirectToDetails

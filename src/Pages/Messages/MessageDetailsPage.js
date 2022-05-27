@@ -282,7 +282,7 @@ const MessageDetailsPage = (props) => {
             .catch(error => {
                 console.log(error)
 
-                alert.setError('Message could not be tagget')
+                alert.setWarning('One or more tags could not be added to the message. Try again.')
             })
             .finally(() => setLoading(false))
     }
