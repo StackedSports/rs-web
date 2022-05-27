@@ -32,7 +32,7 @@ const placeholderMediaCount = {
     field: 'media',
     headerName: 'File Count',
     flex: 1,
-    valueGetter: (params) => params.row.media.length,
+    valueGetter: (params) => params.row.media_count
 }
 
 const associatedTo = {
