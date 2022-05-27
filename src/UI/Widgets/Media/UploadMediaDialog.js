@@ -218,6 +218,7 @@ export default function UploadMediaDialog(props) {
 			let file = files[i]
 
 			//console.log(file)
+			
 
 			if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png") || file.type.includes("/gif")) && file.size < 5000000)
 				|| ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
