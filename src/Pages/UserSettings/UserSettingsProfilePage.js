@@ -36,7 +36,7 @@ const UserSettingsProfilePage = (props) => {
     first_name: user.item?.first_name || "",
     last_name: user.item?.last_name || "",
     email: user.item?.email || "",
-    phone: user.item?.sms_number || "",
+    phone: user.item?.phone || "",
     organization: user.item?.team.org.name || ""
   }
 
@@ -227,23 +227,29 @@ const UserSettingsProfilePage = (props) => {
                     <FormHelperText id="phone">Phone Number</FormHelperText>
                   </FormControl>
 
-                  <FormControl sx={{ width: '100%' }} variant="outlined">
-                    <Field
-                      id="organization"
-                      name="organization"
-                      label="Organization"
-                      component={TextField}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={formikProps.values.organization}
-                    // onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("organization", e.target.value) }}
-                    />
-                    <FormHelperText id="organization">Organization</FormHelperText>
-                  </FormControl>
+
+                  {user.item?.sms_number &&
+                    <FormControl sx={{ width: '100%' }} variant="outlined">
+                      <Field
+                        id="sms-number"
+                        name="sms-number"
+                        label="Sms Number"
+                        component={TextField}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        value={formatPhoneNumber(user.item?.sms_number) || ""}
+                      />
+                      <FormHelperText id="sms-number">SMS/MMS</FormHelperText>
+                    </FormControl>
+                  }
 
                   <LoadingButton
                     type="submit"
+                    sx={{
+                      alignSelf: "center",
+                      gridColumn: user.item?.sms_number ? "2/3" : "1/3"
+                    }}
                     loading={loading}
                     variant="contained"
                     onClick={onSaveSettings}

@@ -3,6 +3,7 @@ import AvatarImg from "images/avatar.png";
 
 import { formatPhoneNumber } from 'utils/Parser';
 import { settingsRoutes } from 'Routes/Routes';
+import { Avatar, Tooltip, Typography } from '@material-ui/core';
 
 
 const getImg = (profile_image) => {
@@ -15,16 +16,17 @@ const profileImg = {
     headerName: '',
     width: 50,
     sortable: false,
-    valueGetter: (params) => params.row.twitter_profile?.profile_image,
+    valueGetter: (params) => params.row.twitter_profile,
     renderCell: (params) => {
-        // console.log(params)
+        console.log(params.row)
         return (
-            <img
-                src={getImg(params.value)}
-                style={{ width: 30, height: 30, borderRadius: "50%" }}
+            <Avatar
+                alt={params.row.first_name}
+                src={getImg(params.value?.profile_image)}
+                sx={{ width: 40, height: 40, justifySelf: 'center' }}
             />
         )
-    }
+    },
 }
 
 const fullName = {
@@ -61,16 +63,26 @@ const twitterName = {
             return `@${params.row.twitter_profile?.screen_name}`
         else
             return ''
-    }
+    },
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+            <Typography component='span' style={{ fontSize: 12 }} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 const phone = {
     field: 'phone',
-    headerName: 'Phone',
+    headerName: 'Personal Phone',
     width: 180,
     flex: 1,
     // resizable: true,
-    valueGetter: (params) => formatPhoneNumber(params.row.phone)
+    valueGetter: (params) => formatPhoneNumber(params.row.phone),
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+            <Typography component='span' style={{ fontSize: 12 }} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 
@@ -80,7 +92,12 @@ const smsNumber = {
     width: 160,
     flex: 1,
     // resizable: true,
-    valueGetter: (params) => params.row.sms_number ? formatPhoneNumber(params.row.sms_number) : ''
+    valueGetter: (params) => params.row.sms_number ? formatPhoneNumber(params.row.sms_number) : '',
+    renderCell: (params) => (
+        <Tooltip title={params.value} placement='right-start'>
+            <Typography component='span' style={{ fontSize: 12 }} noWrap >{params.value}</Typography>
+        </Tooltip>
+    ),
 }
 
 

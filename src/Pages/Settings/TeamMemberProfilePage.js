@@ -66,8 +66,8 @@ const TeamMemberProfilePage = (props) => {
     first_name: teamMember.item?.first_name || "",
     last_name: teamMember.item?.last_name || "",
     email: teamMember.item?.email || "",
-    // phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
-    phone: teamMember.item?.sms_number || "",
+    phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
+    // phone: teamMember.item?.phone || "",
     // organization: teamMember.item?.team.org.name || ""
   }
 
@@ -136,39 +136,86 @@ const TeamMemberProfilePage = (props) => {
         </Stack>
         :
         <Stack flex={1} spacing={2} direction="row">
-          <Box
-            sx={{
-              height: "250px",
-              display: "grid",
-              alignItems: "center",
-              gridTemplateRows: "2fr .1fr .9fr",
-              borderRadius: "7px",
-              border: "#dadada  1px solid",
-            }}
-          >
-            <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={4} padding="20px">
-              <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
-                <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
-                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
-                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
+          <Stack spacing={2}>
+            <Box
+              sx={{
+                width: "400px",
+                height: "250px",
+                display: "grid",
+                alignItems: "center",
+                gridTemplateRows: "2fr .1fr .9fr",
+                borderRadius: "7px",
+                border: "#dadada  1px solid",
+              }}
+            >
+              <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={4} padding="20px">
+                <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
+                  <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
+                  <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
+                  <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
+                </Stack>
+                <Stack flex={1} justifyContent="flex-start" alignItems="center">
+                  <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={teamMember.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""} />
+                </Stack>
               </Stack>
-              <Stack flex={1} justifyContent="flex-start" alignItems="center">
-                <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={teamMember.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""} />
+
+              <Divider style={{ gridColumn: "1/2" }} />
+
+              <Stack direction="row" justifyContent="space-evenly" alignItems="center">
+                <input hidden accept="image/*" id="contained-button-file" multiple type="file" />
+                <Button style={{ fontSize: "12px" }} component="label" htmlFor="contained-button-file" onClick={onUploadPicture}>
+                  UPLOAD PICTURE
+                </Button>
+                <Button style={{ fontSize: "12px" }} component="label" onClick={onRemovePicture} disabled={disableBtnRemovePicture}>
+                  REMOVE PICTURE
+                </Button>
               </Stack>
-            </Stack>
+            </Box>
 
-            <Divider style={{ gridColumn: "1/2" }} />
+            {/* SMS/MMS CARD */}
+            {teamMember.item?.sms_number &&
+              <Box sx={{
+                width: "400px",
+                height: "250px",
+                display: 'grid',
+                gridTemplateRows: "2fr .1fr .9fr",
+                border: "#ccc 1px solid",
+                borderRadius: "7px",
+                alignItems: "center",
+              }}>
+                <Stack spacing={1} p="20px 20px 0 20px">
+                  <Typography variant="h5" >
+                    SMS/MMS
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: '#ccc', fontWeight: 500
+                    }}>
+                    Your profile information can be edited below
+                  </Typography>
+                  <Typography variant="h5">
+                    {formatPhoneNumber(teamMember.item?.sms_number)}
+                  </Typography>
+                  <Typography
+                    sx={{ color: '#ccc', fontWeight: 500 }}
+                  >
+                    To associate a different number to your account contact your account rep.
+                  </Typography>
+                </Stack>
 
-            <Stack direction="row" justifyContent="space-evenly" alignItems="center">
-              <input hidden accept="image/*" id="contained-button-file" multiple type="file" />
-              <Button style={{ fontSize: "12px" }} component="label" htmlFor="contained-button-file" onClick={onUploadPicture}>
-                UPLOAD PICTURE
-              </Button>
-              <Button style={{ fontSize: "12px" }} component="label" onClick={onRemovePicture} disabled={disableBtnRemovePicture}>
-                REMOVE PICTURE
-              </Button>
-            </Stack>
-          </Box>
+                <Divider style={{ marginTop: "7px", gridColumn: "1/2" }} />
+
+                <Button
+                  variant="text"
+                  disabled={!teamMember.item?.sms_number}
+                  style={{ justifySelf: "end", paddingRight: "20px" }}
+                // onClick={}
+                >
+                  UNLINK
+                </Button>
+              </Box>}
+          </Stack>
+
 
           <Box
             flex={1}
@@ -247,11 +294,11 @@ const TeamMemberProfilePage = (props) => {
                       type="number"
                       id="phone"
                       name="phone"
-                      label="Phone Number"
+                      label="Personal Phone Number"
                       component={TextField}
                       value={formikProps.values.phone}
                       onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("phone", e.target.value) }} />
-                    <FormHelperText id="phone">Phone Number</FormHelperText>
+                    <FormHelperText id="phone">Personal Number</FormHelperText>
                   </FormControl>
 
                   {/* <FormControl sx={{ width: '100%' }} variant="outlined">
