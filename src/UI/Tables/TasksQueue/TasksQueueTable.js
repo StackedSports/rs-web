@@ -19,9 +19,9 @@ export const TasksQueueTable = (props) => {
       columns={columns}
       hideFooter
       onRowsScrollEnd={handleOnRowsScrollEnd}
-      components={{
-        Row: props => <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`${messageRoutes.details}/${props.rowId}`} ><GridRow {...props} /></Link>
-      }}
+    //components={{
+    //  Row: props => <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`${messageRoutes.details}/${props.rowId}`} ><GridRow {...props} /></Link>
+    //}}
     />
   )
 }

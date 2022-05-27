@@ -143,8 +143,18 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     }
 
     return (
-        <Box width='100%' height={props.mini ? 500 : 'fit-content'} flex={1} pb={2} ref={refScrollTopTable}>
-            <Box position='relative'>
+        <Box
+            sx={{
+                width: '100%',
+                height: props.mini ? 500 : 'fit-content',
+                flex: 1,
+                pb: 2,
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+            ref={refScrollTopTable}
+        >
+            <Box position='relative' flex={1}>
                 {!props.loading && props.items && props.items.length === 0 && (
                     <span>No media available</span>
                 )}
@@ -178,7 +188,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <CircularProgress sx={{ position: 'sticky', left: '50%', top: '50%' }} />
                 </StyledLoadingOverlay>
             </Box>
-            {(props.pagination && props.items?.length > 0)
+            {(props.pagination && props.pagination?.totalPages > 1)
                 && (
                     <Box display='flex' justifyContent='center' mt={2}>
                         <Pagination
