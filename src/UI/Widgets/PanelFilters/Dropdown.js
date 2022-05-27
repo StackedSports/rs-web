@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
 import {
     Box,
     MenuList,
@@ -18,15 +18,21 @@ import RenderIf from "../RenderIf";
 
 
 export const Dropdown = ({ label, options, loading, onSearch, onClick, getOptionLabel, keepOpen }) => {
+    const buttonRef = useRef(null);
+    const [buttonWidth, setButtonWidth] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchText, setSearchText] = useState('');
-
-    const debouncedSearch = useMemo(() => debounce(onSearch, 500), [onSearch]);
+    const debouncedSearch = useMemo(() => debounce(onSearch, 400), [onSearch]);
 
     useEffect(() => {
         if (onSearch)
             debouncedSearch(searchText)
     }, [searchText])
+
+    useLayoutEffect(() => {
+        if (buttonRef.current)
+            setButtonWidth(buttonRef.current.offsetWidth);
+    }, [])
 
     const handleToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -56,13 +62,25 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
     const open = Boolean(anchorEl);
 
     return (
-        <ClickAwayListener onClickAway={() => handleClose()}>
-            <Box>
-                <Button variant='outlined' endIcon={<KeyboardArrowDown />} onClick={handleToggle}>
-                    {label}
-                </Button>
-                <Popper open={open} anchorEl={anchorEl} placement="bottom-start">
-                    <Paper elevation={3} sx={{ maxHeight: '250px', overflowY: 'auto' }}>
+        <Box>
+            <Button variant='outlined' endIcon={<KeyboardArrowDown />} onClick={handleToggle} ref={buttonRef}>
+                {label}
+            </Button>
+            <Popper
+              open={open}
+              anchorEl={anchorEl}
+              placement="bottom-start"
+              sx={{ zIndex: 5 }}
+            >
+                <Paper
+                  elevation={3}
+                  sx={{
+                      minWidth: buttonWidth,
+                      maxHeight: '250px',
+                      overflowY: 'auto'
+                  }}
+                >
+                    <ClickAwayListener onClickAway={() => handleClose()}>
                         <MenuList
                             autoFocusItem={open}
                             onKeyDown={handleListKeyDown}
@@ -107,9 +125,9 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
                                 </MenuItem>
                             ))}
                         </MenuList>
-                    </Paper>
-                </Popper>
-            </Box>
-        </ClickAwayListener>
+                    </ClickAwayListener>
+                </Paper>
+            </Popper>
+        </Box>
     );
 }

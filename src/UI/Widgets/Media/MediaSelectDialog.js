@@ -86,19 +86,20 @@ export default function MediaSelectDialog(props) {
     }
 
     const onSearch = (search, tabIndex) => {
-        console.log(`${search} ${tabIndex}`)
-
-        //if(tabIndex === 0)
-        media.filter({ name: search })
-        placeholders.filter({ name: search })
+        // console.log(`${search} ${tabIndex}`)
+        if (tabIndex === 0)
+            media.filter({ name: search })
+        else
+            placeholders.filter({ name: search })
     }
 
     const onClearSearch = (tabIndex) => {
-        console.log(tabIndex)
+        //console.log(tabIndex)
 
-        //if(tabIndex === 0)
-        media.clearFilter()
-        placeholders.clearFilter()
+        if (tabIndex === 0)
+            media.clearFilter()
+        else
+            placeholders.clearFilter()
     }
 
     return (

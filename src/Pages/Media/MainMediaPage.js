@@ -1,7 +1,8 @@
-import { useState, useMemo, useContext } from 'react'
-import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune } from '@mui/icons-material'
-import { Stack, Typography, Box, CircularProgress } from '@mui/material'
+import { useState, useMemo, useContext, useRef } from 'react'
+import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune, Clear } from '@mui/icons-material'
+import { Stack, Typography, Box, CircularProgress, IconButton } from '@mui/material'
 import { Link } from 'react-router-dom'
+import lodash from "lodash"
 
 import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
@@ -13,8 +14,9 @@ import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
-import { archiveMedias, addTagsToMedias } from "Api/Endpoints"
+import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
+import RenderIf from 'UI/Widgets/RenderIf'
 
 export const MainMediaPage = (props) => {
     const app = useContext(AppContext)
@@ -28,6 +30,8 @@ export const MainMediaPage = (props) => {
     const [selectedMedias, setSelectedMedias] = useState([])
     const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [loadingTags, setLoadingTags] = useState(false)
+    const isTagDialogFunctionRemoveRef = useRef(false)
     const [addFilter, setAddFilter] = useState()
 
     // console.log("placeholders", placeholders)
@@ -62,6 +66,7 @@ export const MainMediaPage = (props) => {
         )
     }
 
+    // Find way to download all selected medias
     const onDownloadAction = () => {
         if (selectedMedias.length > 0) {
             media.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
@@ -77,9 +82,74 @@ export const MainMediaPage = (props) => {
         }
     }
 
-    //TODO
-    const handleTagsDialogConfirm = (selectedTagsIds) => {
-        const result = addTagsToMedias(selectedTagsIds, selectedMedias)
+    const getAllMediaIdsFromPlaceholder = (placeholder) => {
+        return placeholder.media.map(media => media.id)
+    }
+
+    const onAddTags = async (tagsIds, mediasIds) => {
+
+        const { success, error } = await addTagsToMedias(tagsIds, mediasIds)
+        if (error.count === 0) {
+            app.alert.setSuccess('Tags added successfully')
+            setOpenSelectTagDialog(false)
+        }
+        else if (success.count === 0)
+            app.alert.setError('An error occurred while adding tags')
+        else
+            app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+    }
+
+    const onDeleteTags = async (tagsIds, mediasIds) => {
+        confirmDialog.show('Remove Tags',
+            `Are you sure you want to remove the selected tags (${tagsIds.length}) from ${selectedMedias.length} medias and ${selectedPlaceholders.length} placeholders ?`,
+            async () => {
+                const { success, error } = await deleteTagsFromMedias(tagsIds, mediasIds)
+                if (error.count === 0) {
+                    app.alert.setSuccess('Tags removed successfully')
+                    setOpenSelectTagDialog(false)
+                }
+                else if (success.count === 0)
+                    app.alert.setError('An error occurred while removing tags')
+                else
+                    app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+            })
+    }
+
+    const handleTagsDialogConfirm = async (selectedTagsIds) => {
+        setLoadingTags(true)
+
+        // getting all medias from selected placeholders
+        const mediasFromSelectedPlaceholders = placeholders.items.
+            filter(placeholders => selectedPlaceholders.includes(placeholders.id)).
+            map(placeholder => getAllMediaIdsFromPlaceholder(placeholder)).
+            flat()
+
+        const uniqueMediaIds = lodash.uniq([mediasFromSelectedPlaceholders, selectedMedias])
+
+        if (isTagDialogFunctionRemoveRef.current) {
+            await onDeleteTags(selectedTagsIds, uniqueMediaIds)
+        } else {
+            await onAddTags(selectedTagsIds, uniqueMediaIds)
+        }
+        setLoadingTags(false)
+    }
+
+    const onTagAction = () => {
+        if (selectedPlaceholders.length > 0 || selectedMedias.length > 0) {
+            isTagDialogFunctionRemoveRef.current = false
+            setOpenSelectTagDialog(true)
+        } else {
+            app.alert.setWarning('Please select at least one media or placeholder')
+        }
+    }
+
+    const onUntagAction = () => {
+        if (selectedPlaceholders.length > 0 || selectedMedias.length > 0) {
+            isTagDialogFunctionRemoveRef.current = true
+            setOpenSelectTagDialog(true)
+        } else {
+            app.alert.setWarning('Please select at least one media or placeholder')
+        }
     }
 
     const handleTagsClick = (tag) => {
@@ -108,15 +178,14 @@ export const MainMediaPage = (props) => {
                 { name: 'Send in Message', onClick: () => { console.log("clicked") } },
                 { name: 'Download', onClick: onDownloadAction },
                 { name: 'Archive Media', onClick: onArchiveAction, disabled: selectedMedias.length === 0 },
-                { name: 'Untag', onClick: () => { console.log("clicked") } },
+                { name: 'Untag', onClick: onUntagAction },
             ]
         },
         {
             name: 'Tag',
             icon: LocalOfferOutlined,
             variant: 'outlined',
-            onClick: () => setOpenSelectTagDialog(true),
-            disabled: selectedMedias.length === 0,
+            onClick: onTagAction,
         },
         {
             name: 'Filters',
@@ -128,9 +197,6 @@ export const MainMediaPage = (props) => {
 
     return (
         <MediaPage
-            //   viewGrid={viewGrid}
-            //   onSwitchView={onSwitchView}
-            //   filter = {media.filter}
             filter={media.filter}
             actions={mainActions}
             showPanelFilters={showPanelFilters}
@@ -140,6 +206,14 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Quick Access
+                    <RenderIf condition={selectedMedias.length > 0}>
+                        <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'}>
+                            {`${selectedMedias.length} media${selectedMedias.length > 1 ? "s" : ""} selected`}
+                            <IconButton size='small' color='primary' onClick={() => setSelectedMedias([])}>
+                                <Clear fontSize="inherit" />
+                            </IconButton>
+                        </Typography>
+                    </RenderIf>
                 </Typography>
                 <Box>
                     <Button
@@ -150,15 +224,6 @@ export const MainMediaPage = (props) => {
                     />
                 </Box>
             </Stack>
-
-            {media.loading && (
-                <Box
-                    height='300px'
-                    sx={{ display: 'grid', placeItems: 'center' }}
-                >
-                    <CircularProgress />
-                </Box>
-            )}
 
             <MediaTable
                 items={media.items || []}
@@ -176,6 +241,14 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Placeholders
+                    <RenderIf condition={selectedPlaceholders.length > 0}>
+                        <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'}>
+                            {`${selectedPlaceholders.length} placeholder${selectedPlaceholders.length > 1 ? "s" : ""} selected`}
+                            <IconButton size='small' color='primary' onClick={() => setSelectedPlaceholders([])}>
+                                <Clear fontSize="inherit" />
+                            </IconButton>
+                        </Typography>
+                    </RenderIf>
                 </Typography>
                 <Box>
                     <Button
@@ -187,17 +260,9 @@ export const MainMediaPage = (props) => {
                 </Box>
             </Stack>
 
-            {placeholders.loading && (
-                <Box
-                    height='300px'
-                    sx={{ display: 'grid', placeItems: 'center' }}
-                >
-                    <CircularProgress />
-                </Box>
-            )}
-
             <MediaTable
                 items={placeholders.items}
+                loading={placeholders.loading}
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
                 linkTo={mediaRoutes.placeholderDetails}
@@ -256,6 +321,9 @@ export const MainMediaPage = (props) => {
                 open={openSelectTagDialog}
                 onClose={() => setOpenSelectTagDialog(false)}
                 onConfirm={handleTagsDialogConfirm}
+                actionLoading={loadingTags}
+                title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
+                isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
             />
         </MediaPage>
     )

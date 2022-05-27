@@ -11,9 +11,8 @@ import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { useMessages, useTeamMembers, useTags } from 'Api/Hooks'
+import { useMessages, useTeamMembers, useTags2 } from 'Api/Hooks'
 import { getFullName } from 'utils/Parser'
-
 
 const getTitle = (filterName) => {
     switch (filterName) {
@@ -26,11 +25,10 @@ const getTitle = (filterName) => {
     }
 }
 
-
 const MessagesPage = (props) => {
     const { user } = useContext(AuthContext)
     const senders = useTeamMembers()
-    const tags = useTags()
+    const tags = useTags2()
 
     const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user.role.includes('Admin') }
     const messages = useMessages(1, 10, DEFAULT_MESSAGE_FILTER)
@@ -99,7 +97,8 @@ const MessagesPage = (props) => {
         },
         'tags': {
             label: 'Tags',
-            options: tags || [],
+            options: tags.items || [],
+            onSearch: (search) => tags.search(search),
 
         },
         'send_at_dates': {
@@ -124,7 +123,7 @@ const MessagesPage = (props) => {
             isUnique: true,
             options: [{ id: 'all', name: 'All' }, { id: 'drafts', name: 'Drafts' }, { id: 'scheduled', name: 'Scheduled' }, { id: 'in_progress', name: 'In Progress' }, { id: 'finished', name: 'Finished' }, { id: 'archived', name: 'Archived' }],
         }
-    }), [senders.items, tags])
+    }), [senders.items, tags.items])
 
 
     //Controls the filters through the props

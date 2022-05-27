@@ -1,35 +1,32 @@
-import { useState, useEffect, useRef, useMemo, useContext } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { Typography } from "@mui/material"
-import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined } from '@mui/icons-material'
+import { IconButton, Typography } from "@mui/material"
+import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined, Clear } from '@mui/icons-material'
 
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 
 import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
-import { addNewTagsToMedia, archiveMedias } from "Api/Endpoints"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { useMedias } from 'Api/Hooks'
-import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
+import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
-import { separeteNewTagsNameFromExistingTagsIds } from "utils/Helper"
+import RenderIf from "UI/Widgets/RenderIf"
 
 export const AllMediaPage = () => {
 	const { type, value } = useParams()
 
-	// const [allMedias, setAllMedias] = useState([])
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
 	const [selectedMedias, setSelectedMedias] = useState([])
-	const filterChanged = useRef(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
-	const medias = useMedias(1, 25)
+	const medias = useMedias(1, 24)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 
@@ -44,21 +41,8 @@ export const AllMediaPage = () => {
 		}
 	}, [type, value])
 
-	// useEffect(() => {
-	// 	if (!medias.loading && medias.items) {
-	// 		if (filterChanged.current) {
-	// 			filterChanged.current = false
-	// 			setAllMedias(medias.items)
-	// 		}
-	// 		else {
-	// 			setAllMedias(oldMedias => [...oldMedias, ...medias.items])
-	// 		}
-	// 	}
-	// }, [medias.items, medias.loading])
-
 	const onFilterChange = (filter) => {
 		console.log("Filter Change", filter)
-		filterChanged.current = true
 		medias.filter(filter)
 	}
 
@@ -77,30 +61,22 @@ export const AllMediaPage = () => {
 				else {
 					app.alert.setError(`Something went wrong, ${response.error.count} media${response.error.count > 1 ? 's' : ''} not archived`)
 					if (response.error.status.includes(422))
-						app.alert.setError(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
+						app.alert.setWarning(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
 				}
 			})
 	}
 
-	//How to display erros
 	const onAddTagsToMedias = async (tagsIds) => {
-		setLoadingTags(true)
 
-		// separate new Tags and already existing tags
-		const [newTagsNames, alreadyExistingTags] = separeteNewTagsNameFromExistingTagsIds(tagsIds)
-
-		const res = await Promise.all(selectedMedias.map(mediaId => addNewTagsToMedia(newTagsNames, mediaId)))
-		console.log("res", res)
-
-		const { success, error } = await addTagsToMedias(alreadyExistingTags, selectedMedias)
-		if (error.count === 0)
+		const { success, error } = await addTagsToMedias(tagsIds, selectedMedias)
+		if (error.count === 0) {
 			app.alert.setSuccess('Tags added successfully')
+			setOpenSelectTagDialog(false)
+		}
 		else if (success.count === 0)
 			app.alert.setError('An error occurred while adding tags')
 		else
 			app.alert.setWarning(`Some tags (${error.count}) could not be added`)
-
-		setLoadingTags(false)
 	}
 
 	const onDeleteTagsFromMedias = async (tagsIds) => {
@@ -108,24 +84,29 @@ export const AllMediaPage = () => {
 			`Are you sure you want to remove the selected tags (${tagsIds.length}) ?`,
 			async () => {
 				const { success, error } = await deleteTagsFromMedias(tagsIds, selectedMedias)
-				if (error.count === 0)
+				if (error.count === 0) {
 					app.alert.setSuccess('Tags removed successfully')
-				else if (success.count === 0)
+					setOpenSelectTagDialog(false)
+				}
+				else if (success.count === 0) {
 					app.alert.setError('An error occurred while removing tags')
+				}
 				else
 					app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
 			})
 	}
 
-	const handleTagsDialogConfirm = (selectedTagsIds) => {
-		setOpenSelectTagDialog(false)
+	const handleTagsDialogConfirm = async (selectedTagsIds) => {
+		setLoadingTags(true)
 		if (isTagDialogFunctionRemoveRef.current) {
-			onDeleteTagsFromMedias(selectedTagsIds)
+			await onDeleteTagsFromMedias(selectedTagsIds)
 		} else {
-			onAddTagsToMedias(selectedTagsIds)
+			await onAddTagsToMedias(selectedTagsIds)
 		}
+		setLoadingTags(false)
 	}
 
+	//TODO: find way to download all medias at once ( zip file? )
 	const onDownloadAction = () => {
 		if (selectedMedias.length > 0) {
 			medias.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
@@ -137,7 +118,6 @@ export const AllMediaPage = () => {
 					a.download = mediaSelected.name;
 					a.click();
 				}
-
 			})
 		}
 	}
@@ -157,8 +137,13 @@ export const AllMediaPage = () => {
 	}
 
 	const onSendInMessageAction = () => {
-		// how to send in message? only one media?
-		//app.sendMediaInMessage(media, 'media')
+		if (selectedMedias.length !== 1)
+			app.alert.setWarning('Please select only one media to send in message')
+		else {
+			const media = medias.items.find(m => selectedMedias[0] === m.id)
+			if (media)
+				app.sendMediaInMessage(media, 'media')
+		}
 	}
 
 	const mainActions = [
@@ -204,16 +189,23 @@ export const AllMediaPage = () => {
 			showPanelFilters={showPanelFilters}
 			replecaSelectPanelFilter={replaceSelectedPanelFilter}
 		>
-
-			{!medias.loading && (medias.items && medias.items.length > 0) && (
-				<Typography fontWeight='bold' gutterBottom>
-					Showing  {' '}
+			<RenderIf condition={medias.items && medias.items.length > 0}>
+				<Typography fontWeight='bold'>
+					You have
 					<Typography component='span' color='primary' fontWeight='bold'>
-						{medias.items?.length + " of " + medias.pagination.totalItems}
+						{` ${medias.pagination.totalItems || 0} `}
 					</Typography>
-					{' '} medias
+					medias
 				</Typography>
-			)}
+				<RenderIf condition={selectedMedias.length > 0}>
+					<Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'}>
+						{`${selectedMedias.length} media${selectedMedias.length > 1 ? "s" : ""} selected`}
+						<IconButton size='small' color='primary' onClick={() => setSelectedMedias([])}>
+							<Clear fontSize="inherit" />
+						</IconButton>
+					</Typography>
+				</RenderIf>
+			</RenderIf>
 
 			<MediaTable
 				items={medias.items}

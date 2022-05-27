@@ -1,5 +1,7 @@
 import { getFullName, formatDateWithoutUTC } from "utils/Parser"
 import { format } from "date-fns"
+import { Link } from 'react-router-dom'
+import { messageRoutes } from 'Routes/Routes';
 
 const SendTime = {
     field: 'send_at',
@@ -15,7 +17,7 @@ const Sender = {
 }
 const Recipients = {
     field: 'recipient_count',
-    headerName: 'Recipients',
+    headerName: 'Recipients/Results',
     flex: 1
 }
 const Type = {
@@ -30,10 +32,23 @@ const Status = {
     flex: 1
 }
 
+const Details = {
+    field: 'details',
+    headerName: 'Details',
+    flex: 1,
+    valueGetter: (params) => 'View Details',
+    renderCell: (params) => (
+        <Link style={{ color: 'inherit' }} to={`${messageRoutes.details}/${params.id}`} >
+            {params.value}
+        </Link>
+    )
+}   
+
 export const columns = [
     SendTime,
     Sender,
-    Recipients,
     Type,
-    Status
+    Status,
+    Recipients,
+    Details
 ]

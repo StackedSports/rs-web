@@ -536,7 +536,7 @@ export const getPlaceholders = (page, perPage, filters) => {
     if (!objectNotNull(data.criteria))
         delete data.criteria
 
-    console.log(data)
+    //console.log(data)
 
     return GET(`media/placeholders?page=${page}&per_page=${perPage}`, data)
 }
@@ -593,6 +593,7 @@ export const getMedias = (page, perPage, { cancelToken }) => {
 }
 
 export const filterMedias = (page, perPage, filters) => {
+    console.log(filters)
     const data = {
         page: page,
         per_page: perPage,
@@ -1090,33 +1091,6 @@ export const archiveMedias = async (mediasIds) => {
     })
 }
 
-
-export const addNewTagsToMedia = (tagsName, mediaId) => {
-    let error = 0
-    let success = 0
-
-    return new Promise((resolve, reject) => {
-        Promise.allSettled(tagsName.map(tagName => addTagToMedia(mediaId, tagName))).
-            then(results => {
-                results.forEach((result, index) => {
-                    if (result.status === 'fulfilled') {
-                        success++
-                    }
-                    else {
-                        error++
-                        console.log(result)
-                    }
-                })
-            }).finally(() => {
-                resolve({
-                    success,
-                    error
-                })
-            }
-            )
-    })
-}
-
 /**
  * Adds array of tags to a Media
  * @param {int[]} tagIds array of tag ids to archive
@@ -1137,9 +1111,10 @@ export const addTagsToMedia = (tagIds, mediaId) => {
  * Adds array of tags to an array of Medias
  * @param {*} tagsIds array of tag ids to archive 
  * @param {*} mediasId  array of media ids to associate tags to
- * @returns {promise} promise with an object with the following keys: success.count, success.ids, error.count, error.ids
+ * @returns {promise} promise with an object with the following keys: success.count, success.ids, error.count, error.ids.
+ * erros and succes are count by medias, not by the tags. if all tags were added to a media then success.count++
  */
-export const addTagsToMedias = (tagIds, mediaIds) => {
+export const addTagsToMedias = async (tags, mediasIds) => {
     let response = {
         success: {
             count: 0,
@@ -1150,25 +1125,48 @@ export const addTagsToMedias = (tagIds, mediaIds) => {
             id: []
         }
     }
-    return new Promise((resolve, reject) => {
-        if (!mediaIds instanceof Array && !tagIds instanceof Array)
-            return reject(new Error("Both mediaIds and tagIds must be an array"))
+    const [newTags, existingTags] = separeteNewTagsNameFromExistingTagsIds(tags)
+    let promises = []
 
-        Promise.allSettled(mediaIds.map(mediaId => addTagsToMedia(tagIds, mediaId))).
-            then(results => {
-                results.forEach((result, index) => {
-                    if (result.status === 'fulfilled') {
-                        response.success.count++
-                        response.success.id.push(mediaIds[index])
-                    }
-                    else {
-                        response.error.count++
-                        response.error.id.push(mediaIds[index])
-                    }
-                })
-            }).finally(() => {
-                resolve(response)
+    return new Promise((resolve, reject) => {
+        if (!mediasIds instanceof Array && !tags instanceof Array)
+            return reject(new Error("Both mediaIds and Tags must be an array"))
+
+        if (newTags.length > 0) {
+            //add every new tag to every contact
+            const mediasTags = mediasIds.reduce((acc, mediaId) => {
+                acc[mediaId] = newTags
+                return acc
+            }, {})
+            const newTagsPromises = Object.keys(mediasTags).map(mediaId => mediasTags[mediaId].map(tagName =>
+                [mediaId, addTagToMedia(mediaId, tagName)])).flat()
+            promises = [...promises, ...newTagsPromises]
+        }
+
+        if (existingTags.length > 0) {
+            const existingPromises = mediasIds.map(mediaId => [mediaId, addTagsToMedia(existingTags, mediaId)])
+            promises = [...promises, ...existingPromises]
+        }
+
+        Promise.allSettled(promises.map(([, promise]) => promise)).then(results => {
+            const resultStatus = results.reduce((acc, result, index) => {
+                const mediaId = promises[index][0]
+                acc[mediaId] = acc[mediaId] || []
+                acc[mediaId].push(result)
+                return acc
+            }, {})
+
+            Object.keys(resultStatus).forEach(mediaId => {
+                if (resultStatus[mediaId].some(result => result.status === 'rejected')) {
+                    response.error.count++
+                    response.error.id.push(mediaId)
+                } else {
+                    response.success.count++
+                    response.success.id.push(mediaId)
+                }
             })
+            resolve(response)
+        })
     })
 }
 

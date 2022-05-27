@@ -100,7 +100,7 @@ export const PanelFilters = (props) => {
 
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
-		} else if (filter.optionsLabel && filter.optionsLabel instanceof String) {
+		} else if (filter.optionsLabel && (typeof filter.optionsLabel === 'string' || filter.optionsLabel instanceof String)) {
 			return option[filter.optionsLabel];
 		} else {
 			return option.name;

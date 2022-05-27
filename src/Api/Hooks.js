@@ -389,7 +389,7 @@ export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
-
+    
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
 
@@ -915,7 +915,6 @@ export const useSnippets = () => {
         getSnippets()
             .then(([snippets]) => {
                 //console.log('ApiHooks: getRanks -----')
-                console.log(setSnippets)
                 setSnippets(snippets)
             })
             .catch(error => {

@@ -57,10 +57,6 @@ const BaseMessagePage = (props) => {
         setRedirect(messageRoutes.create)
     }
 
-    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
-    }
-
     return (
         <MainLayout
             title={props.title || 'Messages'}
@@ -71,7 +67,6 @@ const BaseMessagePage = (props) => {
             loading={props.loading}
             redirect={props.redirect || redirect}
             actions={props.actions}
-            onFilterSelected={onFilterSelected}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: props.panelFilters,
