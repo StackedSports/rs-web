@@ -13,10 +13,12 @@ import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
 import { useMessages, useTeamMembers } from "Api/Hooks";
+import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 
 export const TeamQueue = () => {
   const [loadedRows, setLoadedRows] = useState([]);
+  const [loading, setLoading] = useState(false);
   const filterChanged = useRef(false);
   const lastFilter = useRef({});
   const firstRender = useRef(true);
@@ -25,6 +27,8 @@ export const TeamQueue = () => {
   const { user } = useContext(AuthContext);
   const senders = useTeamMembers();
   const history = useHistory();
+
+  console.log(loadedRows);
 
   const getBaseFilter = () => {
     if (dates.includes(null))
@@ -38,16 +42,30 @@ export const TeamQueue = () => {
   const messages = useMessages(1, 10, getBaseFilter());
 
   useEffect(() => {
+    setLoading(true);
     if (!messages.loading) {
-      if (filterChanged.current) {
-        setLoadedRows(messages.items);
-        filterChanged.current = false;
-      }
-      else {
-        setLoadedRows((old) => lodash.uniqBy([...old, ...messages.items], 'id'))
-      }
-    }
+      const newMessages = [...messages.items];
 
+      Promise.allSettled(newMessages.map(async (message) => await getMessageRecipients(message.id, 1, 10000)
+      )).then(results => {
+        results.map((result, index) => {
+          if (result.status === "fulfilled") {
+            const [{ status_counts }, _] = result.value;
+            newMessages[index].status_counts = status_counts;
+          }
+        })
+      }).finally(() => {
+
+        if (filterChanged.current) {
+          setLoadedRows(newMessages);
+          filterChanged.current = false;
+        }
+        else {
+          setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
+        }
+        setLoading(false);
+      })
+    }
   }, [messages.items, messages.loading]);
 
   useEffect(() => {
@@ -69,7 +87,6 @@ export const TeamQueue = () => {
     }
   }, [dates]);
 
-
   // create a new message
   const onNewTaskClick = () => {
     history.push("messages/create");
@@ -80,6 +97,15 @@ export const TeamQueue = () => {
   }
 
   const filtersOptions = {
+    message_status: {
+      label: "Status",
+      options: [
+        { value: "Pending", label: "Pending" },
+        { value: "In Progress", label: "In Progress" },
+      ],
+      optionsLabel: "label",
+      isUnique: true,
+    },
     sender: {
       label: "Sender",
       options: senders.items,
@@ -103,6 +129,8 @@ export const TeamQueue = () => {
     if (filters.platform)
       filter.platform = filters.platform.map(platform => platform.value);
     lastFilter.current = filter;
+    if (filters.message_status)
+      filter.message_status = filters.message_status.map(status => status.value);
     messages.filter(filter);
   }
 
@@ -151,8 +179,8 @@ export const TeamQueue = () => {
         </Stack>
       )}
       {(messages.items.length !== 0 || messages.loading) && (
-        <Box height={Math.min(messages.items.length + 2, 6) * 56 + 'px'} >
-          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={messages.loading} />
+        <Box height={(Math.min(messages.items.length + 1, 6) * 52) + 58 + 'px'} >
+          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={loading} />
         </Box>
       )}
     </BaseSection>

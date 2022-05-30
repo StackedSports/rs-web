@@ -1,15 +1,10 @@
-import { Tooltip, Typography,Box } from '@mui/material';
+import { Tooltip, Typography, Box } from '@mui/material';
+import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid-pro';
 
-import { formatDate, formatPhoneNumber } from 'utils/Parser'
+import { formatDate, formatPhoneNumber, getFullName } from 'utils/Parser'
 
 import AvatarImg from "images/avatar.png";
 
-const getFullName = (params) => {
-    if (params)
-        return `${params.first_name || ''} ${params.last_name || ''}`
-    else
-        ''
-}
 
 const getImg = (profile_image) => {
     return profile_image && !profile_image.includes('contact-missing-image') ?
@@ -23,7 +18,8 @@ const profileImg = {
     sortable: false,
     valueGetter: (params) => params.row.twitter_profile?.profile_image,
     renderCell: (params) => {
-        // console.log(params)
+        if (params.rowNode.depth !== 0)
+            return null
         return (
             <img
                 src={getImg(params.value)}
@@ -149,8 +145,7 @@ const school = {
 const gradYear = {
     field: 'gradYear',
     headerName: 'Grad Year',
-    flex: 1,
-    minWidth: 100,
+    flex: 'fit-content',
     valueGetter: (params) => params.row.grad_year ? params.row.grad_year : '',
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
@@ -313,6 +308,10 @@ const birthday = {
     ),
 }
 
+const relationships = {
+    field: GRID_TREE_DATA_GROUPING_FIELD,
+}
+
 export const columnsMini = [
     profileImg,
     fullName,
@@ -342,6 +341,7 @@ export const columnsFull = [
     state,
     school,
     gradYear,
+    relationships,
     positions,
     areaCoach,
     positionCoach,

@@ -101,6 +101,7 @@ const FollowOnTwitterDialog = (props) => {
             id="follow-on-twitter-contacts"
             height="600px"
             hideFooter
+            mini
             disableColumnMenu
             disableColumnFilter
             disableColumnSelector
@@ -117,6 +118,7 @@ const FollowOnTwitterDialog = (props) => {
             <ContactsTableServerMode
               id="follow-on-twitter-team-members"
               height="600px"
+              mini
               hideFooter
               disableColumnMenu
               disableColumnFilter

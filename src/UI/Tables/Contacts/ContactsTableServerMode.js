@@ -17,12 +17,13 @@ export default function ContactsTableServerMode({
     pagination,
     id,
     height,
+    mini,
     redirectToDetails,
     columnsControl,
     ...restOfProps
 }) {
     const history = useHistory();
-    const columns = columnsFull
+    const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
 
     const onColumnVisibilityModelChange = (newModel) => {
@@ -34,8 +35,37 @@ export default function ContactsTableServerMode({
     }
 
     const redirectToDetailsPage = (row) => {
-        if (row.field != '__check__')
+        if (row.field != '__check__' && row.field != '__tree_data_group__' && row.rowNode.depth === 0)
             history.push(`${contactsRoutes.profile}/${row.id}`)
+    }
+
+    const getTreeData = () => {
+        if (contacts && contacts.length > 0) {
+            return contacts.map(contact => {
+                let result = { ...contact, hierarchy: [contact.id] }
+                let children = []
+                if (contact.relationships)
+                    children = contact?.relationships.map(relationship => {
+                        return { ...relationship, hierarchy: [...result.hierarchy, relationship.id] }
+                    })
+                return [result, ...children]
+            }).flat()
+        } else
+            return []
+    }
+
+    const getTreeDataPath = (row) => row.hierarchy;
+
+    const groupingColDef = {
+        headerName: 'Relationships',
+        valueGetter: (params) => {
+            if (params.rowNode.depth === 0)
+                return params.rowNode.children ? 'Members' : ''
+            else
+                return params.row?.relationship_type?.description
+        },
+        flex: 1,
+        minWidth: 200,
     }
 
     return (
@@ -46,8 +76,15 @@ export default function ContactsTableServerMode({
                     '.MuiDataGrid-row:hover': { cursor: 'pointer' }
                 }}
                 checkboxSelection
+                disableSelectionOnClick
                 keepNonExistentRowsSelected
-                rows={contacts || []}
+                rows={getTreeData() || []}
+                treeData
+                disableChildrenFiltering
+                disableChildrenSorting
+                getTreeDataPath={getTreeDataPath}
+                isRowSelectable={(params) => Object.hasOwnProperty.call(params.row, 'relationships')}
+                groupingColDef={groupingColDef}
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
