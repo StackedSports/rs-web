@@ -18,6 +18,7 @@ import { getFullName } from "utils/Parser";
 
 export const TeamQueue = () => {
   const [loadedRows, setLoadedRows] = useState([]);
+  const [loading, setLoading] = useState(false);
   const filterChanged = useRef(false);
   const lastFilter = useRef({});
   const firstRender = useRef(true);
@@ -41,6 +42,7 @@ export const TeamQueue = () => {
   const messages = useMessages(1, 10, getBaseFilter());
 
   useEffect(() => {
+    setLoading(true);
     if (!messages.loading) {
       const newMessages = [...messages.items];
 
@@ -52,17 +54,18 @@ export const TeamQueue = () => {
             newMessages[index].status_counts = status_counts;
           }
         })
+      }).finally(() => {
+
+        if (filterChanged.current) {
+          setLoadedRows(newMessages);
+          filterChanged.current = false;
+        }
+        else {
+          setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
+        }
+        setLoading(false);
       })
-
-      if (filterChanged.current) {
-        setLoadedRows(newMessages);
-        filterChanged.current = false;
-      }
-      else {
-        setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
-      }
     }
-
   }, [messages.items, messages.loading]);
 
   useEffect(() => {
@@ -94,6 +97,15 @@ export const TeamQueue = () => {
   }
 
   const filtersOptions = {
+    message_status: {
+      label: "Status",
+      options: [
+        { value: "Pending", label: "Pending" },
+        { value: "In Progress", label: "In Progress" },
+      ],
+      optionsLabel: "label",
+      isUnique: true,
+    },
     sender: {
       label: "Sender",
       options: senders.items,
@@ -117,6 +129,8 @@ export const TeamQueue = () => {
     if (filters.platform)
       filter.platform = filters.platform.map(platform => platform.value);
     lastFilter.current = filter;
+    if (filters.message_status)
+      filter.message_status = filters.message_status.map(status => status.value);
     messages.filter(filter);
   }
 
@@ -166,7 +180,7 @@ export const TeamQueue = () => {
       )}
       {(messages.items.length !== 0 || messages.loading) && (
         <Box height={(Math.min(messages.items.length + 1, 6) * 52) + 58 + 'px'} >
-          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={messages.loading} />
+          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={loading} />
         </Box>
       )}
     </BaseSection>
