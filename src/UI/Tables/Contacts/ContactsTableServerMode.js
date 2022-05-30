@@ -74,6 +74,7 @@ export default function ContactsTableServerMode({
                     '.MuiDataGrid-row:hover': { cursor: 'pointer' }
                 }}
                 checkboxSelection
+                disableSelectionOnClick
                 keepNonExistentRowsSelected
                 rows={getTreeData() || []}
                 treeData
