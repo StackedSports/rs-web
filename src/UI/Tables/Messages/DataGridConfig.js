@@ -64,7 +64,7 @@ const deliveredAt = {
     field: 'deliveredAt',
     headerName: 'Delivered At',
     width: 130,
-    valueGetter: (params) => formatDate(params.row.last_sent_at || params.row.send_at)
+    valueGetter: (params) => params.row?.status === 'Sent' ? formatDate(params.row.last_sent_at || params.row.send_at) : ''
 }
 
 const status = {
