@@ -17,12 +17,13 @@ export default function ContactsTableServerMode({
     pagination,
     id,
     height,
+    mini,
     redirectToDetails,
     columnsControl,
     ...restOfProps
 }) {
     const history = useHistory();
-    const columns = columnsFull
+    const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
 
     const onColumnVisibilityModelChange = (newModel) => {
@@ -34,18 +35,19 @@ export default function ContactsTableServerMode({
     }
 
     const redirectToDetailsPage = (row) => {
-        console.log(row)
         if (row.field != '__check__' && row.field != '__tree_data_group__' && row.rowNode.depth === 0)
             history.push(`${contactsRoutes.profile}/${row.id}`)
     }
 
     const getTreeData = () => {
-        if (contacts) {
+        if (contacts && contacts.length > 0) {
             return contacts.map(contact => {
                 let result = { ...contact, hierarchy: [contact.id] }
-                const children = contact.relationships.map(relationship => {
-                    return { ...relationship, hierarchy: [...result.hierarchy, relationship.id] }
-                })
+                let children = []
+                if (contact.relationships)
+                    children = contact?.relationships.map(relationship => {
+                        return { ...relationship, hierarchy: [...result.hierarchy, relationship.id] }
+                    })
                 return [result, ...children]
             }).flat()
         } else

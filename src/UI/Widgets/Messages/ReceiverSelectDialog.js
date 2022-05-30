@@ -32,7 +32,7 @@ const myTabs = [
     { id: 2, label: 'Contacts' }
 ]
 
-const getSelectionLabel = (privateCount, teamCount, contactCount,clearSelection) => {
+const getSelectionLabel = (privateCount, teamCount, contactCount, clearSelection) => {
     if (privateCount == 0 && teamCount == 0 && contactCount == 0)
         return ''
 
@@ -259,6 +259,7 @@ export default function ReceiverSelectDialog(props) {
             </TabPanel>
             <TabPanel value={2} index={2}>
                 <ContactsTableServerMode
+                    mini
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}
