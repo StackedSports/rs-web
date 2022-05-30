@@ -8,16 +8,16 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Divider } from "@material-ui/core";
+import { Divider, Tooltip } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { mask, unMask } from 'remask';
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import UserSettingsPage from "./UserSettingsPage";
 import { updateUser } from 'Api/Endpoints';
 import { useUser } from 'Api/Hooks';
-
 const UserSettingsProfilePage = (props) => {
   const user = useUser();
   const alert = useMainLayoutAlert();
@@ -30,14 +30,26 @@ const UserSettingsProfilePage = (props) => {
       return
 
     console.log(user.item)
-  }, [])
+  }, [user.item])
+
+
+  const patternPhoneMask = [
+    '(999) 999-9999',
+  ]
 
   const initialValues = {
     first_name: user.item?.first_name || "",
     last_name: user.item?.last_name || "",
     email: user.item?.email || "",
-    phone: user.item?.phone || "",
+    phone: user.item?.phone ? mask(user.item?.phone.replace(/\D+/g, ""), patternPhoneMask) : "",
     organization: user.item?.team.org.name || ""
+  }
+
+  console.log(user.item)
+
+  const handleMask = (e) => {
+    let originalValue = unMask(e);
+    return mask(originalValue, patternPhoneMask);
   }
 
   const onRemovePicture = () => {
@@ -67,6 +79,7 @@ const UserSettingsProfilePage = (props) => {
       updateUser(data, userStorage.id)
         .then(res => {
           alert.setSuccess("Changes saved successfully!");
+          user.refresh();
         })
         .catch(error => {
           console.log(error)
@@ -110,6 +123,7 @@ const UserSettingsProfilePage = (props) => {
         >
           <Box
             sx={{
+              width: "400px",
               height: "250px",
               display: "grid",
               alignItems: "center",
@@ -118,15 +132,27 @@ const UserSettingsProfilePage = (props) => {
               border: "#dadada  1px solid",
             }}
           >
-            <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={4} padding="20px">
-              <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start" padding="20px">
+              <Stack direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
                 <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
-                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
+                <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>
+                  {initialValues.email?.length >= 32 ?
+                    <Tooltip style={{ fontSize: "14px" }} title={initialValues.email} placement='right-start'>
+                      <Typography component='span' noWrap >{`${initialValues.email?.substring(0, 27)}...`}</Typography>
+                    </Tooltip>
+                    :
+                    initialValues.email
+                  }
+                </Typography>
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
                 <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.organization}</Typography>
               </Stack>
-              <Stack flex={1} justifyContent="flex-start" alignItems="center">
-                <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={user.item?.twitter_profile?.profile_image || ""} />
+              <Stack justifyContent="flex-start" alignItems="center">
+                <Avatar
+                  sx={{ width: "146px", height: "146px" }}
+                  alt={initialValues.first_name}
+                  src={user.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""}
+                />
               </Stack>
             </Stack>
 
@@ -217,13 +243,12 @@ const UserSettingsProfilePage = (props) => {
 
                   <FormControl sx={{ width: '100%' }} variant="outlined">
                     <Field
-                      type="number"
                       id="phone"
                       name="phone"
                       label="Phone Number"
                       component={TextField}
-                      value={formikProps.values.phone}
-                      onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("phone", e.target.value) }} />
+                      value={mask(formikProps.values.phone, patternPhoneMask)}
+                      onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("phone", handleMask(e.target.value)) }} />
                     <FormHelperText id="phone">Phone Number</FormHelperText>
                   </FormControl>
 

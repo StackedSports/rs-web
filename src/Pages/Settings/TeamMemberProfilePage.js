@@ -10,8 +10,9 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Divider } from "@material-ui/core";
+import { Divider, Tooltip } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
+import { mask, unMask } from 'remask';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
@@ -62,13 +63,22 @@ const TeamMemberProfilePage = (props) => {
   //   }
   // ]
 
+  const patternPhoneMask = [
+    '(999) 999-9999',
+  ]
+
   const initialValues = {
     first_name: teamMember.item?.first_name || "",
     last_name: teamMember.item?.last_name || "",
     email: teamMember.item?.email || "",
-    phone: Number(teamMember.item?.phone.replace(/\D+/g, "")) || "",
-    // phone: teamMember.item?.phone || "",
+    phone: teamMember.item?.phone ? mask(teamMember.item?.phone.replace(/\D+/g, ""), patternPhoneMask) : "",
+    // phone: teamMember.item?.sms_number || "",
     // organization: teamMember.item?.team.org.name || ""
+  }
+
+  const handleMask = (e) => {
+    let originalValue = unMask(e);
+    return mask(originalValue, patternPhoneMask);
   }
 
   const onSubmitForm = (values) => {
@@ -148,14 +158,26 @@ const TeamMemberProfilePage = (props) => {
                 border: "#dadada  1px solid",
               }}
             >
-              <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={4} padding="20px">
-                <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
+              <Stack direction="row" justifyContent="space-between" alignItems="flex-start" padding="20px">
+                <Stack direction="column" justifyContent="flex-start" alignItems="start" spacing={1}>
                   <Typography variant="h6" component="p">{getFullName(initialValues)}</Typography>
-                  <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{initialValues.email}</Typography>
+                  <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>
+                    {initialValues.email?.length >= 32 ?
+                      <Tooltip style={{ fontSize: "14px" }} title={initialValues.email} placement='right-start'>
+                        <Typography component='span' noWrap >{`${initialValues.email?.substring(0, 27)}...`}</Typography>
+                      </Tooltip>
+                      :
+                      initialValues.email
+                    }
+                  </Typography>
                   <Typography sx={{ color: '#ccc', fontWeight: 500, fontSize: "14px" }}>{formatPhoneNumber(initialValues.phone)}</Typography>
                 </Stack>
-                <Stack flex={1} justifyContent="flex-start" alignItems="center">
-                  <Avatar sx={{ width: "146px", height: "146px" }} alt="org favicon" src={teamMember.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""} />
+                <Stack justifyContent="flex-start" alignItems="center">
+                  <Avatar
+                    sx={{ width: "146px", height: "146px", }}
+                    alt={initialValues.first_name}
+                    src={teamMember.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""}
+                  />
                 </Stack>
               </Stack>
 
@@ -274,6 +296,17 @@ const TeamMemberProfilePage = (props) => {
                     <FormHelperText id="last_name">Last Name</FormHelperText>
                   </FormControl>
 
+                  <FormControl sx={{ width: '100%' }} variant="outlined">
+                    <Field
+                      id="phone"
+                      name="phone"
+                      label="Personal Phone Number"
+                      component={TextField}
+                      value={formikProps.values.phone}
+                      onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("phone", handleMask(e.target.value)) }} />
+                    <FormHelperText id="phone">Personal Number</FormHelperText>
+                  </FormControl>
+
                   <FormControl sx={{ width: '100%', }} variant="outlined">
                     <Field
                       id="email"
@@ -287,18 +320,6 @@ const TeamMemberProfilePage = (props) => {
                     // onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("email", e.target.value) }}
                     />
                     <FormHelperText id="email">Email</FormHelperText>
-                  </FormControl>
-
-                  <FormControl sx={{ width: '100%' }} variant="outlined">
-                    <Field
-                      type="number"
-                      id="phone"
-                      name="phone"
-                      label="Personal Phone Number"
-                      component={TextField}
-                      value={formikProps.values.phone}
-                      onChange={e => { formikProps.handleChange(e); formikProps.setFieldValue("phone", e.target.value) }} />
-                    <FormHelperText id="phone">Personal Number</FormHelperText>
                   </FormControl>
 
                   {/* <FormControl sx={{ width: '100%' }} variant="outlined">
