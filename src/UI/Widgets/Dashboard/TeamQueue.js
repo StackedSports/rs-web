@@ -13,6 +13,7 @@ import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
 import { useMessages, useTeamMembers } from "Api/Hooks";
+import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 
 export const TeamQueue = () => {
@@ -25,6 +26,8 @@ export const TeamQueue = () => {
   const { user } = useContext(AuthContext);
   const senders = useTeamMembers();
   const history = useHistory();
+
+  console.log(loadedRows);
 
   const getBaseFilter = () => {
     if (dates.includes(null))
@@ -39,12 +42,24 @@ export const TeamQueue = () => {
 
   useEffect(() => {
     if (!messages.loading) {
+      const newMessages = [...messages.items];
+
+      Promise.allSettled(newMessages.map(async (message) => await getMessageRecipients(message.id, 1, 10000)
+      )).then(results => {
+        results.map((result, index) => {
+          if (result.status === "fulfilled") {
+            const [{ status_counts }, _] = result.value;
+            newMessages[index].status_counts = status_counts;
+          }
+        })
+      })
+
       if (filterChanged.current) {
-        setLoadedRows(messages.items);
+        setLoadedRows(newMessages);
         filterChanged.current = false;
       }
       else {
-        setLoadedRows((old) => lodash.uniqBy([...old, ...messages.items], 'id'))
+        setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
       }
     }
 
@@ -68,7 +83,6 @@ export const TeamQueue = () => {
       messages.filter({ ...lastFilter.current, ...getBaseFilter() });
     }
   }, [dates]);
-
 
   // create a new message
   const onNewTaskClick = () => {
@@ -151,7 +165,7 @@ export const TeamQueue = () => {
         </Stack>
       )}
       {(messages.items.length !== 0 || messages.loading) && (
-        <Box height={Math.min(messages.items.length + 2, 6) * 56 + 'px'} >
+        <Box height={(Math.min(messages.items.length + 1, 6) * 52) + 58 + 'px'} >
           <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={messages.loading} />
         </Box>
       )}
