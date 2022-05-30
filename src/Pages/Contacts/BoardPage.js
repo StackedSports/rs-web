@@ -37,16 +37,19 @@ export default function BoardPage(props) {
 
     const { id, boardId } = useParams();
     // console.log(id)
-    // console.log(boardId)
+    console.log(boardId)
 
     const board = useBoard(boardId)
     const boardContacts = useBoardContacts(boardId)
 
     useEffect(() => {
-        if (board.item)
-            console.log("board: ", board.item)
+        if (!board.item)
+            return
+
         console.log("board.item", board.item)
     }, [board.item])
+
+    console.log("board.item", board.item)
 
     const title = useMemo(() => {
         if (board.item)
@@ -72,23 +75,24 @@ export default function BoardPage(props) {
         let criteria = board.item.criteria
         console.log(criteria)
         let filters = {}
-        Object.keys(criteria).forEach(key => {
-            console.log(key)
-            console.log(criteria[key])
+        if (criteria)
+            Object.keys(criteria).forEach(key => {
+                console.log(key)
+                console.log(criteria[key])
 
-            let filterName = parseCriteriaNames(key)
+                let filterName = parseCriteriaNames(key)
 
-            if (!filters[filterName])
-                filters[filterName] = []
+                if (!filters[filterName])
+                    filters[filterName] = []
 
-            criteria[key].forEach(item => {
-                filters[filterName].push({
-                    id: item,
-                    name: item,
-                    disabled: true
+                criteria[key].forEach(item => {
+                    filters[filterName].push({
+                        id: item,
+                        name: item,
+                        disabled: true
+                    })
                 })
             })
-        })
 
         // console.log("filters", filters)
 
@@ -107,9 +111,10 @@ export default function BoardPage(props) {
             return columns
         } else {
             // get columsn from criteria
-            Object.keys(board.item.criteria).forEach(key => {
-                columns[parseCriteriaNames(key)] = true
-            })
+            if (board.item.criteria)
+                Object.keys(board.item.criteria).forEach(key => {
+                    columns[parseCriteriaNames(key)] = true
+                })
 
             // console.log('board column = ', columns)
 
