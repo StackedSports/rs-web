@@ -218,6 +218,7 @@ export default function UploadMediaDialog(props) {
 			let file = files[i]
 
 			//console.log(file)
+			
 
 			if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png") || file.type.includes("/gif")) && file.size < 5000000)
 				|| ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
@@ -632,7 +633,7 @@ export default function UploadMediaDialog(props) {
 							<Tooltip
 								arrow
 								placement="top-end"
-								title="Add a tag to your media for better organisation and easier filtering. (Think of a tag like adding media to a folder)"
+								title="Add a tag to your media for better organization and easier filtering. (Think of a tag like adding media to a folder)"
 							>
 								<Stack flex={1}>
 									<SearchableSelector
@@ -659,7 +660,7 @@ export default function UploadMediaDialog(props) {
 							<Tooltip
 								arrow
 								placement="top-end"
-								title="Create a new placeholder or add media to an existing placeholder for sending personalised media to contacts. "
+								title="Create a new placeholder or add media to an existing placeholder for sending personalized media to contacts."
 							>
 								<Stack flex={1}>
 									<SearchableSelector
