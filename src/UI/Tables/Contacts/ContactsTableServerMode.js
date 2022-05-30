@@ -34,8 +34,36 @@ export default function ContactsTableServerMode({
     }
 
     const redirectToDetailsPage = (row) => {
-        if (row.field != '__check__')
+        console.log(row)
+        if (row.field != '__check__' && row.field != '__tree_data_group__' && row.rowNode.depth === 0)
             history.push(`${contactsRoutes.profile}/${row.id}`)
+    }
+
+    const getTreeData = () => {
+        if (contacts) {
+            return contacts.map(contact => {
+                let result = { ...contact, hierarchy: [contact.id] }
+                const children = contact.relationships.map(relationship => {
+                    return { ...relationship, hierarchy: [...result.hierarchy, relationship.id] }
+                })
+                return [result, ...children]
+            }).flat()
+        } else
+            return []
+    }
+
+    const getTreeDataPath = (row) => row.hierarchy;
+
+    const groupingColDef = {
+        headerName: 'Relationships',
+        valueGetter: (params) => {
+            if (params.rowNode.depth === 0)
+                return params.rowNode.children ? 'Members' : ''
+            else
+                return params.row?.relationship_type?.description
+        },
+        flex: 1,
+        minWidth: 200,
     }
 
     return (
@@ -47,7 +75,13 @@ export default function ContactsTableServerMode({
                 }}
                 checkboxSelection
                 keepNonExistentRowsSelected
-                rows={contacts || []}
+                rows={getTreeData() || []}
+                treeData
+                disableChildrenFiltering
+                disableChildrenSorting
+                getTreeDataPath={getTreeDataPath}
+                isRowSelectable={(params) => Object.hasOwnProperty.call(params.row, 'relationships')}
+                groupingColDef={groupingColDef}
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
