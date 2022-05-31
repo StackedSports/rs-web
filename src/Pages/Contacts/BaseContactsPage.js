@@ -210,11 +210,7 @@ export default function BaseContactsPage(props) {
         { // Category
             id: '0',
             name: 'All Contacts',
-            items: [
-                // Filters
-                // { id: '0', name: 'New (Last 30 days)' },
-                { id: '0', name: 'Contacts', path: contactsRoutes.all }
-            ]
+            path: contactsRoutes.all,    
         },
         { // Category
             id: '1',

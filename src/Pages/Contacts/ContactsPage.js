@@ -83,12 +83,12 @@ export default function ContactsPage(props) {
     const teamMembers = useTeamMembers()
     const boards = useBoards()
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (!contacts.items)
             return
 
         console.log(contacts.items)
-    }, [contacts.items])
+    }, [contacts.items]) */
 
     useEffect(() => {
         if (!boards.items)
@@ -210,11 +210,7 @@ export default function ContactsPage(props) {
         { // Category
             id: '0',
             name: 'All Contacts',
-            items: [
-                // Filters
-                // { id: '0', name: 'New (Last 30 days)' },
-                { id: '0', name: 'Contacts', path: contactsRoutes.all }
-            ]
+            path: contactsRoutes.all,    
         },
         { // Category
             id: '1',
