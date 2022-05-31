@@ -106,7 +106,7 @@ const FollowOnTwitterDialog = (props) => {
             disableColumnFilter
             disableColumnSelector
             contacts={props.contacts}
-            columnsControl={visibleTableRows}
+            columnVisibilityModel={visibleTableRows}
             selectionModel={props.selectedContacts}
             onSelectionModelChange={props.onSelectionChange}
           />
@@ -124,9 +124,9 @@ const FollowOnTwitterDialog = (props) => {
               disableColumnFilter
               disableColumnSelector
               contacts={props.teamMembers.filter(member => member.twitter_profile.screen_name != null)}
-              selection={selectedTeamMembers}
-              columnsControl={visibleTableRows}
-              onSelectionChange={onSelectionChange}
+              columnVisibilityModel={visibleTableRows}
+              selectionModel={selectedTeamMembers}
+              onSelectionModelChange={onSelectionChange}
             />
           </Stack>
           <Typography sx={{ fontWeight: 500 }}>Select the accounts you would like to have follow the selected contacts.</Typography>

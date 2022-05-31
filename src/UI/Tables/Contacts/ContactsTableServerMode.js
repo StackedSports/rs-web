@@ -39,7 +39,14 @@ export default function ContactsTableServerMode({
             history.push(`${contactsRoutes.profile}/${row.id}`)
     }
 
+    const getIsRowSelectable = (params) => {
+        return Object.hasOwnProperty.call(params.row, 'relationships')
+    }
+
     const getTreeData = () => {
+        if (!contacts) return []
+        if (mini) return contacts
+
         if (contacts && contacts.length > 0) {
             return contacts.map(contact => {
                 let result = { ...contact, hierarchy: [contact.id] }
@@ -50,8 +57,7 @@ export default function ContactsTableServerMode({
                     })
                 return [result, ...children]
             }).flat()
-        } else
-            return []
+        }
     }
 
     const getTreeDataPath = (row) => row.hierarchy;
@@ -78,12 +84,12 @@ export default function ContactsTableServerMode({
                 checkboxSelection
                 disableSelectionOnClick
                 keepNonExistentRowsSelected
-                rows={getTreeData() || []}
-                treeData
+                rows={getTreeData()}
+                treeData={mini ? false : true}
                 disableChildrenFiltering
                 disableChildrenSorting
                 getTreeDataPath={getTreeDataPath}
-                isRowSelectable={(params) => Object.hasOwnProperty.call(params.row, 'relationships')}
+                isRowSelectable={mini ? null : getIsRowSelectable}
                 groupingColDef={groupingColDef}
                 rowCount={pagination?.totalItems}
                 columns={columns}

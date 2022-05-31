@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import { useState, useContext, useRef } from "react"
 import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted, Clear } from '@mui/icons-material'
-import { Typography, Box, IconButton } from "@mui/material"
+import { Typography, IconButton } from "@mui/material"
 import lodash from "lodash"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
@@ -12,30 +12,25 @@ import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholders } from 'Api/Hooks'
 import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from "UI/Widgets/RenderIf"
 
 export const AllMediaPlaceholderPage = (props) => {
 
   const [viewGrid, setViewGrid] = useState(true)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-  const [selectedPlaceholdersIds, setSelectedPlaceholdersIds] = useState([])
   const isTagDialogFunctionRemoveRef = useRef(false)
   const [loadingTags, setLoadingTags] = useState(false)
 
   const app = useContext(AppContext)
   const confirmDialog = useContext(ConfirmDialogContext)
   const placeholders = usePlaceholders(1, 24)
-  console.log(placeholders.items)
-
-  /*   useEffect(() => {
-      if (placeholders.items) {
-        setAllPlaceholders(oldMedias => [...oldMedias, ...placeholders.items])
-      }
-    }, [placeholders.items]) */
-
-  const onSelectionChange = (selection) => {
-    setSelectedPlaceholdersIds(selection)
-  }
+  const multiPageSelection = useMultiPageSelection_V2(placeholders.items)
+  const { selectionModel: selectedPlaceholdersIds,
+    selectedData: selectedPlaceholders,
+    count: selectedPlaceholdersCount,
+    clear: clearSelection
+  } = multiPageSelection
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
 
@@ -70,10 +65,7 @@ export const AllMediaPlaceholderPage = (props) => {
 
     setLoadingTags(true)
     // getting all medias from selected placeholders
-    const mediasFromSelectedPlaceholders = placeholders.items.
-      filter(placeholders => selectedPlaceholdersIds.includes(placeholders.id)).
-      map(placeholder => placeholder.media).
-      flat()
+    const mediasFromSelectedPlaceholders = selectedPlaceholders.map(placeholder => placeholder.media).flat()
 
     const uniqueMediasIds = lodash.uniqBy(mediasFromSelectedPlaceholders, 'id').map(media => media.id)
 
@@ -86,14 +78,14 @@ export const AllMediaPlaceholderPage = (props) => {
   }
 
   const onTagAction = () => {
-    if (selectedPlaceholdersIds.length > 0) {
+    if (selectedPlaceholdersCount > 0) {
       isTagDialogFunctionRemoveRef.current = false
       setOpenSelectTagDialog(true)
     }
   }
 
   const onUntagAction = () => {
-    if (selectedPlaceholdersIds.length > 0) {
+    if (selectedPlaceholdersCount > 0) {
       isTagDialogFunctionRemoveRef.current = true
       setOpenSelectTagDialog(true)
     }
@@ -105,10 +97,10 @@ export const AllMediaPlaceholderPage = (props) => {
   }
 
   const onSendInMessageAction = () => {
-    if (selectedPlaceholdersIds.length !== 1)
+    if (selectedPlaceholdersCount !== 1)
       app.alert.setWarning('Please select only one media placeholder to send in message')
     else {
-      const placeholder = placeholders.items.find(p => selectedPlaceholdersIds[0] === p.id)
+      const placeholder = selectedPlaceholders[0]
       if (placeholder)
         app.sendMediaInMessage(placeholder, 'placeholder')
     }
@@ -131,7 +123,7 @@ export const AllMediaPlaceholderPage = (props) => {
       icon: AutoFixHigh,
       variant: 'outlined',
       type: 'dropdown',
-      disabled: selectedPlaceholdersIds.length === 0,
+      disabled: selectedPlaceholdersCount === 0,
       options: [
         { name: 'Send in Message', onClick: onSendInMessageAction },
         { name: 'Download', onClick: onDownloadAction },
@@ -144,7 +136,7 @@ export const AllMediaPlaceholderPage = (props) => {
       icon: LocalOfferOutlined,
       variant: 'outlined',
       onClick: onTagAction,
-      disabled: selectedPlaceholdersIds.length === 0,
+      disabled: selectedPlaceholdersCount === 0,
     },
   ]
 
@@ -162,14 +154,14 @@ export const AllMediaPlaceholderPage = (props) => {
           </Typography>
           placeholders
         </Typography>
-        <RenderIf condition={selectedPlaceholdersIds.length > 0}>
-          <Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'}>
-            {`${selectedPlaceholdersIds.length} placeholder${selectedPlaceholdersIds.length > 1 ? "s" : ""} selected`}
-            <IconButton size='small' color='primary' onClick={() => setSelectedPlaceholdersIds([])}>
+        <Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+          <RenderIf condition={selectedPlaceholdersCount > 0}>
+            {`${selectedPlaceholdersCount} placeholder${selectedPlaceholdersCount > 1 ? "s" : ""} selected`}
+            <IconButton size='small' color='primary' onClick={() => clearSelection()}>
               <Clear fontSize="inherit" />
             </IconButton>
-          </Typography>
-        </RenderIf>
+          </RenderIf>
+        </Typography>
       </RenderIf>
 
       <MediaTable
@@ -179,7 +171,7 @@ export const AllMediaPlaceholderPage = (props) => {
         loading={placeholders.loading}
         view={viewGrid ? 'grid' : 'list'}
         linkTo={mediaRoutes.placeholderDetails}
-        onSelectionChange={onSelectionChange}
+        multiPageSelection={multiPageSelection}
         onSendClick={(placeholder) => app.sendMediaInMessage(placeholder, 'placeholder')}
       />
 

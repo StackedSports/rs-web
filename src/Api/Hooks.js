@@ -1064,8 +1064,9 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
 
         get(pagination.currentPage, pagination.itemsPerPage, { ...filters, cancelToken: cancelToken.current.token })
             .then(([media, pagination]) => {
-                //console.log('ApiHooks: getContact -----')
+                console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
+                 console.log(media)
                 setMedia(media)
                 setPagination(pagination)
             })

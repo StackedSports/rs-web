@@ -123,6 +123,11 @@ const MediaPreview = ({ type, ...props }) => {
 
     const [width, setWidth] = useState(200)
     const [isHovering, setIsHovering] = useState(false)
+    const [isChecked, setIsChecked] = useState(props.selected || false)
+
+    useEffect(() => {
+        setIsChecked(props.selected ? true : false)
+    }, [props.selected])
 
     const isMedia = type === 'media'
 
@@ -182,11 +187,12 @@ const MediaPreview = ({ type, ...props }) => {
     }
 
     const onCheckboxChange = (event) => {
+        setIsChecked(event.target.checked)
         props.onSelectedChange(event.target.checked)
     }
 
     const onSendClick = (e) => {
-        console.log(e)
+        //console.log(e)
         e.stopPropagation()
         props.onSendClick(props.item)
     }
@@ -219,10 +225,10 @@ const MediaPreview = ({ type, ...props }) => {
                     ) : (
                         <PlaceholderImage placeholder={props.item} size={width} />
                     )}
-                    {selectable && (isHovering || props.selected) &&
+                    {selectable && (isHovering || isChecked) &&
                         <StyledCheckBox
                             // color="primary"
-                            checked={props.selected}
+                            checked={isChecked}
                             disableRipple
                             onChange={onCheckboxChange}
                             onClick={e => e.stopPropagation()}

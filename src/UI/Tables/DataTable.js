@@ -28,7 +28,7 @@ const DataTable = (props) => {
     }, [props.items])
 
     const onPageChange = (e, page) => {
-        console.log(page)
+        //console.log(page)
         setPagination({
             ...pagination,
             currentPage: page
@@ -65,6 +65,7 @@ const DataTable = (props) => {
               filterModel={props.filterModel}
               components = {props.components}
               keepNonExistentRowsSelected
+              disableMultipleSelection={props.disableMultipleSelection}
             //   paginationMode='server'
             //   onPageChange={() => {}}
             //   disableColumnMenu={true}

@@ -1,13 +1,8 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Stack, Box } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Stack from '@mui/material/Stack';
 import { ErrorMessage, Field } from 'formik';
-import Button from '@mui/material/Button';
 import { useState } from 'react';
 
 export default function AccordionComponent(props) {
@@ -41,7 +36,7 @@ export default function AccordionComponent(props) {
 						//loadingPosition="start"
 						// startIcon={<SaveIcon />}
 						variant="outlined"
-						onClick={props.onDiscard} 
+						onClick={props.onDiscard}
 					>
 						Discard
 					</LoadingButton>
@@ -64,7 +59,7 @@ export default function AccordionComponent(props) {
 					justifyContent="flex-start"
 					spacing={2}
 				>
-					{props.items && props.items.map(item => {
+					{props.items && props.items.map((item, index) => {
 
 						const onInputChange = (e) => {
 							// if (e.target.value != "")
@@ -75,9 +70,10 @@ export default function AccordionComponent(props) {
 						}
 
 						return (
-							<>
+							<Box
+								key={item.label + item.name}
+							>
 								<Field
-									key={item.name}
 									id={item.name}
 									name={item.name}
 									label={item.label}
@@ -87,11 +83,11 @@ export default function AccordionComponent(props) {
 									component={item.component}
 									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
 									placeholder={item.placeholder}
-									//error={ Boolean(item.error)}
-        							//helperText={ item.error}
+								//error={ Boolean(item.error)}
+								//helperText={ item.error}
 								/>
 								{item.touch && <ErrorMessage name={item.name} />}
-							</>
+							</Box>
 						)
 					})}
 					{props.children}

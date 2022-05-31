@@ -365,7 +365,7 @@ const ContactProfileDetails = (props) => {
 			}
 		})
 
-		console.log(data)
+		//console.log(data)
 
 		if (data.includeTagsIds) {
 			console.log("includeTagsIds", data.includeTagsIds)
@@ -495,6 +495,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='general'
 							id='general'
 							title='GENERAL'
 							expandedId={expandedAccordionId}
@@ -526,6 +527,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='details'
 							id='details'
 							title='DETAILS'
 							expandedId={expandedAccordionId}
@@ -644,6 +646,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='coaches'
 							id='coaches'
 							title='COACHES'
 							expandedId={expandedAccordionId}
@@ -710,6 +713,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='positions'
 							id='positions'
 							title='POSITIONS'
 							expandedId={expandedAccordionId}
@@ -748,6 +752,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='relationships'
 							id='family-relationship'
 							title='FAMILY & RELATIONSHIP'
 							expandedId={expandedAccordionId}
@@ -838,6 +843,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='opponents'
 							id='opponents'
 							title='OPPONENTS'
 							expandedId={expandedAccordionId}
@@ -870,6 +876,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='external'
 							id='external-profiles'
 							title='EXTERNAL PROFILES'
 							expandedId={expandedAccordionId}
@@ -896,6 +903,7 @@ const ContactProfileDetails = (props) => {
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
 						<AccordionComponent
+							key='tags'
 							id='tags'
 							title='TAGS'
 							expandedId={expandedAccordionId}
@@ -928,6 +936,7 @@ const ContactProfileDetails = (props) => {
 			</Formik>
 
 			<AccordionComponent
+				key='actions'
 				id='actions'
 				title='ACTIONS'
 				expandedId={expandedAccordionId}

@@ -17,7 +17,7 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['status'] = []
 
         filters.status.forEach(status => {
-            criteria.status.push(status.name)
+            criteria.status.push(status.id)
         })
     }
 
@@ -25,7 +25,7 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['ranks'] = []
 
         filters.rank.forEach(rank => {
-            criteria.ranks.push(rank.name)
+            criteria.ranks.push(rank.id)
         })
     }
 

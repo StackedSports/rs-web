@@ -1,14 +1,12 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import { Box, CircularProgress, Pagination, styled } from '@mui/material'
 
-
-
-import Button from 'UI/Widgets/Buttons/Button'
 import DataTable from 'UI/Tables/DataTable'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 import MediaGrid from './MediaGrid'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 /**
  * 
@@ -22,124 +20,37 @@ import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
 const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
-    const refScrollTopTable = useRef(null)
-
-    // const selection = useArray(null, 'v2')
-    const [selection, setSelection] = useState([])
-    const [selectedControl, setSelectedControl] = useState({})
-
-    // Array of selected item ids
-    const selectionRef = useRef([])
-
+    const scrollToTopTableRef = useRef(null)
     const [carouselIndex, setCarouselIndex] = useState(null)
+    const multiPageSelection = props.multiPageSelection || useMultiPageSelection_V2(props.items)
+
+    useEffect(() => {
+        if (props.onSelectionChange)
+            props.onSelectionChange(multiPageSelection.selectionModel, multiPageSelection.selectedData)
+    }, [multiPageSelection.selectionModel])
+
 
     const onCellClick = ({ field, row }) => {
-
         if (field === 'urls') {
             setCarouselIndex(props.items.indexOf(row))
         }
     }
 
-    const onMediaSelectedChange = (selected, index, item) => {
-        let control = Object.assign({}, selectedControl)
-
-        if (control[item.id]) {
-            control[item.id].selected = selected
-
-            if (selected)
-                selectionRef.current.push(item.id)
-            else
-                selectionRef.current.splice(control[item.id].index, 1)
-        } else {
-            selectionRef.current.push(item.id)
-
-            control[item.id] = {
-                selected,
-                index: selectionRef.current.length - 1
-            }
+    const onMediaGridSelectionChange = (selected, index, Item) => {
+        if (props.disableMultipleSelection) {
+            multiPageSelection.set([Item])
         }
-
-        // console.log(control)
-        // console.log(selectionRef.current)
-
-        setSelectedControl(control)
-        setSelection(selectionRef.current)
-
-        if (props.onSelectionChange)
-            props.onSelectionChange(selectionRef.current)
-    }
-
-    const onDataTableSelectionChange = (selection) => {
-        let control = Object.assign({}, selectedControl)
-
-        if (selection.length > selectionRef.current.length) {
-            // New selection from data table is bigger than
-            // last selection. New selected item is at the
-            // end of the array. Add new selected item to
-            // selectedControl
-
-            let index = selection.length - 1
-
-            control[selection[index]] = {
-                selected: true,
-                index: selection.length - 1
-            }
+        else if (selected) {
+            multiPageSelection.add(Item.id)
         } else {
-            // New selection from data table is smaller than
-            // last selection. An item has been removed from the
-            // selection. We need to find the missing item's id
-            // so we can updated it in the selectedControl.
-
-            let foundIndex = -1
-
-            selectionRef.current.every((id, index) => {
-                if (id !== selection[index]) {
-                    // The items don't match, which means the item
-                    // on our last selection was removed from the
-                    // current index we are accessing.
-
-                    foundIndex = index
-
-                    return false
-                }
-
-                return true
-            })
-
-            if (foundIndex !== -1) {
-                control[selectionRef.current[foundIndex]] = {
-                    selected: false,
-                    index: foundIndex
-                }
-            }
-        }
-
-        // console.log(control)
-        // console.log(selection)
-
-        setSelectedControl(control)
-        setSelection(selection)
-        selectionRef.current = selection
-
-        if (props.onSelectionChange)
-            props.onSelectionChange(selection)
-    }
-
-    const onSendClick = (item) => {
-        if (props.onSendClick)
-            props.onSendClick(item)
-    }
-
-    const onLoadMore = () => {
-        if (props.pagination.currentPage < props.pagination.totalPages) {
-            props.pagination.getPage(props.pagination.currentPage + 1)
+            multiPageSelection.remove(Item.id)
         }
     }
 
     // scroll to top of element ref
     const scrollToTop = () => {
-        if (refScrollTopTable.current)
-            refScrollTopTable.current.scrollIntoView({ behavior: 'smooth' })
+        if (scrollToTopTableRef.current)
+            scrollToTopTableRef.current.scrollIntoView({ behavior: 'smooth' })
     }
 
     return (
@@ -152,7 +63,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 display: 'flex',
                 flexDirection: 'column',
             }}
-            ref={refScrollTopTable}
+            ref={scrollToTopTableRef}
         >
             <Box position='relative' flex={1}>
                 {!props.loading && props.items && props.items.length === 0 && (
@@ -163,8 +74,8 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         type={type}
                         items={props.items}
                         linkTo={props.linkTo}
-                        selectedControl={selectedControl}
-                        onSelectedChange={onMediaSelectedChange}
+                        selectionModel={multiPageSelection.selectionModel}
+                        onSelectedChange={onMediaGridSelectionChange}
                         onSendClick={props.onSendClick}
                         xs={props.xs}
                         sm={props.sm}
@@ -176,12 +87,13 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <DataTable
                         items={props.items}
                         columns={columns}
-                        selection={selection}
-                        onSelectionChange={onDataTableSelectionChange}
+                        selection={multiPageSelection.selectionModel}
+                        onSelectionChange={multiPageSelection.onSelectionModelChange}
                         checkboxSelection
                         disableSelectionOnClick
                         hidePagination={true}
                         onCellClick={onCellClick}
+                        disableMultipleSelection={props.disableMultipleSelection}
                     />
                 )}
                 <StyledLoadingOverlay isLoading={props.loading} display='flex' justifyContent='center'>

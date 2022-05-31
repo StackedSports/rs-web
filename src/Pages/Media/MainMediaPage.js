@@ -16,6 +16,7 @@ import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
 import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 export const MainMediaPage = (props) => {
@@ -27,34 +28,25 @@ export const MainMediaPage = (props) => {
 
     const [viewGrid, setViewGrid] = useState(true)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
-    const [selectedMedias, setSelectedMedias] = useState([])
-    const [selectedPlaceholders, setSelectedPlaceholders] = useState([])
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
     const isTagDialogFunctionRemoveRef = useRef(false)
     const [addFilter, setAddFilter] = useState()
 
-    // console.log("placeholders", placeholders)
+    const mediaMultiPageSelection = useMultiPageSelection_V2(media.items)
+    const placeholdersMultiPageSelection = useMultiPageSelection_V2(placeholders.items)
 
     const onSwitchView = () => {
         setViewGrid(oldViewGrid => !oldViewGrid)
     }
 
-    const onMediaSelectionChange = (selection) => {
-        setSelectedMedias(selection)
-    }
-
-    const onPlaceholderSelectionChange = (selection) => {
-        setSelectedPlaceholders(selection)
-    }
-
-    // TODO Archive Placeholders, API blocked
+    // TODO Archive Placeholders, API blocked refresh data
     const onArchiveAction = async () => {
-        const mediasCount = selectedMedias.length
+        const mediasCount = mediaMultiPageSelection.count
         confirmDialog.show("Archive",
             `Are you sure you want to archive ${mediasCount} media${mediasCount > 0 ? 's' : ''}?`,
             async () => {
-                const response = await archiveMedias(selectedMedias)
+                const response = await archiveMedias(mediaMultiPageSelection.selectionModel)
                 if (response.error.count === 0)
                     app.alert.setSuccess(`${mediasCount} media${mediasCount > 0 ? 's' : ''} archived`)
                 else {
@@ -68,8 +60,8 @@ export const MainMediaPage = (props) => {
 
     // Find way to download all selected medias
     const onDownloadAction = () => {
-        if (selectedMedias.length > 0) {
-            media.items.filter(media => selectedMedias.includes(media.id)).forEach(mediaSelected => {
+        if (mediaMultiPageSelection.count > 0) {
+            mediaMultiPageSelection.selectedData.forEach(mediaSelected => {
                 if (mediaSelected?.urls?.original) {
                     let url = mediaSelected.urls.original;
                     const a = document.createElement('a');
@@ -92,6 +84,8 @@ export const MainMediaPage = (props) => {
         if (error.count === 0) {
             app.alert.setSuccess('Tags added successfully')
             setOpenSelectTagDialog(false)
+            mediaMultiPageSelection.clear()
+            placeholdersMultiPageSelection.clear()
         }
         else if (success.count === 0)
             app.alert.setError('An error occurred while adding tags')
@@ -101,12 +95,14 @@ export const MainMediaPage = (props) => {
 
     const onDeleteTags = async (tagsIds, mediasIds) => {
         confirmDialog.show('Remove Tags',
-            `Are you sure you want to remove the selected tags (${tagsIds.length}) from ${selectedMedias.length} medias and ${selectedPlaceholders.length} placeholders ?`,
+            `Are you sure you want to remove the selected tags (${tagsIds.length}) from ${mediaMultiPageSelection.count} medias and ${placeholdersMultiPageSelection.count} placeholders ?`,
             async () => {
                 const { success, error } = await deleteTagsFromMedias(tagsIds, mediasIds)
                 if (error.count === 0) {
                     app.alert.setSuccess('Tags removed successfully')
                     setOpenSelectTagDialog(false)
+                    mediaMultiPageSelection.clear()
+                    placeholdersMultiPageSelection.clear()
                 }
                 else if (success.count === 0)
                     app.alert.setError('An error occurred while removing tags')
@@ -119,12 +115,11 @@ export const MainMediaPage = (props) => {
         setLoadingTags(true)
 
         // getting all medias from selected placeholders
-        const mediasFromSelectedPlaceholders = placeholders.items.
-            filter(placeholders => selectedPlaceholders.includes(placeholders.id)).
+        const mediasFromSelectedPlaceholders = placeholdersMultiPageSelection.selectedData.
             map(placeholder => getAllMediaIdsFromPlaceholder(placeholder)).
             flat()
 
-        const uniqueMediaIds = lodash.uniq([mediasFromSelectedPlaceholders, selectedMedias])
+        const uniqueMediaIds = lodash.uniq([...mediasFromSelectedPlaceholders, ...mediaMultiPageSelection.selectionModel])
 
         if (isTagDialogFunctionRemoveRef.current) {
             await onDeleteTags(selectedTagsIds, uniqueMediaIds)
@@ -135,7 +130,7 @@ export const MainMediaPage = (props) => {
     }
 
     const onTagAction = () => {
-        if (selectedPlaceholders.length > 0 || selectedMedias.length > 0) {
+        if (placeholdersMultiPageSelection.count > 0 || mediaMultiPageSelection.count > 0) {
             isTagDialogFunctionRemoveRef.current = false
             setOpenSelectTagDialog(true)
         } else {
@@ -144,7 +139,7 @@ export const MainMediaPage = (props) => {
     }
 
     const onUntagAction = () => {
-        if (selectedPlaceholders.length > 0 || selectedMedias.length > 0) {
+        if (placeholdersMultiPageSelection.count > 0 || mediaMultiPageSelection.count > 0) {
             isTagDialogFunctionRemoveRef.current = true
             setOpenSelectTagDialog(true)
         } else {
@@ -177,7 +172,7 @@ export const MainMediaPage = (props) => {
             options: [
                 { name: 'Send in Message', onClick: () => { console.log("clicked") } },
                 { name: 'Download', onClick: onDownloadAction },
-                { name: 'Archive Media', onClick: onArchiveAction, disabled: selectedMedias.length === 0 },
+                { name: 'Archive Media', onClick: onArchiveAction, disabled: mediaMultiPageSelection.count === 0 },
                 { name: 'Untag', onClick: onUntagAction },
             ]
         },
@@ -206,14 +201,14 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Quick Access
-                    <RenderIf condition={selectedMedias.length > 0}>
-                        <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'}>
-                            {`${selectedMedias.length} media${selectedMedias.length > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => setSelectedMedias([])}>
+                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                        <RenderIf condition={mediaMultiPageSelection.count > 0}>
+                            {`${mediaMultiPageSelection.count} media${mediaMultiPageSelection.count > 1 ? "s" : ""} selected`}
+                            <IconButton size='small' color='primary' onClick={() => mediaMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
-                        </Typography>
-                    </RenderIf>
+                        </RenderIf>
+                    </Typography>
                 </Typography>
                 <Box>
                     <Button
@@ -231,7 +226,7 @@ export const MainMediaPage = (props) => {
                 view={viewGrid ? 'grid' : 'list'}
                 type="media"
                 linkTo={mediaRoutes.mediaDetails}
-                onSelectionChange={onMediaSelectionChange}
+                multiPageSelection={mediaMultiPageSelection}
                 onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
                 disablePagination
             />
@@ -241,14 +236,14 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Placeholders
-                    <RenderIf condition={selectedPlaceholders.length > 0}>
-                        <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'}>
-                            {`${selectedPlaceholders.length} placeholder${selectedPlaceholders.length > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => setSelectedPlaceholders([])}>
+                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                        <RenderIf condition={placeholdersMultiPageSelection.count > 0}>
+                            {`${placeholdersMultiPageSelection.count} placeholder${placeholdersMultiPageSelection.count > 1 ? "s" : ""} selected`}
+                            <IconButton size='small' color='primary' onClick={() => placeholdersMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
-                        </Typography>
-                    </RenderIf>
+                        </RenderIf>
+                    </Typography>
                 </Typography>
                 <Box>
                     <Button
@@ -266,7 +261,7 @@ export const MainMediaPage = (props) => {
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
                 linkTo={mediaRoutes.placeholderDetails}
-                onSelectionChange={onPlaceholderSelectionChange}
+                multiPageSelection={placeholdersMultiPageSelection}
                 onSendClick={(placeholder) => app.sendMediaInMessage(placeholder, 'placeholder')}
                 disablePagination
             />

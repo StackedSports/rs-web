@@ -41,6 +41,7 @@ const Type = {
 const Status = {
     field: 'status',
     headerName: 'Status',
+    valueFormatter: (params) => params.value === 'Pending' ? 'Scheduled' : params.value,
     flex: 1
 }
 

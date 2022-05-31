@@ -142,9 +142,10 @@ export const PanelFilters = (props) => {
 						else
 							return (
 								<Dropdown
-									{...filter}
+									key={filterName}
 									onClick={(option) => handleOptionsChange(filterName, option, filter)}
 									getOptionLabel={(option) => getOptionLabel(filter, option)}
+									{...filter}
 								/>
 							)
 					})}
