@@ -271,7 +271,7 @@ export const MediaDetailsPage = () => {
                             loading={loading}
                             type='media'
                             onClick={() => setOpenImageModal(true)}
-                            cardStyle={{ width: "300px", height: "300px" }}
+                            cardStyle={{ width: "300px" }}
                         />
 
                         <Box flex='1 1 auto' >

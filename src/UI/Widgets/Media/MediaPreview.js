@@ -215,7 +215,7 @@ const MediaPreview = ({ type, ...props }) => {
                                 title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
                             >
                                 <Typography noWrap fontWeight='bold'>
-                                    {props.item?.name ? props.item?.name : props.item?.file_name}
+                                    {(props.item?.name ? props.item?.name : props.item?.file_name)}
                                 </Typography>
                             </Tooltip>
                         </Stack>
