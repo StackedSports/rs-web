@@ -38,7 +38,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
 
     const onMediaGridSelectionChange = (selected, index, Item) => {
         if (props.disableMultipleSelection) {
-            multiPageSelection.set([Item.id], [Item])
+            multiPageSelection.set([Item])
         }
         else if (selected) {
             multiPageSelection.add(Item.id)

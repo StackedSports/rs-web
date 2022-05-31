@@ -40,9 +40,9 @@ const reducer = (state, action) => {
             }
         case 'set':
             return {
-                selectedIds: action.selectedIds,
+                selectedIds: action.selectedData.map(data => data.id),
                 selectedData: action.selectedData,
-                count: action.selectedIds.length,
+                count: action.selectedData.length,
             }
         case 'clear':
             return {
@@ -78,7 +78,7 @@ export default function useMultiPageSelection_V2(data) {
         onSelectionModelChange,
         remove: (id) => dispatch({ type: 'removeById', id }),
         add: (id) => dispatch({ type: 'addById', id, data: data.find(item => item.id === id) }),
-        set: (selectedIds, selectedData) => dispatch({ type: 'set', selectedIds, selectedData }),
+        set: (selectedDataArray) => dispatch({ type: 'set', selectedData: selectedDataArray }),
         clear: () => dispatch({ type: 'clear' }),
     }
 

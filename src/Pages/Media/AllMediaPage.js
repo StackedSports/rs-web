@@ -23,14 +23,18 @@ export const AllMediaPage = () => {
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
-	const [selectedMedias, setSelectedMedias] = useState([])
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
 	const medias = useMedias(1, 24)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
-	const selection = useMultiPageSelection_V2(medias.items)
+	const multiPageSelection = useMultiPageSelection_V2(medias.items)
+	const { selectionModel: selectedMediasIds,
+		selectedData: selectedMedias,
+		count: selectedMediasCount,
+		clear: clearSelection
+	} = multiPageSelection
 
 	useEffect(() => {
 		if (type && value) {
@@ -48,16 +52,16 @@ export const AllMediaPage = () => {
 		medias.filter(filter)
 	}
 
-	const onSelectionChange = (selection) => {
+/* 	const onSelectionChange = (selection) => {
 		setSelectedMedias(selection)
-	}
+	} */
 
 	const onArchiveMedia = () => {
 		confirmDialog.show('Archive Media',
-			`Are you sure you want to archive the selected media: ${selection.selectedData.map(m => m.name || m.file_name).join(', ')} ?`,
+			`Are you sure you want to archive the selected media: ${selectedMedias.map(m => m.name || m.file_name).join(', ')} ?`,
 			async () => {
-				const mediasCount = selection.count
-				const response = await archiveMedias(selection.selectionModel)
+				const mediasCount = selectedMediasCount
+				const response = await archiveMedias(selectedMediasIds)
 				if (response.error.count === 0)
 					app.alert.setSuccess(`${mediasCount} media${mediasCount > 0 ? 's' : ''} archived`)
 				else {
@@ -70,7 +74,7 @@ export const AllMediaPage = () => {
 
 	const onAddTagsToMedias = async (tagsIds) => {
 
-		const { success, error } = await addTagsToMedias(tagsIds, selection.selectionModel)
+		const { success, error } = await addTagsToMedias(tagsIds, selectedMediasIds)
 		if (error.count === 0) {
 			app.alert.setSuccess('Tags added successfully')
 			setOpenSelectTagDialog(false)
@@ -85,7 +89,7 @@ export const AllMediaPage = () => {
 		confirmDialog.show('Remove Tags',
 			`Are you sure you want to remove the selected tags (${tagsIds.length}) ?`,
 			async () => {
-				const { success, error } = await deleteTagsFromMedias(tagsIds, selection.selectionModel)
+				const { success, error } = await deleteTagsFromMedias(tagsIds, selectedMediasIds)
 				if (error.count === 0) {
 					app.alert.setSuccess('Tags removed successfully')
 					setOpenSelectTagDialog(false)
@@ -110,8 +114,8 @@ export const AllMediaPage = () => {
 
 	//TODO: find way to download all medias at once ( zip file? )
 	const onDownloadAction = () => {
-		if (selection.count > 0) {
-			selection.selectedData.forEach(mediaSelected => {
+		if (selectedMediasCount > 0) {
+			selectedMedias.forEach(mediaSelected => {
 				if (mediaSelected?.urls?.original) {
 					let url = mediaSelected.urls.original;
 					const a = document.createElement('a');
@@ -125,24 +129,24 @@ export const AllMediaPage = () => {
 	}
 
 	const onTagAction = () => {
-		if (selection.count > 0) {
+		if (selectedMediasCount > 0) {
 			isTagDialogFunctionRemoveRef.current = false
 			setOpenSelectTagDialog(true)
 		}
 	}
 
 	const onUntagAction = () => {
-		if (selection.count > 0) {
+		if (selectedMediasCount > 0) {
 			isTagDialogFunctionRemoveRef.current = true
 			setOpenSelectTagDialog(true)
 		}
 	}
 
 	const onSendInMessageAction = () => {
-		if (selection.count !== 1)
+		if (selectedMediasCount !== 1)
 			app.alert.setWarning('Please select only one media to send in message')
 		else {
-			const media = selection.selectedData[0]
+			const media = selectedMedias[0]
 			if (media)
 				app.sendMediaInMessage(media, 'media')
 		}
@@ -160,7 +164,7 @@ export const AllMediaPage = () => {
 			icon: AutoFixHigh,
 			variant: 'outlined',
 			type: 'dropdown',
-			disabled: selection.count === 0,
+			disabled: selectedMediasCount === 0,
 			options: [
 				{ name: 'Send in Message', onClick: onSendInMessageAction },
 				{ name: 'Download', onClick: onDownloadAction },
@@ -173,7 +177,7 @@ export const AllMediaPage = () => {
 			icon: LocalOfferOutlined,
 			variant: 'outlined',
 			onClick: onTagAction,
-			disabled: selection.count === 0,
+			disabled: selectedMediasCount === 0,
 		},
 		{
 			name: 'Filters',
@@ -200,9 +204,9 @@ export const AllMediaPage = () => {
 					medias
 				</Typography>
 				<Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
-					<RenderIf condition={selection.count > 0}>
-						{`${selection.count} media${selection.count > 1 ? "s" : ""} selected`}
-						<IconButton size='small' color='primary' onClick={() => selection.clear()}>
+					<RenderIf condition={selectedMediasCount > 0}>
+						{`${selectedMediasCount} media${selectedMediasCount > 1 ? "s" : ""} selected`}
+						<IconButton size='small' color='primary' onClick={() => clearSelection()}>
 							<Clear fontSize="inherit" />
 						</IconButton>
 					</RenderIf>
@@ -216,7 +220,7 @@ export const AllMediaPage = () => {
 				view={viewGrid ? 'grid' : 'list'}
 				linkTo={mediaRoutes.mediaDetails}
 				//onSelectionChange={onSelectionChange}
-				multiPageSelection={selection}
+				multiPageSelection={multiPageSelection}
 				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>
 
