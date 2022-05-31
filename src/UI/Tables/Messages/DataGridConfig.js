@@ -2,7 +2,7 @@ import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupported
 
 import { getFullName, formatPhoneNumber, formatDate, capitalize, getMessageRecipientResponseLabel } from 'utils/Parser'
 
-const fullName = { 
+const fullName = {
     field: 'fullName',
     headerName: 'Full Name',
     width: 180,
@@ -25,7 +25,7 @@ const sender = {
     valueGetter: (params) => getFullName(params.row.send_as)
 }
 
-const twitterName = { 
+const twitterName = {
     field: 'twitter_profile',
     headerName: 'Twitter',
     width: 130,
@@ -33,7 +33,7 @@ const twitterName = {
     valueGetter: (params) => `@${params.row.twitter_handle}`
 }
 
-const phone = { 
+const phone = {
     field: 'phone',
     headerName: 'Phone',
     width: 150,
@@ -47,15 +47,15 @@ const media = {
     width: 80,
     valueGetter: (params) => params.row.media,
     renderCell: (params) => (
-        <img 
-          className={`MessageDetailValue Media`}
-          style={{
-            objectFit: 'contain',
-            height: 40,
-            width: 40,
-          }}
-          src={params.value?.urls?.original}
-          //src="https://stakdsocial.s3.us-east-2.amazonaws.com/mywu70w2pooma2ytfz9q2aez6ywg?response-content-disposition=inline%3B%20filename%3D%22chris_highland.png%22%3B%20filename%2A%3DUTF-8%27%27chris_highland.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220329%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220329T191936Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=a5856bda4db5910d2a09cc928d1f5abb2da230b07127996e640f382e1125fad5"  
+        <img
+            className={`MessageDetailValue Media`}
+            style={{
+                objectFit: 'contain',
+                height: 40,
+                width: 40,
+            }}
+            src={params.value?.urls?.original}
+        //src="https://stakdsocial.s3.us-east-2.amazonaws.com/mywu70w2pooma2ytfz9q2aez6ywg?response-content-disposition=inline%3B%20filename%3D%22chris_highland.png%22%3B%20filename%2A%3DUTF-8%27%27chris_highland.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220329%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220329T191936Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=a5856bda4db5910d2a09cc928d1f5abb2da230b07127996e640f382e1125fad5"  
         />
     )
 }
@@ -64,7 +64,7 @@ const deliveredAt = {
     field: 'deliveredAt',
     headerName: 'Delivered At',
     width: 130,
-    valueGetter: (params) => params.row?.status === 'Sent' ? formatDate(params.row.last_sent_at || params.row.send_at) : ''
+    valueGetter: (params) => params.row?.status === 'Sent' ? formatDate(params.row.last_sent_at) : ''
 }
 
 const status = {
@@ -80,7 +80,7 @@ const response = {
     headerName: 'Response',
     width: 400,
     // valueGetter: (params) => capitalize(params.row.response),
-    renderCell: (params) => <span className={`MessageDetailValue Error`}>{getMessageRecipientResponseLabel(params.value)}</span> 
+    renderCell: (params) => <span className={`MessageDetailValue Error`}>{getMessageRecipientResponseLabel(params.value)}</span>
 }
 
 const getPlaceholderColumn = (key) => ({
@@ -125,26 +125,26 @@ export const getColumns = (platform, placeholders, hasFilters, hasMedia, hasCoac
 
     columns.push(fullName)
 
-    if(hasFilters)
+    if (hasFilters)
         columns.push(boardName)
 
-    if(hasCoach)
+    if (hasCoach)
         columns.push(sender)
 
-    if(platform === 'Twitter')
+    if (platform === 'Twitter')
         columns.push(twitterName)
     else
         columns.push(phone)
 
-    if(placeholders) {
+    if (placeholders) {
         Object.keys(placeholders).map(key => {
             columns.push(getPlaceholderColumn(key))
-        })  
+        })
     }
 
-    if(hasMedia)
+    if (hasMedia)
         columns.push(media)
-        
+
     columns.push(deliveredAt)
     columns.push(status)
     columns.push(response)

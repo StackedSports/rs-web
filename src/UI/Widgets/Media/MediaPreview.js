@@ -101,7 +101,7 @@ const PlaceholderImage = (props) => {
 }
 
 const MediaImage = (props) => {
-
+    console.log(props.size)
     return (
         <img
             style={{
@@ -109,7 +109,7 @@ const MediaImage = (props) => {
                 width: props.size,
                 height: props.size
             }}
-            src={props.media?.urls?.thumb || props.media?.urls?.original}
+            src={props.media?.urls?.large || props.media?.urls?.thumb}
         />
     )
 }
@@ -121,7 +121,7 @@ const MediaPreview = ({ type, ...props }) => {
     const app = useContext(AppContext)
     const self = useRef(null)
 
-    const [width, setWidth] = useState(250)
+    const [width, setWidth] = useState(200)
     const [isHovering, setIsHovering] = useState(false)
 
     const isMedia = type === 'media'
@@ -130,10 +130,11 @@ const MediaPreview = ({ type, ...props }) => {
     const showSendOnHover = (props.onSendClick && props.onSendClick instanceof Function) ? true : false
 
     useEffect(() => {
-        if(!self.current)
+        if (!self.current || props.miniImage)
             return
 
         // console.log(self.current.clientWidth)
+        console.log(props.miniImage)
         setWidth(self.current.clientWidth)
     }, [self.current, app.windowSize])
 
@@ -200,23 +201,23 @@ const MediaPreview = ({ type, ...props }) => {
 
     return (
         <StyledCard
-          ref={self}
-          variant="outlined"
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          width={width}
-          style={{ ...props.cardStyle }}
+            ref={self}
+            variant="outlined"
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            width={width}
+            style={{ ...props.cardStyle }}
         >
             <CardActionArea {...cardActionProps()} disableRipple >
                 <CardImage
-                  isHovering={isHovering}
-                  showOverlay={selectable || showSendOnHover}
-                  size={width}
+                    isHovering={isHovering}
+                    showOverlay={selectable || showSendOnHover}
+                    size={width}
                 >
                     {isMedia ? (
-                        <MediaImage media={props.item} size={width}/>
+                        <MediaImage media={props.item} size={width} />
                     ) : (
-                        <PlaceholderImage placeholder={props.item} size={width}/>
+                        <PlaceholderImage placeholder={props.item} size={width} />
                     )}
                     {selectable && (isHovering || props.selected) &&
                         <StyledCheckBox

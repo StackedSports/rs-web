@@ -160,9 +160,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
                         <MediaPreview
-                            cardStyle={{ marginLeft: 15, marginRight: 15 }}
-                            type={hasMedia ? 'media' : 'placeholder'}
-                            item={hasMedia ? message.media : getPlaceholder()} />
+                          miniImage
+                          cardStyle={{ marginLeft: 15, marginRight: 15, width: '300px' }}
+                          type={hasMedia ? 'media' : 'placeholder'}
+                          item={hasMedia ? message.media : getPlaceholder()} />
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
