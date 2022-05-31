@@ -31,6 +31,19 @@ const reducer = (state, action) => {
                 selectedData: state.selectedData.filter(data => data.id !== action.id),
                 count: state.selectedIds.filter(id => id !== action.id).length,
             }
+        case 'addById':
+            return {
+                ...state,
+                selectedIds: lodash.uniq([...state.selectedIds, action.id]),
+                selectedData: lodash.uniqBy([...state.selectedData, action.data], 'id'),
+                count: state.selectedIds.length + 1,
+            }
+        case 'set':
+            return {
+                selectedIds: action.selectedIds,
+                selectedData: action.selectedData,
+                count: action.selectedIds.length,
+            }
         case 'clear':
             return {
                 ...state,
@@ -64,6 +77,8 @@ export default function useMultiPageSelection_V2(data) {
         selectedData: state.selectedData,
         onSelectionModelChange,
         remove: (id) => dispatch({ type: 'removeById', id }),
+        add: (id) => dispatch({ type: 'addById', id, data: data.find(item => item.id === id) }),
+        set: (selectedIds, selectedData) => dispatch({ type: 'set', selectedIds, selectedData }),
         clear: () => dispatch({ type: 'clear' }),
     }
 

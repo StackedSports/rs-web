@@ -1,7 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
 
-import TabList from '@mui/lab/TabList';
-import Tab from '@mui/material/Tab';
 import TabPanel from '@mui/lab/TabPanel';
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
@@ -10,12 +8,8 @@ import MediaTable from 'UI/Tables/Media/MediaTable'
 
 import { usePlaceholders, useBoards, useMedias } from 'Api/Hooks'
 
-import useArray from 'Hooks/ArrayHooks';
 import { AppContext } from 'Context/AppProvider';
 
-
-import { findById } from 'utils/Helper'
-import { FaBullseye } from 'react-icons/fa';
 
 const tabs = [
     { id: 0, label: 'Media' },
@@ -49,44 +43,45 @@ export default function MediaSelectDialog(props) {
     }, [props.removedItem])
 
     const onConfirmSelection = (e) => {
-        console.log('on confirm selection')
+        //console.log('on confirm selection')
         props.onSelected(Object.assign({}, selectedItem), selectedType)
     }
 
-    const onMediaSelectionChange = (selection) => {
-        let selectedId = selection[0]
+    const onMediaSelectionChange = (selectionIds, selectionItems) => {
+        let selectedId = selectionIds[0]
         // console.log(selection)
         setPlaceholderSelectedId('')
         setMediaSelectedId(selectedId)
         setSelectedType('media')
         setSelectionLabel('Selected: Media')
 
-        let selected = findById(selectedId, media.items)
-        console.log(selected)
-        if (props.uniqueSelection && selection.length > 1) {
+        if (props.uniqueSelection && selectionIds.length > 1) {
             app.alert.setWarning("It is not possible to select more than one media.")
             setDisableOnConfirmSelection(true)
         } else {
             setDisableOnConfirmSelection(false)
-            setSelectedItem(selected)
+            setSelectedItem(selectionItems[0])
         }
     }
 
-    const onPlaceholderSelectionChange = (selection) => {
-        let selectedId = selection[0]
+    const onPlaceholderSelectionChange = (selectionIds, selectionItems) => {
+        let selectedId = selectionIds[0]
 
         setPlaceholderSelectedId(selectedId)
         setMediaSelectedId('')
         setSelectedType('placeholder')
         setSelectionLabel('Selected: Placeholder')
 
-        let selected = findById(selectedId, placeholders.items)
-        console.log(selected)
-        setSelectedItem(selected)
+        if (props.uniqueSelection && selectionIds.length > 1) {
+            app.alert.setWarning("It is not possible to select more than one media.")
+            setDisableOnConfirmSelection(true)
+        } else {
+            setDisableOnConfirmSelection(false)
+            setSelectedItem(selectionItems[0])
+        }
     }
 
     const onSearch = (search, tabIndex) => {
-        // console.log(`${search} ${tabIndex}`)
         if (tabIndex === 0)
             media.filter({ name: search })
         else
@@ -94,8 +89,6 @@ export default function MediaSelectDialog(props) {
     }
 
     const onClearSearch = (tabIndex) => {
-        //console.log(tabIndex)
-
         if (tabIndex === 0)
             media.clearFilter()
         else
@@ -116,7 +109,9 @@ export default function MediaSelectDialog(props) {
             disableOnConfirmSelection={disableOnConfirmSelection}
         >
             <TabPanel value={0} index={0}>
-                <MediaTable mini
+                <MediaTable 
+                    mini
+                    disableMultipleSelection={props.uniqueSelection}
                     items={media.items}
                     loading={media.loading}
                     pagination={media.pagination}
@@ -128,7 +123,9 @@ export default function MediaSelectDialog(props) {
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
-                <MediaTable mini
+                <MediaTable 
+                    mini
+                    disableMultipleSelection={props.uniqueSelection}
                     items={placeholders.items}
                     loading={placeholders.loading}
                     pagination={placeholders.pagination}

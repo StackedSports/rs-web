@@ -116,6 +116,11 @@ const MediaPreview = ({ type, ...props }) => {
 
     const [width, setWidth] = useState(250)
     const [isHovering, setIsHovering] = useState(false)
+    const [isChecked, setIsChecked] = useState(props.selected || false)
+
+    useEffect(() => {
+        setIsChecked(props.selected ? true : false)
+    }, [props.selected])
 
     const isMedia = type === 'media'
 
@@ -123,7 +128,7 @@ const MediaPreview = ({ type, ...props }) => {
     const showSendOnHover = (props.onSendClick && props.onSendClick instanceof Function) ? true : false
 
     useEffect(() => {
-        if(!self.current)
+        if (!self.current)
             return
 
         // console.log(self.current.clientWidth)
@@ -150,11 +155,12 @@ const MediaPreview = ({ type, ...props }) => {
     }
 
     const onCheckboxChange = (event) => {
+        setIsChecked(event.target.checked)
         props.onSelectedChange(event.target.checked)
     }
 
     const onSendClick = (e) => {
-        console.log(e)
+        //console.log(e)
         e.stopPropagation()
         props.onSendClick(props.item)
     }
@@ -169,28 +175,28 @@ const MediaPreview = ({ type, ...props }) => {
 
     return (
         <StyledCard
-          ref={self}
-          variant="outlined"
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          width={width}
-          style={{ ...props.cardStyle }}
+            ref={self}
+            variant="outlined"
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            width={width}
+            style={{ ...props.cardStyle }}
         >
             <CardActionArea {...cardActionProps()} disableRipple >
                 <CardImage
-                  isHovering={isHovering}
-                  showOverlay={selectable || showSendOnHover}
-                  size={width}
+                    isHovering={isHovering}
+                    showOverlay={selectable || showSendOnHover}
+                    size={width}
                 >
                     {isMedia ? (
-                        <MediaImage media={props.item} size={width}/>
+                        <MediaImage media={props.item} size={width} />
                     ) : (
-                        <PlaceholderImage placeholder={props.item} size={width}/>
+                        <PlaceholderImage placeholder={props.item} size={width} />
                     )}
-                    {selectable && (isHovering || props.selected) &&
+                    {selectable && (isHovering || isChecked) &&
                         <StyledCheckBox
                             // color="primary"
-                            checked={props.selected}
+                            checked={isChecked}
                             disableRipple
                             onChange={onCheckboxChange}
                             onClick={e => e.stopPropagation()}

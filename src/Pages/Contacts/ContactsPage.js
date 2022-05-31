@@ -91,13 +91,6 @@ export default function ContactsPage(props) {
     }, [contacts.items])
 
     useEffect(() => {
-        if (!contacts.pagination)
-            return
-
-        //console.log(contacts.pagination)
-    }, [contacts.pagination])
-
-    useEffect(() => {
         if (!boards.items)
             return
 
