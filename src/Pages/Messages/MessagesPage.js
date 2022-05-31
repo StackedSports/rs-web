@@ -9,6 +9,7 @@ import BaseMessagePage from './BaseMessagePage'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
+import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { useMessages, useTeamMembers, useTags2 } from 'Api/Hooks'
@@ -173,17 +174,20 @@ const MessagesPage = (props) => {
             onPanelFilterChange={onFilterChange}
             selectedFilters={selectedFilters}
         >
-            <Stack direction="row" alignItems="center" mb={2}>
-                <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                    <span style={{ fontWeight: 'bold' }}>
-                        You have{' '}
-                        <span style={{ color: '#3871DA' }}>
-                            {messages.pagination.totalItems || 0}
+            <RenderIf condition={!messages.loading}>
+                <Stack direction="row" alignItems="center" mb={2}>
+                    <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <span style={{ fontWeight: 'bold' }}>
+                            You have{' '}
+                            <span style={{ color: '#3871DA' }}>
+                                {messages.pagination.totalItems || 0}
+                            </span>
+                            {' '}messages
                         </span>
-                        {' '}messages
-                    </span>
+                    </Stack>
                 </Stack>
-            </Stack>
+            </RenderIf>
+            
             {/* <Stack justifyContent="center" alignItems="center">
                 <Pagination
                     count={messages.pagination.totalPages}

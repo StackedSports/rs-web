@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from 'react'
+import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 
 import { Link } from "react-router-dom"
 
@@ -7,6 +7,13 @@ import PhotoIcon from '@mui/icons-material/Photo'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import SendIcon from '@mui/icons-material/Send';
 
+import { IconContext } from "react-icons"
+import { GrDocumentPdf } from 'react-icons/gr'
+import { RiVideoLine } from 'react-icons/ri'
+import { MdOutlineImage } from 'react-icons/md'
+import { AiOutlineGif } from 'react-icons/ai'
+
+import RenderIf from '../RenderIf'
 import { AppContext } from 'Context/AppProvider'
 
 import { formatDate } from "utils/Parser"
@@ -130,6 +137,30 @@ const MediaPreview = ({ type, ...props }) => {
         setWidth(self.current.clientWidth)
     }, [self.current, app.windowSize])
 
+    const fileType = useMemo(() => {
+        console.log(props.item.file_type)
+
+        const getFileType = (type) => {
+            switch(type) {
+                case 'image/png':
+                case 'image/jpeg':
+                    return 'image'
+                case 'image/gif':
+                    return 'gif'
+                case 'application/pdf':
+                    return 'pdf'
+                case 'video/mp4':
+                    return 'video'
+                default:
+                    // props.item.name
+                    return 'unknown'
+            }
+        }
+
+        return getFileType(props.item.file_type)
+
+    }, [isMedia, props.item])
+
     const cardActionProps = () => {
         if (props.linkTo) {
             return ({
@@ -205,15 +236,37 @@ const MediaPreview = ({ type, ...props }) => {
                 {!props.mini && (
                     <CardContent>
                         <Stack direction='row'>
-                            {isMedia ? (
-                                <PhotoIcon />
-                            ) : (
+                            <RenderIf condition={isMedia && fileType === 'image'}>
+                                <IconContext.Provider value={{ size: '24px' }}>
+                                    <div>
+                                        <MdOutlineImage/>
+                                    </div>
+                                </IconContext.Provider>
+                            </RenderIf>
+                            <RenderIf condition={isMedia && fileType === 'video'}>
+                                <IconContext.Provider value={{ size: '24px' }}>
+                                    <div>
+                                        <RiVideoLine/>
+                                    </div>
+                                </IconContext.Provider>
+                            </RenderIf>
+                            <RenderIf condition={isMedia && fileType === 'gif'}>
+                                <div>
+                                    <AiOutlineGif />
+                                </div>
+                            </RenderIf>
+                            <RenderIf condition={isMedia && fileType === 'pdf'}>
+                                <div>
+                                    <GrDocumentPdf />
+                                </div>
+                            </RenderIf>
+                            <RenderIf condition={!isMedia}>
                                 <PhotoLibraryIcon />
-                            )}
+                            </RenderIf>
                             <Tooltip
                                 title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
                             >
-                                <Typography noWrap fontWeight='bold'>
+                                <Typography noWrap fontWeight='bold' ml={1}>
                                     {props.item?.name ? props.item?.name : props.item?.file_name}
                                 </Typography>
                             </Tooltip>

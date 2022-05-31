@@ -28,6 +28,8 @@ const MessageRecipientsTable = (props) => {
         if(!props.recipients)
             return
 
+        console.log(props.recipients)
+
         let tmp = []
         let hasFilters = false
 
