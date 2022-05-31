@@ -71,7 +71,7 @@ export default function AccordionComponent(props) {
 
 						return (
 							<Box
-								key={item.label + item.name + item.value}
+								key={item.label + item.name}
 							>
 								<Field
 									id={item.name}

@@ -1,14 +1,12 @@
 import { useState, useRef, useMemo } from 'react'
 import { Box, CircularProgress, Pagination, styled } from '@mui/material'
 
-
-
-import Button from 'UI/Widgets/Buttons/Button'
 import DataTable from 'UI/Tables/DataTable'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 import MediaGrid from './MediaGrid'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 /**
  * 
@@ -23,18 +21,17 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
     const refScrollTopTable = useRef(null)
+    const [carouselIndex, setCarouselIndex] = useState(null)
 
-    // const selection = useArray(null, 'v2')
     const [selection, setSelection] = useState([])
     const [selectedControl, setSelectedControl] = useState({})
-
+    console.log("Control",selectedControl)
+    console.log('Selection',selection)
     // Array of selected item ids
     const selectionRef = useRef([])
 
-    const [carouselIndex, setCarouselIndex] = useState(null)
 
     const onCellClick = ({ field, row }) => {
-
         if (field === 'urls') {
             setCarouselIndex(props.items.indexOf(row))
         }
@@ -128,12 +125,6 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
     const onSendClick = (item) => {
         if (props.onSendClick)
             props.onSendClick(item)
-    }
-
-    const onLoadMore = () => {
-        if (props.pagination.currentPage < props.pagination.totalPages) {
-            props.pagination.getPage(props.pagination.currentPage + 1)
-        }
     }
 
     // scroll to top of element ref
