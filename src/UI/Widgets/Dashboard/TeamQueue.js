@@ -100,7 +100,7 @@ export const TeamQueue = () => {
     message_status: {
       label: "Status",
       options: [
-        { value: "Pending", label: "Pending" },
+        { value: "Pending", label: "Scheduled" },
         { value: "In Progress", label: "In Progress" },
       ],
       optionsLabel: "label",

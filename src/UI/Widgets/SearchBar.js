@@ -59,18 +59,18 @@ export const MiniSearchBar = (props) => {
     }
 
     return (
-        <StyledBox expanded={expanded} onClick={onBoxClick}>
-            <StyledSearchIcon expanded={expanded} />
+        <StyledBox expanded={expanded ? 1 : undefined} onClick={onBoxClick}>
+            <StyledSearchIcon expanded={expanded ? 1 : undefined} />
             <StyledTextInput
                 ref={inputRef}
-                expanded={expanded}
+                expanded={expanded ? 1 : undefined}
                 type='text'
                 value={input}
                 onChange={onInputChange}
                 onKeyPress={onKeyPress}
                 placeholder={props.placeholder}
             />
-            {expanded && <StyledClearIcon expanded={expanded} onClick={onClear} />}
+            {expanded && <StyledClearIcon expanded={expanded ? 1 : undefined} onClick={onClear} />}
         </StyledBox>
     )
 }

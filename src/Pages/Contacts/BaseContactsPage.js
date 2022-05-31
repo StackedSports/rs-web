@@ -549,7 +549,7 @@ export default function BaseContactsPage(props) {
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
-                columnsControl={props.columnsControl}
+                columnVisibilityModel={props.columnsControl}
                 {...contactsMultipageSelection}
             />
 
