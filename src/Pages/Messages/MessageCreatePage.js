@@ -62,8 +62,9 @@ export default function MessageCreatePage(props) {
 
     // Platform
     const [platforms, setPlatforms] = useState({
-        // twitter: true,
-        // rs: true
+        twitter: true,
+        rs: true,
+        txt: true
     })
 
     const [platformSelected, setPlatformSelected] = useState(props.platformSelected || null)
@@ -251,6 +252,9 @@ export default function MessageCreatePage(props) {
         if (teamMember.sms_number) {
             platforms['rs'] = true
         }
+        if (teamMember.phone) {
+            platforms['txt'] = true
+        }
 
         setPlatforms(platforms)
     }
@@ -269,13 +273,14 @@ export default function MessageCreatePage(props) {
     const clearPlatforms = () => {
         setPlatforms({})
 
-        if (platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
-            setPlatformSelected(null)
+        // if (platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
+        setPlatformSelected(null)
 
         // platformSelected(null)
     }
 
     const validatePlatform = (sender) => {
+        console.log(sender)
         // We need to validate available platforms for the message
         // based on sender selection.
 
@@ -294,8 +299,10 @@ export default function MessageCreatePage(props) {
             clearPlatforms()
 
             if (platformSelected) {
-                //setPlatformSelected(null)
+                // setPlatformSelected(null)
                 //showErrorMessage('You must select a Platform')
+            } else {
+                setPlatforms({ twitter: true })
             }
 
             return
