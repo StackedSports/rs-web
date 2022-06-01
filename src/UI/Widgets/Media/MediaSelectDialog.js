@@ -16,6 +16,8 @@ const tabs = [
     { id: 1, label: 'Placeholders' }
 ]
 
+// _s is not a function
+
 export default function MediaSelectDialog(props) {
     const app = useContext(AppContext)
     const placeholders = usePlaceholders(1, 24)

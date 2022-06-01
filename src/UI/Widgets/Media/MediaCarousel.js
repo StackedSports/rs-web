@@ -15,7 +15,6 @@ const getFileType = (file) => {
     case 'video/mp4':
       return 'video'
     default:
-      // props.item.name
       return 'unknown'
   }
 }
