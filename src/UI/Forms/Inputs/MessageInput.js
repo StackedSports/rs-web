@@ -33,7 +33,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
 import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { Stack } from '@mui/material';
 
 const platforms = [

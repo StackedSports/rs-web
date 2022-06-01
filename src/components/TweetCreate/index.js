@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import {
-  makeStyles,
   Grid,
   Checkbox,
+  Alert as MuiAlert,
   Snackbar,
   CircularProgress,
   Badge,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import AvatarImg from "../../images/avatar.png";
 import Media from "../../images/media.jpg";
 

@@ -1,15 +1,15 @@
 import React from 'react'
 import   MedLogo  from'../../../../../images/media.jpg'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
 import { Logoimage } from '../../../../signup/signupElements'
-import { Paper } from '@material-ui/core'
-import { Avatar } from '@material-ui/core'
+import { Paper } from '@mui/material'
+import { Avatar } from '@mui/material'
 import { Box } from '@mui/system'
-import { Card } from '@material-ui/core'
+import { Card } from '@mui/material'
 import ProfileAvatar from '../Avatar/ProfileAvatar'
 import ProfileInfo from './ProfileInfo'
 import MessageDetails from '../Details/Details'
-import { CardContent } from '@material-ui/core'
+import { CardContent } from '@mui/material'
 import AvatarImg from "../../../../../images/avatar.jpeg";
 
 function ProfileMedia() {

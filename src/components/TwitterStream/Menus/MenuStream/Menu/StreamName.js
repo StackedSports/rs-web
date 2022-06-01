@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Modal } from '@material-ui/core'
-import { Box } from '@material-ui/core'
-import { Typography } from '@material-ui/core'
-import { Paper } from '@material-ui/core'
+import { Modal } from '@mui/material'
+import { Box } from '@mui/material'
+import { Typography } from '@mui/material'
+import { Paper } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 

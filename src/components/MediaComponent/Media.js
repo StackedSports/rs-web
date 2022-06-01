@@ -2,9 +2,9 @@ import React from 'react'
 import Sidebar from '../common/sidebar/sidebar'
 import MyMedia from './MediaSidebar/MyMedia'
 import { DarkContainer } from '../common/Elements/Elements'
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import Dashboard from './MediaDashboard/dashboard'
-import { Divider } from '@material-ui/core'
+import { Divider } from '@mui/material'
 
 function Media() {
     return (

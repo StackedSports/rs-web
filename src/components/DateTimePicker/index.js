@@ -3,9 +3,9 @@ import {
   Dialog,
   Grid,
   Slider,
-  makeStyles,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Calendar from "react-calendar";

@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Divider, Tooltip } from "@material-ui/core";
+import { Divider, Tooltip } from "@mui/material";
 import { Formik, Form, Field } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { mask, unMask } from 'remask';

@@ -13,7 +13,7 @@ import MessageSetting from '../Content/Message/Setting/MessageSetting'
 import MessageDetails from '../Content/Message/Details/Details'
 import MessageActions from '../Content/Message/Actions/Actions'
 import ProfileMedia from './Message/ProfileInfo/ProfileMedia';
-import { Divider } from '@material-ui/core';
+import { Divider } from '@mui/material';
 import SettingMenu from './Message/Setting/SettingMenu';
 
 

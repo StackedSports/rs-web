@@ -1,9 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import { Grid } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
+import Modal from "@mui/material/Modal";
+import Backdrop from "@mui/material/Backdrop";
+import Fade from "@mui/material/Fade";
+import { Grid } from "@mui/material";
 import styled from "styled-components";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 const useStyles = makeStyles((theme) => ({

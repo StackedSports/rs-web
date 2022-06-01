@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import {
-  makeStyles,
   Grid,
   Checkbox,
   TextField,
+  Alert as MuiAlert,
   Snackbar,
   Backdrop,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 // import DoughnutChart from "../charts/Doughnut";
 import { Picker } from "emoji-mart";
 import InputEmoji from "react-input-emoji";

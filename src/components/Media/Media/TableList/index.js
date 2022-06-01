@@ -1,5 +1,6 @@
-import {Grid, makeStyles} from "@material-ui/core";
-import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import {Grid} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import GifIcon from "@mui/material/SvgIcon/SvgIcon";
 import moment from "moment";
 import React, {useState, useEffect} from "react";
 import ListHeader from './header';

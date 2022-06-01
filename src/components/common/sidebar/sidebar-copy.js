@@ -25,12 +25,13 @@ import {
   Grid,
   Dialog,
   Snackbar,
+  Slider,
+  Alert as MuiAlert,
+} from "@mui/material";
+import {
   makeStyles,
   withStyles,
-  Slider,
-  Backdrop,
-} from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+} from "@mui/styles";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import {
   NoteAdd,

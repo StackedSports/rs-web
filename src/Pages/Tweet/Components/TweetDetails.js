@@ -1,7 +1,7 @@
 import { 
     Box,
     Divider, 
-    Typography } from '@material-ui/core';
+    Typography } from '@mui/material';
 import { Stack } from '@mui/material';
 
 import Button from 'UI/Widgets/Buttons/Button';

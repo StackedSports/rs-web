@@ -4,7 +4,7 @@ import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import Grid from "@mui/material/Grid/Grid";
 
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import TuneIcon from '@mui/icons-material/Tune';

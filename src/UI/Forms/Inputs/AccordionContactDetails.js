@@ -1,12 +1,9 @@
 import { useState, useContext } from 'react'
 
-import {
-    makeStyles,
-    Grid,
-} from "@material-ui/core";
-import {Button as MuiButton } from '@mui/material';
-
+import { Grid, Button as MuiButton } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+
 // import ArrowUpIosIcon from "@material-ui/icons/ArrowUpIos";
 // import ArrowDownIosIcon from "@material-ui/icons/ArrowDownIos";
 // import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -112,7 +109,7 @@ function AccordionContactDetails(props) {
     }
 
     const onChange = (e) => {
-        if(!shouldSave) setShouldSave(true)
+        if (!shouldSave) setShouldSave(true)
 
         props.onChange(e)
     }
@@ -128,8 +125,8 @@ function AccordionContactDetails(props) {
     const arrowTransform = collapsed ? arrowUp : arrowDown
 
     return (
-        <Card style={{ marginLeft: 0, marginRight: 0, paddingLeft: 0, paddingRight: 0}}>
-            <Accordion.Toggle as={Card.Header} style={{ marginLeft: 0, marginRight: 0}} eventKey={props.eventKey}>
+        <Card style={{ marginLeft: 0, marginRight: 0, paddingLeft: 0, paddingRight: 0 }}>
+            <Accordion.Toggle as={Card.Header} style={{ marginLeft: 0, marginRight: 0 }} eventKey={props.eventKey}>
                 <Grid
                     container
                     direction="row"
@@ -143,11 +140,11 @@ function AccordionContactDetails(props) {
                             {/* 3/6 complete */}
                         </span>
                     </p>
-                    {shouldSave && 
+                    {shouldSave &&
                         <MuiButton
-                        onClick={onSave}
+                            onClick={onSave}
                             style={{
-                            // fontWeight: "bold",
+                                // fontWeight: "bold",
                             }}
                             disableElevation
                             variant="contained"
@@ -158,26 +155,26 @@ function AccordionContactDetails(props) {
                         </MuiButton>
                     }
                     <ArrowForwardIosIcon
-                      style={{ fontSize: 15, marginLeft: 20, transform: arrowTransform, transition: '200ms all' }}
+                        style={{ fontSize: 15, marginLeft: 20, transform: arrowTransform, transition: '200ms all' }}
                     ></ArrowForwardIosIcon>
                 </Grid>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={props.eventKey}>
-                <Card.Body style={{height: props.height}}>
+                <Card.Body style={{ height: props.height }}>
                     {props.items && props.items.map(item => {
                         return (
                             <div key={item.name} className={classes.inputContainer}>
                                 <label
-                                className={classes.label}
-                                for={item.name}
+                                    className={classes.label}
+                                    for={item.name}
                                 >
                                     {item.label}
                                 </label>
                                 <input
-                                className={classes.input}
-                                name={item.name}
-                                value={item.value}
-                                onChange={onChange}
+                                    className={classes.input}
+                                    name={item.name}
+                                    value={item.value}
+                                    onChange={onChange}
                                 />
                             </div>
                         )

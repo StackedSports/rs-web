@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
-import { Grid, makeStyles, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import AvatarImg from "../../images/avatar.png";
 import Avatar from "../../images/avatar.jpeg";
 import { formatPhoneNumber } from "../Functions";

@@ -1,4 +1,5 @@
-import {Grid, makeStyles} from "@material-ui/core";
+import {Grid} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import MediaItem from "../Item/item";
 import ClearIcon from "@material-ui/icons/Clear";
 import React, {Fragment, useState,useEffect} from "react";

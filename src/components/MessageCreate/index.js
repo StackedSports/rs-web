@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, Grid, Checkbox, Snackbar, Badge, Paper } from "@material-ui/core";
+import { Grid, Checkbox, Snackbar, Badge, Paper, Alert as MuiAlert } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import AvatarImg from "../../images/avatar.png";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";

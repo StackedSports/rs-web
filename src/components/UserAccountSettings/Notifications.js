@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
-import { Grid, makeStyles, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme) => ({
   tab: {
     margin: 0,

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import {
     Grid,
     Dialog,
-} from "@material-ui/core"
+} from "@mui/material"
 import { Stack, Box } from '@mui/material'
 
 import TabContext from '@mui/lab/TabContext';

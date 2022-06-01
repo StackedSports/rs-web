@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from "react";
 import MenuNewMessage from './Menus/MenuNewMessage/MenuNewMessage'
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import "emoji-mart/css/emoji-mart.css";
 
 import Sidebar from "../common/sidebar/sidebar";
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import Content from "./Content/Content";
 import { getTwitterStream } from "../../ApiHelper";
 import MenuStream from "./Menus/MenuStream/Menu/MenuStream";

@@ -27,14 +27,14 @@ import {
   ListBottom,
   ListBottomText,
 } from "./homeElementsRight";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import Ex1 from "../../images/p1.jpg";
 import Start from "../../images/star.svg";
 import AvatarImg from "../../images/avatar.png";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 const currencies = [
   {

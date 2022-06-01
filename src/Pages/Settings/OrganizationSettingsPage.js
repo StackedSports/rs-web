@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField'
 import Avatar from '@mui/material/Avatar'
 import favicon from 'images/stacked-favicon.png'
 import Typography from '@mui/material/Typography'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from "@mui/styles";
 
 import SettingsPage from './SettingsPage'
 

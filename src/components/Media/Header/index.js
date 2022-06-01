@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import DrawerAnimation from "../../../images/drawer_animation.gif";
 import DrawerIcon from "../../../images/drawer_contact.png";
 import BackAnimation from "../../../images/back_animation.gif";

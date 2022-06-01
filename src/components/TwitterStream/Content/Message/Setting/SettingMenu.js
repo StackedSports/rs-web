@@ -1,7 +1,7 @@
 import React from 'react'
 import Paper from '@mui/material/Paper';
 import { Stack } from '@mui/material';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 function SettingMenu(props) {
     return (
         <div  >

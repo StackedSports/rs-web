@@ -7,7 +7,7 @@ import {
   Box,
   List,
   ListItem,
-} from "@material-ui/core";
+} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';

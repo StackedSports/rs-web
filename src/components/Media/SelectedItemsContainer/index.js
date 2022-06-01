@@ -1,5 +1,5 @@
 import SelectedContactItem from "../Media/Details/selected-contact";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import React from "react";
 
 

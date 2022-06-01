@@ -1,4 +1,4 @@
-import {Checkbox, Grid} from "@material-ui/core";
+import {Checkbox, Grid} from "@mui/material";
 import {MoreHoriz} from "@material-ui/icons";
 import GifIcon from "@material-ui/icons/Gif";
 import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";

@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory } from "react-router-dom";
 import {
-  makeStyles,
   Grid,
   Checkbox,
   TextField,
   Snackbar,
   CircularProgress,
-  Card,
-  CardContent,
-  MenuItem,
-  InputLabel,
-  Form,
-  Select,
+  Alert as MuiAlert,
   CardActions,
   Button,
   CardHeader,
   FormControl
-} from "@material-ui/core";
+} from "@mui/material";
 import { addDays } from "date-fns";
+import { makeStyles } from "@mui/styles";
 
 
 // import { Formik, Form, Field } from "formik";
@@ -27,10 +21,10 @@ import { addDays } from "date-fns";
 
 import DatePicker from "react-date-picker";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ArrowBackwardIosIcon from "@mui/material/SvgIcon/SvgIcon";
 import { DateRangePicker } from "react-date-range";
-import Typography from "@material-ui/core/Typography";
-import Modal from "@material-ui/core/Modal";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 import { FaMarker, FaSlidersH } from "react-icons/fa";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
@@ -71,7 +65,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup
-} from "@material-ui/core";
+} from "@mui/material";
 import {
   addTagstoContacts,
   archiveContactEnd,

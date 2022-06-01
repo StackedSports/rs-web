@@ -2,7 +2,7 @@ import './MessagePreview.css'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'

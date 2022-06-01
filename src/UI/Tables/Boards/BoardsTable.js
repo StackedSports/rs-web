@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { DataGrid } from '@mui/x-data-grid';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';

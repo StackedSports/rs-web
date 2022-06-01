@@ -33,9 +33,9 @@ import { FaTwitter } from "react-icons/fa";
 import Logo from "../../images/logo.png";
 import { BsEyeFill } from "react-icons/bs";
 import { loginUser, registerUser } from "../../ApiHelper";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Backdrop from "@material-ui/core/Backdrop";
-import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
+import { makeStyles } from "@mui/styles";
 import { ToastContainer, toast } from "react-toastify";
 
 import { Redirect } from "react-router-dom";

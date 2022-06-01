@@ -1,5 +1,5 @@
 import ItemMainHeader from "./Header";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import MediaItem from "./Item/item";
 import moment from "moment";
 import PlaceholderTableList from "./TableList/index";

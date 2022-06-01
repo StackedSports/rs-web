@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ListItemButton, Stack } from "@mui/material";
-import { Avatar, List, ListItem, Typography } from '@material-ui/core';
+import { Avatar, List, ListItem, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import Page, { Content } from 'UI/Layouts/Page';

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
 import {
-  makeStyles,
   Grid,
   Checkbox,
   TextField,
   Snackbar,
+  Alert as MuiAlert,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import PhotoIcon from "@material-ui/icons/Photo";

@@ -11,13 +11,13 @@ import CheckIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Picker } from "emoji-mart";
 import {
-  makeStyles,
   Grid,
   Checkbox,
   TextField,
   Snackbar,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import "emoji-mart/css/emoji-mart.css";
 import { FiScissors } from "react-icons/fi";
 import { FaMagic } from "react-icons/fa";

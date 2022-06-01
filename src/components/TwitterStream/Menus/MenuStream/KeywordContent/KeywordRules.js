@@ -2,10 +2,10 @@ import React from 'react'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@mui/styles";
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';

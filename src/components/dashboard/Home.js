@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import { makeStyles } from "@mui/styles";
 import Chart from "./chart";
 import styled from "styled-components";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -42,7 +42,7 @@ import {
   ChartTop2,
 } from "./homeElements";
 import Table from "./table";
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import HomeRight from "./homeRight";
 // import Barchart from "./barChart";
 import FilterModal from "./filterModal";

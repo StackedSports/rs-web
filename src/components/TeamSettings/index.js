@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import HollowWhiteButton from "../common/Buttons/HollowWhiteButton";
 import {
   Grid,
-  makeStyles,
   TextField,
   Checkbox,
   OutlinedInput,
   InputAdornment,
-} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+  Autocomplete
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import AvatarImg from "../../images/avatar.png";
 import Avatar from "../../images/avatar.jpeg";
 import { formatPhoneNumber } from "../Functions";

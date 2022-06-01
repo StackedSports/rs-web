@@ -1,4 +1,4 @@
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import MediaItem from "../Media/Item/item";
 import moment from "moment";
 import React from "react";

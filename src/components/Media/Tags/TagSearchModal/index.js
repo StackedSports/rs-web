@@ -1,7 +1,7 @@
-import {Checkbox, Grid} from "@material-ui/core";
+import {Checkbox, Grid} from "@mui/material";
 import HollowWhiteButton from "../../../common/Buttons/HollowWhiteButton";
 import IconTextField from "../../../common/Fields/IconTextField";
-import LocalOfferOutlinedIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import LocalOfferOutlinedIcon from "@mui/material/SvgIcon/SvgIcon";
 import DialogBox from "../../../common/Dialogs";
 import React, {useEffect} from "react";
 import {getTags} from '../../../../ApiHelper'

@@ -1,7 +1,7 @@
 import React, { useState  } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useStyles } from '../../../MessageCreate';
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 function MyStreams(props) {
 

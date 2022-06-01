@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import { Grid } from "@material-ui/core";
-import Fade from "@material-ui/core/Fade";
+import { makeStyles } from "@mui/styles";
+import Modal from "@mui/material/Modal";
+import Backdrop from "@mui/material/Backdrop";
+import { Grid } from "@mui/material";
+import Fade from "@mui/material/Fade";
 import styled from "styled-components";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 const useStyles = makeStyles((theme) => ({

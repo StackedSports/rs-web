@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, Grid, Checkbox, Dialog } from "@material-ui/core";
+import { Grid, Checkbox, Dialog,Alert as MuiAlert, } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import moment from "moment";
 import { FaSlidersH, FaBars, FaTh } from "react-icons/fa";
 

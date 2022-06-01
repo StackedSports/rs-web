@@ -1,8 +1,9 @@
-import {Grid, makeStyles} from "@material-ui/core";
+import {Grid} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import moment from "moment";
 import React from "react";
 
-import GifIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import GifIcon from "@mui/material/SvgIcon/SvgIcon";
 import {FaMagic, FaFilePdf, FaVideo, FaImage} from "react-icons/fa";
 
 

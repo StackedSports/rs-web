@@ -1,4 +1,4 @@
-import {Checkbox, Grid} from "@material-ui/core";
+import {Checkbox, Grid} from "@mui/material";
 import {MoreHoriz} from "@material-ui/icons";
 import React from "react";
 

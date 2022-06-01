@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';

@@ -35,7 +35,7 @@ import {
 	uploadMedia,
 	addTagToMedia
 } from 'Api/Endpoints'
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 export const FileDropZone = (props) => {
 

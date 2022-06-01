@@ -6,16 +6,15 @@ import Box from '@mui/material/Box';
 
 
 
-import MuiAlert from "@material-ui/lab/Alert";
 import {Link} from "react-router-dom";
 import {
-    makeStyles,
     Grid,
     Checkbox,
     Dialog,
-    withStyles,
+    Alert as MuiAlert,
     Slider, Snackbar,
-} from "@material-ui/core";
+} from "@mui/material";
+import {withStyles, makeStyles } from "@mui/styles";
 import moment from "moment";
 
 
@@ -60,7 +59,7 @@ import {fileTypes} from '../../utils/FileUtils';
 import {MoreHoriz} from "@material-ui/icons";
 import SelectedContactItem from "./Media/Details/selected-contact";
 import TimePicker from "../DateTimePicker";
-import ArrowBackwardIosIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ArrowBackwardIosIcon from "@mui/material/SvgIcon/SvgIcon";
 import {DateRangePicker} from "react-date-range";
 import {addDays} from "date-fns";
 import {DarkContainer} from "../common/Elements/Elements";
@@ -831,7 +830,6 @@ function MediaComponent(props) {
                     title={stateFilter || "Tag"}
                     drop={"down"}
                     style={filtesSpacingStyle}
-                    style={{marginLeft: 5}}
                 >
                     <div>
                         <Grid container direction="row" justify="center">
@@ -1654,7 +1652,6 @@ function MediaComponent(props) {
                 showAnimation={showAnimation}
                 showSideFilters={showSideFilters}
                 showMediaStats={showMediaStats}
-                selectedCheckBoxes={selectedCheckBoxes}
                 dropDownButtonItemsList={dropDownButtonItemsList}
                 showDrawer={showDrawer}
                 setShowBackButton={handleSetShowBackButton}
@@ -1774,7 +1771,6 @@ function MediaComponent(props) {
                                     setDisplayOwner={handleSetDisplayOwner}
                                     setDisplayTags={handleSetDisplayTags}
                                     setDisplayPlaceholder={handleSetDisplayPlaceholder}
-                                    displayPlaceholder={displayPlaceholder}
                                     displayTags={displayTags}
                                     addDataToFilter={addDataToFilter}
                                     id={"messageDetailScrollPublished"}

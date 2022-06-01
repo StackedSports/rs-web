@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { makeStyles, Grid, Checkbox, Snackbar, Badge } from "@material-ui/core";
+import { Grid, Checkbox, Snackbar, Badge } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 
 
 import "emoji-mart/css/emoji-mart.css";
 
 import { DarkContainer } from "../../../common/Elements/Elements";
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import MyStreams from "./MyStreams";
 import Content from "../../Content/Content";
 import MenuStream from "../MenuStream/Menu/MenuStream";

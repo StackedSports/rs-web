@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Divider, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@mui/material";
 import { useFormik, Field } from 'formik';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';

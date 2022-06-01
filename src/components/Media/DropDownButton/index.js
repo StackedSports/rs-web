@@ -1,8 +1,9 @@
 import IconTextField from "../../common/Fields/IconTextField";
-import LocalOfferOutlinedIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import LocalOfferOutlinedIcon from "@mui/material/SvgIcon/SvgIcon";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import DropDownItem from './item';
 import { FaMagic, FaFilePdf, FaVideo, FaImage } from "react-icons/fa";
 

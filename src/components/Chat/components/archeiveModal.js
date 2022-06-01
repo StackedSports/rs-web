@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Modal from "@material-ui/core/Modal";
-import Fade from "@material-ui/core/Fade";
-import { Grid, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import { Grid, Button } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import styled from "styled-components";
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import DialogBox from '../../../../common/Dialogs'
-import { Grid } from '@material-ui/core';
-import { Checkbox } from '@material-ui/core';
+import { Grid } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import HollowWhiteButton from '../../../../common/Buttons/HollowWhiteButton'
 import IconTextField from "../../../../common/Fields/IconTextField";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";

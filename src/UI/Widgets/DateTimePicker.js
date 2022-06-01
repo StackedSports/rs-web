@@ -5,11 +5,11 @@ import {
     Grid,
     Dialog,
     Snackbar,
-    makeStyles,
     withStyles,
     Slider,
     Backdrop,
-} from "@material-ui/core"
+} from "@mui/material"
+import { makeStyles } from "@mui/styles";
 
 import TextField from '@mui/material/TextField';
 import AdapterMoment from '@mui/lab/AdapterMoment';

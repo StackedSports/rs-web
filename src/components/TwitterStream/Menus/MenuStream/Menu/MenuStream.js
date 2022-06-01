@@ -4,7 +4,7 @@ import Box from "@mui/material/Box/Box";
 import Button from "@mui/material/Button/Button";
 import Grid from "@mui/material/Grid/Grid";
 
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -14,7 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { useStyles } from '../../../../MessageCreate';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import StarIcon from '@mui/icons-material/Star';
 export default function MenuStream(props) {
 
