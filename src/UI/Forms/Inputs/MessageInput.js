@@ -38,8 +38,8 @@ import { Stack } from '@mui/material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
-    { name: 'Personal Text', icon: FaPhone },
-    { name: 'SMS/MMS', icon: FaComment }
+    //{ name: 'Personal Text', icon: FaPhone },
+    //{ name: 'SMS/MMS', icon: FaComment }
 ]
 
 const InputSelector = (props) => {
