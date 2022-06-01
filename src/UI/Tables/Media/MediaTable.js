@@ -114,7 +114,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
 
             <MediaCarousel
                 index={carouselIndex}
-                items={props?.items?.map(item => item?.urls?.original)}
+                items={props?.items}
                 onClose={() => setCarouselIndex(null)}
             />
         </Box>

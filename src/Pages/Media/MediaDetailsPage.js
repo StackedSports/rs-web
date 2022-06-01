@@ -59,10 +59,8 @@ export const MediaDetailsPage = () => {
         }
     }, [media])
 
-    console.log("item contact", itemContact)
-    //find way to get placeholder
-
-    console.log(media)
+    //console.log("item contact", itemContact)
+    //console.log(media)
 
     const onArchiveAction = () => {
         archiveMedia(media.id).then(() => {
@@ -464,7 +462,7 @@ export const MediaDetailsPage = () => {
                 </GridItemRight>
             </Grid>
             <MediaCarousel
-                items={[media?.urls?.original]}
+                items={[media]}
                 index={openImageModal ? 0 : null}
                 onClose={() => setOpenImageModal(false)}
             />

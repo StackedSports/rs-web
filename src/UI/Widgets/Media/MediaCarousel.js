@@ -1,16 +1,36 @@
 import { useState, useEffect } from "react"
-import { Dialog, DialogContent, styled, Fab } from "@mui/material"
+import { Dialog, DialogContent, styled, Fab, Box } from "@mui/material"
 import { Close, NavigateBefore, NavigateNext } from "@mui/icons-material"
 import RenderIf from "UI/Widgets/RenderIf"
+
+const getFileType = (file) => {
+  switch (file?.file_type) {
+    case 'image/png':
+    case 'image/jpeg':
+      return 'image'
+    case 'image/gif':
+      return 'gif'
+    case 'application/pdf':
+      return 'pdf'
+    case 'video/mp4':
+      return 'video'
+    default:
+      // props.item.name
+      return 'unknown'
+  }
+}
 
 /**
  * 
  * @param {string} props.items array of url strings
- * @param {number} props.index index of the current item (you can use this to open the carousel at a specific index or close it if null) 
+ * @param {number} props.index index of the current item (you can use this to open the carousel at a specific index or close it if
+ * null) 
+ * @param {string} props.fileType
  */
 export const MediaCarousel = (props) => {
 
   const [url, setUrl] = useState(null)
+  const [type, setType] = useState(null)
   const [index, setIndex] = useState(0)
   const [carouselOpen, setCarouselOpen] = useState(false)
 
@@ -22,8 +42,10 @@ export const MediaCarousel = (props) => {
   }, [props.index])
 
   useEffect(() => {
-    if (props.items)
-      setUrl(props.items[index])
+    if (props.items) {
+      setUrl(props.items[index]?.urls?.original)
+      setType(getFileType(props.items[index]))
+    }
   }, [props.items, index])
 
   const onClickNext = () => {
@@ -46,7 +68,7 @@ export const MediaCarousel = (props) => {
   }
 
   return (
-    <StyledDialog open={carouselOpen} onClose={onClose} maxWidth='xl'>
+    <StyledDialog open={carouselOpen} onClose={onClose} maxWidth='xl' PaperComponent={Box}>
       <DialogContent>
         <Fab className='closeFab' onClick={onClose}>
           <Close />
@@ -61,7 +83,18 @@ export const MediaCarousel = (props) => {
             <NavigateBefore />
           </Fab>
         </RenderIf>
-        <img src={url} />
+        <RenderIf condition={url && type === 'video'}>
+          <video controls src={url} />
+        </RenderIf>
+        <RenderIf condition={url && type === 'pdf'}>
+          <embed src={url} />
+        </RenderIf>
+        <RenderIf condition={url && type !== 'video' && type !== 'pdf'}>
+          <img
+            src={url}
+            loading='lazy'
+          />
+        </RenderIf>
       </DialogContent>
     </StyledDialog>
   )
@@ -71,16 +104,32 @@ export default MediaCarousel
 
 const StyledDialog = styled(Dialog)({
 
+  '.MuiDialog-paper': {
+    height: '100%',
+  },
+
   '.MuiDialogContent-root': {
-    padding: 5,
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   'img': {
-    width: '100%',
+    width: 'auto',
     height: 'auto',
     maxHeight: '80vh',
   },
-
+  'video': {
+    width: 'auto',
+    height: 'auto',
+    maxHeight: '80vh',
+  },
+  'embed': {
+    width: '50vw',
+    height: '100%',
+    maxHeight: '80vh',
+  },
 
   '.MuiFab-root.closeFab': {
     position: 'fixed',
