@@ -28,8 +28,6 @@ export const TeamQueue = () => {
   const senders = useTeamMembers();
   const history = useHistory();
 
-  console.log(loadedRows);
-
   const getBaseFilter = () => {
     if (dates.includes(null))
       return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin" });

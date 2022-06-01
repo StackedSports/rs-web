@@ -63,6 +63,7 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
 }
 
 const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
+    //console.log("message",message)
 
     if (!message)
         return (
@@ -72,7 +73,6 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         )
 
     const [messageStats, setMessageStats] = useState(null)
-    console.log(message)
     useEffect(() => {
         if (!recipients)
             return
@@ -82,8 +82,8 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         let error = recipients?.status_counts.error || 0
         let pending = recipients?.status_counts.pending || 0
 
-        console.log('sent = ' + sent)
-        console.log('total = ' + total)
+        //console.log('sent = ' + sent)
+        //console.log('total = ' + total)
 
         setMessageStats({
             delivery: sent === 0 ? 0 : Math.round(sent / total * 100),
@@ -106,7 +106,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     const showMedia = hasMedia || hasMediaPlaceholder
 
     const getPlaceholder = () => {
-        console.log(recipients)
+       // console.log(recipients)
 
         if (!recipients) {
             // console.log({ ...message.media_placeholder, media: message.media_placeholder_preview })
@@ -138,7 +138,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             })
         }
 
-        console.log(mediaFiles)
+        //console.log(mediaFiles)
 
         return {
             ...message.media_placeholder,
@@ -172,7 +172,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details
                         label="Status"
                         // value={getMessageStatusLabel(message.status)}
-                        value={getMessageStatusLabel(message.status, message.platform.name)}
+                        value={getMessageStatusLabel(message.status, message.platform?.name)}
                         status={getMessageStatusLabel(message.status)}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />

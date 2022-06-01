@@ -21,7 +21,7 @@ export const DashboardPage = () => {
   const [lastQuarterStats, setLastQuarterStates] = useState({ data: null, loading: false });
   const [lastYearStats, setLastYearStates] = useState({ data: null, loading: false });
   const [last30DaysStats, setLast30DaysStats] = useState({ data: null, loading: false });
-  const stats = useStats();
+   const stats = useStats(format(startOfMonth(new Date()), 'yyyy-MM-dd'),format(endOfMonth(new Date()), 'yyyy-MM-dd'));
 
   // first fetch stats for this month when component is mounted
   useEffect(() => {

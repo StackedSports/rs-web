@@ -105,7 +105,7 @@ const MessageRecipientsTable = (props) => {
 
             <MediaCarousel
               index={carouselIndex}
-              items={contacts?.map(item => item?.media?.urls?.original)}
+              items={contacts?.map(item => item?.media)}
               onClose={() => setCarouselIndex(null)}
             />
         </Stack>
