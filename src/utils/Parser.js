@@ -104,28 +104,32 @@ export const getFullName = (contact) => {
 // 	else
 // 		return status
 // }
-export const getMessageStatusLabel = (status, platform) => {
-	let message = status
+export const getMessageStatusLabel = (status, platform, recipients) => {
+	let message = ''
+	console.log(recipients)
+	let allMessagesSent = recipients?.status_counts?.sent === recipients?.count
+	let allMessagesPending = recipients?.status_counts?.pending === recipients?.count
+	let someErrors = recipients?.status_counts?.error > 0 && recipients?.status_counts?.sent > 0
+	// let contactWithoutPhone = recipients?.filter_list?.contacts?.some(contact => contact.phone === null  )
+	let allMessagesFailed = recipients?.status_counts?.error === recipients?.count && recipients?.status_counts?.pending === 0
+
 	switch (true) {
-		case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text')):
+		case (allMessagesFailed && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Failed - Error'
 			break;
-		// case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text')):
-		//     message = 'Complete with some errors'//??
-		//     break;
-		case (status === 'Error' && (platform === 'Twitter' || platform === 'RS Text'))://
-			message = 'Message Failed - Error'
+		case (someErrors && (platform === 'Twitter' || platform === 'RS Text')):
+			message = 'Complete with some errors'
 			break;
-		case (status === 'Sent' && (platform === 'Twitter' || platform === 'RS Text')):
+		case (allMessagesSent && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Completed'
 			break;
-		case (status === 'Complete' && platform === 'Personal Text'):
+		case (allMessagesSent && platform === 'Personal Text'):
 			message = 'Message Complete'
 			break;
 		case (status === 'Error' && platform === 'Personal Text'):
 			message = 'Message Completed'
 			break;
-		case (status === 'In Progress' && platform === 'Personal Text'):
+		case (allMessagesPending && platform === 'Personal Text'):
 			message = 'Message ready to be sent by sender.'
 			break;
 		case (status === 'Cancelled' && platform === 'Personal Text'):
@@ -259,9 +263,9 @@ export const formatDate = (date, dateStyle, timeStyle) => {
 	return d.toLocaleString('en-US', { dateStyle, timeStyle })
 }
 
-export const formatDateWithoutUTC = (isoDate) =>{
+export const formatDateWithoutUTC = (isoDate) => {
 	const date = new Date(isoDate)
-	return new Date (date.valueOf() + date.getTimezoneOffset() * 60000)
+	return new Date(date.valueOf() + date.getTimezoneOffset() * 60000)
 }
 
 export const removeSpaces = (string) => string.replace(/\s/g, '')
