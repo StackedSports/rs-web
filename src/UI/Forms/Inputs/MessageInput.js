@@ -76,6 +76,7 @@ const InputSelected = (props) => {
                 {/* <img className="MediaSelected" src={getSrc[props.variant](props.item)}/> */}
                 <MediaPreview
                     //   mini
+                    miniImage={props.miniImage}
                     item={props.item}
                     // loading={loading}
                     type={props.variant}
@@ -329,10 +330,13 @@ const InputMedia = (props) => {
     if (props.selected) {
         return (
             <InputSelected
+                miniImage
+                style={{ width: "300px" }}
                 variant={props.selected.type}
                 item={props.selected.item}
                 onClick={props.onSelectedClick}
-                onRemove={props.onRemove} />
+                onRemove={props.onRemove}
+            />
         )
     } else {
         return (
@@ -609,7 +613,7 @@ export default function MessageInput(props) {
     }
 
     return (
-        <div className={containerClass}>
+        <div className={containerClass} style={props.style}>
             {!props.hideLabel &&
                 <div className='Label'>
                     <p>{props.label}</p>
