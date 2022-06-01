@@ -159,6 +159,8 @@ const MediaPreview = ({ type, ...props }) => {
                     return 'video'
                 default:
                     // props.item.name
+
+                    // let parts = 
                     return 'unknown'
             }
         }
