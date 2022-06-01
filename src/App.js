@@ -10,24 +10,24 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 // import { ThemeProvider } from '@mui/styles';
 
 import Signup from "./components/signup";
-import Dashboard from "./components/dashboard/index";
-import Contacts from "./Pages/Contacts";
-import Chat from "./Pages/Chat";
+// import Dashboard from "./components/dashboard/index";
+// import Contacts from "./Pages/Contacts";
+// import Chat from "./Pages/Chat";
 
 import Test from './Pages/Test'
 
-import Media from "./Pages/Media";
-import MessageCreate from "./Pages/MessageCreate";
-import UserProfile from "./Pages/UserProfile";
+// import Media from "./Pages/Media";
+// import MessageCreate from "./Pages/MessageCreate";
+// import UserProfile from "./Pages/UserProfile";
 import TweetCreate from "./Pages/TweetCreate";
-import TeamSettings from "./Pages/TeamSettings";
+// import TeamSettings from "./Pages/TeamSettings";
 
 import NewDashboard from "./Pages/Dashboard";
 
 import TwitterStream from './components/TwitterStream/TwitterStream'
-import MediaC from "./components/MediaComponent/Media";
+// import MediaC from "./components/MediaComponent/Media";
 
-import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
+// import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
 import {
 	ContactsRoutes,
@@ -51,20 +51,20 @@ function App() {
 				<div className="body">
 					<Switch>
 						<Route path="/" exact component={Signup} />
-						<Route path="/olddashboard" exact component={Dashboard} />
+						{/* <Route path="/olddashboard" exact component={Dashboard} />
 						<Route path="/olddashboard/:user" exact component={Dashboard} />
 						<Route path="/oldcontacts" exact component={Contacts} />
 						<Route path="/chat" exact component={Chat} />
 
-						<Route path="/oldmedia" exact component={Media} />
+						<Route path="/oldmedia" exact component={Media} /> */}
 						<Route path="/tweet-create" exact component={TweetCreate} />
 
-						<Route path="/contact-profile/:id" exact component={UserProfile} />
+						{/* <Route path="/contact-profile/:id" exact component={UserProfile} />
 						<Route path="/message-create" exact component={MessageCreatePage} />
 						<Route path="/team-settings" exact component={TeamSettings} />
-						<Route path="/team-settings/:userID" exact component={TeamSettings} />
+						<Route path="/team-settings/:userID" exact component={TeamSettings} /> */}
 						<Route path="/twitter-stream" exact component={TwitterStream} />
-						<Route path="/Media-component" exact component={MediaC} />
+						{/* <Route path="/Media-component" exact component={MediaC} /> */}
 
 						<Route path='/test' component={Test} />
 
