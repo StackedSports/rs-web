@@ -62,6 +62,8 @@ export const MediaDetailsPage = () => {
     console.log("item contact", itemContact)
     //find way to get placeholder
 
+    console.log(media)
+
     const onArchiveAction = () => {
         archiveMedia(media.id).then(() => {
             alert.setSuccess("Media archived")
@@ -260,13 +262,16 @@ export const MediaDetailsPage = () => {
             <Grid container mt={3}>
                 <GridItemLeft item xs={8} xl={9} >
 
-                    <Stack direction='row' flexWrap='wrap' gap={2}>
+                    {/* <Stack direction='row' flexWrap='wrap' gap={2}> */}
+                    <Stack direction='row' flexWrap='nowrap' gap={2}>
 
                         <MediaPreview
+                            miniImage
                             item={media}
                             loading={loading}
                             type='media'
                             onClick={() => setOpenImageModal(true)}
+                            cardStyle={{ width: "300px" }}
                         />
 
                         <Box flex='1 1 auto' >
