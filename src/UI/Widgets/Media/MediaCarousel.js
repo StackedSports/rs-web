@@ -126,7 +126,11 @@ const StyledDialog = styled(Dialog)({
     maxHeight: '80vh',
   },
   'embed': {
+<<<<<<< HEAD
     width: '50vw',
+=======
+    width: '100%',
+>>>>>>> 362e468be913531988bf2df074ae00a7d77667ae
     height: '100%',
     maxHeight: '80vh',
   },
