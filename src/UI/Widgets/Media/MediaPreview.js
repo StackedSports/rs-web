@@ -3,8 +3,7 @@ import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
-import PhotoIcon from '@mui/icons-material/Photo'
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
+import { ImageOutlined, GifBoxOutlined, PermMediaOutlined, SmartDisplayOutlined } from '@mui/icons-material'
 import SendIcon from '@mui/icons-material/Send';
 
 import { IconContext } from "react-icons"
@@ -28,7 +27,7 @@ const PlaceholderImage = (props) => {
             position='relative'
             overflow='hidden'
         >
-            {images && images[0] && (
+            {images && images[2] && (
                 <Box
                     sx={{
                         position: 'absolute',
@@ -36,12 +35,13 @@ const PlaceholderImage = (props) => {
                         height: '100%',
                         top: '50%',
                         left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        zIndex: 1,
+                        transform: 'translate(0, -50%) scale(0.7)',
+                        zIndex: 0,
+
                     }}
                 >
                     <img
-                        src={images[0].thumb || images[0].original}
+                        src={images[2].thumb || images[2].original}
                         alt='placeholder'
                         height='100%'
                         width='100%'
@@ -72,7 +72,7 @@ const PlaceholderImage = (props) => {
                 </Box>
             )}
 
-            {images && images[2] && (
+            {images && images[0] && (
                 <Box
                     sx={{
                         position: 'absolute',
@@ -80,13 +80,12 @@ const PlaceholderImage = (props) => {
                         height: '100%',
                         top: '50%',
                         left: '50%',
-                        transform: 'translate(0, -50%) scale(0.7)',
+                        transform: 'translate(-50%, -50%)',
                         zIndex: 0,
-
                     }}
                 >
                     <img
-                        src={images[2].thumb || images[2].original}
+                        src={images[0].thumb || images[0].original}
                         alt='placeholder'
                         height='100%'
                         width='100%'
@@ -95,13 +94,12 @@ const PlaceholderImage = (props) => {
                 </Box>
             )}
 
-
         </Box>
     )
 }
 
 const MediaImage = (props) => {
-    console.log(props.size)
+    //console.log(props.size)
     return (
         <img
             style={{
@@ -139,15 +137,15 @@ const MediaPreview = ({ type, ...props }) => {
             return
 
         // console.log(self.current.clientWidth)
-        console.log(props.miniImage)
+        //console.log(props.miniImage)
         setWidth(self.current.clientWidth)
     }, [self.current, app.windowSize])
 
     const fileType = useMemo(() => {
-        console.log(props.item.file_type)
+        //console.log(props.item.file_type)
 
         const getFileType = (type) => {
-            switch(type) {
+            switch (type) {
                 case 'image/png':
                 case 'image/jpeg':
                     return 'image'
@@ -246,23 +244,13 @@ const MediaPreview = ({ type, ...props }) => {
                     <CardContent>
                         <Stack direction='row'>
                             <RenderIf condition={isMedia && fileType === 'image'}>
-                                <IconContext.Provider value={{ size: '24px' }}>
-                                    <div>
-                                        <MdOutlineImage/>
-                                    </div>
-                                </IconContext.Provider>
+                                <ImageOutlined />
                             </RenderIf>
                             <RenderIf condition={isMedia && fileType === 'video'}>
-                                <IconContext.Provider value={{ size: '24px' }}>
-                                    <div>
-                                        <RiVideoLine/>
-                                    </div>
-                                </IconContext.Provider>
+                                <SmartDisplayOutlined />
                             </RenderIf>
                             <RenderIf condition={isMedia && fileType === 'gif'}>
-                                <div>
-                                    <AiOutlineGif />
-                                </div>
+                                <GifBoxOutlined />
                             </RenderIf>
                             <RenderIf condition={isMedia && fileType === 'pdf'}>
                                 <div>
@@ -270,7 +258,7 @@ const MediaPreview = ({ type, ...props }) => {
                                 </div>
                             </RenderIf>
                             <RenderIf condition={!isMedia}>
-                                <PhotoLibraryIcon />
+                                <PermMediaOutlined />
                             </RenderIf>
                             <Tooltip
                                 title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
