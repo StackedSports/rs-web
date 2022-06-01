@@ -137,7 +137,7 @@ const MediaPreview = ({ type, ...props }) => {
             return
 
         // console.log(self.current.clientWidth)
-        console.log(props.miniImage)
+        //console.log(props.miniImage)
         setWidth(self.current.clientWidth)
     }, [self.current, app.windowSize])
 
@@ -145,7 +145,7 @@ const MediaPreview = ({ type, ...props }) => {
         //console.log(props.item.file_type)
 
         const getFileType = (type) => {
-            switch(type) {
+            switch (type) {
                 case 'image/png':
                 case 'image/jpeg':
                     return 'image'

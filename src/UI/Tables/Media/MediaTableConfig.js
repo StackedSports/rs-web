@@ -52,7 +52,7 @@ const file = {
             height="50px"
             width="50px"
             style={{ objectFit: 'contain' }}
-            src={params.value?.original}
+            src={params.value?.thumb}
         />
     ),
 }
