@@ -12,10 +12,10 @@ export const getAssociatedContactByFileName = (fileName) => {
                     resolve(contacts[0])
                 } else if (contacts.length > 1) {
                     let filteredData = []
-                    reject("found multiple contacts")
+                    // reject("found multiple contacts")
 
                     contacts.forEach(contact => {
-                        if (contact.first_name + " " + contact.last_name === nameParts[0])
+                        if ((contact.first_name + " " + contact.last_name).toLowerCase() === nameParts[0].toLowerCase())
                             filteredData.push(contact)
                     })
 
