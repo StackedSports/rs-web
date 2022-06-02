@@ -13,7 +13,7 @@ import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 import { AppContext } from 'Context/AppProvider'
 
 import { mediaRoutes } from "Routes/Routes"
-import { usePlaceholder } from "Api/Hooks"
+import { usePlaceholder, usePlaceholderMedia } from "Api/Hooks"
 import { formatDate } from "utils/Parser"
 import {
   archiveMedias,
@@ -29,6 +29,7 @@ export const MediaPlaceholderDetailsPage = () => {
   const { id } = useParams()
   const alert = useMainLayoutAlert()
   const { item: placeholder, loading } = usePlaceholder(id)
+  const placeholderMedia = usePlaceholderMedia(id, 1, 10)
 
   //console.log(placeholder)
 
@@ -189,7 +190,7 @@ export const MediaPlaceholderDetailsPage = () => {
             onEdit={onEditName}
           />
 
-          <DetailsPreview label="Media Count" value={placeholder?.media.length} />
+          <DetailsPreview label="Media Count" value={placeholder?.media_count} />
           <DetailsPreview label="Uploaded on :" value={formatDate(placeholder?.created_at)} />
           <DetailsPreview label="Updated on :" value={formatDate(placeholder?.updated_at)} />
         </Box>
@@ -210,7 +211,7 @@ export const MediaPlaceholderDetailsPage = () => {
         </Tooltip>
       </Stack>
       <MediaTable
-        items={placeholder?.media || []}
+        items={placeholderMedia.items || []}
         loading={loading}
         view={viewGrid ? 'grid' : 'list'}
         type="media"

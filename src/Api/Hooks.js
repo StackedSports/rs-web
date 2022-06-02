@@ -18,6 +18,7 @@ import {
     getBoardContacts,
     getPlaceholder,
     getPlaceholders,
+    getPlaceholderMedia,
     getSnippets,
     getCoachTypes,
     getTextPlaceholders,
@@ -958,6 +959,39 @@ export const usePlaceholder = (id) => {
 
     return {
         item: placeholder,
+        loading,
+        error,
+    }
+}
+
+export const usePlaceholderMedia = (id, currentPage, itemsPerPage) => {
+    // getPlaceholderMedia
+    const [loading, setLoading] = useState(true)
+    const [media, setMedia] = useState(null)
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+
+        getPlaceholderMedia(id, pagination.currentPage, pagination.itemsPerPage)
+            .then(([media, pagination]) => {
+                //console.log('ApiHooks: get placeholders')
+                //console.log(placeholders)
+                // console.log(pagination)
+                setMedia(media)
+                setPagination(pagination)
+            })
+            .catch(error => {
+                console.log(error)
+                setError(error)
+            })
+            .finally(() => setLoading(false))
+    }, [id, pagination.currentPage])
+
+    return {
+        items: media,
+        pagination,//: {...pagination, getPage: paginationUtils.getPage },
         loading,
         error,
     }

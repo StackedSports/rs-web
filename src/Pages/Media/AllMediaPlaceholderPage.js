@@ -24,7 +24,7 @@ export const AllMediaPlaceholderPage = (props) => {
 
   const app = useContext(AppContext)
   const confirmDialog = useContext(ConfirmDialogContext)
-  const placeholders = usePlaceholders(1, 24)
+  const placeholders = usePlaceholders(1, 16)
   const multiPageSelection = useMultiPageSelection_V2(placeholders.items)
   const { selectionModel: selectedPlaceholdersIds,
     selectedData: selectedPlaceholders,
