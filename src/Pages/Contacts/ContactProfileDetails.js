@@ -21,9 +21,10 @@ import {
 	usePositions,
 	useStatuses,
 	useRanks,
-	useTags2,
 	useStatus2,
 } from 'Api/Hooks'
+
+import { useTags } from 'Api/ReactQuery';
 
 import {
 	addTagsToContact,
@@ -84,7 +85,7 @@ const ContactProfileDetails = (props) => {
 	const status = useStatuses()
 	const status2 = useStatus2()
 	const ranks = useRanks()
-	const tags = useTags2()
+	const tags = useTags()
 
 	console.log(status2)
 

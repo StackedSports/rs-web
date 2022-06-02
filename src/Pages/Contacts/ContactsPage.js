@@ -22,7 +22,6 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
     useContacts,
-    useContactsInfinite,
     useStatuses,
     useRanks,
     useGradYears,
@@ -31,8 +30,9 @@ import {
     useTeamMembers,
     useUser,
     useStatus2,
-    useTags2
 } from 'Api/Hooks'
+
+import { useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -78,7 +78,7 @@ export default function ContactsPage(props) {
     const status = useStatuses()
     const ranks = useRanks()
     const gradYears = useGradYears()
-    const tags = useTags2()
+    const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
