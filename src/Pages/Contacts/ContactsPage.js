@@ -85,12 +85,12 @@ export default function ContactsPage(props) {
     const teamMembers = useTeamMembers()
     const boards = useBoards()
 
-/*     useEffect(() => {
-        if (!contacts.items)
-            return
-
-        console.log(contacts.items)
-    }, [contacts.items]) */
+    /*     useEffect(() => {
+            if (!contacts.items)
+                return
+    
+            console.log(contacts.items)
+        }, [contacts.items]) */
 
     useEffect(() => {
         if (!boards.items)
@@ -165,7 +165,7 @@ export default function ContactsPage(props) {
         },
         status2: {
             label: 'Status 2',
-            options: status2.items || []
+            options: status2.items.map((status2, index) => ({ id: index, name: status2 })) || []
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
@@ -212,7 +212,7 @@ export default function ContactsPage(props) {
         { // Category
             id: '0',
             name: 'All Contacts',
-            path: contactsRoutes.all,    
+            path: contactsRoutes.all,
         },
         { // Category
             id: '1',
