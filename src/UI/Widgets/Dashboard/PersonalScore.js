@@ -27,7 +27,7 @@ export const PersonalScore = (props) => {
             <BaseSection title={stats.rank ? `${stats.rank}.` : '.'}>
                 <Avatar
                     alt={props.user ? getFullName(props.user) : ''}
-                    src={props.user ? props.user.twitter_profile.profile_image : ''}
+                    src={props.user ? props.user.twitter_profile.profile_image?.replace('_normal', '') : ''}
                     sx={{ width: 90, height: 90, marginInline: 'auto', mb: 1 }}
                 />
                 <Styled.Title textAlign='center' color='text.secondary'>

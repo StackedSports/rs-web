@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import LinearProgress from '@mui/material/LinearProgress';
 
 import {
@@ -179,12 +181,24 @@ export const MediaUploadHeader = (props) => {
 export const MediaUploadItem = (props) => {
   const classes = useStyles();
 
+  // const [inputValue, setInputValue] = useState('')
+
   const onInputChange = debounce(input => {
+    console.log(input)
+
+    // setInputValue(input)
+
     if (input && input !== '')
       props.onSearch(input)
     else
       props.onClearSearch()
   })
+
+  // const onInputChange = (input) => {
+  //   console.log(input)
+
+  //   setInputValue(input)
+  // }
 
   return (
     <Grid container padding={1.5} alignItems="center">
@@ -202,6 +216,7 @@ export const MediaUploadItem = (props) => {
             options={props.options}
             loading={props.optionsLoading}
             value={props.optionSelected || []}
+            // inputValue={inputValue}
             label={null}
             placeholder="Search Contact"
             getOptionLabel={(option) => getFullName(option)}
