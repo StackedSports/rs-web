@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { AutoFixHigh, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material"
 import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
 import lodash from "lodash"
@@ -23,6 +23,7 @@ import { formatDate, getFullName } from "utils/Parser"
 export const MediaDetailsPage = () => {
     const app = useContext(AppContext)
     const { id } = useParams()
+    const history = useHistory()
 
     const alert = useMainLayoutAlert()
     const tags = useTags()
@@ -255,6 +256,8 @@ export const MediaDetailsPage = () => {
             loading={loading}
             alert={alert}
             redirect={redirect}
+            onBackClick={() => history.goBack()}
+            filtersDisabled
         >
 
             <Grid container mt={3}>

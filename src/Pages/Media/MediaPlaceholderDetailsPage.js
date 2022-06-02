@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { AutoFixHigh, GridView, FormatListBulleted, ArrowDropDown } from "@mui/icons-material"
 import { Stack, Box, IconButton, Typography, Tooltip } from "@mui/material"
 
@@ -30,6 +30,7 @@ export const MediaPlaceholderDetailsPage = () => {
   const alert = useMainLayoutAlert()
   const { item: placeholder, loading } = usePlaceholder(id)
 
+  const history = useHistory()
   //console.log(placeholder)
 
   const [openSelectAddTagDialog, setOpenSelectAddTagDialog] = useState(false)
@@ -168,6 +169,8 @@ export const MediaPlaceholderDetailsPage = () => {
       title="Placeholder Details"
       actions={mainActions}
       alert={alert}
+      onBackClick={() => history.goBack()}
+      filtersDisabled
     >
 
       <Stack direction="row" flexWrap='wrap' gap={2} my={3}>
@@ -189,7 +192,7 @@ export const MediaPlaceholderDetailsPage = () => {
             onEdit={onEditName}
           />
 
-          <DetailsPreview label="Media Count" value={placeholder?.media.length} />
+          <DetailsPreview label="Media Count" value={placeholder?.media_count} />
           <DetailsPreview label="Uploaded on :" value={formatDate(placeholder?.created_at)} />
           <DetailsPreview label="Updated on :" value={formatDate(placeholder?.updated_at)} />
         </Box>

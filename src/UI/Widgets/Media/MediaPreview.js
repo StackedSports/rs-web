@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
 import { ImageOutlined, GifBoxOutlined, PermMediaOutlined, SmartDisplayOutlined } from '@mui/icons-material'
 import SendIcon from '@mui/icons-material/Send';
-
+import AllOutIcon from '@mui/icons-material/AllOut';
 import { IconContext } from "react-icons"
 import { GrDocumentPdf } from 'react-icons/gr'
 import { RiVideoLine } from 'react-icons/ri'
@@ -197,6 +197,12 @@ const MediaPreview = ({ type, ...props }) => {
         props.onSendClick(props.item)
     }
 
+    const onPreviewClick = (e) => {
+        console.log('eee')
+        e.stopPropagation()
+        props.onPreviewClick()
+    }
+
     const onMouseEnter = (e) => {
         setIsHovering(true)
     }
@@ -234,11 +240,16 @@ const MediaPreview = ({ type, ...props }) => {
                             onClick={e => e.stopPropagation()}
                         />
                     }
-                    {(showSendOnHover && isHovering) &&
+                    <RenderIf condition={isHovering && props.onPreviewClick}>
+                        <StyledPreviewButton onMouseDown={onPreviewClick}>
+                            <AllOutIcon/>
+                        </StyledPreviewButton>
+                    </RenderIf>
+                    <RenderIf condition={showSendOnHover && isHovering}>
                         <StyledIconButton onMouseDown={onSendClick}>
-                            <SendIcon />
+                            <SendIcon/>
                         </StyledIconButton>
-                    }
+                    </RenderIf>
                 </CardImage>
                 {!props.mini && (
                     <CardContent>
@@ -325,6 +336,13 @@ const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     left: 0,
+    zIndex: 1,
+}));
+
+const StyledPreviewButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    right: 32,
     zIndex: 1,
 }));
 
