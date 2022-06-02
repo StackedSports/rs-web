@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 import SettingsPage from './SettingsPage'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
 
-import { useTags2, useTagsWithContacts, useTagsWithMedia } from 'Api/Hooks'
+import { useTags, useTagsWithMedia,useTagsWithContacts } from 'Api/ReactQuery';
 
 const TagSettingsPage = () => {
-    const tags = useTags2()
+    const tags = useTags()
     const tagsWithContacts = useTagsWithContacts()
     const tagsWithMedia = useTagsWithMedia()
 
@@ -14,21 +14,21 @@ const TagSettingsPage = () => {
     const [tagsSelected, setTagsSelected] = useState([])
 
     useEffect(() => {
-        if(!tags.items)
+        if (!tags.items)
             return
 
         console.log(tags.items)
     }, [tags.items])
 
     useEffect(() => {
-        if(!tagsWithContacts.items)
+        if (!tagsWithContacts.items)
             return
 
         console.log(tagsWithContacts.items)
     }, [tagsWithContacts.items])
 
     useEffect(() => {
-        if(!tagsWithMedia.items)
+        if (!tagsWithMedia.items)
             return
 
         console.log(tagsWithMedia.items)
@@ -40,16 +40,16 @@ const TagSettingsPage = () => {
 
     return (
         <SettingsPage
-          title='Tags'
-          topActionName='+ New Tag'
-          onTopActionClick={onTopActionClick}
+            title='Tags'
+            topActionName='+ New Tag'
+            onTopActionClick={onTopActionClick}
         >
 
             <TagsTable
-              tags={tags.items}
-            //   selection={selectedTags}
-            //   onSelectionChange={onSelectedTagsChange}
-              loading={tags.loading}
+                tags={tags.items}
+                //   selection={selectedTags}
+                //   onSelectionChange={onSelectedTagsChange}
+                loading={tags.loading}
             />
         </SettingsPage>
     )

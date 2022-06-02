@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import MessageTagsTable from 'UI/Tables/MessageTags/MessageTagsTable'
 
-import { useTagsWithMessage } from 'Api/Hooks'
+import { useTagsWithMessage } from 'Api/ReactQuery'
 
 
 const MessageTagsSettingsPage = () => {

@@ -21,10 +21,10 @@ import { formatDate, getFullName } from "utils/Parser"
 
 import {
 	useTeamMembers,
-	useTags2,
 	usePlaceholders,
 	useContacts
 } from 'Api/Hooks'
+import { useTags } from 'Api/ReactQuery';
 
 import {
 	getAssociatedContactByFileName,
@@ -108,7 +108,7 @@ const dummyAssociatedPeople = [
 
 export default function UploadMediaDialog(props) {
 	const teamMembers = useTeamMembers()
-	const tags = useTags2()
+	const tags = useTags()
 	const placeholders = usePlaceholders(1, 25)
 	const contacts = useContacts()
 

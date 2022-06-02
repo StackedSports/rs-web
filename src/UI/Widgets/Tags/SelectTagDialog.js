@@ -9,7 +9,7 @@ import TagsList from 'UI/Widgets/Tags/TagsList'
 import RenderIf from '../RenderIf'
 
 import { AppContext } from 'Context/AppProvider'
-import { useTags2 } from 'Api/Hooks'
+import { useTags } from 'Api/ReactQuery';
 import Button from '../Buttons/Button'
 
 /**
@@ -21,13 +21,12 @@ import Button from '../Buttons/Button'
  */
 const SelectTagDialog = (props) => {
     const app = useContext(AppContext)
-    const tags = useTags2()
+    const tags = useTags()
 
-    const [tagsTable, setTagsTable] = useState([])
+    const [tagsTable, setTagsTable] = useState(tags.items || [])
     const [selectedTags, setSelectedTags] = useState([])
     const [search, setSearch] = useState('')
     const [filterModel, setFilterModel] = useState();
-
     useEffect(() => {
         if (!tags.items)
             return
@@ -113,9 +112,6 @@ const SelectTagDialog = (props) => {
                     No tags found. {props.isAddTag && 'Would you like to create a new one?'}
                 </Typography>
                 <RenderIf condition={props.isAddTag}>
-                    {/* <Typography variant="h6" textAlign='left' component="h3" fontWeight='bold' gutterBottom>
-                        {search}
-                    </Typography> */}
                     <Button
                         onClick={onCreateTag}
                         name={`Create Tag "${search}"`}

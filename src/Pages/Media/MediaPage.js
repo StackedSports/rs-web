@@ -6,11 +6,12 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags2, useTeamMembers, useMediaTypes, useContacts } from 'Api/Hooks'
+import { useTeamMembers, useMediaTypes, useContacts } from 'Api/Hooks'
+import { useTags } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
-    const tags = useTags2()
+    const tags = useTags()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
     const contacts = useContacts()
@@ -96,7 +97,7 @@ export const MediaPage = (props) => {
         },
         "tag": {
             label: 'Tag',
-            options: tags.items || [],
+            options: tags.items,
             onSearch: (search) => tags.search(search),
         },
     }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items,contacts.loading])

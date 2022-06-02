@@ -4,18 +4,11 @@ import SettingsPage from './SettingsPage'
 
 import MediaTagsTable from 'UI/Tables/MediaTags/MediaTagsTable'
 
-import { useTagsWithMedia } from 'Api/Hooks'
+//import { useTagsWithMedia } from 'Api/Hooks'
+import { useTagsWithMedia } from 'Api/ReactQuery'
 
 const MediaTagsSettingsPage = () => {
   const tagsWithMedia = useTagsWithMedia()
-
-
-  useEffect(() => {
-    if (!tagsWithMedia.items)
-      return
-
-    console.log(tagsWithMedia.items)
-  }, [tagsWithMedia.items])
 
   const onTopActionClick = (e) => {
     console.log('top action click')

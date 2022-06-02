@@ -13,7 +13,8 @@ import MediaPage from './MediaPage'
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
-import { usePlaceholders, useMedias, useTags } from 'Api/Hooks'
+import { usePlaceholders, useMedias } from 'Api/Hooks'
+import { useTags } from 'Api/ReactQuery';
 import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
@@ -281,7 +282,7 @@ export const MainMediaPage = (props) => {
                     </Box>
                 </Stack>
                 <Stack direction='row' flexWrap='wrap' gap={3}>
-                    {tags && tags.slice(0, 12).map(tag => (
+                    {tags.items.slice(0, 12).map(tag => (
                         <Stack
                             onClick={() => handleTagsClick(tag)}
                             direction={'row'}
