@@ -189,7 +189,7 @@ export const MediaPlaceholderDetailsPage = () => {
             onEdit={onEditName}
           />
 
-          <DetailsPreview label="Media Count" value={placeholder?.media.length} />
+          <DetailsPreview label="Media Count" value={placeholder?.media_count} />
           <DetailsPreview label="Uploaded on :" value={formatDate(placeholder?.created_at)} />
           <DetailsPreview label="Updated on :" value={formatDate(placeholder?.updated_at)} />
         </Box>
