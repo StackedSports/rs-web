@@ -3,9 +3,16 @@ import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
-import { ImageOutlined, GifBoxOutlined, PermMediaOutlined, SmartDisplayOutlined } from '@mui/icons-material'
-import SendIcon from '@mui/icons-material/Send';
-import AllOutIcon from '@mui/icons-material/AllOut';
+import { 
+    ImageOutlined,
+    GifBoxOutlined,
+    PermMediaOutlined,
+    SmartDisplayOutlined,
+    Send as SendIcon,
+    AllOut as AllOutIcon,
+    SettingsOverscan as SettingsOverscanIcon
+} from '@mui/icons-material'
+
 import { IconContext } from "react-icons"
 import { GrDocumentPdf } from 'react-icons/gr'
 import { RiVideoLine } from 'react-icons/ri'
@@ -200,7 +207,7 @@ const MediaPreview = ({ type, ...props }) => {
     const onPreviewClick = (e) => {
         console.log('eee')
         e.stopPropagation()
-        props.onPreviewClick()
+        props.onPreviewClick(props.item)
     }
 
     const onMouseEnter = (e) => {
@@ -242,7 +249,7 @@ const MediaPreview = ({ type, ...props }) => {
                     }
                     <RenderIf condition={isHovering && props.onPreviewClick}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
-                            <AllOutIcon/>
+                            <SettingsOverscanIcon/>
                         </StyledPreviewButton>
                     </RenderIf>
                     <RenderIf condition={showSendOnHover && isHovering}>
@@ -342,7 +349,7 @@ const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
 const StyledPreviewButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     top: 0,
-    right: 32,
+    right: 36,
     zIndex: 1,
 }));
 
