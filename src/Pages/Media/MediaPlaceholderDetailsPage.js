@@ -212,7 +212,8 @@ export const MediaPlaceholderDetailsPage = () => {
       </Stack>
       <MediaTable
         items={placeholderMedia.items || []}
-        loading={loading}
+        loading={placeholderMedia.loading}
+        pagination={placeholderMedia.pagination}
         view={viewGrid ? 'grid' : 'list'}
         type="media"
         linkTo={mediaRoutes.mediaDetails}
