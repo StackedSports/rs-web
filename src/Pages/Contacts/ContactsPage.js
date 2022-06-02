@@ -58,6 +58,8 @@ export default function ContactsPage(props) {
     const contacts = useContacts()
     const status2 = useStatus2()
 
+    console.log(status2)
+
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
