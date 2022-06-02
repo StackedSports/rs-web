@@ -23,7 +23,7 @@ export default function MediaGrid(props) {
                             selected={props.selectionModel?.includes(item.id) || false}
                             onSelectedChange={(selected) => props.onSelectedChange(selected, index, item)}
                             onSendClick={props.onSendClick && (() => props.onSendClick(item))}
-                            onPreviewClick={props.onPreviewClick && ((index) => props.onPreviewClick(index))}
+                            onPreviewClick={props.onPreviewClick && (() => props.onPreviewClick(item))}
                         />
                     </Grid>
                 )

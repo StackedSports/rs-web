@@ -36,8 +36,8 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         }
     }
 
-    const onPreviewClick = (index) => {
-        setCarouselIndex(index)
+    const onPreviewClick = (item) => {
+        setCarouselIndex(props.items.indexOf(item))
     }
 
     const onMediaGridSelectionChange = (selected, index, Item) => {

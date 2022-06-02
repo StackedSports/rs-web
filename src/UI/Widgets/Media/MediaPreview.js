@@ -198,7 +198,6 @@ const MediaPreview = ({ type, ...props }) => {
     }
 
     const onPreviewClick = (e) => {
-        console.log('eee')
         e.stopPropagation()
         props.onPreviewClick()
     }
