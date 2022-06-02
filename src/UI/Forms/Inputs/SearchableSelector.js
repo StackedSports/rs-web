@@ -8,6 +8,8 @@ export default function SearchableSelector(props) {
     const [value, setValue] = useState(props.multiple ? [] : null)
     const [options, setOptions] = useState([])
 
+    const [inputValue, setInputValue] = useState('')
+
     useEffect(() => {
         if (!props.options)
             return
@@ -56,8 +58,9 @@ export default function SearchableSelector(props) {
             multiple={props.multiple || false}
             options={props.options || []}
             selectOnFocus={props.selectOnFocus || true}
-            clearOnBlur={props.clearOnBlur || true}
+            clearOnBlur={props.clearOnBlur || false}
             value={props.value === "" ? null : props.value}
+            // inputValue={props.inputValue}
             loading={props.loading}
             getOptionLabel={props.getOptionLabel}
             isOptionEqualToValue={props.isOptionEqualToValue || ((option, value) => option?.id === value?.id)}
