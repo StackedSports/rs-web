@@ -23,6 +23,7 @@ const FollowOnTwitterDialog = (props) => {
   const visibleTableRows = {
     // fullname: true,(default)
     profileImg: false,
+    phone: false,
     twitterName: true,
   }
 
@@ -124,8 +125,8 @@ const FollowOnTwitterDialog = (props) => {
               disableColumnFilter
               disableColumnSelector
               contacts={props.teamMembers.filter(member => member.twitter_profile.screen_name != null)}
-              columnVisibilityModel={visibleTableRows}
               selectionModel={selectedTeamMembers}
+              columnVisibilityModel={visibleTableRows}
               onSelectionModelChange={onSelectionChange}
             />
           </Stack>
