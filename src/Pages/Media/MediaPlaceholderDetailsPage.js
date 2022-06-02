@@ -210,6 +210,7 @@ export const MediaPlaceholderDetailsPage = () => {
           </IconButton>
         </Tooltip>
       </Stack>
+      
       <MediaTable
         items={placeholderMedia.items || []}
         loading={placeholderMedia.loading}
