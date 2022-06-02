@@ -602,7 +602,7 @@ export const filterMedias = (page, perPage, filters) => {
 
     console.log(data)
 
-    return AXIOS('post', 'media/search', data, filters.cancelToken)
+    return AXIOS('post', 'media/search', data, filters?.cancelToken)
 }
 
 export const deleteMedia = (mediaId) => {

@@ -192,7 +192,7 @@ export const getFilterMessagesCriteria = (filters) => {
 }
 
 export const getFilterMediasCriteria = (filters) => {
-    console.log(filters)
+    // console.log(filters)
     if (!filters)
         return null
 
@@ -227,15 +227,8 @@ export const getFilterMediasCriteria = (filters) => {
     if (filters.contact_id)
         criteria['contact_id'] = filters.contact_id.map(contact => contact.id)
 
-    // TODO
-    /*  {
-         "per_page": 25,
-         "page": 1,
-         //"name":,
-         "type": 1 // 0: recent_uploads, 1: my_media, 2: images, 3: gifs, 4: mp4s, 5: pdfs
-         // "tag_id": [7693] // pass an array of tag ids to search
-         // "placeholder_id": 1536
-     }*/
+    if (Object.keys(criteria).length === 0)
+        return null
 
     return criteria
 }

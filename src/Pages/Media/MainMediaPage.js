@@ -13,8 +13,7 @@ import MediaPage from './MediaPage'
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
-import { usePlaceholders, useMedias } from 'Api/Hooks'
-import { useTags } from 'Api/ReactQuery';
+import { useTags,useMedias, usePlaceholders } from 'Api/ReactQuery';
 import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'

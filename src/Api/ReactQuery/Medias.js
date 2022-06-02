@@ -1,5 +1,7 @@
-import { filterMedias, getMedia } from "Api/Endpoints"
+import { useEffect, useState } from "react"
+import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
+import { filterMedias, getMedia } from "Api/Endpoints"
 
 
 export const useMedia = (id) => {
@@ -17,21 +19,40 @@ export const useMedia = (id) => {
 
 export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
-    const reactQuery = useQuery([`medias/${currentPage}/${itemsPerPage}`, initialFilters], () => filterMedias(currentPage, itemsPerPage, filters), {
-        select: (data) => data[0],
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [medias, setMedias] = useState([])
+
+    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterMedias(pagination.currentPage, pagination.itemsPerPage), {
         refetchOnWindowFocus: false,
         staleTime: 60000,
     })
 
+
     useEffect(() => {
-        if (initialFilters && !isEqual(filters, initialFilters))
-            setFilters(initialFilters)
-    }, [initialFilters])
+        if (reactQuery.isSuccess) {
+            const [apiMedias, apiPagination] = reactQuery.data
+            setPagination(apiPagination)
+            setMedias(apiMedias)
+        }
+    }, [reactQuery.isSuccess])
+
+
+    const filter = (filters) => {
+        pagination.getPage(1)
+        setFilters(filters)
+    }
+
+    const clearFilter = () => {
+        setFilters(null)
+        pagination.getPage(1)
+    }
 
     return {
         ...reactQuery,
-        items: reactQuery.data,
+        items: medias,
+        pagination,
         loading: reactQuery.isLoading,
-        search,
+        filter,
+        clearFilter,
     }
 }

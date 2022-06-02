@@ -14,9 +14,8 @@ import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useContacts, usePlaceholders, useTeamMembers } from "Api/Hooks"
-import { useMedia } from "Api/ReactQuery"
-import { useTags } from 'Api/ReactQuery';
+import { useContacts, useTeamMembers } from "Api/Hooks"
+import { useTags, useMedia, usePlaceholders } from "Api/ReactQuery"
 import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"

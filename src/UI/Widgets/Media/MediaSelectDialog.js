@@ -6,7 +6,8 @@ import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
-import { usePlaceholders, useBoards, useMedias } from 'Api/Hooks'
+import { useBoards } from 'Api/Hooks'
+import { useMedias, usePlaceholders } from "Api/ReactQuery"
 
 import { AppContext } from 'Context/AppProvider';
 
@@ -111,7 +112,7 @@ export default function MediaSelectDialog(props) {
             disableOnConfirmSelection={disableOnConfirmSelection}
         >
             <TabPanel value={0} index={0}>
-                <MediaTable 
+                <MediaTable
                     mini
                     disableMultipleSelection={props.uniqueSelection}
                     items={media.items}
@@ -125,7 +126,7 @@ export default function MediaSelectDialog(props) {
                 />
             </TabPanel>
             <TabPanel value={1} index={1}>
-                <MediaTable 
+                <MediaTable
                     mini
                     disableMultipleSelection={props.uniqueSelection}
                     items={placeholders.items}

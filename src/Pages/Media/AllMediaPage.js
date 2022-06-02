@@ -10,7 +10,7 @@ import MediaPage from "./MediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
-import { useMedias } from 'Api/Hooks'
+import { useMedias } from "Api/ReactQuery"
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
