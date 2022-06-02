@@ -161,9 +161,9 @@ export default function ContactsPage(props) {
             label: 'State',
             options: states
         },
-        status2: {
+        status_2: {
             label: 'Status 2',
-            options: status2.items.map((status2, index) => ({ id: index, name: status2 })) || []
+            options: status2.items.map((status2, index) => ({ name: status2 })) || []
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 

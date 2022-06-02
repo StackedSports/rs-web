@@ -91,6 +91,11 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['dob'] = filters.birthday[0]
     }
 
+    if(filters.status_2){
+        console.log(filters.status_2)
+        criteria['status_2'] = filters.status_2.map(status => status.name)
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags
