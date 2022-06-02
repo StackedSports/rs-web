@@ -148,6 +148,7 @@ export const getMessageStatusLabel = (status, platform, recipients) => {
 			message = 'Message sending in progress.'
 			break;
 	}
+	
 	return message
 }
 export const getMessagePlatformLabel = (platform) => {

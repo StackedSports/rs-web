@@ -118,11 +118,18 @@ const InputPlatform = (props) => {
                 tmp.push(platforms[0])
             }
 
-            tmp.push(platforms[1])
+            if(props.platforms.txt)
+                tmp.push(platforms[1]) 
 
             if (props.platforms.rs) {
                 tmp.push(platforms[2])
             }
+
+            // const platforms = [
+            //     { name: 'Twitter Dm', icon: FaTwitter },
+            //     { name: 'Personal Text', icon: FaPhone },
+            //     { name: 'SMS/MMS', icon: FaComment }
+            // ]
         }
 
         // tmp.push(platforms[2])
