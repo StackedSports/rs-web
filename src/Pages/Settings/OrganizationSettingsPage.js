@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles';
@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import SettingsPage from './SettingsPage'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
+import DefaultTeamLogo from "images/stacked-favicon.png"
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -26,6 +27,16 @@ const OrganizationSettingsPage = (props) => {
     const classes = useStyles();
 
     const { user } = useContext(AuthContext)
+    const [teamLogo, setTeamLogo] = useState(DefaultTeamLogo)
+
+    useEffect(() => {
+        if (!user || !user?.team)
+            return
+
+        setTeamLogo(user.team.org.logo.original)
+    }, [user])
+    console.log(teamLogo)
+
     console.log(user)
 
     const initialValues = {
@@ -50,6 +61,7 @@ const OrganizationSettingsPage = (props) => {
     const onRemovePicture = (e) => {
         console.log("onRemovePicture")
     }
+    
     return (
         <SettingsPage
             title='Organization'
@@ -188,7 +200,7 @@ const OrganizationSettingsPage = (props) => {
                             <Typography variant="h6" component="p">Org Favicon Logo</Typography>
                         </Stack>
                         <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1}>
-                            <Avatar sx={{ width: "96px", height: "96px", border: "#dadada   1px solid", padding: "15px", }} alt="org favicon" src={user.team.org.logo.original} />
+                            <Avatar sx={{ objectFit: "cover", width: "96px", height: "96px", border: "#dadada 1px solid", padding: "15px", }} alt="org favicon" src={teamLogo} />
                         </Stack>
                     </Stack>
 
