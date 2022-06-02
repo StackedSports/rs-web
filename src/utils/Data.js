@@ -279,6 +279,12 @@ export const coachTypes = [
     'Coordinator'
 ]
 
+export const postTo = [
+    'Send on the behalf of',
+    'Area Recruiting Coach',
+    'Position Coach'
+]
+
 export const getCoachValue = (coachLabel) => {
     switch (coachLabel) {
         case 'Area Coach': return 'area'

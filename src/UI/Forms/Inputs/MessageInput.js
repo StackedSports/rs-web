@@ -118,8 +118,8 @@ const InputPlatform = (props) => {
                 tmp.push(platforms[0])
             }
 
-            if(props.platforms.txt)
-                tmp.push(platforms[1]) 
+            if (props.platforms.txt)
+                tmp.push(platforms[1])
 
             if (props.platforms.rs) {
                 tmp.push(platforms[2])
@@ -477,7 +477,7 @@ const EmojiPicker = (props) => {
 }
 
 const InputText = (props) => {
-    const maxLength = 280
+    const maxLength = props.maxLength || 280
     const textArea = useRef()
 
     const onChange = (e) => {
@@ -510,10 +510,11 @@ const InputText = (props) => {
     return (
         <div>
             <div className="Row" style={{ maringBottom: 20 }}>
-                <TextPlaceholders
-                    placeholders={props.textPlaceholders}
-                    onSelected={onPlaceholderSelected}
-                />
+                {!props.hideTextPlaceholders &&
+                    <TextPlaceholders
+                        placeholders={props.textPlaceholders}
+                        onSelected={onPlaceholderSelected}
+                    />}
                 <Snippets
                     snippets={props.snippets}
                     onSelected={onSnippetSelected}
