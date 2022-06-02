@@ -36,6 +36,10 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         }
     }
 
+    const onPreviewClick = (index) => {
+        setCarouselIndex(index)
+    }
+
     const onMediaGridSelectionChange = (selected, index, Item) => {
         if (props.disableMultipleSelection) {
             multiPageSelection.set([Item])
@@ -77,6 +81,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         selectionModel={multiPageSelection.selectionModel}
                         onSelectedChange={onMediaGridSelectionChange}
                         onSendClick={props.onSendClick}
+                        onPreviewClick={onPreviewClick}
                         xs={props.xs}
                         sm={props.sm}
                         md={props.md}
