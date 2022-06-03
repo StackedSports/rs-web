@@ -20,11 +20,6 @@ const TweetRoutes = (props) => (
       path={tweetRoutes.ranking}
       component={TweetRankingPage}
     />
-    <Route
-      exact
-      path={tweetRoutes.create}
-      component={TweetCreatePage}
-    />
   </>
 )
 

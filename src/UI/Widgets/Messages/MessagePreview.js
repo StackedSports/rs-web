@@ -153,17 +153,16 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
-
     return (
         <Grid className="MessagePreview-Container" container style={style}>
             <Grid container style={{ marginBottom: 20 }}>
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
                         <MediaPreview
-                          miniImage
-                          cardStyle={{ marginLeft: 15, marginRight: 15, width: '300px' }}
-                          type={hasMedia ? 'media' : 'placeholder'}
-                          item={hasMedia ? message.media : getPlaceholder()} />
+                            miniImage
+                            cardStyle={{ marginLeft: 15, marginRight: 15, width: '300px' }}
+                            type={hasMedia ? 'media' : 'placeholder'}
+                            item={hasMedia ? message.media : getPlaceholder()} />
                     </div>
                 )}
                 <div className="MessagePreview-DetailsPanel">
@@ -172,8 +171,8 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details
                         label="Status"
                         // value={getMessageStatusLabel(message.status)}
-                        value={getMessageStatusLabel(message.status, message.platform?.name)}
-                        status={getMessageStatusLabel(message.status)}
+                        value={getMessageStatusLabel(message.status, message.platform.name, recipients)}
+                        status={message.status}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
                     <Details label="Recipient(s)" value={getRecipientsLabel(message)} />

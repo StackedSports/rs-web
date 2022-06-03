@@ -28,11 +28,11 @@ export const routes = {
         path: '/media',
         icon: ImageOutlinedIcon
     },
-    twitterPosts: {
-        title: 'Tweets',
-        path: '/tweet-create', // /twitter-posts
-        icon: TwitterIcon
-    },
+    // twitterPosts: {
+    //     title: 'Tweets',
+    //     path: '/tweet-create',
+    //     icon: TwitterIcon
+    // },
     twitterStream: {
         title: 'Twitter Stream',
         path: '/twitter-stream',
@@ -47,6 +47,11 @@ export const routes = {
         title: 'Tweet',
         path: '/tweet-ranking',
         icon: StackedBarChartIcon
+    },
+    tweetPost: {
+        title: 'Tweet Post',
+        path: '/tweet-post',
+        icon: TwitterIcon
     },
     userSettings: {
         title: ' User Settings',
@@ -132,7 +137,6 @@ export const tweetRoutes = {
     ranking: "/tweet-ranking/new",
     search: "/tweet-search",
     tweets: "/tweet-ranking",
-    create: "/tweet/create",
 }
 
 export const chatRoutes = {

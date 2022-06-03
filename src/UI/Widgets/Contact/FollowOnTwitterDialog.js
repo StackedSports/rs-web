@@ -38,6 +38,8 @@ const FollowOnTwitterDialog = (props) => {
       contact_ids: props.selectedContacts
     }
 
+    console.log(data)
+
     if (data.user_ids.length <= 0 || data.contact_ids.length <= 0)
       return
 

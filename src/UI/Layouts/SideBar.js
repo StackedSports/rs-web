@@ -15,6 +15,7 @@ const regularItems = [
     { ...routes.messages, path: messageRoutes.create },
     routes.media,
     routes.tweet,
+    routes.tweetPost,
     // routes.twitterPosts,
     // routes.twitterStream,
     routes.settings,
