@@ -22,11 +22,10 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [medias, setMedias] = useState([])
 
-    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterMedias(pagination.currentPage, pagination.itemsPerPage), {
+    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterMedias(pagination.currentPage, pagination.itemsPerPage,filters), {
         refetchOnWindowFocus: false,
         staleTime: 60000,
     })
-
 
     useEffect(() => {
         if (reactQuery.isSuccess) {
