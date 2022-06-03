@@ -224,6 +224,7 @@ export const MediaUploadItem = (props) => {
             getChipAvatar={(option) => option.twitter_profile?.profile_image}
             onInputChange={(event, input) => onInputChange(input)}
             onChange={props.onOptionSelected}
+            clearOnBlur={false}
             style={{
               maxWidth: 200
             }}

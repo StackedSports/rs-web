@@ -58,7 +58,7 @@ export default function SearchableSelector(props) {
             multiple={props.multiple || false}
             options={props.options || []}
             selectOnFocus={props.selectOnFocus || true}
-            clearOnBlur={props.clearOnBlur || false}
+            clearOnBlur={props.clearOnBlur !== null ? props.clearOnBlur : true}
             value={props.value === "" ? null : props.value}
             // inputValue={props.inputValue}
             loading={props.loading}
