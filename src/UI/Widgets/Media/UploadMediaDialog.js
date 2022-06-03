@@ -19,10 +19,7 @@ import useAlerts from 'Hooks/AlertHooks'
 
 import { formatDate, getFullName } from "utils/Parser"
 
-import {
-	useTeamMembers,
-} from 'Api/Hooks'
-import { usePlaceholders, useTags,useContacts } from 'Api/ReactQuery';
+import { useTeamMembers, usePlaceholders, useTags, useContacts } from 'Api/ReactQuery';
 
 import {
 	getAssociatedContactByFileName,
@@ -486,11 +483,7 @@ export default function UploadMediaDialog(props) {
 	}
 
 	const onOwnerInputChange = debounce((value) => {
-		if (value && value !== ' ') {
-			teamMembers.filter({ search: value })
-		} else {
-			teamMembers.clearFilter()
-		}
+		teamMembers.search(value)
 	}, 500)
 
 	const onSearchContacts = (input) => {

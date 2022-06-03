@@ -5,7 +5,7 @@ import SettingsPage from './SettingsPage'
 import PositionsTable from 'UI/Tables/Positions/PositionsTable'
 import PositionDialog from 'UI/Widgets/Settings/PositionDialog'
 
-import { usePositions } from 'Api/Hooks'
+import { usePositions } from 'Api/ReactQuery'
 import { deletePosition } from 'Api/Endpoints';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
@@ -36,7 +36,7 @@ const PositionsSettingsPage = () => {
 
     const handleSusccess = () => {
         setSelectedRowPosition(null)
-        positions.refreshData()
+        positions.refetch()
     }
 
     const onRowClick = (e) => {
@@ -53,7 +53,7 @@ const PositionsSettingsPage = () => {
         confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
         Promise.all(selectedPositions.map(position => deletePosition(position)))
             .then(() => {
-                positions.refreshData()
+                positions.refetch()
             }
             ).catch(err => {
                 console.log(err)

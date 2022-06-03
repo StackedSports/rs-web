@@ -6,7 +6,7 @@ import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import TeamMembersTable from 'UI/Tables/TeamMembers/TeamMembersTable';
 
-import { useTeamMembers } from 'Api/Hooks';
+import { useTeamMembers } from 'Api/ReactQuery';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { deleteTeamMember } from 'Api/Endpoints';
 
@@ -38,7 +38,7 @@ const TeamMembersSettingsPage = () => {
         confirmDialog.show(title, "This action is permanent. Are you sure you want to continue? ", () => {
             Promise.all(selectedTeamMembers.map(member => deleteTeamMember(member)))
                 .then(() => {
-                    teamMembers.refreshData()
+                    teamMembers.refetch()
                     alert.setSuccess("Team member deleted successfully.");
                 })
                 .catch(error => {

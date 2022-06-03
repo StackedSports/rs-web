@@ -7,16 +7,16 @@ export const useTags = () => {
     const reactQuery = useQuery('tags', getTags, {
         select: (data) => data[0],
         refetchOnWindowFocus: false,
-        staleTime: 60000,
     })
 
     useEffect(() => {
         if (reactQuery.isSuccess) {
             setTags(reactQuery.data)
         }
-    }, [reactQuery.data])
+    }, [reactQuery.data, reactQuery.isSuccess])
 
     const search = (value) => {
+        if (!reactQuery.data) return
         if (value && value.length > 0 && reactQuery.data && reactQuery.data.length > 0) {
             const filteredTags = reactQuery.data.filter(tag => tag.name.toLowerCase().includes(value.toLowerCase().trim()))
             setTags(filteredTags)
@@ -46,7 +46,7 @@ export const useTagsWithMedia = () => {
     }
 }
 
-export const useTagsWithContacts = () =>{
+export const useTagsWithContacts = () => {
     const reactQuery = useQuery('tagsWithContacts', getTagsWithContacts, {
         select: (data) => data[0],
         refetchOnWindowFocus: false,

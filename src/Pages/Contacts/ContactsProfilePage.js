@@ -8,7 +8,6 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import {
     useBoards,
-    useTeamMembers,
 } from 'Api/Hooks'
 import { useContact } from 'Api/ReactQuery';
 

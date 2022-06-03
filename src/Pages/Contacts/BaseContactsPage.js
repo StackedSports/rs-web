@@ -21,15 +21,10 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
-    useStatuses,
-    useRanks,
-    useGradYears,
     useBoard,
     useBoards,
-    usePositions,
-    useTeamMembers,
 } from 'Api/Hooks';
-import { useTags } from 'Api/ReactQuery';
+import { useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -184,7 +179,7 @@ export default function BaseContactsPage(props) {
             label: 'Status 2',
             options: []
         },
-    }), [status, ranks, gradYears, tags.items, positions])
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems])
 
     let mainActions = [
         {

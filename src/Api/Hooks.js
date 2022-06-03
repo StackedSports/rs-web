@@ -514,14 +514,14 @@ export const useTeamMember = (id) => {
             .finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         item: teamMember,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
@@ -552,28 +552,27 @@ export const useTeamMembers = () => {
             .finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
-    const filter = (param) => {
+    const search = (param) => {
         if (!teamMembers)
             return
 
-        let filtered = teamMembers.filter(member => (`${member.first_name} ${member.last_name}`).includes(param))
-        setTeamMembers(filtered)
-    }
+        if (param && param.length > 0) {
+            let filtered = teamMembers.filter(member => (`${member.first_name} ${member.last_name}`).includes(param))
+            setTeamMembers(filtered)
+        } else
+            setTeamMembers(apiResults.current)
 
-    const clearFilter = () => {
-        setTeamMembers(apiResults.current)
     }
 
     return {
         items: teamMembers,
         loading,
-        filter,
-        clearFilter,
-        refreshData,
+        search,
+        refetch,
         error,
     }
 }
@@ -602,14 +601,14 @@ export const useRanks = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: ranks,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
@@ -861,14 +860,14 @@ export const usePositions = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: Positions,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
@@ -893,14 +892,14 @@ export const useStatuses = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: statuses,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
@@ -924,14 +923,14 @@ export const useSnippets = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: snippets,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }

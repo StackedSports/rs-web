@@ -21,17 +21,12 @@ import { AppContext } from 'Context/AppProvider'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
-    useStatuses,
-    useRanks,
-    useGradYears,
     useBoards,
-    usePositions,
-    useTeamMembers,
     useUser,
     useStatus2,
 } from 'Api/Hooks'
 
-import { useContacts, useTags } from 'Api/ReactQuery';
+import { useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -107,8 +102,6 @@ export default function ContactsPage(props) {
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
-
-    const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
 
     const panelFiltersData = useMemo(() =>
     ({

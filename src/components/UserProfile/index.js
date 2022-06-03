@@ -1261,7 +1261,6 @@ function ContactProfile(props) {
                         sm={10}
                         lg={10}
                         xl={10}
-                        sm={10}
                         xs={10}
                       >
                         <Grid style={{ background: "white", borderRadius: 5 }}>
@@ -1288,7 +1287,7 @@ function ContactProfile(props) {
                           ></textarea>
                         </Grid>
                       </Grid>
-                      <Grid item md={2} sm={2} lg={2} xl={2} sm={2} xs={2}>
+                      <Grid item md={2} sm={2} lg={2} xl={2} xs={2}>
                         <Grid
                           container
                           direction="row"

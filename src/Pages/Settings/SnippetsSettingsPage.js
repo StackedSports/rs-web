@@ -5,7 +5,7 @@ import SettingsPage from './SettingsPage'
 import SnippetsTable from 'UI/Tables/Snippets/SnippetsTable'
 import SnippetsDialog from 'UI/Widgets/Settings/SnippetsDialog'
 
-import { useSnippets } from 'Api/Hooks'
+import { useSnippets } from 'Api/ReactQuery'
 import { deleteSnippets } from 'Api/Endpoints';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
@@ -32,7 +32,7 @@ const SnippetsSettingsPage = () => {
 
     const handleSusccess = () => {
         setSelectedRowSnippet(null)
-        snippets.refreshData()
+        snippets.refetch()
     }
 
     const onRowClick = (e) => {
@@ -49,7 +49,7 @@ const SnippetsSettingsPage = () => {
         confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
         Promise.all(selectedSnippets.map(snippet => deleteSnippets(snippet)))
             .then(() => {
-                snippets.refreshData()
+                snippets.refetch()
             }
             ).catch(err => {
                 console.log(err)

@@ -5,7 +5,7 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import { getFullName } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
-import { useTeamMembers } from 'Api/Hooks'
+import { useTeamMembers } from 'Api/ReactQuery'
 
 const BaseMessagePage = (props) => {
     const [redirect, setRedirect] = useState('')

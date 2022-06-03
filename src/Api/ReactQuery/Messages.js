@@ -1,34 +1,22 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { filterContacts, getContact } from "Api/Endpoints"
+import { getMessages } from "Api/Endpoints"
 
-export const useContact = (id) => {
-    const reactQuery = useQuery(`contact/${id}`, () => getContact(id), {
-        select: (data) => data[0],
-    })
-
-    return {
-        ...reactQuery,
-        item: reactQuery.data,
-        loading: reactQuery.isLoading,
-    }
-}
-
-export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
+export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
+    const [messages, setMessages] = useState([])
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
-    const [contacts, setContacts] = useState()
 
-    const reactQuery = useQuery([`contacts/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterContacts(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const reactQuery = useQuery([`messages/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => getMessages(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
     })
 
     useEffect(() => {
         if (reactQuery.isSuccess) {
-            const [apiContacts, apiPagination] = reactQuery.data
+            const [apiMessages, apiPagination] = reactQuery.data
             setPagination(apiPagination)
-            setContacts(apiContacts)
+            setMessages(apiMessages)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 
@@ -44,7 +32,7 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
 
     return {
         ...reactQuery,
-        items: contacts,
+        items: messages,
         pagination,
         loading: reactQuery.isLoading,
         filter,
