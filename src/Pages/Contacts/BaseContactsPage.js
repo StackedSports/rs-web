@@ -17,7 +17,7 @@ import { PanelDropdown } from 'UI/Layouts/Panel';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 //import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
-//import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+// import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
@@ -44,6 +44,7 @@ import { contactsRoutes, messageRoutes } from 'Routes/Routes';
 import { timeZones, states } from 'utils/Data';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AppContext } from 'Context/AppProvider';
+import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
 
 
 export default function BaseContactsPage(props) {
@@ -63,6 +64,7 @@ export default function BaseContactsPage(props) {
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+    const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
 
     //const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
     const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
@@ -210,7 +212,7 @@ export default function BaseContactsPage(props) {
         { // Category
             id: '0',
             name: 'All Contacts',
-            path: contactsRoutes.all,    
+            path: contactsRoutes.all,
         },
         { // Category
             id: '1',
@@ -252,17 +254,17 @@ export default function BaseContactsPage(props) {
         contacts.filter(filter)
     }
 
-/*     const onContactsSelectionChange = (selection) => {
-        // setSelectedContacts(selected)
-        selectedContacts.onSelectionChange(selection)
-    } */
+    /*     const onContactsSelectionChange = (selection) => {
+            // setSelectedContacts(selected)
+            selectedContacts.onSelectionChange(selection)
+        } */
 
     const onSendMessageClick = (e) => {
         /* console.log(selectedContacts)
 
         selectedContacts.saveData(contacts.items)
         let selectedData = selectedContacts.getDataSelected() */
-        let selectedData = contactsMultipageSelection.selectedData 
+        let selectedData = contactsMultipageSelection.selectedData
 
 
         if (props.onSendMessage)
@@ -283,7 +285,7 @@ export default function BaseContactsPage(props) {
     }
 
     const onFollowOnTwitterClick = (e) => {
-
+        setOpenFollowOnTwitterDialog(true)
     }
 
     const onArchiveContactClick = (e) => {
@@ -331,8 +333,8 @@ export default function BaseContactsPage(props) {
 
     const onTagsSelected = (selectedTagsIds) => {
         setLoadingTags(true)
-/*         selectedContacts.saveData(contacts.items)
-        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
+        /*         selectedContacts.saveData(contacts.items)
+                let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
         let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
 
         // console.log(selectedTagsIds, contactIds)
@@ -369,10 +371,10 @@ export default function BaseContactsPage(props) {
             .finally(() => setLoadingTags(false))
     }
 
-/*     const onPageChange = (page) => {
-        contacts.pagination.getPage(page)
-    }
- */
+    /*     const onPageChange = (page) => {
+            contacts.pagination.getPage(page)
+        }
+     */
     const onCloseBoardDialog = () => {
         if (editBoard)
             setShowPanelFilters(false)
@@ -467,6 +469,9 @@ export default function BaseContactsPage(props) {
                             variant: 'contained',
                             icon: ArrowDropDownIcon,
                             disabled: contactsMultipageSelection.count === 0,
+                            style: {
+                                whiteSpace: "nowrap",
+                            },
                             options: props.title.includes("Board") ?
                                 [
                                     { name: 'Export as CSV', onClick: onExportAsCSVClick },
@@ -530,7 +535,7 @@ export default function BaseContactsPage(props) {
                 </Stack>
             </Stack>
 
-         {/*    <ContactsTable
+            {/*    <ContactsTable
                 id={props.tableId}
                 contacts={contacts.items}
                 pagination={contacts.pagination}
@@ -568,6 +573,15 @@ export default function BaseContactsPage(props) {
                 onClose={() => setOpenSelectTagDialog(false)}
                 confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
                 onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
+            />
+
+            <FollowOnTwitterDialog
+                teamMembers={teamMembers.items}
+                open={openFollowOnTwitterDialog}
+                contacts={contactsMultipageSelection.selectedData}
+                selectedContacts={contactsMultipageSelection.selectionModel}
+                onSelectionChange={contactsMultipageSelection.onSelectionModelChange}
+                onClose={() => setOpenFollowOnTwitterDialog(false)}
             />
         </MainLayout>
     )
