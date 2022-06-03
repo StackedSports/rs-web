@@ -18,8 +18,8 @@ import { AppContext } from 'Context/AppProvider'
 import useArray from 'Hooks/ArrayHooks'
 
 
-import { useUser, useTextPlaceholders, useSnippets } from 'Api/Hooks'
-import { useTeamMembers } from 'Api/ReactQuery'
+import { useUser, useTextPlaceholders } from 'Api/Hooks'
+import { useTeamMembers, useSnippets } from 'Api/ReactQuery'
 import {
     getBoards,
     getBoard,

@@ -922,14 +922,14 @@ export const useSnippets = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: snippets,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
