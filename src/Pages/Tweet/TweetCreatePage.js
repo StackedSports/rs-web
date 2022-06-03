@@ -46,11 +46,11 @@ const TweetCreatePage = (props) => {
   }
 
   const onSaveAndCloseAction = () => {
-
+    console.log("onSaveAndCloseAction")
   }
 
   const onPreviewAndPostAction = () => {
-
+    console.log("onPreviewAndPostAction")
   }
 
   const filters = [
