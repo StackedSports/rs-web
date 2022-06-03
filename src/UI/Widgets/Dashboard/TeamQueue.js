@@ -12,7 +12,7 @@ import DateRangePicker from "UI/Forms/Inputs/DateRangePicker";
 import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
-import { useMessages } from "Api/Hooks";
+import { useMessages } from "Api/ReactQuery";
 import { useTeamMembers } from "Api/ReactQuery";
 import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
