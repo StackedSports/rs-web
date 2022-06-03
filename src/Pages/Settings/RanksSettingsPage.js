@@ -5,7 +5,7 @@ import SettingsPage from './SettingsPage'
 import RanksTable from 'UI/Tables/Ranks/RanksTable'
 import RankDialog from 'UI/Widgets/Settings/RankDialog'
 
-import { useRanks } from 'Api/Hooks'
+import { useRanks } from 'Api/ReactQuery'
 import { deleteRank } from 'Api/Endpoints';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
@@ -33,7 +33,7 @@ const RanksSettingsPage = () => {
 
     const handleSusccess = () => {
         setSelectedRowRank(null)
-        ranks.refreshData()
+        ranks.refetch()
     }
 
     const onRowClick = (e) => {
@@ -50,7 +50,7 @@ const RanksSettingsPage = () => {
         confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
             Promise.all(selectedRanks.map(rank => deleteRank(rank)))
                 .then(() => {
-                    ranks.refreshData()
+                    ranks.refetch()
                 }
                 ).catch(err => {
                     console.log(err)

@@ -22,12 +22,11 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
     useStatuses,
-    useRanks,
     useGradYears,
     useBoard,
     useBoards,
 } from 'Api/Hooks';
-import { useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+import { useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,

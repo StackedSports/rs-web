@@ -600,14 +600,14 @@ export const useRanks = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: ranks,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
