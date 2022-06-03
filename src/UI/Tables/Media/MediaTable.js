@@ -3,6 +3,7 @@ import { Box, CircularProgress, Pagination, styled } from '@mui/material'
 
 import DataTable from 'UI/Tables/DataTable'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
+import RenderIf from 'UI/Widgets/RenderIf'
 import MediaGrid from './MediaGrid'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
@@ -81,7 +82,7 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         selectionModel={multiPageSelection.selectionModel}
                         onSelectedChange={onMediaGridSelectionChange}
                         onSendClick={props.onSendClick}
-                        onPreviewClick={onPreviewClick}
+                        onPreviewClick={type === 'media' && onPreviewClick}
                         xs={props.xs}
                         sm={props.sm}
                         md={props.md}
@@ -105,17 +106,15 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                     <CircularProgress sx={{ position: 'sticky', left: '50%', top: '50%' }} />
                 </StyledLoadingOverlay>
             </Box>
-            {(props.pagination && props.pagination?.totalPages > 1)
-                && (
-                    <Box display='flex' justifyContent='center' mt={2}>
-                        <Pagination
-                            count={props.pagination.totalPages}
-                            page={props.pagination.currentPage}
-                            onChange={(event, page) => { scrollToTop(); props.pagination.getPage(page) }}
-                        />
-                    </Box>
-                )
-            }
+            <RenderIf condition={props.pagination && props.pagination?.totalPages > 1}>
+                <Box display='flex' justifyContent='center' mt={2}>
+                    <Pagination
+                        count={props.pagination?.totalPages}
+                        page={props.pagination?.currentPage}
+                        onChange={(event, page) => { scrollToTop(); props.pagination?.getPage(page) }}
+                    />
+                </Box>
+            </RenderIf>
 
             <MediaCarousel
                 index={carouselIndex}
