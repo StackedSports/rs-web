@@ -32,7 +32,7 @@ export const usePlaceholders = (currentPage, itemsPerPage, initialFilters) => {
             setPagination(apiPagination)
             setPlaceholders(apiPlaceholders)
         }
-    }, [reactQuery.isSuccess])
+    }, [reactQuery.isSuccess, reactQuery.data])
 
     const filter = (filters) => {
         pagination.getPage(1)
