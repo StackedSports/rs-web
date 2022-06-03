@@ -529,7 +529,7 @@ export const getPlaceholder = (id) => {
 }
 
 export const getPlaceholderMedia = (id, page, perPage) => {
-    return AXIOS('get', `media/placeholders/${id}/media?page=${page}&per_page=${perPage}`)
+    return AXIOS('get', `placeholders/${id}/media?page=${page}&per_page=${perPage}`)
 }
 
 export const getPlaceholders = (page, perPage, filters) => {
