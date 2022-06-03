@@ -891,14 +891,14 @@ export const useStatuses = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: statuses,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }

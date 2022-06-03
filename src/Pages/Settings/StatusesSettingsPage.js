@@ -5,7 +5,7 @@ import SettingsPage from './SettingsPage'
 import StatusesTable from 'UI/Tables/Statuses/StatusesTable'
 import { StatusesDialog } from 'UI/Widgets/Settings/StatusesDialog'
 
-import { useStatuses } from 'Api/Hooks'
+import { useStatuses } from 'Api/ReactQuery'
 import { deleteStatus } from 'Api/Endpoints'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
@@ -32,7 +32,7 @@ const StatusesSettingsPage = () => {
 
     const handleSusccess = () => {
         setSelectedRowStatus(null)
-        statuses.refreshData()
+        statuses.refetch()
     }
 
     const onRowClick = (e) => {
@@ -49,7 +49,7 @@ const StatusesSettingsPage = () => {
         confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
         Promise.all(selectedStatuses.map(snippet => deleteStatus(snippet)))
             .then(() => {
-                statuses.refreshData()
+                statuses.refetch()
             }
             ).catch(err => {
                 console.log(err)

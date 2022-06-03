@@ -21,14 +21,13 @@ import { AppContext } from 'Context/AppProvider'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
-    useStatuses,
     useGradYears,
     useBoards,
     useUser,
     useStatus2,
 } from 'Api/Hooks'
 
-import { useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
