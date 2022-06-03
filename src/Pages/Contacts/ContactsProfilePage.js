@@ -8,9 +8,9 @@ import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
 import {
     useBoards,
-    useContact,
     useTeamMembers,
 } from 'Api/Hooks'
+import { useContact } from 'Api/ReactQuery';
 
 
 
@@ -104,7 +104,7 @@ export default function ContactsProfilePage(props) {
                 <ContactProfileDetails
                     loading={contact.loading}
                     contact={updatedContact || contact.item}
-                    refreshContact={() => contact.refreshData()}
+                    refreshContact={() => contact.refetch()}
                     onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />

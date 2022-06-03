@@ -14,7 +14,8 @@ import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useMedia, useContacts, useTags, usePlaceholders, useTeamMembers } from "Api/Hooks"
+import { useTeamMembers } from "Api/Hooks"
+import { useTags, useMedia, usePlaceholders, useContacts } from "Api/ReactQuery"
 import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
@@ -40,7 +41,6 @@ export const MediaDetailsPage = () => {
     const [itemName, setItemName] = useState('')
     const [openImageModal, setOpenImageModal] = useState(false)
 
-    //http://localhost:3000/media/media/details/327184 test
     useEffect(() => {
         let mounted = true
         if (media && mounted) {
@@ -205,6 +205,7 @@ export const MediaDetailsPage = () => {
                 search: value,
             })
         } else {
+            console.log("clear")
             contacts.clearFilter()
         }
     }, 500)
@@ -325,7 +326,7 @@ export const MediaDetailsPage = () => {
                     </Typography>
                     <SearchableSelector
                         multiple
-                        options={tags}
+                        options={tags.items}
                         value={itemTags}
                         onChange={handleChangeTags}
                         label="+ Add tag"
@@ -380,6 +381,7 @@ export const MediaDetailsPage = () => {
                                 value={itemContact}
                                 label="Contact"
                                 placeholder="Search for contact"
+                                clearOnBlur
                                 onChange={handleChangeContact}
                                 getOptionLabel={(option) => getFullName(option)}
                                 onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}

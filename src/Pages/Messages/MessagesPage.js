@@ -12,7 +12,8 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { useMessages, useTeamMembers, useTags2 } from 'Api/Hooks'
+import { useMessages, useTeamMembers } from 'Api/Hooks'
+import { useTags } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 const getTitle = (filterName) => {
@@ -29,7 +30,7 @@ const getTitle = (filterName) => {
 const MessagesPage = (props) => {
     const { user } = useContext(AuthContext)
     const senders = useTeamMembers()
-    const tags = useTags2()
+    const tags = useTags()
 
     const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user.role.includes('Admin') }
     const messages = useMessages(1, 10, DEFAULT_MESSAGE_FILTER)

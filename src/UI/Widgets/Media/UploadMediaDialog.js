@@ -21,10 +21,8 @@ import { formatDate, getFullName } from "utils/Parser"
 
 import {
 	useTeamMembers,
-	useTags2,
-	usePlaceholders,
-	useContacts
 } from 'Api/Hooks'
+import { usePlaceholders, useTags,useContacts } from 'Api/ReactQuery';
 
 import {
 	getAssociatedContactByFileName,
@@ -108,8 +106,8 @@ const dummyAssociatedPeople = [
 
 export default function UploadMediaDialog(props) {
 	const teamMembers = useTeamMembers()
-	const tags = useTags2()
-	const placeholders = usePlaceholders(1, 25)
+	const tags = useTags()
+	const placeholders = usePlaceholders(1, 24)
 	const contacts = useContacts()
 
 	const [selectedOwner, setSelectedOwner] = useState([])
@@ -218,7 +216,7 @@ export default function UploadMediaDialog(props) {
 			let file = files[i]
 
 			//console.log(file)
-			
+
 
 			if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png") || file.type.includes("/gif")) && file.size < 5000000)
 				|| ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {

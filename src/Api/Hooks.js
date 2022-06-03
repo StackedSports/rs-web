@@ -373,24 +373,24 @@ export const useContact = (id) => {
             .finally(() => setLoading(false))
     }, [id, refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         item: contact,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
 
 export const useContacts = (currentPage = 1, itemsPerPage = 50) => {
-    const [loading, setLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    
+
     // TODO: testing filter
     const [filters, setFilters] = useState(null)
 
@@ -1100,7 +1100,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
             .then(([media, pagination]) => {
                 console.log('ApiHooks: getContact -----')
                 // console.log(pagination)
-                 console.log(media)
+                console.log(media)
                 setMedia(media)
                 setPagination(pagination)
             })

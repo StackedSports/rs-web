@@ -114,12 +114,12 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
                             <RenderIf condition={loading}>
                                 <ListSubheader>Loading...</ListSubheader>
                             </RenderIf>
-                            <RenderIf condition={!loading && (!options || options.length == 0)}>
+                            <RenderIf condition={!loading && (!options || options?.length == 0)}>
                                 <MenuItem disabled>
                                     No results found
                                 </MenuItem>
                             </RenderIf>
-                            {options.map((option, i) => (
+                            {options?.map((option, i) => (
                                 <MenuItem key={option.id || i} onClick={() => handleClickOption(option)} >
                                     {getOptionLabel(option)}
                                 </MenuItem>

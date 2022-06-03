@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import PlaceholdersTable from 'UI/Tables/Placeholders/PlaceholdersTable'
 
-import { usePlaceholders } from 'Api/Hooks'
+import { usePlaceholders } from 'Api/ReactQuery'
 
 const PlaceholdersSettingsPage = () => {
     const placeholders = usePlaceholders()

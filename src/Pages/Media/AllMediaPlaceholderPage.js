@@ -10,7 +10,7 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 import { mediaRoutes } from "Routes/Routes"
-import { usePlaceholders } from 'Api/Hooks'
+import { usePlaceholders } from 'Api/ReactQuery'
 import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from "UI/Widgets/RenderIf"

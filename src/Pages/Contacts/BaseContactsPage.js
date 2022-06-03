@@ -26,10 +26,10 @@ import {
     useGradYears,
     useBoard,
     useBoards,
-    useTags,
     usePositions,
     useTeamMembers,
 } from 'Api/Hooks';
+import { useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -154,7 +154,7 @@ export default function BaseContactsPage(props) {
         },
         tags: {
             label: 'Tag',
-            options: tags || [],
+            options: tags.items,
         },
         position: {
             label: 'Position',
@@ -184,7 +184,7 @@ export default function BaseContactsPage(props) {
             label: 'Status 2',
             options: []
         },
-    }), [status, ranks, gradYears, tags, positions])
+    }), [status, ranks, gradYears, tags.items, positions])
 
     let mainActions = [
         {

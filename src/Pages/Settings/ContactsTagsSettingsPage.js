@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import ContactsTagsTable from 'UI/Tables/ContactsTags/ContactsTagsTable'
 
-import { useTagsWithContacts } from 'Api/Hooks'
+import { useTagsWithContacts } from 'Api/ReactQuery'
 
 const ContactsTagsSettingsPage = (props) => {
     const tagsWithContacts = useTagsWithContacts()
