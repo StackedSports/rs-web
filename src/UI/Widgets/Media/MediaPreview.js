@@ -3,8 +3,15 @@ import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
-import { ImageOutlined, GifBoxOutlined, PermMediaOutlined, SmartDisplayOutlined } from '@mui/icons-material'
-import SendIcon from '@mui/icons-material/Send';
+import { 
+    ImageOutlined,
+    GifBoxOutlined,
+    PermMediaOutlined,
+    SmartDisplayOutlined,
+    Send as SendIcon,
+    AllOut as AllOutIcon,
+    SettingsOverscan as SettingsOverscanIcon
+} from '@mui/icons-material'
 
 import { IconContext } from "react-icons"
 import { GrDocumentPdf } from 'react-icons/gr'
@@ -197,6 +204,12 @@ const MediaPreview = ({ type, ...props }) => {
         props.onSendClick(props.item)
     }
 
+    const onPreviewClick = (e) => {
+        console.log('eee')
+        e.stopPropagation()
+        props.onPreviewClick(props.item)
+    }
+
     const onMouseEnter = (e) => {
         setIsHovering(true)
     }
@@ -234,11 +247,16 @@ const MediaPreview = ({ type, ...props }) => {
                             onClick={e => e.stopPropagation()}
                         />
                     }
-                    {(showSendOnHover && isHovering) &&
+                    <RenderIf condition={isHovering && props.onPreviewClick}>
+                        <StyledPreviewButton onMouseDown={onPreviewClick}>
+                            <SettingsOverscanIcon/>
+                        </StyledPreviewButton>
+                    </RenderIf>
+                    <RenderIf condition={showSendOnHover && isHovering}>
                         <StyledIconButton onMouseDown={onSendClick}>
-                            <SendIcon />
+                            <SendIcon/>
                         </StyledIconButton>
-                    }
+                    </RenderIf>
                 </CardImage>
                 {!props.mini && (
                     <CardContent>
@@ -325,6 +343,13 @@ const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     left: 0,
+    zIndex: 1,
+}));
+
+const StyledPreviewButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    right: 36,
     zIndex: 1,
 }));
 

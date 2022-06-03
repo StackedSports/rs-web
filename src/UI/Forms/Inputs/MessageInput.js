@@ -106,9 +106,8 @@ const InputSelected = (props) => {
 // ]
 
 const InputPlatform = (props) => {
-    let selectedPlatform = {}
-
     const [availablePlatforms, setAvailablePlatforms] = useState([])
+    const [selectedPlatform, setSelectedPlatform] = useState(null)
 
     useEffect(() => {
         let tmp = []
@@ -137,11 +136,22 @@ const InputPlatform = (props) => {
         setAvailablePlatforms(tmp)
     }, [props.platforms])
 
-    if (props.selected) {
-        selectedPlatform = platforms.find(plat => plat.name === props.selected)
-    }
+    useEffect(() => {
+        if(props.selected) {
+            let found = platforms.find(plat => plat.name === props.selected)
+            console.log(found)
+            setSelectedPlatform(found)
+        } else {
+            setSelectedPlatform(null)
+        }
+    }, [props.selected])
 
-    const header = () => props.selected ? (
+    console.log(props.platforms)
+    console.log(props.selected)
+
+    console.log(availablePlatforms)
+
+    const header = () => selectedPlatform ? (
         <InputSelected icon={selectedPlatform.icon} name={selectedPlatform.name} onRemove={props.onRemove} />
     ) : (
         <InputSelector icon={FaEnvelope} name='Message Type' />
@@ -178,7 +188,7 @@ const InputSenders = (props) => {
         <Dropdown.List>
             {props.contacts && props.contacts.map((contact, index) => (
                 <SearchableOptionListItem
-                    key={contact.id}
+                    key={contact.id || contact}
                     item={contact}
                     imgDef={typeof contact == 'string' ? null : 'twitter_profile.profile_image'}
                     nameDef={['first_name', 'last_name']}
