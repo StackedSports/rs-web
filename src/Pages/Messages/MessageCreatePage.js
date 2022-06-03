@@ -273,8 +273,8 @@ export default function MessageCreatePage(props) {
     const clearPlatforms = () => {
         setPlatforms({})
 
-        // if (platformSelected === 'Twitter Dm' || platformSelected === 'Rs Text')
-        setPlatformSelected(null)
+        if (platformSelected !== 'Twitter Dm')
+            setPlatformSelected(null)
 
         // platformSelected(null)
     }
@@ -295,15 +295,14 @@ export default function MessageCreatePage(props) {
 
         // If only selection is a coach type, we need to clear the available platforms
         // and inform the user
-        if (senderSelected.length === 0 && typeof sender === 'string') {
-            clearPlatforms()
+        if (typeof sender === 'string') {
+            // senderSelected.length === 0 && 
 
-            if (platformSelected) {
-                // setPlatformSelected(null)
-                //showErrorMessage('You must select a Platform')
-            } else {
-                setPlatforms({ twitter: true })
-            }
+            if (platformSelected && platformSelected !== 'Twitter Dm') {
+                setPlatformSelected(null)
+            } 
+
+            setPlatforms({ twitter: true })
 
             return
         }
@@ -311,14 +310,10 @@ export default function MessageCreatePage(props) {
         // If selected is a team member, we need to validate the platforms based on
         // its properties
         if (typeof sender !== 'string') {
-            setPlatformsForTeamMember(sender)
-        }
+            if(senderSelected[0] && typeof senderSelected[0] === 'string')
+                return
 
-        if (senderSelected.length > 0) {
-            if (typeof senderSelected[0] === 'string') {
-                // Sender at position 0 is a Coach, so we need to merge platforms
-                // availble with coache's platforms.
-            }
+            setPlatformsForTeamMember(sender)
         }
     }
 
@@ -409,11 +404,22 @@ export default function MessageCreatePage(props) {
         // If we are removing a team member from the selection, we need
         // to reset the available platforms
         if (typeof senderSelected[index] !== 'string') {
-            clearPlatforms()
+            setPlatforms({ twitter: true })
             // console.log(platformSelected)
+        } else {
+            // removing a coach typeW
+            // we need to update the platforms based on the team member selected
+            if(senderSelected.length === 2)
+                setPlatformsForTeamMember(senderSelected[1])
+
+            if(platformSelected !== 'Twitter DM')
+                setPlatformSelected(null)
         }
 
-        setSenderSelected.remove(index)
+        let newSelection = setSenderSelected.remove(index)
+
+        if(newSelection.length === 0)
+            setPlatformSelected(null)
     }
 
     const onReceiverSelected = (selectedPrivateBoards, selectedTeamBoards, selectedContacts) => {

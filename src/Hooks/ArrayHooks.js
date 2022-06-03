@@ -41,6 +41,8 @@ export default function useArray(initialState, control) {
         let tmp = Object.assign([], a)
         tmp.splice(index, 1)
         set(tmp)
+
+        return tmp
     }
 
     const removeById = (id) => {

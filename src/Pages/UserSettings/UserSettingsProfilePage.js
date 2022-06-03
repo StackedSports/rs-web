@@ -18,6 +18,7 @@ import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 import UserSettingsPage from "./UserSettingsPage";
 import { updateUser } from 'Api/Endpoints';
 import { useUser } from 'Api/Hooks';
+
 const UserSettingsProfilePage = (props) => {
   const user = useUser();
   const alert = useMainLayoutAlert();

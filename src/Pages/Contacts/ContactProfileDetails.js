@@ -581,6 +581,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue("state", newValue?.abbreviation)
 									onAccordionFieldChange(1)
 								}}
+								clearOnBlur
 							/>
 
 							<SearchableSelector
@@ -597,6 +598,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue('status', newValue)
 									onAccordionFieldChange(1)
 								}}
+								clearOnBlur
 							/>
 
 							<SearchableSelector
@@ -617,6 +619,7 @@ const ContactProfileDetails = (props) => {
 									// onAccordionFieldChange(1)
 									onStatus2Change(formikProps.setFieldValue, newValue)
 								}}
+								clearOnBlur
 							/>
 
 							<SearchableSelector
@@ -633,6 +636,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue('rank', newValue)
 									onAccordionFieldChange(1)
 								}}
+								clearOnBlur
 							/>
 						</AccordionComponent>
 					</Form>
@@ -670,6 +674,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue("position_coach", newValue)
 									onAccordionFieldChange(2)
 								}}
+								clearOnBlur
 							/>
 
 							<SearchableSelector
@@ -685,6 +690,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue("recruiting_coach", newValue)
 									onAccordionFieldChange(2)
 								}}
+								clearOnBlur
 							/>
 
 							<SearchableSelector
@@ -700,6 +706,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue("coordinator", newValue)
 									onAccordionFieldChange(2)
 								}}
+								clearOnBlur
 							/>
 						</AccordionComponent>
 					</Form>
@@ -739,6 +746,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue("position_tags", newValue)
 									onAccordionFieldChange(3)
 								}}
+								clearOnBlur
 							/>
 						</AccordionComponent>
 					</Form>
@@ -857,6 +865,7 @@ const ContactProfileDetails = (props) => {
 							items={[
 								{ label: 'Opponents', name: 'opponents', value: formikProps.values.opponents, component: TextField },
 							]}
+							clearOnBlur
 						>
 							<Button
 								name="Add new opponent"
@@ -929,6 +938,7 @@ const ContactProfileDetails = (props) => {
 									formikProps.setFieldValue('tags', newValue)
 									onAccordionFieldChange(7)
 								}}
+								clearOnBlur
 							/>
 						</AccordionComponent>
 					</Form>
