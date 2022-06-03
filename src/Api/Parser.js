@@ -2,23 +2,16 @@ import { capitalize } from 'utils/Parser'
 import { format } from 'date-fns'
 
 export const getFilterContactsCriteria = (filters) => {
-    let criteria = {}
+    if (!filters) return null
+    //console.log(filters)
 
-    console.log(filters)
+    let criteria = {}
     if (filters.search) {
         criteria['search'] = filters.search
     }
 
-    // if (filters.search) {
-    //     criteria['search'] = filters.search
-    // }
-
     if (filters.status) {
-        criteria['status'] = []
-
-        filters.status.forEach(status => {
-            criteria.status.push(status.id)
-        })
+        criteria['status'] = filters.status.map(status => status.id)
     }
 
     if (filters.rank) {

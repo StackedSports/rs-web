@@ -6,8 +6,8 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTeamMembers, useContacts } from 'Api/Hooks'
-import { useTags, useMediaTypes } from 'Api/ReactQuery';
+import { useTeamMembers } from 'Api/Hooks'
+import { useTags, useMediaTypes, useContacts } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {

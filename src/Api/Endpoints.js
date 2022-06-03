@@ -296,9 +296,9 @@ export const filterContacts = (page, perPage, filters) => {
         criteria: { ...getFilterContactsCriteria(filters) }
     }
 
-    if (filters.sort_column)
+    if (filters?.sort_column)
         data.sort_column = filters.sort_column
-    if (filters.sort_dir)
+    if (filters?.sort_dir)
         data.sort_dir = filters.sort_dir
 
     // data = {
@@ -309,7 +309,7 @@ export const filterContacts = (page, perPage, filters) => {
     //     }
     // }
 
-    console.log(data)
+    //console.log(data)
 
     return AXIOS('post', 'contacts/filter', data)
 }

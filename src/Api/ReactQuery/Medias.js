@@ -34,7 +34,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
             setPagination(apiPagination)
             setMedias(apiMedias)
         }
-    }, [reactQuery.isSuccess])
+    }, [reactQuery.isSuccess, reactQuery.data])
 
 
     const filter = (filters) => {
@@ -73,7 +73,7 @@ export const useMediaTypes = () => {
                 }))
             )
         }
-    }, [reactQuery.isSuccess])
+    }, [reactQuery.isSuccess, reactQuery.data])
 
     return {
         ...reactQuery,

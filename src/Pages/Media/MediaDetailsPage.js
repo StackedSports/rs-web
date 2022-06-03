@@ -14,8 +14,8 @@ import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useContacts, useTeamMembers } from "Api/Hooks"
-import { useTags, useMedia, usePlaceholders } from "Api/ReactQuery"
+import { useTeamMembers } from "Api/Hooks"
+import { useTags, useMedia, usePlaceholders, useContacts } from "Api/ReactQuery"
 import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
@@ -205,6 +205,7 @@ export const MediaDetailsPage = () => {
                 search: value,
             })
         } else {
+            console.log("clear")
             contacts.clearFilter()
         }
     }, 500)
@@ -380,6 +381,7 @@ export const MediaDetailsPage = () => {
                                 value={itemContact}
                                 label="Contact"
                                 placeholder="Search for contact"
+                                clearOnBlur
                                 onChange={handleChangeContact}
                                 getOptionLabel={(option) => getFullName(option)}
                                 onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}

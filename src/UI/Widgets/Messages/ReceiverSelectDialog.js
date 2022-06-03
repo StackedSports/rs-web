@@ -15,10 +15,11 @@ import useArray from 'Hooks/ArrayHooks';
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useContacts, useBoards } from 'Api/Hooks';
+import { useBoards } from 'Api/Hooks';
+import { useContacts } from 'Api/ReactQuery';
 
 import { findByIds } from 'utils/Helper'
-import { Clear } from '@material-ui/icons';
+import { Clear } from '@mui/icons-material';
 
 export const tabs = {
     privateBoard: 0,

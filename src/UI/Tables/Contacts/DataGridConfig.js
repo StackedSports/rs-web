@@ -261,6 +261,7 @@ const rank = {
 const lastMessaged = {
     field: 'lastMessaged',
     headerName: 'Last Messaged',
+    sortable:false,
     // width: 120,
     flex: 1,
     // valueGetter: (params) => params.row. ? params.row. : ''
@@ -268,6 +269,7 @@ const lastMessaged = {
 
 const mostActiveTime = {
     field: 'mostActiveTime',
+    sortable:false,
     headerName: 'Most Active Time',
     // width: 120,
     flex: 1,
@@ -277,6 +279,7 @@ const mostActiveTime = {
 const dateAdded = {
     field: 'dateAdded',
     headerName: 'Date Added',
+    sortable:false,
     // width: 120,
     flex: 1,
     // valueGetter: (params) => params.row. ? params.row. : ''
