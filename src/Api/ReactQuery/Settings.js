@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { getPositions, getRanks, getSnippets, getStatuses } from "Api/Endpoints"
+import { getGradYears, getPositions, getRanks, getSnippets, getStatuses } from "Api/Endpoints"
 
 export const usePositions = () => {
     const reactQuery = useQuery("positions", getPositions, {
@@ -41,6 +41,18 @@ export const useSnippets = () => {
 
 export const useStatuses = () => {
     const reactQuery = useQuery("statuses", getStatuses, {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        items: reactQuery.data || [],
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const useGradYears = () => {
+    const reactQuery = useQuery("gradYears", getGradYears, {
         select: (data) => data[0],
     })
 

@@ -21,11 +21,10 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
-    useGradYears,
     useBoard,
     useBoards,
 } from 'Api/Hooks';
-import { useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+import { useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,

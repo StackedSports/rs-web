@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import GradYearsTable from 'UI/Tables/GradYears/GradYearsTable'
 
-import { useGradYears } from 'Api/Hooks'
+import { useGradYears } from 'Api/ReactQuery'
 
 const GradYearsSettingsPage = () => {
     const gradYears = useGradYears()
