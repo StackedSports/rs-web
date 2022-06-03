@@ -25,12 +25,11 @@ import {
     useRanks,
     useGradYears,
     useBoards,
-    usePositions,
     useUser,
     useStatus2,
 } from 'Api/Hooks'
 
-import { useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { usePositions,useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,

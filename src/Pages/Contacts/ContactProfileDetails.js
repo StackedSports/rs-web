@@ -17,13 +17,12 @@ import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states } from 'utils/Data';
 import {
-	usePositions,
 	useStatuses,
 	useRanks,
 	useStatus2,
 } from 'Api/Hooks'
 
-import { useTeamMembers,useTags } from 'Api/ReactQuery';
+import { usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
 
 import {
 	addTagsToContact,

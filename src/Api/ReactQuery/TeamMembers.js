@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
-import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
 import { getTeamMember, getTeamMembers } from "Api/Endpoints"
 import { getFullName } from "utils/Parser"
 
 export const useTeamMembers = () => {
     const [teamMembers, setTeamMembers] = useState([])
-    const reactQuery = useQuery("teamMembers", () => getTeamMembers(), {
+    const reactQuery = useQuery("teamMembers", getTeamMembers, {
         select: (data) => data[0],
     })
 

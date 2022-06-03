@@ -859,14 +859,14 @@ export const usePositions = () => {
             }).finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: Positions,
         loading,
-        refreshData,
+        refetch,
         error,
     }
 }
