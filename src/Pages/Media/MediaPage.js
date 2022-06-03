@@ -6,8 +6,8 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTeamMembers, useMediaTypes, useContacts } from 'Api/Hooks'
-import { useTags } from 'Api/ReactQuery';
+import { useTeamMembers, useContacts } from 'Api/Hooks'
+import { useTags, useMediaTypes } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
@@ -83,7 +83,7 @@ export const MediaPage = (props) => {
             label: 'Associated To',
             options: contacts.items || [],
             optionsLabel: (item) => getFullName(item),
-            onSearch: (value) => value ==='' ? contacts.clearFilter() : contacts.filter({search: value}),
+            onSearch: (value) => value === '' ? contacts.clearFilter() : contacts.filter({ search: value }),
             loading: contacts.loading,
         },
         "dateUploaded": {
@@ -100,7 +100,7 @@ export const MediaPage = (props) => {
             options: tags.items,
             onSearch: (search) => tags.search(search),
         },
-    }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items,contacts.loading])
+    }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items, contacts.loading])
 
     const onTopActionClick = (e) => {
         setUploadDialogOpen(true)

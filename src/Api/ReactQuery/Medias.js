@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { filterMedias, getMedia } from "Api/Endpoints"
+import { filterMedias, getMedia, getMediaTypes } from "Api/Endpoints"
 
 
 export const useMedia = (id) => {
@@ -54,5 +54,30 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
         loading: reactQuery.isLoading,
         filter,
         clearFilter,
+    }
+}
+
+export const useMediaTypes = () => {
+    const [mediaTypes, setMediaTypes] = useState([])
+
+    const reactQuery = useQuery(`mediaTypes`, () => getMediaTypes())
+
+    useEffect(() => {
+        if (reactQuery.isSuccess) {
+            const [apiMediaTypes] = reactQuery.data
+            setMediaTypes(
+                apiMediaTypes.map(item => ({
+                    ...item,
+                    id: item.key,
+                    name: item.type,
+                }))
+            )
+        }
+    }, [reactQuery.isSuccess])
+
+    return {
+        ...reactQuery,
+        items: mediaTypes,
+        loading: reactQuery.isLoading,
     }
 }

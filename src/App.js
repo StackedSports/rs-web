@@ -43,7 +43,13 @@ import ThemeProvider from 'Theme/ThemeProvider'
 import AppProvider from 'Context/AppProvider'
 import { chatRoutes } from "Routes/Routes";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 60000
+		}
+	}
+})
 
 function App() {
 	return (
