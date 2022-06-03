@@ -13,7 +13,6 @@ import { AuthContext } from 'Context/Auth/AuthProvider';
 import { AppContext } from 'Context/AppProvider';
 import { linkWithTwitter, unLinkTwitter } from 'Api/Endpoints';
 
-
 const UserAccountCard = (props) => {
 	const app = useContext(AppContext);
 
@@ -181,7 +180,7 @@ const UserSettingsAccountPage = (props) => {
 						buttonText="LINK TWITTER"
 						provider={'twitterProvider'}
 						account={user.item?.twitter_profile?.screen_name ? `@${user.item?.twitter_profile?.screen_name}` : null}
-						image={user.item?.twitter_profile?.profile_image}
+						image={user.item?.twitter_profile?.profile_image?.replace("_normal", "") || ""}
 						userId={user.item?.id}
 						refreshUser={() => user.refresh()}
 					/>
