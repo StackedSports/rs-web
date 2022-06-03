@@ -9,8 +9,7 @@ import {
     PermMediaOutlined,
     SmartDisplayOutlined,
     Send as SendIcon,
-    AllOut as AllOutIcon,
-    SettingsOverscan as SettingsOverscanIcon
+    Fullscreen as FullscreenIcon
 } from '@mui/icons-material'
 
 import { IconContext } from "react-icons"
@@ -249,7 +248,7 @@ const MediaPreview = ({ type, ...props }) => {
                     }
                     <RenderIf condition={isHovering && props.onPreviewClick}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
-                            <SettingsOverscanIcon/>
+                            <FullscreenIcon/>
                         </StyledPreviewButton>
                     </RenderIf>
                     <RenderIf condition={showSendOnHover && isHovering}>
