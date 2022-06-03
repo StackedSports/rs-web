@@ -26,12 +26,11 @@ import {
     useGradYears,
     useBoards,
     usePositions,
-    useTeamMembers,
     useUser,
     useStatus2,
 } from 'Api/Hooks'
 
-import { useContacts, useTags } from 'Api/ReactQuery';
+import { useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -107,8 +106,6 @@ export default function ContactsPage(props) {
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
-
-    const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
 
     const panelFiltersData = useMemo(() =>
     ({

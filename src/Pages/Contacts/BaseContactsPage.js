@@ -27,9 +27,8 @@ import {
     useBoard,
     useBoards,
     usePositions,
-    useTeamMembers,
 } from 'Api/Hooks';
-import { useTags } from 'Api/ReactQuery';
+import { useTeamMembers, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -210,7 +209,7 @@ export default function BaseContactsPage(props) {
         { // Category
             id: '0',
             name: 'All Contacts',
-            path: contactsRoutes.all,    
+            path: contactsRoutes.all,
         },
         { // Category
             id: '1',
@@ -252,17 +251,17 @@ export default function BaseContactsPage(props) {
         contacts.filter(filter)
     }
 
-/*     const onContactsSelectionChange = (selection) => {
-        // setSelectedContacts(selected)
-        selectedContacts.onSelectionChange(selection)
-    } */
+    /*     const onContactsSelectionChange = (selection) => {
+            // setSelectedContacts(selected)
+            selectedContacts.onSelectionChange(selection)
+        } */
 
     const onSendMessageClick = (e) => {
         /* console.log(selectedContacts)
 
         selectedContacts.saveData(contacts.items)
         let selectedData = selectedContacts.getDataSelected() */
-        let selectedData = contactsMultipageSelection.selectedData 
+        let selectedData = contactsMultipageSelection.selectedData
 
 
         if (props.onSendMessage)
@@ -331,8 +330,8 @@ export default function BaseContactsPage(props) {
 
     const onTagsSelected = (selectedTagsIds) => {
         setLoadingTags(true)
-/*         selectedContacts.saveData(contacts.items)
-        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
+        /*         selectedContacts.saveData(contacts.items)
+                let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
         let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
 
         // console.log(selectedTagsIds, contactIds)
@@ -369,10 +368,10 @@ export default function BaseContactsPage(props) {
             .finally(() => setLoadingTags(false))
     }
 
-/*     const onPageChange = (page) => {
-        contacts.pagination.getPage(page)
-    }
- */
+    /*     const onPageChange = (page) => {
+            contacts.pagination.getPage(page)
+        }
+     */
     const onCloseBoardDialog = () => {
         if (editBoard)
             setShowPanelFilters(false)
@@ -530,7 +529,7 @@ export default function BaseContactsPage(props) {
                 </Stack>
             </Stack>
 
-         {/*    <ContactsTable
+            {/*    <ContactsTable
                 id={props.tableId}
                 contacts={contacts.items}
                 pagination={contacts.pagination}

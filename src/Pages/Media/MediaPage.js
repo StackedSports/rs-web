@@ -6,8 +6,7 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTeamMembers } from 'Api/Hooks'
-import { useTags, useMediaTypes, useContacts } from 'Api/ReactQuery';
+import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 export const MediaPage = (props) => {
@@ -78,6 +77,7 @@ export const MediaPage = (props) => {
             label: 'Owner',
             options: teamMembers.items || [],
             optionsLabel: (item) => getFullName(item),
+            onSearch: (search) => teamMembers.search(search),
         },
         "contact_id": {
             label: 'Associated To',

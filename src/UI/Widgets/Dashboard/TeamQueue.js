@@ -12,7 +12,8 @@ import DateRangePicker from "UI/Forms/Inputs/DateRangePicker";
 import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
-import { useMessages, useTeamMembers } from "Api/Hooks";
+import { useMessages } from "Api/Hooks";
+import { useTeamMembers } from "Api/ReactQuery";
 import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 
@@ -108,6 +109,7 @@ export const TeamQueue = () => {
       label: "Sender",
       options: senders.items,
       optionsLabel: (sender) => getFullName(sender),
+      onSearch: (search) => senders.search(search),
     },
     platform: {
       label: "Type",

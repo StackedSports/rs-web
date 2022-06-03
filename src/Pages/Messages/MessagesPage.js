@@ -12,8 +12,8 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { useMessages, useTeamMembers } from 'Api/Hooks'
-import { useTags } from 'Api/ReactQuery';
+import { useMessages } from 'Api/Hooks'
+import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 
 const getTitle = (filterName) => {
@@ -92,6 +92,7 @@ const MessagesPage = (props) => {
             label: 'Sender',
             options: senders.items || [],
             optionsLabel: (sender) => getFullName(sender),
+            onSearch: (search) => senders.search(search),
         },
         'recipient_status': {
             label: 'Recipient Status',
@@ -188,7 +189,7 @@ const MessagesPage = (props) => {
                     </Stack>
                 </Stack>
             </RenderIf>
-            
+
             {/* <Stack justifyContent="center" alignItems="center">
                 <Pagination
                     count={messages.pagination.totalPages}

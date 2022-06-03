@@ -16,7 +16,7 @@ import { mask, unMask } from 'remask';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
-import { useTeamMember } from 'Api/Hooks';
+import { useTeamMember } from 'Api/ReactQuery';
 import { updateTeamMember } from 'Api/Endpoints';
 import { settingsRoutes } from 'Routes/Routes';
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
@@ -94,7 +94,7 @@ const TeamMemberProfilePage = (props) => {
       updateTeamMember(data, id)
         .then(res => {
           alert.setSuccess("Changes saved successfully!");
-          teamMember.refreshData();
+          teamMember.refetch();
         })
         .catch(error => {
           console.log(error)
