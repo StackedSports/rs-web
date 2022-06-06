@@ -23,10 +23,9 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import {
     useBoards,
     useUser,
-    useStatus2,
 } from 'Api/Hooks'
 
-import { useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,

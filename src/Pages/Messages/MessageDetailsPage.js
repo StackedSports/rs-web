@@ -17,7 +17,8 @@ import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import { AppContext } from 'Context/AppProvider'
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
-import { useMessage, useMessageRecipients } from 'Api/Hooks'
+import { useMessageRecipients } from 'Api/Hooks'
+import { useMessage } from 'Api/ReactQuery';
 import {
     sendMessage,
     deleteMessage,
@@ -45,7 +46,7 @@ const MessageDetailsPage = (props) => {
     const [redirect, setRedirect] = useState('')
     const [refresh, setRefresh] = useState(false)
 
-    const message = useMessage(messageId.current, refresh)
+    const message = useMessage(messageId.current)
     const recipients = useMessageRecipients(messageId.current, refresh, 1, 25)
     // console.log(recipients)
 
@@ -243,6 +244,7 @@ const MessageDetailsPage = (props) => {
     const refreshMessage = () => {
         // console.log('refreshMessage')
         setRefresh(refresh ? false : true)
+        message.refetch()
     }
 
     const onSelectedRecipientsChange = (selection) => {

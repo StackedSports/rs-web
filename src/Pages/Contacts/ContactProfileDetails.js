@@ -16,11 +16,8 @@ import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states } from 'utils/Data';
-import {
-	useStatus2,
-} from 'Api/Hooks'
 
-import { useStatuses,useRanks, usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
+import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
 
 import {
 	addTagsToContact,
@@ -83,7 +80,7 @@ const ContactProfileDetails = (props) => {
 	const ranks = useRanks()
 	const tags = useTags()
 
-	console.log(status2)
+	//console.log(status2)
 
 	useEffect(() => {
 		if (props.contact)

@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 import { FormBaseDialog } from "../Dialogs/FormBaseDialog";
 import { createPerson, updatePerson } from 'Api/Endpoints';
-import { usePeopleTypes } from 'Api/Hooks';
+import { usePeopleTypes } from 'Api/ReactQuery';
 
 const initialValues = {
   "person_relationship_type_id": "",

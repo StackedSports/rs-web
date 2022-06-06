@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react"
-import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { getGradYears, getPositions, getRanks, getSnippets, getStatuses } from "Api/Endpoints"
+import { getAllStatus2, getGradYears, getPeopleTypes, getPlatform, getPositions, getRanks, getSnippets, getStatuses, getTextPlaceholders } from "Api/Endpoints"
 
 export const usePositions = () => {
     const reactQuery = useQuery("positions", getPositions, {
@@ -53,6 +51,54 @@ export const useStatuses = () => {
 
 export const useGradYears = () => {
     const reactQuery = useQuery("gradYears", getGradYears, {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        items: reactQuery.data || [],
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const useStatus2 = () => {
+    const reactQuery = useQuery("status2", getAllStatus2, {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        items: reactQuery.data || [],
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const usePlatform = () => {
+    const reactQuery = useQuery("platform", getPlatform, {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        items: reactQuery.data || [],
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const useTextPlaceholders = () => {
+    const reactQuery = useQuery("textPlaceholders", getTextPlaceholders, {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        items: reactQuery.data || [],
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const usePeopleTypes = () => {
+    const reactQuery = useQuery("peopleTypes", getPeopleTypes, {
         select: (data) => data[0],
     })
 

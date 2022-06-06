@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import PeopleTypesTable from 'UI/Tables/PeopleTypes/PeopleTypesTable'
 
-import { usePeopleTypes } from 'Api/Hooks'
+import { usePeopleTypes } from 'Api/ReactQuery'
 
 const PeopleTypesSettingsPage = () => {
     const peopleTypes = usePeopleTypes()

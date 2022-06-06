@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { getMessages } from "Api/Endpoints"
+import { getMessage, getMessages } from "Api/Endpoints"
 
 export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
@@ -37,5 +37,17 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
         loading: reactQuery.isLoading,
         filter,
         clearFilter,
+    }
+}
+
+export const useMessage = (id) => {
+    const reactQuery = useQuery(`message/${id}`, () => getMessage(id), {
+        select: (data) => data[0],
+    })
+
+    return {
+        ...reactQuery,
+        item : reactQuery.data,
+        loading: reactQuery.isLoading,
     }
 }

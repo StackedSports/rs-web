@@ -83,6 +83,7 @@ export default function AccordionComponent(props) {
 									component={item.component}
 									onChange={e => { onInputChange(e); props.onFieldValue(item.name, e.target.value) }}
 									placeholder={item.placeholder}
+									fullWidth
 								//error={ Boolean(item.error)}
 								//helperText={ item.error}
 								/>

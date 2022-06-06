@@ -8,7 +8,7 @@ import { AuthContext } from 'Context/Auth/AuthProvider';
 import { PersonalScore, TeamQueue, StackUp, MessagesGraphs } from 'UI/Widgets/Dashboard'
 
 import { getStats } from 'Api/Endpoints'
-import { useStats } from 'Api/Hooks';
+import { useStats } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser';
 
 export const DashboardPage = () => {

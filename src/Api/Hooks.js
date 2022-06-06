@@ -781,14 +781,14 @@ export const useStatus2 = () => {
             .finally(() => setLoading(false))
     }, [refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         items: status,
         loading,
-        refreshData,
+        refetch,
         error
     }
 }

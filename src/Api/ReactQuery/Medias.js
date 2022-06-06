@@ -7,7 +7,6 @@ import { filterMedias, getMedia, getMediaTypes } from "Api/Endpoints"
 export const useMedia = (id) => {
     const reactQuery = useQuery(`media/${id}`, () => getMedia(id), {
         select: (data) => data[0],
-        staleTime: 60000,
     })
 
     return {

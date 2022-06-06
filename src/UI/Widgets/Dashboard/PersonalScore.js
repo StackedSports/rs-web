@@ -14,7 +14,7 @@ import { objectNotNull } from 'utils/Validation'
  */
 export const PersonalScore = (props) => {
     const [stats, setStats] = useState({});
-    console.log(props.user)
+    //console.log(props.user)
 
     useEffect(() => {
         if (!props.stats.loading && objectNotNull(props.stats)) {

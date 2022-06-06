@@ -4,7 +4,7 @@ import SettingsPage from './SettingsPage'
 
 import BoardTable from 'UI/Tables/Board/BoardTable'
 
-import { usePlatform } from 'Api/Hooks'
+import { usePlatform } from 'Api/ReactQuery'
 
 const BoardSettingsPage = () => {
     const platform = usePlatform()
