@@ -65,7 +65,6 @@ export const useMessageRecipients = (id, currentPage, itemsPerPage) => {
             setRecipients(apiRecipients)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
-    console.log("recipiets", recipients)
 
     return {
         ...reactQuery,

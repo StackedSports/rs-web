@@ -231,9 +231,6 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
 
-    // TODO: testing filter
-    const [filters, setFilters] = useState(null)
-
     useEffect(() => {
         setLoading(true)
 
@@ -254,23 +251,13 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
                 setLoading(false)
             })
 
-    }, [boardId, pagination.currentPage, filters])
+    }, [boardId, pagination.currentPage])
 
-    const filter = (filters) => {
-        pagination.getPage(1)
-        setFilters(filters)
-    }
-
-    const clearFilter = () => {
-        setFilters(null)
-    }
 
     return {
         items: contacts,
         pagination,
         loading,
-        filter,
-        clearFilter,
         error,
     }
 }

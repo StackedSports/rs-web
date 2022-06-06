@@ -5,11 +5,7 @@ import BaseContactsPage from './BaseContactsPage';
 
 import { AppContext } from 'Context/AppProvider';
 
-import {
-    useBoardContacts
-} from 'Api/Hooks';
-
-import {useBoard} from 'Api/ReactQuery'
+import { useBoard, useBoardContacts } from 'Api/ReactQuery'
 
 const parseCriteriaNames = (criteria) => {
     switch (criteria) {
@@ -49,8 +45,6 @@ export default function BoardPage(props) {
 
         console.log("board.item", board.item)
     }, [board.item])
-
-    console.log("board.item", board.item)
 
     const title = useMemo(() => {
         if (board.item)
@@ -95,7 +89,7 @@ export default function BoardPage(props) {
                 })
             })
 
-        // console.log("filters", filters)
+         console.log("filters", filters)
 
         return filters
     }, [board.item])

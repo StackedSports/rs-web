@@ -450,7 +450,7 @@ export const deleteBoard = (id) => {
     return AXIOS('delete', `filters/${id}`)
 }
 
-export const getBoardContacts = (id, page, perPage, filters) => {
+export const getBoardContacts = (id, page, perPage) => {
     return AXIOS('get', `filters/${id}/contacts?page=${page}&per_page=${perPage}`)
 }
 

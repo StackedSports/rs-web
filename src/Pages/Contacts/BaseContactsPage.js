@@ -21,7 +21,7 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import {useBoards, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+import { useBoards, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -242,7 +242,7 @@ export default function BaseContactsPage(props) {
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
-
+        if(contacts.filter)
         contacts.filter(filter)
     }
 
