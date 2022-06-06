@@ -36,34 +36,33 @@ export const TeamQueue = () => {
       return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin", send_at_dates: [dates] });
   };
 
-  //console.log("queue date", dates)
-
   const messages = useMessages(1, 10, getBaseFilter());
+
+  const getAllMessageWithRecipientsStatus = async (messages) => {
+    const newMessages = [...messages];
+    return Promise.allSettled(newMessages.map((message) => getMessageRecipients(message.id, 1, 10000)
+    )).then(results => {
+      results.map((result, index) => {
+        if (result.status === "fulfilled") {
+          const [{ status_counts }, _] = result.value;
+          newMessages[index].status_counts = status_counts;
+        }
+      })
+    }).finally(() => {
+      if (filterChanged.current) {
+        setLoadedRows(newMessages);
+        filterChanged.current = false;
+      }
+      else {
+        setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
+      }
+    });
+  }
 
   useEffect(() => {
     setLoading(true);
-    if (!messages.loading) {
-      const newMessages = [...messages.items];
-
-      Promise.allSettled(newMessages.map(async (message) => await getMessageRecipients(message.id, 1, 10000)
-      )).then(results => {
-        results.map((result, index) => {
-          if (result.status === "fulfilled") {
-            const [{ status_counts }, _] = result.value;
-            newMessages[index].status_counts = status_counts;
-          }
-        })
-      }).finally(() => {
-
-        if (filterChanged.current) {
-          setLoadedRows(newMessages);
-          filterChanged.current = false;
-        }
-        else {
-          setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
-        }
-        setLoading(false);
-      })
+    if (!messages.loading && messages.items?.length > 0) {
+      getAllMessageWithRecipientsStatus(messages.items).finally(() => setLoading(false));
     }
   }, [messages.items, messages.loading]);
 
@@ -180,7 +179,7 @@ export const TeamQueue = () => {
       )}
       {(messages.items.length !== 0 || messages.loading) && (
         <Box height={(Math.min(messages.items.length + 1, 6) * 52) + 58 + 'px'} >
-          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={loading} />
+          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={loading || messages.loading} />
         </Box>
       )}
     </BaseSection>
