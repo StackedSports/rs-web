@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
+import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import Stack from '@mui/material/Stack';
 import { AccountBox, Tune } from '@material-ui/icons';
@@ -28,8 +29,10 @@ import { useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositi
 
 import {
     addTagsToContacts,
+    archiveContacts,
     deleteBoard,
     deleteTagToContact,
+    getBoardContacts,
     untagContacts,
     updateBoard,
 } from 'Api/Endpoints';
@@ -75,28 +78,29 @@ export default function BaseContactsPage(props) {
     const teamMembers = useTeamMembers()
     const boards = useBoards()
     const board = useBoard(props.boardInfo?.id)
+    const gridApiRef = useGridApiRef()
 
     useEffect(() => {
         if (props.selectedFilters)
             setSelectedFilters(props.selectedFilters)
     }, [props.selectedFilters])
 
-    // useEffect(() => {//enable remove filter button when editing board
-    //     let filters = {}
-    //     Object.keys(selectedFilters).forEach(key => {
-    //         // console.log(key)
-    //         // console.log(selectedFilters[key])
-    //         if (!filters[key])
-    //             filters[key] = []
+    useEffect(() => {//enable remove filter button when editing board
+        let filters = {}
+        Object.keys(selectedFilters).forEach(key => {
+            // console.log(key)
+            // console.log(selectedFilters[key])
+            if (!filters[key])
+                filters[key] = []
 
-    //         selectedFilters[key].forEach(item => {
-    //             const criteria = { ...item, disabled: !editBoard }
-    //             filters[key].push(criteria)
-    //         })
-    //     })
-    //     setSelectedFilters(filters)
+            selectedFilters[key].forEach(item => {
+                const criteria = { ...item, disabled: !editBoard }
+                filters[key].push(criteria)
+            })
+        })
+        setSelectedFilters(filters)
 
-    // }, [editBoard])
+    }, [editBoard])
 
     useEffect(() => {
         if (!contacts.items)
@@ -269,8 +273,24 @@ export default function BaseContactsPage(props) {
     }
 
     const onExportAsCSVClick = (e) => {
-
+        gridApiRef.current.exportDataAsCsv()
     }
+
+    const onExportBoardAsCSVClick = (e) => {
+        // getBoardContacts(props.boardInfo.id, 1, contacts.pagination.totalItems)
+        //     .then(resp => {
+        //         console.log(resp[0])
+        //         contactsMultipageSelection.set(resp[0])
+        //         gridApiRef.current.exportDataAsCsv()
+        //         contactsMultipageSelection.clear()
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //         allContacts = []
+        //         app.alert.setError(`Failed to export board: ${props.boardInfo.name}.`)
+        //     })
+    }
+    // console.log(contactsMultipageSelection.selectedData)
 
     const onRemoveTagClick = (e) => {
         console.log("onRemoveTagClick")
@@ -284,13 +304,27 @@ export default function BaseContactsPage(props) {
     }
 
     const onArchiveContactClick = (e) => {
-
+        console.log("onArchiveContactClick")
+        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
+        setLoading(true)
+        archiveContacts(contactIds)
+            .then(resp => {
+                console.log(resp)
+                app.alert.setSuccess(`Contact${contactIds.length > 1 && 's'} successfully archived!`)
+                contactIds.forEach(contactId => contactsMultipageSelection.remove(contactId))
+                contacts.refreshData()
+            })
+            .catch(error => {
+                console.log(error)
+                app.alert.setError(`Failed to archive contact${contactIds.length > 1 && 's'}.`)
+            })
+            .finally(() => setLoading(false))
     }
 
     const onEditBoard = () => {
         console.log("onEditBoard")
         setEditBoard(true)
-        setOpenCreateBoardDialog(true)
+        // setOpenCreateBoardDialog(true)
     }
 
     const boardEditedSuccess = (res) => {
@@ -388,8 +422,8 @@ export default function BaseContactsPage(props) {
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
             filters={filters}
-            actions={props.disabledMainActions ? [] : mainActions}
-            // actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
+            // actions={props.disabledMainActions ? [] : mainActions}
+            actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
@@ -440,7 +474,7 @@ export default function BaseContactsPage(props) {
                             icon: AutoFixHighIcon,
                             options: props.title.includes("Board") ?
                                 [
-                                    //     { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                    { name: 'Export Board as CSV', onClick: onExportBoardAsCSVClick },
                                     //     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
                                     //     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                     //     { name: 'Archive Contact', onClick: onArchiveContactClick },
@@ -545,6 +579,7 @@ export default function BaseContactsPage(props) {
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
+                apiRef={gridApiRef}
                 columnVisibilityModel={props.columnsControl}
                 {...contactsMultipageSelection}
             />
