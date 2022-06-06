@@ -5,13 +5,7 @@ import Stack from '@mui/material/Stack';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
-
-import {
-    useBoards,
-} from 'Api/Hooks'
-import { useContact } from 'Api/ReactQuery';
-
-
+import { useBoards, useContact } from 'Api/ReactQuery';
 
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 

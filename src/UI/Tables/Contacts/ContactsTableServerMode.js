@@ -61,8 +61,6 @@ export default function ContactsTableServerMode({
         return contacts
     }
 
-    console.log(pagination)
-
     const getTreeDataPath = (row) => row.hierarchy;
 
     const groupingColDef = {

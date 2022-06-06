@@ -20,12 +20,7 @@ import { AppContext } from 'Context/AppProvider'
 
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import {
-    useBoards,
-    useUser,
-} from 'Api/Hooks'
-
-import { useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { useBoards,useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -288,7 +283,7 @@ export default function ContactsPage(props) {
 
     const onBoardCreated = () => {
         setOpenCreateBoardDialog(false)
-        boards.refreshData()
+        boards.refetch()
         app.alert.setSuccess('Board created successfully!')
     }
 

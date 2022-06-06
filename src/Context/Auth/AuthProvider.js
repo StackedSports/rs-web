@@ -1,14 +1,17 @@
 import { useState, useContext, useEffect, createContext, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useQueryClient } from 'react-query'
 
 import { AppContext } from 'Context/AppProvider'
 import { login as apiLogin, logout as apiLogout, loginWithTwitter as apiLoginWithTwitter } from 'Api/Endpoints'
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
+
 const AuthContext = createContext()
 AuthContext.displayName = 'AuthContext'
 
 const AuthProvider = (props) => {
+    const queryClient = useQueryClient()
     const app = useContext(AppContext)
     const provider = new TwitterAuthProvider();
     const auth = getAuth();
@@ -79,27 +82,31 @@ const AuthProvider = (props) => {
         apiLogout()
             .then(res => {
                 console.log(res)
-                app.redirect('/')
-                setUser(null)
+                /* setUser(null)
                 localStorage.removeItem('user')
+                app.redirect('/') */
             })
             .catch(error => {
                 console.log(error)
                 // TODO: only temporary, don't know if this should
                 // still be here
-                app.redirect('/')
                 setUser(null)
                 localStorage.removeItem('user')
+                //app.redirect('/')
             })
-            // .finally(() => app.redirect('/'))
+            .finally(() => {
+                setUser(null)
+                localStorage.removeItem('user')
+                app.redirect('/')
+                queryClient.clear()
+            })
         // localStorage.removeItem('user')
-
-        setUser(null)
-        localStorage.removeItem('user')       
+        //setUser(null)
+        //localStorage.removeItem('user')
     }
 
     const utils = useMemo(() => ({
-        user, login,loginWithTwitter, logout
+        user, login, loginWithTwitter, logout
     }), [user])
 
     return (

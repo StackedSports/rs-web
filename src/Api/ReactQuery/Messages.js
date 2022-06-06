@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { getMessage, getMessages } from "Api/Endpoints"
+import { getMessage, getMessageRecipients, getMessages } from "Api/Endpoints"
 
 export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
@@ -47,7 +47,30 @@ export const useMessage = (id) => {
 
     return {
         ...reactQuery,
-        item : reactQuery.data,
+        item: reactQuery.data,
+        loading: reactQuery.isLoading,
+    }
+}
+
+export const useMessageRecipients = (id, currentPage, itemsPerPage) => {
+    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [recipients, setRecipients] = useState()
+
+    const reactQuery = useQuery([`message/${id}/recipients/${pagination.currentPage}/${pagination.itemsPerPage}`], () => getMessageRecipients(id, pagination.currentPage, pagination.itemsPerPage))
+
+    useEffect(() => {
+        if (reactQuery.isSuccess) {
+            const [apiRecipients, apiPagination] = reactQuery.data
+            setPagination(apiPagination)
+            setRecipients(apiRecipients)
+        }
+    }, [reactQuery.isSuccess, reactQuery.data])
+    console.log("recipiets", recipients)
+
+    return {
+        ...reactQuery,
+        items: recipients,
+        pagination,
         loading: reactQuery.isLoading,
     }
 }

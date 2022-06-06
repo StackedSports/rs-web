@@ -213,13 +213,13 @@ export const useBoard = (id) => {
             .finally(() => setLoading(false))
     }, [id, refresh])
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
     return {
         item: board,
-        refreshData,
+        refetch,
         loading,
         error,
     }
@@ -707,7 +707,7 @@ export const useBoards = () => {
 
     }
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
@@ -716,7 +716,7 @@ export const useBoards = () => {
         loading,
         filter,
         clearFilter,
-        refreshData,
+        refetch,
         error,
     }
 }
@@ -1135,10 +1135,11 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
 
 // getMessage
 
-export const useMessage = (id, refresh) => {
+export const useMessage = (id) => {
     const [message, setMessage] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [refresh, setRefresh] = useState(false)
     // console.log(refresh)
 
     useEffect(() => {
@@ -1160,15 +1161,21 @@ export const useMessage = (id, refresh) => {
 
     }, [id, refresh])
 
+    const refetch = () => {
+        setRefresh(old => !old)
+    }
+
     return {
         item: message,
         loading,
+        refetch,
         error
     }
 }
 
-export const useMessageRecipients = (id, refresh, currentPage, itemsPerPage) => {
+export const useMessageRecipients = (id, currentPage, itemsPerPage) => {
     const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
     const [recipients, setRecipients] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [error, setError] = useState(null)
@@ -1188,10 +1195,15 @@ export const useMessageRecipients = (id, refresh, currentPage, itemsPerPage) => 
             .finally(() => setLoading(false))
     }, [id, refresh, pagination.currentPage])
 
+    const refetch = () => {
+        setRefresh(old => !old)
+    }
+
     return {
         items: recipients,
         pagination,
         loading,
+        refetch,
         error
     }
 }

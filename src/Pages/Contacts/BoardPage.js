@@ -6,9 +6,10 @@ import BaseContactsPage from './BaseContactsPage';
 import { AppContext } from 'Context/AppProvider';
 
 import {
-    useBoard,
     useBoardContacts
 } from 'Api/Hooks';
+
+import {useBoard} from 'Api/ReactQuery'
 
 const parseCriteriaNames = (criteria) => {
     switch (criteria) {

@@ -20,11 +20,8 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 // import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import {
-    useBoard,
-    useBoards,
-} from 'Api/Hooks';
-import { useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+
+import {useBoards, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -296,8 +293,7 @@ export default function BaseContactsPage(props) {
     const boardEditedSuccess = (res) => {
         setOpenCreateBoardDialog(false)
         app.alert.setSuccess('Board edited successfully!')
-        // board.refreshData()
-        boards.refreshData()
+        boards.refetch()
         setShowPanelFilters(false)
         setEditBoard(false)
     }
@@ -315,7 +311,7 @@ export default function BaseContactsPage(props) {
             deleteBoard(props.id)
                 .then(res => {
                     app.alert.setSuccess('Board deleted successfully!')
-                    boards.refreshData()
+                    boards.refetch()
                     setRedirect(contactsRoutes.all)
                 })
                 .catch(error => {

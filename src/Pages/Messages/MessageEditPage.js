@@ -2,13 +2,13 @@ import { useState, useRef, useEffect } from 'react'
 
 import MessageCreatePage from './MessageCreatePage'
 
-import { useMessage, useMessageRecipients } from 'Api/Hooks'
+import { useMessage, useMessageRecipients } from 'Api/ReactQuery'
 
 const MessageEditPage = (props) => {
     const messageId = useRef(props.match.params.id)
 
-    const message = useMessage(messageId.current, 1, 1000)
-    const recipients = useMessageRecipients(messageId.current, false)
+    const message = useMessage(messageId.current)
+    const recipients = useMessageRecipients(messageId.current, 1, 1000)
 
     // Platform
     const [platformSelected, setPlatformSelected] = useState(null)
@@ -30,17 +30,17 @@ const MessageEditPage = (props) => {
 
     // Platform
     useEffect(() => {
-        if(!message.item || !message.item.platform)
+        if (!message.item || !message.item.platform)
             return
-        
+
         console.log(message.item)
 
         let platform = message.item.platform.name
         let selectedPlatform = null
 
-        if(platform === 'Twitter')
+        if (platform === 'Twitter')
             selectedPlatform = 'Twitter Dm'
-        else if(platform === 'Rs Text')
+        else if (platform === 'Rs Text')
             selectedPlatform = 'Rs Text'
         else
             selectedPlatform = 'Personal Text'
@@ -51,19 +51,19 @@ const MessageEditPage = (props) => {
 
     // Sender
     useEffect(() => {
-        if(!message.item)
+        if (!message.item)
             return
 
         let sender = message.item.sender
 
-        if(sender)
+        if (sender)
             setSenderSelected([sender])
 
     }, [message.item])
 
     // Recipient
     useEffect(() => {
-        if(!recipients.items)
+        if (!recipients.items)
             return
 
         //let recipients = recipients.item
@@ -74,10 +74,10 @@ const MessageEditPage = (props) => {
             recipients: []
         }
 
-        if(recipients.items.contact_list)
+        if (recipients.items.contact_list)
             selected.recipients = recipients.items.contact_list
 
-        if(recipients.items.filter_list) {
+        if (recipients.items.filter_list) {
             recipients.items.filter_list.forEach(filter => {
                 selected.teamBoards.push({ id: filter.id, name: filter.name })
             })
@@ -85,9 +85,9 @@ const MessageEditPage = (props) => {
 
 
         // let recipients = {
-            // contacts: array of contacts,
-            // privateBoards: array of private boards,
-            // boards: array of boards
+        // contacts: array of contacts,
+        // privateBoards: array of private boards,
+        // boards: array of boards
         // }
 
         setRecipientSelected(selected)
@@ -96,7 +96,7 @@ const MessageEditPage = (props) => {
 
     // Send At
     useEffect(() => {
-        if(!message.item)
+        if (!message.item)
             return
 
         let sendAt = message.item.send_at
@@ -107,12 +107,12 @@ const MessageEditPage = (props) => {
 
     // Media
     useEffect(() => {
-        if(!message.item)
+        if (!message.item)
             return
 
         let media = message.item.media
 
-        if(media && Object.keys(media).length > 0)
+        if (media && Object.keys(media).length > 0)
             setMediaSelected({
                 item: media,
                 type: 'media'
@@ -122,12 +122,12 @@ const MessageEditPage = (props) => {
 
     // Media Placeholder
     useEffect(() => {
-        if(!message.item)
+        if (!message.item)
             return
 
         let placeholder = message.item.media_placeholder
 
-        if(placeholder && Object.keys(placeholder).length > 0)
+        if (placeholder && Object.keys(placeholder).length > 0)
             setMediaSelected({
                 item: placeholder,
                 type: 'placeholder'
@@ -137,27 +137,27 @@ const MessageEditPage = (props) => {
 
     // Message Text
     useEffect(() => {
-        if(!message.item)
+        if (!message.item)
             return
 
         let body = message.item.body
 
-        if(body)
+        if (body)
             setTextMessage(body)
 
     }, [message.item])
 
     return (
         <MessageCreatePage
-          messageId={messageId.current}
-          platformSelected={platformSelected}
-          senderSelected={senderSelected}
-          recipientSelected={recipientSelected}
-          sendAt={sendAt}
-          mediaSelected={mediaSelected}
-          textMessage={textMessage}
-          loading={message.loading}
-          edit
+            messageId={messageId.current}
+            platformSelected={platformSelected}
+            senderSelected={senderSelected}
+            recipientSelected={recipientSelected}
+            sendAt={sendAt}
+            mediaSelected={mediaSelected}
+            textMessage={textMessage}
+            loading={message.loading}
+            edit
         />
     )
 }

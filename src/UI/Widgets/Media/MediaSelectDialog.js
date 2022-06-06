@@ -3,10 +3,8 @@ import { useState, useEffect, useContext } from 'react'
 import TabPanel from '@mui/lab/TabPanel';
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
-import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
-import { useBoards } from 'Api/Hooks'
 import { useMedias, usePlaceholders } from "Api/ReactQuery"
 
 import { AppContext } from 'Context/AppProvider';

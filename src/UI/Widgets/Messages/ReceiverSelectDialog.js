@@ -15,8 +15,7 @@ import useArray from 'Hooks/ArrayHooks';
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useBoards } from 'Api/Hooks';
-import { useContacts } from 'Api/ReactQuery';
+import { useContacts,useBoards } from 'Api/ReactQuery';
 
 import { findByIds } from 'utils/Helper'
 import { Clear } from '@mui/icons-material';
