@@ -58,7 +58,10 @@ export default function ContactsTableServerMode({
                 return [result, ...children]
             }).flat()
         }
+        return contacts
     }
+
+    console.log(pagination)
 
     const getTreeDataPath = (row) => row.hierarchy;
 
@@ -107,6 +110,7 @@ export default function ContactsTableServerMode({
                     Footer: CustomFooter
                 }}
                 onCellClick={redirectToDetails && redirectToDetailsPage}
+                hideFooter={contacts?.length === 0}
                 {...restOfProps}
             />
         </Stack>
