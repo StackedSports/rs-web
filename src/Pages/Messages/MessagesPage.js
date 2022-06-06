@@ -32,7 +32,7 @@ const MessagesPage = (props) => {
     const senders = useTeamMembers()
     const tags = useTags()
 
-    const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user.role.includes('Admin') }
+    const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user?.role?.includes('Admin') }
     const messages = useMessages(1, 10, DEFAULT_MESSAGE_FILTER)
 
     const { filterType, filterValue } = useParams()
