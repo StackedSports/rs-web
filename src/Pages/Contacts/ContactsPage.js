@@ -26,6 +26,7 @@ import {
     addTagsToContacts,
     addTagsToContactsWithNewTags,
     addTagToContact,
+    archiveContacts,
     deleteTagToContact,
     untagContacts,
 } from 'Api/Endpoints'
@@ -245,7 +246,21 @@ export default function ContactsPage(props) {
     }
 
     const onArchiveContactClick = (e) => {
-
+        console.log("onArchiveContactClick")
+        let contactIds = multipageSelection.selectedData.map(contact => contact.id)
+        setLoading(true)
+        archiveContacts(contactIds)
+            .then(resp => {
+                console.log(resp)
+                app.alert.setSuccess(`Contact${contactIds.length > 1 && 's'} successfully archived!`)
+                contactIds.forEach(contactId => multipageSelection.remove(contactId))
+                contacts.refetch()
+            })
+            .catch(error => {
+                console.log(error)
+                app.alert.setError(`Failed to archive contact${contactIds.length > 1 && 's'}.`)
+            })
+            .finally(() => setLoading(false))
     }
 
     const onTagsSelected = async (selectedTagsIds) => {
