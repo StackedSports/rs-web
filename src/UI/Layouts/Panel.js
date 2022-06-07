@@ -9,9 +9,11 @@ import { default as ArrowBack } from '@mui/icons-material/ArrowBackIos';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
 import Dropdown from 'UI/Widgets/Dropdown'
 import PanelFilters from 'UI/Widgets/PanelFilters';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
+import { Tooltip } from '@material-ui/core';
 
 export const PanelDropdown = ({ action, header }) => {
 
@@ -120,6 +122,15 @@ export default function Panel(props) {
                         {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick} />}
                         {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick} />}
                         <h2 className='Title'>{props.title}</h2>
+                        {props.showBackBoardToContacts &&
+                            <Tooltip title="Back to contacts" placement='right-center'>
+                                <ClearIcon
+                                    onClick={props.onBackBoardToContacts}
+                                    style={{ color: "red", cursor: "pointer", fontSize: 27, marginLeft: 8 }}
+                                />
+                            </Tooltip>
+                        }
+
                         <div className="JustifyRight">
                             {renderActions(props.actions)}
                         </div>

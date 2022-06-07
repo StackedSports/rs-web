@@ -89,7 +89,7 @@ export default function BoardPage(props) {
                 })
             })
 
-         console.log("filters", filters)
+        console.log("filters", filters)
 
         return filters
     }, [board.item])
@@ -125,6 +125,7 @@ export default function BoardPage(props) {
         is_shared: board.item?.is_shared,
     }
 
+
     return (
         <BaseContactsPage
             title={title}
@@ -137,6 +138,7 @@ export default function BoardPage(props) {
             selectedFilters={selectedFilters}
             disabledMainActions
             columnsControl={visibleTableColumns}
+            showBackBoardToContacts
         />
     )
 }
