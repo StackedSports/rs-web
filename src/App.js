@@ -9,6 +9,7 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
 import Signup from "./components/signup";
+import SignUp from "Pages/UserOnboarding/SignUp";
 // import Dashboard from "./components/dashboard/index";
 // import Contacts from "./Pages/Contacts";
 // import Chat from "./Pages/Chat";
@@ -59,7 +60,6 @@ function App() {
 				<AppProvider>
 					<div className="body">
 						<Switch>
-							<Route path="/" exact component={Signup} />
 							{/* <Route path="/olddashboard" exact component={Dashboard} />
 						<Route path="/olddashboard/:user" exact component={Dashboard} />
 						<Route path="/oldcontacts" exact component={Contacts} />
@@ -76,6 +76,10 @@ function App() {
 							{/* <Route path="/Media-component" exact component={MediaC} /> */}
 
 							<Route path='/test' component={Test} />
+
+							<Route path="/" exact component={Signup} />
+							{/* <Route path="/" exact component={SignUp} /> */}
+
 							<Route path={routes.contacts.path} component={ContactsRoutes} />
 							<Route path={routes.messages.path} component={MessagesRoutes} />
 							<Route path={routes.media.path} component={MediaRoutes} />
