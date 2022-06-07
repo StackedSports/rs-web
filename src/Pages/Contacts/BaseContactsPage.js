@@ -82,22 +82,22 @@ export default function BaseContactsPage(props) {
             setSelectedFilters(props.selectedFilters)
     }, [props.selectedFilters])
 
-    useEffect(() => {//enable remove filter button when editing board
-        let filters = {}
-        Object.keys(selectedFilters).forEach(key => {
-            // console.log(key)
-            // console.log(selectedFilters[key])
-            if (!filters[key])
-                filters[key] = []
+    // useEffect(() => {//enable remove filter button when editing board
+    //     let filters = {}
+    //     Object.keys(selectedFilters).forEach(key => {
+    //         // console.log(key)
+    //         // console.log(selectedFilters[key])
+    //         if (!filters[key])
+    //             filters[key] = []
 
-            selectedFilters[key].forEach(item => {
-                const criteria = { ...item, disabled: !editBoard }
-                filters[key].push(criteria)
-            })
-        })
-        setSelectedFilters(filters)
+    //         selectedFilters[key].forEach(item => {
+    //             const criteria = { ...item, disabled: !editBoard }
+    //             filters[key].push(criteria)
+    //         })
+    //     })
+    //     setSelectedFilters(filters)
 
-    }, [editBoard])
+    // }, [editBoard])
 
     useEffect(() => {
         if (!contacts.items)
@@ -246,8 +246,8 @@ export default function BaseContactsPage(props) {
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
-        if(contacts.filter)
-        contacts.filter(filter)
+        if (contacts.filter)
+            contacts.filter(filter)
     }
 
     /*     const onContactsSelectionChange = (selection) => {
@@ -320,7 +320,7 @@ export default function BaseContactsPage(props) {
     const onEditBoard = () => {
         console.log("onEditBoard")
         setEditBoard(true)
-        // setOpenCreateBoardDialog(true)
+        setOpenCreateBoardDialog(true)
     }
 
     const boardEditedSuccess = (res) => {
@@ -408,17 +408,23 @@ export default function BaseContactsPage(props) {
         setSelectedFilters(props.selectedFilters)
     }
 
+    const onBackBoardToContacts = (redirect) => {
+        setRedirect(contactsRoutes.all)
+    }
+
     console.log("selectedFilters", selectedFilters)
     console.log("props.selectedFilters", props.selectedFilters)
 
     return (
         <MainLayout
             title={props.title || 'Contacts'}
+            showBackBoardToContacts={props.showBackBoardToContacts}
+            onBackBoardToContacts={onBackBoardToContacts}
             topActionName='+ New Contact'
             onTopActionClick={onTopActionClick}
             filters={filters}
-            // actions={props.disabledMainActions ? [] : mainActions}
-            actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
+            actions={props.disabledMainActions ? [] : mainActions}
+            // actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}

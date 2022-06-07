@@ -40,6 +40,8 @@ export default function MainLayout(props) {
                     onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
                     onBackClick={props.onBackClick}
                     propsPanelFilters={props.propsPanelFilters}
+                    showBackBoardToContacts={props.showBackBoardToContacts}
+                    onBackBoardToContacts={props.onBackBoardToContacts}
                 >
                     {props.alert && (
                         <Snackbar

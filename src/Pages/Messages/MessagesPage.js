@@ -167,6 +167,8 @@ const MessagesPage = (props) => {
         }
     }
 
+    console.log(messages.items)
+
     return (
         <BaseMessagePage
             title={getTitle(filterValue)}
