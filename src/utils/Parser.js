@@ -105,7 +105,7 @@ export const getFullName = (contact) => {
 // 		return status
 // }
 export const getMessageStatusLabel = (status, platform, recipients) => {
-	let message = ''
+	let message = status
 	console.log(recipients)
 	let allMessagesSent = recipients?.status_counts?.sent === recipients?.count
 	let allMessagesPending = recipients?.status_counts?.pending === recipients?.count
@@ -115,6 +115,7 @@ export const getMessageStatusLabel = (status, platform, recipients) => {
 
 	switch (true) {
 		case (allMessagesFailed && (platform === 'Twitter' || platform === 'RS Text')):
+		case (status === "Error" && recipients?.count === 0 && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Failed - Error'
 			break;
 		case (someErrors && (platform === 'Twitter' || platform === 'RS Text')):
@@ -148,7 +149,7 @@ export const getMessageStatusLabel = (status, platform, recipients) => {
 			message = 'Message sending in progress.'
 			break;
 	}
-	
+
 	return message
 }
 export const getMessagePlatformLabel = (platform) => {

@@ -106,7 +106,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     const showMedia = hasMedia || hasMediaPlaceholder
 
     const getPlaceholder = () => {
-       // console.log(recipients)
+        // console.log(recipients)
 
         if (!recipients) {
             // console.log({ ...message.media_placeholder, media: message.media_placeholder_preview })
@@ -153,6 +153,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
+    console.log(recipients)
     return (
         <Grid className="MessagePreview-Container" container style={style}>
             <Grid container style={{ marginBottom: 20 }}>
@@ -178,7 +179,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details label="Recipient(s)" value={getRecipientsLabel(message)} />
                     {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
                     <Details label="Send As" value={getMessagePlatformLabel(message.platform)} />
-                    <Details label="Start Sending At" value={formatDate(message.send_at, 'medium', 'short')} />
+                    <Details label="Start Sending At" value={message.first_sent_at ? formatDate(message.first_sent_at, 'medium', 'short') : '--'} />
                     <Details label="Tags" value={message.tags || '--'} />
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }} />
