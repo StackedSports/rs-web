@@ -591,8 +591,8 @@ export const getMedia = (id) => {
     return AXIOS('get', `media/${id}`)
 }
 
-export const getMedias = (page, perPage, { cancelToken }) => {
-    // console.log(`get media page ${page} items per page ${perPage}`)
+export const getMedias = (page, perPage, filters) => {
+    const { cancelToken} = filters || {}
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`, {}, cancelToken)
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { filterMedias, getMedia, getMediaTypes } from "Api/Endpoints"
-
+import { filterMedias, getMedias, getMedia, getMediaTypes } from "Api/Endpoints"
+import lodash from "lodash"
 
 export const useMedia = (id) => {
     const reactQuery = useQuery(`media/${id}`, () => getMedia(id), {
@@ -21,9 +21,11 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [medias, setMedias] = useState([])
 
-    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterMedias(pagination.currentPage, pagination.itemsPerPage,filters), {
+    //get right function if filter is null or empty get filterMidias else get getMidas
+    const get = filters && !lodash.isEmpty(filters) ? filterMedias : getMedias
+
+    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
-        staleTime: 60000,
     })
 
     useEffect(() => {

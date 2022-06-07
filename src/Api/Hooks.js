@@ -237,7 +237,7 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
 
         // const get = objectNotNull(filters) ? filterContacts : getContacts
 
-        getBoardContacts(boardId, pagination.currentPage, 50, filters)
+        getBoardContacts(boardId, pagination.currentPage, 50)
             .then(([contacts, pag]) => {
                 //console.log('ApiHooks: getContact -----')
                 //console.log(contact)
@@ -252,10 +252,10 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
                 setLoading(false)
             })
 
-    }, [boardId, pagination.currentPage, filters, refresh])
+    }, [boardId, pagination.currentPage, refresh])
 
 
-    const refreshData = () => {
+    const refetch = () => {
         setRefresh(old => !old)
     }
 
@@ -264,8 +264,7 @@ export const useBoardContacts = (boardId, currentPage = 1, itemsPerPage = 50) =>
         pagination,
         loading,
         filter,
-        clearFilter,
-        refreshData,
+        refetch,
         error,
     }
 }

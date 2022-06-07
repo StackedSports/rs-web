@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
-import { filterContacts, getContact } from "Api/Endpoints"
+import { getContacts, filterContacts, getContact } from "Api/Endpoints"
+import lodash from "lodash"
 
 export const useContact = (id) => {
     const reactQuery = useQuery(`contact/${id}`, () => getContact(id), {
@@ -20,7 +21,9 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [contacts, setContacts] = useState()
 
-    const reactQuery = useQuery([`contacts/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => filterContacts(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const get = filters && !lodash.isEmpty(filters) ? filterContacts : getContacts
+
+    const reactQuery = useQuery([`contacts/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
     })
 

@@ -30,6 +30,7 @@ export const EditableLabel = (props) => {
 
     return (
         <StyledInput
+            multiline
             variant={editable ? "outlined" : "standard"}
             editable={editable ? "true" : undefined}
             inputRef={inputRef}

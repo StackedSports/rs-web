@@ -98,12 +98,6 @@ export const MediaDetailsPage = () => {
                 { name: 'Delete', onClick: onDeleteAction },
             ]
         },
-        // {
-        //     name: 'Tag',
-        //     icon: LocalOfferOutlined,
-        //     variant: 'outlined',
-        //     onClick: () => setOpenSelectTagDialog(true),
-        // },
     ]
 
 
@@ -292,7 +286,7 @@ export const MediaDetailsPage = () => {
                                 <DetailsPreview label="Archived on :" value={formatDate(media?.discarded_at)} />
                             </RenderIf>
 
-                            <Stack direction='row' gap={2} alignItems='center'>
+                            <Stack direction='row' gap={2} mt={.5} alignItems='center'>
                                 <Typography variant="info">
                                     Tags :
                                 </Typography>
@@ -528,7 +522,7 @@ const TagsInfo = styled('span')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing(1),
+    padding: theme.spacing(.7),
     border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: theme.shape.borderRadius,
     marginRight: theme.spacing(1),

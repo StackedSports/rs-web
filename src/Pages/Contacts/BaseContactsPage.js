@@ -309,7 +309,6 @@ export default function BaseContactsPage(props) {
                 console.log(resp)
                 app.alert.setSuccess(`Contact${contactIds.length > 1 && 's'} successfully archived!`)
                 contactIds.forEach(contactId => contactsMultipageSelection.remove(contactId))
-                contacts.refreshData()
             })
             .catch(error => {
                 console.log(error)
