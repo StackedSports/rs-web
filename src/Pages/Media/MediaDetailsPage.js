@@ -11,26 +11,28 @@ import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import EditableLabel from 'UI/Forms/Inputs/EditableLabel'
 import RenderIf from "UI/Widgets/RenderIf"
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
+import ErrorPanel from 'UI/Layouts/ErrorPanel'
 
 import { AppContext } from 'Context/AppProvider'
 
-import { useTags, useMedia, usePlaceholders, useContacts,useTeamMembers } from "Api/ReactQuery"
+import { useTags, useMedia, useMediaMutation, usePlaceholders, useContacts, useTeamMembers } from "Api/ReactQuery"
 import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
-import { archiveMedia, deleteMedia, updateMedia, updateMediaForm, addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
+import { addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
 
 export const MediaDetailsPage = () => {
     const app = useContext(AppContext)
     const { id } = useParams()
     const history = useHistory()
+    const { update, remove } = useMediaMutation()
 
     const alert = useMainLayoutAlert()
     const tags = useTags()
     const contacts = useContacts()
     const teamMembers = useTeamMembers()
     const placeholders = usePlaceholders()
-    const { item: media, loading } = useMedia(id)
+    const { item: media, loading, isError, error } = useMedia(id)
 
     const [redirect, setRedirect] = useState('')
     const [itemTags, setItemTags] = useState([])
@@ -63,10 +65,13 @@ export const MediaDetailsPage = () => {
     //console.log(media)
 
     const onArchiveAction = () => {
-        archiveMedia(media.id).then(() => {
-            alert.setSuccess("Media archived")
-        }).catch(err => {
-            alert.setWarning(err.message)
+        update({ id: media.id, data: { archive: true } }, {
+            onSuccess: () => {
+                alert.success("Media archived")
+            },
+            onError: () => {
+                alert.error("Error archiving media")
+            }
         })
     }
 
@@ -78,11 +83,14 @@ export const MediaDetailsPage = () => {
     }
 
     const onDeleteAction = () => {
-        deleteMedia(media.id).then(() => {
-            alert.setSuccess("Media deleted")
-            setRedirect(mediaRoutes.media)
-        }).catch(err => {
-            alert.setWarning(err.message)
+        remove(media.id, {
+            onSuccess: () => {
+                alert.setSuccess("Media deleted")
+                setRedirect(mediaRoutes.media)
+            },
+            onError: err => {
+                alert.setWarning(err.message)
+            }
         })
     }
 
@@ -100,20 +108,22 @@ export const MediaDetailsPage = () => {
         },
     ]
 
-
     const onEditName = (newName) => {
-        updateMedia(media.id, { name: newName }).then(() => {
-            alert.setSuccess("Media name updated")
-            setItemName(newName)
-        }).catch(err => {
-            setItemName(media.name)
-            alert.setWarning(err.message)
+        update({ id: media.id, data: { name: newName } }, {
+            onSuccess: () => {
+                setItemName(newName)
+                alert.setSuccess("Media name updated")
+            },
+            onError: err => {
+                setItemName(media.name)
+                alert.setWarning(err.message)
+            }
         })
     }
 
     const handleChangeTags = (newTags) => {
-        console.log("newTags", newTags)
-        console.log(itemTags)
+        //console.log("newTags", newTags)
+        //console.log(itemTags)
         const sameItems = lodash.intersectionBy(itemTags, newTags, 'id')
 
         if (newTags.length > itemTags.length) {
@@ -141,46 +151,36 @@ export const MediaDetailsPage = () => {
     }
 
     const handleChangeOwner = (owner) => {
-
-        if (owner && owner.length > 0) {
-            const newOwner = owner.pop()
-            updateMedia(media.id, { owner: newOwner.id }).then(() => {
-                setItemOwner([newOwner])
-                alert.setSuccess("Media owner updated to: " + getFullName(newOwner))
-            }
-            ).catch(err => {
+        const newOwner = owner.pop()
+        update({ id: media.id, data: { owner: newOwner ? newOwner.id : null } }, {
+            onSuccess: () => {
+                setItemOwner(newOwner ? [newOwner] : [])
+                if (newOwner)
+                    alert.setSuccess("Media owner updated to: " + getFullName(newOwner))
+                else
+                    alert.setSuccess("Media owner removed")
+            },
+            onError: err => {
                 alert.setWarning(err.message)
-            })
-        } else {
-            updateMedia(media.id, { owner: null }).then(() => {
-                setItemOwner([])
-                alert.setSuccess("Media owner removed")
-            }
-            ).catch(err => {
-                alert.setWarning(err.message)
-            })
-        }
+            },
+        })
     }
 
     const handleChangePlaceholder = (placeholder) => {
-        if (placeholder && placeholder.length > 0) {
-            const newPlaceholder = placeholder.pop()
-            updateMediaForm(media.id, { media_placeholder_id: newPlaceholder.id }).then((res) => {
-                setItemPlaceholder([newPlaceholder])
-                alert.setSuccess("Media placeholder updated")
-            }).catch(err => {
+        const newPlaceholder = placeholder.pop()
+        update({ id: media.id, data: { media_placeholder_id: newPlaceholder ? newPlaceholder.id : null } }, {
+            onSuccess: () => {
+                setItemPlaceholder(newPlaceholder ? [newPlaceholder] : [])
+                if (newPlaceholder)
+                    alert.setSuccess("Media placeholder updated")
+                else
+                    alert.setSuccess("Media placeholder removed")
+            },
+            onError: err => {
                 alert.setWarning(err.message)
-            })
-        } else {
-            updateMediaForm(media.id, { media_placeholder_id: "" }).then((res) => {
-                setItemPlaceholder([])
-                alert.setSuccess("Media placeholder removed")
-            }).catch(err => {
-                alert.setWarning(err.message)
-            })
-        }
+            },
+        })
     }
-
 
     const handlePlaceholderInputSearch = debounce((value) => {
         if (value) {
@@ -204,29 +204,21 @@ export const MediaDetailsPage = () => {
     }, 500)
 
     const handleChangeContact = (contact) => {
-        // return console.log('change contact')
-        if (contact && contact.length > 0) {
-            const newContact = contact.pop()
+        const newContact = contact.pop()
 
-            // Associate media to contact
-            updateMedia(media.id, { team_contact_id: newContact.id })
-                .then(() => {
-                    setItemContact([newContact])
-                    alert.setSuccess("Media contact updated")
-                }
-                ).catch(err => {
-                    alert.setWarning(err.message)
-                })
-        } else {
-            updateMedia(media.id, { team_contact_id: null })
-                .then(() => {
-                    setItemContact([])
-                    alert.setSuccess("Media contact deleted")
-                }
-                ).catch(err => {
-                    alert.setWarning(err.message)
-                })
-        }
+        // Associate media to contact
+        update({ id: media.id, data: { team_contact_id: newContact ? newContact.id : null } }, {
+            onSuccess: () => {
+                setItemContact(newContact ? [newContact] : [])
+                if (newContact)
+                    alert.setSuccess("Media contact updated to: " + getFullName(newContact))
+                else
+                    alert.setSuccess("Media contact removed")
+            },
+            onError: err => {
+                alert.setWarning(err.message)
+            },
+        })
     }
 
     const messagesCountLabel = useMemo(() => {
@@ -246,219 +238,226 @@ export const MediaDetailsPage = () => {
     return (
         <MainLayout
             title="Media Details"
-            actions={mainActions}
+            actions={!isError ? mainActions : null}
             loading={loading}
             alert={alert}
             redirect={redirect}
-            onBackClick={() => history.goBack()}
+            onBackClick={() => history.length > 1 ? history.goBack() : setRedirect(mediaRoutes.media)}
             filtersDisabled
         >
+            {isError &&
+                <ErrorPanel
+                    title={`${error.response.status} ${error.response.statusText}`}
+                    body={error.response.data?.errors[0]?.message}
+                />
+            }
+            <RenderIf condition={!isError}>
+                <Grid container mt={3}>
+                    <GridItemLeft item xs={8} xl={9} >
 
-            <Grid container mt={3}>
-                <GridItemLeft item xs={8} xl={9} >
+                        {/* <Stack direction='row' flexWrap='wrap' gap={2}> */}
+                        <Stack direction='row' flexWrap='nowrap' gap={2}>
 
-                    {/* <Stack direction='row' flexWrap='wrap' gap={2}> */}
-                    <Stack direction='row' flexWrap='nowrap' gap={2}>
-
-                        <MediaPreview
-                            miniImage
-                            item={media}
-                            loading={loading}
-                            type='media'
-                            onClick={() => setOpenImageModal(true)}
-                            cardStyle={{ width: "300px" }}
-                        />
-
-                        <Box flex='1 1 auto' >
-
-                            <EditableLabel
-                                placeholder='Media Name'
-                                value={itemName}
-                                onEdit={onEditName}
+                            <MediaPreview
+                                miniImage
+                                item={media}
+                                loading={loading}
+                                type='media'
+                                onClick={() => setOpenImageModal(true)}
+                                cardStyle={{ width: "300px" }}
                             />
 
-                            <DetailsPreview label="File Name:" value={media?.file_name} />
-                            <DetailsPreview label="File Type:" value={media?.file_type} />
-                            <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
-                            <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
-                            <DetailsPreview label="File Size:" value={fileSizeFormatted} />
-                            <RenderIf condition={media?.discarded_at}>
-                                <DetailsPreview label="Archived on :" value={formatDate(media?.discarded_at)} />
-                            </RenderIf>
+                            <Box flex='1 1 auto' >
 
-                            <Stack direction='row' gap={2} mt={.5} alignItems='center'>
-                                <Typography variant="info">
-                                    Tags :
-                                </Typography>
-                                {media?.tags.map((tag) => (
-                                    <TagsInfo key={tag.id}>
-                                        {tag.name}
-                                    </TagsInfo>
-                                ))}
-                            </Stack>
-                        </Box>
-                    </Stack>
-
-                    <Typography variant='subtitle1' >
-                        Owner
-                    </Typography>
-                    <SearchableSelector
-                        multiple
-                        options={teamMembers.items}
-                        loading={teamMembers.loading}
-                        value={itemOwner}
-                        onChange={handleChangeOwner}
-                        label="+ Add Owner"
-                        placeholder="Search for owner"
-                        getOptionLabel={(option) => getFullName(option)}
-                        getChipLabel={(option) => getFullName(option)}
-                    />
-
-                    <Typography variant='subtitle1' >
-                        Tags
-                    </Typography>
-                    <SearchableSelector
-                        multiple
-                        options={tags.items}
-                        value={itemTags}
-                        onChange={handleChangeTags}
-                        label="+ Add tag"
-                        placeholder="Search for tags"
-                        getOptionLabel={(option) => option?.name}
-                        getChipLabel={(option) => option?.name}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    icon={<CheckBoxOutlineBlank fontSize="small" />}
-                                    checkedIcon={<CheckBox fontSize="small" />}
-                                    style={{ marginRight: 8 }}
-                                    checked={selected}
+                                <EditableLabel
+                                    placeholder='Media Name'
+                                    value={itemName}
+                                    onEdit={onEditName}
                                 />
-                                {option.name}
-                            </li>
-                        )}
-                    />
 
-                    <Stack direction='row' alignItems='center' flexWrap='wrap' gap={1} >
+                                <DetailsPreview label="File Name:" value={media?.file_name} />
+                                <DetailsPreview label="File Type:" value={media?.file_type} />
+                                <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
+                                <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
+                                <DetailsPreview label="File Size:" value={fileSizeFormatted} />
+                                <RenderIf condition={media?.discarded_at}>
+                                    <DetailsPreview label="Archived on :" value={formatDate(media?.discarded_at)} />
+                                </RenderIf>
 
-                        <Box sx={{ flex: '1 1 auto', }} >
+                                <Stack direction='row' gap={2} mt={.5} alignItems='center'>
+                                    <Typography variant="info">
+                                        Tags :
+                                    </Typography>
+                                    {media?.tags.map((tag) => (
+                                        <TagsInfo key={tag.id}>
+                                            {tag.name}
+                                        </TagsInfo>
+                                    ))}
+                                </Stack>
+                            </Box>
+                        </Stack>
 
-                            <Typography variant='subtitle1' mb={2}  >
-                                Association to Placeholder
-                            </Typography>
-                            <SearchableSelector
-                                multiple
-                                options={placeholders.items}
-                                loading={placeholders.loading}
-                                value={itemPlaceholder}
-                                onChange={handleChangePlaceholder}
-                                label="Placeholder"
-                                placeholder="Search for placeholder"
-                                getOptionLabel={(option) => option?.name}
-                                onInputChange={(event, newInputValue) => { handlePlaceholderInputSearch(newInputValue) }}
-                                getChipLabel={(option) => option?.name}
-                            />
-
-                        </Box>
-
-                        <Box sx={{ flex: '1 1 auto', }} >
-
-                            <Typography variant='subtitle1' mb={2} >
-                                Association to Contact
-                            </Typography>
-
-                            <SearchableSelector
-                                multiple
-                                options={contacts.items}
-                                loading={contacts.loading}
-                                value={itemContact}
-                                label="Contact"
-                                placeholder="Search for contact"
-                                clearOnBlur
-                                onChange={handleChangeContact}
-                                getOptionLabel={(option) => getFullName(option)}
-                                onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}
-                                getChipLabel={(option) => getFullName(option)}
-                            />
-                        </Box>
-                    </Stack>
-                </GridItemLeft>
-
-                <GridItemRight item xs={4} xl={3} >
-                    <MediaStatsColumn>
-                        <Typography variant='subtitle1'>
-                            Media Status
+                        <Typography variant='subtitle1' >
+                            Owner
                         </Typography>
-                        <DetailsPreview
-                            direction="column"
-                            label="Sent in:"
-                            value={messagesCountLabel}
+                        <SearchableSelector
+                            multiple
+                            options={teamMembers.items}
+                            loading={teamMembers.loading}
+                            value={itemOwner}
+                            onChange={handleChangeOwner}
+                            label="+ Add Owner"
+                            placeholder="Search for owner"
+                            getOptionLabel={(option) => getFullName(option)}
+                            getChipLabel={(option) => getFullName(option)}
                         />
-                        <DetailsPreview
-                            direction="column"
-                            label="Media Published in:"
-                            value={`${media?.activity?.tweets} Tweets`}
+
+                        <Typography variant='subtitle1' >
+                            Tags
+                        </Typography>
+                        <SearchableSelector
+                            multiple
+                            options={tags.items}
+                            value={itemTags}
+                            onChange={handleChangeTags}
+                            label="+ Add tag"
+                            placeholder="Search for tags"
+                            getOptionLabel={(option) => option?.name}
+                            getChipLabel={(option) => option?.name}
+                            renderOption={(props, option, { selected }) => (
+                                <li {...props}>
+                                    <Checkbox
+                                        icon={<CheckBoxOutlineBlank fontSize="small" />}
+                                        checkedIcon={<CheckBox fontSize="small" />}
+                                        style={{ marginRight: 8 }}
+                                        checked={selected}
+                                    />
+                                    {option.name}
+                                </li>
+                            )}
                         />
-                        <Stack>
-                            <Typography variant='subtitle2' gutterBottom >
-                                Messaging Stats:
-                            </Typography>
 
-                            <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1'>
-                                    -
-                                </Typography>
-                                <Typography variant='caption'>
-                                    Response Rate (0/0)
-                                </Typography>
-                            </Stack>
+                        <Stack direction='row' alignItems='center' flexWrap='wrap' gap={1} >
 
-                            <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1'>
-                                    -
+                            <Box sx={{ flex: '1 1 auto', }} >
+
+                                <Typography variant='subtitle1' mb={2}  >
+                                    Association to Placeholder
                                 </Typography>
-                                <Typography variant='caption'>
-                                    Opt-out Rate (0/0)
+                                <SearchableSelector
+                                    multiple
+                                    options={placeholders.items}
+                                    loading={placeholders.loading}
+                                    value={itemPlaceholder}
+                                    onChange={handleChangePlaceholder}
+                                    label="Placeholder"
+                                    placeholder="Search for placeholder"
+                                    getOptionLabel={(option) => option?.name}
+                                    onInputChange={(event, newInputValue) => { handlePlaceholderInputSearch(newInputValue) }}
+                                    getChipLabel={(option) => option?.name}
+                                />
+
+                            </Box>
+
+                            <Box sx={{ flex: '1 1 auto', }} >
+
+                                <Typography variant='subtitle1' mb={2} >
+                                    Association to Contact
                                 </Typography>
-                            </Stack>
+
+                                <SearchableSelector
+                                    multiple
+                                    options={contacts.items}
+                                    loading={contacts.loading}
+                                    value={itemContact}
+                                    label="Contact"
+                                    placeholder="Search for contact"
+                                    clearOnBlur
+                                    onChange={handleChangeContact}
+                                    getOptionLabel={(option) => getFullName(option)}
+                                    onInputChange={(event, newInputValue) => handleContactInputSearch(newInputValue)}
+                                    getChipLabel={(option) => getFullName(option)}
+                                />
+                            </Box>
                         </Stack>
+                    </GridItemLeft>
 
-                        <Stack>
-                            <Typography variant="info" gutterBottom >
-                                Post Stats:
+                    <GridItemRight item xs={4} xl={3} >
+                        <MediaStatsColumn>
+                            <Typography variant='subtitle1'>
+                                Media Status
                             </Typography>
+                            <DetailsPreview
+                                direction="column"
+                                label="Sent in:"
+                                value={messagesCountLabel}
+                            />
+                            <DetailsPreview
+                                direction="column"
+                                label="Media Published in:"
+                                value={`${media?.activity?.tweets} Tweets`}
+                            />
+                            <Stack>
+                                <Typography variant='subtitle2' gutterBottom >
+                                    Messaging Stats:
+                                </Typography>
 
-                            <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1'>
-                                    -
-                                </Typography>
-                                <Typography variant='caption'>
-                                    Contact Engagement
-                                </Typography>
+                                <Stack justifyContent='center' alignItems='center'>
+                                    <Typography variant='subtitle1'>
+                                        -
+                                    </Typography>
+                                    <Typography variant='caption'>
+                                        Response Rate (0/0)
+                                    </Typography>
+                                </Stack>
+
+                                <Stack justifyContent='center' alignItems='center'>
+                                    <Typography variant='subtitle1'>
+                                        -
+                                    </Typography>
+                                    <Typography variant='caption'>
+                                        Opt-out Rate (0/0)
+                                    </Typography>
+                                </Stack>
                             </Stack>
 
-                            <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1'>
-                                    -
+                            <Stack>
+                                <Typography variant="info" gutterBottom >
+                                    Post Stats:
                                 </Typography>
-                                <Typography variant='caption'>
-                                    Favorites from Contacts
-                                </Typography>
+
+                                <Stack justifyContent='center' alignItems='center'>
+                                    <Typography variant='subtitle1'>
+                                        -
+                                    </Typography>
+                                    <Typography variant='caption'>
+                                        Contact Engagement
+                                    </Typography>
+                                </Stack>
+
+                                <Stack justifyContent='center' alignItems='center'>
+                                    <Typography variant='subtitle1'>
+                                        -
+                                    </Typography>
+                                    <Typography variant='caption'>
+                                        Favorites from Contacts
+                                    </Typography>
+                                </Stack>
+
+                                <Stack justifyContent='center' alignItems='center'>
+                                    <Typography variant='subtitle1'>
+                                        -
+                                    </Typography>
+                                    <Typography variant='caption'>
+                                        Retweets front Contacts
+                                    </Typography>
+                                </Stack>
                             </Stack>
 
-                            <Stack justifyContent='center' alignItems='center'>
-                                <Typography variant='subtitle1'>
-                                    -
-                                </Typography>
-                                <Typography variant='caption'>
-                                    Retweets front Contacts
-                                </Typography>
-                            </Stack>
-                        </Stack>
-
-                    </MediaStatsColumn>
-                </GridItemRight>
-            </Grid>
+                        </MediaStatsColumn>
+                    </GridItemRight>
+                </Grid>
+            </RenderIf>
             <MediaCarousel
                 items={[media]}
                 index={openImageModal ? 0 : null}

@@ -1007,44 +1007,7 @@ export const updateMedia = (mediaId, data) => {
         media: { ...data }
     }
 
-    console.log(body)
-
     return PUT(`media/${mediaId}`, body)
-}
-
-export const updateMediaForm = (mediaId, data) => {
-
-    let bodyFormData = new FormData();
-    if (data.name)
-        bodyFormData.append('media[name]', data.name)
-    if (data.team_contact_id)
-        bodyFormData.append('media[team_contact_id]', data.team_contact_id)
-    if (data.media_placeholder_id)
-        bodyFormData.append('media[media_placeholder_id]', data.media_placeholder_id)
-    if (data.owner)
-        bodyFormData.append('media[owner]', data.owner)
-    if (data.archive)
-        bodyFormData.append('media[archive]', data.archive)
-
-    return new Promise((resolve, reject) => {
-
-        let myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json; version=1");
-        myHeaders.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
-        myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
-
-        let requestOptions = {
-            method: 'PUT',
-            headers: myHeaders,
-            body: bodyFormData,
-            redirect: 'follow'
-        };
-
-        fetch(URL + `media/${mediaId}`, requestOptions)
-            .then(response => response.json())
-            .then(result => resolve(result))
-            .catch(error => reject(error))
-    })
 }
 
 /**
