@@ -19,7 +19,7 @@ import useAlerts from 'Hooks/AlertHooks'
 
 import { formatDate, getFullName } from "utils/Parser"
 
-import { useTeamMembers, usePlaceholders, useTags, useContacts } from 'Api/ReactQuery';
+import { useTeamMembers, usePlaceholders, useTags, useContacts, useMediaMutation } from 'Api/ReactQuery';
 
 import {
 	getAssociatedContactByFileName,
@@ -30,7 +30,7 @@ import {
 	uploadMedia,
 	addTagToMedia
 } from 'Api/Endpoints'
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@mui/material/Tooltip';
 
 export const FileDropZone = (props) => {
 
@@ -106,6 +106,7 @@ export default function UploadMediaDialog(props) {
 	const tags = useTags()
 	const placeholders = usePlaceholders(1, 24)
 	const contacts = useContacts()
+	const { create: uploadMediaAction } = useMediaMutation()
 
 	const [selectedOwner, setSelectedOwner] = useState([])
 	const [selectedTags, setSelectedTags] = useState([])
@@ -368,10 +369,8 @@ export default function UploadMediaDialog(props) {
 
 			// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
 
-			uploadMedia(media)
-				.then(res => {
-					// console.log(res)
-
+			uploadMediaAction(media, {
+				onSuccess: (res) => {
 					let mediaRes = res
 
 					let temp2 = Object.assign([], tempUploadStatus)
@@ -393,12 +392,8 @@ export default function UploadMediaDialog(props) {
 							})
 						//}
 					})
-
-					// last id 314852
-				})
-				.catch(error => {
-					// console.log(error)
-
+				},
+				onError: (error) => {
 					let temp2 = Object.assign([], tempUploadStatus)
 					temp2[index] = "failed"
 					tempUploadStatus[index] = "failed"
@@ -406,11 +401,8 @@ export default function UploadMediaDialog(props) {
 					// console.log(temp2)
 
 					failedCount++
-
-					//tempUploadStatus[index] = "failed"
-					//setUploadStatus(tempUploadStatus)
-				})
-				.finally(() => {
+				},
+				onSettled: () => {
 					//setUploadStatus(tempUploadStatus)
 					count--
 
@@ -418,7 +410,62 @@ export default function UploadMediaDialog(props) {
 						setUploadingMedia(false)
 						onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
 					}
-				})
+				}
+
+
+			})
+
+			/* 			uploadMedia(media)
+							.then(res => {
+								// console.log(res)
+			
+								let mediaRes = res
+			
+								let temp2 = Object.assign([], tempUploadStatus)
+								tempUploadStatus[index] = "success"
+								temp2[index] = "success"
+								setUploadStatus(temp2)
+								// console.log(temp2)
+			
+								successCount++
+			
+								selectedTags.forEach(tag => {
+									//if(typeof tag.id == "string" && tag.id.includes("new-")) {
+									addTagToMedia(mediaRes.id, tag.name)
+										.then(res => {
+											//console.log(res)
+										})
+										.catch(error => {
+											//console.log(error)
+										})
+									//}
+								})
+			
+								// last id 314852
+							})
+							.catch(error => {
+								// console.log(error)
+			
+								let temp2 = Object.assign([], tempUploadStatus)
+								temp2[index] = "failed"
+								tempUploadStatus[index] = "failed"
+								setUploadStatus(temp2)
+								// console.log(temp2)
+			
+								failedCount++
+			
+								//tempUploadStatus[index] = "failed"
+								//setUploadStatus(tempUploadStatus)
+							})
+							.finally(() => {
+								//setUploadStatus(tempUploadStatus)
+								count--
+			
+								if (count == 0) {
+									setUploadingMedia(false)
+									onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
+								}
+							}) */
 		})
 	}
 

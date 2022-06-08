@@ -24,8 +24,8 @@ export default function ErrorPanel(props) {
                 <span style={{...styles.span, marginBottom: 60}}>
                     When trying to access your message, we got the following error:
                 </span>
-                <h1 style={{ fontWeight: 'bold', textAlign: 'center', color: '#555' }}>{props.title}</h1>
-                <span style={{...styles.span, fontSize: 26, color: '#555', maxWidth: 400 }}>
+                <h1 style={{ fontWeight: 'bold', textAlign: 'center', color: '#bbb' }}>{props.title}</h1>
+                <span style={{...styles.span, fontSize: 26, color: '#bbb', maxWidth: 400 }}>
                     {props.body}
                 </span>
             </Stack>
@@ -40,7 +40,7 @@ const styles = {
     },
     span: {
         fontSize: 22,
-        color: '#bbb',
+        color: '#555',
         textAlign: 'center',
         fontWeight: 'bold',
         maxWidth: 300

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery } from "react-query"
-import { filterMedias, getMedias, getMedia, getMediaTypes } from "Api/Endpoints"
+import { useQuery, useMutation, useQueryClient } from "react-query"
+import { filterMedias, getMedias, getMedia, getMediaTypes, updateMedia, deleteMedia, uploadMedia } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useMedia = (id) => {
-    const reactQuery = useQuery(`media/${id}`, () => getMedia(id), {
+    const reactQuery = useQuery(['media', id], () => getMedia(id), {
         select: (data) => data[0],
+        enabled: !!id,
     })
 
     return {
@@ -79,5 +80,37 @@ export const useMediaTypes = () => {
         ...reactQuery,
         items: mediaTypes,
         loading: reactQuery.isLoading,
+    }
+}
+
+export const useMediaMutation = () => {
+    const queryClient = useQueryClient();
+
+    const update = useMutation(({ id, data }) => updateMedia(id, data),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.invalidateQueries('media', { active: true })
+                queryClient.invalidateQueries('medias')
+            },
+        })
+
+    const remove = useMutation((id) => deleteMedia(id),
+        {
+            onSuccess: () => {
+                queryClient.removeQueries('media', { active: true })
+            }
+        })
+
+    const create = useMutation((media) => uploadMedia(media),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('medias')
+            },
+        })
+
+    return {
+        update: update.mutate,
+        remove: remove.mutate,
+        create: create.mutate,
     }
 }

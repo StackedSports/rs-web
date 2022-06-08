@@ -8,12 +8,11 @@ export const EditableLabel = (props) => {
     const inputRef = useRef(null)
 
     useEffect(() => {
-        if(props.value ==! undefined || props.value != null) 
-        setValue(props.value)
+        if (props.value == !undefined || props.value != null)
+            setValue(props.value)
     }, [props.value])
 
     const onEdit = (e) => {
-        console.log('cliquei')
         props.onEdit(value)
         setEditable(false)
     }
@@ -28,16 +27,21 @@ export const EditableLabel = (props) => {
         inputRef.current.focus()
     }
 
+    const onChange = (e) => {
+        setValue(e.target.value)
+    }
+
     return (
         <StyledInput
             multiline
             variant={editable ? "outlined" : "standard"}
             editable={editable ? "true" : undefined}
             inputRef={inputRef}
+            fullWidth
             disableUnderline={true}
             value={value}
             readOnly={!editable}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={onChange}
             onClick={setEditableTrue}
             onBlur={onCancel}
             placeholder={props.placeholder}
