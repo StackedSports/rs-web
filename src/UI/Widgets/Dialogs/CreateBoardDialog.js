@@ -18,8 +18,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import Button from '../Buttons/Button'
-import { createNewBoard, updateBoard } from 'Api/Endpoints'
-
+import { useBoardMutation } from 'Api/ReactQuery';
 
 const validationSchema = yup.object({
   name: yup
@@ -38,6 +37,7 @@ const validationSchema = yup.object({
 export const CreateBoardDialog = (props) => {
 
   const [error, setError] = useState(null)
+  const { create: createBoard, update: updateBoard } = useBoardMutation()
 
   const formik = useFormik({
     initialValues: {
@@ -53,7 +53,18 @@ export const CreateBoardDialog = (props) => {
           criteria: props.selectedFilters
         }
         // console.log(data)
-        updateBoard(props.boardInfo?.id, data)
+        updateBoard({ id: props.boardInfo?.id, data }, {
+          onSuccess: (res) => {
+            props.boardEditedSuccess(res)
+          },
+          onError: (err) => {
+            props.boardEditedFailure(error)
+          },
+          onSettled: () => {
+            formikHelpers.setSubmitting(false)
+          }
+        })
+       /*  updateBoard(props.boardInfo?.id, data)
           .then(res => {
             console.log(res)
             props.boardEditedSuccess(res)
@@ -62,18 +73,18 @@ export const CreateBoardDialog = (props) => {
             console.log(error)
             props.boardEditedFailure(error)
           })
-          .finally(() => formikHelpers.setSubmitting(false))
+          .finally(() => formikHelpers.setSubmitting(false)) */
 
       } else {
-        createNewBoard(values, props.selectedFilters)
-          .then((res) => {
-            console.log(values, res)
+        createBoard({ data: values, filters: props.selectedFilters }, {
+          onSuccess: (res) => {
             props.onBoardCreated()
-          })
-          .catch(error => {
+          },
+          onError: (error) => {
             formikHelpers.setSubmitting(false)
             setError(error)
-          })
+          }
+        })
       }
     }
   });

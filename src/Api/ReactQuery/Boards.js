@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
-import { useQuery } from "react-query"
-import { getBoard, getBoardContacts, getBoards } from "Api/Endpoints"
+import { useQuery, useQueryClient, useMutation } from "react-query"
+import { createNewBoard,updateBoard ,getBoard, getBoardContacts, getBoards } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 
 export const useBoard = (id) => {
-    const reactQuery = useQuery(`board/${id}`, () => getBoard(id), {
+    const reactQuery = useQuery(['board', id], () => getBoard(id), {
         select: (data) => data[0],
         enabled: !!id,
     })
@@ -54,4 +54,22 @@ export const useBoardContacts = (boardId, currentPage, itemsPerPage) => {
     }
 }
 
+export const useBoardMutation = () => {
+    const queryClient = useQueryClient();
+
+    const update = useMutation(({ id, data }) => updateBoard(id, data), {        
+        onSuccess: () => queryClient.invalidateQueries(`boards`),
+    });
+
+    const remove = useMutation();
+    const create = useMutation(({ data, filters }) => createNewBoard(data, filters), {
+        onSuccess: () => queryClient.resetQueries('boards'),
+    });
+
+    return {
+        update: update.mutate,
+        remove: remove.mutate,
+        create: create.mutate,
+    }
+}
 

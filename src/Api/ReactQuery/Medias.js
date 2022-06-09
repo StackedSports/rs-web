@@ -98,7 +98,7 @@ export const useMediaMutation = () => {
         {
             onSuccess: () => {
                 queryClient.cancelQueries('media', { active: true })
-                queryClient.invalidateQueries('medias')
+                queryClient.resetQueries('medias')
             }
         })
 
