@@ -69,23 +69,25 @@ export const MediaPage = (props) => {
             options: mediaTypes.items,
             isUnique: true,
         },
+        /* hidden for now
         "distributed": {
             label: 'Distributed',
             options: [],
-        },
+        }, */
         "owner": {
             label: 'Owner',
             options: teamMembers.items || [],
             optionsLabel: (item) => getFullName(item),
             onSearch: (search) => teamMembers.search(search),
         },
+        /* hidden for now api doesn't support it
         "contact_id": {
             label: 'Associated To',
             options: contacts.items || [],
             optionsLabel: (item) => getFullName(item),
             onSearch: (value) => value === '' ? contacts.clearFilter() : contacts.filter({ search: value }),
             loading: contacts.loading,
-        },
+        }, */
         "dateUploaded": {
             label: 'Date Uploaded',
             type: 'date',
