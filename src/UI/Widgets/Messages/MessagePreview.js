@@ -172,7 +172,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details
                         label="Status"
                         // value={getMessageStatusLabel(message.status)}
-                        value={getMessageStatusLabel(message.status, message.platform.name, recipients)}
+                        value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
                         status={message.status}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
