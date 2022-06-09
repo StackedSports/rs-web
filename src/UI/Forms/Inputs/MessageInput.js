@@ -146,10 +146,9 @@ const InputPlatform = (props) => {
         }
     }, [props.selected])
 
-    console.log(props.platforms)
-    console.log(props.selected)
-
-    console.log(availablePlatforms)
+    //console.log(props.platforms)
+    //console.log(props.selected)
+    //console.log(availablePlatforms)
 
     const header = () => selectedPlatform ? (
         <InputSelected icon={selectedPlatform.icon} name={selectedPlatform.name} onRemove={props.onRemove} />

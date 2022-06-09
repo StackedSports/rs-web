@@ -8,18 +8,20 @@ import { tweetRoutes } from 'Routes/Routes';
 import { AppContext } from 'Context/AppProvider';
 
 import TweetPage from "./TweetPage";
-import { useSnippets, useTeamMembers, useUser, } from 'Api/Hooks';
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
-import { formatDate } from 'utils/Parser';
 import DateTimePicker from 'UI/Widgets/DateTimePicker';
-import { postTo } from 'utils/Data';
-import { uploadMedia } from 'Api/Endpoints';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
+import { formatDate } from 'utils/Parser';
+import { postTo } from 'utils/Data';
+import { useUser } from 'Api/Hooks';
+import { useSnippets, useTeamMembers, useMediaMutation } from 'Api/ReactQuery';
 
 const TweetCreatePage = (props) => {
   const app = useContext(AppContext)
   const user = useUser()
-  const snippets = useSnippets().items
+  const snippets = useSnippets()
+  const teamMembers = useTeamMembers()
+  const { create: uploadMedia } = useMediaMutation()
 
   const [sendAt, setSendAt] = useState('ASAP')
   const [postToOptions, setPostToOptions] = useState([])
@@ -31,7 +33,6 @@ const TweetCreatePage = (props) => {
   const [mediaRemoved, setMediaRemoved] = useState(null)
   const [textMessage, setTextMessage] = useState('')
 
-  const teamMembers = useTeamMembers()
 
   useEffect(() => {
     if (!teamMembers.items)
@@ -168,17 +169,19 @@ const TweetCreatePage = (props) => {
     }
     // console.log(media)
 
-    uploadMedia(media)
-      .then(res => {
+    uploadMedia(media, {
+      onSuccess: (res) => {
         app.alert.setSuccess("Uploaded media successfully!")
-        console.log(res)
         onMediaSelected(res, "media")
-      })
-      .catch(error => {
+      },
+      onError: (err) => {
         app.alert.setError("Failed to upload media.")
-        console.log(error)
-      })
-      .finally(() => setUploadingMedia(false))
+        console.log(err)
+      },
+      onSettled: () => {
+        setUploadingMedia(false)
+      }
+    })
   }
 
   const onMediaSelectedClick = (e) => {
@@ -245,7 +248,7 @@ const TweetCreatePage = (props) => {
         type='text'
         label='Message Text:'
         placeholder='Type message'
-        snippets={snippets}
+        snippets={snippets.items}
         hideTextPlaceholders
         value={textMessage}
         onChange={onTextAreaChange}

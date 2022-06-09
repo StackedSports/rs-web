@@ -187,12 +187,12 @@ export default function ReceiverSelectDialog(props) {
 
     const onSearch = (searchTerm, tabIndex) => {
         contacts.filter({ search: searchTerm })
-        boards.filter({ search: searchTerm })
+        //boards.filter({ search: searchTerm })
     }
 
     const onClearSearch = (tabIndex) => {
         contacts.clearFilter()
-        boards.clearFilter()
+        //boards.clearFilter()
     }
 
     const onSelectionConfirm = (e) => {
@@ -237,7 +237,7 @@ export default function ReceiverSelectDialog(props) {
             onConfirmSelection={onSelectionConfirm}
             onSearch={onSearch}
             onClearSearch={onClearSearch}
-            onClose={props.onClose}
+            onClose={onClose}
         >
             <TabPanel value={0} index={0}>
                 <BoardsTable mini
