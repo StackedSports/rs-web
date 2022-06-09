@@ -67,10 +67,10 @@ export const MediaDetailsPage = () => {
     const onArchiveAction = () => {
         update({ id: media.id, data: { archive: true } }, {
             onSuccess: () => {
-                alert.success("Media archived")
+                alert.setSuccess("Media archived")
             },
-            onError: () => {
-                alert.error("Error archiving media")
+            onError: (e) => {
+                alert.setWarning(`Error archiving media: ${e.message}`)
             }
         })
     }
