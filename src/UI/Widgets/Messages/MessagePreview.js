@@ -64,7 +64,7 @@ const Details = ({ label, value, direction = 'row', style, labelArray = false, t
 }
 
 const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
-    console.log("message", message)
+    // console.log("message", message)
 
     if (!message)
         return (
@@ -166,7 +166,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details label="Recipient(s)" value={getRecipientsLabel(message)} />
                     {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
                     <Details label="Send As" value={getMessagePlatformLabel(message.platform)} />
-                    <Details label="Start Sending At" value={message.first_sent_at ? formatDate(message.first_sent_at, 'medium', 'short') : '--'} />
+                    <Details label="Start Sending At" value={message.first_sent_at ? formatDate(message.first_sent_at, 'medium', 'short') : formatDate(message.send_at, 'medium', 'short')} />
                     <Details label="Tags" value={message.tags || '--'} />
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }} />

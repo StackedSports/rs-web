@@ -189,7 +189,7 @@ const MessageDetailsPage = (props) => {
     const onScheduleMessageClick = () => {
         console.log('schedule')
 
-        sendMessage(message.item.id)
+        sendMessage(message.item)
             .then(res => {
                 console.log(res)
                 alert.setSuccess('Message scheduled successfully!')
@@ -432,6 +432,8 @@ const MessageDetailsPage = (props) => {
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
     // console.log(hasMedia || hasMediaPlaceholder)
+
+    console.log(message.item)
 
     return (
         <BaseMessagePage
