@@ -412,9 +412,6 @@ export default function BaseContactsPage(props) {
         setRedirect(contactsRoutes.all)
     }
 
-    console.log("selectedFilters", selectedFilters)
-    console.log("props.selectedFilters", props.selectedFilters)
-
     return (
         <MainLayout
             title={props.title || 'Contacts'}

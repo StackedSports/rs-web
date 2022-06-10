@@ -2,8 +2,7 @@ import './MessageRecipientsTable.css'
 
 import { useState, useEffect } from 'react'
 
-import { Grid } from "@material-ui/core"
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 
@@ -49,8 +48,6 @@ const MessageRecipientsTable = (props) => {
 
         if(props.recipients.contact_list)
             tmp = tmp.concat(props.recipients.contact_list)
-        
-        console.log(props.hasMedia)
 
         setContacts(tmp)
         setColumns(getColumns(props.platform?.name, tmp[0]?.placeholders, hasFilters, props.hasMedia, props.hasCoach))
@@ -71,7 +68,7 @@ const MessageRecipientsTable = (props) => {
     return (
         <Stack spacing={2} style={{ width: '100%', height: 600, position: 'relative' }}>
             {props.loading && <LoadingOverlay/>}
-            <DataGrid sx={{ m: 0 }}
+            <DataGridPro sx={{ m: 0 }}
             //   rows={props.contacts ? props.contacts : []}
               rows={contacts}
               columns={columns}
@@ -93,14 +90,14 @@ const MessageRecipientsTable = (props) => {
             //   disableColumnSelector={true}
             />
             {props.pagination && props.pagination.totalPages > 1 && (
-                <Grid container justifyContent="center" alignItems="center">
+                <Stack justifyContent="center" alignItems="center">
                     <Pagination
                       count={props.pagination.totalPages}
                       page={props.pagination.currentPage}
                       onChange={onPageChange}
                       disabled={props.loading}
                     />
-                </Grid>
+                </Stack>
             )}
 
             <MediaCarousel

@@ -13,7 +13,7 @@ const fullName = {
 const boardName = {
     field: 'filterName',
     headerName: 'Board Name',
-    width: 180,
+    flex: 1,
     resizable: true,
     valueGetter: (params) => params.row.filterName || ''
 }
@@ -63,8 +63,8 @@ const media = {
 const deliveredAt = {
     field: 'deliveredAt',
     headerName: 'Delivered At',
-    width: 130,
-    valueGetter: (params) => params.row?.status === 'Sent' ? formatDate(params.row.last_sent_at) : ''
+    flex: 1,
+    valueGetter: (params) => params.row.sent_at ? formatDate(params.row.sent_at, 'medium', 'short') : ''
 }
 
 const status = {

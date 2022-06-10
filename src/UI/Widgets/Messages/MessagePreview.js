@@ -2,11 +2,11 @@ import './MessagePreview.css'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Grid } from "@material-ui/core"
+import { Stack, Grid, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
-import Typography from 'UI/Widgets/Typography'
+//import Typography from 'UI/Widgets/Typography'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 import {
@@ -24,10 +24,10 @@ import { objectNotNull } from 'utils/Validation'
 import { messageRoutes } from 'Routes/Routes'
 
 const getRecipientsLabel = (message) => {
-    if (message.recipient_count === 0)
+    if (!message.recipient_count?.status || message.recipient_count?.status?.total === 0)
         return '--'
 
-    return `${message.recipient_count} Recipients`
+    return `${message.recipient_count?.status?.total} Recipients`
 }
 
 const Label = ({ label }) => (
@@ -37,11 +37,8 @@ const Label = ({ label }) => (
 const Details = ({ label, value, status, direction = 'row', style, labelArray = false, textArea = false }) => {
     let detailClass = textArea ? 'MessageDetailTextArea' : 'MessageDetailValue'
 
-    // if(textArea)
-    //     detailClass += ' TextArea'
-
     return (
-        <Grid container style={style}>
+        <Stack direction={direction} style={style}>
             <span className="DetailLabel">{label}:</span>
             {labelArray ?
                 value.map(item => (
@@ -58,7 +55,7 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
                         {value}
                     </span>
                 )}
-        </Grid>
+        </Stack>
     )
 }
 
@@ -153,9 +150,9 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(hasMedia)
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
-    console.log(recipients)
+    //console.log(recipients)
     return (
-        <Grid className="MessagePreview-Container" container style={style}>
+        <Grid container className="MessagePreview-Container" style={style}>
             <Grid container style={{ marginBottom: 20 }}>
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
@@ -171,7 +168,6 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     <Details
                         label="Status"
-                        // value={getMessageStatusLabel(message.status)}
                         value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
                         status={message.status}
                     />
@@ -189,11 +185,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     {messageStats && (
                         <Grid container direction="column" alignItems="center" style={{ marginTop: 10, marginBottom: 30 }}>
-                            <Typography size={26} weight="bold" text={`${messageStats.delivery}%`} />
-                            <Typography text={`Delivery Rate (${messageStats.sent}/${messageStats.total})`} />
+                            <Typography fontSize={26} fontWeight="bold"> {`${messageStats.delivery}%`} </Typography>
+                            <Typography>{`Delivery Rate (${messageStats.sent}/${messageStats.total})`}</Typography>
                         </Grid>
                     )}
-
 
                     {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
                 </Grid>
@@ -205,7 +200,3 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 }
 
 export default MessagePreview
-
-// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/q896zrr42f5zxwz5401cifq9gdmc/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T175218Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=6fc5249be04f6f06b46552661cbb367446b344f7e881c358254e2f707dc3943c
-
-// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/j3unrjgqooyvhbw04v6eovyp8qxl/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T170242Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=d4f37780c8a08657cd480f8b10abb79aa6ddfe795aa66ca69b0c80b29ef58899

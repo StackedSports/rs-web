@@ -33,8 +33,6 @@ export default function BoardPage(props) {
     const app = useContext(AppContext);
 
     const { id, boardId } = useParams();
-    // console.log(id)
-    console.log(boardId)
 
     const board = useBoard(boardId)
     const boardContacts = useBoardContacts(boardId)
@@ -89,7 +87,7 @@ export default function BoardPage(props) {
                 })
             })
 
-        console.log("filters", filters)
+        //console.log("filters", filters)
 
         return filters
     }, [board.item])

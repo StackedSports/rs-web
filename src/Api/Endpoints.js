@@ -435,6 +435,7 @@ export const getBoard = (id) => {
 }
 
 export const updateBoard = (id, data) => {
+    console.log("updateBoard",data)
     const body = {
         filter: {
             ...data,
