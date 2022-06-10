@@ -104,37 +104,38 @@ export const getFullName = (contact) => {
 // 	else
 // 		return status
 // }
-export const getMessageStatusLabel = (status, platform, recipients) => {
-	let message = status
-	//console.log(recipients)
-	let allMessagesSent = recipients?.status_counts?.sent === recipients?.count
-	let allMessagesPending = recipients?.status_counts?.pending === recipients?.count
-	let someErrors = recipients?.status_counts?.error > 0 && recipients?.status_counts?.sent > 0
-	// let contactWithoutPhone = recipients?.filter_list?.contacts?.some(contact => contact.phone === null  )
-	let allMessagesFailed = recipients?.status_counts?.error === recipients?.count && recipients?.status_counts?.pending === 0
+export const getMessageStatusLabel = (status, platform, recipient_count) => {
 
+	const isAllMessagesSent = recipient_count?.status?.sent === recipient_count?.status?.total || recipient_count?.status?.total === 0
+	const isAllMessagesPending = recipient_count?.status?.pending === recipient_count?.status?.total
+	const isSentWithErros = recipient_count?.status?.error > 0 && recipient_count?.status?.sent > 0
+	const isAllMessagesFailed = recipient_count?.status?.error === recipient_count?.status?.total && recipient_count?.status?.pending === 0
+
+	let message = ''
 	switch (true) {
-		case (allMessagesFailed && (platform === 'Twitter' || platform === 'RS Text')):
-		case (status === "Error" && recipients?.count === 0 && (platform === 'Twitter' || platform === 'RS Text')):
+		case (status === "Sent" && isAllMessagesSent):
+		case (status == 'Completed' && isAllMessagesSent):
+		case (status === 'Error' && platform === 'Personal Text' && isSentWithErros):
+			message = 'Message Completed'
+			break;
+		case (status === "Error" && recipient_count?.status?.total === 0):
+		case (status === "Error" && isAllMessagesFailed && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Message Failed - Error'
 			break;
-		case (someErrors && (platform === 'Twitter' || platform === 'RS Text')):
+		case (status === "Error" && isSentWithErros && (platform === 'Twitter' || platform === 'RS Text')):
 			message = 'Complete with some errors'
 			break;
-		case (allMessagesSent && (platform === 'Twitter' || platform === 'RS Text')):
-			message = 'Message Completed'
-			break;
-		case (allMessagesSent && platform === 'Personal Text'):
-			message = 'Message Complete'
-			break;
-		case (status === 'Error' && platform === 'Personal Text'):
-			message = 'Message Completed'
-			break;
-		case (allMessagesPending && platform === 'Personal Text'):
+		case (status === 'In Progress' && isAllMessagesPending && platform === 'Personal Text'):
 			message = 'Message ready to be sent by sender.'
 			break;
 		case (status === 'Cancelled' && platform === 'Personal Text'):
 			message = 'Completed with some skipped messages'
+			break;
+		case (status === 'Cancelled' && isSentWithErros):
+			message = 'Completed with some skipped messages'
+			break;
+		case (status === 'In Progress' && (platform === 'Twitter' || platform === 'RS Text')):
+			message = 'Message sending in progress.'
 			break;
 		case (status === 'Deleted'):
 			message = 'Message Archived'
@@ -145,13 +146,19 @@ export const getMessageStatusLabel = (status, platform, recipients) => {
 		case (status === 'Pending'):
 			message = 'Message Scheduled'
 			break;
-		case (status === 'In Progress' && (platform === 'Twitter' || platform === 'RS Text')):
-			message = 'Message sending in progress.'
+		case (status === 'In Progress'):
+			message = 'Message sending in progress'
 			break;
+		case (status === 'Cancelled'):
+			message = 'Cancelled'
+			break;
+		default:
+			message = `${status}`
 	}
 
 	return message
 }
+
 export const getMessagePlatformLabel = (platform) => {
 	if (!platform)
 		return '--'

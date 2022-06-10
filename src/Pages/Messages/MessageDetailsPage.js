@@ -168,7 +168,7 @@ const MessageDetailsPage = (props) => {
         setDisplayTagDialog(true)
         setTagging('message')
     }
-    console.log(message.item)
+    
     const onSendMessageClick = () => {
         console.log('send')
 

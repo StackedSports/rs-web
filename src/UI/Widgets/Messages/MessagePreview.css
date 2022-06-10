@@ -53,27 +53,27 @@
     hyphens: auto;
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.Draft {
+.MessagePreview-DetailsPanel .MessageDetailValue.orange {
     color: orange
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.InProgress {
+.MessagePreview-DetailsPanel .MessageDetailValue.blue {
     color: #3871DA
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.Scheduled {
+.MessagePreview-DetailsPanel .MessageDetailValue.purple {
     color: purple
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.Sent {
+.MessagePreview-DetailsPanel .MessageDetailValue.green {
     color: green
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.Error {
+.MessagePreview-DetailsPanel .MessageDetailValue.red {
     color: red
 }
 
-.MessagePreview-DetailsPanel .MessageDetailValue.Pending {
+.MessagePreview-DetailsPanel .MessageDetailValue.gray {
     color: #ccc
 }
 

@@ -34,8 +34,34 @@ const Label = ({ label }) => (
     <span className="MessagePreview-Label">{label}</span>
 )
 
-const Details = ({ label, value, status, direction = 'row', style, labelArray = false, textArea = false }) => {
+const Details = ({ label, value, direction = 'row', style, labelArray = false, textArea = false }) => {
     let detailClass = textArea ? 'MessageDetailTextArea' : 'MessageDetailValue'
+
+    let color = null
+    switch (value) {
+        case 'Message Failed - Error':
+        case 'Cancelled':
+            color = 'red'
+            break
+        case 'Complete with some errors':
+        case 'Message Completed':
+        case 'Completed with some skipped messages':
+            color = 'green'
+            break
+        case 'Message ready to be sent by sender':
+        case 'Message sending in progress':
+            color = 'blue'
+            break
+        case 'Message Archived':
+            color = 'grey'
+            break
+        case 'Draft':
+            color = 'orange'
+            break
+        case 'Message Scheduled':
+            color = 'purple'
+            break
+    }
 
     return (
         <Stack direction={direction} style={style}>
@@ -43,14 +69,14 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
             {labelArray ?
                 value.map(item => (
                     <span style={{ marginRight: '0.2em' }}
-                        className={status ? `MessageDetailValue ${removeSpaces(status)}` : 'MessageDetailValue'}
+                        className={color ? `MessageDetailValue ${color}` : 'MessageDetailValue'}
                     >
                         {item}
                     </span>
                 ))
                 : (
                     <span
-                        className={status ? `${detailClass} ${removeSpaces(status)}` : detailClass}
+                        className={color ? `${detailClass} ${color}` : detailClass}
                     >
                         {value}
                     </span>
@@ -60,7 +86,7 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
 }
 
 const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
-    //console.log("message",message)
+    console.log("message", message)
 
     if (!message)
         return (
@@ -70,17 +96,15 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         )
 
     const [messageStats, setMessageStats] = useState(null)
+
     useEffect(() => {
-        if (!recipients)
+        if (!message)
             return
 
-        let total = recipients?.count || 0
-        let sent = recipients?.status_counts.sent || 0
-        let error = recipients?.status_counts.error || 0
-        let pending = recipients?.status_counts.pending || 0
-
-        //console.log('sent = ' + sent)
-        //console.log('total = ' + total)
+        let total = message.recipient_count.status?.total || 0
+        let sent = message.recipient_count.status?.sent || 0
+        let error = message.recipient_count.status?.error || 0
+        let pending = message.recipient_count.status?.pending || 0
 
         setMessageStats({
             delivery: sent === 0 ? 0 : Math.round(sent / total * 100),
@@ -89,13 +113,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             error,
             pending,
         })
-    }, [recipients])
-
-    // console.log(message)
-    // console.log(recipients)
-
-    // console.log(message.media)
-    // console.log(message.media_placeholder)
+    }, [message])
 
     const hasMedia = useMemo(() => objectNotNull(message?.media), [message])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message?.media_placeholder), [message])
@@ -135,22 +153,13 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             })
         }
 
-        //console.log(mediaFiles)
-
         return {
             ...message.media_placeholder,
             media: mediaFiles
         }
     }
 
-    // const mediaPlaceholder = useMemo(() => {
 
-    // }, [message, recipients])
-
-    // console.log(hasMedia)
-    // console.log(hasMediaPlaceholder)
-    // console.log(showMedia)
-    //console.log(recipients)
     return (
         <Grid container className="MessagePreview-Container" style={style}>
             <Grid container style={{ marginBottom: 20 }}>
@@ -168,8 +177,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     <Details
                         label="Status"
-                        value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
-                        status={message.status}
+                        value={getMessageStatusLabel(message.status, message.platform?.name, message.recipient_count)}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
                     <Details label="Recipient(s)" value={getRecipientsLabel(message)} />
