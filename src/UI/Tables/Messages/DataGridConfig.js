@@ -5,7 +5,7 @@ import { getFullName, formatPhoneNumber, formatDate, capitalize, getMessageRecip
 const fullName = {
     field: 'fullName',
     headerName: 'Full Name',
-    width: 180,
+    flex:1,
     resizable: true,
     valueGetter: (params) => getFullName(params.row)
 }
@@ -28,7 +28,7 @@ const sender = {
 const twitterName = {
     field: 'twitter_profile',
     headerName: 'Twitter',
-    width: 130,
+    flex:1,
     // resizable: true,
     valueGetter: (params) => `@${params.row.twitter_handle}`
 }
@@ -78,7 +78,7 @@ const status = {
 const response = {
     field: 'response',
     headerName: 'Response',
-    width: 400,
+    flex:1,
     // valueGetter: (params) => capitalize(params.row.response),
     renderCell: (params) => <span className={`MessageDetailValue Error`}>{getMessageRecipientResponseLabel(params.value)}</span>
 }

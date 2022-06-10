@@ -80,12 +80,12 @@ export const getFilterContactsCriteria = (filters) => {
     }
 
     if (filters.birthday) {
-        console.log(filters.birthday[0])
+        //console.log(filters.birthday[0])
         criteria['dob'] = filters.birthday[0]
     }
 
     if(filters.status_2){
-        console.log(filters.status_2)
+        //console.log(filters.status_2)
         criteria['status_2'] = filters.status_2.map(status => status.name)
     }
 
@@ -111,7 +111,7 @@ export const getFilterContactsCriteria = (filters) => {
 }
 
 const getStatus = (status) => {
-    console.log(status)
+   // console.log(status)
     switch (status) {
         case 'drafts': return 'draft'
         case 'in_progress': return 'in progress'
@@ -128,7 +128,7 @@ export const getFilterMessagesCriteria = (filters) => {
 
     let criteria = {}
 
-    console.log(filters)
+    //console.log(filters)
 
     if (filters.status) {
         criteria['message_status'] = []

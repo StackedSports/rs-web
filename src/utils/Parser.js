@@ -106,7 +106,7 @@ export const getFullName = (contact) => {
 // }
 export const getMessageStatusLabel = (status, platform, recipients) => {
 	let message = status
-	console.log(recipients)
+	//console.log(recipients)
 	let allMessagesSent = recipients?.status_counts?.sent === recipients?.count
 	let allMessagesPending = recipients?.status_counts?.pending === recipients?.count
 	let someErrors = recipients?.status_counts?.error > 0 && recipients?.status_counts?.sent > 0

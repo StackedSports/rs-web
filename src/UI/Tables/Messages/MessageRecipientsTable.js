@@ -11,10 +11,10 @@ import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 const MessageRecipientsTable = (props) => {
-    if(!props.recipients || props.recipients.length === 0)
+    if (!props.recipients || props.recipients.length === 0)
         return (
             <div style={{ height: 300, position: 'relative' }}>
-                {props.loading &&  <LoadingOverlay/>}
+                {props.loading && <LoadingOverlay />}
             </div>
         )
 
@@ -24,7 +24,7 @@ const MessageRecipientsTable = (props) => {
     const [carouselIndex, setCarouselIndex] = useState(null)
 
     useEffect(() => {
-        if(!props.recipients)
+        if (!props.recipients)
             return
 
         console.log(props.recipients)
@@ -32,7 +32,7 @@ const MessageRecipientsTable = (props) => {
         let tmp = []
         let hasFilters = false
 
-        if(props.recipients.filter_list && props.recipients.filter_list.length > 0) {
+        if (props.recipients.filter_list && props.recipients.filter_list.length > 0) {
             hasFilters = true
 
             props.recipients.filter_list.forEach(filter => {
@@ -46,7 +46,7 @@ const MessageRecipientsTable = (props) => {
             })
         }
 
-        if(props.recipients.contact_list)
+        if (props.recipients.contact_list)
             tmp = tmp.concat(props.recipients.contact_list)
 
         setContacts(tmp)
@@ -55,55 +55,50 @@ const MessageRecipientsTable = (props) => {
     }, [props.recipients, props.platform, props.hasMedia, props.hasCoach])
 
     const onPageChange = (e, page) => {
-        console.log(page)
         props.onPageChange(page)
     }
-    console.log("contacts", contacts)
 
     const onCellClick = ({ field, row }) => {
-        if (field === 'media') 
+        if (field === 'media')
             setCarouselIndex(contacts.indexOf(row))
     }
 
-    return (
+    return (    
         <Stack spacing={2} style={{ width: '100%', height: 600, position: 'relative' }}>
-            {props.loading && <LoadingOverlay/>}
+            {props.loading && <LoadingOverlay />}
             <DataGridPro sx={{ m: 0 }}
-            //   rows={props.contacts ? props.contacts : []}
-              rows={contacts}
-              columns={columns}
-              checkboxSelection
-              selectionModel={props.selection}
-              onSelectionModelChange={props.onSelectionChange}
-              hideFooter
-            //   autoPageSize
-            //   autoHeight
-            //   pageSize={props.pagination.itemsPerPage}
-            //   rowsPerPageOptions={[props.pagination.itemsPerPage]}
-            //   rowCount={props.pagination.totalItems}
-            //   paginationMode='server'
-            //   page={props.pagination.currentPage - 1}
-            //   onPageChange={() => {}}
-            //   loading={props.loading}
-              onCellClick={onCellClick}
-            //   disableColumnMenu={true}
-            //   disableColumnSelector={true}
+                rows={contacts}
+                columns={columns}
+                checkboxSelection
+                keepNonExistentRowsSelected
+                selectionModel={props.selection}
+                onSelectionModelChange={props.onSelectionChange}
+                hideFooter
+                //   autoPageSize
+                //   autoHeight
+                //   pageSize={props.pagination.itemsPerPage}
+                //   rowsPerPageOptions={[props.pagination.itemsPerPage]}
+                //   rowCount={props.pagination.totalItems}
+                //   paginationMode='server'
+                //   page={props.pagination.currentPage - 1}
+                //   onPageChange={() => {}}
+                onCellClick={onCellClick}
             />
-            {props.pagination && props.pagination.totalPages > 1 && (
+            {props.pagination && props.pagination.totalPages > 0 && (
                 <Stack justifyContent="center" alignItems="center">
                     <Pagination
-                      count={props.pagination.totalPages}
-                      page={props.pagination.currentPage}
-                      onChange={onPageChange}
-                      disabled={props.loading}
+                        count={props.pagination.totalPages}
+                        page={props.pagination.currentPage}
+                        onChange={onPageChange}
+                        disabled={props.loading}
                     />
                 </Stack>
             )}
 
             <MediaCarousel
-              index={carouselIndex}
-              items={contacts?.map(item => item?.media)}
-              onClose={() => setCarouselIndex(null)}
+                index={carouselIndex}
+                items={contacts?.map(item => item?.media)}
+                onClose={() => setCarouselIndex(null)}
             />
         </Stack>
     )

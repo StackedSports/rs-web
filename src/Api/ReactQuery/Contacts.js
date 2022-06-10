@@ -36,13 +36,13 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
     }, [reactQuery.isSuccess, reactQuery.data])
 
     const filter = (filters) => {
-        pagination.getPage(1)
         setFilters(filters)
+        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 24 })
     }
 
     const clearFilter = () => {
         setFilters(null)
-        pagination.getPage(1)
+        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 24 })
     }
 
     return {
