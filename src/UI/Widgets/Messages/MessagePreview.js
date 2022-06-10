@@ -63,8 +63,6 @@ const Details = ({ label, value, status, direction = 'row', style, labelArray = 
 }
 
 const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
-    //console.log("message",message)
-
     if (!message)
         return (
             <div style={{ height: 300 }}>
@@ -154,6 +152,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
     // console.log(hasMediaPlaceholder)
     // console.log(showMedia)
     console.log(recipients)
+    
     return (
         <Grid className="MessagePreview-Container" container style={style}>
             <Grid container style={{ marginBottom: 20 }}>
@@ -172,7 +171,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details
                         label="Status"
                         // value={getMessageStatusLabel(message.status)}
-                        value={getMessageStatusLabel(message.status, message.platform.name, recipients)}
+                        value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
                         status={message.status}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
