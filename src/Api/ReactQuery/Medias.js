@@ -25,7 +25,7 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     //get right function if filter is null or empty get filterMidias else get getMidas
     const get = filters && !lodash.isEmpty(filters) ? filterMedias : getMedias
 
-    const reactQuery = useQuery([`medias/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const reactQuery = useQuery(['medias', pagination.currentPage, pagination.itemsPerPage, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
     })
 
@@ -97,7 +97,8 @@ export const useMediaMutation = () => {
     const remove = useMutation((id) => deleteMedia(id),
         {
             onSuccess: () => {
-                queryClient.removeQueries('media', { active: true })
+                queryClient.cancelQueries('media', { active: true })
+                queryClient.resetQueries('medias')
             }
         })
 

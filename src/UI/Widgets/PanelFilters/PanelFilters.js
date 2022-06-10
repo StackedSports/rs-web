@@ -107,6 +107,8 @@ export const PanelFilters = (props) => {
 		}
 	}
 
+	console.log(props.filters)
+
 	return (
 		<>
 			<Stack direction='row' flexWrap='wrap' pb={1}>

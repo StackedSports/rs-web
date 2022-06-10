@@ -15,7 +15,7 @@ import useArray from 'Hooks/ArrayHooks';
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useContacts,useBoards } from 'Api/ReactQuery';
+import { useContacts, useBoards } from 'Api/ReactQuery';
 
 import { findByIds } from 'utils/Helper'
 import { Clear } from '@mui/icons-material';
@@ -27,8 +27,8 @@ export const tabs = {
 }
 
 const myTabs = [
-    { id: 0, label: 'My Boards' },
-    { id: 1, label: 'Team Boards' },
+    { id: 0, label: 'My Boards', hideSearch: true },
+    { id: 1, label: 'Team Boards', hideSearch: true },
     { id: 2, label: 'Contacts' }
 ]
 
@@ -163,36 +163,12 @@ export default function ReceiverSelectDialog(props) {
 
     }, [props.removedItem])
 
-    /*     const onContactsSelectionChange = (selection) => {
-            console.log('onSelectionChange')
-    
-            // mpSelection, mpSelectedCount, mpUtils
-            mpSelection.onSelectionChange(selection)
-    
-            return
-    
-    
-        }
-    
-        const onContactsPageChange = (page) => {
-            console.log('onPageChange')
-    
-            // 
-            , mpSelectedCount, mpUtils
-            mpSelection.saveData(contacts.items)
-    
-            contacts.pagination.getPage(page)
-    
-        } */
-
     const onSearch = (searchTerm, tabIndex) => {
         contacts.filter({ search: searchTerm })
-        boards.filter({ search: searchTerm })
     }
 
     const onClearSearch = (tabIndex) => {
         contacts.clearFilter()
-        boards.clearFilter()
     }
 
     const onSelectionConfirm = (e) => {
@@ -237,7 +213,7 @@ export default function ReceiverSelectDialog(props) {
             onConfirmSelection={onSelectionConfirm}
             onSearch={onSearch}
             onClearSearch={onClearSearch}
-            onClose={props.onClose}
+            onClose={onClose}
         >
             <TabPanel value={0} index={0}>
                 <BoardsTable mini

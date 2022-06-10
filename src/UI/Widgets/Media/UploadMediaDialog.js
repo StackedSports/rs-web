@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { Dialog, Grid, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { Dialog, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
 
 import Upload from "images/Upload.PNG"
@@ -27,7 +27,6 @@ import {
 
 import {
 	createPlaceholder,
-	uploadMedia,
 	addTagToMedia
 } from 'Api/Endpoints'
 import Tooltip from '@mui/material/Tooltip';
@@ -55,7 +54,7 @@ export const FileDropZone = (props) => {
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
-			<img src={Upload}></img>
+			<img src={Upload} style={{ userSelect: 'none', userDrag:'none' }} />
 			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
 				Upload Media
 			</p>
@@ -106,7 +105,7 @@ export default function UploadMediaDialog(props) {
 	const tags = useTags()
 	const placeholders = usePlaceholders(1, 24)
 	const contacts = useContacts()
-	const { create: uploadMediaAction } = useMediaMutation()
+	const { create: uploadMedia } = useMediaMutation()
 
 	const [selectedOwner, setSelectedOwner] = useState([])
 	const [selectedTags, setSelectedTags] = useState([])
@@ -369,7 +368,7 @@ export default function UploadMediaDialog(props) {
 
 			// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
 
-			uploadMediaAction(media, {
+			uploadMedia(media, {
 				onSuccess: (res) => {
 					let mediaRes = res
 
@@ -412,60 +411,7 @@ export default function UploadMediaDialog(props) {
 					}
 				}
 
-
 			})
-
-			/* 			uploadMedia(media)
-							.then(res => {
-								// console.log(res)
-			
-								let mediaRes = res
-			
-								let temp2 = Object.assign([], tempUploadStatus)
-								tempUploadStatus[index] = "success"
-								temp2[index] = "success"
-								setUploadStatus(temp2)
-								// console.log(temp2)
-			
-								successCount++
-			
-								selectedTags.forEach(tag => {
-									//if(typeof tag.id == "string" && tag.id.includes("new-")) {
-									addTagToMedia(mediaRes.id, tag.name)
-										.then(res => {
-											//console.log(res)
-										})
-										.catch(error => {
-											//console.log(error)
-										})
-									//}
-								})
-			
-								// last id 314852
-							})
-							.catch(error => {
-								// console.log(error)
-			
-								let temp2 = Object.assign([], tempUploadStatus)
-								temp2[index] = "failed"
-								tempUploadStatus[index] = "failed"
-								setUploadStatus(temp2)
-								// console.log(temp2)
-			
-								failedCount++
-			
-								//tempUploadStatus[index] = "failed"
-								//setUploadStatus(tempUploadStatus)
-							})
-							.finally(() => {
-								//setUploadStatus(tempUploadStatus)
-								count--
-			
-								if (count == 0) {
-									setUploadingMedia(false)
-									onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
-								}
-							}) */
 		})
 	}
 
@@ -777,7 +723,7 @@ export default function UploadMediaDialog(props) {
 					/>
 				}
 
-			</Stack >
+			</Stack>
 
 			<Stack direction="row" justifyContent="flex-end" margin={2}>
 				<MuiButton
@@ -810,6 +756,6 @@ export default function UploadMediaDialog(props) {
 					{uploadFinished ? "OK" : "Upload"}
 				</LoadingButton>
 			</Stack>
-		</Dialog >
+		</Dialog>
 	)
 }

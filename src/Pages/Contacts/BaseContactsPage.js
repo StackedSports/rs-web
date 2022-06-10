@@ -22,7 +22,7 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import { useBoards, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContacts,
@@ -68,6 +68,7 @@ export default function BaseContactsPage(props) {
 
     // handle filters options
     const status = useStatuses()
+    const status2 = useStatus2()
     const ranks = useRanks()
     const gradYears = useGradYears()
     const tags = useTags()
@@ -176,11 +177,11 @@ export default function BaseContactsPage(props) {
             label: 'State',
             options: states
         },
-        status2: {
+        status_2: {
             label: 'Status 2',
-            options: []
+            options: status2.items.map((status2, index) => ({ name: status2 })) || []
         },
-    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems])
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems.items, status2.items ])
 
     let mainActions = [
         {
@@ -411,9 +412,6 @@ export default function BaseContactsPage(props) {
     const onBackBoardToContacts = (redirect) => {
         setRedirect(contactsRoutes.all)
     }
-
-    console.log("selectedFilters", selectedFilters)
-    console.log("props.selectedFilters", props.selectedFilters)
 
     return (
         <MainLayout

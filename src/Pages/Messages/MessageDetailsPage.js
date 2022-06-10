@@ -44,9 +44,7 @@ const MessageDetailsPage = (props) => {
     const [redirect, setRedirect] = useState('')
 
     const message = useMessage(messageId.current)
-    const recipients = useMessageRecipients(messageId.current, 1, 1000)
-    // console.log(recipients)
-
+    const recipients = useMessageRecipients(messageId.current, 1, 50)
 
     const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
     // const [selectedRecipients.items, setSelectedRecipients] = useState([])
@@ -170,7 +168,7 @@ const MessageDetailsPage = (props) => {
         setDisplayTagDialog(true)
         setTagging('message')
     }
-    console.log(message.item)
+    
     const onSendMessageClick = () => {
         console.log('send')
 
@@ -233,13 +231,7 @@ const MessageDetailsPage = (props) => {
 
     }
 
-
-    const removeFromSelection = (ids) => {
-
-    }
-
     const refreshMessage = () => {
-        // console.log('refreshMessage')
         message.refetch()
         recipients.refetch()
     }
@@ -296,19 +288,6 @@ const MessageDetailsPage = (props) => {
             alert.setWarning(`${res.success.count} out of ${selectedRecipients.items.length} recipients were tagged successfully. ${res.error.count} recipients failed to be tagged.`)
 
         setLoading(false)
-
-        /*       addTagsToContacts(selectedTags, selectedRecipients.items)
-                  .then(res => {
-                      console.log(res)
-      
-                      if(res.error === 0)
-                          alert.setSuccess('Recipients tagged successfully!')
-                      else
-                          alert.setWarning(`${res.success} out of ${res.total} recipients were tagged successfully. ${res.error} recipients failed to be tagged.`)
-                  })
-                  .finally(() => {
-                      setLoading(false)
-                  }) */
     }
 
     const onSendNewMessageWithContacts = () => {

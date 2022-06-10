@@ -18,15 +18,14 @@ import { AppContext } from 'Context/AppProvider'
 import useArray from 'Hooks/ArrayHooks'
 
 
-import { useUser, useTextPlaceholders } from 'Api/Hooks'
-import { useTeamMembers, useSnippets } from 'Api/ReactQuery'
+import { useUser } from 'Api/Hooks'
+import { useTeamMembers, useSnippets, useMediaMutation, useTextPlaceholders } from 'Api/ReactQuery'
 import {
     getBoards,
     getBoard,
     filterContacts,
     createMessage,
     updateMessage,
-    uploadMedia
 } from 'Api/Endpoints'
 import { updateContact } from 'ApiHelper'
 
@@ -44,6 +43,7 @@ import { messageRoutes } from 'Routes/Routes'
 export default function MessageCreatePage(props) {
     const user = useUser()
     const app = useContext(AppContext)
+    const { create: uploadMedia } = useMediaMutation()
 
     const [loading, setLoading] = useState(false)
     // const contacts = useContacts()
@@ -96,7 +96,7 @@ export default function MessageCreatePage(props) {
     // const textArea = useRef(null)
     const [textMessage, setTextMessage] = useState('')
     const snippets = useSnippets().items
-    const textPlaceholders = useTextPlaceholders()
+    const textPlaceholders = useTextPlaceholders().items
 
     // Error
     const [error, setError] = useState({
@@ -481,19 +481,19 @@ export default function MessageCreatePage(props) {
             file: file,
             owner: user.item?.id
         }
-        // console.log(media)
 
-        uploadMedia(media)
-            .then(res => {
+        uploadMedia(media, {
+            onSuccess: (res) => {
                 app.alert.setSuccess("Uploaded media successfully!")
                 console.log(res)
                 onMediaSelected(res, "media")
-            })
-            .catch(error => {
+            },
+            onError: (error) => {
                 app.alert.setError("Failed to upload media.")
                 console.log(error)
-            })
-            .finally(() => setUploadingMedia(false))
+            },
+            onSettled: () => setUploadingMedia(false),
+        })
     }
 
     const onMediaSelectedClick = (e) => {

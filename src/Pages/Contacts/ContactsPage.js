@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useContext } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import { Stack, IconButton } from '@mui/material';
-import { AccountBox, Tune, Clear } from '@material-ui/icons';
+import { AccountBox, Tune, Clear } from '@mui/icons-material';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -23,11 +23,8 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import { useBoards,useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
-    addTagsToContacts,
     addTagsToContactsWithNewTags,
-    addTagToContact,
     archiveContacts,
-    deleteTagToContact,
     untagContacts,
 } from 'Api/Endpoints'
 
@@ -298,7 +295,6 @@ export default function ContactsPage(props) {
 
     const onBoardCreated = () => {
         setOpenCreateBoardDialog(false)
-        boards.refetch()
         app.alert.setSuccess('Board created successfully!')
     }
 

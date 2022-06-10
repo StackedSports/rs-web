@@ -2,16 +2,17 @@ import './MessagePreview.css'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Grid } from "@material-ui/core"
+import { Stack, Grid, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
-import Typography from 'UI/Widgets/Typography'
+//import Typography from 'UI/Widgets/Typography'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 import {
     getFullName,
     getMessageStatusLabel,
+    getMessageStatusColor,
     getMessagePlatformLabel,
     getMessageSenderLabel,
     getMessageRecipientsLabel,
@@ -24,45 +25,47 @@ import { objectNotNull } from 'utils/Validation'
 import { messageRoutes } from 'Routes/Routes'
 
 const getRecipientsLabel = (message) => {
-    if (message.recipient_count === 0)
+    if(typeof message.recipient_count === 'number')
+        return `${message.recipient_count} Recipients`
+
+    if (!message.recipient_count?.status || message.recipient_count?.status?.total === 0)
         return '--'
 
-    return `${message.recipient_count} Recipients`
+    return `${message.recipient_count?.status?.total} Recipients`
 }
 
 const Label = ({ label }) => (
     <span className="MessagePreview-Label">{label}</span>
 )
 
-const Details = ({ label, value, status, direction = 'row', style, labelArray = false, textArea = false }) => {
+const Details = ({ label, value, direction = 'row', style, labelArray = false, textArea = false, color = null }) => {
     let detailClass = textArea ? 'MessageDetailTextArea' : 'MessageDetailValue'
 
-    // if(textArea)
-    //     detailClass += ' TextArea'
-
     return (
-        <Grid container style={style}>
+        <Stack direction={direction} style={style}>
             <span className="DetailLabel">{label}:</span>
             {labelArray ?
                 value.map(item => (
                     <span style={{ marginRight: '0.2em' }}
-                        className={status ? `MessageDetailValue ${removeSpaces(status)}` : 'MessageDetailValue'}
+                        className={color ? `MessageDetailValue ${color}` : 'MessageDetailValue'}
                     >
                         {item}
                     </span>
                 ))
                 : (
                     <span
-                        className={status ? `${detailClass} ${removeSpaces(status)}` : detailClass}
+                        className={color ? `${detailClass} ${color}` : detailClass}
                     >
                         {value}
                     </span>
                 )}
-        </Grid>
+        </Stack>
     )
 }
 
 const MessagePreview = ({ message, recipients, mini = false, style, link = false, ...props }) => {
+    console.log("message", message)
+
     if (!message)
         return (
             <div style={{ height: 300 }}>
@@ -71,17 +74,15 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
         )
 
     const [messageStats, setMessageStats] = useState(null)
+
     useEffect(() => {
-        if (!recipients)
+        if (!message)
             return
 
-        let total = recipients?.count || 0
-        let sent = recipients?.status_counts.sent || 0
-        let error = recipients?.status_counts.error || 0
-        let pending = recipients?.status_counts.pending || 0
-
-        //console.log('sent = ' + sent)
-        //console.log('total = ' + total)
+        let total = message.recipient_count.status?.total || 0
+        let sent = message.recipient_count.status?.sent || 0
+        let error = message.recipient_count.status?.error || 0
+        let pending = message.recipient_count.status?.pending || 0
 
         setMessageStats({
             delivery: sent === 0 ? 0 : Math.round(sent / total * 100),
@@ -90,13 +91,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             error,
             pending,
         })
-    }, [recipients])
-
-    // console.log(message)
-    // console.log(recipients)
-
-    // console.log(message.media)
-    // console.log(message.media_placeholder)
+    }, [message])
 
     const hasMedia = useMemo(() => objectNotNull(message?.media), [message])
     const hasMediaPlaceholder = useMemo(() => objectNotNull(message?.media_placeholder), [message])
@@ -136,25 +131,16 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
             })
         }
 
-        //console.log(mediaFiles)
-
         return {
             ...message.media_placeholder,
             media: mediaFiles
         }
     }
 
-    // const mediaPlaceholder = useMemo(() => {
+    const messageStatusLabel = useMemo(() => getMessageStatusLabel(message.status, message.platform?.name, message.recipient_count), [message])
 
-    // }, [message, recipients])
-
-    // console.log(hasMedia)
-    // console.log(hasMediaPlaceholder)
-    // console.log(showMedia)
-    console.log(recipients)
-    
     return (
-        <Grid className="MessagePreview-Container" container style={style}>
+        <Grid container className="MessagePreview-Container" style={style}>
             <Grid container style={{ marginBottom: 20 }}>
                 {showMedia && (
                     <div className="MessagePreview-MediaPanel">
@@ -171,8 +157,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     <Details
                         label="Status"
                         // value={getMessageStatusLabel(message.status)}
-                        value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
-                        status={message.status}
+                        // value={getMessageStatusLabel(message.status, message.platform?.name, recipients)}
+                        // status={message.status}
+                        color={getMessageStatusColor(messageStatusLabel)}
+                        value={messageStatusLabel}
                     />
                     <Details label="Sender" value={getMessageSenderLabel(message)} />
                     <Details label="Recipient(s)" value={getRecipientsLabel(message)} />
@@ -188,11 +176,10 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     {messageStats && (
                         <Grid container direction="column" alignItems="center" style={{ marginTop: 10, marginBottom: 30 }}>
-                            <Typography size={26} weight="bold" text={`${messageStats.delivery}%`} />
-                            <Typography text={`Delivery Rate (${messageStats.sent}/${messageStats.total})`} />
+                            <Typography fontSize={26} fontWeight="bold"> {`${messageStats.delivery}%`} </Typography>
+                            <Typography>{`Delivery Rate (${messageStats.sent}/${messageStats.total})`}</Typography>
                         </Grid>
                     )}
-
 
                     {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
                 </Grid>
@@ -204,7 +191,3 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 }
 
 export default MessagePreview
-
-// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/q896zrr42f5zxwz5401cifq9gdmc/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T175218Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=6fc5249be04f6f06b46552661cbb367446b344f7e881c358254e2f707dc3943c
-
-// https://stakdsocial.s3.us-east-2.amazonaws.com/variants/j3unrjgqooyvhbw04v6eovyp8qxl/fc137cc3f943a2fb62d27a291a775bb96286eeaa79ece24ddc4daf9515b11723?response-content-disposition=inline%3B%20filename%3D%22rsweb-message.png%22%3B%20filename%2A%3DUTF-8%27%27rsweb-message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220520%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220520T170242Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=d4f37780c8a08657cd480f8b10abb79aa6ddfe795aa66ca69b0c80b29ef58899
