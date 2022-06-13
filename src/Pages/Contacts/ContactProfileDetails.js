@@ -44,6 +44,7 @@ const formValidation = Yup.object().shape({
 
 const detailsFormValidation = Yup.object().shape({
 	dob: Yup.date()
+		.nullable()
 		.max(new Date(), "Date of birth must be in the past")
 		.min(subYears(new Date(), 120), `Min date is ${subYears(new Date(), 120)}`)
 		.typeError("Format must be MM/DD/YYYY")
