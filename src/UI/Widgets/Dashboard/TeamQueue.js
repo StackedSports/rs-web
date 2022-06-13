@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { Grid, Typography, Stack, Box } from "@mui/material"
+import { Typography, Stack, Box } from "@mui/material"
 import { Tune, Event, KeyboardArrowDown } from '@mui/icons-material';
 import lodash from "lodash";
 import { useHistory } from "react-router-dom";
@@ -12,8 +12,7 @@ import DateRangePicker from "UI/Forms/Inputs/DateRangePicker";
 import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
-import { useMessages } from "Api/ReactQuery";
-import { useTeamMembers } from "Api/ReactQuery";
+import { useMessages,useTeamMembers } from "Api/ReactQuery";
 import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 

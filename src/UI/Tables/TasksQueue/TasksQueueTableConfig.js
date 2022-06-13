@@ -3,14 +3,19 @@ import { format } from "date-fns"
 import { Link } from 'react-router-dom'
 import { messageRoutes } from 'Routes/Routes';
 
-const formatRecipientsStatuses = (total, statuses) => {
+const formatRecipientsStatuses = (recipient_count, statuses) => {
     let result = '';
-    if (statuses && Object.keys(statuses).length > 0) {
-        result = `Sent ${statuses.sent} of ${total}`;
+    if (recipient_count instanceof Object) {
+        result = `Sent ${recipient_count.status?.sent || 0} of ${recipient_count.status?.total}`;
+        if (recipient_count.status.skipped) result += `, ${recipient_count.status.skipped} skipped`;
+        if (recipient_count.status.error) result += `, ${recipient_count.status.error} failed`;
+    }
+    else if (statuses && Object.keys(statuses).length > 0) {
+        result = `Sent ${statuses.sent} of ${recipient_count}`;
         if (statuses.skipped) result += `, ${statuses.skipped} skipped`;
         if (statuses.error) result += `, ${statuses.error} failed`;
     } else
-        result = `Sent ${total}`;
+        result = `Sent ${recipient_count}`;
     return result;
 }
 
