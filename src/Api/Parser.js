@@ -217,7 +217,7 @@ export const getFilterMediasCriteria = (filters) => {
         criteria['placeholder_id'] = filters.placeholder
 
     if (filters.owner) {
-        criteria['owner_id'] = filters.owner[0].id
+        criteria['owner_id'] = filters.owner.map(owner => owner.id)
     }
     if (filters.dateUploaded) {
         criteria['created_at'] = filters.dateUploaded[0].map(date => format(new Date(date), 'yyyy-MM-dd'))

@@ -53,7 +53,7 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
     }
 
     const handleClickOption = (option) => {
-        console.log("option clicked", option)
+       // console.log("option clicked", option)
         onClick(option);
         if (!keepOpen)
             handleClose();

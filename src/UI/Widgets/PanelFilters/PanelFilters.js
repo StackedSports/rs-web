@@ -35,9 +35,9 @@ export const PanelFilters = (props) => {
 			return
 		}
 
-		//console.log("Calling onFilterChange")
-		if (props.onFilterChange && props.onFilterChange instanceof Function)
+		if (props.onFilterChange && props.onFilterChange instanceof Function) {
 			props.onFilterChange(Object.assign({}, selectedFilters))
+		}
 	}, [selectedFilters])
 
 	useEffect(() => {
@@ -107,7 +107,7 @@ export const PanelFilters = (props) => {
 		}
 	}
 
-	console.log(props.filters)
+	//console.log(props.filters)
 
 	return (
 		<>

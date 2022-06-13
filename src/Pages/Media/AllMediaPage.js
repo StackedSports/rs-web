@@ -16,8 +16,12 @@ import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoi
 import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
+import useSearchParams from 'Hooks/SearchParamsHook';
+
 export const AllMediaPage = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const { type, value } = useParams()
+	const page = searchParams.get('page') || 1
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -47,14 +51,21 @@ export const AllMediaPage = () => {
 		}
 	}, [type, value])
 
+	useEffect(() => {
+		if (medias.pagination) {
+			const params = {};
+			searchParams.forEach((value, key) => {
+				params[key] = params[key] || [];
+				params[key].push(value);
+			});
+			setSearchParams({ ...params, page: medias.pagination.currentPage });
+		}
+	}, [medias.pagination.currentPage, searchParams])
+
 	const onFilterChange = (filter) => {
 		console.log("Filter Change", filter)
 		medias.filter(filter)
 	}
-
-/* 	const onSelectionChange = (selection) => {
-		setSelectedMedias(selection)
-	} */
 
 	const onArchiveMedia = () => {
 		confirmDialog.show('Archive Media',

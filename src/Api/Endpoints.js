@@ -598,14 +598,14 @@ export const getMedias = (page, perPage, filters) => {
 }
 
 export const filterMedias = (page, perPage, filters) => {
-    console.log(filters)
+    //console.log(filters)
     const data = {
         page: page,
         per_page: perPage,
         ...getFilterMediasCriteria(filters),
     }
 
-    console.log(data)
+    //console.log(data)
 
     return AXIOS('post', 'media/search', data, filters?.cancelToken)
 }
