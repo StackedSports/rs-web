@@ -8,15 +8,12 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import useSearchParams from 'Hooks/SearchParamsHook';
-import { getFilterMediasCriteria } from 'Api/Parser' 
 
 export const MediaPage = (props) => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
     const contacts = useContacts()
-	const [searchParams, setSearchParams] = useSearchParams();
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
@@ -39,10 +36,6 @@ export const MediaPage = (props) => {
             }
         }
     }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
-
-    useEffect(() => {
-        setSearchParams(getFilterMediasCriteria(selectedFilters))
-    }, [selectedFilters])
 
     const filtersOptions = useMemo(() => {
         let index = 0
