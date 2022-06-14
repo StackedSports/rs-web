@@ -6,6 +6,7 @@ import BaseContactsPage from './BaseContactsPage';
 import { AppContext } from 'Context/AppProvider';
 
 import { useBoard, useBoardContacts } from 'Api/ReactQuery'
+import { parseColumnsNames } from 'UI/Tables/Contacts/DataGridConfig';
 
 const parseCriteriaNames = (criteria) => {
     switch (criteria) {
@@ -66,12 +67,12 @@ export default function BoardPage(props) {
             return null
 
         let criteria = board.item.criteria
-        console.log(criteria)
+        //console.log(criteria)
         let filters = {}
         if (criteria)
             Object.keys(criteria).forEach(key => {
-                console.log(key)
-                console.log(criteria[key])
+               // console.log(key)
+               // console.log(criteria[key])
 
                 let filterName = parseCriteriaNames(key)
 
@@ -97,20 +98,19 @@ export default function BoardPage(props) {
             profileImg: true,
             fullName: true,
             twitterName: true,
-            phone: true
+            phone: true,
         }
 
         if (!board.item) {
             return columns
         } else {
-            // get columsn from criteria
-            if (board.item.criteria)
-                Object.keys(board.item.criteria).forEach(key => {
-                    columns[parseCriteriaNames(key)] = true
+            // get columns from board
+            if (board.item.settings)
+                Object.values(board.item.settings.selected_columns).forEach(value => {
+                    const columnName = parseColumnsNames(value);
+                    if (columnName)
+                        columns[parseColumnsNames(value)] = true
                 })
-
-            // console.log('board column = ', columns)
-
             return columns
         }
     }, [board.item])

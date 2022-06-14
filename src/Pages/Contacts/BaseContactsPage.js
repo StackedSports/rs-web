@@ -181,7 +181,7 @@ export default function BaseContactsPage(props) {
             label: 'Status 2',
             options: status2.items.map((status2, index) => ({ name: status2 })) || []
         },
-    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems.items, status2.items ])
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems.items, status2.items])
 
     let mainActions = [
         {
@@ -575,11 +575,13 @@ export default function BaseContactsPage(props) {
             /> */}
 
             <ContactsTableServerMode
+                id={`board-table-${board.item?.id}`}
+                redirectToDetails
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
                 apiRef={gridApiRef}
-                columnVisibilityModel={props.columnsControl}
+                columnsControl={props.columnsControl}
                 {...contactsMultipageSelection}
             />
 

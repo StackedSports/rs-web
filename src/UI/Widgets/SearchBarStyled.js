@@ -1,7 +1,6 @@
-import { Box } from '@material-ui/core';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
-import { styled, TextField, Autocomplete, Chip, Avatar } from "@mui/material"
+import { styled, TextField, Autocomplete, Chip, Avatar,Box } from "@mui/material"
 
 export const StyledBox = styled(Box)(({ theme, expanded}) => {
     if(expanded) {

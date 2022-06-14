@@ -261,7 +261,7 @@ const rank = {
 const lastMessaged = {
     field: 'lastMessaged',
     headerName: 'Last Messaged',
-    sortable:false,
+    sortable: false,
     // width: 120,
     flex: 1,
     // valueGetter: (params) => params.row. ? params.row. : ''
@@ -269,7 +269,7 @@ const lastMessaged = {
 
 const mostActiveTime = {
     field: 'mostActiveTime',
-    sortable:false,
+    sortable: false,
     headerName: 'Most Active Time',
     // width: 120,
     flex: 1,
@@ -279,7 +279,7 @@ const mostActiveTime = {
 const dateAdded = {
     field: 'dateAdded',
     headerName: 'Date Added',
-    sortable:false,
+    sortable: false,
     // width: 120,
     flex: 1,
     // valueGetter: (params) => params.row. ? params.row. : ''
@@ -322,17 +322,6 @@ export const columnsMini = [
     phone,
 ]
 
-// export const columnsFull = [
-//     profileImg,
-//     fullName,
-//     twitterName,
-//     phone,
-//     state,
-//     gradYear,
-//     school,
-//     status
-// ]
-
 export const columnsFull = [
     profileImg,
     fullName,
@@ -359,3 +348,39 @@ export const columnsFull = [
     timeZone,
     birthday,
 ]
+
+export const parseColumnsNames = (property) => {
+    switch (property) {
+        case 'created_at':
+        case 'last_messaged_at':
+        return null
+        case 'profile_image':
+            return 'profileImg'
+        case 'first_name':
+            return 'firstName'
+        case 'last_name':
+            return 'lastName'
+        case 'nick_name':
+            return 'nickName'
+        case 'twitter_name':
+        case 'twitter':
+            return 'twitterName'
+        case 'ranks':
+            return 'rank'
+        case 'grad_year':
+            return 'gradYear'
+        case 'positions':
+        case 'team_positions':
+            return 'position'
+        case 'area_coaches':
+            return 'areaCoach'
+        case 'position_coaches':
+            return 'positionCoach'
+        case 'timezones':
+            return 'timeZone'
+        case 'states':
+            return 'state'
+        default:
+            return property
+    }
+}

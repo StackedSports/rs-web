@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';

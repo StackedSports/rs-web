@@ -1,5 +1,4 @@
-import Stack from '@mui/material/Stack';
-import { Typography } from '@material-ui/core';
+import { Typography,Stack } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';

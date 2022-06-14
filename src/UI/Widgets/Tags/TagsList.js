@@ -1,6 +1,5 @@
 
 import { Stack, Typography, Chip } from '@mui/material'
-import ClearIcon from '@material-ui/icons/Clear'
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions'
 

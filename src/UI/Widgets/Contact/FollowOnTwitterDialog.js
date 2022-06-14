@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
-import { Box, Divider } from '@material-ui/core';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box, Divider } from '@mui/material';
 
 import BaseDialog from 'UI/Widgets/Dialogs/BaseDialog';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
