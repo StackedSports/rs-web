@@ -93,6 +93,8 @@ export default function ReceiverSelectDialog(props) {
         if (!boards.items)
             return
 
+        console.log(boards.items)
+
         let tempTeam = []
         let tempPrivate = []
 

@@ -34,7 +34,8 @@ const name = {
 const contacts = {
     field: 'contacts',
     headerName: 'Contacts',
-    valueGetter: (params) => params.row.contacts.count
+    // TODO: we need to figure out why athletes is coming back from filters, it should only be contacts
+    valueGetter: (params) => params.row.contacts?.count || params.row.athletes?.count || '--'
 }
 
 export const columns = [
