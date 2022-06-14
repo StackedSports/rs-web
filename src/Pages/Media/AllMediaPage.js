@@ -19,9 +19,10 @@ import RenderIf from "UI/Widgets/RenderIf"
 import useSearchParams from 'Hooks/SearchParamsHook';
 
 export const AllMediaPage = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
+	const searchParams = useSearchParams()
 	const { type, value } = useParams()
-	const page = searchParams.get('page') || 1
+
+	// const page = searchParams.get('page') || 1
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -30,40 +31,59 @@ export const AllMediaPage = () => {
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 
-	const medias = useMedias(1, 24)
+	const medias = useMedias(searchParams.page || 1, 24, searchParams.filters)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
+
 	const { selectionModel: selectedMediasIds,
 		selectedData: selectedMedias,
 		count: selectedMediasCount,
 		clear: clearSelection
 	} = multiPageSelection
 
+	
+
 	useEffect(() => {
 		if (type && value) {
-			setReplaceSelectedPanelFilter(
-				{
-					type: type,
-					value: value
-				}
-			)
+			setReplaceSelectedPanelFilter({
+				type: type,
+				value: value
+			})
 		}
 	}, [type, value])
 
-	useEffect(() => {
-		if (medias.pagination) {
-			const params = {};
-			searchParams.forEach((value, key) => {
-				params[key] = params[key] || [];
-				params[key].push(value);
-			});
-			setSearchParams({ ...params, page: medias.pagination.currentPage });
-		}
-	}, [medias.pagination.currentPage, searchParams])
+	// useEffect(() => {
+	// 	if(!searchParams)
+	// 		return
+
+	// 		console.log(searchParams.toString())
+
+	// 		for (const p of searchParams) {
+	// 			console.log(p)
+
+	// 			let key = p[0]
+	// 			let value = p[1]
+
+
+	// 		}
+	// }, [searchParams])
+
+	// useEffect(() => {
+	// 	if (medias.pagination) {
+	// 		const params = {};
+	// 		searchParams.forEach((value, key) => {
+	// 			params[key] = params[key] || [];
+	// 			params[key].push(value);
+	// 		});
+	// 		setSearchParams({ ...params, page: medias.pagination.currentPage });
+	// 	}
+	// }, [medias.pagination.currentPage, searchParams])
 
 	const onFilterChange = (filter) => {
 		console.log("Filter Change", filter)
+		searchParams.setFilters(filter)
+		return
 		medias.filter(filter)
 	}
 

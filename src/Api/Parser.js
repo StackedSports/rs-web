@@ -202,15 +202,21 @@ export const getFilterMediasCriteria = (filters) => {
 
     // OK
     if (filters.fileType)
-        criteria['type'] = filters.fileType[0].id
+        criteria['type'] = filters.fileType[0].id || filters.fileType
 
     // OK 
     if (filters.tag) {
         criteria['tag_id'] = []
 
-        filters.tag.forEach(tag => {
-            criteria['tag_id'].push(tag.id)
-        })
+        if(Array.isArray(filters.tag)) {
+            filters.tag.forEach(tag => {
+                criteria['tag_id'].push(tag.id)
+            })
+        } else {
+            criteria['tag_id'] = filters.tag
+        }
+
+        
     }
 
     if (filters.placeholder)
