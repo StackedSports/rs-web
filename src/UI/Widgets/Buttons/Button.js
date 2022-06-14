@@ -1,7 +1,6 @@
 import { default as MuiButton } from '@mui/material/Button';
 import { default as MuiIconButton } from '@mui/material/IconButton';
 import { LoadingButton } from '@mui/lab';
-import { Typography } from '@material-ui/core';
 
 export const IconButton = ({ Icon, color = 'primary', name, ...props }) => (
 	<LoadingButton color={color} {...props} aria-label={name}>

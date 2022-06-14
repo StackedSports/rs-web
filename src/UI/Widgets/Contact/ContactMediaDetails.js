@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import Stack from '@mui/material/Stack';
-import { Typography } from '@material-ui/core';
+import { Typography, Stack } from '@mui/material';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Button from '@mui/material/Button';
