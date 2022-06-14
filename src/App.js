@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import "./App.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import "./App.css";
 
-import Signup from "./components/signup";
-import SignUp from "Pages/UserOnboarding/SignUp";
+//import Signup from "./components/signup";
+import Signup from "Pages/UserOnboarding/SignUp";
 // import Dashboard from "./components/dashboard/index";
 // import Contacts from "./Pages/Contacts";
 // import Chat from "./Pages/Chat";

@@ -566,8 +566,10 @@ button:focus {
   width: 100%;
 }
 .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
-  
-
   text-transform: capitalize !important; 
- 
+}
+
+a,
+a:hover{
+  color:inh
 }
