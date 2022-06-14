@@ -154,8 +154,7 @@ export default function ContactsPage(props) {
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
     const visibleTableRows = {
-        profileImg: false,//
-        // fullname: true,(default)
+        profileImg: false,
         twitterName: true,
         phone: true,
         state: true,
@@ -465,45 +464,12 @@ export default function ContactsPage(props) {
                         onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
                         disabled={multipageSelection.count == 0}
                     />
-                    {/* <PanelDropdown
-                        header={() => (
-                            <Button
-                                style={{ minWidth: 0 }}
-                                variant="outlined"
-                                name={<ViewColumnIcon />}
-                                textColor="#3871DA"
-                            />
-                        )}
-                        action={{
-                            options: [
-                                { name: 'Profile Image', onClick: onExportAsCSVClick },
-                                { name: 'Full Name', onClick: onRemoveTagClick },
-                                { name: 'First Name', onClick: onFollowOnTwitterClick },
-                                { name: 'Last Name', onClick: onArchiveContactClick },
-                                { name: 'Nick Name', onClick: onExportAsCSVClick },
-                                { name: 'Twitter', onClick: onRemoveTagClick },
-                                { name: 'Phone', onClick: onFollowOnTwitterClick },
-                                { name: 'State', onClick: onArchiveContactClick },
-                                { name: 'School', onClick: onExportAsCSVClick },
-                                { name: 'Grad Year', onClick: onRemoveTagClick },
-                                { name: 'Positions', onClick: onFollowOnTwitterClick },
-                                { name: 'Area Coach', onClick: onArchiveContactClick },
-                                { name: 'Recruiting Coach', onClick: onExportAsCSVClick },
-                                { name: 'Status', onClick: onRemoveTagClick },
-                                { name: 'Status 2', onClick: onFollowOnTwitterClick },
-                                { name: 'Rank', onClick: onArchiveContactClick },
-                                { name: 'Last Messaged', onClick: onArchiveContactClick },
-                                { name: 'Most Active Time', onClick: onArchiveContactClick },
-                                { name: 'Date Added', onClick: onArchiveContactClick },
-                                { name: 'Time Zone', onClick: onArchiveContactClick },
-                                { name: 'Birthday (dob)', onClick: onArchiveContactClick },
-                            ]
-                        }}
-                    /> */}
+
                 </Stack>
             </Stack>
 
             <ContactsTableServerMode
+                id='contacts-table-contacts-page'
                 redirectToDetails
                 contacts={contacts.items}
                 pagination={contacts.pagination}
