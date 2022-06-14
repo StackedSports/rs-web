@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import BackgroundImage from "images/login.png";
-import { Stack, Typography, Grid, TextField, InputAdornment, Tooltip, Button, styled } from "@mui/material";
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, Stack, Typography, Grid, TextField, InputAdornment, Tooltip, Button, styled } from "@mui/material";
+import { ArrowForwardIos, Visibility, VisibilityOff } from '@mui/icons-material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { Link } from "react-router-dom";
-import { Field, Form, Formik } from 'formik';
+import { useFormik } from 'formik';
 import * as  yup from 'yup';
 
-const initalValues = {
+import { AuthContext } from 'Context/Auth/AuthProvider'
+import { LoadingButton } from "@mui/lab";
+
+const initialValues = {
   email: '',
   password: '',
 };
@@ -23,29 +26,24 @@ const validationSchema = yup.object().shape({
 
 export default function Signup() {
 
+  const auth = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleShowPasswordClick = () => {
     setShowPassword(oldShowPassword => !oldShowPassword);
   }
 
-  const loginUserUsingCredential = () => {
+  const loginUserUsingCredential = (email, password) => {
     setLoading(true);
     auth.login(email, password).then(
       (res) => {
-        // console.log(res);
-        // console.log("This is the resonse of login", res.data);
-        //localStorage.setItem("user", JSON.stringify(res.data));
-        //console.log(localStorage.getItem("user"));
         setLoading(false);
-        // window.location.href = "/dashboard";
         console.log('redirecting...')
-        setRedirect('/contacts')
       },
       (error) => {
-        // console.log("this is error", error.JSON());
         console.log('error = ', error);
-        notifyUser("Something went wrong please try again");
+        console.log("Something went wrong please try again");
         setLoading(false);
       }
     );
@@ -61,6 +59,14 @@ export default function Signup() {
       })
   }
 
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values, formikHelpers) => {
+      console.log(values)
+      loginUserUsingCredential(values.email, values.password);
+    }
+  });
 
   return (
     <Stack
@@ -68,10 +74,10 @@ export default function Signup() {
       direction="column"
       alignItems="center"
       gap={4}
-      padding={4}
+      p={4}
       sx={{
-        width: "100vw",
-        height: "100vh",
+        minWidth: "100vw",
+        minHeight: "100vh",
         backgroundImage: `url(${BackgroundImage})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: 'cover',
@@ -80,12 +86,13 @@ export default function Signup() {
       <Stack alignSelf='stretch'>
         <Button
           variant='contained'
+          size="large"
+          color='neutral'
           component={Link}
           to='/singup'
           sx={{
             textDecoration: 'none',
             alignSelf: 'flex-end',
-            backgroundColor: '#00acee',
           }}
         >
           Create your account
@@ -96,118 +103,111 @@ export default function Signup() {
         container
         sx={{
           width: "100%",
-          maxWidth: "700px",
-          minHeight: "590px",
-          borderRadius: (theme) => theme.spacing(5),
+          maxWidth: "800px",
+          borderRadius: (theme) => theme.spacing(4),
           overflow: "hidden",
         }}
       >
         <Grid item
           xs={12}
-          md={8}
-          component={Stack}
-          direction="column"
+          sm={8}
+          md={7}
+          component="form"
+          onSubmit={formik.handleSubmit}
           sx={{
             backgroundColor: "#fff",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: (theme) => theme.spacing(4),
+            gap: (theme) => theme.spacing(2),
           }}
-          gap={5}
-          justifyContent="center"
-          alignItems="center"
+
         >
-          <Typography align="center" component="h2" variant="h3" >
+          <Typography align="center" component="h1" variant="h4" fontWeight='bold' >
             Sign in to your account
           </Typography>
-          <Typography style={{ color: '#ccc', fontWeight: 500 }} component="span" >
+          <Typography sx={{ color: '#b7b7b7', fontWeight: 500, mb: 2 }} component="span" >
             Complete login details to continue
           </Typography>
 
           <Button /* twitter */
-            sx={{
-              width: "378px",
-              padding: "10px 20px",
-              border: "#dadada solid 1px",
-              borderRadius: "5px",
-              justifyContent: "space-between",
-              color: "#000"
-            }}
+            variant="outlined"
+            size="large"
+            color="primary"
+            fullWidth
             onClick={loginUserUsingTwitter}
-            name="Sign in with Twitter"
             endIcon={<TwitterIcon style={{ fontSize: 30, color: "#00acee", }} />}
-          />
+            sx={{ justifyContent: 'space-between' }}
+          >
+            Sign in with Twitter
+          </Button>
 
           <Typography style={{ color: '#ccc', fontWeight: 500 }} component="span" >
             Or
           </Typography>
 
-          <Formik
-            initialValues={initalValues}
-            validationSchema={validationSchema}
-            onSubmit={(values) => {
-              handleSubmit(values)
-            }}
+          <Stack width={'100%'}>
+            <TextField
+              name="email"
+              type="email"
+              variant="outlined"
+              color="primary"
+              label="Email"
+              fullWidth
+              error={Boolean(formik.errors.email) && Boolean(formik.touched.email)}
+              helperText={formik.errors.email || ' '}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+
+            <TextField
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              color="primary"
+              label="Password"
+              autoComplete="current-password"
+              fullWidth
+              onChange={formik.handleChange}
+              error={Boolean(formik.errors.password)}
+              helperText={formik.errors.password || ''}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end"
+                    onClick={handleShowPasswordClick}
+                    sx={{
+                      cursor: 'pointer',
+                    }}>
+                    <Tooltip title={showPassword ? 'Show password' : 'Hide password'}>
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button color='neutral' sx={{ ml: 'auto' }}>
+              Forgot Password?
+            </Button>
+          </Stack>
+
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            loading={loading}
+            fullWidth
+            endIcon={<ArrowForwardIos />}
           >
-            {(forkmikProps) => (
-              <Form
-              //onFocus={handleCloseError}
-              >
-                <Field
-                  name="email"
-                  type="email"
-                  as={TextField}
-                  variant="outlined"
-                  color="primary"
-                  label="Email"
-                  fullWidth
-                  error={Boolean(forkmikProps.errors.email) && Boolean(forkmikProps.touched.email)}
-                  helperText={forkmikProps.errors.email || ' '}
-                />
-
-                <Field
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  as={TextField}
-                  variant="outlined"
-                  color="primary"
-                  label="Senha"
-                  autoComplete="current-password"
-                  fullWidth
-                  margin="dense"
-                  error={Boolean(forkmikProps.errors.password)}
-                  helperText={forkmikProps.errors.password || ' '}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end"
-                        onClick={handleShowPasswordClick}
-                        sx={{
-                          cursor: 'pointer',
-                        }}>
-                        <Tooltip title={showPassword ? 'Show password' : 'Hide password'}>
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={!forkmikProps.isValid || !forkmikProps.dirty}
-                  fullWidth
-                  sx={{ mb: 1 }}
-                >
-                  Iniciar Sessão
-                </Button>
-              </Form>
-            )}
-          </Formik>
+            Sign in to your account
+          </LoadingButton>
         </Grid>
 
         <Grid item
           xs={0}
-          md={4}
+          sm={4}
+          md={5}
           sx={{
             backgroundColor: "#373D4A",
           }}

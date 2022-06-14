@@ -39,6 +39,10 @@ let theme = createTheme({
             main: '#c62828',
             contrastText: '#FFFFFF',
         },
+        neutral: {
+            main: '#1f1919',
+            contrastText: '#FFFFFF',
+        },
         background: {
             default: '#FFFFFF',
             paper: '#FFFFFF',
