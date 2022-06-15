@@ -1,11 +1,13 @@
 import { useState, useContext } from "react";
-import BackgroundImage from "images/login.png";
-import { Box, Stack, Typography, Grid, TextField, InputAdornment, Tooltip, Button, styled } from "@mui/material";
-import { ArrowForwardIos, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, Stack, Typography, Grid, TextField, InputAdornment, Button } from "@mui/material";
+import { ArrowForward, Visibility, VisibilityOff } from '@mui/icons-material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { Link } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as  yup from 'yup';
+
+import BackgroundImage from "images/login.png";
+import BrandIcon from "images/stacked-favicon.png"
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { LoadingButton } from "@mui/lab";
@@ -51,12 +53,9 @@ export default function Signup() {
 
   const loginUserUsingTwitter = () => {
     setLoading(true);
-    auth.loginWithTwitter().then(
-      (res) => {
-        setRedirect('/contacts')
-      }).finally(() => {
-        setLoading(false);
-      })
+    auth.loginWithTwitter().finally(() => {
+      setLoading(false);
+    })
   }
 
   const formik = useFormik({
@@ -73,8 +72,9 @@ export default function Signup() {
       flex={1}
       direction="column"
       alignItems="center"
-      gap={4}
-      p={4}
+      gap={3}
+      py={2}
+      px={[2,4]}
       sx={{
         minWidth: "100vw",
         minHeight: "100vh",
@@ -83,7 +83,8 @@ export default function Signup() {
         backgroundSize: 'cover',
       }}
     >
-      <Stack alignSelf='stretch'>
+      <Stack alignSelf='stretch' direction='row' gap={1} justifyContent='space-between' alignItems='center' >
+        <img src={BrandIcon} width={55} alt="brand" />
         <Button
           variant='contained'
           size="large"
@@ -91,8 +92,9 @@ export default function Signup() {
           component={Link}
           to='/singup'
           sx={{
-            textDecoration: 'none',
-            alignSelf: 'flex-end',
+            paddingY: 2,
+            textTransform: 'none',
+            letterSpacing: '1px',
           }}
         >
           Create your account
@@ -111,7 +113,6 @@ export default function Signup() {
         <Grid item
           xs={12}
           sm={8}
-          md={7}
           component="form"
           onSubmit={formik.handleSubmit}
           sx={{
@@ -119,15 +120,16 @@ export default function Signup() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: (theme) => theme.spacing(4),
+            paddingY: (theme) => theme.spacing(3),
+            paddingX: (theme) => theme.spacing(7),
             gap: (theme) => theme.spacing(2),
           }}
 
         >
-          <Typography align="center" component="h1" variant="h4" fontWeight='bold' >
+          <Typography align="center" component="h1" fontSize={45} fontWeight='bold' >
             Sign in to your account
           </Typography>
-          <Typography sx={{ color: '#b7b7b7', fontWeight: 500, mb: 2 }} component="span" >
+          <Typography sx={{ color: '#b7b7b7', fontWeight: 500, mb: 4 }} component="span" >
             Complete login details to continue
           </Typography>
 
@@ -179,14 +181,12 @@ export default function Signup() {
                     sx={{
                       cursor: 'pointer',
                     }}>
-                    <Tooltip title={showPassword ? 'Show password' : 'Hide password'}>
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </Tooltip>
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </InputAdornment>
                 ),
               }}
             />
-            <Button color='neutral' sx={{ ml: 'auto' }}>
+            <Button color='neutral' sx={{ color: '#888888', fontSize: '1rem', ml: 'auto' }}>
               Forgot Password?
             </Button>
           </Stack>
@@ -198,7 +198,13 @@ export default function Signup() {
             size="large"
             loading={loading}
             fullWidth
-            endIcon={<ArrowForwardIos />}
+            endIcon={<ArrowForward />}
+            sx={{
+              py: 2,
+              justifyContent: 'space-between',
+              textTransform: 'none',
+              letterSpacing: '1px',
+            }}
           >
             Sign in to your account
           </LoadingButton>
@@ -207,16 +213,13 @@ export default function Signup() {
         <Grid item
           xs={0}
           sm={4}
-          md={5}
           sx={{
             backgroundColor: "#373D4A",
           }}
         >
 
         </Grid>
-
       </Grid>
-
     </Stack>
   );
 }
