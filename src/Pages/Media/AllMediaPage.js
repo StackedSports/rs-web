@@ -16,13 +16,16 @@ import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoi
 import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
-import useSearchParams from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToSearchParams,searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
+import { getFilterMediasCriteria } from "Api/Parser"
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
 	const { type, value } = useParams()
 
-	// const page = searchParams.get('page') || 1
+	const page = searchParams.searchParams.get('page')
+	const queryFilters = searchParams.searchParams.get('filters')
+	console.log('queryFilters', searchParamsToFilterObject(queryFilters))
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -30,13 +33,14 @@ export const AllMediaPage = () => {
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
-
-	const medias = useMedias(searchParams.page || 1, 24, searchParams.filters)
+	//searchParams.filters
+	const medias = useMedias(page, 24)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
 
-	const { selectionModel: selectedMediasIds,
+	const { 
+		selectionModel: selectedMediasIds,
 		selectedData: selectedMedias,
 		count: selectedMediasCount,
 		clear: clearSelection
@@ -51,10 +55,14 @@ export const AllMediaPage = () => {
 		}
 	}, [type, value])
 
+	useEffect(() => {
+		searchParams.appenSearchParams('page', medias.pagination.currentPage)
+	}, [medias.pagination.currentPage])
 
 	const onFilterChange = (filter) => {
-		console.log("Filter Change", filter)
-		searchParams.setFilters(filter)
+		const criteria = getFilterMediasCriteria(filter)
+		console.log("criteria",criteria)
+		searchParams.appenSearchParams('filters', filterObjectToSearchParams(criteria))
 		return
 		medias.filter(filter)
 	}
@@ -222,7 +230,6 @@ export const AllMediaPage = () => {
 				loading={medias.loading}
 				view={viewGrid ? 'grid' : 'list'}
 				linkTo={mediaRoutes.mediaDetails}
-				//onSelectionChange={onSelectionChange}
 				multiPageSelection={multiPageSelection}
 				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>

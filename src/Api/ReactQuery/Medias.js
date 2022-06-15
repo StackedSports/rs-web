@@ -17,13 +17,11 @@ export const useMedia = (id) => {
     }
 }
 
-export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
+export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
     const [medias, setMedias] = useState([])
 
-    console.log(filters)
-    console.log(initialFilters)
     //get right function if filter is null or empty get filterMidias else get getMidas
     const get = filters && !lodash.isEmpty(filters) ? filterMedias : getMedias
 
@@ -40,16 +38,16 @@ export const useMedias = (currentPage, itemsPerPage, initialFilters) => {
     }, [reactQuery.isSuccess, reactQuery.data])
 
     useEffect(() => {
-        if(initialFilters && JSON.stringify(initialFilters) !== JSON.stringify(filters)) {
+        if (initialFilters && !lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
-            console.log('xxxx')
         }
     }, [initialFilters])
 
     useEffect(() => {
-        pagination.getPage(currentPage)
-    }, [currentPage])
-
+        if (initialPage && initialPage != pagination.currentPage) {
+            pagination.getPage(initialPage)
+        }
+    }, [initialPage])
 
     const filter = (filters) => {
         pagination.getPage(1)

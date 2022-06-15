@@ -4,34 +4,34 @@ import { useHistory, useLocation } from "react-router-dom";
 export default function useSearchParams() {
     const history = useHistory();
     const { search } = useLocation();
+    const searchParams = useMemo(() => new URLSearchParams(search), [search]);
 
-    const searchParams = useMemo(() => {
-        console.log(search)
+    const searchParamsObj = useMemo(() => {
 
         let params = {
             filters: null,
             page: null
         }
-        
+
         let urlParams = new URLSearchParams(search)
 
         for (const p of urlParams) {
-            console.log(p)
+            // console.log(p)
 
             let key = p[0]
             let value = p[1]
 
-            if(key === 'page')
+            if (key === 'page')
                 params.page = value
             else {
-                if(!params.filters)
+                if (!params.filters)
                     params.filters = {}
 
                 params.filters[key] = value
             }
         }
 
-        console.log(params)
+        //  console.log(params)
 
         return params
 
@@ -60,7 +60,6 @@ export default function useSearchParams() {
             Object.entries(filters).forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(item => newParams.append(key, item.id))
-                    // newParams.append(key, value)
                 }
                 else {
                     newParams.append(key, value)
@@ -71,9 +70,48 @@ export default function useSearchParams() {
         history.push({ search: newParams.toString() })
     }
 
-    // return [searchParams, setSearchParams];
+    const appenSearchParams = (key, value) => {
+        if (searchParams.has(key) && searchParams.get(key) == value) return
+
+        const newParams = new URLSearchParams(search)
+        newParams.set(key, value)
+        history.push({ search: newParams.toString() })
+    }
+
     return {
-        ...searchParams,
+        ...searchParamsObj,
+        searchParams,
+        setSearchParams,
+        appenSearchParams,
         setFilters
     }
+}
+
+export function filterObjectToSearchParams(filters) {
+
+    const parserFilters = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            const reduce = value.reduce((acc, item) => {
+                return [...acc, item]
+            }, [])
+            parserFilters.append(key, reduce.join(','))
+        }
+        else {
+            parserFilters.append(key, value)
+        }
+    })
+    return parserFilters.toString()
+}
+
+export function searchParamsToFilterObject(searchParams) {
+    if (searchParams) {
+        const filtersSearchParams = new URLSearchParams(searchParams)
+        const filterObject = {}
+        filtersSearchParams.forEach((value, key) => {
+            filterObject[key] = value.split(',')
+        })
+        return filterObject
+    }
+    return null
 }

@@ -91,7 +91,6 @@ export const PanelFilters = (props) => {
 			if (newSelectFilters[filterName].length === 0) {
 				delete newSelectFilters[filterName];
 			}
-
 			return newSelectFilters;
 		})
 	}

@@ -14,10 +14,6 @@ export const MediaPage = (props) => {
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
     const contacts = useContacts()
-<<<<<<< HEAD
-	// const [searchParams, setSearchParams] = useSearchParams();
-=======
->>>>>>> origin/feature
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
@@ -41,13 +37,10 @@ export const MediaPage = (props) => {
         }
     }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
 
-<<<<<<< HEAD
     // useEffect(() => {
     //     setSearchParams(getFilterMediasCriteria(selectedFilters))
     // }, [selectedFilters])
 
-=======
->>>>>>> origin/feature
     const filtersOptions = useMemo(() => {
         let index = 0
         return [
