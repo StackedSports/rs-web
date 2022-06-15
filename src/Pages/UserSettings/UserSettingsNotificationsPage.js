@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Divider, Typography } from "@material-ui/core";
+import { Divider, Typography } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 
 import UserSettingsPage from "./UserSettingsPage";

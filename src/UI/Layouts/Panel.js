@@ -13,7 +13,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 export const PanelDropdown = ({ action, header }) => {
 
@@ -123,7 +123,7 @@ export default function Panel(props) {
                         {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick} />}
                         <h2 className='Title'>{props.title}</h2>
                         {props.showBackBoardToContacts &&
-                            <Tooltip title="Back to contacts" placement='right-center'>
+                            <Tooltip title="Back to contacts" placement='right'>
                                 <ClearIcon
                                     onClick={props.onBackBoardToContacts}
                                     style={{ color: "red", cursor: "pointer", fontSize: 27, marginLeft: 8 }}

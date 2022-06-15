@@ -3,7 +3,7 @@ import AvatarImg from "images/avatar.png";
 
 import { formatPhoneNumber } from 'utils/Parser';
 import { settingsRoutes } from 'Routes/Routes';
-import { Avatar, Tooltip, Typography } from '@material-ui/core';
+import { Avatar, Tooltip, Typography } from '@mui/material';
 
 
 const getImg = (profile_image) => {

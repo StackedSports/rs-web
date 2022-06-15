@@ -42,8 +42,6 @@ export const AllMediaPage = () => {
 		clear: clearSelection
 	} = multiPageSelection
 
-	
-
 	useEffect(() => {
 		if (type && value) {
 			setReplaceSelectedPanelFilter({
@@ -53,32 +51,6 @@ export const AllMediaPage = () => {
 		}
 	}, [type, value])
 
-	// useEffect(() => {
-	// 	if(!searchParams)
-	// 		return
-
-	// 		console.log(searchParams.toString())
-
-	// 		for (const p of searchParams) {
-	// 			console.log(p)
-
-	// 			let key = p[0]
-	// 			let value = p[1]
-
-
-	// 		}
-	// }, [searchParams])
-
-	// useEffect(() => {
-	// 	if (medias.pagination) {
-	// 		const params = {};
-	// 		searchParams.forEach((value, key) => {
-	// 			params[key] = params[key] || [];
-	// 			params[key].push(value);
-	// 		});
-	// 		setSearchParams({ ...params, page: medias.pagination.currentPage });
-	// 	}
-	// }, [medias.pagination.currentPage, searchParams])
 
 	const onFilterChange = (filter) => {
 		console.log("Filter Change", filter)

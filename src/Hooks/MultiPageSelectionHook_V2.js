@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const reducer = (state, action) => {
-    // add and remove are to handle with on selection model change of mui data grid, internal use only
+    // add and remove are to handle with on selection model change of mui data grid with keepNonExistentRowsSelected active, internal use only
     switch (action.type) {
         case 'add':
             return {
