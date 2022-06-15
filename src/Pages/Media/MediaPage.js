@@ -8,6 +8,8 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
+import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import { getFilterMediasCriteria } from 'Api/Parser'
 
 export const MediaPage = (props) => {
     const tags = useTags()
@@ -18,6 +20,8 @@ export const MediaPage = (props) => {
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
 
+    const searchParams = useSearchParams()
+
     //Handle with setSelectedFilters from props
     useEffect(() => {
         if (props.replecaSelectPanelFilter) {
@@ -25,21 +29,17 @@ export const MediaPage = (props) => {
             if (type === 'type') {
                 if (!mediaTypes.loading)
                     setSelectedFilters({
-                        "fileType": [{ ...mediaTypes.items.find(item => item.id == value) }],
+                        "type": [{ ...mediaTypes.items.find(item => item.id == value) }],
                     })
             }
             if (type === 'owner') {
                 if (!teamMembers.loading)
                     setSelectedFilters({
-                        "owner": [{ ...teamMembers.items?.find(item => item.id == value) }],
+                        "owner_id": [{ ...teamMembers.items?.find(item => item.id == value) }],
                     })
             }
         }
     }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
-
-    // useEffect(() => {
-    //     setSearchParams(getFilterMediasCriteria(selectedFilters))
-    // }, [selectedFilters])
 
     const filtersOptions = useMemo(() => {
         let index = 0
@@ -68,7 +68,7 @@ export const MediaPage = (props) => {
 
     const panelFiltersData = useMemo(() =>
     ({
-        "fileType": {
+        "type": {
             label: 'File Type',
             options: mediaTypes.items,
             isUnique: true,
@@ -78,7 +78,7 @@ export const MediaPage = (props) => {
             label: 'Distributed',
             options: [],
         }, */
-        "owner": {
+        "owner_id": {
             label: 'Owner',
             options: teamMembers.items || [],
             optionsLabel: (item) => getFullName(item),
@@ -92,7 +92,7 @@ export const MediaPage = (props) => {
             onSearch: (value) => value === '' ? contacts.clearFilter() : contacts.filter({ search: value }),
             loading: contacts.loading,
         }, */
-        "dateUploaded": {
+        "created_at": {
             label: 'Date Uploaded',
             type: 'date',
             optionsLabel: (dates) => {
@@ -101,12 +101,16 @@ export const MediaPage = (props) => {
             disableFuture: true,
             isUnique: true
         },
-        "tag": {
+        "tag_id": {
             label: 'Tag',
             options: tags.items,
             onSearch: (search) => tags.search(search),
         },
     }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items, contacts.loading])
+
+    useEffect(() => {
+        searchParams.appenSearchParams('filters', filterObjectToSearchParams( getFilterMediasCriteria(selectedFilters)))
+    }, [selectedFilters])
 
     const onTopActionClick = (e) => {
         setUploadDialogOpen(true)

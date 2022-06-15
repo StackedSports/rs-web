@@ -15,9 +15,8 @@ export const getPagination = (res) => {
 export const paginationConfig = (currentPage, itemsPerPage) => ({ currentPage, itemsPerPage })
 
 export const usePagination = (initialPage, itemsPerPag) => {
-    const history = useHistory()
 
-    const [currentPage, setCurrentPage] = useState(initialPage || 1)
+    const [currentPage, setCurrentPage] = useState( Number(initialPage) || 1)
     const [itemsPerPage, setItemsPerPage] = useState(itemsPerPag || 50)
     const [totalItems, setTotalItems] = useState(0)
     const [totalPages, setTotalPages] = useState(0)

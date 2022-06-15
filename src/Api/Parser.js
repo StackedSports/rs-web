@@ -84,7 +84,7 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['dob'] = filters.birthday[0]
     }
 
-    if(filters.status_2){
+    if (filters.status_2) {
         //console.log(filters.status_2)
         criteria['status_2'] = filters.status_2.map(status => status.name)
     }
@@ -111,7 +111,7 @@ export const getFilterContactsCriteria = (filters) => {
 }
 
 const getStatus = (status) => {
-   // console.log(status)
+    // console.log(status)
     switch (status) {
         case 'drafts': return 'draft'
         case 'in_progress': return 'in progress'
@@ -201,35 +201,62 @@ export const getFilterMediasCriteria = (filters) => {
     }
 
     // OK
-    if (filters.fileType)
-        criteria['type'] = filters.fileType[0].id || filters.fileType
+    if (filters.type)
+        criteria['type'] = filters.type[0].id || filters.fileType
 
     // OK 
-    if (filters.tag) {
-        criteria['tag_id'] = []
-
-        if(Array.isArray(filters.tag)) {
-            filters.tag.forEach(tag => {
-                criteria['tag_id'].push(tag.id)
-            })
-        } else {
-            criteria['tag_id'] = filters.tag
-        }
-
-        
+    if (filters.tag_id) {
+        criteria['tag_id'] = filters.tag_id.map(tag => tag.id)
     }
 
     if (filters.placeholder)
         criteria['placeholder_id'] = filters.placeholder
 
-    if (filters.owner) {
-        criteria['owner_id'] = filters.owner.map(owner => owner.id)
+    if (filters.owner_id) {
+        criteria['owner_id'] = filters.owner_id.map(owner => owner.id)
     }
-    if (filters.dateUploaded) {
-        criteria['created_at'] = filters.dateUploaded[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    if (filters.created_at) {
+        criteria['created_at'] = filters.created_at[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
     if (filters.contact_id)
         criteria['contact_id'] = filters.contact_id.map(contact => contact.id)
+
+    if (Object.keys(criteria).length === 0)
+        return null
+
+    return criteria
+}
+
+export const getQueryStringCriteria = (queryString) => {
+    if (!queryString)
+        return null
+
+    const criteria = {}
+
+    if (queryString.name) {
+        criteria['name'] = queryString.name[0]
+    }
+
+    // OK
+    if (queryString.type)
+        criteria['type'] = queryString.type[0]
+
+    // OK 
+    if (queryString.tag_id) {
+        criteria['tag_id'] = queryString.tag_id
+    }
+
+    if (queryString.placeholder)
+        criteria['placeholder_id'] = queryString.placeholder
+
+    if (queryString.owner_id) {
+        criteria['owner_id'] = queryString.owner_id
+    }
+    if (queryString.created_at) {
+        criteria['created_at'] = queryString.created_at
+    }
+    if (queryString.contact_id)
+        criteria['contact_id'] = queryString.contact_id
 
     if (Object.keys(criteria).length === 0)
         return null

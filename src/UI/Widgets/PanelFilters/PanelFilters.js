@@ -49,9 +49,21 @@ export const PanelFilters = (props) => {
 		}
 	}, [props.setFilter]);
 
+	const getOptionLabel = (filter, option) => {
+
+		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
+			return filter.optionsLabel(option);
+		} else if (filter.optionsLabel && (typeof filter.optionsLabel === 'string' || filter.optionsLabel instanceof String)) {
+			return option[filter.optionsLabel];
+		} else {
+			return option.name;
+		}
+	}
+
 	const handleOptionsChange = (filterName, option, filter) => {
 		//console.log(filterName)
 		//console.log(option)
+		//option = { ...option, itemLabel: getOptionLabel(filter, option) } try to save the label from the option
 
 		let filters = Object.assign({}, selectedFilters)
 
@@ -93,17 +105,6 @@ export const PanelFilters = (props) => {
 			}
 			return newSelectFilters;
 		})
-	}
-
-	const getOptionLabel = (filter, option) => {
-
-		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
-			return filter.optionsLabel(option);
-		} else if (filter.optionsLabel && (typeof filter.optionsLabel === 'string' || filter.optionsLabel instanceof String)) {
-			return option[filter.optionsLabel];
-		} else {
-			return option.name;
-		}
 	}
 
 	//console.log(props.filters)

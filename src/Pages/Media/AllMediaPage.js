@@ -16,16 +16,15 @@ import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoi
 import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
-import useSearchParams, { filterObjectToSearchParams,searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
-import { getFilterMediasCriteria } from "Api/Parser"
+import { getQueryStringCriteria } from "Api/Parser"
+import useSearchParams, {searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
 	const { type, value } = useParams()
 
 	const page = searchParams.searchParams.get('page')
-	const queryFilters = searchParams.searchParams.get('filters')
-	console.log('queryFilters', searchParamsToFilterObject(queryFilters))
+	const queryFilters =getQueryStringCriteria(searchParamsToFilterObject(searchParams.searchParams.get('filters')))
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -34,7 +33,7 @@ export const AllMediaPage = () => {
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
 	//searchParams.filters
-	const medias = useMedias(page, 24)
+	const medias = useMedias(page, 24,queryFilters)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
@@ -60,11 +59,8 @@ export const AllMediaPage = () => {
 	}, [medias.pagination.currentPage])
 
 	const onFilterChange = (filter) => {
-		const criteria = getFilterMediasCriteria(filter)
-		console.log("criteria",criteria)
-		searchParams.appenSearchParams('filters', filterObjectToSearchParams(criteria))
-		return
-		medias.filter(filter)
+		//return
+		//medias.filter(filter)
 	}
 
 	const onArchiveMedia = () => {

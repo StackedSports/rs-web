@@ -71,10 +71,14 @@ export default function useSearchParams() {
     }
 
     const appenSearchParams = (key, value) => {
-        if (searchParams.has(key) && searchParams.get(key) == value) return
-
+        if ((searchParams.has(key) && searchParams.get(key) == value)) return
         const newParams = new URLSearchParams(search)
-        newParams.set(key, value)
+        console.log("apendando", key, value)
+        if (value) {
+            newParams.set(key, value)
+        } else
+            newParams.delete(key)
+            
         history.push({ search: newParams.toString() })
     }
 
@@ -89,6 +93,7 @@ export default function useSearchParams() {
 
 export function filterObjectToSearchParams(filters) {
 
+    if (!filters) return
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
@@ -109,7 +114,7 @@ export function searchParamsToFilterObject(searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
         const filterObject = {}
         filtersSearchParams.forEach((value, key) => {
-            filterObject[key] = value.split(',')
+            filterObject[key] = value.split(',').map(item => parseInt(item) || item)
         })
         return filterObject
     }

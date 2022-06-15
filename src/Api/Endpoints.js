@@ -602,7 +602,8 @@ export const filterMedias = (page, perPage, filters) => {
     const data = {
         page: page,
         per_page: perPage,
-        ...getFilterMediasCriteria(filters),
+        //...getFilterMediasCriteria(filters),
+        ...filters
     }
 
     console.log(data)
