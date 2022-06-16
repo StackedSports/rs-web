@@ -38,7 +38,7 @@ export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
     }, [reactQuery.isSuccess, reactQuery.data])
 
     useEffect(() => {
-        if (initialFilters && !lodash.isEqual(initialFilters, filters)) {
+        if ( !lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
         }
     }, [initialFilters])

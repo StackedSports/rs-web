@@ -3,39 +3,15 @@ import { useHistory, useLocation } from "react-router-dom";
 
 export default function useSearchParams() {
     const history = useHistory();
-    const { search } = useLocation();
+    const { pathname, search } = useLocation();
     const searchParams = useMemo(() => new URLSearchParams(search), [search]);
 
-    const searchParamsObj = useMemo(() => {
-
-        let params = {
-            filters: null,
-            page: null
+    const filtersAndPageObj = useMemo(() => {
+        return {
+            filters: searchParamsToFilterObject(searchParams.get('filters')),
+            page: Number(searchParams.get('page')) || 1,
         }
-
-        let urlParams = new URLSearchParams(search)
-
-        for (const p of urlParams) {
-            // console.log(p)
-
-            let key = p[0]
-            let value = p[1]
-
-            if (key === 'page')
-                params.page = value
-            else {
-                if (!params.filters)
-                    params.filters = {}
-
-                params.filters[key] = value
-            }
-        }
-
-        //  console.log(params)
-
-        return params
-
-    }, [search]);
+    }, [searchParams]);
 
     const setSearchParams = (params) => {
         const newParams = new URLSearchParams();
@@ -50,40 +26,30 @@ export default function useSearchParams() {
                 }
             })
         }
-        history.push({ search: newParams.toString() })
+        const newParamsStr = newParams.toString()
+        if (searchParams.toString() !== newParamsStr)
+            history.push({ search: newParamsStr })
     }
-
-    const setFilters = (filters) => {
-        const newParams = new URLSearchParams()
-
-        if (filters) {
-            Object.entries(filters).forEach(([key, value]) => {
-                if (Array.isArray(value)) {
-                    value.forEach(item => newParams.append(key, item.id))
-                }
-                else {
-                    newParams.append(key, value)
-                }
-            })
-        }
-
-        history.push({ search: newParams.toString() })
-    }
-
-    const appenSearchParams = (key, value) => {
+    const appenSearchParams = (key, value, redirectTo) => {
         if ((searchParams.has(key) && searchParams.get(key) == value)) return
         const newParams = new URLSearchParams(search)
-        console.log("apendando", key, value)
         if (value) {
             newParams.set(key, value)
         } else
             newParams.delete(key)
-            
-        history.push({ search: newParams.toString() })
+
+        const newParamsStr = newParams.toString()
+        if (searchParams.toString() !== newParamsStr) {
+            history.push({ pathname: redirectTo || pathname, search: newParamsStr })
+        }
+    }
+
+    const setFilters = (filters, redirectTo) => {
+        appenSearchParams('filters', filterObjectToSearchParams(filters),redirectTo)
     }
 
     return {
-        ...searchParamsObj,
+        ...filtersAndPageObj,
         searchParams,
         setSearchParams,
         appenSearchParams,
@@ -92,18 +58,17 @@ export default function useSearchParams() {
 }
 
 export function filterObjectToSearchParams(filters) {
-
     if (!filters) return
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
             const reduce = value.reduce((acc, item) => {
-                return [...acc, item]
+                return [...acc, `${item.itemLabel}:${item.value}`]
             }, [])
             parserFilters.append(key, reduce.join(','))
         }
         else {
-            parserFilters.append(key, value)
+            parserFilters.append(key, `${value.itemLabel}:${value.value}`)
         }
     })
     return parserFilters.toString()
@@ -114,7 +79,10 @@ export function searchParamsToFilterObject(searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
         const filterObject = {}
         filtersSearchParams.forEach((value, key) => {
-            filterObject[key] = value.split(',').map(item => parseInt(item) || item)
+            filterObject[key] = value.split(',').map(item => {
+                const [itemLabel, value] = item.split(':')
+                return { itemLabel: itemLabel, value: Number(value) || value }
+            })
         })
         return filterObject
     }

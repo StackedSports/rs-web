@@ -6,7 +6,7 @@ import axios from "axios";
 import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
-    getFilterMediasCriteria,
+    getMediaQueryCriteriaObjFromFilters,
     getFilterPlaceholdersCriteria
 } from './Parser'
 

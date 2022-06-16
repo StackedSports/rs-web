@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useContext } from "react"
-import { useParams } from "react-router-dom"
 import { IconButton, Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined, Clear } from '@mui/icons-material'
 
@@ -16,15 +15,14 @@ import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoi
 import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
-import { getQueryStringCriteria } from "Api/Parser"
-import useSearchParams, {searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
+import { getMediaCriteriaFromQueryString } from "Api/Parser"
+import useSearchParams, { searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
-	const { type, value } = useParams()
 
-	const page = searchParams.searchParams.get('page')
-	const queryFilters =getQueryStringCriteria(searchParamsToFilterObject(searchParams.searchParams.get('filters')))
+	const page = searchParams.page
+	const queryFilters = getMediaCriteriaFromQueryString(searchParams.filters)
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -32,27 +30,17 @@ export const AllMediaPage = () => {
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
-	//searchParams.filters
-	const medias = useMedias(page, 24,queryFilters)
+	const medias = useMedias(page, 24, queryFilters)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
 
-	const { 
+	const {
 		selectionModel: selectedMediasIds,
 		selectedData: selectedMedias,
 		count: selectedMediasCount,
 		clear: clearSelection
 	} = multiPageSelection
-
-	useEffect(() => {
-		if (type && value) {
-			setReplaceSelectedPanelFilter({
-				type: type,
-				value: value
-			})
-		}
-	}, [type, value])
 
 	useEffect(() => {
 		searchParams.appenSearchParams('page', medias.pagination.currentPage)

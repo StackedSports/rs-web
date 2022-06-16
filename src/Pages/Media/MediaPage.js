@@ -8,38 +8,32 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
-import { getFilterMediasCriteria } from 'Api/Parser'
+import useSearchParams, { filterObjectToSearchParams, searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
+import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
+import lodash from 'lodash';
 
 export const MediaPage = (props) => {
+    const searchParams = useSearchParams()
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
     const contacts = useContacts()
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState()
+    const [selectedFilters, setSelectedFilters] = useState(searchParams.filters)
 
-    const searchParams = useSearchParams()
 
-    //Handle with setSelectedFilters from props
     useEffect(() => {
-        if (props.replecaSelectPanelFilter) {
-            const { type, value } = props.replecaSelectPanelFilter
-            if (type === 'type') {
-                if (!mediaTypes.loading)
-                    setSelectedFilters({
-                        "type": [{ ...mediaTypes.items.find(item => item.id == value) }],
-                    })
-            }
-            if (type === 'owner') {
-                if (!teamMembers.loading)
-                    setSelectedFilters({
-                        "owner_id": [{ ...teamMembers.items?.find(item => item.id == value) }],
-                    })
-            }
+        const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
+        searchParams.setFilters(criteria,props.onFilterRedirect) 
+    }, [selectedFilters])
+
+    useEffect(() => {
+        const parsedSelectedFilters = getMediaQueryCriteriaObjFromFilters(selectedFilters)
+        if (!lodash.isEqual(parsedSelectedFilters, searchParams.filters)) {
+            setSelectedFilters(searchParams.filters)
         }
-    }, [props.replecaSelectPanelFilter, mediaTypes.loading, teamMembers.loading])
+    }, [searchParams.filters])
 
     const filtersOptions = useMemo(() => {
         let index = 0
@@ -50,13 +44,21 @@ export const MediaPage = (props) => {
                 items: teamMembers.items.map(item => ({
                     id: item.id,
                     name: getFullName(item),
-                    path: `${mediaRoutes.filters.owner}/${item.id}`
+                    path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
+                        owner_id: {
+                            itemLabel: getFullName(item), value: item.id
+                        }
+                    })}`,
                 }))
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
                 name: item.name,
-                path: `${mediaRoutes.filters.type}/${item.id}`
+                path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
+                    type: {
+                        itemLabel: item.name, value: item.id
+                    }
+                })}`,
             })),
             {
                 id: ++index,
@@ -95,9 +97,7 @@ export const MediaPage = (props) => {
         "created_at": {
             label: 'Date Uploaded',
             type: 'date',
-            optionsLabel: (dates) => {
-                return dates[0] + ' - ' + dates[1]
-            },
+            optionsLabel: (dates) => `${dates.startDate} - ${dates.endDate}`,
             disableFuture: true,
             isUnique: true
         },
@@ -108,17 +108,14 @@ export const MediaPage = (props) => {
         },
     }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items, contacts.loading])
 
-    useEffect(() => {
-        searchParams.appenSearchParams('filters', filterObjectToSearchParams( getFilterMediasCriteria(selectedFilters)))
-    }, [selectedFilters])
-
     const onTopActionClick = (e) => {
         setUploadDialogOpen(true)
     }
 
     const onPanelFilterChange = (filter) => {
         setSelectedFilters(filter)
-        props.filter(filter)
+        if (props.filter)
+            props.filter(filter)
     }
 
     return (
@@ -128,7 +125,6 @@ export const MediaPage = (props) => {
             onTopActionClick={onTopActionClick}
             filters={filtersOptions}
             actions={props.actions}
-            //loading={teamMembers.loading}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: panelFiltersData,

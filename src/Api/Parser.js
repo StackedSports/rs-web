@@ -201,22 +201,26 @@ export const getFilterMediasCriteria = (filters) => {
     }
 
     // OK
-    if (filters.type)
-        criteria['type'] = filters.type[0].id || filters.fileType
+    if (filters.fileType)
+        criteria['type'] = filters.fileType[0].id
 
     // OK 
-    if (filters.tag_id) {
-        criteria['tag_id'] = filters.tag_id.map(tag => tag.id)
+    if (filters.tag) {
+        criteria['tag_id'] = []
+
+        filters.tag.forEach(tag => {
+            criteria['tag_id'].push(tag.id)
+        })
     }
 
     if (filters.placeholder)
         criteria['placeholder_id'] = filters.placeholder
 
-    if (filters.owner_id) {
-        criteria['owner_id'] = filters.owner_id.map(owner => owner.id)
+    if (filters.owner) {
+        criteria['owner_id'] = filters.owner.map(owner => owner.id)
     }
-    if (filters.created_at) {
-        criteria['created_at'] = filters.created_at[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    if (filters.dateUploaded) {
+        criteria['created_at'] = filters.dateUploaded[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
     }
     if (filters.contact_id)
         criteria['contact_id'] = filters.contact_id.map(contact => contact.id)
@@ -227,40 +231,80 @@ export const getFilterMediasCriteria = (filters) => {
     return criteria
 }
 
-export const getQueryStringCriteria = (queryString) => {
+// this function is used to normalize the data between the api criteria filters and url params {itemLabel,value}
+export const getMediaQueryCriteriaObjFromFilters = (filters) => {
+    if (!filters)
+        return null
+
+    let criteria = {}
+
+    if (filters.name) {
+        criteria['name'] = { itemLabel: filters.itemLabel, value: filters.name }
+    }
+
+    if (filters.type)
+        criteria['type'] = filters.type.map(type => ({ itemLabel: type.itemLabel, value: type.id || type.value }))
+
+    if (filters.tag_id) {
+        criteria['tag_id'] = filters.tag_id.map(tag => ({ itemLabel: tag.itemLabel, value: tag.id || tag.value }))
+    }
+
+    if (filters.placeholder)
+        criteria['placeholder_id'] = filters.placeholder.map(placeholder => ({ itemLabel: placeholder.itemLabel, value: placeholder.id || placeholder.value }))
+
+    if (filters.owner_id) {
+        criteria['owner_id'] = filters.owner_id.map(owner => ({ itemLabel: owner.itemLabel, value: owner.id || owner.value }))
+    }
+
+    if (filters.created_at) {
+        const { startDate, endDate } = filters.created_at[0]
+        criteria['created_at'] = { itemLabel: filters.itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
+    }
+
+    // TODO: need add it on the server side
+    /*     if (filters.contact_id)
+            criteria['contact_id'] = { label: filters.itemLabel, value: filters.contact_id.map(contact => contact.id) } */
+
+    if (Object.keys(criteria).length === 0)
+        return null
+
+    return criteria
+}
+
+// this function parse url params to the api criteria values
+export const getMediaCriteriaFromQueryString = (queryString) => {
     if (!queryString)
         return null
 
     const criteria = {}
 
     if (queryString.name) {
-        criteria['name'] = queryString.name[0]
+        criteria['name'] = queryString.name.value
     }
 
-    // OK
     if (queryString.type)
-        criteria['type'] = queryString.type[0]
+        criteria['type'] = queryString.type.map(type => type.value)[0]
 
-    // OK 
     if (queryString.tag_id) {
-        criteria['tag_id'] = queryString.tag_id
+        criteria['tag_id'] = queryString.tag_id.map(tag => tag.value)
     }
 
     if (queryString.placeholder)
-        criteria['placeholder_id'] = queryString.placeholder
+        criteria['placeholder_id'] = queryString.placeholder.value
 
     if (queryString.owner_id) {
-        criteria['owner_id'] = queryString.owner_id
+        criteria['owner_id'] = queryString.owner_id.map(owner => owner.value)
     }
     if (queryString.created_at) {
-        criteria['created_at'] = queryString.created_at
+        console.log("queryString", queryString.created_at)
+        criteria['created_at'] = queryString.created_at.value
     }
-    if (queryString.contact_id)
-        criteria['contact_id'] = queryString.contact_id
+    //TODO
+    /*  if (queryString.contact_id)
+         criteria['contact_id'] = queryString.contact_id.value */
 
     if (Object.keys(criteria).length === 0)
         return null
-
     return criteria
 }
 

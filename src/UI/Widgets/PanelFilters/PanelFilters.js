@@ -20,13 +20,12 @@ export const PanelFilters = (props) => {
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
 	useEffect(() => {
-		if (!props.selectedFilters || lodash.isEqual(props.selectedFilters, selectedFilters)) {
-			//console.log("No changes detected");
-			return
-		}
-		//console.log("external Change happens", props.selectedFilters)
-		setSelectedFilters(props.selectedFilters)
+		//console.log("No changes detected");
+		if (lodash.isEqual(props.selectedFilters, selectedFilters)) return
+		if (!props.selectedFilters && selectedFilters === {}) return
 
+		//console.log("external Change happens", props.selectedFilters)
+		setSelectedFilters(props.selectedFilters || {})
 	}, [props.selectedFilters])
 
 	useEffect(() => {
@@ -63,8 +62,7 @@ export const PanelFilters = (props) => {
 	const handleOptionsChange = (filterName, option, filter) => {
 		//console.log(filterName)
 		//console.log(option)
-		//option = { ...option, itemLabel: getOptionLabel(filter, option) } try to save the label from the option
-
+		option = { ...option, itemLabel: getOptionLabel(filter, option) }
 		let filters = Object.assign({}, selectedFilters)
 
 		if (filters[filterName]) {
@@ -106,7 +104,6 @@ export const PanelFilters = (props) => {
 			return newSelectFilters;
 		})
 	}
-
 	//console.log(props.filters)
 
 	return (
@@ -117,7 +114,7 @@ export const PanelFilters = (props) => {
 						<SearchableOptionSelected
 							style={{ marginLeft: 0 }}
 							key={index + key}
-							item={`${props.filters[key].label}: ${getOptionLabel(props.filters[key], filter)}`}
+							item={`${props.filters[key].label}: ${filter.itemLabel || getOptionLabel(props.filters[key], filter)}`}
 							disabled={filter.disabled}
 							onRemove={(e) => onRemoveFilter(key, filter)}
 						/>
@@ -137,7 +134,7 @@ export const PanelFilters = (props) => {
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, date, filter)}
+									onChange={(date) => handleOptionsChange(filterName, ({ startDate: date[0], endDate: date[1] }), filter)}
 									endIcon={<KeyboardArrowDown />}
 								/>
 							)
