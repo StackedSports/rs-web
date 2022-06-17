@@ -31,7 +31,7 @@ export const usePagination = (initialPage, itemsPerPag) => {
     }
 
     const getPage = (page) => {
-        setCurrentPage(Number(initialPage) || 1)
+        setCurrentPage(Number(page) || 1)
     }
 
     return [

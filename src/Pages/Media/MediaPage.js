@@ -8,7 +8,7 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import useSearchParams, { filterObjectToSearchParams, searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
 
@@ -25,7 +25,7 @@ export const MediaPage = (props) => {
 
     useEffect(() => {
         const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
-        searchParams.setFilters(criteria,props.onFilterRedirect) 
+        searchParams.setFilters(criteria, props.onFilterRedirect)
     }, [selectedFilters])
 
     useEffect(() => {
@@ -63,7 +63,7 @@ export const MediaPage = (props) => {
             {
                 id: ++index,
                 name: 'Placeholders',
-                path: mediaRoutes.placeholders,
+                path: `${mediaRoutes.placeholders}?page=1`,
             }
         ]
     }, [mediaTypes.items, teamMembers.items])

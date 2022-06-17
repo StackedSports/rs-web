@@ -9,7 +9,7 @@ export default function useSearchParams() {
     const filtersAndPageObj = useMemo(() => {
         return {
             filters: searchParamsToFilterObject(searchParams.get('filters')),
-            page: Number(searchParams.get('page')) || 1,
+            page: Number(searchParams.get('page')) || null,
         }
     }, [searchParams]);
 
@@ -37,15 +37,20 @@ export default function useSearchParams() {
             newParams.set(key, value)
         } else
             newParams.delete(key)
-
         const newParamsStr = newParams.toString()
+
+
+
         if (searchParams.toString() !== newParamsStr) {
-            history.push({ pathname: redirectTo || pathname, search: newParamsStr })
+            if (!searchParams.has('page') && newParams.get('page') === '1')
+                history.replace({ pathname: redirectTo || pathname, search: newParamsStr })
+            else
+                history.push({ pathname: redirectTo || pathname, search: newParamsStr })
         }
     }
 
     const setFilters = (filters, redirectTo) => {
-        appenSearchParams('filters', filterObjectToSearchParams(filters),redirectTo)
+        appenSearchParams('filters', filterObjectToSearchParams(filters), redirectTo)
     }
 
     return {

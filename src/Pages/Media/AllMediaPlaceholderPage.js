@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react"
+import { useState, useContext, useRef, useEffect } from "react"
 import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted, Clear } from '@mui/icons-material'
 import { Typography, IconButton } from "@mui/material"
 import lodash from "lodash"
@@ -8,6 +8,7 @@ import MediaPage from "./MediaPage"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { AppContext } from 'Context/AppProvider'
+import useSearchParams from 'Hooks/SearchParamsHook';
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
 import { mediaRoutes } from "Routes/Routes"
 import { usePlaceholders } from 'Api/ReactQuery'
@@ -16,21 +17,28 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from "UI/Widgets/RenderIf"
 
 export const AllMediaPlaceholderPage = (props) => {
+  const searchParams = useSearchParams()
+  const confirmDialog = useContext(ConfirmDialogContext)
+  const app = useContext(AppContext)
+
+  const page = searchParams.page
+  const placeholders = usePlaceholders(page, 24)
 
   const [viewGrid, setViewGrid] = useState(true)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
   const isTagDialogFunctionRemoveRef = useRef(false)
   const [loadingTags, setLoadingTags] = useState(false)
 
-  const app = useContext(AppContext)
-  const confirmDialog = useContext(ConfirmDialogContext)
-  const placeholders = usePlaceholders(1, 24)
   const multiPageSelection = useMultiPageSelection_V2(placeholders.items)
   const { selectionModel: selectedPlaceholdersIds,
     selectedData: selectedPlaceholders,
     count: selectedPlaceholdersCount,
     clear: clearSelection
   } = multiPageSelection
+
+  useEffect(() => {
+    searchParams.appenSearchParams('page', placeholders.pagination.currentPage)
+  }, [placeholders.pagination.currentPage])
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
 

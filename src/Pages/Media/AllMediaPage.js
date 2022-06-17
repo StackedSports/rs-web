@@ -16,23 +16,22 @@ import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
 import { getMediaCriteriaFromQueryString } from "Api/Parser"
-import useSearchParams, { searchParamsToFilterObject } from 'Hooks/SearchParamsHook';
+import useSearchParams from 'Hooks/SearchParamsHook';
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
 
 	const page = searchParams.page
-	const queryFilters = getMediaCriteriaFromQueryString(searchParams.filters)
+	const mediaCriteriaFilters = getMediaCriteriaFromQueryString(searchParams.filters)
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
-	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
-	const medias = useMedias(page, 24, queryFilters)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
+	const medias = useMedias(page, 24, mediaCriteriaFilters)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
 
 	const {
@@ -188,7 +187,6 @@ export const AllMediaPage = () => {
 			filter={onFilterChange}
 			actions={mainActions}
 			showPanelFilters={showPanelFilters}
-			replecaSelectPanelFilter={replaceSelectedPanelFilter}
 		>
 			<RenderIf condition={medias.items && medias.items.length > 0}>
 				<Typography fontWeight='bold'>
