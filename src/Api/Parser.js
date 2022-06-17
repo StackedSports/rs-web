@@ -313,9 +313,10 @@ export const getMediaQueryCriteriaObjFromFilters = (filters) => {
     }
 
     if (filters.created_at) {
-        const { itemLabel,startDate, endDate } = filters.created_at[0]
-        console.log("Startdate e end",startDate, endDate)
-        criteria['created_at'] = { itemLabel: itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
+        console.log(filters.created_at)
+        const { itemLabel,value } = filters.created_at[0]
+        console.log(value)
+        criteria['created_at'] = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date), 'yyyy-MM-dd')) }]
     }
 
     // TODO: need add it on the server side
@@ -353,7 +354,8 @@ export const getMediaCriteriaFromQueryString = (queryString) => {
         criteria['owner_id'] = queryString.owner_id.map(owner => owner.value)
     }
     if (queryString.created_at) {
-        criteria['created_at'] = queryString.created_at.value
+        console.log("criteria",queryString.created_at[0].value)
+        criteria['created_at'] = queryString.created_at[0].value
     }
     //TODO
     /*  if (queryString.contact_id)

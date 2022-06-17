@@ -132,7 +132,7 @@ export const PanelFilters = (props) => {
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, ({ startDate: date[0], endDate: date[1] }), filter)}
+									onChange={(date) => handleOptionsChange(filterName, ({ value : date }), filter)}
 									endIcon={<KeyboardArrowDown />}
 								/>
 							)
