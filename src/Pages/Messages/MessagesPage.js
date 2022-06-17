@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 
-import { useParams } from "react-router-dom"
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
 import { Tune } from '@mui/icons-material'
@@ -12,9 +11,12 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
+import { useParams } from "react-router-dom"
+import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
 import { useMessages } from 'Api/ReactQuery'
 import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
+import { getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
 
 const getTitle = (filterName) => {
     switch (filterName) {
@@ -28,17 +30,30 @@ const getTitle = (filterName) => {
 }
 
 const MessagesPage = (props) => {
+    const searchParams = useSearchParams()
     const { user } = useContext(AuthContext)
     const senders = useTeamMembers()
     const tags = useTags()
 
+    const page = searchParams.page
     const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user?.role?.includes('Admin') }
-    const messages = useMessages(1, 10, DEFAULT_MESSAGE_FILTER)
+    const messages = useMessages(page, 10, DEFAULT_MESSAGE_FILTER)
 
     const { filterType, filterValue } = useParams()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
+
+    useEffect(() => {
+        searchParams.appenSearchParams('page', messages.pagination.currentPage)
+    }, [messages.pagination.currentPage])
+
+    /*     useEffect(() => {
+            console.log(selectedFilters)
+            const criteria = getMessagesQueryCriteriaObjFromFilters(selectedFilters)
+            console.log(criteria)
+            searchParams.setFilters(criteria, props.onFilterRedirect)
+        }, [selectedFilters]) */
 
     useEffect(() => {
         if (!messages.error)
@@ -148,7 +163,11 @@ const MessagesPage = (props) => {
     }, [filterType, filterValue, senders.loading, senders.items])
 
     const onFilterChange = (filters) => {
-        // console.log(filters)
+       /*  console.log(filters)
+        const criteria = getMessagesQueryCriteriaObjFromFilters(filters)
+        console.log("criteria",criteria)
+        searchParams.setFilters(criteria) */
+
         if (Object.keys(filters).length === 0)
             messages.filter(DEFAULT_MESSAGE_FILTER)
         else {

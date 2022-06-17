@@ -87,9 +87,7 @@ export const PanelFilters = (props) => {
 		}
 
 		//console.log(filters)
-
 		setSelectedFilters(filters)
-
 	}
 
 	const onRemoveFilter = (filterName, filter) => {

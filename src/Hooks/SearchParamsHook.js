@@ -70,7 +70,7 @@ export function filterObjectToSearchParams(filters) {
             const reduce = value.reduce((acc, item) => {
                 return [...acc, `${item.itemLabel}:${item.value}`]
             }, [])
-            parserFilters.append(key, reduce.join(','))
+            parserFilters.append(key, reduce.join(';'))
         }
         else {
             parserFilters.append(key, `${value.itemLabel}:${value.value}`)
@@ -84,9 +84,9 @@ export function searchParamsToFilterObject(searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
         const filterObject = {}
         filtersSearchParams.forEach((value, key) => {
-            filterObject[key] = value.split(',').map(item => {
+            filterObject[key] = value.split(';').map(item => {
                 const [itemLabel, value] = item.split(':')
-                return { itemLabel: itemLabel, value: Number(value) || value }
+                return { itemLabel: itemLabel, value: value.includes(',') ? value.split(',') : (Number(value) || value) }
             })
         })
         return filterObject

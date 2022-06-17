@@ -2,11 +2,12 @@ import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery } from "react-query"
 import { getMessage, getMessageRecipients, getMessages } from "Api/Endpoints"
+import lodash from "lodash"
 
-export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
+export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
     const [filters, setFilters] = useState(initialFilters)
     const [messages, setMessages] = useState([])
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
 
     const reactQuery = useQuery([`messages/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => getMessages(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
@@ -19,6 +20,18 @@ export const useMessages = (currentPage, itemsPerPage, initialFilters) => {
             setMessages(apiMessages)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
+
+    useEffect(() => {
+        if (!lodash.isEqual(initialFilters, filters)) {
+            setFilters(initialFilters)
+        }
+    }, [initialFilters])
+
+    useEffect(() => {
+        if (initialPage && initialPage != pagination.currentPage) {
+            pagination.getPage(initialPage)
+        }
+    }, [initialPage])
 
     const filter = (filters) => {
         pagination.getPage(1)

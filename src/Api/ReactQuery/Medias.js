@@ -40,6 +40,7 @@ export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         if ( !lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
+            pagination.getPage(1)
         }
     }, [initialFilters])
 

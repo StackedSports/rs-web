@@ -94,13 +94,13 @@ export const MediaPage = (props) => {
             onSearch: (value) => value === '' ? contacts.clearFilter() : contacts.filter({ search: value }),
             loading: contacts.loading,
         }, */
-        "created_at": {
+        /* "created_at": {
             label: 'Date Uploaded',
             type: 'date',
             optionsLabel: (dates) => `${dates.startDate} - ${dates.endDate}`,
             disableFuture: true,
             isUnique: true
-        },
+        }, */
         "tag_id": {
             label: 'Tag',
             options: tags.items,
