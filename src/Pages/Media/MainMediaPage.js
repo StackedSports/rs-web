@@ -1,4 +1,5 @@
 import { useState, useMemo, useContext, useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune, Clear } from '@mui/icons-material'
 import { Stack, Typography, Box, CircularProgress, IconButton } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -13,13 +14,14 @@ import MediaPage from './MediaPage'
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
-import { useTags,useMedias, usePlaceholders } from 'Api/ReactQuery';
+import { useTags, useMedias, usePlaceholders } from 'Api/ReactQuery';
 import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 export const MainMediaPage = (props) => {
+    const history = useHistory()
     const app = useContext(AppContext)
     const confirmDialog = useContext(ConfirmDialogContext)
     const media = useMedias(1, 6)
@@ -153,7 +155,6 @@ export const MainMediaPage = (props) => {
             filter: {},
             option: tag
         }
-
         setAddFilter(filter)
     }
 
@@ -192,10 +193,11 @@ export const MainMediaPage = (props) => {
 
     return (
         <MediaPage
-            filter={media.filter}
+            //filter={media.filter}
             actions={mainActions}
             showPanelFilters={showPanelFilters}
             setFilter={addFilter}
+            onFilterRedirect={mediaRoutes.media}
         >
 
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>

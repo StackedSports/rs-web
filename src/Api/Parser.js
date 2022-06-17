@@ -84,7 +84,7 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['dob'] = filters.birthday[0]
     }
 
-    if(filters.status_2){
+    if (filters.status_2) {
         //console.log(filters.status_2)
         criteria['status_2'] = filters.status_2.map(status => status.name)
     }
@@ -111,7 +111,7 @@ export const getFilterContactsCriteria = (filters) => {
 }
 
 const getStatus = (status) => {
-   // console.log(status)
+    // console.log(status)
     switch (status) {
         case 'drafts': return 'draft'
         case 'in_progress': return 'in progress'
@@ -189,6 +189,62 @@ export const getFilterMessagesCriteria = (filters) => {
     return criteria
 }
 
+export const getMessagesQueryCriteriaObjFromFilters = (filters) => {
+    if (!filters)
+        return null
+
+    const criteria = Object.assign({}, filters)
+
+    if (filters.platform)
+        criteria.platform = filters.platform.map(platform => ({ itemLabel: platform.itemLabel, value: platform.name }))
+    if (filters.sender)
+        criteria.sender = filters.sender.map(sender => ({ itemLabel: sender.itemLabel, value: sender.id }))
+    if (filters.recipient_status)
+        criteria.recipient_status = filters.recipient_status.map(status => ({ itemLabel: status.itemLabel, value: status.name }))
+    if (filters.tags)
+        criteria.tags = filters.tags.map(tag => ({ itemLabel: tag.itemLabel, value: tag.name }))
+    if (filters.status) {
+        const status = filters.status[0]
+        criteria.status = { itemLabel: status.itemLabel, value: status.id }
+    }
+    if (filters.send_at_dates) {
+        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null) {
+            const { itemLabel, startDate, endDate } = filters.send_at_dates[0]
+            criteria.send_at_dates = { itemLabel: itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
+        }
+    }
+    if (filters.sent_at_dates) {
+        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null)
+            criteria.sent_at_dates = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+    }
+    return criteria
+}
+
+// this function parse url params to the api criteria values
+export const getMessagesCriteriaFromQueryString = (queryString) => {
+    if (!queryString)
+        return null
+
+    const criteria = Object.assign({}, queryString)
+
+    if (queryString.platform)
+        criteria.platform = queryString.platform.map(platform => platform.value)
+    if (queryString.sender)
+        criteria.sender = queryString.sender.map(sender => sender.value)
+    if (queryString.recipient_status)
+        criteria.recipient_status = queryString.recipient_status.map(status => status.value)
+    if (queryString.tags)
+        criteria.tags = queryString.tags.map(tag => tag.value)
+    if (queryString.status)
+        criteria.status = queryString.status.value
+    if (queryString.send_at_dates)
+        criteria.send_at_dates = queryString.send_at_dates.value
+    if (queryString.sent_at_dates)
+        criteria.sent_at_dates = queryString.sent_at_dates.value
+
+
+}
+
 export const getFilterMediasCriteria = (filters) => {
     // console.log(filters)
     if (!filters)
@@ -228,6 +284,83 @@ export const getFilterMediasCriteria = (filters) => {
     if (Object.keys(criteria).length === 0)
         return null
 
+    return criteria
+}
+
+// this function is used to normalize the data between the api criteria filters and url params {itemLabel,value}
+export const getMediaQueryCriteriaObjFromFilters = (filters) => {
+    if (!filters)
+        return null
+
+    let criteria = {}
+
+    if (filters.name) {
+        criteria['name'] = { itemLabel: filters.itemLabel, value: filters.name }
+    }
+
+    if (filters.type)
+        criteria['type'] = filters.type.map(type => ({ itemLabel: type.itemLabel, value: type.id || type.value }))
+
+    if (filters.tag_id) {
+        criteria['tag_id'] = filters.tag_id.map(tag => ({ itemLabel: tag.itemLabel, value: tag.id || tag.value }))
+    }
+
+    if (filters.placeholder)
+        criteria['placeholder_id'] = filters.placeholder.map(placeholder => ({ itemLabel: placeholder.itemLabel, value: placeholder.id || placeholder.value }))
+
+    if (filters.owner_id) {
+        criteria['owner_id'] = filters.owner_id.map(owner => ({ itemLabel: owner.itemLabel, value: owner.id || owner.value }))
+    }
+
+    if (filters.created_at) {
+        const { itemLabel,startDate, endDate } = filters.created_at[0]
+        console.log("Startdate e end",startDate, endDate)
+        criteria['created_at'] = { itemLabel: itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
+    }
+
+    // TODO: need add it on the server side
+    /*     if (filters.contact_id)
+            criteria['contact_id'] = { label: filters.itemLabel, value: filters.contact_id.map(contact => contact.id) } */
+
+    if (Object.keys(criteria).length === 0)
+        return null
+
+    return criteria
+}
+
+// this function parse url params to the api criteria values
+export const getMediaCriteriaFromQueryString = (queryString) => {
+    if (!queryString)
+        return null
+
+    const criteria = {}
+
+    if (queryString.name) {
+        criteria['name'] = queryString.name.value
+    }
+
+    if (queryString.type)
+        criteria['type'] = queryString.type.map(type => type.value)[0]
+
+    if (queryString.tag_id) {
+        criteria['tag_id'] = queryString.tag_id.map(tag => tag.value)
+    }
+
+    if (queryString.placeholder)
+        criteria['placeholder_id'] = queryString.placeholder.value
+
+    if (queryString.owner_id) {
+        criteria['owner_id'] = queryString.owner_id.map(owner => owner.value)
+    }
+    if (queryString.created_at) {
+        criteria['created_at'] = queryString.created_at.value
+    }
+    //TODO
+    /*  if (queryString.contact_id)
+         criteria['contact_id'] = queryString.contact_id.value */
+
+    if (Object.keys(criteria).length === 0)
+        return null
     return criteria
 }
 

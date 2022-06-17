@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useContext } from "react"
-import { useParams } from "react-router-dom"
 import { IconButton, Typography } from "@mui/material"
 import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined, Clear } from '@mui/icons-material'
 
@@ -16,43 +15,39 @@ import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoi
 import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
 
+import { getMediaCriteriaFromQueryString } from "Api/Parser"
 import useSearchParams from 'Hooks/SearchParamsHook';
 
 export const AllMediaPage = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
-	const { type, value } = useParams()
+	const searchParams = useSearchParams()
+
+	const page = searchParams.page
+	const mediaCriteriaFilters = getMediaCriteriaFromQueryString(searchParams.filters)
 
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
-	const [replaceSelectedPanelFilter, setReplaceSelectedPanelFilter] = useState({})
-
-	const medias = useMedias(1, 24)
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
+	const medias = useMedias(page, 24, mediaCriteriaFilters)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
-	const { selectionModel: selectedMediasIds,
+
+	const {
+		selectionModel: selectedMediasIds,
 		selectedData: selectedMedias,
 		count: selectedMediasCount,
 		clear: clearSelection
 	} = multiPageSelection
 
 	useEffect(() => {
-		if (type && value) {
-			setReplaceSelectedPanelFilter(
-				{
-					type: type,
-					value: value
-				}
-			)
-		}
-	}, [type, value])
+		searchParams.appenSearchParams('page', medias.pagination.currentPage)
+	}, [medias.pagination.currentPage])
 
 	const onFilterChange = (filter) => {
-		console.log("Filter Change", filter)
-		medias.filter(filter)
+		//return
+		//medias.filter(filter)
 	}
 
 	const onArchiveMedia = () => {
@@ -192,7 +187,6 @@ export const AllMediaPage = () => {
 			filter={onFilterChange}
 			actions={mainActions}
 			showPanelFilters={showPanelFilters}
-			replecaSelectPanelFilter={replaceSelectedPanelFilter}
 		>
 			<RenderIf condition={medias.items && medias.items.length > 0}>
 				<Typography fontWeight='bold'>
@@ -218,7 +212,6 @@ export const AllMediaPage = () => {
 				loading={medias.loading}
 				view={viewGrid ? 'grid' : 'list'}
 				linkTo={mediaRoutes.mediaDetails}
-				//onSelectionChange={onSelectionChange}
 				multiPageSelection={multiPageSelection}
 				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 			/>

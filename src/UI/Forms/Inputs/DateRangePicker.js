@@ -24,7 +24,7 @@ export const DateRangePicker = (props) => {
     }
 
     const handleCloseCalendar = (newDates) => {
-        console.log(newDates);
+        //console.log(newDates);
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         if (!value.every((date, index) => isEqual(date, newDates[index]) || date === newDates[index])) {
             if (props.onChange instanceof Function) {

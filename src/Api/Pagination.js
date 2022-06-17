@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 
 export const getPagination = (res) => {
     //console.log(res.headers)
@@ -13,13 +14,14 @@ export const getPagination = (res) => {
 
 export const paginationConfig = (currentPage, itemsPerPage) => ({ currentPage, itemsPerPage })
 
-export const usePagination = (currentPag, itemsPerPag) => {
-    const [currentPage, setCurrentPage] = useState(currentPag || 1)
+export const usePagination = (initialPage, itemsPerPag) => {
+
+    const [currentPage, setCurrentPage] = useState( Number(initialPage) || 1)
     const [itemsPerPage, setItemsPerPage] = useState(itemsPerPag || 50)
     const [totalItems, setTotalItems] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
 
-    const lastPage = useRef(currentPage || 1)
+    const lastPage = useRef(currentPage)
 
     const setPagination = (pagination) => {
         setCurrentPage(pagination.currentPage)
@@ -29,7 +31,7 @@ export const usePagination = (currentPag, itemsPerPag) => {
     }
 
     const getPage = (page) => {
-        setCurrentPage(page)
+        setCurrentPage(Number(page) || 1)
     }
 
     return [

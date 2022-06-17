@@ -6,7 +6,7 @@ import axios from "axios";
 import {
     getFilterContactsCriteria,
     getFilterMessagesCriteria,
-    getFilterMediasCriteria,
+    getMediaQueryCriteriaObjFromFilters,
     getFilterPlaceholdersCriteria
 } from './Parser'
 
@@ -598,14 +598,15 @@ export const getMedias = (page, perPage, filters) => {
 }
 
 export const filterMedias = (page, perPage, filters) => {
-    //console.log(filters)
+    console.log(filters)
     const data = {
         page: page,
         per_page: perPage,
-        ...getFilterMediasCriteria(filters),
+        //...getFilterMediasCriteria(filters),
+        ...filters
     }
 
-    //console.log(data)
+    console.log(data)
 
     return AXIOS('post', 'media/search', data, filters?.cancelToken)
 }
