@@ -9,7 +9,7 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
     const [messages, setMessages] = useState([])
     const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
 
-    const reactQuery = useQuery([`messages/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => getMessages(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const reactQuery = useQuery(['messages',pagination.currentPage,pagination.itemsPerPage, filters], () => getMessages(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
     })
 
@@ -17,15 +17,17 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
         if (reactQuery.isSuccess) {
             const [apiMessages, apiPagination] = reactQuery.data
             setPagination(apiPagination)
+            console.log("apiMessages", apiMessages)
             setMessages(apiMessages)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (!lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
+            pagination.getPage(1)
         }
-    }, [initialFilters])
+    }, [initialFilters]) */
 
     useEffect(() => {
         if (initialPage && initialPage != pagination.currentPage) {

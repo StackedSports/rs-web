@@ -29,9 +29,7 @@ export const MediaPage = (props) => {
     }, [selectedFilters])
 
     useEffect(() => {
-        console.log(selectedFilters)
         const parsedSelectedFilters = getMediaQueryCriteriaObjFromFilters(selectedFilters)
-        console.log(parsedSelectedFilters)
         if (!lodash.isEqual(parsedSelectedFilters, searchParams.filters)) {
             setSelectedFilters(searchParams.filters)
         }

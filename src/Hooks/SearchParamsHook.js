@@ -86,7 +86,7 @@ export function searchParamsToFilterObject(searchParams) {
         filtersSearchParams.forEach((string, key) => {
             filterObject[key] = filtersSearchParams.get(key).split(';').map(item => {
                 const [itemLabel, value] = item.split(':')
-                return { itemLabel: itemLabel, value: value.includes(',') ? value.split(',') : (Number(value) || value) }
+                return { itemLabel: itemLabel, value: value?.includes(',') ? value.split(',') : (Number(value) || value) }
             })
         })
         return filterObject

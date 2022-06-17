@@ -66,7 +66,7 @@ export const PanelFilters = (props) => {
 		let filters = Object.assign({}, selectedFilters)
 
 		if (filters[filterName]) {
-			if (filter.type === 'date' && option.includes(null)) {
+			if (filter.type === 'date' && option.value.includes(null)) {
 				delete filters[filterName]
 			}
 			else if (filter.isUnique) {
