@@ -44,16 +44,23 @@ const MessagesPage = (props) => {
     const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
 
-    useEffect(() => {
+/*     useEffect(() => {
         searchParams.appenSearchParams('page', messages.pagination.currentPage)
     }, [messages.pagination.currentPage])
 
-    /*     useEffect(() => {
-            console.log(selectedFilters)
-            const criteria = getMessagesQueryCriteriaObjFromFilters(selectedFilters)
-            console.log(criteria)
-            searchParams.setFilters(criteria, props.onFilterRedirect)
-        }, [selectedFilters]) */
+    console.log("messages",messages.items) */
+
+/*     useEffect(() => {
+        const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
+        searchParams.setFilters(criteria, props.onFilterRedirect)
+    }, [selectedFilters])
+
+    useEffect(() => {
+        const parsedSelectedFilters = getMediaQueryCriteriaObjFromFilters(selectedFilters)
+        if (!lodash.isEqual(parsedSelectedFilters, searchParams.filters)) {
+            setSelectedFilters(searchParams.filters)
+        }
+    }, [searchParams.filters]) */
 
     useEffect(() => {
         if (!messages.error)
@@ -159,10 +166,10 @@ const MessagesPage = (props) => {
     }, [filterType, filterValue, senders.loading, senders.items])
 
     const onFilterChange = (filters) => {
-       /*  console.log(filters)
-        const criteria = getMessagesQueryCriteriaObjFromFilters(filters)
-        console.log("criteria",criteria)
-        searchParams.setFilters(criteria) */
+         //console.log(filters)
+        // const criteria = getMessagesQueryCriteriaObjFromFilters(filters)
+         //console.log("criteria",criteria)
+         //searchParams.setFilters(criteria)
 
         if (Object.keys(filters).length === 0)
             messages.filter(DEFAULT_MESSAGE_FILTER)
@@ -178,7 +185,7 @@ const MessagesPage = (props) => {
                 filters.tags = filters.tags.map(tag => tag.name)
             if (filters.status)
                 filters.status = filters.status[0].id
-            messages.filter(filters)
+             messages.filter(filters)
         }
     }
 
