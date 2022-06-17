@@ -12,7 +12,7 @@ import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { useParams } from "react-router-dom"
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { useMessages } from 'Api/ReactQuery'
 import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'

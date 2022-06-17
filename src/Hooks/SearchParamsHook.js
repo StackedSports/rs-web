@@ -8,7 +8,7 @@ export default function useSearchParams() {
 
     const filtersAndPageObj = useMemo(() => {
         return {
-            filters: searchParamsToFilterObject(searchParams.get('filters')),
+            filters: queryParamsToFilterObject(searchParams.get('filters')),
             page: Number(searchParams.get('page')) || null,
         }
     }, [searchParams]);
@@ -50,7 +50,7 @@ export default function useSearchParams() {
     }
 
     const setFilters = (filters, redirectTo) => {
-        appenSearchParams('filters', filterObjectToSearchParams(filters), redirectTo)
+        appenSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
     }
 
     return {
@@ -62,7 +62,7 @@ export default function useSearchParams() {
     }
 }
 
-export function filterObjectToSearchParams(filters) {
+export function filterObjectToQueryParams(filters) {
     if (!filters) return
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
@@ -70,7 +70,7 @@ export function filterObjectToSearchParams(filters) {
             const reduce = value.reduce((acc, item) => {
                 return [...acc, `${item.itemLabel}:${item.value}`]
             }, [])
-            parserFilters.append(key, reduce.join(';;'))
+            parserFilters.append(key, reduce.join(';'))
         }
         else {
             parserFilters.append(key, `${value.itemLabel}:${value.value}`)
@@ -79,7 +79,7 @@ export function filterObjectToSearchParams(filters) {
     return parserFilters.toString()
 }
 
-export function searchParamsToFilterObject(searchParams) {
+export function queryParamsToFilterObject(searchParams) {
     if (searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
         const filterObject = {}
