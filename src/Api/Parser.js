@@ -1,5 +1,6 @@
 import { capitalize } from 'utils/Parser'
 import { format } from 'date-fns'
+import lodash from 'lodash'
 
 export const getFilterContactsCriteria = (filters) => {
     if (!filters) return null
@@ -313,7 +314,7 @@ export const getMediaQueryCriteriaObjFromFilters = (filters) => {
     }
 
     if (filters.created_at) {
-        const { itemLabel,value } = filters.created_at[0]
+        const { itemLabel, value } = filters.created_at[0]
         criteria['created_at'] = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date), 'yyyy-MM-dd')) }]
     }
 

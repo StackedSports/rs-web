@@ -1,6 +1,5 @@
 import './SideFilter.css'
 import { useState } from 'react'
-
 import { NavLink } from 'react-router-dom';
 
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";

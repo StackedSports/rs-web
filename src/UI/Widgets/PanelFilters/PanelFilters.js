@@ -72,8 +72,8 @@ export const PanelFilters = (props) => {
 			else if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
-				if (filters[filterName].find(f => f.id === option.id)) {
-					filters[filterName] = filters[filterName].filter(item => item.id !== option.id)
+				if (filters[filterName].find(f => f.id === option.id || f.itemLabel === option.itemLabel)) {
+					filters[filterName] = filters[filterName].filter(item => item.id !== option.id || f.itemLabel === option.itemLabel)
 				} else {
 					filters[filterName].push(option)
 				}
@@ -132,7 +132,7 @@ export const PanelFilters = (props) => {
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, ({ value : date }), filter)}
+									onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
 									endIcon={<KeyboardArrowDown />}
 								/>
 							)
