@@ -8,7 +8,7 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
 
@@ -40,11 +40,16 @@ export const MediaPage = (props) => {
         return [
             {
                 id: index,
+                name: 'Quick acess',
+                path: mediaRoutes.all,
+            },
+            {
+                id: ++index,
                 name: 'My Media',
                 items: teamMembers.items.map(item => ({
                     id: item.id,
                     name: getFullName(item),
-                    path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
+                    path: `${mediaRoutes.media}?page=1&filters=${filterObjectToQueryParams({
                         owner_id: {
                             itemLabel: getFullName(item), value: item.id
                         }
@@ -54,7 +59,7 @@ export const MediaPage = (props) => {
             ...mediaTypes.items.map(item => ({
                 id: ++index,
                 name: item.name,
-                path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
+                path: `${mediaRoutes.media}?page=1&filters=${filterObjectToQueryParams({
                     type: {
                         itemLabel: item.name, value: item.id
                     }

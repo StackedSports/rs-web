@@ -12,7 +12,7 @@ import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { useParams } from "react-router-dom"
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { useMessages } from 'Api/ReactQuery'
 import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
@@ -44,13 +44,13 @@ const MessagesPage = (props) => {
     const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
 
-/*     useEffect(() => {
+    useEffect(() => {
         searchParams.appenSearchParams('page', messages.pagination.currentPage)
     }, [messages.pagination.currentPage])
 
-    console.log("messages",messages.items) */
+    //console.log("messages",messages.items)
 
-/*     useEffect(() => {
+    useEffect(() => {
         const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
         searchParams.setFilters(criteria, props.onFilterRedirect)
     }, [selectedFilters])
@@ -60,7 +60,7 @@ const MessagesPage = (props) => {
         if (!lodash.isEqual(parsedSelectedFilters, searchParams.filters)) {
             setSelectedFilters(searchParams.filters)
         }
-    }, [searchParams.filters]) */
+    }, [searchParams.filters])
 
     useEffect(() => {
         if (!messages.error)

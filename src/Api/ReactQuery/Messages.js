@@ -22,12 +22,12 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 
-/*     useEffect(() => {
+    useEffect(() => {
         if (!lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
             pagination.getPage(1)
         }
-    }, [initialFilters]) */
+    }, [initialFilters])
 
     useEffect(() => {
         if (initialPage && initialPage != pagination.currentPage) {
