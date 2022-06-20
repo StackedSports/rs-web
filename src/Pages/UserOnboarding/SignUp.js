@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Box, Stack, Typography, Grid, TextField, InputAdornment, Button } from "@mui/material";
+import { Stack, Typography, Grid, TextField, InputAdornment, Button } from "@mui/material";
 import { ArrowForward, Visibility, VisibilityOff } from '@mui/icons-material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import BackgroundImage from "images/login.png";
 import BrandIcon from "images/stacked-favicon.png"
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
+import { AppContext } from 'Context/AppProvider';
 import { LoadingButton } from "@mui/lab";
 
 const initialValues = {
@@ -20,14 +21,15 @@ const initialValues = {
 const validationSchema = yup.object().shape({
   email: yup.string()
     .required('Please enter your email')
-    .email('Please enter a valid email'),
+    .email('Please enter a valid email')
+    .trim(),
   password: yup.string()
     .required('Please enter your password')
     .trim(),
 })
 
 export default function Signup() {
-
+  const app = useContext(AppContext)
   const auth = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,11 +43,9 @@ export default function Signup() {
     auth.login(email, password).then(
       (res) => {
         setLoading(false);
-        console.log('redirecting...')
       },
       (error) => {
-        console.log('error = ', error);
-        console.log("Something went wrong please try again");
+        app.alert.setError(`${error.message}: ${error.response.data.error}`);
         setLoading(false);
       }
     );
@@ -53,7 +53,11 @@ export default function Signup() {
 
   const loginUserUsingTwitter = () => {
     setLoading(true);
-    auth.loginWithTwitter().finally(() => {
+    auth.loginWithTwitter().
+    catch(error => {
+      app.alert.setError(`You need link your account with Twitter: ${error.response.data.error}`);
+    }).
+    finally(() => {
       setLoading(false);
     })
   }
@@ -62,7 +66,6 @@ export default function Signup() {
     initialValues,
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      console.log(values)
       loginUserUsingCredential(values.email, values.password);
     }
   });
@@ -74,7 +77,7 @@ export default function Signup() {
       alignItems="center"
       gap={3}
       py={2}
-      px={[2,4]}
+      px={[2, 5, 8.7]}
       sx={{
         minWidth: "100vw",
         minHeight: "100vh",
@@ -104,9 +107,9 @@ export default function Signup() {
       <Grid
         container
         sx={{
-          width: "100%",
-          maxWidth: "800px",
-          borderRadius: (theme) => theme.spacing(4),
+          width: '100%',
+          maxWidth: '800px',
+          borderRadius: '40px',
           overflow: "hidden",
         }}
       >
@@ -120,16 +123,31 @@ export default function Signup() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            paddingY: (theme) => theme.spacing(3),
-            paddingX: (theme) => theme.spacing(7),
+            paddingY: 5,
+            paddingX: 7,
             gap: (theme) => theme.spacing(2),
           }}
 
         >
-          <Typography align="center" component="h1" fontSize={45} fontWeight='bold' >
+          <Typography
+            component="h1"
+            align="center"
+            fontSize='40px'
+            lineHeight={1.2}
+            fontWeight={600}
+            px='12px'
+          >
             Sign in to your account
           </Typography>
-          <Typography sx={{ color: '#b7b7b7', fontWeight: 500, mb: 4 }} component="span" >
+          <Typography
+            component="span"
+            sx={{
+              color: '#b7b7b7',
+              fontSize: '1rem',
+              lineHeight: 1.2,
+              mb: 4
+            }}
+          >
             Complete login details to continue
           </Typography>
 
@@ -139,8 +157,13 @@ export default function Signup() {
             color="primary"
             fullWidth
             onClick={loginUserUsingTwitter}
-            endIcon={<TwitterIcon style={{ fontSize: 30, color: "#00acee", }} />}
-            sx={{ justifyContent: 'space-between' }}
+            endIcon={<TwitterIcon style={{ fontSize: 25, color: "#03A9F4", }} />}
+            sx={{
+              justifyContent: 'space-between',
+              py: 1.7,
+              fontSize: '1rem',
+              lineHeight: 1.2,
+            }}
           >
             Sign in with Twitter
           </Button>
@@ -157,8 +180,8 @@ export default function Signup() {
               color="primary"
               label="Email"
               fullWidth
-              error={Boolean(formik.errors.email) && Boolean(formik.touched.email)}
-              helperText={formik.errors.email || ' '}
+              error={Boolean(formik.errors.email) && formik.touched.email}
+              helperText={formik.touched.email && formik.errors.email || ' '}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
@@ -172,8 +195,9 @@ export default function Signup() {
               autoComplete="current-password"
               fullWidth
               onChange={formik.handleChange}
-              error={Boolean(formik.errors.password)}
-              helperText={formik.errors.password || ''}
+              onBlur={formik.handleBlur}
+              error={Boolean(formik.errors.password) && formik.touched.password}
+              helperText={formik.touched.password && formik.errors.password || ' '}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end"
@@ -200,7 +224,8 @@ export default function Signup() {
             fullWidth
             endIcon={<ArrowForward />}
             sx={{
-              py: 2,
+              mt: 2,
+              py: 1.7,
               justifyContent: 'space-between',
               textTransform: 'none',
               letterSpacing: '1px',
