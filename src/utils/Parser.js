@@ -106,55 +106,49 @@ export const getFullName = (contact) => {
 // }
 export const getMessageStatusLabel = (status, platform, recipient_count) => {
 
-	const isAllMessagesSent = recipient_count?.status?.sent === recipient_count?.status?.total || recipient_count?.status?.total === 0
-	const isAllMessagesPending = recipient_count?.status?.pending === recipient_count?.status?.total
-	const isSentWithErros = recipient_count?.status?.error > 0 && recipient_count?.status?.sent > 0
-	const isAllMessagesFailed = recipient_count?.status?.error === recipient_count?.status?.total && recipient_count?.status?.pending === 0
+	const { total, sent, skiped, cancelled, error, pending } = recipient_count.status
 
-	let message = ''
-	switch (true) {
-		case (status === "Sent" && isAllMessagesSent):
-		case (status == 'Completed' && isAllMessagesSent):
-		case (status === 'Error' && platform === 'Personal Text' && isSentWithErros):
-			message = 'Message Completed'
-			break;
-		case (status === "Error" && recipient_count?.status?.total === 0):
-		case (status === "Error" && isAllMessagesFailed && (platform === 'Twitter' || platform === 'RS Text')):
-			message = 'Message Failed - Error'
-			break;
-		case (status === "Error" && isSentWithErros && (platform === 'Twitter' || platform === 'RS Text')):
-			message = 'Complete with some errors'
-			break;
-		case (status === 'In Progress' && isAllMessagesPending && platform === 'Personal Text'):
-			message = 'Message ready to be sent by sender.'
-			break;
-		case (status === 'Cancelled' && platform === 'Personal Text'):
-			message = 'Completed with some skipped messages'
-			break;
-		case (status === 'Cancelled' && isSentWithErros):
-			message = 'Completed with some skipped messages'
-			break;
-		case (status === 'In Progress' && (platform === 'Twitter' || platform === 'RS Text')):
-			message = 'Message sending in progress.'
-			break;
-		case (status === 'Deleted'):
-			message = 'Message Archived'
-			break;
-		case (status === 'Draft'):
-			message = 'Draft'
-			break;
-		case (status === 'Pending'):
-			message = 'Message Scheduled'
-			break;
-		case (status === 'In Progress'):
-			message = 'Message sending in progress'
-			break;
-		case (status === 'Cancelled'):
+	const isTwitterDM = platform === 'Twitter'
+	const isPersonalText = platform === 'Personal Text'
+	const isSMS = platform === 'Rs Text'
+
+	const isError = status === 'Error'
+	const isSent = status === 'Sent'
+	const isComplete = status === 'Complete'
+	const isInProgress = status === 'In Progress'
+	const isCancelled = status === 'Cancelled'
+	const isDeleted = status === 'Deleted'
+	const isArchived = status === 'Archived'
+	const isPending = status === 'Pending'
+	const isDraft = status === 'Draft'
+
+
+	let message = status
+
+	if(isPersonalText && isInProgress)
+		message = 'Message Ready to be Sent by Sender'
+	else if(isCancelled) {
+		if(sent > 0)
+			message = 'Completed With Some Skipped Messages'
+		else 
 			message = 'Cancelled'
-			break;
-		default:
-			message = `${status}`
-	}
+	} else if(isDeleted || isArchived) {
+		message = 'Message Archived'
+	} else if(isDraft)
+		message = 'Draft'
+	else if(isPending)
+		message = 'Message Scheduled'
+	else {
+		if(isError) {
+			if(total === error)
+				message = 'Message Failed'
+			else if(sent > 0)
+				message = 'Complete With Some Errors'
+		} else if(isSent || isComplete)
+			message = 'Message Completed'
+		else if(isInProgress)
+			message = 'Message Sending In Progress'
+	} 
 
 	return message
 }
@@ -163,17 +157,17 @@ export const getMessageStatusColor = (status) => {
 	let color = null
 
     switch (status) {
-        case 'Message Failed - Error':
+        case 'Message Failed':
         case 'Cancelled':
             color = 'red'
             break
-        case 'Complete with some errors':
+        case 'Complete With Some Errors':
         case 'Message Completed':
-        case 'Completed with some skipped messages':
+        case 'Completed With Some Skipped Messages':
             color = 'green'
             break
-        case 'Message ready to be sent by sender':
-        case 'Message sending in progress':
+        case 'Message Ready to be Sent by Sender':
+        case 'Message Sending In Progress':
             color = 'blue'
             break
         case 'Message Archived':

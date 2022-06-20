@@ -39,6 +39,8 @@ const MessagesPage = (props) => {
     const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user?.role?.includes('Admin') }
     const messages = useMessages(page, 10, DEFAULT_MESSAGE_FILTER)
 
+    console.log(messages.items)
+
     const { filterType, filterValue } = useParams()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
@@ -218,6 +220,8 @@ const MessagesPage = (props) => {
             </Stack> */}
             {messages.items && messages.items.map((message, index) => {
                 // console.log('rendering message ' + index)
+                // console.log(message.recipient_count.status)
+                // console.log(message.platform)
                 return (
                     <MessagePreview key={index} message={message} mini style={styles.divider} link />
                 )
