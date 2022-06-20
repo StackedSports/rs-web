@@ -22,7 +22,6 @@ export const MediaPage = (props) => {
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState(searchParams.filters)
 
-
     useEffect(() => {
         const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
         searchParams.setFilters(criteria, props.onFilterRedirect)
@@ -40,7 +39,7 @@ export const MediaPage = (props) => {
         return [
             {
                 id: index,
-                name: 'Quick acess',
+                name: 'Quick Access',
                 path: mediaRoutes.all,
             },
             {
@@ -49,21 +48,33 @@ export const MediaPage = (props) => {
                 items: teamMembers.items.map(item => ({
                     id: item.id,
                     name: getFullName(item),
-                    path: `${mediaRoutes.media}?page=1&filters=${filterObjectToQueryParams({
-                        owner_id: {
-                            itemLabel: getFullName(item), value: item.id
-                        }
-                    })}`,
-                }))
+                    path: {
+                        pathname: mediaRoutes.media,
+                        search: new URLSearchParams({
+                            page: 1,
+                            filters: filterObjectToQueryParams({
+                                owner_id: {
+                                    itemLabel: getFullName(item), value: item.id
+                                }
+                            }),
+                        }).toString(),
+                    },
+                })),
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
                 name: item.name,
-                path: `${mediaRoutes.media}?page=1&filters=${filterObjectToQueryParams({
-                    type: {
-                        itemLabel: item.name, value: item.id
-                    }
-                })}`,
+                path: {
+                    pathname: mediaRoutes.media,
+                    search: new URLSearchParams({
+                        page: 1,
+                        filters: filterObjectToQueryParams({
+                            type: {
+                                itemLabel: item.name, value: item.id
+                            }
+                        }),
+                    }).toString()
+                },
             })),
             {
                 id: ++index,
