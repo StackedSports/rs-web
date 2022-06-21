@@ -8,7 +8,7 @@ import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { mediaRoutes } from 'Routes/Routes'
 import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
 
@@ -21,7 +21,6 @@ export const MediaPage = (props) => {
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState(searchParams.filters)
-
 
     useEffect(() => {
         const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
@@ -40,25 +39,42 @@ export const MediaPage = (props) => {
         return [
             {
                 id: index,
+                name: 'Quick Access',
+                path: mediaRoutes.all,
+            },
+            {
+                id: ++index,
                 name: 'My Media',
                 items: teamMembers.items.map(item => ({
                     id: item.id,
                     name: getFullName(item),
-                    path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
-                        owner_id: {
-                            itemLabel: getFullName(item), value: item.id
-                        }
-                    })}`,
-                }))
+                    path: {
+                        pathname: mediaRoutes.media,
+                        search: new URLSearchParams({
+                            page: 1,
+                            filters: filterObjectToQueryParams({
+                                owner_id: {
+                                    itemLabel: getFullName(item), value: item.id
+                                }
+                            }),
+                        }).toString(),
+                    },
+                })),
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
                 name: item.name,
-                path: `${mediaRoutes.media}?page=1&filters=${filterObjectToSearchParams({
-                    type: {
-                        itemLabel: item.name, value: item.id
-                    }
-                })}`,
+                path: {
+                    pathname: mediaRoutes.media,
+                    search: new URLSearchParams({
+                        page: 1,
+                        filters: filterObjectToQueryParams({
+                            type: {
+                                itemLabel: item.name, value: item.id
+                            }
+                        }),
+                    }).toString()
+                },
             })),
             {
                 id: ++index,
@@ -94,13 +110,13 @@ export const MediaPage = (props) => {
             onSearch: (value) => value === '' ? contacts.clearFilter() : contacts.filter({ search: value }),
             loading: contacts.loading,
         }, */
-        /* "created_at": {
+        "created_at": {
             label: 'Date Uploaded',
             type: 'date',
-            optionsLabel: (dates) => `${dates.startDate} - ${dates.endDate}`,
+            optionsLabel: (dates) => dates.value.join(' - '),
             disableFuture: true,
             isUnique: true
-        }, */
+        },
         "tag_id": {
             label: 'Tag',
             options: tags.items,

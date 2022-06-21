@@ -6,22 +6,20 @@ import { getFullName } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
 import { useTeamMembers } from 'Api/ReactQuery'
+import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
 
 const BaseMessagePage = (props) => {
     const [redirect, setRedirect] = useState('')
     const teamMembers = useTeamMembers()
 
-    const teamMembersFilterItems = useMemo(() => {
-        if (!teamMembers.loading && teamMembers.items) {
-            return teamMembers.items.map(member => ({
-                id: member.id,
-                name: getFullName(member),
-                path: `${messageRoutes.filters.teamMembers}/${member.id}`
-            }))
-        }
-        return []
-    }, [teamMembers.items, teamMembers.loading])
-
+    const getStatusQueryString = (status) => {
+        return new URLSearchParams({
+            page: 1,
+            filters: filterObjectToQueryParams({
+                message_status: { itemLabel: status, value: status }
+            })
+        }).toString()
+    }
 
     const filtersWithTeamMembers = useMemo(() => {
         return [
@@ -29,28 +27,61 @@ const BaseMessagePage = (props) => {
                 id: 'create',
                 name: 'Message Create',
                 items: [
-                    { id: 'draft', name: 'Drafts', path: messageRoutes.filters.drafts },
+                    { id: 'draft', name: 'Drafts', path: { pathname: messageRoutes.all, search: getStatusQueryString('Drafts') } },
                 ]
             },
             {
-                id: '0',
+                id: 'messages',
                 name: 'Messages',
                 items: [
-                    { id: 'all', name: 'All Messages', path: messageRoutes.all },
-                    { id: '0', name: 'Scheduled', path: messageRoutes.filters.scheduled },
-                    { id: '1', name: 'In Progress', path: messageRoutes.filters.inProgress },
-                    { id: '2', name: 'Finished', path: messageRoutes.filters.finished },
-                    // { id: 'errors', name: 'Error', path: messageRoutes.filters.error },
-                    { id: '3', name: 'Archived', path: messageRoutes.filters.archived },
+                    {
+                        id: 'all',
+                        name: 'All Messages',
+                        path: { pathname: messageRoutes.all, search: 'page=1' }
+                    },
+                    {
+                        id: 'scheduled',
+                        name: 'Scheduled',
+                        path: { pathname: messageRoutes.all, search: getStatusQueryString('Scheduled') }
+                    },
+                    {
+                        id: 'in_progress',
+                        name: 'In Progress',
+                        path: { pathname: messageRoutes.all, search: getStatusQueryString('In Progress') }
+                    },
+                    {
+                        id: 'finished',
+                        name: 'Finished',
+                        path: { pathname: messageRoutes.all, search: getStatusQueryString('Finished') }
+                    },
+                    {
+                        id: 'archived',
+                        name: 'Archived',
+                        path: { pathname: messageRoutes.all, search: getStatusQueryString('Archived') }
+                    },
                 ]
             },
             {
-                id: '1',
+                id: 'teamMembers',
                 name: 'Team Members',
-                items: teamMembersFilterItems
-            }
+                items: teamMembers.items.map(member => ({
+                    id: member.id,
+                    name: getFullName(member),
+                    path: {
+                        pathname: messageRoutes.all,
+                        search: new URLSearchParams({
+                            page: 1,
+                            filters: filterObjectToQueryParams({
+                                sender: {
+                                    itemLabel: getFullName(member), value: member.id
+                                }
+                            }),
+                        }).toString(),
+                    },
+                })),
+            },
         ]
-    }, [teamMembersFilterItems])
+    }, [teamMembers.items])
 
     const onTopActionClick = (e) => {
         console.log('top action click')

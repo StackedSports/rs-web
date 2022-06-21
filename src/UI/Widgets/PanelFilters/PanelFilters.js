@@ -20,9 +20,8 @@ export const PanelFilters = (props) => {
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
 	useEffect(() => {
-		//console.log("No changes detected");
-		if (lodash.isEqual(props.selectedFilters, selectedFilters)) return
-		if (!props.selectedFilters && selectedFilters === {}) return
+		if (lodash.isEqual(props.selectedFilters, selectedFilters) || !props.selectedFilters instanceof Object) return
+		if (!props.selectedFilters && lodash.isEmpty(selectedFilters)) return
 
 		//console.log("external Change happens", props.selectedFilters)
 		setSelectedFilters(props.selectedFilters || {})
@@ -66,14 +65,14 @@ export const PanelFilters = (props) => {
 		let filters = Object.assign({}, selectedFilters)
 
 		if (filters[filterName]) {
-			if (filter.type === 'date' && option.includes(null)) {
+			if (filter.type === 'date' && option.value.includes(null)) {
 				delete filters[filterName]
 			}
 			else if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
-				if (filters[filterName].find(f => f.id === option.id)) {
-					filters[filterName] = filters[filterName].filter(item => item.id !== option.id)
+				if (filters[filterName].find(f => f.id === option.id || f.itemLabel === option.itemLabel)) {
+					filters[filterName] = filters[filterName].filter(item => item.id !== option.id || f.itemLabel === option.itemLabel)
 				} else {
 					filters[filterName].push(option)
 				}
@@ -132,7 +131,7 @@ export const PanelFilters = (props) => {
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, ({ startDate: date[0], endDate: date[1] }), filter)}
+									onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
 									endIcon={<KeyboardArrowDown />}
 								/>
 							)

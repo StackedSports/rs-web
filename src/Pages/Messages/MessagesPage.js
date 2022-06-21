@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useContext } from 'react'
+import { useState, useEffect, useMemo, useContext } from 'react'
 
 import Stack from '@mui/material/Stack'
 import Pagination from '@mui/material/Pagination'
@@ -11,23 +11,12 @@ import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { useParams } from "react-router-dom"
-import useSearchParams, { filterObjectToSearchParams } from 'Hooks/SearchParamsHook';
+import useSearchParams from 'Hooks/SearchParamsHook';
 import { useMessages } from 'Api/ReactQuery'
 import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
-import { getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
-
-const getTitle = (filterName) => {
-    switch (filterName) {
-        case 'drafts': return 'Drafts'
-        case 'pending': return 'Scheduled'
-        case 'in_progress': return 'In Progress'
-        case 'finished': return 'Finished'
-        case 'error': return 'Error'
-        default: return 'All Messages'
-    }
-}
+import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
+import lodash from "lodash"
 
 const MessagesPage = (props) => {
     const searchParams = useSearchParams()
@@ -36,12 +25,9 @@ const MessagesPage = (props) => {
     const tags = useTags()
 
     const page = searchParams.page
-    const DEFAULT_MESSAGE_FILTER = { status: 'all', includeTeam: user?.role?.includes('Admin') }
-    const messages = useMessages(page, 10, DEFAULT_MESSAGE_FILTER)
+    const criteria = useMemo(() => ({ ...getMessagesCriteriaFromQueryString(searchParams.filters), includeTeam: user?.role?.includes('Admin') }), [searchParams.filters])
+    const messages = useMessages(page, 10, criteria)
 
-    console.log(messages.items)
-
-    const { filterType, filterValue } = useParams()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
@@ -50,21 +36,16 @@ const MessagesPage = (props) => {
         searchParams.appenSearchParams('page', messages.pagination.currentPage)
     }, [messages.pagination.currentPage])
 
-    /*     useEffect(() => {
-            console.log(selectedFilters)
-            const criteria = getMessagesQueryCriteriaObjFromFilters(selectedFilters)
-            console.log(criteria)
-            searchParams.setFilters(criteria, props.onFilterRedirect)
-        }, [selectedFilters]) */
+    useEffect(() => {
+        const parsedSelectedFilters = getMessagesQueryCriteriaObjFromFilters(selectedFilters)
+        if (!lodash.isEqual(parsedSelectedFilters, searchParams.filters)) {
+            setSelectedFilters(searchParams.filters)
+        }
+    }, [searchParams.filters])
 
     useEffect(() => {
         if (!messages.error)
             return
-
-        Object.keys(messages.error).forEach(key => {
-            console.log(key)
-            console.log(messages.error[key])
-        })
 
         setErrorPanelMessage({
             title: `Unknown Error`,
@@ -90,7 +71,7 @@ const MessagesPage = (props) => {
     ]
 
     const onPageChange = (e, page) => {
-        console.log(page)
+        //console.log(page)
         messages.pagination.getPage(page)
 
         window.scrollTo({
@@ -125,19 +106,15 @@ const MessagesPage = (props) => {
             label: 'Send At Dates',
             type: 'date',
             isUnique: true,
-            optionsLabel: (dates) => {
-                return dates[0] + ' - ' + dates[1]
-            },
+            optionsLabel: (dates) => dates.value.join(' - '),
         },
         'sent_at_dates': {
             label: 'Sent At Dates',
             type: 'date',
             isUnique: true,
-            optionsLabel: (dates) => {
-                return dates[0] + ' - ' + dates[1]
-            },
+            optionsLabel: (dates) => dates.value.join(' - '),
         },
-        'status': {
+        'message_status': {
             label: 'Status',
             type: 'hidden',
             isUnique: true,
@@ -145,52 +122,15 @@ const MessagesPage = (props) => {
         }
     }), [senders.items, tags.items])
 
-
-    //Controls the filters through the props
-    useEffect(() => {
-        if (filterType === 'status') {
-            const statusValue = panelFilters.status.options.find(status => status.id === filterValue)
-            console.log(statusValue)
-            statusValue && setSelectedFilters({
-                status: [statusValue]
-            })
-        }
-        if (filterType === 'team_members' && !senders.loading && senders.items) {
-            const senderValue = panelFilters.sender.options.find(sender => sender.id === filterValue)
-            senderValue && setSelectedFilters({
-                sender: [senderValue]
-            })
-        }
-
-    }, [filterType, filterValue, senders.loading, senders.items])
-
     const onFilterChange = (filters) => {
-       /*  console.log(filters)
-        const criteria = getMessagesQueryCriteriaObjFromFilters(filters)
-        console.log("criteria",criteria)
-        searchParams.setFilters(criteria) */
-
-        if (Object.keys(filters).length === 0)
-            messages.filter(DEFAULT_MESSAGE_FILTER)
-        else {
-            filters.includeTeam = user.role.includes('Admin')
-            if (filters.platform)
-                filters.platform = filters.platform.map(platform => platform.name)
-            if (filters.sender)
-                filters.sender = filters.sender.map(sender => sender.id)
-            if (filters.recipient_status)
-                filters.recipient_status = filters.recipient_status.map(status => status.name)
-            if (filters.tags)
-                filters.tags = filters.tags.map(tag => tag.name)
-            if (filters.status)
-                filters.status = filters.status[0].id
-            messages.filter(filters)
-        }
+        setSelectedFilters(filters)
+        const parsedSelectedFilters = getMessagesQueryCriteriaObjFromFilters(filters)
+        searchParams.setFilters(parsedSelectedFilters)
     }
 
     return (
         <BaseMessagePage
-            title={getTitle(filterValue)}
+            title={searchParams.filters?.message_status ? searchParams.filters.message_status[0].value : 'All Messages'}
             actions={actions}
             showPanelFilters={showPanelFilters}
             panelFilters={panelFilters}
@@ -211,13 +151,6 @@ const MessagesPage = (props) => {
                 </Stack>
             </RenderIf>
 
-            {/* <Stack justifyContent="center" alignItems="center">
-                <Pagination
-                    count={messages.pagination.totalPages}
-                    page={messages.pagination.currentPage}
-                    onChange={onPageChange}
-                    disabled={messages.loading} />
-            </Stack> */}
             {messages.items && messages.items.map((message, index) => {
                 // console.log('rendering message ' + index)
                 // console.log(message.recipient_count.status)

@@ -1,5 +1,6 @@
 import { capitalize } from 'utils/Parser'
 import { format } from 'date-fns'
+import lodash from 'lodash'
 
 export const getFilterContactsCriteria = (filters) => {
     if (!filters) return null
@@ -192,57 +193,65 @@ export const getFilterMessagesCriteria = (filters) => {
 export const getMessagesQueryCriteriaObjFromFilters = (filters) => {
     if (!filters)
         return null
+    const criteria = {}
 
-    const criteria = Object.assign({}, filters)
-
+    if (filters.message_status)
+        criteria.message_status = filters.message_status.map(status => ({ itemLabel: status.itemLabel, value: status.name || status.value }))
     if (filters.platform)
-        criteria.platform = filters.platform.map(platform => ({ itemLabel: platform.itemLabel, value: platform.name }))
+        criteria.platform = filters.platform.map(platform => ({ itemLabel: platform.itemLabel, value: platform.name || platform.value }))
     if (filters.sender)
-        criteria.sender = filters.sender.map(sender => ({ itemLabel: sender.itemLabel, value: sender.id }))
+        criteria.sender = filters.sender.map(sender => ({ itemLabel: sender.itemLabel, value: sender.id || sender.value }))
     if (filters.recipient_status)
-        criteria.recipient_status = filters.recipient_status.map(status => ({ itemLabel: status.itemLabel, value: status.name }))
+        criteria.recipient_status = filters.recipient_status.map(status => ({ itemLabel: status.itemLabel, value: status.name || status.value }))
     if (filters.tags)
-        criteria.tags = filters.tags.map(tag => ({ itemLabel: tag.itemLabel, value: tag.name }))
-    if (filters.status) {
-        const status = filters.status[0]
-        criteria.status = { itemLabel: status.itemLabel, value: status.id }
-    }
+        criteria.tags = filters.tags.map(tag => ({ itemLabel: tag.itemLabel, value: tag.name || tag.value }))
     if (filters.send_at_dates) {
-        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null) {
-            const { itemLabel, startDate, endDate } = filters.send_at_dates[0]
-            criteria.send_at_dates = { itemLabel: itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
-        }
+        const { itemLabel, value } = filters.send_at_dates[0]
+        criteria.send_at_dates = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
     if (filters.sent_at_dates) {
-        if (filters.send_at_dates[0][0] != null && filters.send_at_dates[0][1] != null)
-            criteria.sent_at_dates = filters.send_at_dates[0].map(date => format(new Date(date), 'yyyy-MM-dd'))
+        const { itemLabel, value } = filters.sent_at_dates[0]
+        criteria.sent_at_dates = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
     return criteria
 }
 
 // this function parse url params to the api criteria values
 export const getMessagesCriteriaFromQueryString = (queryString) => {
-    if (!queryString)
-        return null
-
     const criteria = Object.assign({}, queryString)
 
-    if (queryString.platform)
+    const messageStatus = queryString?.message_status ? queryString.message_status[0]?.value : null
+
+    switch (messageStatus) {
+        case 'Drafts': criteria.message_status = ['Draft']
+            break;
+        case 'In Progress': criteria.message_status = ['In Progress']
+            break;
+        case 'Scheduled': criteria.message_status = ['pending']
+            break;
+        case 'Archived': criteria.message_status = ['Archived']
+            break;
+        case 'Finished': criteria.message_status = [`Error`, `Sent`, `Completed`, `Cancelled`]
+            break;
+        default: criteria.message_status = [`Error`, `Preview`, `In Progress`, `Sent`, `Rejected`, `Completed`, `Cancelled`, `Pending`]
+    }
+
+    if (queryString?.platform)
         criteria.platform = queryString.platform.map(platform => platform.value)
-    if (queryString.sender)
+    if (queryString?.sender)
         criteria.sender = queryString.sender.map(sender => sender.value)
-    if (queryString.recipient_status)
+    if (queryString?.recipient_status)
         criteria.recipient_status = queryString.recipient_status.map(status => status.value)
-    if (queryString.tags)
+    if (queryString?.tags)
         criteria.tags = queryString.tags.map(tag => tag.value)
-    if (queryString.status)
+    if (queryString?.status)
         criteria.status = queryString.status.value
-    if (queryString.send_at_dates)
-        criteria.send_at_dates = queryString.send_at_dates.value
-    if (queryString.sent_at_dates)
-        criteria.sent_at_dates = queryString.sent_at_dates.value
+    if (queryString?.send_at_dates)
+        criteria.send_at_dates = queryString.send_at_dates[0]?.value
+    if (queryString?.sent_at_dates)
+        criteria.sent_at_dates = queryString.sent_at_dates[0]?.value
 
-
+    return criteria
 }
 
 export const getFilterMediasCriteria = (filters) => {
@@ -313,9 +322,8 @@ export const getMediaQueryCriteriaObjFromFilters = (filters) => {
     }
 
     if (filters.created_at) {
-        const { itemLabel,startDate, endDate } = filters.created_at[0]
-        console.log("Startdate e end",startDate, endDate)
-        criteria['created_at'] = { itemLabel: itemLabel, value: [startDate, endDate].map(date => format(new Date(date), 'yyyy-MM-dd')) }
+        const { itemLabel, value } = filters.created_at[0]
+        criteria['created_at'] = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
 
     // TODO: need add it on the server side
@@ -353,7 +361,7 @@ export const getMediaCriteriaFromQueryString = (queryString) => {
         criteria['owner_id'] = queryString.owner_id.map(owner => owner.value)
     }
     if (queryString.created_at) {
-        criteria['created_at'] = queryString.created_at.value
+        criteria['created_at'] = queryString.created_at[0].value
     }
     //TODO
     /*  if (queryString.contact_id)

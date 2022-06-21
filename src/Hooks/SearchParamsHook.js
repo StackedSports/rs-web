@@ -8,7 +8,7 @@ export default function useSearchParams() {
 
     const filtersAndPageObj = useMemo(() => {
         return {
-            filters: searchParamsToFilterObject(searchParams.get('filters')),
+            filters: queryParamsToFilterObject(searchParams.get('filters')),
             page: Number(searchParams.get('page')) || null,
         }
     }, [searchParams]);
@@ -31,15 +31,13 @@ export default function useSearchParams() {
             history.push({ search: newParamsStr })
     }
     const appenSearchParams = (key, value, redirectTo) => {
-        if ((searchParams.has(key) && searchParams.get(key) == value)) return
+        if ((searchParams.has(key) && searchParams.get(key).toString() == value)) return
         const newParams = new URLSearchParams(search)
         if (value) {
             newParams.set(key, value)
         } else
             newParams.delete(key)
         const newParamsStr = newParams.toString()
-
-
 
         if (searchParams.toString() !== newParamsStr) {
             if (!searchParams.has('page') && newParams.get('page') === '1')
@@ -50,7 +48,7 @@ export default function useSearchParams() {
     }
 
     const setFilters = (filters, redirectTo) => {
-        appenSearchParams('filters', filterObjectToSearchParams(filters), redirectTo)
+        appenSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
     }
 
     return {
@@ -62,7 +60,7 @@ export default function useSearchParams() {
     }
 }
 
-export function filterObjectToSearchParams(filters) {
+export function filterObjectToQueryParams(filters) {
     if (!filters) return
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
@@ -79,14 +77,14 @@ export function filterObjectToSearchParams(filters) {
     return parserFilters.toString()
 }
 
-export function searchParamsToFilterObject(searchParams) {
+export function queryParamsToFilterObject(searchParams) {
     if (searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
         const filterObject = {}
-        filtersSearchParams.forEach((value, key) => {
-            filterObject[key] = value.split(';').map(item => {
+        filtersSearchParams.forEach((string, key) => {
+            filterObject[key] = filtersSearchParams.get(key).split(';').map(item => {
                 const [itemLabel, value] = item.split(':')
-                return { itemLabel: itemLabel, value: value.includes(',') ? value.split(',') : (Number(value) || value) }
+                return { itemLabel: itemLabel, value: value?.includes(',') ? value.split(',') : (Number(value) || value) }
             })
         })
         return filterObject

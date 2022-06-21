@@ -35,10 +35,13 @@ export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
             setPagination(apiPagination)
             setMedias(apiMedias)
         }
-    }, [reactQuery.isSuccess, reactQuery.data])
+        if (reactQuery.isError) {
+            setMedias([])
+        }
+    }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
 
     useEffect(() => {
-        if ( !lodash.isEqual(initialFilters, filters)) {
+        if (!lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
             pagination.getPage(1)
         }
@@ -85,6 +88,9 @@ export const useMediaTypes = () => {
                     name: item.type,
                 }))
             )
+        }
+        if (reactQuery.isError) {
+            setMediaTypes([])
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 

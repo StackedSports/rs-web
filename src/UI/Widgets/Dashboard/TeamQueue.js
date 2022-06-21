@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { Typography, Stack, Box } from "@mui/material"
 import { Tune, Event, KeyboardArrowDown } from '@mui/icons-material';
 import lodash from "lodash";
+import { format } from 'date-fns'
 import { useHistory } from "react-router-dom";
 
 import { SectionSubTitle } from "./Components/Styles/StyledComponents"
@@ -12,7 +13,7 @@ import DateRangePicker from "UI/Forms/Inputs/DateRangePicker";
 import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
-import { useMessages,useTeamMembers } from "Api/ReactQuery";
+import { useMessages, useTeamMembers } from "Api/ReactQuery";
 import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 
@@ -30,9 +31,16 @@ export const TeamQueue = () => {
 
   const getBaseFilter = () => {
     if (dates.includes(null))
-      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin" });
+      return ({
+        message_status: ['Pending', 'In Progress'],
+        includeTeam: user?.role === "Admin"
+      });
     else
-      return ({ message_status: ['Pending', 'In Progress'], includeTeam: user?.role === "Admin", send_at_dates: [dates] });
+      return ({
+        message_status: ['Pending', 'In Progress'],
+        includeTeam: user?.role === "Admin",
+        send_at_dates: dates.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd'))
+      });
   };
 
   const messages = useMessages(1, 10, getBaseFilter());
