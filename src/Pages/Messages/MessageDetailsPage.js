@@ -46,6 +46,8 @@ const MessageDetailsPage = (props) => {
     const message = useMessage(messageId.current)
     const recipients = useMessageRecipients(messageId.current, 1, 50)
 
+    console.log(recipients.items)
+
     const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
     // const [selectedRecipients.items, setSelectedRecipients] = useState([])
 

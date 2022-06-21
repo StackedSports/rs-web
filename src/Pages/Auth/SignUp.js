@@ -88,7 +88,7 @@ export default function Signup() {
     >
       <Stack alignSelf='stretch' direction='row' gap={1} justifyContent='space-between' alignItems='center' >
         <img src={BrandIcon} width={55} alt="brand" />
-        <Button
+        {/* <Button
           variant='contained'
           size="large"
           color='neutral'
@@ -101,7 +101,7 @@ export default function Signup() {
           }}
         >
           Create your account
-        </Button>
+        </Button> */}
       </Stack>
 
       <Grid
