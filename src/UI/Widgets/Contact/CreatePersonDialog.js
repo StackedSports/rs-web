@@ -66,7 +66,6 @@ export const CreatePersonDialog = (props) => {
           })
       }
       if (contact.id && !props.person) {
-        console.log("create person")
         formikHelpers.setSubmitting(true);
         createPerson(contact.id, values)
           .then((res) => {

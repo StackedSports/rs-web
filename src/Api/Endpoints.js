@@ -589,7 +589,7 @@ export const addTagToMedia = (mediaId, tag) => {
 }
 
 export const getMedia = (id) => {
-    return AXIOS('get', `media/${id}`)
+    return AXIOS('get', `media/${id}`) 
 }
 
 export const getMedias = (page, perPage, filters) => {
