@@ -101,7 +101,7 @@ const GET = (url, body, cancelToken) => {
     return new Promise((resolve, reject) => {
         //const data = JSON.stringify(body);
 
-        console.log(body)
+        //console.log(body)
 
         const HEADERS = {
             Accept: "application/json; version=1",
@@ -480,7 +480,7 @@ export const upadateSelectedColumns = (userId, body) => {
 export const getMessages = (page = 1, perPage = 10, filters) => {
     let data = {
         criteria: {
-            ...getFilterMessagesCriteria(filters),
+            ...filters,
             include_team: filters?.includeTeam ? 'true' : 'false'
         }
     }
@@ -497,7 +497,7 @@ export const getMessages = (page = 1, perPage = 10, filters) => {
     //     }
     // }
 
-    console.log(data)
+    //console.log(data)
 
     return GET(`messages?page=${page}&per_page=${perPage}`, data, filters?.cancelToken)
     // return AXIOS('get', `messages?page=${page}&per_page=${perPage}`, criteria)

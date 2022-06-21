@@ -20,9 +20,8 @@ export const PanelFilters = (props) => {
 	const [selectedFilters, setSelectedFilters] = useState(props.selectedFilters || {});
 
 	useEffect(() => {
-		//console.log("No changes detected");
-		if (lodash.isEqual(props.selectedFilters, selectedFilters)) return
-		if (!props.selectedFilters && selectedFilters === {}) return
+		if (lodash.isEqual(props.selectedFilters, selectedFilters) || !props.selectedFilters instanceof Object) return
+		if (!props.selectedFilters && lodash.isEmpty(selectedFilters)) return
 
 		//console.log("external Change happens", props.selectedFilters)
 		setSelectedFilters(props.selectedFilters || {})

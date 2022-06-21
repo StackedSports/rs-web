@@ -31,9 +31,6 @@ export default function useSearchParams() {
             history.push({ search: newParamsStr })
     }
     const appenSearchParams = (key, value, redirectTo) => {
-        console.log("comparação", searchParams.get(key)?.toString())
-        console.log("comparação", value)
-        console.log("comparação", searchParams.get(key) == value)
         if ((searchParams.has(key) && searchParams.get(key).toString() == value)) return
         const newParams = new URLSearchParams(search)
         if (value) {
@@ -77,7 +74,6 @@ export function filterObjectToQueryParams(filters) {
             parserFilters.append(key, `${value.itemLabel}:${value.value}`)
         }
     })
-    console.log("parserFilters", parserFilters.toString())
     return parserFilters.toString()
 }
 
