@@ -1,14 +1,9 @@
 import { useState, useContext } from 'react';
-import { Redirect } from 'react-router-dom';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import { default as ArrowBack } from '@mui/icons-material/ArrowBackIos';
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+
+import { ListItemButton, Stack, Avatar, List, ListItem, Typography, Grid, Box } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import TuneIcon from '@mui/icons-material/Tune';
-import { ListItemButton, Stack } from "@mui/material";
-import { Avatar, List, ListItem, Typography } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
 
 import Page, { Content } from 'UI/Layouts/Page';
@@ -130,8 +125,6 @@ export default function ChatPage(props) {
     setConversationViewer([...conversationViewer])
   }
 
-  console.log(conversationViewer)
-
   const onChatSearch = (searchTerm) => {
     console.log("onChatSearch", searchTerm)
   }
@@ -209,15 +202,14 @@ export default function ChatPage(props) {
           visible={displayFilters}
           filters={filters}
           collapsed={true}
-          // onFilterSelected={onFilterSelected}
+        // onFilterSelected={onFilterSelected}
         />
         <Panel hideHeader>
-          <Stack flex={1} direction="row">
+          <Grid container flex={1} flexWrap='nowrap' >
 
-            <Stack sx={{//conversation summary list
+            <Grid item sx={{//conversation summary list
               width: "370px",
-              height: "100vh",
-              overflowY: "scroll",
+              overflowY: "auto",
               border: "red solid 1px",
               borderRadius: "5px",
               border: "solid 1px #dadada",
@@ -232,21 +224,19 @@ export default function ChatPage(props) {
               >
                 <Icon sx={{ cursor: "pointer" }} onClick={onBackClick} />
                 <Typography component="h2" variant="h6"><b>Ben Garves</b></Typography>
-                <Typography style={{ color: "#dadada", fontSize: "12px", }} component="span" variant="subtitle1">@BD615</Typography>
+                <Typography sx={{ color: "#dadada", fontSize: "12px", }} component="span" variant="subtitle1">@BD615</Typography>
               </Stack>
 
-              <List style={{ padding: 0 }}>
-
-                <ListItem style={{ padding: "30px", }} >
-                  <SearchBar
-                    style={{ margin: 0 }}
-                    searchOnChange
-                    icon={TuneIcon}
-                    placeholder="Search"
-                    onSearch={onChatSearch}
-                    onClear={onChatSearchClear}
-                  />
-                </ListItem>
+              <Box sx={{ p: '20px' }}>
+                <SearchBar
+                  style={{ margin: 0 }}
+                  searchOnChange
+                  placeholder="Search"
+                  onSearch={onChatSearch}
+                  onClear={onChatSearchClear}
+                />
+              </Box>
+              <List >
 
                 {conversations.map(conversation => (
                   <ChatListItem
@@ -257,17 +247,11 @@ export default function ChatPage(props) {
                 ))
                 }
               </List>
-            </Stack>
+            </Grid>
 
-            <Stack sx={{//conversation details container
-              maxWidth: displayFilters ? "700px" : "900px",
-              overflowX: "scroll",
-            }}
-              flex={1}
-              spacing={2}
-              direction="row"
-              flexWrap="nowrap"
-            >
+            //conversation details container
+            <Grid item xs container > 
+            
               {conversationViewer.map(conversation => (
                 <ConversationChat
                   conversation={conversation}
@@ -276,7 +260,7 @@ export default function ChatPage(props) {
               ))
               }
 
-            </Stack>
+            </Grid>
 
             {/* {alert && (
             <Snackbar
@@ -299,9 +283,9 @@ export default function ChatPage(props) {
 
             {/* {loading && <LoadingOverlay />} */}
 
-          </Stack>
+          </Grid>
         </Panel>
       </Content>
-    </Page >
+    </Page>
   )
 }

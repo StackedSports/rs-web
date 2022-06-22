@@ -1,25 +1,25 @@
 import { useState } from 'react';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
 import {
+  Grid,
+  Divider,
+  Stack,
+  Checkbox,
   Avatar,
   Typography,
   Box,
   List,
   ListItem,
-} from "@material-ui/core";
-import CloseIcon from '@mui/icons-material/Close';
+} from "@mui/material";
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
+import CloseIcon from '@mui/icons-material/Close';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
-import Checkbox from '@mui/material/Checkbox';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleUnchecked from "@material-ui/icons/RadioButtonUnchecked";
 
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
-
 
 const TextMessage = (props) => {
 
@@ -63,7 +63,7 @@ const TextMessage = (props) => {
           aria-label="recipe"
           src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
         />}
-    </ListItem >
+    </ListItem>
   )
 }
 
@@ -87,7 +87,6 @@ const ConversationChat = (props) => {
 
   const onActionClick = () => {
     setClickActionButton(true)
-
   }
 
   const onCancelClick = () => {
@@ -111,177 +110,177 @@ const ConversationChat = (props) => {
     setCheckedMessages([...checkedMessages, message])
   }
 
-  console.log(checkedMessages)
-
   return (
-    <Stack sx={{//conversation chat
-      minWidth: "350px",
-      border: "#dadada solid 1px",
-    }}
-      key={props.conversation.id}
-    >
-      <Stack sx={{//header
-        padding: "20px",
-        backgroundColor: "#3871DA",
+    <Grid item xs>
+      <Stack sx={{//conversation chat
+        minWidth: "350px",
+        border: "#dadada solid 1px",
       }}
-        direction="row"
-        flexWrap="nowrap"
-        alignItems="center"
-        justifyContent="space-between"
+        key={props.conversation.id}
       >
-        <Stack
-          spacing={2}
+        <Stack sx={{//header
+          padding: "20px",
+          backgroundColor: "#3871DA",
+        }}
           direction="row"
+          flexWrap="nowrap"
           alignItems="center"
+          justifyContent="space-between"
         >
-          <Avatar style={{
-            width: "36px",
-            height: "36px",
-          }}
-            aria-label="recipe"
-            src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
-          />
-          <Typography style={{
+          <Stack
+            spacing={2}
+            direction="row"
+            alignItems="center"
+          >
+            <Avatar style={{
+              width: "36px",
+              height: "36px",
+            }}
+              aria-label="recipe"
+              src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+            />
+            <Typography style={{
+              color: "#ffff",
+              fontWeight: 500,
+            }}
+              variant="body1"
+            >
+              {props.conversation.name}
+            </Typography>
+            <Typography style={{
+              color: "#dadada",
+            }}
+              variant="subtitle2"
+            >
+              @charles
+            </Typography>
+          </Stack>
+          <CloseIcon sx={{
             color: "#ffff",
-            fontWeight: 500,
+            cursor: "pointer",
           }}
-            variant="body1"
-          >
-            {props.conversation.name}
-          </Typography>
-          <Typography style={{
-            color: "#dadada",
-          }}
-            variant="subtitle2"
-          >
-            @charles
-          </Typography>
-        </Stack>
-        <CloseIcon sx={{
-          color: "#ffff",
-          cursor: "pointer",
-        }}
-          onClick={() => onCloseConversation(props.conversation)}
-        />
-      </Stack>
-
-      {/* box textarea */}
-      <Stack p="20px">
-        <MessageInput
-          style={{
-            position: "relative",
-            width: "100%",
-            height: "110px",
-          }}
-          type='chat'
-          hideLabel
-          placeholder='Type your message here'
-          value={textMessage}
-          onChange={onTextAreaChange}
-          footerText={`${props.conversation.name} is typing...`}
-        />
-
-        <Stack sx={{
-          marginTop: "30px",
-        }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Box display="flex" flex={1}>
-            <InsertPhotoIcon
-              sx={{
-                cursor: "pointer"
-              }}
-              onClick={onAddImage}
-            />
-            <Divider
-              flexItem
-              orientation="vertical"
-              style={{ marginLeft: "10px", marginRight: "10px" }}
-            />
-
-            <AutoFixHighIcon
-              sx={{
-                cursor: "pointer"
-              }}
-            // onClick={ }
-            />
-            <Divider
-              flexItem
-              orientation="vertical"
-              style={{ marginLeft: "10px", marginRight: "10px" }}
-            />
-            <ContentCutIcon
-              sx={{
-                cursor: "pointer"
-              }}
-            // onClick={ }
-            />
-          </Box>
-          <Button name="Send" variant="contained" />
-        </Stack>
-
-      </Stack>
-
-      <Divider />
-
-      <Stack flex={2}>
-
-        <Stack /* actions */
-          sx={{
-            width: "100%",
-          }}
-          direction="row"
-          justifyContent="space-between"
-        >
-          <Button sx={{
-            visibility: clickActionButton ? "visible" : "hidden",
-          }}
-            name="Cancel"
-            variant="text"
-            onClick={onCancelClick}
+            onClick={() => onCloseConversation(props.conversation)}
           />
-          {checkedMessages.length === 0 ?
-            <Button
-              name="Action"
+        </Stack>
+
+        {/* box textarea */}
+        <Stack p="20px">
+          <MessageInput
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "110px",
+            }}
+            type='chat'
+            hideLabel
+            placeholder='Type your message here'
+            value={textMessage}
+            onChange={onTextAreaChange}
+            footerText={`${props.conversation.name} is typing...`}
+          />
+
+          <Stack sx={{
+            marginTop: "30px",
+          }}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box display="flex" flex={1}>
+              <InsertPhotoIcon
+                sx={{
+                  cursor: "pointer"
+                }}
+                onClick={onAddImage}
+              />
+              <Divider
+                flexItem
+                orientation="vertical"
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              />
+
+              <AutoFixHighIcon
+                sx={{
+                  cursor: "pointer"
+                }}
+              // onClick={ }
+              />
+              <Divider
+                flexItem
+                orientation="vertical"
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              />
+              <ContentCutIcon
+                sx={{
+                  cursor: "pointer"
+                }}
+              // onClick={ }
+              />
+            </Box>
+            <Button name="Send" variant="contained" />
+          </Stack>
+
+        </Stack>
+
+        <Divider />
+
+        <Stack flex={2}>
+
+          <Stack /* actions */
+            sx={{
+              width: "100%",
+            }}
+            direction="row"
+            justifyContent="space-between"
+          >
+            <Button sx={{
+              visibility: clickActionButton ? "visible" : "hidden",
+            }}
+              name="Cancel"
               variant="text"
-              onClick={onActionClick}
+              onClick={onCancelClick}
             />
-            :
-            <PanelDropdown
-              action={{
-                name: 'Action',
-                variant: 'text',
-                options: [
-                  { name: 'Sync with CRM', onClick: onSyncMessageClick },
-                  { name: 'Export as CSV', onClick: onExportCSV },
-                  { name: 'Archive', onClick: onArchiveMessage, color: "red" },
-                ]
-              }}
+            {checkedMessages.length === 0 ?
+              <Button
+                name="Action"
+                variant="text"
+                onClick={onActionClick}
+              />
+              :
+              <PanelDropdown
+                action={{
+                  name: 'Action',
+                  variant: 'text',
+                  options: [
+                    { name: 'Sync with CRM', onClick: onSyncMessageClick },
+                    { name: 'Export as CSV', onClick: onExportCSV },
+                    { name: 'Archive', onClick: onArchiveMessage, color: "red" },
+                  ]
+                }}
+              />
+            }
+          </Stack>
+
+          <List style={{}}>
+            {/* {props.conversation?.messages.map(message => ( */}
+            <TextMessage
+              owner
+              onCheck={onCheckMessages}
+              // message={message}
+              actionActive={clickActionButton}
             />
-          }
+            <TextMessage
+              // message={message}
+              onCheck={onCheckMessages}
+              actionActive={clickActionButton}
+            />
+            {/* ))
+          } */}
+          </List>
         </Stack>
 
-        <List style={{}}>
-          {/* {props.conversation?.messages.map(message => ( */}
-          <TextMessage
-            owner
-            onCheck={onCheckMessages}
-            // message={message}
-            actionActive={clickActionButton}
-          />
-          <TextMessage
-            // message={message}
-            onCheck={onCheckMessages}
-            actionActive={clickActionButton}
-          />
-          {/* ))
-          } */}
-        </List>
       </Stack>
-
-    </Stack>
+    </Grid>
   )
 }
 
