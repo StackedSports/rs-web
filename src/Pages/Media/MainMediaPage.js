@@ -19,6 +19,7 @@ import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoi
 import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from 'UI/Widgets/RenderIf'
+import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
 
 export const MainMediaPage = (props) => {
     const history = useHistory()
@@ -33,7 +34,6 @@ export const MainMediaPage = (props) => {
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
     const isTagDialogFunctionRemoveRef = useRef(false)
-    const [addFilter, setAddFilter] = useState()
 
     const mediaMultiPageSelection = useMultiPageSelection_V2(media.items)
     const placeholdersMultiPageSelection = useMultiPageSelection_V2(placeholders.items)
@@ -155,7 +155,6 @@ export const MainMediaPage = (props) => {
             filter: {},
             option: tag
         }
-        setAddFilter(filter)
     }
 
     const mainActions = [
@@ -196,7 +195,6 @@ export const MainMediaPage = (props) => {
             //filter={media.filter}
             actions={mainActions}
             showPanelFilters={showPanelFilters}
-            setFilter={addFilter}
             onFilterRedirect={mediaRoutes.media}
         >
 
@@ -285,7 +283,18 @@ export const MainMediaPage = (props) => {
                 <Stack direction='row' flexWrap='wrap' gap={3}>
                     {tags.items.slice(0, 12).map(tag => (
                         <Stack
-                            onClick={() => handleTagsClick(tag)}
+                            component={Link}
+                            to={{
+                                pathname: mediaRoutes.media,
+                                search: new URLSearchParams({
+                                    page: 1,
+                                    filters: filterObjectToQueryParams({
+                                        tag_id: {
+                                            itemLabel: tag.name, value: tag.id
+                                        }
+                                    }),
+                                }).toString(),
+                            }}
                             direction={'row'}
                             alignItems='center'
                             key={tag.id}

@@ -71,8 +71,8 @@ export const PanelFilters = (props) => {
 			else if (filter.isUnique) {
 				filters[filterName] = [option]
 			} else {
-				if (filters[filterName].find(f => f.id === option.id || f.itemLabel === option.itemLabel)) {
-					filters[filterName] = filters[filterName].filter(item => item.id !== option.id || f.itemLabel === option.itemLabel)
+				if (filters[filterName].find(f => f.itemLabel === option.itemLabel)) {
+					filters[filterName] = filters[filterName].filter(item => item.itemLabel !== option.itemLabel)
 				} else {
 					filters[filterName].push(option)
 				}
