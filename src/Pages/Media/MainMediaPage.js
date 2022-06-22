@@ -149,14 +149,6 @@ export const MainMediaPage = (props) => {
         }
     }
 
-    const handleTagsClick = (tag) => {
-        const filter = {
-            filterName: 'tag',
-            filter: {},
-            option: tag
-        }
-    }
-
     const mainActions = [
         {
             name: 'Change view',
