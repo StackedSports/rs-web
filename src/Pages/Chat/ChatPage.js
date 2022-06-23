@@ -139,7 +139,7 @@ export default function ChatPage(props) {
   const [conversationViewer, setConversationViewer] = useState([])
 
   useEffect(() => {
-    const pinned = conversations.filter(conversation => pinnedChats[user.id].includes(conversation.id))
+    const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
     setConversationViewer(pinned)
   }, [])
 
