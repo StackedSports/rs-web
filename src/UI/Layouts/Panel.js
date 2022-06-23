@@ -13,7 +13,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
-import { Tooltip } from '@mui/material';
+import { Tooltip, Box } from '@mui/material';
 
 export const PanelDropdown = ({ action, header }) => {
 
@@ -115,7 +115,7 @@ export default function Panel(props) {
     const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled])
 
     return (
-        <div className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} >
+        <Box className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} sx={props.sx} >
             {!props.hideHeader &&
                 <div style={{ marginBottom: 10 }}>
                     <div className='Header'>
@@ -139,6 +139,6 @@ export default function Panel(props) {
                 </div>
             }
             {props.children}
-        </div>
+        </Box>
     )
 }

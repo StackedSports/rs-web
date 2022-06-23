@@ -40,6 +40,7 @@
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
     "react-bootstrap": "^1.4.3",
     "react-calendar": "^3.3.1",
     "react-chartjs-2": "^2.11.2",

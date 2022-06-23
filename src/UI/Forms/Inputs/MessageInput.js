@@ -33,7 +33,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
 import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
-import { Stack,CircularProgress } from '@mui/material';
+import { Stack, CircularProgress } from '@mui/material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
@@ -136,7 +136,7 @@ const InputPlatform = (props) => {
     }, [props.platforms])
 
     useEffect(() => {
-        if(props.selected) {
+        if (props.selected) {
             let found = platforms.find(plat => plat.name === props.selected)
             console.log(found)
             setSelectedPlatform(found)
@@ -446,7 +446,7 @@ const Snippets = ({ snippets, onSelected }) => {
     )
 }
 
-const EmojiPicker = (props) => {
+export const EmojiPicker = (props) => {
     const [showPicker, setShowPicker] = useState(false)
 
     const onClick = (e) => {
@@ -460,7 +460,7 @@ const EmojiPicker = (props) => {
     const onSelect = (emoji) => {
         // console.log(emoji)
         setShowPicker(false)
-        props.onEmojiSelected(emoji)
+            props.onEmojiSelected(emoji)
     }
 
     return (
@@ -468,7 +468,7 @@ const EmojiPicker = (props) => {
             <Emoji emoji="grinning" size={28} onClick={onClick} />
             {showPicker && (
                 <div
-                    style={{ position: 'absolute', top: '40px', left: '0px' }}
+                    style={{ position: 'absolute', top: '40px', left: '0px', zIndex: '10' }}
                     onMouseLeave={onMouseLeave}>
                     <Picker
                         showPreview={false}
@@ -571,21 +571,17 @@ const InputChat = (props) => {
 
     return (
         <div style={props.style}>
-            <EmojiPicker style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-            }}
-                onEmojiSelected={onEmojiSelected}
-            />
             <textarea
                 ref={textArea}
                 className='TextArea-chat'
                 type='text'
-                rows='10'
+                rows='5'
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={onChange}
+            />
+            <EmojiPicker
+                onEmojiSelected={onEmojiSelected}
             />
             <span
                 style={{
