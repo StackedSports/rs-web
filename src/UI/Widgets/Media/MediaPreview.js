@@ -125,7 +125,7 @@ const MediaPreview = ({ type, ...props }) => {
     const app = useContext(AppContext)
     const self = useRef(null)
 
-    const [width, setWidth] = useState(200)
+    const [width, setWidth] = useState(props.width || 200)
     const [isHovering, setIsHovering] = useState(false)
     const [isChecked, setIsChecked] = useState(props.selected || false)
 
@@ -139,7 +139,7 @@ const MediaPreview = ({ type, ...props }) => {
     const showSendOnHover = (props.onSendClick && props.onSendClick instanceof Function) ? true : false
 
     useEffect(() => {
-        if (!self.current || props.miniImage)
+        if (!self.current || props.miniImage || props.width)
             return
 
         // console.log(self.current.clientWidth)
