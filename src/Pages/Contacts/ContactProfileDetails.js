@@ -469,10 +469,10 @@ const ContactProfileDetails = (props) => {
 			/>
 
 			<CreateOpponentDialog
-				open={openNewOpponentDialog}
-				onClose={() => setOpenNewOpponentDialog(false)}
-				contact={props.contact}
-			//onCreated ={onOpponentCreated  }
+			  open={openNewOpponentDialog}
+			  onClose={() => setOpenNewOpponentDialog(false)}
+			  contact={props.contact}
+			//   onCreated={onOpponentCreated}
 			/>
 
 			<PeopleDialog

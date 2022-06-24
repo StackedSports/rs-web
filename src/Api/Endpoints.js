@@ -954,8 +954,9 @@ export const addOpponent = (data, contactId) => {
     //     "notes": ""
     // }
 
+    // API receives payload as "opponent" not "oponnents"
     let body = {
-        opponents: data
+        opponent: data
     }
 
     return POST(`contacts/${contactId}/opponents`, body)
@@ -1231,7 +1232,7 @@ export const updatePerson = (contactId, personId, data) => {
 
 export const createOpponent = (contactId, data) => {
     const body = {
-        opponents: { ...data }
+        opponent: { ...data }
     }
     return POST(`contacts/${contactId}/opponents`, body)
 }
