@@ -11,7 +11,6 @@ import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
 import SideFilter from 'UI/Widgets/SideFilter';
 import SearchBar from 'UI/Widgets/SearchBar';
-
 import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
