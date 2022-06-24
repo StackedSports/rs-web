@@ -9,10 +9,10 @@ import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
 import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
-
 import SideFilter from 'UI/Widgets/SideFilter';
 import SearchBar from 'UI/Widgets/SearchBar';
 
+import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
@@ -26,38 +26,126 @@ const conversations = [
     messages: [
       {
         id: "0",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "1",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "2",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "3",
+        message: "lorem ipsum dolor sit amet",
       }
     ]
   },
   {
     id: '1',
     name: 'Luke Burke 2',
+    messages: [
+      {
+        id: "0",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "1",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "2",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "3",
+        message: "lorem ipsum dolor sit amet",
+      }
+    ]
   },
   {
     id: '2',
     name: 'Luke Burke 3',
+    messages: [
+      {
+        id: "0",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "1",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "2",
+        message: "lorem ipsumt",
+        owner: true,
+      },
+      {
+        id: "3",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "4",
+        message: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "5",
+        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+        owner: true,
+      }
+    ]
   },
   {
     id: '3',
     name: 'Luke Burke 4',
+    messages: [
+      {
+        id: "0",
+        message: "lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "1",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "2",
+        message: "lorem ipsumt",
+        owner: true,
+      },
+      {
+        id: "3",
+        message: "lorem ipsum dolor sit amet",
+      },
+      {
+        id: "4",
+        message: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+        owner: true,
+      },
+      {
+        id: "5",
+        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+        owner: true,
+      }
+    ]
   },
-  {
-    id: '4',
-    name: 'Luke Burke 5',
-  },
-  {
-    id: '5',
-    name: 'Luke Burke 6',
-  },
-  {
-    id: '6',
-    name: 'Luke Burke 7',
-  },
+
 ]
 
 export default function ChatPage(props) {
   const confirmDialog = useContext(ConfirmDialogContext)
   const { user } = useContext(AuthContext)
+  const snippets = useSnippets()
+  const textPlaceholders = useTextPlaceholders()
+  console.log(snippets)
+
   const [pinnedChats, setPinnedChats] = useLocalStorage('pinnedChats', {})
 
   const [displayFilters, setDisplayFilters] = useState(true)
@@ -84,7 +172,7 @@ export default function ChatPage(props) {
     setDisplayFilters(!displayFilters)
   }
 
-  const onToggleChat = (conversation) => {
+  const onClickChatListItem = (conversation) => {
     console.log("open conversation")
     let index = 0
     const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
@@ -219,7 +307,7 @@ export default function ChatPage(props) {
                   <ChatListItem
                     key={conversation.id}
                     conversation={conversation}
-                    onToggleChat={onToggleChat}
+                    onToggleChat={onClickChatListItem}
                     onArchiveConversation={onArchiveConversation}
                   />
                 ))
@@ -253,6 +341,8 @@ export default function ChatPage(props) {
                         conversation={conversation}
                         onCloseConversation={onCloseConversation}
                         onPin={() => onPin(conversation)}
+                        snippets={snippets}
+                        textPlaceholders={textPlaceholders}
                       />
                     ))}
                     {provided.placeholder}
@@ -262,6 +352,7 @@ export default function ChatPage(props) {
             </DragDropContext>
 
           </Grid>
+
         </Panel>
       </Content>
     </Page>
