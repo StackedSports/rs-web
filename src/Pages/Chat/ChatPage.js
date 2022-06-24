@@ -1,12 +1,9 @@
 import { useState, useContext, useCallback, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import { ListItemButton, Stack, Avatar, List, ListItem, Typography, Grid, Box, IconButton } from "@mui/material";
+import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import CloseIcon from '@mui/icons-material/Close';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
@@ -15,12 +12,11 @@ import SideBar from 'UI/Layouts/SideBar';
 
 import SideFilter from 'UI/Widgets/SideFilter';
 import SearchBar from 'UI/Widgets/SearchBar';
-// import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
-import ConversationChat from './Components/ConversationChat';
+import { ChatWindow, ChatListItem } from '../../UI/Widgets/Chat';
 
 // Data to test
 const conversations = [
@@ -59,77 +55,6 @@ const conversations = [
   },
 ]
 
-
-const ChatListItem = (props) => {
-
-  const [showIconClose, setShowIconClose] = useState(false)
-
-  const onArchiveConversation = (conversation) => {
-    props.onArchiveConversation(conversation)
-  }
-
-  return (
-    <ListItemButton
-      sx={{
-        padding: "15px",
-        position: "relative",
-        borderTop: "solid 1px #dadada",
-        borderBottom: "solid 1px #dadada",
-      }}
-      key={props.conversation?.id}
-      onMouseEnter={() => setShowIconClose(true)}
-      onMouseLeave={() => setShowIconClose(false)}
-      onClick={() => props.onToggleChat(props.conversation)}
-    >
-      <Stack flex={1} direction="row" spacing={2} alignItems="center">
-        <IconButton
-          sx={{
-            visibility: showIconClose ? "visible" : "hidden",
-            position: "absolute",
-            marginRight: "15px",
-            right: 0,
-            bottom: 0,
-            transform: "translateY(-50%)",
-            zIndex: 1,
-          }}
-          onClick={(e) => { e.stopPropagation(); onArchiveConversation(props.conversation) }}
-        >
-          <ArchiveIcon />
-        </IconButton>
-        <Avatar style={{
-          width: "56px",
-          height: "56px",
-        }}
-          aria-label="avatar"
-          src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
-        />
-        <Stack flex={1} sx={{ position: "relative" }}>
-          <Typography style={{
-            position: "absolute",
-            right: 0,
-          }}
-            variant='body2'
-            fontWeight={600}
-            fontSize={12}
-          >
-            11:23 am
-          </Typography>
-
-          <Typography variant="body1" fontWeight='bold'>
-            {props.conversation?.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            @charles
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            There Ways To Get Travel Disco...
-          </Typography>
-        </Stack>
-      </Stack>
-    </ListItemButton>
-  )
-}
-
 export default function ChatPage(props) {
   const confirmDialog = useContext(ConfirmDialogContext)
   const { user } = useContext(AuthContext)
@@ -139,16 +64,16 @@ export default function ChatPage(props) {
   const [conversationViewer, setConversationViewer] = useState([])
 
   useEffect(() => {
-    const pinned = conversations.filter(conversation => pinnedChats[user.id].includes(conversation.id))
+    const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
     setConversationViewer(pinned)
   }, [])
 
   const isPinned = useCallback((conversation) => {
-    if (pinnedChats[user.id]) {
-      return pinnedChats[user.id].includes(conversation.id)
+    if (user && pinnedChats[user.id]) {
+      return pinnedChats[user.id]?.includes(conversation.id)
     }
     return false
-  }, [pinnedChats, user.id])
+  }, [pinnedChats, user])
 
   const onTopActionClick = () => {
     console.log("onTopActionClick")
@@ -321,7 +246,7 @@ export default function ChatPage(props) {
                     }}
                   >
                     {conversationViewer.map((conversation, index) => (
-                      <ConversationChat
+                      <ChatWindow
                         isPinned={isPinned(conversation)}
                         index={index}
                         key={conversation.id}

@@ -1,89 +1,36 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
 import {
-  Grid,
   Divider,
   Stack,
   Paper,
-  Checkbox,
   Avatar,
   Typography,
-  Tooltip,
   Box,
   IconButton,
   List,
-  ListItem,
   TextField,
 } from "@mui/material";
 import { Draggable } from 'react-beautiful-dnd';
 
 import CloseIcon from '@mui/icons-material/Close';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CircleUnchecked from "@material-ui/icons/RadioButtonUnchecked";
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import WrapTextIcon from '@mui/icons-material/WrapText';
 import PushPinIcon from '@mui/icons-material/PushPin';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
+import { TextMessage } from 'UI/Widgets/Chat';
 import { EmojiPicker } from 'UI/Forms/Inputs/MessageInput';
 
-const TextMessage = (props) => {
-
-  const [checked, setChecked] = useState(false);
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-    props.onCheck(event.target.checked)
-  };
-
-  return (
-    <ListItem>
-      {props.actionActive &&
-        <Checkbox
-          sx={{
-            "& .MuiSvgIcon-root": {
-              borderRadius: "50%"
-            }
-          }}
-          checked={checked}
-          onChange={handleChange}
-          icon={<CircleUnchecked />}
-          checkedIcon={<CheckCircleIcon sx={{ color: "#006644" }} />}
-        />
-      }
-      <Typography style={{
-        margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
-        padding: '10px',
-        color: props.owner ? "#fff" : "#000",
-        backgroundColor: props.owner ? "#3871DA" : "#f1f0f0",
-        borderRadius: props.owner ? "20px 20px 0 20px" : "20px 20px 20px 0",
-      }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </Typography>
-      {props.owner &&
-        <Avatar sx={{
-          margin: '5px 0 5px 10px',
-          width: "26px",
-          height: "26px",
-          alignSelf: "flex-end",
-        }}
-          aria-label="recipe"
-          src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
-        />}
-    </ListItem>
-  )
-}
-
-const ConversationChat = (props) => {
+export const ChatWindow = (props) => {
   const [textMessage, setTextMessage] = useState("")
   const [checkedMessages, setCheckedMessages] = useState([])
   const [clickActionButton, setClickActionButton] = useState(false)
-  const chatRef = useRef()
+  const chatInputRef = useRef()
 
-  const onCloseConversation = (conversation) => {
-    props.onCloseConversation(conversation)
+  const onCloseConversation = () => {
+    props.onCloseConversation(props.conversation)
   }
 
   const onTextAreaChange = (value) => {
@@ -126,7 +73,10 @@ const ConversationChat = (props) => {
   }
 
   return (
-    <Draggable draggableId={props.conversation.id} index={props.index} isDragDisabled={props.isPinned}>
+    <Draggable
+      draggableId={props.conversation.id}
+      index={props.index} isDragDisabled={props.isPinned}
+    >
       {(provided) => (
         <Paper
           {...provided.draggableProps}
@@ -145,7 +95,7 @@ const ConversationChat = (props) => {
             color="#fff"
             sx={{ userSelect: 'none' }}
           >
-            <IconButton onClick={()=>props.onPin()} color='inherit' size='small'>
+            <IconButton onClick={() => props.onPin()} color='inherit' size='small'>
               <PushPinIcon />
             </IconButton>
 
@@ -162,7 +112,7 @@ const ConversationChat = (props) => {
             <Typography variant="subtitle2" >
               @charles
             </Typography>
-            <IconButton onClick={() => onCloseConversation(props.conversation)} size='small' color='inherit' sx={{ ml: 'auto' }} >
+            <IconButton onClick={onCloseConversation} size='small' color='inherit' sx={{ ml: 'auto' }} >
               <CloseIcon />
             </IconButton>
           </Stack>
@@ -173,7 +123,7 @@ const ConversationChat = (props) => {
               fullWidth
               multiline
               rows={4}
-              inputRef={chatRef}
+              inputRef={chatInputRef}
               variant="outlined"
               placeholder="Type your message here"
               value={textMessage}
@@ -194,7 +144,7 @@ const ConversationChat = (props) => {
                 }}
                 onEmojiSelected={(emoji) => {
                   setTextMessage(textMessage + emoji.native)
-                  chatRef.current.focus()
+                  chatInputRef.current.focus()
                 }}
               />
 
@@ -325,4 +275,4 @@ const ConversationChat = (props) => {
   )
 }
 
-export default ConversationChat;
+export default ChatWindow;
