@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
+import lodash from "lodash";
 import {
     Box,
     MenuList,
@@ -6,18 +7,20 @@ import {
     ListSubheader,
     TextField,
     InputAdornment,
+    IconButton,
     Button,
     Paper,
     Popper,
     ClickAwayListener,
     debounce,
+    ListItemText,
 } from "@mui/material";
 import { Search, KeyboardArrowDown } from "@mui/icons-material";
 import RenderIf from "../RenderIf";
 
 
 
-export const Dropdown = ({ label, options, loading, onSearch, onClick, getOptionLabel, keepOpen }) => {
+export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen }) => {
     const buttonRef = useRef(null);
     const [buttonWidth, setButtonWidth] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -53,7 +56,7 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
     }
 
     const handleClickOption = (option) => {
-       // console.log("option clicked", option)
+        // console.log("option clicked", option)
         onClick(option);
         if (!keepOpen)
             handleClose();
@@ -63,22 +66,33 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
 
     return (
         <Box>
-            <Button variant='outlined' endIcon={<KeyboardArrowDown />} onClick={handleToggle} ref={buttonRef}>
-                {label}
-            </Button>
+            <RenderIf condition={type === 'icon'}>
+                <IconButton ref={buttonRef} onClick={handleToggle}>
+                    {icon}
+                </IconButton>
+            </RenderIf>
+            <RenderIf condition={type !== 'icon'}>
+                <Button variant='outlined' endIcon={<KeyboardArrowDown />} onClick={handleToggle} ref={buttonRef}>
+                    {label}
+                </Button>
+            </RenderIf>
             <Popper
-              open={open}
-              anchorEl={anchorEl}
-              placement="bottom-start"
-              sx={{ zIndex: 5 }}
+                open={open}
+                anchorEl={anchorEl}
+                placement="bottom-start"
+                sx={{ zIndex: 5 }}
             >
                 <Paper
-                  elevation={3}
-                  sx={{
-                      minWidth: buttonWidth,
-                      maxHeight: '250px',
-                      overflowY: 'auto'
-                  }}
+                    elevation={3}
+                    sx={{
+                        minWidth: buttonWidth,
+                        maxWidth: '350px',
+                        maxHeight: '250px',
+                        overflowY: 'auto',
+                        '& .MuiMenuItem-root': {
+                            maxWidth: '350px',
+                        }
+                    }}
                 >
                     <ClickAwayListener onClickAway={() => handleClose()}>
                         <MenuList
@@ -119,11 +133,34 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
                                     No results found
                                 </MenuItem>
                             </RenderIf>
-                            {options?.map((option, i) => (
-                                <MenuItem key={option.id || i} onClick={() => handleClickOption(option)} >
-                                    {getOptionLabel(option)}
-                                </MenuItem>
-                            ))}
+
+
+                            {// if options is array of objects
+                                Array.isArray(options) ? options?.map((option, i) => (
+                                    <MenuItem key={option.id || i} onClick={() => handleClickOption(option)} >
+                                        <ListItemText
+                                            primary={getOptionLabel ? getOptionLabel(option) : option}
+                                            primaryTypographyProps={{ noWrap: true }}
+                                        />
+                                    </MenuItem>
+                                ))
+                                    :
+                                    // if options is an object with array will creat subheader to each key
+                                    Object.keys(options).map((key, index) => (
+                                        [
+                                            <ListSubheader sx={{ fontWeight: 'bold', textTransform: 'capitalize' }} >{key.replace('_', ' ')}</ListSubheader>,
+                                            Array.isArray(options[key]) && options[key]?.map((option, i) => (
+                                                <MenuItem key={option.id || i} onClick={() => handleClickOption(option)}>
+                                                    <ListItemText
+                                                        primary={getOptionLabel ? getOptionLabel(option) : option}
+                                                        primaryTypographyProps={{ noWrap: true }}
+                                                    />
+                                                </MenuItem>
+                                            ))
+                                        ]
+                                    ))
+                            }
+
                         </MenuList>
                     </ClickAwayListener>
                 </Paper>
@@ -131,3 +168,5 @@ export const Dropdown = ({ label, options, loading, onSearch, onClick, getOption
         </Box>
     );
 }
+
+export default Dropdown;

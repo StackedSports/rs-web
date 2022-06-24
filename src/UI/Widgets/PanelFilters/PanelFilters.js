@@ -6,7 +6,7 @@ import lodash from 'lodash';
 
 import { SearchableOptionSelected } from 'UI/Forms/Inputs/SearchableOptions';
 import DateRangePicker from 'UI/Forms/Inputs/DateRangePicker';
-import { Dropdown } from './Dropdown';
+import { Dropdown } from '../DropdownMui/Dropdown';
 
 /**
  * Renders section containing the selected filters and colapse section with dropdown filters
