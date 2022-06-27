@@ -20,7 +20,7 @@ import RenderIf from "../RenderIf";
 
 
 
-export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen }) => {
+export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen,...restOfProps }) => {
     const buttonRef = useRef(null);
     const [buttonWidth, setButtonWidth] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -65,7 +65,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
     const open = Boolean(anchorEl);
 
     return (
-        <Box>
+        <Box {...restOfProps}>
             <RenderIf condition={type === 'icon'}>
                 <IconButton ref={buttonRef} onClick={handleToggle}>
                     {icon}
