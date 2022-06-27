@@ -17,7 +17,7 @@ import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
 import { ChatWindow, ChatListItem } from '../../UI/Widgets/Chat';
 
-// Data to test
+// Data for test
 const conversations = [
   {
     id: '0',
@@ -150,8 +150,10 @@ export default function ChatPage(props) {
   const [conversationViewer, setConversationViewer] = useState([])
 
   useEffect(() => {
-    const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
-    setConversationViewer(pinned)
+    if (user) {
+      const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
+      setConversationViewer(pinned)
+    }
   }, [])
 
   const isPinned = useCallback((conversation) => {

@@ -9,6 +9,7 @@ import {
   IconButton,
   List,
   TextField,
+  styled
 } from "@mui/material";
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -17,6 +18,7 @@ import ShortTextIcon from '@mui/icons-material/ShortText';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import WrapTextIcon from '@mui/icons-material/WrapText';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
@@ -25,6 +27,7 @@ import { EmojiPicker } from 'UI/Forms/Inputs/MessageInput';
 import { Dropdown } from 'UI/Widgets/DropdownMui';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import MediaPreview from '../Media/MediaPreview';
+import { stringSplice } from 'utils/Helper';
 
 
 export const ChatWindow = (props) => {
@@ -59,13 +62,20 @@ export const ChatWindow = (props) => {
     setMediaSelected(null)
   }
 
+  const replaceTextSelectionWith = (substring) => {
+    let start = chatInputRef.current.selectionStart
+    let end = chatInputRef.current.selectionEnd
+
+    return stringSplice(textMessage, start, start - end, substring)
+  }
+
   const onAddSnippet = (snippet) => {
-    setTextMessage(textMessage ? `${textMessage} ${snippet.content} ` : snippet.content)
+    setTextMessage(replaceTextSelectionWith(snippet.content))
     chatInputRef.current.focus();
   }
 
   const onAddTextPlaceholder = (placeholder) => {
-    setTextMessage(textMessage ? `${textMessage} [${placeholder}] ` : `[${placeholder}]`)
+    setTextMessage(replaceTextSelectionWith(`[${placeholder}]`))
     chatInputRef.current.focus();
   }
 
@@ -104,7 +114,8 @@ export const ChatWindow = (props) => {
     <>
       <Draggable
         draggableId={props.conversation.id}
-        index={props.index} isDragDisabled={props.isPinned}
+        index={props.index}
+      //isDragDisabled={props.isPinned}
       >
         {(provided) => (
           <Paper
@@ -116,7 +127,7 @@ export const ChatWindow = (props) => {
             <Stack //header
               {...provided.dragHandleProps}
               p='20px'
-              bgcolor={props.isPinned ? "#3871DA80" : '#3871DAFF'}
+              bgcolor={props.isPinned ? "#3871DAAA" : '#3871DAFF'}
               direction="row"
               flexWrap="nowrap"
               alignItems="center"
@@ -125,7 +136,7 @@ export const ChatWindow = (props) => {
               sx={{ userSelect: 'none' }}
             >
               <IconButton onClick={() => props.onPin()} color='inherit' size='small'>
-                <PushPinIcon />
+                {props.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
               </IconButton>
 
               <Avatar style={{
@@ -273,6 +284,14 @@ export const ChatWindow = (props) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
+                '::-webkit-scrollbar': {
+                  width: '5px',
+                  background: 'transparent',
+                },
+
+                '::-webkit-scrollbar-thumb': {
+                  background: (theme)=> theme.palette.primary.main,
+                }
               }}
             >
               {props.conversation?.messages.map(message => (
