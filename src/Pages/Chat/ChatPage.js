@@ -22,11 +22,13 @@ const conversations = [
   {
     id: '0',
     name: 'Luke Burke 1',
+    isTyping: true,
     messages: [
       {
         id: "0",
         message: "lorem ipsum dolor sit amet",
         owner: true,
+
       },
       {
         id: "1",
@@ -287,7 +289,7 @@ export default function ChatPage(props) {
                 borderBottom="solid 1px #dadada"
               >
                 <Icon sx={{ cursor: "pointer" }} onClick={onBackClick} />
-                <Typography component="h2" variant="h6" sx={{ml:'20px'}}><b>Ben Garves</b></Typography>
+                <Typography component="h2" variant="h6" sx={{ ml: '20px' }}><b>Ben Garves</b></Typography>
                 <Typography sx={{ color: "#dadada", fontSize: "12px", }} component="span" variant="subtitle1">@BD615</Typography>
               </Stack>
 
@@ -330,6 +332,14 @@ export default function ChatPage(props) {
                       overscrollBehaviorInline: 'contain',
                       gap: 1,
                       minHeight: 0,
+                      '::-webkit-scrollbar': {
+                        height: '8px',
+                        background: 'transparent',
+                      },
+                      '::-webkit-scrollbar-thumb': {
+                        background: (theme) => theme.palette.grey[400],
+                        borderRadius: '4px',
+                      }
                     }}
                   >
                     {conversationViewer.map((conversation, index) => (

@@ -168,6 +168,10 @@ export const ChatWindow = (props) => {
                 placeholder="Type your message here"
                 value={textMessage}
                 onChange={(e) => onTextAreaChange(e.target.value)}
+                helperText={props.conversation.isTyping && `${props.conversation.name} is typing...`}
+                FormHelperTextProps={{
+                  sx:{ marginInline:0}
+                }}
               />
               {mediaSelected && (
                 <Box sx={{ position: 'relative' }}>
@@ -290,7 +294,7 @@ export const ChatWindow = (props) => {
                 },
 
                 '::-webkit-scrollbar-thumb': {
-                  background: (theme)=> theme.palette.primary.main,
+                  background: (theme)=> theme.palette.grey[400],
                 }
               }}
             >
