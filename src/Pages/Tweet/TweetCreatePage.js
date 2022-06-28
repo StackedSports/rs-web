@@ -20,7 +20,7 @@ const TweetCreatePage = (props) => {
   const app = useContext(AppContext)
   const user = useUser()
   const snippets = useSnippets()
-  const teamMembers = useTeamMembers()
+  const teamMembers = useTeamMembers({ has_twitter: true })
   const { create: uploadMedia } = useMediaMutation()
 
   const [sendAt, setSendAt] = useState('ASAP')
@@ -43,7 +43,7 @@ const TweetCreatePage = (props) => {
   }, [teamMembers.items])
 
   const onTopActionClick = () => {
-
+    onCreateMessage('save')
   }
 
   const onSaveAndCloseAction = () => {
@@ -52,6 +52,7 @@ const TweetCreatePage = (props) => {
 
   const onPreviewAndPostAction = () => {
     console.log("onPreviewAndPostAction")
+    onCreateMessage('preview')
   }
 
   const filters = [
@@ -77,16 +78,16 @@ const TweetCreatePage = (props) => {
   ]
 
   const actions = [
-    {
-      name: 'More',
-      icon: ArrowDropDownIcon,
-      variant: 'outlined',
-      type: 'dropdown',
-      // disabled: ,
-      options: [
-        // { name: '', onClick:  },
-      ]
-    },
+    /*    {
+         name: 'More',
+         icon: ArrowDropDownIcon,
+         variant: 'outlined',
+         type: 'dropdown',
+         // disabled: ,
+         options: [
+           // { name: '', onClick:  },
+         ]
+       }, */
     {
       name: 'Save and Close',
       icon: CheckIcon,
@@ -188,8 +189,6 @@ const TweetCreatePage = (props) => {
     setShowMediaDialog(true)
   }
 
-  console.log(sendAt)
-
   return (
     <TweetPage
       title="Create Post"
@@ -249,7 +248,6 @@ const TweetCreatePage = (props) => {
         label='Message Text:'
         placeholder='Type message'
         snippets={snippets.items}
-        hideTextPlaceholders
         value={textMessage}
         onChange={onTextAreaChange}
       />

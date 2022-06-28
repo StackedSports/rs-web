@@ -518,7 +518,7 @@ const InputText = (props) => {
     return (
         <div>
             <div className="Row" style={{ maringBottom: 20 }}>
-                {!props.hideTextPlaceholders &&
+                {props.textPlaceholders &&
                     <TextPlaceholders
                         placeholders={props.textPlaceholders}
                         onSelected={onPlaceholderSelected}

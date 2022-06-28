@@ -49,12 +49,13 @@ export const FileDropZone = (props) => {
 				borderRadius: 4,
 				border: "1px dotted gray",
 				padding: 16,
+				userSelect: 'none',
 				...props.style
 			}}
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
-			<img src={Upload} style={{ userSelect: 'none', userDrag:'none' }} />
+			<img src={Upload} style={{ userSelect: 'none', userDrag:'none', pointerEvents: 'none' }} />
 			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
 				Upload Media
 			</p>

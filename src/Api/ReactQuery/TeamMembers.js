@@ -3,9 +3,9 @@ import { useQuery } from "react-query"
 import { getTeamMember, getTeamMembers } from "Api/Endpoints"
 import { getFullName } from "utils/Parser"
 
-export const useTeamMembers = () => {
+export const useTeamMembers = ({ has_twitter = false, has_rs_text = false } = {}) => {
     const [teamMembers, setTeamMembers] = useState([])
-    const reactQuery = useQuery("teamMembers", getTeamMembers, {
+    const reactQuery = useQuery(["teamMembers", has_twitter, has_rs_text], () => getTeamMembers({ has_twitter, has_rs_text }), {
         select: (data) => data[0],
     })
 

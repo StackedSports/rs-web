@@ -54,7 +54,6 @@
     padding: 8px 16px;
 }
 
-
 .MessageInput .Row {
     display: flex;
     flex-direction: row;
@@ -85,7 +84,6 @@
 .MessageInput .Input .Container.Large.Media {
     position: relative;
     padding: 0;
-
 }
 
 .MessageInput .Input .MediaSelected {
@@ -134,13 +132,13 @@
 
 .MessageInput .Input .TextArea {
     width: 100%;
-    /* flex: 1; */
     resize: none;
     border: 0px solid transparent;
     outline: 0px solid transparent;
     min-height: 300px;
     margin-top: 20px;
-    /* background-color: #d8d8d8; */
+    font-size: 1rem;
+    font-family: "Proxima Nova", "Roboto", "sans-serif";
 }
 
 .TextArea-chat {

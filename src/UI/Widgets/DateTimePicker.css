@@ -1,5 +1,5 @@
 .DateTimePicker {
-    width: 960px;
+    max-width: 960px;
 }
 
 .DateTimePicker .Header {

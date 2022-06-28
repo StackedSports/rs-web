@@ -61,7 +61,7 @@ const TweetsPage = (props) => {
 			return
 
 		return () => {
-			if(listener.curent)
+			if(listener.current)
 				listener.current()
 			if(listener2.current)
 				listener2.current()

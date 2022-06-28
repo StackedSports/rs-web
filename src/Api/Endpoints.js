@@ -323,8 +323,13 @@ export const deleteTeamMember = (id) => {
     return AXIOS('delete', `team/members/${id}`)
 }
 
-export const getTeamMembers = () => {
-    return AXIOS('get', `team/members?per_page=100&only_active=true`)
+export const getTeamMembers = ({ has_twitter = false, has_rs_text = false }) => {
+    let filters = ''
+    if (has_twitter)
+        filters += '&has_twitter=true'
+    if (has_rs_text)
+        filters += '&has_rs_text=true'
+    return AXIOS('get', `team/members?per_page=100&only_active=true${filters}`)
 }
 
 export const getTags = () => {
@@ -435,7 +440,7 @@ export const getBoard = (id) => {
 }
 
 export const updateBoard = (id, data) => {
-    console.log("updateBoard",data)
+    console.log("updateBoard", data)
     const body = {
         filter: {
             ...data,
@@ -589,11 +594,11 @@ export const addTagToMedia = (mediaId, tag) => {
 }
 
 export const getMedia = (id) => {
-    return AXIOS('get', `media/${id}`) 
+    return AXIOS('get', `media/${id}`)
 }
 
 export const getMedias = (page, perPage, filters) => {
-    const { cancelToken} = filters || {}
+    const { cancelToken } = filters || {}
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`, {}, cancelToken)
 }
 

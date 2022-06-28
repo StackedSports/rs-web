@@ -20,13 +20,13 @@ import { deconstructDate } from 'utils/Parser'
 const NumberInput = (props) => {
     return (
         <input
-          type='number'
-          name={props.name}
-          min={props.min}
-          max={props.max}
-          maxLength={props.maxLength}
-          value={props.value}
-          onChange={props.onChange}
+            type='number'
+            name={props.name}
+            min={props.min}
+            max={props.max}
+            maxLength={props.maxLength}
+            value={props.value}
+            onChange={props.onChange}
         />
     )
 }
@@ -43,7 +43,7 @@ export default function DateTimePicker(props) {
         now.current = new Date()
         setDate(time['_d'])
         setAsap(false)
-        
+
     }
 
     const onAsapClick = (e) => {
@@ -58,12 +58,12 @@ export default function DateTimePicker(props) {
 
     return (
         <Dialog
-          open={props.open}
-          maxWidth='md'
-          fullWidth={true}
-          onClose={props.onClose}
-          scroll={"body"}
-          PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" }}}
+            open={props.open}
+            maxWidth='md'
+            fullWidth={true}
+            onClose={props.onClose}
+            scroll={"body"}
+            PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" } }}
         >
             <Grid className='DateTimePicker'>
                 <Grid className='Header'>
@@ -76,28 +76,28 @@ export default function DateTimePicker(props) {
                         <h2>SELECT DATE & TIME</h2>
                     </Grid>
                     <Grid
-                      container
-                      direction='row'
-                      justify='flex-end'
-                      alignItems='center'
+                        container
+                        direction='row'
+                        justify='flex-end'
+                        alignItems='center'
                     >
                         <p>
-                            {asap ? 
+                            {asap ?
                                 'ASAP'
-                            :   date.toLocaleString('en-US', { dateStyle: 'full' , timeStyle: 'short'})
+                                : date.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' })
                             }
                         </p>
                     </Grid>
                 </Grid>
                 <Grid
-                  container
-                  direction='row'
+                    container
+                    direction='row'
                 >
                     <Grid item md={6} xs={12}
-                      container
-                      justify='center'
-                      alignItems='center'
-                      style={{ paddingTop: 50 }}
+                        display='flex'
+                        justify='center'
+                        alignItems='center'
+                        justifyContent='center'
                     >
                         {/* <Calendar
                           onChange={onCalendarChange}
@@ -115,9 +115,10 @@ export default function DateTimePicker(props) {
                         </LocalizationProvider>
                     </Grid>
                     <Grid item md={6} xs={12}
-                      container
-                      justify='center'
-                      alignItems='center'
+                        display='flex'
+                        justify='center'
+                        alignItems='center'
+                        justifyContent='center'
                     >
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <StaticTimePicker
@@ -133,38 +134,38 @@ export default function DateTimePicker(props) {
                     </Grid>
                 </Grid>
                 <Grid
-                  container
-                  direction='row'
-                  alignItems='center'
-                  justify='flex-end'
-                  style={{ paddingRight: 16 }}
+                    container
+                    direction='row'
+                    alignItems='center'
+                    justify='flex-end'
+                    style={{ paddingRight: 16 }}
                 >
                     <button
-                      className={asap ? 'Action' : 'Action Outline'}
-                      onClick={onAsapClick}
+                        className={asap ? 'Action' : 'Action Outline'}
+                        onClick={onAsapClick}
                     >
                         ASAP
                     </button>
                 </Grid>
-                
-                <Divider/>
+
+                <Divider />
                 <Grid
-                  container
-                  direction='row'
-                  alignItems='center'
-                  justify='flex-end'
-                  style={{ paddingBottom: 16, paddingRight: 16 }}
+                    container
+                    direction='row'
+                    alignItems='center'
+                    justify='flex-end'
+                    style={{ paddingBottom: 16, paddingRight: 16 }}
                 >
                     <button
-                      className='Cancel'
-                      onClick={props.onClose}
+                        className='Cancel'
+                        onClick={props.onClose}
                     >
                         Cancel
                     </button>
-                    
+
                     <button
-                      className='Action Bold'
-                      onClick={onSave}
+                        className='Action Bold'
+                        onClick={onSave}
                     >
                         SAVE
                     </button>
