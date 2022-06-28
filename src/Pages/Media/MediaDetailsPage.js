@@ -89,7 +89,11 @@ export const MediaDetailsPage = () => {
                 setRedirect(mediaRoutes.media)
             },
             onError: err => {
-                alert.setWarning(err.message)
+                console.table(err)
+                if (err.response.status === 422)
+                    alert.setWarning('Unable to delete media that has been previously used in a message. Please contact support to get media deleted')
+                else
+                    alert.setWarning(err.message)
             }
         })
     }
