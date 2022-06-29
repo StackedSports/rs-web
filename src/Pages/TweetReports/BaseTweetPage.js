@@ -5,7 +5,6 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import { tweetRoutes } from 'Routes/Routes'
 
 import { AppContext } from 'Context/AppProvider'
-import build from '@date-io/date-fns'
 
 const filters = [
     { // Category
@@ -13,7 +12,7 @@ const filters = [
         name: 'Tweet Reports',
         items: [
             // Filters
-            { id: '0', name: 'History', path: tweetRoutes.tweets },
+            { id: '0', name: 'History', path: tweetRoutes.reports },
         ]
     },
     // { // Category
@@ -26,13 +25,11 @@ const filters = [
     // },
 ]
 
-
-
-export default function TweetPage(props) {
+export default function BaseTweetPage(props) {
     const { redirect } = useContext(AppContext)
 
     const onTopActionClick = (e) => {
-        redirect(tweetRoutes.ranking)
+        redirect(tweetRoutes.search)
     }
 
     return (
@@ -43,7 +40,7 @@ export default function TweetPage(props) {
             filters={props.filters || filters}
             alert={props.alert}
             actions={props.actions}
-        // onFilterSelected={onFilterSelected}
+            onFilterSelected={() => console.log('onFilterSelected')}
         >
             {props.children}
         </MainLayout>

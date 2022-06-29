@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery } from "react-query"
-import { getMessage, getMessageRecipients, getMessages } from "Api/Endpoints"
+import { useQuery, useMutation, useQueryClient } from "react-query"
+import { createMessage, getMessage, getMessageRecipients, getMessages } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
@@ -58,7 +58,7 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
 }
 
 export const useMessage = (id) => {
-    const reactQuery = useQuery(['message',id], () => getMessage(id), {
+    const reactQuery = useQuery(['message', id], () => getMessage(id), {
         select: (data) => data[0],
     })
 
@@ -66,6 +66,30 @@ export const useMessage = (id) => {
         ...reactQuery,
         item: reactQuery.data,
         loading: reactQuery.isLoading,
+    }
+}
+
+export const useMessageMutations = () => {
+    const queryClient = useQueryClient();
+
+    const create = useMutation((message) => createMessage(message),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('messages')
+            },
+        })
+
+    const update = useMutation((message) => updateMedia(message),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('messages')
+            }
+        })
+
+
+    return {
+        update: update.mutate,
+        create: create.mutate,
     }
 }
 

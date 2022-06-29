@@ -14,13 +14,13 @@ import { db, functions } from 'Api/Firebase'
 import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
 import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from './TweetPage'
+import BaseTweetPage from './BaseTweetPage'
 
 import TweetDetails from './Components/TweetDetails'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
-const TweetRankingPage = (props) => {
+const TweetSearchPage = (props) => {
 	const { user } = useContext(AuthContext)
 
 	// const [input, setInput] = useState('https://twitter.com/USC_FB/status/1523330156374282240')
@@ -273,7 +273,7 @@ const TweetRankingPage = (props) => {
 
 
 	return (
-		<TweetPage
+		<BaseTweetPage
 		  title="Post Deep Dive"
 		>
 			<Stack spacing={3}>
@@ -359,8 +359,8 @@ const TweetRankingPage = (props) => {
 					</Stack>
 				</RenderIf>
 			</Stack >
-		</TweetPage >
+		</BaseTweetPage >
 	)
 }
 
-export default TweetRankingPage;
+export default TweetSearchPage;

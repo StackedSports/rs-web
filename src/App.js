@@ -43,7 +43,6 @@ import {
 import ThemeProvider from 'Theme/ThemeProvider'
 import AppProvider from 'Context/AppProvider'
 import { chatRoutes } from "Routes/Routes";
-import { TweetCreatePage } from "Pages/Tweet";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -63,10 +62,10 @@ function App() {
 						<Switch>
 							{/** Only Route left from old code */}
 							<Route path="/twitter-stream" exact component={TwitterStream} />
+							<Route path="/tweet-create" exact component={TweetCreate} />
 
 							{/** New Routes */}
-							<Route path="/tweet-create" exact component={TweetCreate} />
-							<Route path='/test' component={Test} />
+							{/* <Route path='/test' component={TweetsPage} /> */}
 							<Route path="/" exact component={Signup} />
 							<Route path={routes.contacts.path} component={ContactsRoutes} />
 							<Route path={routes.messages.path} component={MessagesRoutes} />
@@ -75,7 +74,7 @@ function App() {
 							<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 							<Route path={routes.dashboard.path} component={NewDashboard} />
 							<Route path={routes.tweet.path} component={TweetRoutes} />
-							<Route path={routes.tweetPost.path} component={TweetCreatePage} />
+							<Route path={routes.tweetPost.path} component={TweetRoutes} />
 							<Route path={chatRoutes.all} component={ChatRoutes} />
 						</Switch>
 					</div>

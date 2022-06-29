@@ -1,129 +1,111 @@
+import { useContext, useEffect, useState, useMemo } from 'react';
+import { useTags, useTeamMembers } from 'Api/ReactQuery';
 
-import { useState, useEffect, useRef, useContext } from 'react'
-import axios from 'axios'
 
-import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@material-ui/core';
-import { Stack } from '@mui/material'
-import Collapse from '@mui/material/Collapse'
+import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
+import Tune from '@mui/icons-material/Tune';
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { httpsCallable } from 'firebase/functions'
+import { Avatar, Box, Divider, Card, CardHeader, Button, IconButton, CardContent, Typography, Stack, CardMedia } from '@mui/material';
 
-import { db, functions } from 'Api/Firebase'
+import BaseTweetPage from "./BaseTweetPage";
+import { getFullName } from 'utils/Parser';
+import TweetDisplay from 'UI/Widgets/Tweet/TweetDisplay';
 
-import SearchBar from 'UI/Widgets/SearchBar'
-import Button from 'UI/Widgets/Buttons/Button'
-import LoadingPanel from 'UI/Widgets/LoadingPanel'
-import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from './TweetPage'
+import useSearchParams from 'Hooks/SearchParamsHook';
 
-import TweetDetails from './Components/TweetDetails'
-
-import { AppContext } from 'Context/AppProvider'
-import { AuthContext } from 'Context/Auth/AuthProvider'
-
-import { tweetRoutes } from 'Routes/Routes'
-
-const TweetsPage = (props) => {
-    const { redirect } = useContext(AppContext)
-
-	const { user } = useContext(AuthContext)
-
-	const [loading, setLoading] = useState(true)
-    const [tweets, setTweets] = useState(null)
-
-	const listener = useRef(null)
-	const listener2 = useRef(null)
-
-	// console.log(user)
-
-	useEffect(() => {
-		const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
-            where('status', '!=', 'failed')) // , where("state", "==", "CA")
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            let tweets = []
-
-            querySnapshot.forEach((doc) => {
-                tweets.push(doc.data())
-            })
-            console.log(tweets)
-
-            setLoading(false)
-            setTweets(tweets)
-        });
-
-        return () => unsubscribe()
-	}, [])
-
-	useEffect(() => {
-		if(!listener.current)
-			return
-
-		return () => {
-			if(listener.current)
-				listener.current()
-			if(listener2.current)
-				listener2.current()
-		}
-	}, [listener.current])
-	
-	const onNewSearchClick = (e) => {
-        redirect(tweetRoutes.ranking)
+const getTitle = (type) => {
+    switch (type) {
+        case 'schedule':
+            return 'Schedule';
+        case 'published':
+            return 'Published';
+        case 'expired':
+            return 'Expired';
+        case 'archived':
+            return 'Archived';
+        default:
+            return 'All';
     }
-
-	return (
-		<TweetPage
-		  title="Tweet Reports"
-		>
-			<Stack spacing={3}>
-				<Divider />
-
-				<RenderIf condition={loading}>
-                    <LoadingPanel/>
-                </RenderIf>
-
-				<RenderIf condition={tweets && tweets.length > 0}>
-					{tweets && tweets.map(tweet => (
-                        <Stack
-                          key={tweet.id}
-                          style={{
-                            border: '1px solid #ddd'
-                          }}
-                        >
-                            <TweetDetails 
-                              tweetId={tweet.tweetId}
-                              loading={false}
-                              details={tweet}
-                            />
-                        </Stack>
-                    ))}
-				</RenderIf>
-
-                <RenderIf condition={tweets && tweets.length == 0}>
-                    <Stack sx={{  }} alignItems="center" justifyContent="center">
-                        <p style={{ fontWeight: 'bold', marginTop: 20 }}> 
-                            You have no Tweet Reports at the moment
-                        </p>
-                        <p style={{ fontSize: 16, margin: 0 }}>
-                            Click on the button bellow to take your next step
-                        </p>
-                        <p style={{ fontSize: 16, margin: 0 }}>
-                            on building an engaging audience!
-                        </p>
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            name='+ New Search'
-                            sx={{ minWidth: 120, marginTop: 5 }}
-                            onClick={onNewSearchClick}
-                        />
-                    </Stack>
-                </RenderIf>
-			</Stack >
-		</TweetPage >
-	)
 }
 
-export default TweetsPage
+export const TweetsPage = () => {
+    const { searchParams } = useSearchParams();
+    const tags = useTags()
+    const teamMembers = useTeamMembers({ has_twitter: true })
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
+
+    const panelFilters = useMemo(() =>
+    ({
+        "type": {
+            label: 'Type',
+            options: [
+                { id: 'twitter', name: 'Twitter' },
+                { id: 'instagram', name: 'Instagram' },
+            ]
+        },
+        "account": {
+            label: 'Account',
+            options: teamMembers.items,
+            optionsLabel: (item) => getFullName(item),
+            onSearch: (search) => teamMembers.search(search),
+        },
+        "tag_id": {
+            label: 'Tags',
+            options: tags.items,
+            onSearch: (search) => tags.search(search),
+        },
+        "status": {
+            label: 'Status',
+            options: [
+                { id: 'published', name: 'Published' },
+                { id: 'scheduled', name: 'Scheduled' },
+                { id: 'expired', name: 'Expired' },
+                { id: 'archived', name: 'Archived' }
+            ]
+        },
+        "created_at": {
+            label: 'Date',
+            type: 'date',
+            optionsLabel: (dates) => dates.value.join(' - '),
+            disableFuture: true,
+            isUnique: true
+        },
+    }), [tags.items, teamMembers.items])
+
+
+    const actions = [
+        {
+            name: 'Action',
+            icon: AutoFixHigh,
+            variant: 'outlined',
+            type: 'dropdown',
+            options: []
+        },
+        {
+            name: 'Filters',
+            icon: Tune,
+            variant: 'outlined',
+            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
+        },
+    ]
+
+    return (
+        <BaseTweetPage
+            title={getTitle(searchParams.get('status'))}
+            actions={actions}
+            showPanelFilters={showPanelFilters}
+            panelFilters={panelFilters}
+        >
+            <Divider sx={{ mb: 3 }} />
+
+            <TweetDisplay>
+                <Typography variant="h6" component="h6">
+                    Tweet 1
+                </Typography>
+            </TweetDisplay>
+
+        </BaseTweetPage>
+    )
+}
+
+export default TweetsPage;

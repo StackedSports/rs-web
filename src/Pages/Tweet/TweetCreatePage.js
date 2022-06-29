@@ -7,12 +7,11 @@ import { Divider, Stack } from '@mui/material';
 import { tweetRoutes } from 'Routes/Routes';
 import { AppContext } from 'Context/AppProvider';
 
-import TweetPage from "./TweetPage";
+import BaseTweetPage from "./BaseTweetPage";
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
 import DateTimePicker from 'UI/Widgets/DateTimePicker';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import { formatDate } from 'utils/Parser';
-import { postTo } from 'utils/Data';
 import { useUser } from 'Api/Hooks';
 import { useSnippets, useTeamMembers, useMediaMutation } from 'Api/ReactQuery';
 
@@ -24,7 +23,6 @@ const TweetCreatePage = (props) => {
   const { create: uploadMedia } = useMediaMutation()
 
   const [sendAt, setSendAt] = useState('ASAP')
-  const [postToOptions, setPostToOptions] = useState([])
   const [postToSelected, setPostToSelected] = useState([])
   const [showTimePicker, setShowTimePicker] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
@@ -32,50 +30,57 @@ const TweetCreatePage = (props) => {
   const [showMediaDialog, setShowMediaDialog] = useState(false)
   const [mediaRemoved, setMediaRemoved] = useState(null)
   const [textMessage, setTextMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-
-  useEffect(() => {
-    if (!teamMembers.items)
-      return
-    // console.log(teamMembers.items)
-
-    setPostToOptions(postTo.concat(teamMembers.items))
-  }, [teamMembers.items])
 
   const onTopActionClick = () => {
-    onCreateMessage('save')
+
   }
 
   const onSaveAndCloseAction = () => {
-    console.log("onSaveAndCloseAction")
+    onCreateMessage('save')
   }
 
   const onPreviewAndPostAction = () => {
     console.log("onPreviewAndPostAction")
-    onCreateMessage('preview')
+   app.redirect(tweetRoutes.details)
   }
 
-  const filters = [
-    { // Category
-      id: '0',
-      name: 'Drafts',
-      items: [
-        // Filters
-        { id: '0', name: 'Ben Graves', path: tweetRoutes.search },
-      ]
-    },
-    { // Category
-      id: '1',
-      name: 'Posts',
-      items: [
-        // Filters
-        { id: 'scheduled', name: 'Scheduled', path: tweetRoutes.tweets },
-        { id: 'published', name: 'Published', path: tweetRoutes.tweets },
-        { id: 'expired', name: 'Expired', path: tweetRoutes.tweets },
-        { id: 'archived', name: 'Archived', path: tweetRoutes.tweets },
-      ]
-    },
-  ]
+  const onCreateMessage = (control) => {
+    setLoading(true)
+    const messageDataApi = {
+      platform: 'Twitter',
+    }
+
+    if (control !== 'save' && control !== 'preview')
+      return
+
+    if (control === 'save') {
+
+      if (typeof postToSelected[0] === String)
+        messageDataApi.send_as_coach = postToSelected[0] === 'Area Coach' ? 'area' : 'recruiting'
+      else if (postToSelected[0] && postToSelected[0].id)
+        messageDataApi.user_id = postToSelected[0].id
+      else
+        return app.alert.setError("Please select a Post To")
+
+      if (sendAt instanceof Date)
+        messageDataApi.send_at = formatDate(sendAt)
+
+      if (textMessage.trim().length > 0)
+        messageDataApi.body = textMessage
+      else if (mediaSelected) {
+        if (mediaSelected.type === 'media')
+          messageData.media_id = mediaSelected.item.id
+        else if (mediaSelected.type === 'placeholder')
+          messageData.media_placeholder_id = mediaSelected.item.id
+      }
+      else
+        return app.alert.setError("Please enter a message or select a media")
+
+      app.alert.setWarning("This functionality is not yet available")
+    }
+  }
 
   const actions = [
     /*    {
@@ -190,11 +195,10 @@ const TweetCreatePage = (props) => {
   }
 
   return (
-    <TweetPage
+    <BaseTweetPage
       title="Create Post"
       topActionName="+ New Post"
       onTopActionClick={onTopActionClick}
-      filters={filters}
       actions={actions}
     >
       <Divider />
@@ -217,7 +221,7 @@ const TweetCreatePage = (props) => {
         type='sender'
         label='Post to:'
         name='Posting Account'
-        contacts={postToOptions}
+        contacts={teamMembers.items}
         selected={postToSelected}
         onSelected={onPostToSelected}
         onRemove={onPostToRemove}
@@ -252,7 +256,7 @@ const TweetCreatePage = (props) => {
         onChange={onTextAreaChange}
       />
 
-    </TweetPage>
+    </BaseTweetPage>
   )
 }
 
