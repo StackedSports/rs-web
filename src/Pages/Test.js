@@ -31,13 +31,7 @@ const Test = () => {
         //     .catch(error => {
         //         console.log(error)
         //     })
-        console.log('aaa')
 
-        getStats()
-            .then(res => {
-                console.log(res)
-            })
-            .catch(error => console.log(error))
     }, [])
 
     // useEffect(() => {
