@@ -9,7 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
+import CreateContactDialog from 'UI/Widgets/Contact/CreateContactDialog';
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
 import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
@@ -20,7 +20,7 @@ import { AppContext } from 'Context/AppProvider'
 
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useBoards,useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContactsWithNewTags,
@@ -513,6 +513,7 @@ export default function ContactsPage(props) {
                 onSelectionChange={multipageSelection.onSelectionModelChange}
                 onClose={() => setOpenFollowOnTwitterDialog(false)}
             />
+
         </MainLayout>
     )
 }

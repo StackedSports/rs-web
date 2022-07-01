@@ -20,7 +20,7 @@ import RenderIf from "../RenderIf";
 
 
 
-export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen,...restOfProps }) => {
+export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen, zIndex, ...restOfProps }) => {
     const buttonRef = useRef(null);
     const [buttonWidth, setButtonWidth] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -72,7 +72,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                 </IconButton>
             </RenderIf>
             <RenderIf condition={type !== 'icon'}>
-                <Button variant='outlined' endIcon={<KeyboardArrowDown />} onClick={handleToggle} ref={buttonRef}>
+                <Button variant='outlined' endIcon={icon || <KeyboardArrowDown />} onClick={handleToggle} ref={buttonRef}>
                     {label}
                 </Button>
             </RenderIf>
@@ -80,7 +80,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                 open={open}
                 anchorEl={anchorEl}
                 placement="bottom-start"
-                sx={{ zIndex: 5 }}
+                sx={{ zIndex: zIndex || 5 }}
             >
                 <Paper
                     elevation={3}
