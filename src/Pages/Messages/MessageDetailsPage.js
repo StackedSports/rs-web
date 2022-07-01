@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useContext } from 'react'
+import { useQueryClient } from 'react-query'
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
@@ -45,8 +46,6 @@ const MessageDetailsPage = (props) => {
 
     const message = useMessage(messageId.current)
     const recipients = useMessageRecipients(messageId.current, 1, 50)
-
-    console.log(recipients.items)
 
     const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
     // const [selectedRecipients.items, setSelectedRecipients] = useState([])
@@ -124,6 +123,7 @@ const MessageDetailsPage = (props) => {
             .then(res => {
                 console.log(res)
                 alert.setSuccess('Message deleted succesfully!')
+                useQueryClient().invalidateQueries('messages')
 
                 setTimeout(() => {
                     setRedirect(`${messageRoutes.all}`)
@@ -170,7 +170,7 @@ const MessageDetailsPage = (props) => {
         setDisplayTagDialog(true)
         setTagging('message')
     }
-    
+
     const onSendMessageClick = () => {
         console.log('send')
 
@@ -234,6 +234,7 @@ const MessageDetailsPage = (props) => {
     }
 
     const refreshMessage = () => {
+        selectedRecipients.clear()
         message.refetch()
         recipients.refetch()
     }
