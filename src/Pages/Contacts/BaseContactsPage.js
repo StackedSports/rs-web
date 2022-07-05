@@ -262,6 +262,11 @@ export default function BaseContactsPage(props) {
             .finally(() => setLoading(false))
     }
 
+    const onBoardCreated = () => {
+        setOpenCreateBoardDialog(false)
+        app.alert.setSuccess('Board created successfully!')
+    }
+
     const onEditBoard = () => {
         console.log("onEditBoard")
         setEditBoard(true)
@@ -286,7 +291,7 @@ export default function BaseContactsPage(props) {
         confirmDialog.show(title, "You cannot undo this action. Are you sure you want to continue? ", () => {
             // console.log("onDeleteBoard")
             setLoading(true)
-            deleteBoard(props.id)
+            deleteBoard(props.boardInfo.id)
                 .then(res => {
                     app.alert.setSuccess('Board deleted successfully!')
                     boards.refetch()
@@ -482,6 +487,7 @@ export default function BaseContactsPage(props) {
                 open={openCreateBoardDialog}
                 onClose={onCloseBoardDialog}
                 selectedFilters={selectedFilters}
+                onBoardCreated={onBoardCreated}
                 boardEditedSuccess={boardEditedSuccess}
                 boardEditedFailure={boardEditedFailure}
                 confirmAction={editBoard ? "Edit Board" : "Create Board"}

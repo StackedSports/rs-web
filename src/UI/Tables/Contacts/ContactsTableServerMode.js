@@ -148,14 +148,14 @@ function CustomFooter(props) {
         alignItems='center'
         borderTop={1}
     >
-        <FormControl variant="standard" >
+{/*         <FormControl variant="standard" >
             <Select value={props.pagination?.itemsPerPage || 50} onChange={handlePaginationChange}>
                 <MenuItem value={25}>25</MenuItem>
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={75}>75</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
             </Select>
-        </FormControl>
+        </FormControl> */}
         <CustomPagination />
     </Stack>
 }
