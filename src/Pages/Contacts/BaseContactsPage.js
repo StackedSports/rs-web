@@ -1,72 +1,69 @@
-import { useState, useMemo, useEffect, useContext } from 'react';
+import { useState, useMemo, useEffect, useContext, useRef } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import Stack from '@mui/material/Stack';
-import { AccountBox, Tune } from '@material-ui/icons';
+import { AccountBox, Tune, Clear } from '@mui/icons-material';
 import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-
-import Button, { IconButton } from 'UI/Widgets/Buttons/Button';
+import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
+import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
+import Button from 'UI/Widgets/Buttons/Button';
+import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
-import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-//import ContactsTable from 'UI/Tables/Contacts/ContactsTable';
 
-// import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
+import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
+
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import { useBoards, useStatus2, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions, useContacts } from 'Api/ReactQuery';
 
 import {
-    addTagsToContacts,
+    addTagsToContactsWithNewTags,
     archiveContacts,
     deleteBoard,
-    deleteTagToContact,
-    getBoardContacts,
     untagContacts,
-    updateBoard,
 } from 'Api/Endpoints';
 
 import { contactsRoutes, messageRoutes } from 'Routes/Routes';
-
+import { getFullName } from 'utils/Parser';
 import { timeZones, states } from 'utils/Data';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AppContext } from 'Context/AppProvider';
-import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
+import { Box, IconButton } from '@mui/material';
+import RenderIf from 'UI/Widgets/RenderIf';
 
 
 export default function BaseContactsPage(props) {
-    const [redirect, setRedirect] = useState('')
     const app = useContext(AppContext)
-
-    const contacts = useMemo(() => props.contacts, [props.contacts])
     const confirmDialog = useContext(ConfirmDialogContext)
+    const isTagDialogFunctionRemoveRef = useRef(false)
 
+    const [redirect, setRedirect] = useState('')
+    const [selectedSort, setSelectedSort] = useState({})
     const [loading, setLoading] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
     const [teamBoards, setTeamBoards] = useState([])
 
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
-    const [editBoard, setEditBoard] = useState(false)
+    const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
     const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
-    const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
-
-    //const selectedContacts = useMultiPageSelection(contacts.pagination.currentPage)
-    const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
+    const [showPanelFilters, setShowPanelFilters] = useState(false)
+    const [editBoard, setEditBoard] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
 
-
     // handle filters options
+    const contacts = useMemo(() => props.contacts, [props.contacts])
     const status = useStatuses()
     const status2 = useStatus2()
     const ranks = useRanks()
@@ -75,30 +72,15 @@ export default function BaseContactsPage(props) {
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
-    const board = useBoard(props.boardInfo?.id)
+    //const board = useBoard(props.boardInfo?.id)
     const gridApiRef = useGridApiRef()
+
+    const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
 
     useEffect(() => {
         if (props.selectedFilters)
             setSelectedFilters(props.selectedFilters)
     }, [props.selectedFilters])
-
-    // useEffect(() => {//enable remove filter button when editing board
-    //     let filters = {}
-    //     Object.keys(selectedFilters).forEach(key => {
-    //         // console.log(key)
-    //         // console.log(selectedFilters[key])
-    //         if (!filters[key])
-    //             filters[key] = []
-
-    //         selectedFilters[key].forEach(item => {
-    //             const criteria = { ...item, disabled: !editBoard }
-    //             filters[key].push(criteria)
-    //         })
-    //     })
-    //     setSelectedFilters(filters)
-
-    // }, [editBoard])
 
     useEffect(() => {
         if (!contacts.items)
@@ -118,40 +100,33 @@ export default function BaseContactsPage(props) {
         if (!boards.items)
             return
 
-        // console.log(boards.items)
-        const privateBoards = boards.items.filter(board => {
-            if (!board.is_shared)
-                return board
-        })
-        const teamBoards = boards.items.filter(board => {
-            if (board.is_shared)
-                return board
-        })
+        const privateBoards = boards.items.filter(board => !board.is_shared)
+        const teamBoards = boards.items.filter(board => board.is_shared)
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
 
 
-    const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
-
     const panelFiltersData = useMemo(() =>
     ({
         status: {
             label: 'Status',
-            options: status.items?.map(item => ({ id: item.id, name: item.status })) || [],
-            type: 'status'
+            options: status.items || [],
+            optionsLabel: 'status'
         },
         rank: {
             label: 'Rank',
-            options: ranks.items?.map(item => ({ id: item.id, name: item.rank })) || [],
+            options: ranks.items || [],
+            optionsLabel: 'rank'
         },
         gradYear: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
         tags: {
-            label: 'Tag',
-            options: tags.items,
+            label: 'Tags',
+            options: tags.items || [],
+            onSearch: (search) => tags.search(search),
         },
         position: {
             label: 'Position',
@@ -159,11 +134,13 @@ export default function BaseContactsPage(props) {
         },
         areaCoach: {
             label: 'Area Coach',
-            options: teamMembersItems
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option)
         },
         positionCoach: {
             label: 'Position Coach',
-            options: teamMembersItems
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option)
         },
         timeZone: {
             label: 'Time Zone',
@@ -171,7 +148,10 @@ export default function BaseContactsPage(props) {
         },
         birthday: {
             label: 'Birthday',
-            options: []
+            type: 'date',
+            format: 'MM/dd',
+            optionsLabel: (dates) => dates.value.join(' - '),
+            isUnique: true
         },
         state: {
             label: 'State',
@@ -181,7 +161,8 @@ export default function BaseContactsPage(props) {
             label: 'Status 2',
             options: status2.items.map((status2, index) => ({ name: status2 })) || []
         },
-    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembersItems.items, status2.items])
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
+
 
     let mainActions = [
         {
@@ -199,10 +180,9 @@ export default function BaseContactsPage(props) {
         }
     ]
 
-    // console.log(Object.keys(selectedFilters).length === 0)
-
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        console.log("Cliquei")
+        setOpenCreateContactDialog(true)
     }
 
     let filters = [
@@ -224,46 +204,23 @@ export default function BaseContactsPage(props) {
             // Filters
             items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
         },
-        // { // Category
-        //     id: '3',
-        //     name: 'User Boards',
-        //     items: [
-        //          Filters
-        //          { id: '0', name: 'Scheduled' },
-        //          { id: '1', name: 'In Progress' },
-        //     ]
-        // },
     ]
-
-    // else if(action.type === 'criteria')
-    //     return (
-    //         <div>{action.name}</div>
-    //     )
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
+    //TODO Refactor this
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
-        if (contacts.filter)
-            contacts.filter(filter)
+        if (props.onPanelFilterChange)
+            props.onPanelFilterChange(filter)
     }
 
-    /*     const onContactsSelectionChange = (selection) => {
-            // setSelectedContacts(selected)
-            selectedContacts.onSelectionChange(selection)
-        } */
-
+    //TODO REFACTOR
     const onSendMessageClick = (e) => {
-        /* console.log(selectedContacts)
-
-        selectedContacts.saveData(contacts.items)
-        let selectedData = selectedContacts.getDataSelected() */
         let selectedData = contactsMultipageSelection.selectedData
-
-
         if (props.onSendMessage)
             props.onSendMessage(selectedData)
         // else
@@ -274,27 +231,13 @@ export default function BaseContactsPage(props) {
         gridApiRef.current.exportDataAsCsv()
     }
 
-    const onExportBoardAsCSVClick = (e) => {
-        // getBoardContacts(props.boardInfo.id, 1, contacts.pagination.totalItems)
-        //     .then(resp => {
-        //         console.log(resp[0])
-        //         contactsMultipageSelection.set(resp[0])
-        //         gridApiRef.current.exportDataAsCsv()
-        //         contactsMultipageSelection.clear()
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //         allContacts = []
-        //         app.alert.setError(`Failed to export board: ${props.boardInfo.name}.`)
-        //     })
-    }
-    // console.log(contactsMultipageSelection.selectedData)
-
     const onRemoveTagClick = (e) => {
-        console.log("onRemoveTagClick")
+        isTagDialogFunctionRemoveRef.current = true
         setOpenSelectTagDialog(true)
-        setSelectTagDialogTitle("Untag Contact")
-        // deleteTagToContact()
+    }
+    const onAddTagClick = (e) => {
+        isTagDialogFunctionRemoveRef.current = false
+        setOpenSelectTagDialog(true)
     }
 
     const onFollowOnTwitterClick = (e) => {
@@ -310,6 +253,7 @@ export default function BaseContactsPage(props) {
                 console.log(resp)
                 app.alert.setSuccess(`Contact${contactIds.length > 1 && 's'} successfully archived!`)
                 contactIds.forEach(contactId => contactsMultipageSelection.remove(contactId))
+                contacts.refetch()
             })
             .catch(error => {
                 console.log(error)
@@ -356,33 +300,22 @@ export default function BaseContactsPage(props) {
         })
     }
 
-    const onTagsSelected = (selectedTagsIds) => {
-        setLoadingTags(true)
-        /*         selectedContacts.saveData(contacts.items)
-                let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
-        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
+    const onAddTagsToContacts = async (selectedTagsIds) => {
 
-        // console.log(selectedTagsIds, contactIds)
+        let contactIds = contactsMultipageSelection.selectionModel
 
-        addTagsToContacts(selectedTagsIds, contactIds)
-            .then(res => {
-                if (res.error === 0) {
-                    app.alert.setSuccess('Contacts tagged successfully!')
-                    setOpenSelectTagDialog(false)
-                }
-                else
-                    app.alert.setWarning(`${res.success} out of ${res.total} contacts were tagged successfully. ${res.error} contacts failed to be tagged.`)
-            })
-            .finally(() => setLoadingTags(false))
+        const res = await addTagsToContactsWithNewTags(selectedTagsIds, contactIds)
+
+        if (res.error.count === 0)
+            app.alert.setSuccess('Contacts tagged successfully!')
+        else
+            app.alert.setWarning(`${res.success.count} out of ${contactsMultipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
+
     }
 
-    const onRemoveTagsSelected = (selectedTagsIds) => {
-        setLoadingTags(true)
-        /* selectedContacts.saveData(contacts.items)
-        let contactIds = selectedContacts.getDataSelected().map(contact => contact.id) */
-        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
+    const onRemoveTagsFromContacts = async (selectedTagsIds) => {
 
-        // console.log(selectedTagsIds, contactIds)
+        const contactIds = contactsMultipageSelection.selectionModel
 
         untagContacts(selectedTagsIds, contactIds)
             .then(res => {
@@ -393,13 +326,18 @@ export default function BaseContactsPage(props) {
                 else
                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
-            .finally(() => setLoadingTags(false))
     }
 
-    /*     const onPageChange = (page) => {
-            contacts.pagination.getPage(page)
+    const handleTagsDialogConfirm = async (selectedTagsIds) => {
+        setLoadingTags(true)
+        if (isTagDialogFunctionRemoveRef.current) {
+            await onRemoveTagsFromContacts(selectedTagsIds)
+        } else {
+            await onAddTagsToContacts(selectedTagsIds)
         }
-     */
+        setLoadingTags(false)
+    }
+
     const onCloseBoardDialog = () => {
         if (editBoard)
             setShowPanelFilters(false)
@@ -411,6 +349,10 @@ export default function BaseContactsPage(props) {
 
     const onBackBoardToContacts = (redirect) => {
         setRedirect(contactsRoutes.all)
+    }
+
+    const onContactCreated = () => {
+        app.alert.setSuccess('Contact created successfully!')
     }
 
     return (
@@ -434,7 +376,7 @@ export default function BaseContactsPage(props) {
             }}
         >
             <Stack direction="row" alignItems="center" mb={2}>
-                <Stack flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
+                <Stack minHeight='53px' flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
                     <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                         <span style={{ fontWeight: 'bold' }}>
                             You have{' '}
@@ -445,13 +387,16 @@ export default function BaseContactsPage(props) {
                         </span>
                     </Stack>
                     {contactsMultipageSelection.count > 0 &&
-                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Stack flex={1} minHeight='28px' direction="row" justifyContent="flex-start" alignItems="center">
                             <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
-                                <span style={{ color: '#3871DA' }}>
+                                <span >
                                     {contactsMultipageSelection.count}
                                 </span>
                                 {' '}contact{contactsMultipageSelection.count > 1 && "s"} selected
                             </span>
+                            <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => contactsMultipageSelection.clear()}>
+                                <Clear fontSize="inherit" />
+                            </IconButton>
                         </Stack>
                     }
                 </Stack>
@@ -466,29 +411,30 @@ export default function BaseContactsPage(props) {
                     />
                 </Stack>
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                    <PanelDropdown
-                        action={{
-                            name: 'Actions',
-                            variant: 'outlined',
-                            icon: AutoFixHighIcon,
-                            options: props.title.includes("Board") ?
-                                [
-                                    { name: 'Export Board as CSV', onClick: onExportBoardAsCSVClick },
-                                    //     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
-                                    //     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    //     { name: 'Archive Contact', onClick: onArchiveContactClick },
-                                    { name: 'Edit Board', onClick: onEditBoard },
-                                    { name: 'Delete Board', onClick: onDeleteBoard },
-                                ]
-                                :
-                                [
-                                    //     { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    //     { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: selectedContacts.count === 0 },
-                                    //     { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    //     { name: 'Archive Contact', onClick: onArchiveContactClick },
-                                ]
-                        }}
-                    />
+                    <RenderIf condition={props.boardInfo}>
+                        <PanelDropdown
+                            action={{
+                                name: 'Actions',
+                                variant: 'outlined',
+                                icon: AutoFixHighIcon,
+                                options: props.title.includes("Board") ?
+                                    [
+                                        { name: 'Export Board as CSV', onClick: onExportAsCSVClick },
+                                        { name: 'Edit Board', onClick: onEditBoard },
+                                        { name: 'Delete Board', onClick: onDeleteBoard },
+                                    ]
+                                    :
+                                    []
+                            }}
+                        />
+                    </RenderIf>
+                    <RenderIf condition={props.onContactSearch}>
+                        <MiniSearchBar
+                            placeholder="Search Contacts"
+                            onSearch={props.onContactSearch}
+                            onClear={props.onContactSearchClear}
+                        />
+                    </RenderIf>
                     <PanelDropdown
                         action={{
                             id: 'selected-contacts-actions',
@@ -497,91 +443,36 @@ export default function BaseContactsPage(props) {
                             variant: 'contained',
                             icon: ArrowDropDownIcon,
                             disabled: contactsMultipageSelection.count === 0,
-                            style: {
-                                whiteSpace: "nowrap",
-                            },
-                            options: props.title.includes("Board") ?
-                                [
-                                    { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: contactsMultipageSelection.count === 0 },
-                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    { name: 'Archive Contact', onClick: onArchiveContactClick },
-                                    // { name: 'Edit Board', onClick: onEditBoard },
-                                    // { name: 'Delete Board', onClick: onDeleteBoard },
-                                ]
-                                :
-                                [
-                                    { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick, disabled: contactsMultipageSelection.count === 0 },
-                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    { name: 'Archive Contact', onClick: onArchiveContactClick },
-                                ]
+                            style: { whiteSpace: "nowrap" },
+                            options: [
+                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                { name: 'Archive Contact', onClick: onArchiveContactClick }
+                            ]
                         }}
                     />
                     <Button
                         name="Tag"
                         variant="outlined"
                         endIcon={<LocalOfferOutlinedIcon />}
-                        onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
+                        onClick={onAddTagClick}
                         disabled={contactsMultipageSelection.count == 0}
                     />
-                    {/* <PanelDropdown
-                        header={() => (
-                            <Button
-                                style={{ minWidth: 0 }}
-                                variant="outlined"
-                                name={<ViewColumnIcon />}
-                                textColor="#3871DA"
-                            />
-                        )}
-                        action={{
-                            options: [
-                                { name: 'Profile Image', onClick: onExportAsCSVClick },
-                                { name: 'Full Name', onClick: onRemoveTagClick },
-                                { name: 'First Name', onClick: onFollowOnTwitterClick },
-                                { name: 'Last Name', onClick: onArchiveContactClick },
-                                { name: 'Nick Name', onClick: onExportAsCSVClick },
-                                { name: 'Twitter', onClick: onRemoveTagClick },
-                                { name: 'Phone', onClick: onFollowOnTwitterClick },
-                                { name: 'State', onClick: onArchiveContactClick },
-                                { name: 'School', onClick: onExportAsCSVClick },
-                                { name: 'Grad Year', onClick: onRemoveTagClick },
-                                { name: 'Positions', onClick: onFollowOnTwitterClick },
-                                { name: 'Area Coach', onClick: onArchiveContactClick },
-                                { name: 'Recruiting Coach', onClick: onExportAsCSVClick },
-                                { name: 'Status', onClick: onRemoveTagClick },
-                                { name: 'Status 2', onClick: onFollowOnTwitterClick },
-                                { name: 'Rank', onClick: onArchiveContactClick },
-                                { name: 'Last Messaged', onClick: onArchiveContactClick },
-                                { name: 'Most Active Time', onClick: onArchiveContactClick },
-                                { name: 'Date Added', onClick: onArchiveContactClick },
-                                { name: 'Time Zone', onClick: onArchiveContactClick },
-                                { name: 'Birthday (dob)', onClick: onArchiveContactClick },
-                            ]
-                        }}
-                    /> */}
+
                 </Stack>
             </Stack>
 
-            {/*    <ContactsTable
-                id={props.tableId}
-                contacts={contacts.items}
-                pagination={contacts.pagination}
-                loading={contacts.loading}
-                selection={selectedContacts.items}
-                onSelectionChange={onContactsSelectionChange}
-                onPageChange={onPageChange}
-                columnsControl={props.columnsControl}
-            /> */}
-
             <ContactsTableServerMode
-                id={`board-table-${board.item?.id}`}
+                id={props.tableId}
                 redirectToDetails
                 contacts={contacts.items}
                 pagination={contacts.pagination}
                 loading={contacts.loading}
                 apiRef={gridApiRef}
                 columnsControl={props.columnsControl}
+                onSortModelChange={props.onSortingChange}
+                sortingMode={props.sortingMode}
                 {...contactsMultipageSelection}
             />
 
@@ -597,19 +488,26 @@ export default function BaseContactsPage(props) {
                 title={editBoard ? `Edit Board: ${props.boardInfo?.name}` : "Create Board"}
             />
 
+            <CreateContactDialog
+                open={openCreateContactDialog}
+                onClose={() => setOpenCreateContactDialog(false)}
+                onContactCreated={onContactCreated}
+            />
+
             <SelectTagDialog
                 open={openSelectTagDialog}
                 actionLoading={loadingTags}
-                title={selectTagDialogTitle}
+                title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
                 onClose={() => setOpenSelectTagDialog(false)}
-                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
-                onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
+                confirmLabel={isTagDialogFunctionRemoveRef.current && "Untag"}
+                onConfirm={handleTagsDialogConfirm}
+                isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
             />
 
             <FollowOnTwitterDialog
-                teamMembers={teamMembers.items}
                 open={openFollowOnTwitterDialog}
                 contacts={contactsMultipageSelection.selectedData}
+                teamMembers={teamMembers.items}
                 selectedContacts={contactsMultipageSelection.selectionModel}
                 onSelectionChange={contactsMultipageSelection.onSelectionModelChange}
                 onClose={() => setOpenFollowOnTwitterDialog(false)}

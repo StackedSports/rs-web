@@ -1,4 +1,4 @@
-import { Box, Stack, Pagination as MuiPagination } from "@mui/material"
+import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import {
     DataGridPro,
     gridPageCountSelector,
@@ -20,6 +20,7 @@ export default function ContactsTableServerMode({
     mini,
     redirectToDetails,
     columnsControl,
+    sortingMode,
     ...restOfProps
 }) {
     const history = useHistory();
@@ -32,6 +33,10 @@ export default function ContactsTableServerMode({
 
     const onPageChange = (page) => {
         pagination.getPage(page + 1)
+    }
+
+    const handlePaginationChange = () => {
+
     }
 
     const redirectToDetailsPage = (row) => {
@@ -95,7 +100,7 @@ export default function ContactsTableServerMode({
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
-                sortingMode={pagination && 'server'}
+                sortingMode={sortingMode || 'server'}
                 // filterMode='server' it need to be implemented, so filter is desabled
                 disableColumnFilter
                 pagination
@@ -131,10 +136,26 @@ function CustomPagination(props) {
 }
 
 //Custom mui data grid footer
-function CustomFooter() {
-    return <Stack direction={'row'} sx={{ p: 1, borderColor: 'divider' }} justifyContent='center' borderTop={1} >
-        <Box>
-            <CustomPagination />
-        </Box>
+// TODO use grid api to change page size
+function CustomFooter(props) {
+    const handlePaginationChange = () => {
+
+    }
+    return <Stack
+        direction={'row'}
+        sx={{ p: 1, borderColor: 'divider' }}
+        justifyContent='center'
+        alignItems='center'
+        borderTop={1}
+    >
+        <FormControl variant="standard" >
+            <Select value={props.pagination?.itemsPerPage || 50} onChange={handlePaginationChange}>
+                <MenuItem value={25}>25</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={75}>75</MenuItem>
+                <MenuItem value={100}>100</MenuItem>
+            </Select>
+        </FormControl>
+        <CustomPagination />
     </Stack>
 }

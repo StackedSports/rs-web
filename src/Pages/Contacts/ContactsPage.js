@@ -1,26 +1,13 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 
-import { Stack, IconButton } from '@mui/material';
-import { AccountBox, Tune, Clear } from '@mui/icons-material';
-import SendIcon from '@mui/icons-material/Send';
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
-import MainLayout from 'UI/Layouts/MainLayout';
-import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
-import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
-import Button from 'UI/Widgets/Buttons/Button';
-import { MiniSearchBar } from 'UI/Widgets/SearchBar'
-import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
-import { PanelDropdown } from 'UI/Layouts/Panel';
+import { AccountBox, Tune } from '@mui/icons-material';
 
 import { AppContext } from 'Context/AppProvider'
 
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useBoards,useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, usePositions, useTeamMembers, useContacts, useTags } from 'Api/ReactQuery';
 
 import {
     addTagsToContactsWithNewTags,
@@ -31,8 +18,8 @@ import {
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
 import { timeZones, states } from 'utils/Data'
-import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 import { getFullName } from 'utils/Parser';
+import BaseContactsPage from './BaseContactsPage';
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
@@ -138,10 +125,8 @@ export default function ContactsPage(props) {
             label: 'Birthday',
             type: 'date',
             format: 'MM/dd',
-            optionsLabel: (dates) => {
-                return dates[0] + ' - ' + dates[1]
-            },
-            isUnique: true
+            optionsLabel: (dates) => dates.value.join(' - '),
+            isUnique: true,
         },
         state: {
             label: 'State',
@@ -203,15 +188,6 @@ export default function ContactsPage(props) {
             // Filters
             items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
         },
-        // { // Category
-        //     id: '3',
-        //     name: 'User Boards',
-        //     items: [
-        //         // Filters
-        //         // { id: '0', name: 'Scheduled' },
-        //         // { id: '1', name: 'In Progress' },
-        //     ]
-        // },
     ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
@@ -303,6 +279,7 @@ export default function ContactsPage(props) {
 
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
+        contacts.refetch()
     }
 
     const onContactSearchClear = () => {
@@ -383,136 +360,151 @@ export default function ContactsPage(props) {
     }
 
     return (
-        <MainLayout
-            title='Contacts'
-            topActionName='+ New Contact'
-            onTopActionClick={onTopActionClick}
-            filters={filters}
-            actions={mainActions}
-            onFilterSelected={onFilterSelected}
-            loading={loading}
-            redirect={redirect}
-            propsPanelFilters={{
-                open: showPanelFilters,
-                filters: panelFiltersData,
-                onFilterChange: onPanelFilterChange
-            }}
-        >
-            <Stack direction="row" alignItems="center" mb={2}>
-                <Stack flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
-                    <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                        <span style={{ fontWeight: 'bold' }}>
-                            You have{' '}
-                            <span style={{ color: '#3871DA' }}>
-                                {contacts.pagination.totalItems || 0}
-                            </span>
-                            {' '}contacts
-                        </span>
-                    </Stack>
-                    {multipageSelection.count > 0 &&
-                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center">
-                            <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
-                                <span >
-                                    {multipageSelection.count}
-                                </span>
-                                {' '}contact{multipageSelection.count > 1 && "s"} selected
-                            </span>
-                            <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => multipageSelection.clear()}>
-                                <Clear fontSize="inherit" />
-                            </IconButton>
-                        </Stack>
-                    }
-                </Stack>
-                <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                    <Button
-                        name="Send Message"
-                        variant="contained"
-                        endIcon={<SendIcon />}
-                        onClick={onSendMessageClick}
-                        disabled={multipageSelection.count == 0}
-                    />
-                </Stack>
-                <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                    <MiniSearchBar
-                        placeholder="Search Contacts"
-                        onSearch={onContactSearch}
-                        onClear={onContactSearchClear}
-                    />
-                    {multipageSelection.count > 0 &&
-                        <PanelDropdown
-                            action={{
-                                id: 'selected-contacts-actions',
-                                name: `${multipageSelection.count} selected contact${multipageSelection.count > 1 ? "s" : ""}`,
-                                type: 'dropdown',
-                                variant: 'contained',
-                                icon: ArrowDropDownIcon,
-                                style: {
-                                    whiteSpace: "nowrap",
-                                },
-                                options: [
-                                    { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    { name: 'Archive Contact', onClick: onArchiveContactClick }
-                                ]
-                            }}
-                        />}
-                    <Button
-                        name="Tag"
-                        variant="outlined"
-                        endIcon={<LocalOfferOutlinedIcon />}
-                        onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
-                        disabled={multipageSelection.count == 0}
-                    />
+        <BaseContactsPage
+            title="Contacts"
+            contacts={contacts}
+            onSendMessage={onSendMessageClick}
+            onSortingChange={onSortingChange}
+            onPanelFilterChange={onPanelFilterChange}
+            tableId="contacts-table"
+            columnsControl={visibleTableRows}
+            onContactSearch={onContactSearch}
+            onContactSearchClear={onContactSearchClear}
+        />
 
-                </Stack>
-            </Stack>
-
-            <ContactsTableServerMode
-                id='contacts-table-contacts-page'
-                redirectToDetails
-                contacts={contacts.items}
-                pagination={contacts.pagination}
-                columnsControl={visibleTableRows}
-                loading={contacts.loading}
-                apiRef={gridApiRef}
-                onSortModelChange={onSortingChange}
-                {...multipageSelection}
-            />
-
-            <CreateBoardDialog
-                title="Create Board"
-                confirmAction="Create Board"
-                open={openCreateBoardDialog}
-                onBoardCreated={onBoardCreated}
-                selectedFilters={selectedFilters}
-                onClose={() => setOpenCreateBoardDialog(false)}
-            />
-
-            <CreateContactDialog
-                open={openCreateContactDialog}
-                onClose={() => setOpenCreateContactDialog(false)}
-                onContactCreated={onContactCreated}
-            />
-
-            <SelectTagDialog
-                open={openSelectTagDialog}
-                actionLoading={loadingTags}
-                title={selectTagDialogTitle}
-                onClose={() => setOpenSelectTagDialog(false)}
-                confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
-                onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
-                isAddTag={!selectTagDialogTitle.includes("Untag")}
-            />
-
-            <FollowOnTwitterDialog
-                open={openFollowOnTwitterDialog}
-                contacts={multipageSelection.selectedData}
-                teamMembers={teamMembers.items}
-                selectedContacts={multipageSelection.selectionModel}
-                onSelectionChange={multipageSelection.onSelectionModelChange}
-                onClose={() => setOpenFollowOnTwitterDialog(false)}
-            />
-        </MainLayout>
     )
+
+    /*     return (
+            <MainLayout
+                title='Contacts'
+                topActionName='+ New Contact'
+                onTopActionClick={onTopActionClick}
+                filters={filters}
+                actions={mainActions}
+                onFilterSelected={onFilterSelected}
+                loading={loading}
+                redirect={redirect}
+                propsPanelFilters={{
+                    open: showPanelFilters,
+                    filters: panelFiltersData,
+                    onFilterChange: onPanelFilterChange
+                }}
+            >
+                <Stack direction="row" alignItems="center" mb={2}>
+                    <Stack flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
+                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                            <span style={{ fontWeight: 'bold' }}>
+                                You have{' '}
+                                <span style={{ color: '#3871DA' }}>
+                                    {contacts.pagination.totalItems || 0}
+                                </span>
+                                {' '}contacts
+                            </span>
+                        </Stack>
+                        {multipageSelection.count > 0 &&
+                            <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center">
+                                <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
+                                    <span >
+                                        {multipageSelection.count}
+                                    </span>
+                                    {' '}contact{multipageSelection.count > 1 && "s"} selected
+                                </span>
+                                <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => multipageSelection.clear()}>
+                                    <Clear fontSize="inherit" />
+                                </IconButton>
+                            </Stack>
+                        }
+                    </Stack>
+                    <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Button
+                            name="Send Message"
+                            variant="contained"
+                            endIcon={<SendIcon />}
+                            onClick={onSendMessageClick}
+                            disabled={multipageSelection.count == 0}
+                        />
+                    </Stack>
+                    <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
+                        <MiniSearchBar
+                            placeholder="Search Contacts"
+                            onSearch={onContactSearch}
+                            onClear={onContactSearchClear}
+                        />
+                        {multipageSelection.count > 0 &&
+                            <PanelDropdown
+                                action={{
+                                    id: 'selected-contacts-actions',
+                                    name: `${multipageSelection.count} selected contact${multipageSelection.count > 1 ? "s" : ""}`,
+                                    type: 'dropdown',
+                                    variant: 'contained',
+                                    icon: ArrowDropDownIcon,
+                                    style: {
+                                        whiteSpace: "nowrap",
+                                    },
+                                    options: [
+                                        { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                        { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                        { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                        { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                    ]
+                                }}
+                            />}
+                        <Button
+                            name="Tag"
+                            variant="outlined"
+                            endIcon={<LocalOfferOutlinedIcon />}
+                            onClick={() => { setOpenSelectTagDialog(true); setSelectTagDialogTitle("Select Tags") }}
+                            disabled={multipageSelection.count == 0}
+                        />
+    
+                    </Stack>
+                </Stack>
+    
+                <ContactsTableServerMode
+                    id='contacts-table-contacts-page'
+                    redirectToDetails
+                    contacts={contacts.items}
+                    pagination={contacts.pagination}
+                    columnsControl={visibleTableRows}
+                    loading={contacts.loading}
+                    apiRef={gridApiRef}
+                    onSortModelChange={onSortingChange}
+                    {...multipageSelection}
+                />
+    
+                <CreateBoardDialog
+                    title="Create Board"
+                    confirmAction="Create Board"
+                    open={openCreateBoardDialog}
+                    onBoardCreated={onBoardCreated}
+                    selectedFilters={selectedFilters}
+                    onClose={() => setOpenCreateBoardDialog(false)}
+                />
+    
+                <CreateContactDialog
+                    open={openCreateContactDialog}
+                    onClose={() => setOpenCreateContactDialog(false)}
+                    onContactCreated={onContactCreated}
+                />
+    
+                <SelectTagDialog
+                    open={openSelectTagDialog}
+                    actionLoading={loadingTags}
+                    title={selectTagDialogTitle}
+                    onClose={() => setOpenSelectTagDialog(false)}
+                    confirmLabel={selectTagDialogTitle.includes("Untag") && "Untag"}
+                    onConfirm={selectTagDialogTitle.includes("Untag") ? onRemoveTagsSelected : onTagsSelected}
+                    isAddTag={!selectTagDialogTitle.includes("Untag")}
+                />
+    
+                <FollowOnTwitterDialog
+                    open={openFollowOnTwitterDialog}
+                    contacts={multipageSelection.selectedData}
+                    teamMembers={teamMembers.items}
+                    selectedContacts={multipageSelection.selectionModel}
+                    onSelectionChange={multipageSelection.onSelectionModelChange}
+                    onClose={() => setOpenFollowOnTwitterDialog(false)}
+                />
+            </MainLayout>
+        ) */
 }
