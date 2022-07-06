@@ -71,8 +71,8 @@ export default function BoardPage(props) {
         let filters = {}
         if (criteria)
             Object.keys(criteria).forEach(key => {
-               // console.log(key)
-               // console.log(criteria[key])
+                // console.log(key)
+                // console.log(criteria[key])
 
                 let filterName = parseCriteriaNames(key)
 
@@ -123,11 +123,9 @@ export default function BoardPage(props) {
         is_shared: board.item?.is_shared,
     }
 
-
     return (
         <BaseContactsPage
             title={title}
-            id={board.item?.id}
             boardInfo={boardInfo}
             tableId={`board-${boardId}-page`}
             contacts={boardContacts}
@@ -136,6 +134,7 @@ export default function BoardPage(props) {
             selectedFilters={selectedFilters}
             disabledMainActions
             columnsControl={visibleTableColumns}
+            sortingMode='client'
             showBackBoardToContacts
         />
     )
