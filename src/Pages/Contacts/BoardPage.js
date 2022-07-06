@@ -115,8 +115,6 @@ export default function BoardPage(props) {
         }
     }, [board.item])
 
-    // console.log(boardContacts)
-
     const boardInfo = {
         id: board.item?.id,
         name: board.item?.name,

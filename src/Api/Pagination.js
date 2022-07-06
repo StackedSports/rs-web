@@ -16,7 +16,7 @@ export const paginationConfig = (currentPage, itemsPerPage) => ({ currentPage, i
 
 export const usePagination = (initialPage, itemsPerPag) => {
 
-    const [currentPage, setCurrentPage] = useState( Number(initialPage) || 1)
+    const [currentPage, setCurrentPage] = useState(Number(initialPage) || 1)
     const [itemsPerPage, setItemsPerPage] = useState(itemsPerPag || 50)
     const [totalItems, setTotalItems] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
@@ -34,8 +34,12 @@ export const usePagination = (initialPage, itemsPerPag) => {
         setCurrentPage(Number(page) || 1)
     }
 
+    const changeItemsPerPage = (itemsPerPage) => {
+        setItemsPerPage(Number(itemsPerPage) || 50)
+    }
+
     return [
-        { currentPage, itemsPerPage, totalItems, totalPages, lastPage: lastPage.current, getPage }, // pagination
+        { currentPage, itemsPerPage, totalItems, totalPages, lastPage: lastPage.current, getPage,changeItemsPerPage }, // pagination
         setPagination//{ setPagination, getPage } // utils
     ]
 }

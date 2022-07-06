@@ -1,8 +1,10 @@
-import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
     gridPageCountSelector,
     gridPageSelector,
+    gridPageSizeSelector,
+    gridRowCountSelector,
     useGridApiContext,
     useGridSelector,
 } from '@mui/x-data-grid-pro';
@@ -35,8 +37,8 @@ export default function ContactsTableServerMode({
         pagination.getPage(page + 1)
     }
 
-    const handlePaginationChange = () => {
-
+    const onPageSizeChange = (size) => {
+        pagination.changeItemsPerPage(size)
     }
 
     const redirectToDetailsPage = (row) => {
@@ -108,6 +110,7 @@ export default function ContactsTableServerMode({
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
                 columnVisibilityModel={visibleColumns.items}
                 onPageChange={onPageChange}
+                onPageSizeChange={onPageSizeChange}
                 components={{
                     Pagination: CustomPagination,
                     Footer: CustomFooter
@@ -135,27 +138,38 @@ function CustomPagination(props) {
     );
 }
 
-//Custom mui data grid footer
-// TODO use grid api to change page size
 function CustomFooter(props) {
-    const handlePaginationChange = () => {
+    const apiRef = useGridApiContext();
+    const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
+    //const page = useGridSelector(apiRef, gridPageSelector);
+    //const rowCount = useGridSelector(apiRef, gridRowCountSelector);
 
-    }
-    return <Stack
-        direction={'row'}
-        sx={{ p: 1, borderColor: 'divider' }}
-        justifyContent='center'
-        alignItems='center'
+    return <Box
+        sx={{
+            p: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'space-between',
+            justifyItems: 'center',
+            alignItems: 'center',
+            gap: 1,
+        }}
         borderTop={1}
     >
-{/*         <FormControl variant="standard" >
-            <Select value={props.pagination?.itemsPerPage || 50} onChange={handlePaginationChange}>
+        <Stack gap={1} direction='row' alignItems='center'>
+            <Typography variant='subtitle2'>
+                Contacts per page:
+            </Typography>
+            <Select variant='standard' disableUnderline value={pageSize} onChange={(e) => apiRef.current.setPageSize(e.target.value)}>
                 <MenuItem value={25}>25</MenuItem>
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={75}>75</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
             </Select>
-        </FormControl> */}
+        </Stack>
         <CustomPagination />
-    </Stack>
+        {/*        <Typography variant='subtitle2' justifySelf='flex-end'>
+            {page * pageSize + 1} - {(page + 1) * pageSize > rowCount ? rowCount : (page + 1) * pageSize} of {rowCount}
+        </Typography> */}
+    </Box>
 }
