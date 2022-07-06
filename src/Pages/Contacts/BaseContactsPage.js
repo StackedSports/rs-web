@@ -7,7 +7,6 @@ import SendIcon from '@mui/icons-material/Send';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
 import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
@@ -23,7 +22,7 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import { useBoards, useStatus2, useBoard, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions, useContacts } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
 
 import {
     addTagsToContactsWithNewTags,
@@ -47,7 +46,6 @@ export default function BaseContactsPage(props) {
     const isTagDialogFunctionRemoveRef = useRef(false)
 
     const [redirect, setRedirect] = useState('')
-    const [selectedSort, setSelectedSort] = useState({})
     const [loading, setLoading] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
     const [privateBoards, setPrivateBoards] = useState([])
@@ -56,7 +54,6 @@ export default function BaseContactsPage(props) {
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
-    const [selectTagDialogTitle, setSelectTagDialogTitle] = useState("Select Tags")
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [editBoard, setEditBoard] = useState(false)
@@ -210,7 +207,6 @@ export default function BaseContactsPage(props) {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
     }
 
-    //TODO Refactor this
     const onPanelFilterChange = (filter) => {
         console.log('Filters selected', filter)
         setSelectedFilters(filter)
@@ -218,13 +214,10 @@ export default function BaseContactsPage(props) {
             props.onPanelFilterChange(filter)
     }
 
-    //TODO REFACTOR
     const onSendMessageClick = (e) => {
         let selectedData = contactsMultipageSelection.selectedData
         if (props.onSendMessage)
             props.onSendMessage(selectedData)
-        // else
-        //     app.sendMessageToContacts(selectedData)
     }
 
     const onExportAsCSVClick = (e) => {
@@ -369,7 +362,6 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             actions={props.disabledMainActions ? [] : mainActions}
-            // actions={props.disabledMainActions && !editBoard ? [] : mainActions} //enable actions to edit board
             onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}

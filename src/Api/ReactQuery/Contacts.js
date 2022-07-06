@@ -23,7 +23,7 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
 
     const get = filters && !lodash.isEmpty(filters) ? filterContacts : getContacts
 
-    const reactQuery = useQuery([`contacts/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const reactQuery = useQuery(['contacts', pagination.currentPage, pagination.itemsPerPage, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
     })
 
@@ -37,12 +37,12 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
 
     const filter = (filters) => {
         setFilters(filters)
-        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 24 })
+        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 25 })
     }
 
     const clearFilter = () => {
         setFilters(null)
-        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 24 })
+        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 25 })
     }
 
     return {
