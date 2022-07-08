@@ -39,7 +39,6 @@ export default function BoardPage(props) {
 
     const searchParams = useSearchParams();
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`${TABLE_ID}-perPage`, 50)
-    console.log("perPageLocalStorage", perPageLocalStorage)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
     const board = useBoard(boardId)
