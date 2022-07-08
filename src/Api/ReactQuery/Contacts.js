@@ -35,14 +35,28 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 
+    useEffect(() => {
+        if (currentPage && currentPage != pagination.currentPage) {
+            pagination.getPage(currentPage)
+        }
+    }, [currentPage])
+
+    useEffect(() => {
+        if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
+            pagination.getItemsPerPage(itemsPerPage)
+        }
+    }, [itemsPerPage])
+
+
+
     const filter = (filters) => {
         setFilters(filters)
-        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 25 })
+        setPagination({ ...pagination, currentPage: 1 })
     }
 
     const clearFilter = () => {
         setFilters(null)
-        setPagination({ ...pagination, currentPage: 1, itemsPerPage: itemsPerPage || 25 })
+        setPagination({ ...pagination, currentPage: 1 })
     }
 
     return {

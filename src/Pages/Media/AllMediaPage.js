@@ -42,7 +42,7 @@ export const AllMediaPage = () => {
 	} = multiPageSelection
 
 	useEffect(() => {
-		searchParams.appenSearchParams('page', medias.pagination.currentPage)
+		searchParams.appendSearchParams('page', medias.pagination.currentPage)
 	}, [medias.pagination.currentPage])
 
 	const onFilterChange = (filter) => {

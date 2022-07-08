@@ -37,7 +37,7 @@ export const AllMediaPlaceholderPage = (props) => {
   } = multiPageSelection
 
   useEffect(() => {
-    searchParams.appenSearchParams('page', placeholders.pagination.currentPage)
+    searchParams.appendSearchParams('page', placeholders.pagination.currentPage)
   }, [placeholders.pagination.currentPage])
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
