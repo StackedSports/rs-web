@@ -32,12 +32,6 @@ export default function ContactsTableServerMode({
     const history = useHistory();
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
-    const [, setPerPage] = useLocalStorage(`${id}-perPage`, 50)
-
-    useEffect(() => {
-        const params = { page: pagination.currentPage, perPage: pagination.itemsPerPage }
-        searchParams.setSearchParams(params)
-    }, [pagination.itemsPerPage, pagination.currentPage])
 
     const onColumnVisibilityModelChange = (newModel) => {
         visibleColumns.onChange(newModel)
@@ -49,7 +43,6 @@ export default function ContactsTableServerMode({
 
     const onPageSizeChange = (size) => {
         pagination.getItemsPerPage(size)
-        setPerPage(size)
     }
 
     const redirectToDetailsPage = (row) => {
