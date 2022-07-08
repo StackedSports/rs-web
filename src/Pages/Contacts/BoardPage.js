@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import BaseContactsPage from './BaseContactsPage';
 
 import { AppContext } from 'Context/AppProvider';
+import useSearchParams from "Hooks/SearchParamsHook";
+import useLocalStorage from "Hooks/useLocalStorage";
 
 import { useBoard, useBoardContacts } from 'Api/ReactQuery'
 import { parseColumnsNames } from 'UI/Tables/Contacts/DataGridConfig';
@@ -32,11 +34,22 @@ const parseCriteriaNames = (criteria) => {
 
 export default function BoardPage(props) {
     const app = useContext(AppContext);
+    const { boardId } = useParams();
+    const TABLE_ID = `board-${boardId}`
 
-    const { id, boardId } = useParams();
-
+    const searchParams = useSearchParams();
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`${TABLE_ID}-perPage`, 50)
+    const page = searchParams.page
+    const perPage = searchParams.perPage || perPageLocalStorage
     const board = useBoard(boardId)
-    const boardContacts = useBoardContacts(boardId)
+    const boardContacts = useBoardContacts(boardId, page, perPage)
+
+    useEffect(() => {
+        const { pagination } = boardContacts
+        const params = { page: pagination.currentPage, perPage: pagination.itemsPerPage }
+        searchParams.setSearchParams(params)
+        setperPageLocalStorage(pagination.itemsPerPage)
+    }, [boardContacts.pagination.itemsPerPage, boardContacts.pagination.currentPage, boardId])
 
     useEffect(() => {
         if (!board.item)
@@ -125,7 +138,7 @@ export default function BoardPage(props) {
         <BaseContactsPage
             title={title}
             boardInfo={boardInfo}
-            tableId={`board-${boardId}-page`}
+            tableId={TABLE_ID}
             contacts={boardContacts}
             enableSendMessageWithoutSelection
             onSendMessage={onSendMessage}

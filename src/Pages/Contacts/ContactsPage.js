@@ -1,18 +1,31 @@
 import { useState, useMemo, useEffect, useContext } from 'react';
 
 import { AppContext } from 'Context/AppProvider'
+import useSearchParams from "Hooks/SearchParamsHook";
+import useLocalStorage from "Hooks/useLocalStorage";
 
-import {  useContacts } from 'Api/ReactQuery';
+import { useContacts } from 'Api/ReactQuery';
 
 
 import BaseContactsPage from './BaseContactsPage';
 
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
-    const contacts = useContacts()
+    const searchParams = useSearchParams();
+    const [perPageLocalStorage,setperPageLocalStorage ] = useLocalStorage(`contacts-table-perPage`, 50)
+    const page = searchParams.page
+    const perPage = searchParams.perPage || perPageLocalStorage
+    const contacts = useContacts(page, perPage)
 
     const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedSort, setSelectedSort] = useState({})
+
+    useEffect(() => {
+        const { pagination } = contacts
+        const params = { page: pagination.currentPage, perPage: pagination.itemsPerPage }
+        searchParams.setSearchParams(params)
+        setperPageLocalStorage(pagination.itemsPerPage)
+    }, [contacts.pagination.itemsPerPage, contacts.pagination.currentPage])
 
     const visibleTableRows = {
         profileImg: false,

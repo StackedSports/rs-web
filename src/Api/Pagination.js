@@ -34,12 +34,12 @@ export const usePagination = (initialPage, itemsPerPag) => {
         setCurrentPage(Number(page) || 1)
     }
 
-    const changeItemsPerPage = (itemsPerPage) => {
+    const getItemsPerPage = (itemsPerPage) => {
         setItemsPerPage(Number(itemsPerPage) || 50)
     }
 
     return [
-        { currentPage, itemsPerPage, totalItems, totalPages, lastPage: lastPage.current, getPage,changeItemsPerPage }, // pagination
+        { currentPage, itemsPerPage, totalItems, totalPages, lastPage: lastPage.current, getPage,getItemsPerPage }, // pagination
         setPagination//{ setPagination, getPage } // utils
     ]
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useQuery, useQueryClient, useMutation } from "react-query"
-import { createNewBoard,updateBoard ,getBoard, getBoardContacts, getBoards } from "Api/Endpoints"
+import { createNewBoard, updateBoard, getBoard, getBoardContacts, getBoards } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 
 export const useBoard = (id) => {
@@ -33,7 +33,7 @@ export const useBoardContacts = (boardId, currentPage, itemsPerPage) => {
     const [contacts, setContacts] = useState(null)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
 
-    const reactQuery = useQuery([`board/${boardId}/contacts/${pagination.currentPage}/${pagination.itemsPerPage}`, boardId], () => getBoardContacts(boardId, pagination.currentPage, pagination.itemsPerPage),
+    const reactQuery = useQuery(['boardContacts', boardId, pagination.currentPage, pagination.itemsPerPage], () => getBoardContacts(boardId, pagination.currentPage, pagination.itemsPerPage),
         {
             enabled: !!boardId,
         })
@@ -46,6 +46,18 @@ export const useBoardContacts = (boardId, currentPage, itemsPerPage) => {
         }
     }, [reactQuery.isSuccess, reactQuery.data])
 
+    useEffect(() => {
+        if (currentPage && currentPage != pagination.currentPage) {
+            pagination.getPage(currentPage)
+        }
+    }, [currentPage])
+
+    useEffect(() => {
+        if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
+            pagination.getItemsPerPage(itemsPerPage)
+        }
+    }, [itemsPerPage])
+
     return {
         ...reactQuery,
         items: contacts,
@@ -57,7 +69,7 @@ export const useBoardContacts = (boardId, currentPage, itemsPerPage) => {
 export const useBoardMutation = () => {
     const queryClient = useQueryClient();
 
-    const update = useMutation(({ id, data }) => updateBoard(id, data), {        
+    const update = useMutation(({ id, data }) => updateBoard(id, data), {
         onSuccess: () => queryClient.invalidateQueries(`boards`),
     });
 

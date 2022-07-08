@@ -9,7 +9,8 @@ export default function useSearchParams() {
     const filtersAndPageObj = useMemo(() => {
         return {
             filters: queryParamsToFilterObject(searchParams.get('filters')),
-            page: Number(searchParams.get('page')) || null,
+            page: Number(searchParams.get('page')) || 1,
+            perPage: Number(searchParams.get('perPage')) || null
         }
     }, [searchParams]);
 
@@ -19,18 +20,23 @@ export default function useSearchParams() {
             Object.entries(params).forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     // value.forEach(item => newParams.append(key, item))
-                    newParams.append(key, value)
+                    newParams.set(key, value)
                 }
                 else {
-                    newParams.append(key, value)
+                    newParams.set(key, value)
                 }
             })
         }
         const newParamsStr = newParams.toString()
-        if (searchParams.toString() !== newParamsStr)
-            history.push({ search: newParamsStr })
+        if (searchParams.toString() !== newParamsStr) {
+            if (!searchParams.has('page') && newParams.get('page') === '1')
+                history.replace({ search: newParamsStr })
+            else
+                history.push({ search: newParamsStr })
+        }
     }
-    const appenSearchParams = (key, value, redirectTo) => {
+
+    const appendSearchParams = (key, value, redirectTo) => {
         if ((searchParams.has(key) && searchParams.get(key).toString() == value)) return
         const newParams = new URLSearchParams(search)
         if (value) {
@@ -48,14 +54,14 @@ export default function useSearchParams() {
     }
 
     const setFilters = (filters, redirectTo) => {
-        appenSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
+        appendSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
     }
 
     return {
         ...filtersAndPageObj,
         searchParams,
         setSearchParams,
-        appenSearchParams,
+        appendSearchParams,
         setFilters
     }
 }

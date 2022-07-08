@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -13,6 +14,8 @@ import { useHistory } from "react-router-dom";
 import { contactsRoutes } from 'Routes/Routes';
 import { columnsMini, columnsFull } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
+import useLocalStorage from "Hooks/useLocalStorage";
+import useSearchParams from "Hooks/SearchParamsHook";
 
 export default function ContactsTableServerMode({
     contacts,
@@ -25,6 +28,7 @@ export default function ContactsTableServerMode({
     sortingMode,
     ...restOfProps
 }) {
+    const searchParams = useSearchParams();
     const history = useHistory();
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
@@ -38,7 +42,7 @@ export default function ContactsTableServerMode({
     }
 
     const onPageSizeChange = (size) => {
-        pagination.changeItemsPerPage(size)
+        pagination.getItemsPerPage(size)
     }
 
     const redirectToDetailsPage = (row) => {
@@ -107,6 +111,7 @@ export default function ContactsTableServerMode({
                 disableColumnFilter
                 pagination
                 pageSize={pagination?.itemsPerPage}
+                page={(pagination?.currentPage - 1) || 0}
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
                 columnVisibilityModel={visibleColumns.items}
                 onPageChange={onPageChange}
@@ -141,8 +146,8 @@ function CustomPagination(props) {
 function CustomFooter(props) {
     const apiRef = useGridApiContext();
     const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
-    //const page = useGridSelector(apiRef, gridPageSelector);
-    //const rowCount = useGridSelector(apiRef, gridRowCountSelector);
+    const page = useGridSelector(apiRef, gridPageSelector);
+    const rowCount = useGridSelector(apiRef, gridRowCountSelector);
 
     return <Box
         sx={{
@@ -165,11 +170,12 @@ function CustomFooter(props) {
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={75}>75</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
+                <MenuItem value={200}>200</MenuItem>
             </Select>
         </Stack>
         <CustomPagination />
-        {/*        <Typography variant='subtitle2' justifySelf='flex-end'>
+        <Typography variant='subtitle2' justifySelf='flex-end'>
             {page * pageSize + 1} - {(page + 1) * pageSize > rowCount ? rowCount : (page + 1) * pageSize} of {rowCount}
-        </Typography> */}
+        </Typography>
     </Box>
 }
