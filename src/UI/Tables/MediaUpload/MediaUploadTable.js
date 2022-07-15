@@ -158,6 +158,7 @@ export const MediaUploadHeader = (props) => {
 
   return (
     <Grid
+      spacing={1}
       container
       sx={{
         background: "#f6f8fa",
@@ -165,13 +166,13 @@ export const MediaUploadHeader = (props) => {
       }}
       alignItems="center"
     >
-      <Grid item xs>
+      <Grid item xs={5}>
         <p className={classes.tableP}> File Name</p>
       </Grid>
-      <Grid item xs>
+      <Grid item xs={4}>
         <p className={classes.tableP}>Associated</p>
       </Grid>
-      <Grid item xs>
+      <Grid item xs={3}>
         <p className={classes.tableP}>Upload Status</p>
       </Grid>
     </Grid>
@@ -201,11 +202,11 @@ export const MediaUploadItem = (props) => {
   // }
 
   return (
-    <Grid container padding={1.5} alignItems="center">
-      <Grid item xs>
-        <p className={classes.tableP}> {props.item.name}</p>
+    <Grid container padding={1.5}  spacing={1} alignItems="center" >
+      <Grid item xs={5} >
+        <Typography sx={{wordWrap:'break-word'}} className={classes.tableP}> {props.item.name}</Typography>
       </Grid>
-      <Grid item xs>
+      <Grid item xs={4}>
         {props.optionSelected === "loading" &&
           <MediaTableItemLoading />
         }
@@ -281,9 +282,11 @@ export const MediaUploadItem = (props) => {
           <p style={{ color: "#aaa", width: 240, marginLeft: 16 }}>None</p>
         }
       </Grid>
-      <Grid item xs>
-        <Stack direction='row' sx={{ '> *': { flex: 1 } }} >
+      <Grid item xs={3}>
+        <Stack direction='row' >
+        <Box flex={1}>
           <MediaUploadStatus status={props.itemUploadStatus} />
+        </Box>
 
           {!props.disableAssociateInput &&
             <DeleteForeverIcon

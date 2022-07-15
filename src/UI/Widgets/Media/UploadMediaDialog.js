@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { Dialog, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
+import Tooltip from '@mui/material/Tooltip';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
@@ -29,7 +30,6 @@ import {
 	createPlaceholder,
 	addTagToMedia
 } from 'Api/Endpoints'
-import Tooltip from '@mui/material/Tooltip';
 
 export const FileDropZone = (props) => {
 
@@ -54,7 +54,7 @@ export const FileDropZone = (props) => {
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
-			<img src={Upload} style={{ userSelect: 'none', userDrag:'none' }} />
+			<img src={Upload} style={{ userSelect: 'none', userDrag: 'none' }} />
 			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
 				Upload Media
 			</p>
@@ -105,7 +105,7 @@ export default function UploadMediaDialog(props) {
 	const tags = useTags()
 	const placeholders = usePlaceholders(1, 24)
 	const contacts = useContacts()
-	const { create: uploadMedia } = useMediaMutation()
+	const { createAsync: uploadMedia } = useMediaMutation()
 
 	const [selectedOwner, setSelectedOwner] = useState([])
 	const [selectedTags, setSelectedTags] = useState([])
@@ -118,7 +118,7 @@ export default function UploadMediaDialog(props) {
 	const [dropFiles, setDropFiles] = useState(dummyFiles);
 
 	// Upload Process
-	const [uploadStatusCount, setUploadStatusCount] = useState({ success: 13, failed: 5, total: 18 })
+	const [uploadStatusCount, setUploadStatusCount] = useState({ success: 0, failed: 0, total: 0 })
 	const [uploadFinished, setUploadFinished] = useState(false)
 	const [failedUploads, setFailedUploads] = useState([])
 
@@ -202,6 +202,18 @@ export default function UploadMediaDialog(props) {
 		})
 	}
 
+	const isFileValid = (file) => {
+		const { type, size } = file
+		const PERMITTED_IMAGES_TYPES = ["/png", "/jpeg", "/jpg", "/gif",]
+		const MAX_IMAGE_SIZE = 5000000 // 5MB
+		const isImageValid = PERMITTED_IMAGES_TYPES.some(extension => type.toLowerCase().includes(extension)) && size < MAX_IMAGE_SIZE
+
+		const PERMITTED_OTHER_TYPES = ["/pdf", "/mp4"]
+		const MAX_OTHER_FILES_SIZE = 15000000 // 15MB
+		const isOtherFilesValid = PERMITTED_OTHER_TYPES.some(extension => type.toLowerCase().includes(extension)) && size < MAX_OTHER_FILES_SIZE
+		return isImageValid || isOtherFilesValid
+	}
+
 	const handleImportFiles = (files) => {
 		let tempFiles = []
 		let tempAssociated = []
@@ -212,15 +224,7 @@ export default function UploadMediaDialog(props) {
 		for (let i = 0; i < files.length; i++) {
 			let file = files[i]
 
-			//console.log(file)
-
-
-			if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png") || file.type.includes("/gif")) && file.size < 5000000)
-				|| ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
-				// 5MB for images and 15MB for videos
-
-				//console.log(file.name + "*")
-
+			if (isFileValid(file)) {
 				tempFiles.push(file)
 				tempAssociated.push("loading")
 				tempUploadStatus.push("none")
@@ -229,39 +233,25 @@ export default function UploadMediaDialog(props) {
 
 		if (files.length != tempFiles.length) {
 			setAlerts.push("One or more files were not added since they do not match the file upload criteria")
-
-			// setMediaAlert({
-			//   message: ,
-			//   visible: true
-			// })
 		}
 
 		const initialAssociated = Object.assign([], associatedPeople)
 		const initialUploadStatus = Object.assign([], uploadStatus)
 
 		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
-		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
-		handleAssociateContactToFile(tempFiles, tempAssociated, tempUploadStatus)
 			.then(() => {
-
-				//console.log(tempFiles)
-				//console.log(tempAssociated)
-
 				setAssociatedPeople(initialAssociated.concat(tempAssociated))
 				setUploadStatus(initialUploadStatus.concat(tempUploadStatus))
-				// setDropFiles(dropFiles.concat(tempFiles));
+
 			})
 
 		setAssociatedPeople(associatedPeople.concat(tempAssociated))
 		setDropFiles(dropFiles.concat(tempFiles));
 		setUploadStatus(uploadStatus.concat(tempUploadStatus))
-		// setAssociatedPeople(associated)
-		// setDropFiles(tempFiles);
 	}
 
 	const handleFileChange = (e) => {
 		handleImportFiles(e.target.files)
-		return
 	}
 
 	const onDrop = (e) => {
@@ -293,7 +283,6 @@ export default function UploadMediaDialog(props) {
 			return
 		}
 
-		// TODO: uncomment this
 		if (dropFiles.length == 0) {
 			setAlerts.push("You forgot to import media files to upload")
 			return
@@ -321,14 +310,11 @@ export default function UploadMediaDialog(props) {
 		// return console.log(selectedOwner)
 
 		if (selectedPlaceholders[0] && selectedPlaceholders[0].id.toString().includes('new-')) {
-			console.log(selectedPlaceholders[0])
-
-			setUploadingMedia(true)
+			//console.log(selectedPlaceholders[0])
 
 			createPlaceholder(selectedPlaceholders[0].name)
 				.then(res => {
 					console.log(res)
-
 					handleUpload(res.data.id)
 				})
 				.catch(error => {
@@ -340,16 +326,13 @@ export default function UploadMediaDialog(props) {
 	}
 
 	const handleUpload = (withPlaceholder) => {
-		let tempUploadStatus = Object.assign([], uploadStatus)
+		setUploadingMedia(true)
 
 		let count = dropFiles.length
-
 		let failedCount = 0
 		let successCount = 0
 
-		setUploadingMedia(true)
-
-		dropFiles.forEach((file, index) => {
+		const mediaUploadData = dropFiles.map((file, index) => {
 			let media = {
 				file,
 				owner: selectedOwner[0]?.id.toString(),
@@ -357,73 +340,60 @@ export default function UploadMediaDialog(props) {
 				contact: associatedPeople[index]?.id.toString(),
 				selectedTags: selectedTags
 			}
+			return media
+		})
 
-			// console.log("upload " + index)
-			console.log(media)
+		mediaUploadData.forEach((media, index) => {
 
-			//return
+			setUploadStatus(status => {
+				status[index] = "uploading"
+				return status
+			})
 
-			tempUploadStatus[index] = "uploading"
-			setUploadStatus(tempUploadStatus)
+			uploadMedia(media).then(mediaRes => {
+				setUploadStatus(status => {
+					status[index] = "success"
+					return status
+				})
+				successCount++
 
-			// TODO: create new placeholder if selectedPlaceholders id contains 'new-'
+				selectedTags.forEach(tag => {
+					addTagToMedia(mediaRes.id, tag.name)
+						.then(res => {
+							//console.log(res)
+						})
+						.catch(error => {
+							//console.log(error)
+						})
+					//}
+				})
+			}).catch(error => {
+				setUploadStatus(status => {
+					status[index] = "failed"
+					return status
+				})
 
-			uploadMedia(media, {
-				onSuccess: (res) => {
-					let mediaRes = res
-
-					let temp2 = Object.assign([], tempUploadStatus)
-					tempUploadStatus[index] = "success"
-					temp2[index] = "success"
-					setUploadStatus(temp2)
-					// console.log(temp2)
-
-					successCount++
-
-					selectedTags.forEach(tag => {
-						//if(typeof tag.id == "string" && tag.id.includes("new-")) {
-						addTagToMedia(mediaRes.id, tag.name)
-							.then(res => {
-								//console.log(res)
-							})
-							.catch(error => {
-								//console.log(error)
-							})
-						//}
-					})
-				},
-				onError: (error) => {
-					let temp2 = Object.assign([], tempUploadStatus)
-					temp2[index] = "failed"
-					tempUploadStatus[index] = "failed"
-					setUploadStatus(temp2)
-					// console.log(temp2)
-
-					failedCount++
-				},
-				onSettled: () => {
-					//setUploadStatus(tempUploadStatus)
-					count--
-
-					if (count == 0) {
-						setUploadingMedia(false)
-						onUploadFinished(tempUploadStatus, successCount, failedCount, dropFiles.length)
-					}
+				failedCount++
+			}).finally(() => {
+				count--
+				if (count == 0) {
+					setUploadingMedia(false)
+					onUploadFinished(uploadStatus, successCount, failedCount, dropFiles.length)
 				}
-
 			})
 		})
 	}
 
 	const onUploadFinished = (tempUploadStatus, successCount, failedCount, totalCount) => {
-		let tmp = []
 
-		tempUploadStatus.forEach((status, index) => {
-			if (status === 'failed')
-				tmp.push(dropFiles[index])
-		})
+		const failedUploadsFiles = tempUploadStatus.reduce((acc, status, index) => {
+			if (status === 'success')
+				acc.push(dropFiles[index])
+			return acc
+		}
+			, [])
 
-		setFailedUploads(tmp)
+		setFailedUploads(failedUploadsFiles)
 		setUploadStatusCount({ success: successCount, failed: failedCount, total: totalCount })
 		setUploadFinished(true)
 	}
@@ -448,6 +418,7 @@ export default function UploadMediaDialog(props) {
 		setSelectedPlaceholders([])
 		setSelectedTags([])
 		setUploadFinished(false)
+		setAlerts.clear()
 	}
 
 	const associateContactToMedia = (selection, index) => {

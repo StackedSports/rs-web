@@ -14,8 +14,12 @@ export default function useAlerts(intialState) {
         setAlerts.remove(index)
     }
 
+    const clear = () => {
+        setAlerts.clear()
+    }
+
     const utils = {
-        push, remove
+        push, remove,clear
     }
 
     return [alerts, utils]

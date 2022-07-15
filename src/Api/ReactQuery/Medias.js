@@ -131,5 +131,6 @@ export const useMediaMutation = () => {
         update: update.mutate,
         remove: remove.mutate,
         create: create.mutate,
+        createAsync: create.mutateAsync,
     }
 }
