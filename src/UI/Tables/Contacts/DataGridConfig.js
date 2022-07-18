@@ -36,7 +36,7 @@ const fullName = {
     flex: 2,
     minWidth: 180,
     resizable: true,
-    valueGetter: (params) => getFullName(params.row),
+    valueGetter: (params) => params.row.fullName || getFullName(params.row),
     renderCell: (params) => (
         <Tooltip title={params.value} placement='right-start'>
             <Typography component='span' fontSize={14} noWrap >{params.value}</Typography>
@@ -95,8 +95,9 @@ const twitterName = {
     // resizable: true,
     valueGetter: (params) => {
         let contact = params.row
-
-        if (contact.twitter_profile && contact.twitter_profile.screen_name)
+        if (contact.tweetUsername)
+            return `@${contact.tweetUsername}`
+        else if (contact.twitter_profile && contact.twitter_profile.screen_name)
             return `@${params.row.twitter_profile?.screen_name}`
         else
             return ''
@@ -353,7 +354,7 @@ export const parseColumnsNames = (property) => {
     switch (property) {
         case 'created_at':
         case 'last_messaged_at':
-        return null
+            return null
         case 'profile_image':
             return 'profileImg'
         case 'first_name':

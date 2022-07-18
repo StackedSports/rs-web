@@ -28,6 +28,7 @@ const BaseDialog = (props) => {
           position: 'absolute',
           right: 8,
           top: 8,
+          zIndex: 1000,
           color: (theme) => theme.palette.grey[500],
         }}
       >

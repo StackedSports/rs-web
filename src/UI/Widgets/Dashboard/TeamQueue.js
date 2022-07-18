@@ -14,12 +14,10 @@ import PanelFilters from "../PanelFilters";
 
 import { AuthContext } from "Context/Auth/AuthProvider";
 import { useMessages, useTeamMembers } from "Api/ReactQuery";
-import { getMessageRecipients } from "Api/Endpoints";
 import { getFullName } from "utils/Parser";
 
 export const TeamQueue = () => {
   const [loadedRows, setLoadedRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const filterChanged = useRef(false);
   const lastFilter = useRef({});
   const firstRender = useRef(true);
@@ -45,31 +43,16 @@ export const TeamQueue = () => {
 
   const messages = useMessages(1, 10, getBaseFilter());
 
-  const getAllMessageWithRecipientsStatus = async (messages) => {
-    const newMessages = [...messages];
-    return Promise.allSettled(newMessages.map((message) => getMessageRecipients(message.id, 1, 10000)
-    )).then(results => {
-      results.map((result, index) => {
-        if (result.status === "fulfilled") {
-          const [{ status_counts }, _] = result.value;
-          newMessages[index].status_counts = status_counts;
-        }
-      })
-    }).finally(() => {
+  useEffect(() => {
+    if (!messages.loading && messages.items?.length > 0) {
+      //getAllMessageWithRecipientsStatus(messages.items).finally(() => setLoading(false));
       if (filterChanged.current) {
-        setLoadedRows(newMessages);
+        setLoadedRows(messages.items);
         filterChanged.current = false;
       }
       else {
-        setLoadedRows((old) => lodash.uniqBy([...old, ...newMessages], 'id'))
+        setLoadedRows((old) => lodash.uniqBy([...old, ...messages.items], 'id'))
       }
-    });
-  }
-
-  useEffect(() => {
-    setLoading(true);
-    if (!messages.loading && messages.items?.length > 0) {
-      getAllMessageWithRecipientsStatus(messages.items).finally(() => setLoading(false));
     }
   }, [messages.items, messages.loading]);
 
@@ -186,7 +169,7 @@ export const TeamQueue = () => {
       )}
       {(messages.items.length !== 0 || messages.loading) && (
         <Box height={(Math.min(messages.items.length + 1, 6) * 52) + 58 + 'px'} >
-          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={loading || messages.loading} />
+          <TasksQueueTable rows={loadedRows} apiPagination={messages.pagination} loading={messages.loading} />
         </Box>
       )}
     </BaseSection>

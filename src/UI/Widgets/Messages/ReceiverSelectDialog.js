@@ -21,15 +21,15 @@ import { findByIds } from 'utils/Helper'
 import { Clear } from '@mui/icons-material';
 
 export const tabs = {
-    privateBoard: 0,
-    teamBoard: 1,
-    contact: 2
+    privateBoard: '0',
+    teamBoard: '1',
+    contact: '2'
 }
 
 const myTabs = [
-    { id: 0, label: 'My Boards', hideSearch: true },
-    { id: 1, label: 'Team Boards', hideSearch: true },
-    { id: 2, label: 'Contacts' }
+    { id: '0', label: 'My Boards', hideSearch: true },
+    { id: '1', label: 'Team Boards', hideSearch: true },
+    { id: '2', label: 'Contacts' }
 ]
 
 const getSelectionLabel = (privateCount, teamCount, contactCount, clearSelection) => {
@@ -217,7 +217,7 @@ export default function ReceiverSelectDialog(props) {
             onClearSearch={onClearSearch}
             onClose={onClose}
         >
-            <TabPanel value={0} index={0}>
+            <TabPanel value={'0'} index={0}>
                 <BoardsTable mini
                     contacts={privateBoards}
                     pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50 }}
@@ -226,7 +226,7 @@ export default function ReceiverSelectDialog(props) {
                     onSelectionChange={(newSelection) => setSelectedPrivateBoards(newSelection)}
                 />
             </TabPanel>
-            <TabPanel value={1} index={1}>
+            <TabPanel value={'1'} index={1}>
                 <BoardsTable mini
                     contacts={teamBoards}
                     pagination={{ currentPage: 1, totalPages: 1, itemsPerPage: 50 }}
@@ -235,7 +235,7 @@ export default function ReceiverSelectDialog(props) {
                     onSelectionChange={(newSelection) => setSelectedTeamBoards(newSelection)}
                 />
             </TabPanel>
-            <TabPanel value={2} index={2}>
+            <TabPanel value={'2'} index={2}>
                 <ContactsTableServerMode
                     mini
                     contacts={contacts.items}

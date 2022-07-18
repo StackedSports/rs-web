@@ -36,7 +36,7 @@ const getSelectionLabel = (privateCount, teamCount, contactCount) => {
 }
 
 export default function SelectDialogTab(props) {
-  const [tabIndex, setTabIndex] = useState(props.currentTab ? props.currentTab : 0)
+  const [tabIndex, setTabIndex] = useState(props.currentTab ? props.currentTab : '0')
 
   const handleChange = (e, newValue) => {
     setTabIndex(newValue)
