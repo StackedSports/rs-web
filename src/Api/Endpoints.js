@@ -553,7 +553,7 @@ export const uploadMedia = (media) => {
         myHeaders.append("X-Auth-Token", JSON.parse(localStorage.getItem("user")).token);
         myHeaders.append("Authorization", "RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452")
 
-        console.log("upload file name = " + media.file.name + "*")
+        //console.log("upload file name = " + media.file.name + "*")
 
         let formdata = new FormData();
         formdata.append("files[]", media.file, media.file.name);

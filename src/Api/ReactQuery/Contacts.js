@@ -30,7 +30,7 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         if (reactQuery.isSuccess) {
             const [apiContacts, apiPagination] = reactQuery.data
-            setPagination(apiPagination)
+            setPagination({...apiPagination,itemsPerPage: itemsPerPage})
             setContacts(apiContacts)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
