@@ -1,7 +1,8 @@
 import { 
     Box,
     Divider, 
-    Typography } from '@material-ui/core';
+    Typography
+} from '@material-ui/core';
 import { Stack } from '@mui/material';
 
 import Button from 'UI/Widgets/Buttons/Button';
@@ -41,7 +42,7 @@ const Count = (props) => (
         </Typography>
         <Typography
             variant="subtitle2"
-            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 14 }}
+            style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 14, marginBottom: 1 }}
         >
             {props.label}
         </Typography>
@@ -54,7 +55,7 @@ const Status = ({ status }) => (
             variant="subtitle2"
             style={{ width: "100%", textAlign: "center" }}
         >
-            {`Status: ${status?.status}`}
+            {`Status: ${status?.fetched === status?.analyzed ? 'Finished' : 'In Progress'}`}
         </Typography>  
         <Typography
             variant="subtitle2"
@@ -170,13 +171,31 @@ const TweetDetails = (props) => {
                 <Divider/>
 
                 <RenderIf condition={metrics}>
-                    <Stack mt={2} direction="row" flex={1} justifyContent="space-around">
+                    <Stack mt={2} direction="row" justifyContent="space-around">
                         <Count label="Likes" value={metrics?.likes}/>
                         <Count label="Retweets" value={metrics?.retweets}/>
                         <Count label="Quotes" value={metrics?.quotes}/>
                         <Count label="Replies" value={metrics?.replies}/>
                     </Stack>
                 </RenderIf>
+
+                {/* <Stack direction="row" flex={1}>
+                    <RenderIf condition={true}>
+                        <Button
+                            variant="contained"
+                            name="View Contacts"
+                            onClick={props.onSaveTweet}
+                        />
+                    </RenderIf>
+                </Stack> */}
+
+                <Box flex={1} sx={{ width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }} p={2}>
+                    <Button
+                        variant="contained"
+                        name="View Contacts"
+                        onClick={() => console.log('show dialog')}
+                    />
+                </Box>
 
                 {/* <Box sx={{ width: "100%" }}>
                     <Divider />

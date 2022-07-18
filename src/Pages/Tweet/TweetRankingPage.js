@@ -46,24 +46,6 @@ const TweetRankingPage = (props) => {
 	// console.log(user)
 
 	useEffect(() => {
-		if(!tweetId || tweetId === '')
-			return
-
-		// console.log('testing firestore')
-
-		// addDoc(collection(db, 'logs'), {
-		// 		message: 'Hey test success'
-		// 	})
-		// 	.then(res => {
-		// 		console.log(res)
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err)
-		// 	})
-
-	}, [tweetId])
-
-	useEffect(() => {
 		if(!listener.current)
 			return
 
@@ -75,32 +57,13 @@ const TweetRankingPage = (props) => {
 		}
 	}, [listener.current])
 
-
-	const onTweetSearch = () => {
-		console.log("onTweetSearch")
-		console.log(input)
-		setOpenTweet(!openTweet)
-	}
-
 	const onSearchChange = (input) => {
 		setInput(input)
 	}
 
 	const onSearchTweet = (value) => {
-		// TODO
-
-		// return
-
-		// let parts = value.split('/')
-
-		// let tweet = 'https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg'
-		// let parts = tweet.split('/')
-		// console.log(parts)
-
-		// https://twitter.com/willy_lowry/status/1521517935155679237?s=20&t=d6QUaCurDkLz_Cwooh0f1A
-
+		// Getting TweetId from Tweet Url
 		let queryParams = value.split('/').slice(-1)
-		// console.log(queryParams[0])
 		let inputTweetId = queryParams[0].split('?')[0]
 
 		console.log(inputTweetId)
@@ -135,57 +98,6 @@ const TweetRankingPage = (props) => {
 		})
 
 		listener.current = unsub
-
-		
-
-		// const getTweetData = httpsCallable(functions, 'getTweetData')
-		// getTweetData({ tweetId, userToken: user.token })
-		// 	.then(res => {
-		// 		console.log(res)
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err)
-		// 	})
-
-		// const tweetDataRequestRef = doc(collection(db, 'tweetDataRequests'))
-		// setDoc(tweetDataRequestRef, { id: tweetDataRequestRef.id, tweetId })
-		// 	.then(() => {
-		// 		console.log('tweet data request made')
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err)
-		// 	})
-
-		// const unsub = onSnapshot(doc(db, 'tweetDataResponses', tweetDataRequestRef.id), (tweetDataRef) => {
-		// 	const tweetDataResponse = tweetDataRef.data()
-		// 	console.log('got tweet data response')
-		// 	console.log(tweetDataResponse)
-		// })
-
-		// listener.current = unsub
-
-		// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
-
-		
-
-		return
-
-		// user.team.org.id
-
-		// const requestRef = doc(collection(db, 'requests'))
-		// setDoc(requestRef, { tweetId, id: requestRef.id, userToken: user.token })
-		// 	.then(() => {
-		// 		console.log('request made')
-		// 	})
-		// 	.catch(err => console.log(err))
-
-		// const unsub = onSnapshot(doc(db, 'tweet_logs', requestRef.id), (logRef) => {
-		// 	const log = logRef.data()
-
-		// 	console.log(log)
-		// })
-
-		// listener.current = unsub
 	}
 	
 	const analyzeTweet = (tweetId, requestRef) => {
