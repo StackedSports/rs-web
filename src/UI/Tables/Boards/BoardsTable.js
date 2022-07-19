@@ -1,5 +1,5 @@
 import { Grid,Stack } from "@mui/material"
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro} from '@mui/x-data-grid-pro';
 import Pagination from '@mui/material/Pagination';
 
 import { columns } from './DataGridConfig';
@@ -20,7 +20,7 @@ export default function BoardsTable(props) {
 
     return (
         <Stack spacing={2} style={{ height: props.mini ? 500 : 850, width: '100%'}}>
-            <DataGrid sx={{ m: 0 }}
+            <DataGridPro sx={{ m: 0 }}
             //   rows={props.contacts ? props.contacts : []}
               rows={props.contacts}
               columns={columns}

@@ -36,14 +36,14 @@ const TweetDisplay = (props) => {
     }, [props.tweetId])
 
     const onTweetLoadSuccess = (widget) => {
-		console.log(widget)
+		//console.log(widget)
 
 		setLoading(false)
 		setTweetWidget(widget)
 
 		if(tweetContainer.current) {
 			// tweetContainer.current.innerHTML = widget
-			console.log('set inner html')
+			//console.log('set inner html')
 
             setTimeout(() => setRefresh(oldValue => !oldValue), 200)
 		}

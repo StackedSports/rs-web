@@ -11,8 +11,8 @@ import { AppContext } from 'Context/AppProvider';
 
 
 const tabs = [
-    { id: 0, label: 'Media' },
-    { id: 1, label: 'Placeholders' }
+    { id: '0', label: 'Media' },
+    { id: '1', label: 'Placeholders' }
 ]
 
 // _s is not a function
@@ -109,7 +109,7 @@ export default function MediaSelectDialog(props) {
             onClose={props.onClose}
             disableOnConfirmSelection={disableOnConfirmSelection}
         >
-            <TabPanel value={0} index={0}>
+            <TabPanel value={'0'} index={0}>
                 <MediaTable
                     mini
                     disableMultipleSelection={props.uniqueSelection}
@@ -123,7 +123,7 @@ export default function MediaSelectDialog(props) {
                     xl={3}
                 />
             </TabPanel>
-            <TabPanel value={1} index={1}>
+            <TabPanel value={'1'} index={1}>
                 <MediaTable
                     mini
                     disableMultipleSelection={props.uniqueSelection}

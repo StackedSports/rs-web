@@ -3,17 +3,12 @@ import { format } from "date-fns"
 import { Link } from 'react-router-dom'
 import { messageRoutes } from 'Routes/Routes';
 
-const formatRecipientsStatuses = (recipient_count, statuses) => {
+const formatRecipientsStatuses = (recipient_count) => {
     let result = '';
     if (recipient_count instanceof Object) {
         result = `Sent ${recipient_count.status?.sent || 0} of ${recipient_count.status?.total}`;
         if (recipient_count.status.skipped) result += `, ${recipient_count.status.skipped} skipped`;
         if (recipient_count.status.error) result += `, ${recipient_count.status.error} failed`;
-    }
-    else if (statuses && Object.keys(statuses).length > 0) {
-        result = `Sent ${statuses.sent} of ${recipient_count}`;
-        if (statuses.skipped) result += `, ${statuses.skipped} skipped`;
-        if (statuses.error) result += `, ${statuses.error} failed`;
     } else
         result = `Sent ${recipient_count}`;
     return result;
@@ -34,7 +29,7 @@ const Sender = {
 const Recipients = {
     field: 'recipient_count',
     headerName: 'Recipients/Results',
-    valueGetter: (params) => params.row?.recipient_count ? formatRecipientsStatuses(params.row.recipient_count, params.row.status_counts) : '',
+    valueGetter: (params) => params.row?.recipient_count ? formatRecipientsStatuses(params.row.recipient_count) : '',
     flex: 1.5
 }
 const Type = {
