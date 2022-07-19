@@ -435,7 +435,7 @@ export const getBoard = (id) => {
 }
 
 export const updateBoard = (id, data) => {
-    console.log("updateBoard",data)
+    console.log("updateBoard", data)
     const body = {
         filter: {
             ...data,
@@ -589,11 +589,11 @@ export const addTagToMedia = (mediaId, tag) => {
 }
 
 export const getMedia = (id) => {
-    return AXIOS('get', `media/${id}`) 
+    return AXIOS('get', `media/${id}`)
 }
 
 export const getMedias = (page, perPage, filters) => {
-    const { cancelToken} = filters || {}
+    const { cancelToken } = filters || {}
     return AXIOS('get', `media?page=${page}&per_page=${perPage}`, {}, cancelToken)
 }
 
@@ -1235,6 +1235,17 @@ export const createOpponent = (contactId, data) => {
         opponent: { ...data }
     }
     return POST(`contacts/${contactId}/opponents`, body)
+}
+
+export const updateOpponent = (contactId, opponentId, data) => {
+    const body = {
+        opponent: { ...data }
+    }
+    return PUT(`contacts/${contactId}/opponents/${opponentId}`, body)
+}
+
+export const deleteOpponent = (contactId, opponentId) => {
+    return DELETE(`contacts/${contactId}/opponents/${opponentId}`)
 }
 
 export const loginWithTwitter = ({ token, secret, email, handle, id }) => {

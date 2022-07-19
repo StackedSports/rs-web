@@ -78,6 +78,7 @@ export const FormBaseDialog = (props) => {
                 }
             </DialogContent>
             <DialogActions sx={{ padding: '0 20px 24px' }}>
+                {props.secondaryAction}
                 <LoadingButton
                     type="submit"
                     size='large'

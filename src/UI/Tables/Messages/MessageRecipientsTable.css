@@ -1,5 +1,6 @@
 .MessageDetailValue {
     /* font-weight: bold; */
+    width: fit-content;
 }
 
 .MessageDetailValue.Draft {

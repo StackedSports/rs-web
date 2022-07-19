@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
-import { TextField, MenuItem, FormGroup, FormControlLabel, Checkbox, Stack, RadioGroup, Radio } from '@mui/material'
+import { useState, useEffect, useContext } from 'react'
+import { TextField, MenuItem, FormGroup, FormControlLabel, Checkbox, Stack, RadioGroup, Radio, Button } from '@mui/material'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import { FormBaseDialog } from "../Dialogs/FormBaseDialog";
-import { createOpponent } from 'Api/Endpoints';
+import { createOpponent, updateOpponent, deleteOpponent } from 'Api/Endpoints';
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
 const initialValues = {
   "week": 1,
@@ -24,7 +25,7 @@ const validationSchema = yup.object().shape({
 
 
 export const CreateOpponentDialog = (props) => {
-
+  const confirmDialog = useContext(ConfirmDialogContext);
   const [contact, setContact] = useState(props.contact || {});
   const [error, setError] = useState(null);
 
@@ -34,21 +35,62 @@ export const CreateOpponentDialog = (props) => {
     onSubmit: (values, formikHelpers) => {
       if (contact.id) {
         formikHelpers.setSubmitting(true);
-        createOpponent(contact.id, values)
+        if (props.opponent) {
+          updateOpponent(contact.id, props.opponent.id, values)
+            .then((res) => {
+              if (props.onSuccess)
+                props.onSuccess()
+              handleClose()
+            })
+            .catch(err => {
+              console.log(err)
+              setError(err)
+            }).finally(() => {
+              formikHelpers.setSubmitting(false);
+            })
+        } else {
+          createOpponent(contact.id, values)
+            .then((res) => {
+              if (props.onSuccess)
+                props.onSuccess()
+              handleClose()
+            })
+            .catch(err => {
+              console.log(err)
+              setError(err)
+            }).finally(() => {
+              formikHelpers.setSubmitting(false);
+            })
+        }
+      }
+    }
+  })
+
+  const onDeleteOpponent = () => {
+    if (props.opponent) {
+      confirmDialog.show("Delete Opponent", `Are you sure you want to delete this opponent (${props.opponent.name}) ?`, () => {
+        formik.setSubmitting(true);
+        deleteOpponent(contact.id, props.opponent.id)
           .then((res) => {
-            console.log(res)
-            if(props.onCreated && typeof props.onCreated instanceof Function )
-            props.onCreated()
+            if (props.onSuccess)
+              props.onSuccess("removed")
+            handleClose()
           })
           .catch(err => {
             console.log(err)
             setError(err)
           }).finally(() => {
-            formikHelpers.setSubmitting(false);
+            formik.setSubmitting(false);
           })
-      }
+      })
     }
-  })
+  }
+
+  useEffect(() => {
+    if (props.opponent) {
+      formik.setValues(props.opponent)
+    }
+  }, [props.opponent])
 
   const handleClose = () => {
     props.onClose();
@@ -59,10 +101,15 @@ export const CreateOpponentDialog = (props) => {
     <FormBaseDialog
       open={props.open}
       onClose={handleClose}
-      title={`New Opponent for contact: ${props?.contact?.first_name} ${props?.contact?.last_name}`}
+      title={`${props.opponent ? `Update opponent` : 'New opponent'} for contact: ${props?.contact?.first_name} ${props?.contact?.last_name}`}
       onSubmit={formik.handleSubmit}
       loading={formik.isSubmitting}
       error={error}
+      secondaryAction={props.opponent &&
+        <Button variant="contained" color="error" size='large' sx={{ mr: 'auto' }} onClick={onDeleteOpponent}>
+          Delete
+        </Button>
+      }
     >
 
       <TextField

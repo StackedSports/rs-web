@@ -1,11 +1,13 @@
 import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined';
+import { Typography } from '@mui/material';
 
 import { getFullName, formatPhoneNumber, formatDate, capitalize, getMessageRecipientResponseLabel } from 'utils/Parser'
 
 const fullName = {
     field: 'fullName',
     headerName: 'Full Name',
-    flex:1,
+    minWidth:180,
+    flex: 1,
     resizable: true,
     valueGetter: (params) => getFullName(params.row)
 }
@@ -13,6 +15,7 @@ const fullName = {
 const boardName = {
     field: 'filterName',
     headerName: 'Board Name',
+    maxWidth:250,
     flex: 1,
     resizable: true,
     valueGetter: (params) => params.row.filterName || ''
@@ -28,7 +31,8 @@ const sender = {
 const twitterName = {
     field: 'twitter_profile',
     headerName: 'Twitter',
-    flex:1,
+    maxWidth:250,
+    flex: 1,
     // resizable: true,
     valueGetter: (params) => `@${params.row.twitter_handle}`
 }
@@ -63,7 +67,7 @@ const media = {
 const deliveredAt = {
     field: 'deliveredAt',
     headerName: 'Delivered At',
-    flex: 1,
+    minWidth:160,
     valueGetter: (params) => params.row.sent_at ? formatDate(params.row.sent_at, 'medium', 'short') : ''
 }
 
@@ -78,9 +82,10 @@ const status = {
 const response = {
     field: 'response',
     headerName: 'Response',
-    flex:1,
-    // valueGetter: (params) => capitalize(params.row.response),
-    renderCell: (params) => <span className={`MessageDetailValue Error`}>{getMessageRecipientResponseLabel(params.value)}</span>
+    flex: 1,
+    minWidth:450,
+    // valueGetter: (params) => getMessageRecipientResponseLabel(params.row.response),
+    renderCell: (params) => <Typography noWrap className={`MessageDetailValue Error`}>{getMessageRecipientResponseLabel(params.value)}</Typography>
 }
 
 const getPlaceholderColumn = (key) => ({

@@ -2,9 +2,7 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-// import Button as ButtonMUI from '@mui/material/Button';
-import { Collapse, List, ListItem } from '@material-ui/core';
-import { ListItemButton } from '@mui/material';
+import { ListItemButton, List, ListItem } from '@mui/material';
 import * as Yup from "yup";
 import { parse, isDate, subYears } from "date-fns";
 
@@ -32,6 +30,7 @@ import { objectNotNull } from 'utils/Validation'
 import { getStringListOfIds } from 'utils/Helper'
 import Button from 'UI/Widgets/Buttons/Button';
 import PeopleDialog from 'UI/Widgets/Dialogs/PeopleDialog';
+import OpponentDialog from 'UI/Widgets/Dialogs/OpponentDialog';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -71,6 +70,8 @@ const ContactProfileDetails = (props) => {
 	const [openPeopleDialog, setOpenPeopleDialog] = useState(false)
 	const [familyMember, setFamilyMember] = useState(null)
 	const [openNewOpponentDialog, setOpenNewOpponentDialog] = useState(false)
+	const [opponent, setOpponent] = useState(null)
+	const [openOpponentDialog, setOpenOpponentDialog] = useState(false)
 
 	const [openCollapsePeople, setOpenCollapsePeople] = useState(false)
 
@@ -442,10 +443,26 @@ const ContactProfileDetails = (props) => {
 		props.refreshContact()
 	}
 
+	const onSuccessOpponent = (type) => {
+		console.log("opponent updated ")
+		if (opponent) {
+			if (type === 'removed')
+				app.alert.setSuccess(`Opponent removed!`)
+			else
+				app.alert.setSuccess(`Opponent updated!`)
+		} else
+			app.alert.setSuccess(`New opponent created!`)
+		props.refreshContact()
+	}
+
 	const onViewPerson = (person) => {
 		setFamilyMember(person)
 		console.log(person)
 		setOpenNewFamilyMemberDialog(true)
+	}
+	const onViewOpponent = (opponent) => {
+		setOpponent(opponent)
+		setOpenNewOpponentDialog(true)
 	}
 
 	const onStatus2Change = (setFieldValue, value) => {
@@ -468,18 +485,25 @@ const ContactProfileDetails = (props) => {
 				person={familyMember}
 			/>
 
-			<CreateOpponentDialog
-			  open={openNewOpponentDialog}
-			  onClose={() => setOpenNewOpponentDialog(false)}
-			  contact={props.contact}
-			//   onCreated={onOpponentCreated}
-			/>
-
 			<PeopleDialog
 				open={openPeopleDialog}
 				onViewPerson={onViewPerson}
 				people={props.contact?.relationships}
 				onClose={setOpenPeopleDialog}
+			/>
+
+			<CreateOpponentDialog
+				open={openNewOpponentDialog}
+				onClose={() => { setOpenNewOpponentDialog(false), setOpponent(null) }}
+				opponent={opponent}
+				onSuccess={onSuccessOpponent}
+				contact={props.contact}
+			/>
+
+			<OpponentDialog
+				open={openOpponentDialog}
+				onClose={() => setOpenOpponentDialog(false)}
+				opponents={props.contact?.opponents}
 			/>
 
 			<Formik
@@ -777,16 +801,7 @@ const ContactProfileDetails = (props) => {
 								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
 							/>
 
-							<List
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									// width: "100%",
-									// position: "absolute",
-									// zIndex: 1000,
-									// backgroundColor: "#ffff"
-								}}
-							>
+							<List sx={{ p: 0 }} >
 								{props.contact?.relationships?.filter((person, index) => index < 3 && person)
 									.map(person => {
 										return (
@@ -803,17 +818,19 @@ const ContactProfileDetails = (props) => {
 									})
 								}
 								{props.contact?.relationships?.length > 3 &&
-									<Button
-										style={{
-											alignSelf: "center",
-											width: "max-content",
-										}}
-										type="button"
-										name="View More..."
-										variant='outlined'
-										// endIcon={<MoreHorizIcon />}
-										onClick={() => setOpenPeopleDialog(true)}
-									/>
+									<ListItem>
+										<Button
+											sx={{
+												marginInline: "auto",
+												width: "max-content",
+											}}
+											type="button"
+											name="View More..."
+											variant='outlined'
+											// endIcon={<MoreHorizIcon />}
+											onClick={() => setOpenPeopleDialog(true)}
+										/>
+									</ListItem>
 								}
 							</List>
 							{/* <Button
@@ -857,9 +874,6 @@ const ContactProfileDetails = (props) => {
 							onFieldChange={(e) => onFieldChange(e, 5, formikProps)}
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 5, formikProps)}
-							items={[
-								{ label: 'Opponents', name: 'opponents', value: formikProps.values.opponents, component: TextField },
-							]}
 							clearOnBlur
 						>
 							<Button
@@ -868,6 +882,39 @@ const ContactProfileDetails = (props) => {
 								variant='contained'
 								onClick={() => setOpenNewOpponentDialog(true)}
 							/>
+
+							<List sx={{ p: 0 }}>
+								{props.contact?.opponents?.slice(0, 3)
+									.map(opponent => {
+										return (
+											<ListItemButton
+												key={opponent.id}
+												onClick={() => onViewOpponent(opponent)}
+											>
+												<Stack direction="row" flex={1}>
+													<Stack flex={1}>{opponent.name}</Stack>
+													<Stack>{opponent.score}</Stack>
+												</Stack>
+											</ListItemButton>
+										)
+									})
+								}
+								{props.contact?.opponents?.length > 3 &&
+									<ListItem>
+										<Button
+											sx={{
+												marginInline: "auto",
+												width: "max-content",
+											}}
+											type="button"
+											name="View More..."
+											variant='outlined'
+											onClick={() => setOpenOpponentDialog(true)}
+										/>
+									</ListItem>
+								}
+							</List>
+
 						</AccordionComponent>
 					</Form>
 				)}

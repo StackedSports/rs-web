@@ -97,7 +97,7 @@ export default function ContactsProfilePage(props) {
                 <ContactProfileDetails
                     loading={contact.loading}
                     contact={updatedContact || contact.item}
-                    refreshContact={() => contact.refetch()}
+                    refreshContact={contact.refetch}
                     onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />
