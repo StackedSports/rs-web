@@ -1,15 +1,14 @@
 import { useState, useMemo, useContext } from "react";
-import { TabContext, TabList, TabPanel } from "@mui/lab"
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Typography } from "@mui/material";
 import Tab from '@mui/material/Tab';
-import BaseDialog from "./BaseDialog"
+import BaseDialog from "./BaseDialog";
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-import { AppContext } from 'Context/AppProvider'
-import { useContact } from "Api/ReactQuery";
+import { AppContext } from 'Context/AppProvider';
 
 import lodsh from 'lodash';
 
-export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, open, onClose }) => {
+export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, loading, open, onClose }) => {
   const app = useContext(AppContext)
   const [tab, setTab] = useState('likes');
   const [selectedLikesContactsIds, setSelectedLikesContactsIds] = useState([]);
@@ -19,31 +18,56 @@ export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, open, onCl
     setTab(tabValue);
   }
 
-  const collumnsVisible = {
+  const columnsHidden = {
     profileImg: false,
     phone: false,
   }
 
-  const selectedContactsIds = useMemo(() => {
-    return lodsh.uniq([...selectedLikesContactsIds, ...selectedRetweetsContactsIds]);
+  const getAllContacts = () => {
+    return [...contactsLikes, ...contactsRetweets]
+  }
+
+  const parseContact = (contact) => {
+    return {
+      id: contact.id,
+      first_name: contact.fullName.split(' ')[0],
+      last_name: contact.fullName.split(' ')[1],
+      twitter_profile: {
+        profile_image: contact.profileImg,
+      }
+    }
+  }
+
+  const selectedContacts = useMemo(() => {
+    const selectedContactsIds = lodsh.uniq([...selectedLikesContactsIds, ...selectedRetweetsContactsIds]);
+
+    return selectedContactsIds.map(contactId => {
+      const contact = getAllContacts().find(contact => contact.id === contactId)
+      if (contact) {
+        return parseContact(contact)
+      }
+    })
   }, [selectedLikesContactsIds, selectedRetweetsContactsIds]);
 
   const onSendInMessage = () => {
-   // app.sendMessageToContacts()
-   // TODO GET CONTACTS
-   console.log('send in message')
+    app.sendMessageToContacts(selectedContacts)
   }
-
 
   return (
     <BaseDialog
       open={open}
       onClose={onClose}
       cancelLabel="Close"
-      confirmLabel="Send in Message"
+      confirmLabel="Send Message"
+      onConfirm={selectedContacts.length > 0 ? onSendInMessage : null}
+      sx={{
+        '.MuiTabPanel-root':{
+          paddingInline:0,
+        }
+      }}
     >
       <TabContext value={tab}>
-        <TabList onChange={handleTabChange} aria-label="basic tabs example">
+        <TabList onChange={handleTabChange} aria-label="tweets-details-contacts">
           <Tab label="Likes" value="likes" />
           <Tab label="Retweets" value="retweets" />
         </TabList>
@@ -56,7 +80,8 @@ export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, open, onCl
             disableColumnFilter
             disableColumnSelector
             sortingMode='client'
-            columnVisibilityModel={collumnsVisible}
+            loading={loading}
+            columnVisibilityModel={columnsHidden}
             contacts={contactsLikes}
             selectionModel={selectedLikesContactsIds}
             onSelectionModelChange={(ids) => setSelectedLikesContactsIds(ids)}
@@ -71,7 +96,8 @@ export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, open, onCl
             disableColumnFilter
             disableColumnSelector
             sortingMode='client'
-            columnVisibilityModel={collumnsVisible}
+            loading={loading}
+            columnVisibilityModel={columnsHidden}
             contacts={contactsRetweets}
             selectionModel={selectedRetweetsContactsIds}
             onSelectionModelChange={(ids) => setSelectedRetweetsContactsIds(ids)}
@@ -79,7 +105,7 @@ export const TweetRankingDialog = ({ contactsLikes, contactsRetweets, open, onCl
         </TabPanel>
       </TabContext>
       <Typography>
-        {selectedContactsIds.length} contacts selected
+        {selectedContacts.length} contacts selected
       </Typography>
     </BaseDialog>
   )

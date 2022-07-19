@@ -96,22 +96,24 @@ const TweetDetails = (props) => {
     const { metrics, likes, retweets } = props.details
     const [contactsLikes, setContactsLikes] = useState([])
     const [contactsRetweets, setContactsRetweets] = useState([])
+    const [loadingContacts, setLoadingContacts] = useState(false)
 
     useEffect(() => {
         let mounted = true
+        setLoadingContacts(true)
         const fetchContacts = async () => {
             const querySnapshotLikes = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`));
             const _contactsLikes = querySnapshotLikes.docs.map(doc => doc.data());
-            if (mounted)
-                setContactsLikes(_contactsLikes)
 
             const querySnapshotRetweets = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`));
             const _contactsRetweets = querySnapshotRetweets.docs.map(doc => doc.data());
-            if (mounted)
+            if (mounted) {
+                setContactsLikes(_contactsLikes)
                 setContactsRetweets(_contactsRetweets)
+            }
         }
 
-        fetchContacts()
+        fetchContacts().finally(() => setLoadingContacts(false))
 
         return () => { mounted = false }
 
@@ -237,6 +239,7 @@ const TweetDetails = (props) => {
             <TweetRankingDialog
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
+                loading={loadingContacts}
                 contactsLikes={contactsLikes}
                 contactsRetweets={contactsRetweets}
             />

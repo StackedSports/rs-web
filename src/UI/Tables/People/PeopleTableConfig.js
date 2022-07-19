@@ -128,9 +128,7 @@ const livesWith = {
     // resizable: true,
     valueGetter: (params) => params.row.lives_with ? params.row.lives_with : '',
     renderCell: (params) => (
-        <Tooltip title={params.value} placement='right-start'>
-            <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
-        </Tooltip>
+        <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
     ),
 }
 
@@ -167,9 +165,7 @@ const topInfluencer = {
     minWidth: 100,
     valueGetter: (params) => params.row.top_influencer ? params.row.top_influencer : '',
     renderCell: (params) => (
-        <Tooltip title={params.value} placement='right-start'>
-            <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
-        </Tooltip>
+        <Typography fontSize={14} noWrap >{params.value ? "Yes" : "No"}</Typography>
     ),
 }
 
