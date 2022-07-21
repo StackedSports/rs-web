@@ -14,16 +14,12 @@ import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
 
 import { AppContext } from 'Context/AppProvider'
+import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import useArray from 'Hooks/ArrayHooks'
 
-
-import { useUser } from 'Api/Hooks'
 import { useTeamMembers, useSnippets, useMediaMutation, useTextPlaceholders } from 'Api/ReactQuery'
 import {
-    getBoards,
-    getBoard,
-    filterContacts,
     createMessage,
     updateMessage,
 } from 'Api/Endpoints'
@@ -39,34 +35,26 @@ import {
 import { formatDate } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
+import { object } from 'yup'
+import { platform } from 'chart.js'
+
+const ALL_PLATFORMS = {
+    twitter: true,
+    rs: true,
+    txt: true
+}
 
 export default function MessageCreatePage(props) {
-    const user = useUser()
+    const { user } = useContext(AuthContext)
     const app = useContext(AppContext)
+    const { control } = useParams()
+    const teamMembers = useTeamMembers()
     const { create: uploadMedia } = useMediaMutation()
 
     const [loading, setLoading] = useState(false)
-    // const contacts = useContacts()
-    // const ranks = useRanks()
-
-    const { control } = useParams()
-    // const fromContactsId = useRef(props.match?.params?.contacts)
-
-
-    // TODO: user should be coming from user context, not from
-    // fetching the api
-    // const user = useUser()
-
-    const teamMembers = useTeamMembers()
-    // const tags = useTags()
-    // const contact = useContact('mkjXBTMWnmPX')
 
     // Platform
-    const [platforms, setPlatforms] = useState({
-        twitter: true,
-        rs: true,
-        txt: true
-    })
+    const [platforms, setPlatforms] = useState(ALL_PLATFORMS)
 
     const [platformSelected, setPlatformSelected] = useState(props.platformSelected || null)
 
@@ -105,15 +93,6 @@ export default function MessageCreatePage(props) {
     })
 
     const [redirect, setRedirect] = useState('')
-
-    useEffect(() => {
-
-        if (!user.item)
-            return
-        // const owner = Object.assign({}, user.item)
-        // delete owner.token
-        // console.log(owner)
-    }, [user.item])
 
     useEffect(() => {
         if (!control)
@@ -176,7 +155,7 @@ export default function MessageCreatePage(props) {
 
     // Recipients from Props
     useEffect(() => {
-        console.log(props.recipientSelected)
+        //console.log(props.recipientSelected)
 
         if (props.recipientSelected)
             setRecipientSelected(props.recipientSelected)
@@ -202,17 +181,6 @@ export default function MessageCreatePage(props) {
 
     }, [props.textMessage])
 
-    // console.log(snippets)
-    // console.log(textPlaceholders)
-
-    // useEffect(() => {
-    //     if(!user)
-    //         return
-
-    //     setPlatformsForUser()
-
-    // }, [user])
-
     useEffect(() => {
         // console.log(teamMembers.items)
 
@@ -223,44 +191,13 @@ export default function MessageCreatePage(props) {
 
     }, [teamMembers.items])
 
-    const setPlatformsForUser = () => {
-        // if(!user)
-        //     return
-        console.log('set platforms for user')
-
-        let platforms = {
-            twitter: true,
-            text: true
+    useEffect(() => {
+        if (senderSelected.length === 0)
+            setPlatforms(ALL_PLATFORMS)
+        else {
+            validatePlatform(senderSelected)
         }
-
-        // if(user) {
-        //     platforms['twitter'] = true
-        // }
-        // if(user) {
-        //     platforms['text'] = true
-        // }
-
-        setPlatforms(platforms)
-
-    }
-
-    const setPlatformsForTeamMember = (teamMember) => {
-        let platforms = {}
-
-        if (teamMember.twitter_profile && teamMember.twitter_profile.screen_name) {
-            platforms['twitter'] = true
-        }
-        if (teamMember.sms_number) {
-            platforms['rs'] = true
-        }
-        if (teamMember.phone) {
-            platforms['txt'] = true
-        }
-
-        setPlatforms(platforms)
-    }
-
-    // console.log(teamMembers.items)
+    }, [senderSelected, setPlatforms])
 
     const onPlatformSelected = (platform, index) => {
         console.log('platform selected = ' + platform)
@@ -271,17 +208,7 @@ export default function MessageCreatePage(props) {
         setPlatformSelected(null)
     }
 
-    const clearPlatforms = () => {
-        setPlatforms({})
-
-        if (platformSelected !== 'Twitter Dm')
-            setPlatformSelected(null)
-
-        // platformSelected(null)
-    }
-
-    const validatePlatform = (sender) => {
-        console.log(sender)
+    const validatePlatform = (senders) => {
         // We need to validate available platforms for the message
         // based on sender selection.
 
@@ -296,48 +223,41 @@ export default function MessageCreatePage(props) {
 
         // If only selection is a coach type, we need to clear the available platforms
         // and inform the user
-        if (typeof sender === 'string') {
-            // senderSelected.length === 0 && 
+        const newAvailablePlatforms = {}
 
-            if (platformSelected && platformSelected !== 'Twitter Dm') {
-                setPlatformSelected(null)
-            }
-
-            setPlatforms({ twitter: true })
-
-            return
+        if (senders.some(sender => typeof sender === 'string'))
+            newAvailablePlatforms['twitter'] = true
+        else {
+            if (senders.some(sender => sender?.twitter_profile?.screen_name))
+                newAvailablePlatforms['twitter'] = true
+            if (senders.some(sender => sender?.phone))
+                newAvailablePlatforms['txt'] = true
+            if (senders.some(sender => sender?.sms_number))
+                newAvailablePlatforms['rs'] = true
         }
 
-        // If selected is a team member, we need to validate the platforms based on
-        // its properties
-        if (typeof sender !== 'string') {
-            if (senderSelected[0] && typeof senderSelected[0] === 'string')
-                return
+        checkSelectedPlatform(newAvailablePlatforms)
+        setPlatforms(newAvailablePlatforms)
+    }
 
-            setPlatformsForTeamMember(sender)
+    function checkSelectedPlatform(availablePlatforms) {
+        if (platformSelected) {
+            const selectedPlatf = (() => {
+                switch (platformSelected) {
+                    case 'Twitter Dm': return 'twitter'
+                    case 'SMS/MMS': return 'rs'
+                    default: return 'txt'
+                }
+            })()
+            if (!availablePlatforms || !availablePlatforms[selectedPlatf]) {
+                setPlatformSelected(null)
+            }
         }
     }
 
     const onSenderSelected = (sender) => {
 
         console.log(sender)
-
-        validatePlatform(sender)
-
-        // const getCoachIndex = () => {
-        //     let index = -1
-
-        //     senderSelected.every((selected, i) => {
-        //         if(isSelectedCoachType(selected)) {
-        //             index = i
-        //             return false
-        //         }
-
-        //         return true
-        //     })
-
-        //     return index
-        // }
 
         if (typeof sender == 'string') {
             // console.log('sender = ' + sender)
@@ -391,36 +311,11 @@ export default function MessageCreatePage(props) {
                     setSenderSelected.put(sender, index)
 
             }
-
-            // console.log(sender)
-
-
         }
     }
 
     const onSenderRemove = (index) => {
-        console.log('Sender Remove')
-        console.log(senderSelected.length)
-
-        // If we are removing a team member from the selection, we need
-        // to reset the available platforms
-        if (typeof senderSelected[index] !== 'string') {
-            setPlatforms({ twitter: true })
-            // console.log(platformSelected)
-        } else {
-            // removing a coach typeW
-            // we need to update the platforms based on the team member selected
-            if (senderSelected.length === 2)
-                setPlatformsForTeamMember(senderSelected[1])
-
-            if (platformSelected !== 'Twitter DM')
-                setPlatformSelected(null)
-        }
-
-        let newSelection = setSenderSelected.remove(index)
-
-        if (newSelection.length === 0)
-            setPlatformSelected(null)
+        setSenderSelected.remove(index)
     }
 
     const onReceiverSelected = (selectedPrivateBoards, selectedTeamBoards, selectedContacts) => {
@@ -462,7 +357,7 @@ export default function MessageCreatePage(props) {
             tmp[type].splice(index, 1)
         }
 
-        console.log(tmp)
+        //console.log(tmp)
 
         setRecipientSelected(tmp)
     }
@@ -475,11 +370,10 @@ export default function MessageCreatePage(props) {
         setMediaRemoved('')
         setShowMediaDialog(false)
     }
-
     const onUploadMedia = (file) => {
         const media = {
             file: file,
-            owner: user.item?.id
+            owner: user.id
         }
 
         uploadMedia(media, {
@@ -805,10 +699,6 @@ export default function MessageCreatePage(props) {
         { name: 'Preview & Send', variant: 'contained', icon: SendIcon, onClick: onPreviewSendClick }
 
     ]
-
-    let platformOptions = []
-
-    // if()
 
 
     return (
