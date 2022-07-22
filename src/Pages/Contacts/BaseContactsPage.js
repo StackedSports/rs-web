@@ -69,9 +69,8 @@ export default function BaseContactsPage(props) {
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
-    //const board = useBoard(props.boardInfo?.id)
-    const gridApiRef = useGridApiRef()
 
+    const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
 
     useEffect(() => {
@@ -162,6 +161,12 @@ export default function BaseContactsPage(props) {
 
 
     let mainActions = [
+        {
+            name: 'List View | Boards View',
+            path: '/contacts/kanban',
+            icon: AccountBox,
+            variant: 'text',
+        },
         {
             name: 'Save as Board',
             icon: AccountBox,
@@ -460,18 +465,24 @@ export default function BaseContactsPage(props) {
                 </Stack>
             </Stack>
 
-            <ContactsTableServerMode
-                id={props.tableId}
-                redirectToDetails
-                contacts={contacts.items}
-                pagination={contacts.pagination}
-                loading={contacts.loading}
-                apiRef={gridApiRef}
-                columnsControl={props.columnsControl}
-                onSortModelChange={props.onSortingChange}
-                sortingMode={props.sortingMode}
-                {...contactsMultipageSelection}
-            />
+            {
+                props.kanbanView ? props.children
+                 : (
+                    <ContactsTableServerMode
+                        id={props.tableId}
+                        redirectToDetails
+                        contacts={contacts.items}
+                        pagination={contacts.pagination}
+                        loading={contacts.loading}
+                        apiRef={gridApiRef}
+                        columnsControl={props.columnsControl}
+                        onSortModelChange={props.onSortingChange}
+                        sortingMode={props.sortingMode}
+                        {...contactsMultipageSelection}
+                    />
+                )
+            }
+
 
             <CreateBoardDialog
                 onEditBoard={onEditBoard}

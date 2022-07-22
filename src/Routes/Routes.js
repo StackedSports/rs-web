@@ -124,6 +124,7 @@ export const settingsRoutes = {
 export const contactsRoutes = {
     all: '/contacts',
     board: '/contacts/board',
+    kanban: '/contacts/kanban',
     profile: '/contacts/profile'
 }
 
