@@ -43,12 +43,7 @@ const Test = () => {
     const onTopActionClick = (e) => {
         console.log('top action click')
 
-        archiveContact('wPDWyTrRvApL')
-            .then(res => {
-                console.log(res)
-
-                return getContact('wPDWyTrRvApL')
-            })
+        filterContacts(1, 10, { search: 'abxc__'})
             .then(res => {
                 console.log(res)
             })

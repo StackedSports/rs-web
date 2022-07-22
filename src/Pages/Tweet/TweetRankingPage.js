@@ -28,6 +28,8 @@ const TweetRankingPage = (props) => {
 
 	// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
 
+	// https://twitter.com/StackedSports/status/1224381203006083074?s=20&t=N9z23KWGruGddmGOPDpuTQ
+
 	const [input, setInput] = useState('')
 	const [tweetId, setTweetId] = useState(null)
 	// const [tweetDetails, setTweetDetails] = useState(null)
@@ -112,7 +114,7 @@ const TweetRankingPage = (props) => {
 
 		// const requestRef = doc(collection(db, 'orgs', orgId, 'tweet-ranking'))
 		// const requestRef = doc(db, 'orgs', orgId, 'tweet-ranking', tweetId)
-		setDoc(requestRef, { tweetId, id: tweetId, orgId })
+		setDoc(requestRef, { tweetId, id: tweetId, orgId, userRSToken: user.token })
 			.then(() => {
 				console.log('analyzes request made')
 				setAnalyzesLoading(true)
@@ -194,6 +196,7 @@ const TweetRankingPage = (props) => {
 				<SearchBar
 				  style={{
 					width: "100%",
+					maxWidth: '100%'
 					// border: '1px solid #ddd'
 					}}
 				  value={input}
