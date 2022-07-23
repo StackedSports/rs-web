@@ -101,12 +101,14 @@ const TweetDetails = (props) => {
     useEffect(() => {
         let mounted = true
         setLoadingContacts(true)
+
         const fetchContacts = async () => {
             const querySnapshotLikes = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`));
             const _contactsLikes = querySnapshotLikes.docs.map(doc => doc.data());
 
             const querySnapshotRetweets = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`));
             const _contactsRetweets = querySnapshotRetweets.docs.map(doc => doc.data());
+            
             if (mounted) {
                 setContactsLikes(_contactsLikes)
                 setContactsRetweets(_contactsRetweets)
