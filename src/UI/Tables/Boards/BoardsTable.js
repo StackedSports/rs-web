@@ -31,7 +31,6 @@ export default function BoardsTable(props) {
               pageSize={props.pagination.itemsPerPage}
               rowsPerPageOptions={[props.pagination.itemsPerPage]}
               rowCount={props.pagination.totalItems}
-              paginationMode='server'
               page={props.pagination.currentPage - 1}
               onPageChange={() => {}}
               loading={props.loading}
