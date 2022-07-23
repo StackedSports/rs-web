@@ -99,19 +99,19 @@ const TweetDetails = (props) => {
 
     useEffect(() => {
         const likesColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`)
-        const unsub = onSnapshot(likesColRef,
-            (snapshot) => {
+        const unsub = onSnapshot(likesColRef, (snapshot) => {
                 setContactsLikes(snapshot.docs.map(doc => doc.data()))
             })
+
         return () => unsub()
     }, [])
 
     useEffect(() => {
         const retweetsColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`)
-        const unsub = onSnapshot(retweetsColRef,
-            (snapshot) => {
+        const unsub = onSnapshot(retweetsColRef, (snapshot) => {
                 setContactsRetweets(snapshot.docs.map(doc => doc.data()))
             })
+            
         return () => unsub()
     }, [])
 
