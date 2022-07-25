@@ -19,15 +19,9 @@ import Test from './Pages/Test'
 // import Media from "./Pages/Media";
 // import MessageCreate from "./Pages/MessageCreate";
 // import UserProfile from "./Pages/UserProfile";
-import TweetCreate from "./Pages/TweetCreate";
 // import TeamSettings from "./Pages/TeamSettings";
 
 import NewDashboard from "./Pages/Dashboard";
-
-import TwitterStream from './components/TwitterStream/TwitterStream'
-// import MediaC from "./components/MediaComponent/Media";
-
-// import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
 import {
 	ContactsRoutes,
@@ -62,10 +56,8 @@ function App() {
 					<div className="body">
 						<Switch>
 							{/** Only Route left from old code */}
-							<Route path="/twitter-stream" exact component={TwitterStream} />
 
 							{/** New Routes */}
-							<Route path="/tweet-create" exact component={TweetCreate} />
 							<Route path='/test' component={Test} />
 							<Route path="/" exact component={Signup} />
 							<Route path={routes.contacts.path} component={ContactsRoutes} />
