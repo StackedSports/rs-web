@@ -12,7 +12,7 @@ export const KanbanWorkspace = (props) => {
                     type="COLUMN"
                 >
                     {(provided) => (
-                        <Stack direction='row' ref={provided.innerRef} {...provided.droppableProps} minHeight='100%'>
+                        <Stack direction='row' ref={provided.innerRef} {...provided.droppableProps}>
                             {props.children}
                             {provided.placeholder}
                         </Stack>

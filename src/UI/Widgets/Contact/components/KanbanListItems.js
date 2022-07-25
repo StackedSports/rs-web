@@ -11,7 +11,7 @@ export const getBackgroundColor = (isDraggingOver, isDraggingFrom,) => {
     if (isDraggingFrom) {
         return '#dadada';
     }
-    return '#fafafaaf';
+    return 'transparent';
 };
 
 const InnerContactList = ({ contacts }) => {
@@ -79,5 +79,5 @@ const Wrapper = styled(Box)`
   transition: background-color 0.2s ease, opacity 0.1s ease;
   user-select: none;
   width: 100%;
-    min-height: 250px;
+    flex:1;
 `;

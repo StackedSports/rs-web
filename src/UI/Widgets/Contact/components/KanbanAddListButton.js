@@ -14,13 +14,14 @@ export const KanbanAddListButton = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    props.onAddList(e.target.listName.value)
+    if (e.target.listName.value && e.target.listName.value !== '')
+      props.onAddList(e.target.listName.value)
     setExpanded(false)
   }
 
   return (
     <Box>
-      <Box sx={{ minHeight: '40px', width: '270px', bgcolor: '#dadada', padding: .5 }} component='form' onSubmit={onSubmit}>
+      <Box sx={{ width: '310px', bgcolor: '#dadada', padding: .5, borderRadius: 1.2 }} component='form' onSubmit={onSubmit}>
         <TextField
           name='listName'
           label={null}

@@ -10,7 +10,7 @@ export const KanbanList = ({ list, index, onAddContact }) => {
 
     const getListStyle = isDraggingOver => ({
         background: isDraggingOver ? "lightblue" : "lightgrey",
-        padding: grid,
+        //padding: grid,
         width: 275,
     });
 
@@ -20,14 +20,13 @@ export const KanbanList = ({ list, index, onAddContact }) => {
     return (
         <Draggable draggableId={title} index={index} direction="horizontal">
             {(provided, snapshot) => (
-                <Stack ref={provided.innerRef} {...provided.draggableProps} sx={{ mx: .5 }}>
-                    <Stack bgcolor={snapshot.isDragging ? '#afafaf' : '#dadada'} width='270px'>
+                <Stack ref={provided.innerRef} {...provided.draggableProps} sx={{ mx: .5 }} width='310px' flex={1}>
+                    <Stack sx={{ minHeight: '100%' }} >
                         <Stack
                             direction='row'
                             alignItems='center'
-                            height='40px'
-                            p={1}
-                            width='100%'
+                            sx={{ borderRadius: 1.2, padding: 1, width: '100%', height: '50px' }}
+                            bgcolor={snapshot.isDragging ? '#afafaf' : '#f5f6fa'}
                             isDragging={snapshot.isDragging}
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}

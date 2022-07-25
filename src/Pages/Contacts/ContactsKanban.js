@@ -77,15 +77,9 @@ export const ContactsKanban = () => {
         // insert into next
         next.contacts.splice(destination.index, 0, target);
 
-        const result = {
-            ..._lists,
-            [source.droppableId]: current,
-            [destination.droppableId]: next,
-        };
+        const result = _lists.map((item, index) => { return index === currentIndex ? current : index === next.index ? next : item });
 
-        return {
-            quoteMap: result,
-        };
+        return result;
     };
 
     function onDragEnd(result) {
@@ -124,7 +118,6 @@ export const ContactsKanban = () => {
             return;
         }
 
-
     }
 
     console.log(lists)
@@ -139,7 +132,7 @@ export const ContactsKanban = () => {
             onContactSearchClear={onContactSearchClear}
             kanbanView={true}
         >
-            <Stack direction={'row'} flex={1} spacing={.5}>
+            <Stack direction={'row'} flex={1} spacing={.5} sx={{ overflow: 'auto', overflowX: 'auto', minWidth: 0 }}>
                 <KanbanWorkspace onDragEnd={onDragEnd}>
                     {lists.map((list, index) => (
                         <KanbanList key={list.name} list={list} index={index} onAddContact={onAddContact} />
