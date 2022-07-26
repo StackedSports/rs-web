@@ -2,8 +2,6 @@ import './MessageInput.css'
 
 import { useState, useRef, useEffect } from 'react'
 
-import Grid from '@mui/material/Grid';
-import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import CloseIcon from '@mui/icons-material/Close';
 
 import {

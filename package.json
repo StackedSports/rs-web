@@ -13,8 +13,6 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
     "@mui/icons-material": "^5.8.2",
     "@mui/lab": "^5.0.0-alpha.84",
     "@mui/material": "^5.8.2",
@@ -26,6 +24,10 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.6.1",
+    "@types/react": "^17.0.47",
+    "@types/react-dom": "^18.0.6",
     "axios": "^0.21.1",
     "axios-curlirize": "^2.0.0",
     "bootstrap": "^4.5.3",
@@ -42,11 +44,8 @@
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-bootstrap": "^1.4.3",
-    "react-calendar": "^3.3.1",
     "react-chartjs-2": "^2.11.2",
-    "react-date-picker": "^8.0.6",
     "react-date-range": "^1.3.0",
-    "react-day-picker": "^7.4.8",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-inline-editing": "^1.0.10",
@@ -63,6 +62,7 @@
     "redux-persist-transform-encrypt": "^2.0.1",
     "remask": "^0.1.0-alpha.5",
     "styled-components": "^5.2.1",
+    "typescript": "^3.9.10",
     "web-vitals": "^0.2.4",
     "yup": "^0.32.11"
   },
@@ -85,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@types/styled-components": "^5.1.25",
     "file-loader": "^6.2.0",
     "react-edit-inline": "^1.0.8"
   }
