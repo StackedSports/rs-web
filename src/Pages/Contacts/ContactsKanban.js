@@ -1,8 +1,8 @@
+import { useState, useRef, useContext } from 'react'
 import { useContacts } from 'Api/ReactQuery';
-import { useState, useRef } from 'react'
 import BaseContactsPage from './BaseContactsPage';
 
-
+import { AppContext } from 'Context/AppProvider';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
@@ -11,7 +11,8 @@ import { Stack } from '@mui/material';
 
 
 export const ContactsKanban = () => {
-    const contacts = useContacts()
+    const app = useContext(AppContext);
+    const contacts = useContacts();
     const [lists, setLists] = useState([]);
     const tempContactIndex = useRef(0);
 
@@ -29,7 +30,11 @@ export const ContactsKanban = () => {
     }
 
     const onAddList = (listName) => {
-        setLists(lists => [...lists, { name: listName, contacts: [] }])
+        if (lists.find(list => list.name === listName) === undefined) {
+            setLists(lists => [...lists, { name: listName, contacts: [] }])
+        } else {
+            app.alert.setWarning(`Board ${listName} already exists, please choose a different name`)
+        }
     }
 
     const onAddContact = (listName) => {
@@ -43,6 +48,10 @@ export const ContactsKanban = () => {
         tempContactIndex.current++
     }
 
+    const onDeleteBoard = (listName) => {
+        setLists(lists => lists.filter(list => list.name !== listName))
+    }
+
     // a little function to help us with reordering the result
     const reorder = (list, startIndex, endIndex) => {
         const result = Array.from(list);
@@ -52,17 +61,15 @@ export const ContactsKanban = () => {
         return result;
     };
 
-    const reorderQuoteMap = (_lists, source, destination) => {
-
-        const current = _lists.find(item => item.name = source.droppableId);
-        const currentIndex = _lists.indexOf(current);
-        const next = _lists.find(item => item.name = destination.droppableId);
-        const target = current.contacts[source.index];
+    const reorderContactsMap = (_lists, source, destination) => {
+        const currentIndex = _lists.findIndex(item => item.name == source.droppableId);
+        const nextIndex = _lists.findIndex(item => item.name == destination.droppableId);
+        const target = _lists[currentIndex].contacts[source.index];
 
         // moving to same list
         if (source.droppableId === destination.droppableId) {
             const reordered = reorder(
-                current.contacts,
+                _lists[currentIndex].contacts,
                 source.index,
                 destination.index,
             );
@@ -73,17 +80,14 @@ export const ContactsKanban = () => {
         // moving to different list
 
         // remove from original
-        current.contats.splice(source.index, 1);
+        _lists[currentIndex].contacts.splice(source.index, 1);
         // insert into next
-        next.contacts.splice(destination.index, 0, target);
+        _lists[nextIndex].contacts.splice(destination.index, 0, target);
 
-        const result = _lists.map((item, index) => { return index === currentIndex ? current : index === next.index ? next : item });
-
-        return result;
+        return _lists
     };
 
     function onDragEnd(result) {
-        console.log(result)
         const { source, destination } = result;
 
         // dropped outside the list
@@ -113,14 +117,13 @@ export const ContactsKanban = () => {
 
         // reordering contact
         if (result.type === 'CONTACT') {
-            const result = reorderQuoteMap(lists, source, destination);
-            setLists(result)
+            const result = reorderContactsMap([...lists], source, destination);
+            setLists(result);
             return;
         }
 
     }
 
-    console.log(lists)
 
     return (
         <BaseContactsPage
@@ -135,7 +138,7 @@ export const ContactsKanban = () => {
             <Stack direction={'row'} flex={1} spacing={.5} sx={{ overflow: 'auto', overflowX: 'auto', minWidth: 0 }}>
                 <KanbanWorkspace onDragEnd={onDragEnd}>
                     {lists.map((list, index) => (
-                        <KanbanList key={list.name} list={list} index={index} onAddContact={onAddContact} />
+                        <KanbanList key={list.name} list={list} index={index} onAddContact={onAddContact} onDeleteBoard={onDeleteBoard} />
                     ))}
                 </KanbanWorkspace>
                 <KanbanAddListButton onAddList={onAddList} />

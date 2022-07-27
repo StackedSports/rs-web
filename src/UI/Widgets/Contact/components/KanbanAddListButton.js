@@ -4,11 +4,17 @@ import { Add, Close } from '@mui/icons-material'
 
 export const KanbanAddListButton = (props) => {
   const [expanded, setExpanded] = useState(false)
+  const [name, setName] = useState('')
+
+  const handleExpand = () => {
+    setExpanded(!expanded)
+    setName('')
+  }
 
   const handleAddList = (e) => {
     if (!expanded) {
       e.preventDefault()
-      setExpanded(true)
+      handleExpand()
     }
   }
 
@@ -16,7 +22,7 @@ export const KanbanAddListButton = (props) => {
     e.preventDefault()
     if (e.target.listName.value && e.target.listName.value !== '')
       props.onAddList(e.target.listName.value)
-    setExpanded(false)
+    handleExpand()
   }
 
   return (
@@ -27,8 +33,10 @@ export const KanbanAddListButton = (props) => {
           label={null}
           fullWidth
           autoFocus={expanded}
-          placeholder="enter list name"
+          placeholder="enter board name"
           size='small'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           sx={{
             mb: .5,
             display: expanded ? 'inline-flex' : 'none',
@@ -45,11 +53,11 @@ export const KanbanAddListButton = (props) => {
             sx={{ textTransform: 'none', justifyContent: 'flex-start' }}
             startIcon={<Add />}
           >
-            Add a List
+            Add a Board
           </Button>
           <IconButton
             size='small'
-            onClick={() => setExpanded(old => !old)}
+            onClick={() => handleExpand()}
             sx={{ display: expanded ? 'inline-flex' : 'none' }}
           >
             <Close />

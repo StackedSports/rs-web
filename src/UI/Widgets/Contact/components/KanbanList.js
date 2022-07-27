@@ -1,12 +1,28 @@
-import React from 'react'
-import { Box, Stack, styled, Typography, IconButton } from '@mui/material';
+import { useState } from 'react'
+import { Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { KanbanListItems } from './KanbanListItems';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-export const KanbanList = ({ list, index, onAddContact }) => {
+export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClickMoreOptions = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMoreOptions = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDeleteBoard = () => {
+        handleCloseMoreOptions();
+        onDeleteBoard(list.name)
+    }
 
     const getListStyle = isDraggingOver => ({
         background: isDraggingOver ? "lightblue" : "lightgrey",
@@ -32,11 +48,12 @@ export const KanbanList = ({ list, index, onAddContact }) => {
                             aria-label={`${title} list`}
                         >
                             <Typography variant='h6' fontWeight={600}>{title}</Typography>
+                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2 }}>{contacts.length}</Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>
                                 <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={() => onAddContact(title)} >
                                     <AddCircleOutlineRoundedIcon fontSize="inherit" />
                                 </IconButton>
-                                <IconButton size='small' sx={{ color: 'text.secondary' }}>
+                                <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={handleClickMoreOptions}>
                                     <MoreHorizIcon fontSize="inherit" />
                                 </IconButton>
                             </Stack>
@@ -48,6 +65,21 @@ export const KanbanList = ({ list, index, onAddContact }) => {
                             contacts={contacts}
                         />
                     </Stack>
+
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleCloseMoreOptions}
+                    >
+                        <MenuItem onClick={handleDeleteBoard}>
+                            <ListItemIcon>
+                                <DeleteForeverIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText>Delete Board</ListItemText>
+                        </MenuItem>
+                    </Menu>
+
                 </Stack>
             )}
         </Draggable>
