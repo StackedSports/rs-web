@@ -3,8 +3,9 @@ import { usePagination } from "Api/Pagination"
 import { useQuery, useMutation, useQueryClient } from "react-query"
 import { filterMedias, getMedias, getMedia, getMediaTypes, updateMedia, deleteMedia, uploadMedia } from "Api/Endpoints"
 import lodash from "lodash"
+import { IMedia, IMediaType } from "Interfaces"
 
-export const useMedia = (id) => {
+export const useMedia = (id: number) => {
     const reactQuery = useQuery(['media', id], () => getMedia(id), {
         select: (data) => data[0],
         enabled: !!id,
@@ -17,7 +18,7 @@ export const useMedia = (id) => {
     }
 }
 
-export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
+export const useMedias = (initialPage?: number, itemsPerPage?: number, initialFilters?: object) => {
     const [filters, setFilters] = useState(initialFilters)
     const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
     const [medias, setMedias] = useState([])
@@ -53,13 +54,13 @@ export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
         }
     }, [initialPage])
 
-    const filter = (filters) => {
+    const filter = (filters: any) => {
         pagination.getPage(1)
         setFilters(filters)
     }
 
     const clearFilter = () => {
-        setFilters(null)
+        setFilters(undefined)
         pagination.getPage(1)
     }
 
@@ -74,13 +75,13 @@ export const useMedias = (initialPage, itemsPerPage, initialFilters) => {
 }
 
 export const useMediaTypes = () => {
-    const [mediaTypes, setMediaTypes] = useState([])
+    const [mediaTypes, setMediaTypes] = useState<IMediaType[]>([])
 
     const reactQuery = useQuery(`mediaTypes`, () => getMediaTypes())
 
     useEffect(() => {
         if (reactQuery.isSuccess) {
-            const [apiMediaTypes] = reactQuery.data
+            const [apiMediaTypes]: [IMediaType[]] = reactQuery.data
             setMediaTypes(
                 apiMediaTypes.map(item => ({
                     ...item,
@@ -104,7 +105,7 @@ export const useMediaTypes = () => {
 export const useMediaMutation = () => {
     const queryClient = useQueryClient();
 
-    const update = useMutation(({ id, data }) => updateMedia(id, data),
+    const update = useMutation(({ id, data }: { id: number, data: any }) => updateMedia(id, data),
         {
             onSuccess: (data, variables, context) => {
                 queryClient.invalidateQueries('media', { active: true })
