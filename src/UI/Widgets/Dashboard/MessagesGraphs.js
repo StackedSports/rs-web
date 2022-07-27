@@ -14,14 +14,14 @@ export const MessagesGraphs = (props) => {
   const [rightGraph, setRightGraph] = useState([]);
 
   useEffect(() => {
-    if (!props.stats[leftTimeRangeIndex].loading && props.stats[leftTimeRangeIndex]?.data === null)
+    if (!props.stats[leftTimeRangeIndex].loading && props.stats[leftTimeRangeIndex]?.data === null && !props.stats[leftTimeRangeIndex]?.error)
       props.stats[leftTimeRangeIndex].fetch();
     if (props.stats[leftTimeRangeIndex]?.data && !props.stats[leftTimeRangeIndex].loading)
       setLeftGraph(props.stats[leftTimeRangeIndex].data);
   }, [props.stats, leftTimeRangeIndex]);
 
   useEffect(() => {
-    if (!props.stats[rightTimeRangeIndex].loading && props.stats[rightTimeRangeIndex]?.data === null)
+    if (!props.stats[rightTimeRangeIndex].loading && props.stats[rightTimeRangeIndex]?.data === null && !props.stats[rightTimeRangeIndex]?.error)
       props.stats[rightTimeRangeIndex].fetch();
     if (props.stats[rightTimeRangeIndex]?.data && !props.stats[rightTimeRangeIndex].loading)
       setRightGraph(props.stats[rightTimeRangeIndex].data);

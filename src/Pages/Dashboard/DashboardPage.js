@@ -142,7 +142,7 @@ export const DashboardPage = () => {
     getStats(arrayOfDates[index].start, arrayOfDates[index].end).then(([res]) => {
       setState({ data: { ...res.table }, loading: false })
     }).catch(() => {
-      setState({ data: null, loading: false })
+      setState({ data: null, loading: false, error: true })
     })
   }
 
