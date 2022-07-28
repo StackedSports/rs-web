@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions'
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -25,4 +25,7 @@ const analytics = getAnalytics(app)
 
 export const db = getFirestore(app)
 export const functions = getFunctions(app)
-connectFunctionsEmulator(functions, "localhost", 5001)
+
+
+// connectFirestoreEmulator (db, 'localhost', 8080)
+// connectFunctionsEmulator(functions, "localhost", 5001)

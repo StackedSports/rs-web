@@ -6,7 +6,7 @@ import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typogra
 import { Stack } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, orderBy, limit } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 
 import { db, functions } from 'Api/Firebase'
@@ -39,7 +39,11 @@ const TweetsPage = (props) => {
 
 	useEffect(() => {
 		const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
-            where('status', '!=', 'failed')) // , where("state", "==", "CA")
+            // where('status', '!=', 'failed'),
+            // orderBy('timestamp', 'desc'),
+            // limit(10))
+        )
+            // , where("state", "==", "CA")
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             let tweets = []
