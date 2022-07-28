@@ -1,3 +1,4 @@
+import { IPanelFilters } from "Interfaces";
 import { useEffect, useMemo } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -14,7 +15,7 @@ export default function useSearchParams() {
         }
     }, [searchParams]);
 
-    const setSearchParams = (params) => {
+    const setSearchParams = (params: Record<string, string>) => {
         const newParams = new URLSearchParams();
         if (params) {
             Object.entries(params).forEach(([key, value]) => {
@@ -36,8 +37,8 @@ export default function useSearchParams() {
         }
     }
 
-    const appendSearchParams = (key, value, redirectTo) => {
-        if ((searchParams.has(key) && searchParams.get(key).toString() == value)) return
+    const appendSearchParams = (key: string, value: string, redirectTo: string) => {
+        if ((searchParams.has(key) && searchParams.get(key) == value)) return
         const newParams = new URLSearchParams(search)
         if (value) {
             newParams.set(key, value)
@@ -53,7 +54,7 @@ export default function useSearchParams() {
         }
     }
 
-    const setFilters = (filters, redirectTo) => {
+    const setFilters = (filters, redirectTo: string) => {
         appendSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
     }
 
@@ -66,7 +67,7 @@ export default function useSearchParams() {
     }
 }
 
-export function filterObjectToQueryParams(filters) {
+export function filterObjectToQueryParams(filters: any) {
     if (!filters) return
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
@@ -83,15 +84,15 @@ export function filterObjectToQueryParams(filters) {
     return parserFilters.toString()
 }
 
-export function queryParamsToFilterObject(searchParams) {
+export function queryParamsToFilterObject(searchParams: string) {
     if (searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
-        const filterObject = {}
+        const filterObject: Record<string, IPanelFilters[]> = {}
         filtersSearchParams.forEach((string, key) => {
-            filterObject[key] = filtersSearchParams.get(key).split(';').map(item => {
+            filterObject[key] = filtersSearchParams.get(key)?.split(';').map(item => {
                 const [itemLabel, value] = item.split(':')
                 return { itemLabel: itemLabel, value: value?.includes(',') ? value.split(',') : (Number(value) || value) }
-            })
+            }) || []
         })
         return filterObject
     }

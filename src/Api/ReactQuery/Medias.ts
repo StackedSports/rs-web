@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery, useMutation, useQueryClient } from "react-query"
+import { useQuery, useMutation, useQueryClient, UseQueryResult } from "react-query"
 import { filterMedias, getMedias, getMedia, getMediaTypes, updateMedia, deleteMedia, uploadMedia } from "Api/Endpoints"
 import lodash from "lodash"
-import { IMedia, IMediaType } from "Interfaces"
+import { IMedia, IMediaType, IApiResponse, IPagination } from "Interfaces"
 
 export const useMedia = (id: number) => {
     const reactQuery = useQuery(['media', id], () => getMedia(id), {
