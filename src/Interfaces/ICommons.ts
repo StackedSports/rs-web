@@ -1,3 +1,5 @@
+import { IPagination } from "./IPagination";
+
 export interface ITwitterProfile {
     screen_name?: any;
     profile_image: string;
@@ -30,4 +32,14 @@ export interface ITeam {
 
 export interface ISettings {
     selected_columns: string[];
+}
+
+export interface IApiResponse extends Array<any | IPagination> {
+    data: any;
+    pagination: IPagination;
+}
+
+export interface IPanelFilters {
+    itemLabel: string;
+    value: any;
 }

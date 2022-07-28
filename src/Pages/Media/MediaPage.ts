@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, FC } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
@@ -12,7 +12,14 @@ import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHo
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
 
-export const MediaPage = (props) => {
+type MediaPageProps = {
+    onFilterRedirect?: string
+    filter?: (filters: any) => void
+    title?: string
+    topActionName?: string
+}
+
+export const MediaPage = (props:MediaPageProps) => {
     const searchParams = useSearchParams()
     const tags = useTags()
     const teamMembers = useTeamMembers()
@@ -67,8 +74,8 @@ export const MediaPage = (props) => {
                 path: {
                     pathname: mediaRoutes.media,
                     search: new URLSearchParams({
-                        page: 1,
-                        filters: filterObjectToQueryParams({
+                        'page': '1',
+                        'filters': filterObjectToQueryParams({
                             type: {
                                 itemLabel: item.name, value: item.id
                             }
@@ -136,29 +143,30 @@ export const MediaPage = (props) => {
 
     return (
         <MainLayout
-            title={props.title || 'Media'}
-            topActionName={props.topActionName || '+ Add Media'}
-            onTopActionClick={onTopActionClick}
-            filters={filtersOptions}
-            actions={props.actions}
-            propsPanelFilters={{
-                open: props.showPanelFilters,
-                filters: panelFiltersData,
+            title= { props.title || 'Media' }
+    topActionName = { props.topActionName || '+ Add Media' }
+    onTopActionClick = { onTopActionClick }
+    filters = { filtersOptions }
+    actions = { props.actions }
+    propsPanelFilters = {{
+        open: props.showPanelFilters,
+            filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                setFilter: props.setFilter,
-                selectedFilters: selectedFilters
-            }}
+                    setFilter: props.setFilter,
+                        selectedFilters: selectedFilters
+    }
+}
         >
-            <Divider />
+    <Divider />
 
-            {props.children}
+{ props.children }
 
-            <UploadMediaDialog
-                open={uploadDialogOpen}
-                onClose={() => setUploadDialogOpen(false)}
-            />
+<UploadMediaDialog
+                open={ uploadDialogOpen }
+onClose = {() => setUploadDialogOpen(false)}
+/>
 
-        </MainLayout>
+    < /MainLayout>
     )
 }
 
