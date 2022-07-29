@@ -437,23 +437,25 @@ export default function BaseContactsPage(props) {
                             onClear={props.onContactSearchClear}
                         />
                     </RenderIf>
-                    <PanelDropdown
-                        action={{
-                            id: 'selected-contacts-actions',
-                            name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
-                            type: 'dropdown',
-                            variant: 'contained',
-                            icon: ArrowDropDownIcon,
-                            disabled: contactsMultipageSelection.count === 0,
-                            style: { whiteSpace: "nowrap" },
-                            options: [
-                                { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                { name: 'Archive Contact', onClick: onArchiveContactClick }
-                            ]
-                        }}
-                    />
+                    <RenderIf condition={contactsMultipageSelection.count > 0}>
+                        <PanelDropdown
+                            action={{
+                                id: 'selected-contacts-actions',
+                                name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
+                                type: 'dropdown',
+                                variant: 'contained',
+                                icon: ArrowDropDownIcon,
+                                disabled: contactsMultipageSelection.count === 0,
+                                style: { whiteSpace: "nowrap" },
+                                options: [
+                                    { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                                    { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                    { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                ]
+                            }}
+                        />
+                    </RenderIf>
                     <Button
                         name="Tag"
                         variant="outlined"
