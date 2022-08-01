@@ -13,7 +13,7 @@ import Button from 'UI/Widgets/Buttons/Button';
 import { TweetRankingDialog } from 'UI/Widgets/Dialogs/TweetRankingDialog';
 import TweetDisplay from './TweetDisplay'
 import { db } from 'Api/Firebase'
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const round = (num) => {
     let m = Number((Math.abs(num) * 100).toPrecision(15))
@@ -96,27 +96,23 @@ const TweetDetails = (props) => {
     const { metrics, likes, retweets } = props.details
     const [contactsLikes, setContactsLikes] = useState([])
     const [contactsRetweets, setContactsRetweets] = useState([])
-    const [loadingContacts, setLoadingContacts] = useState(false)
 
     useEffect(() => {
-        let mounted = true
-        setLoadingContacts(true)
-        const fetchContacts = async () => {
-            const querySnapshotLikes = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`));
-            const _contactsLikes = querySnapshotLikes.docs.map(doc => doc.data());
+        const likesColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`)
+        const unsub = onSnapshot(likesColRef, (snapshot) => {
+                setContactsLikes(snapshot.docs.map(doc => doc.data()))
+            })
 
-            const querySnapshotRetweets = await getDocs(collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`));
-            const _contactsRetweets = querySnapshotRetweets.docs.map(doc => doc.data());
-            if (mounted) {
-                setContactsLikes(_contactsLikes)
-                setContactsRetweets(_contactsRetweets)
-            }
-        }
+        return () => unsub()
+    }, [])
 
-        fetchContacts().finally(() => setLoadingContacts(false))
-
-        return () => { mounted = false }
-
+    useEffect(() => {
+        const retweetsColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`)
+        const unsub = onSnapshot(retweetsColRef, (snapshot) => {
+                setContactsRetweets(snapshot.docs.map(doc => doc.data()))
+            })
+            
+        return () => unsub()
     }, [])
 
     return (
@@ -239,7 +235,6 @@ const TweetDetails = (props) => {
             <TweetRankingDialog
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
-                loading={loadingContacts}
                 contactsLikes={contactsLikes}
                 contactsRetweets={contactsRetweets}
             />

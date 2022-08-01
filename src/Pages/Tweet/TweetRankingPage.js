@@ -28,6 +28,14 @@ const TweetRankingPage = (props) => {
 
 	// https://twitter.com/StackedSports/status/1526584454629601282?s=20&t=FHrYYmUINuuLa5ypJDUwWg
 
+	// https://twitter.com/StackedSports/status/1224381203006083074?s=20&t=N9z23KWGruGddmGOPDpuTQ
+
+	// Tweet Ranking V2 tests
+	// https://twitter.com/DmawXXX/status/1552009718050263040?s=20&t=VeN45rn_2cjxDD3vFhAZcA 5 likes
+	// https://twitter.com/wilnyl/status/1552048968561041414?s=20&t=VeN45rn_2cjxDD3vFhAZcA 2k likes
+	// https://twitter.com/chongzhen_085/status/1552216451330650112?s=20&t=VeN45rn_2cjxDD3vFhAZcA 9k likes
+	// https://twitter.com/_Yuming_Li/status/1552239503858814983?s=20&t=VeN45rn_2cjxDD3vFhAZcA 5.3k likes
+
 	const [input, setInput] = useState('')
 	const [tweetId, setTweetId] = useState(null)
 	// const [tweetDetails, setTweetDetails] = useState(null)
@@ -112,7 +120,7 @@ const TweetRankingPage = (props) => {
 
 		// const requestRef = doc(collection(db, 'orgs', orgId, 'tweet-ranking'))
 		// const requestRef = doc(db, 'orgs', orgId, 'tweet-ranking', tweetId)
-		setDoc(requestRef, { tweetId, id: tweetId, orgId })
+		setDoc(requestRef, { tweetId, id: tweetId, orgId, userRSToken: user.token })
 			.then(() => {
 				console.log('analyzes request made')
 				setAnalyzesLoading(true)
@@ -194,6 +202,7 @@ const TweetRankingPage = (props) => {
 				<SearchBar
 				  style={{
 					width: "100%",
+					maxWidth: '100%'
 					// border: '1px solid #ddd'
 					}}
 				  value={input}
