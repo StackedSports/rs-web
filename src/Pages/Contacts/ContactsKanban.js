@@ -1,6 +1,7 @@
 import { useState, useRef, useContext } from 'react'
 import { useContacts } from 'Api/ReactQuery';
 import BaseContactsPage from './BaseContactsPage';
+import lodash from 'lodash';
 
 import { AppContext } from 'Context/AppProvider';
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
@@ -70,9 +71,10 @@ export const ContactsKanban = () => {
 
         const list = newLists.find(list => list.name === listName)
         if (list !== undefined) {
-            list.contacts = [...list.contacts, ...multipageSelection.selectedData]
+            list.contacts = lodash.uniqBy([...list.contacts, ...multipageSelection.selectedData], 'id')
             setLists(newLists)
         }
+        multipageSelection.clear()
     }
 
     const onCloseSelectionDialog = () => {
