@@ -76,7 +76,7 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
                             <ListItemIcon>
                                 <DeleteForeverIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Delete Board</ListItemText>
+                            <ListItemText>Delete Column</ListItemText>
                         </MenuItem>
                     </Menu>
 

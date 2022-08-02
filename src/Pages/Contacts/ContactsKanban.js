@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from 'react'
+import { useState, useRef, useContext, useEffect } from 'react'
 import { useContacts } from 'Api/ReactQuery';
 import BaseContactsPage from './BaseContactsPage';
 
@@ -9,12 +9,31 @@ import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
 import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
 import { Stack } from '@mui/material';
 
+import LoadingPanel from 'UI/Widgets/LoadingPanel'
+import RenderIf from 'UI/Widgets/RenderIf'
+import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'  
+
 
 export const ContactsKanban = () => {
     const app = useContext(AppContext);
+
+    const kanbanId = useRef('test')
     const contacts = useContacts();
+
+    const [loading, setLoading] = useState(true)
+    const [kanban, setKanban] = useState(null)
     const [lists, setLists] = useState([]);
     const tempContactIndex = useRef(0);
+
+    useEffect(() => {
+        const unsub = getKanban('test', (kanban) => {
+            console.log(kanban)
+            setKanban(kanban)
+            setLoading(false)
+        })
+
+        return () => unsub()
+    }, [])
 
     const onSendMessageClick = (selectedData) => {
         app.sendMessageToContacts(selectedData)
@@ -29,11 +48,26 @@ export const ContactsKanban = () => {
         contacts.clearFilter()
     }
 
-    const onAddList = (listName) => {
-        if (lists.find(list => list.name === listName) === undefined) {
-            setLists(lists => [...lists, { name: listName, contacts: [] }])
+    const onAddColumn = (columnName) => {
+        console.log('on Add Column')
+
+        if (!kanban.columns || kanban.columns.find(column => column.name === columnName) === undefined) {
+            console.log('column does not exist yet')
+            // setLists(lists => [...lists, { name: columnName, contacts: [] }])
+            
+            // Create new columns array
+            const newColumns = [...kanban.columns, { name: columnName, contacts: [] }]
+
+            // Update state
+            setKanban(kanban => ({
+                ...kanban,
+                columns: newColumns
+            }))
+
+            // Save to firebase
+            updateColumns(kanbanId.current, newColumns)
         } else {
-            app.alert.setWarning(`Board ${listName} already exists, please choose a different name`)
+            app.alert.setWarning(`Column ${columnName} already exists, please choose a different name`)
         }
     }
 
@@ -48,8 +82,19 @@ export const ContactsKanban = () => {
         tempContactIndex.current++
     }
 
-    const onDeleteBoard = (listName) => {
-        setLists(lists => lists.filter(list => list.name !== listName))
+    const onDeleteColumn = (columnName) => {
+        // setLists(lists => lists.filter(list => list.name !== listName))
+        setKanban(kanban => {
+            const newColumns = kanban.columns.filter(column => column.name !== columnName)
+
+            // Save to firebase
+            updateColumns(kanbanId.current, newColumns)
+
+            return {
+                ...kanban,
+                columns: newColumns
+            }
+        })
     }
 
     // a little function to help us with reordering the result
@@ -106,20 +151,33 @@ export const ContactsKanban = () => {
         // reordering column
         if (result.type === 'COLUMN') {
             const ordered = reorder(
-                lists,
+                kanban.columns,
                 source.index,
                 destination.index,
             );
 
-            setLists(ordered);
+            setKanban(kanban => ({
+                ...kanban,
+                columns: ordered
+            }))
+
+            updateColumns(kanbanId.current, ordered)
+
             return;
         }
 
         // reordering contact
         if (result.type === 'CONTACT') {
-            const result = reorderContactsMap([...lists], source, destination);
-            setLists(result);
-            return;
+            const result = reorderContactsMap([...kanban.columns], source, destination)
+
+            setKanban(kanban => ({
+                ...kanban,
+                columns: result
+            }))
+
+            updateColumns(kanbanId.current, result)
+
+            return
         }
 
     }
@@ -127,7 +185,7 @@ export const ContactsKanban = () => {
 
     return (
         <BaseContactsPage
-            title="Contacts"
+            title={loading ? `Kanban` : `Kanban "${kanban.name}"`}
             contacts={contacts}
             onSendMessage={onSendMessageClick}
             tableId="kanban-table"
@@ -135,13 +193,26 @@ export const ContactsKanban = () => {
             onContactSearchClear={onContactSearchClear}
             kanbanView={true}
         >
+            <RenderIf condition={loading}>
+                <LoadingPanel/>
+            </RenderIf>
             <Stack direction={'row'} flex={1} spacing={.5} sx={{ overflow: 'auto', overflowX: 'auto', minWidth: 0 }}>
-                <KanbanWorkspace onDragEnd={onDragEnd}>
-                    {lists.map((list, index) => (
-                        <KanbanList key={list.name} list={list} index={index} onAddContact={onAddContact} onDeleteBoard={onDeleteBoard} />
-                    ))}
-                </KanbanWorkspace>
-                <KanbanAddListButton onAddList={onAddList} />
+                <RenderIf condition={!loading && kanban && kanban.columns && Array.isArray(kanban.columns)}>
+                    <KanbanWorkspace onDragEnd={onDragEnd}>
+                        {kanban?.columns?.map((list, index) => (
+                            <KanbanList
+                            key={list.name}
+                            list={list}
+                            index={index}
+                            onAddContact={onAddContact}
+                            onDeleteBoard={onDeleteColumn}
+                            />
+                        ))}
+                    </KanbanWorkspace>
+                </RenderIf>
+                <RenderIf condition={!loading}>
+                    <KanbanAddListButton onAddList={onAddColumn} />
+                </RenderIf>
             </Stack>
         </BaseContactsPage>
     )

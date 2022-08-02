@@ -33,7 +33,7 @@ export const KanbanAddListButton = (props) => {
           label={null}
           fullWidth
           autoFocus={expanded}
-          placeholder="enter board name"
+          placeholder="Column Name"
           size='small'
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -53,7 +53,7 @@ export const KanbanAddListButton = (props) => {
             sx={{ textTransform: 'none', justifyContent: 'flex-start' }}
             startIcon={<Add />}
           >
-            Add a Board
+            Add Column
           </Button>
           <IconButton
             size='small'
