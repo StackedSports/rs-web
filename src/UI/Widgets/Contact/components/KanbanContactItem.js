@@ -2,6 +2,13 @@ import { Avatar, Box, Stack, styled, Typography } from '@mui/material';
 import React from 'react'
 import { getFullName } from 'utils/Parser';
 
+const getPositionsString = (positions) => {
+    if (positions.length == 0)
+        return '-'
+    else
+        return positions.join(' - ')
+}
+
 export const KanbanContactItem = (props) => {
     const {
         contact,
@@ -21,12 +28,12 @@ export const KanbanContactItem = (props) => {
                 <Typography fontSize={18}>{getFullName(contact)}</Typography>
             </Stack>
             <Stack direction='row' alignItems='center' gap={1} >
-                <Typography fontWeight={600}>{contact.positions.reduce((acc, position) => `${acc} - ${position}`).toUpperCase()}</Typography>
+                <Typography fontWeight={600}>{getPositionsString(contact.positions).toUpperCase()}</Typography>
                 {'|'}
-                <Typography fontWeight={600}>{contact.grad_year}</Typography>
+                <Typography fontWeight={600}>{contact.grad_year ? contact.grad_year : '-'}</Typography>
             </Stack>
-            <Typography fontSize={14} fontWeight={600}>{`${contact.high_school} HS`}</Typography>
-            <Typography fontSize={14} fontWeight={600}> {contact.state}</Typography>
+            <Typography fontSize={14} fontWeight={600}>{contact.high_school ? `${contact.high_school} HS` : ''}</Typography>
+            <Typography fontSize={14} fontWeight={600}> {contact.state ? contact.state : ''}</Typography>
         </Container>
     );
 }
