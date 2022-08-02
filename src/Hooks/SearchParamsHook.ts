@@ -1,4 +1,4 @@
-import { IPanelFilters } from "Interfaces";
+import { IPanelFilterOption, IPanelSelectedFilterOption } from "Interfaces";
 import { useEffect, useMemo } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -37,7 +37,7 @@ export default function useSearchParams() {
         }
     }
 
-    const appendSearchParams = (key: string, value: string, redirectTo: string) => {
+    const appendSearchParams = (key: string, value: string, redirectTo?: string) => {
         if ((searchParams.has(key) && searchParams.get(key) == value)) return
         const newParams = new URLSearchParams(search)
         if (value) {
@@ -54,7 +54,7 @@ export default function useSearchParams() {
         }
     }
 
-    const setFilters = (filters, redirectTo: string) => {
+    const setFilters = (filters: any, redirectTo?: string) => {
         appendSearchParams('filters', filterObjectToQueryParams(filters), redirectTo)
     }
 
@@ -67,14 +67,14 @@ export default function useSearchParams() {
     }
 }
 
-export function filterObjectToQueryParams(filters: any) {
-    if (!filters) return
+export function filterObjectToQueryParams(filters: Record<string, IPanelSelectedFilterOption[] | IPanelSelectedFilterOption>): string {
+    if (!filters) return ''
     const parserFilters = new URLSearchParams()
     Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            const reduce = value.reduce((acc, item) => {
+            const reduce: string[] = value.reduce((acc, item) => {
                 return [...acc, `${item.itemLabel}:${item.value}`]
-            }, [])
+            }, [''])
             parserFilters.append(key, reduce.join(';'))
         }
         else {
@@ -84,10 +84,10 @@ export function filterObjectToQueryParams(filters: any) {
     return parserFilters.toString()
 }
 
-export function queryParamsToFilterObject(searchParams: string) {
+export function queryParamsToFilterObject(searchParams: string | null) {
     if (searchParams) {
         const filtersSearchParams = new URLSearchParams(searchParams)
-        const filterObject: Record<string, IPanelFilters[]> = {}
+        const filterObject: Record<string, IPanelSelectedFilterOption[]> = {}
         filtersSearchParams.forEach((string, key) => {
             filterObject[key] = filtersSearchParams.get(key)?.split(';').map(item => {
                 const [itemLabel, value] = item.split(':')
