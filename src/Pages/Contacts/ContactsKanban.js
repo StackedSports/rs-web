@@ -71,14 +71,30 @@ export const ContactsKanban = () => {
         }
     }
 
-    const onAddContact = (listName) => {
+    const onAddContact = (columnName) => {
         const contact = contacts.items[tempContactIndex.current]
-        setLists(lists => {
-            const newLists = [...lists]
-            const list = newLists.find(l => l.name === listName)
-            list.contacts.push(contact)
-            return newLists
+
+        setKanban(kanban => {
+            const newColumns = [...kanban.columns]
+            const column = newColumns.find(c => c.name === columnName)
+            column.contacts.push(contact)
+
+            // Save to firebase
+            updateColumns(kanbanId.current, newColumns)
+
+            return {
+                ...kanban,
+                columns: newColumns
+            }
         })
+
+        // setLists(lists => {
+        //     const newLists = [...lists]
+        //     const list = newLists.find(l => l.name === listName)
+        //     list.contacts.push(contact)
+        //     return newLists
+        // })
+
         tempContactIndex.current++
     }
 
