@@ -7,31 +7,14 @@ import { AppContext } from 'Context/AppProvider';
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
 import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
-import { IconButton, Stack } from '@mui/material';
-import TabPanel from '@mui/lab/TabPanel';
-import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
-import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
-import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-import { Clear } from '@mui/icons-material';
-
-const getSelectionLabel = (selectionCount, clearSelection) => {
-    return (
-        <>
-            {`${selectionCount} Contacts Selected`}
-            <IconButton size='small' color='inherit' onClick={clearSelection}>
-                <Clear fontSize="inherit" />
-            </IconButton>
-        </>
-    )
-}
+import { Stack } from '@mui/material';
+import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
 export const ContactsKanban = () => {
     const app = useContext(AppContext);
     const contacts = useContacts();
     const [lists, setLists] = useState([]);
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
-    const multipageSelection = useMultiPageSelection_V2(contacts.items)
-
 
     const tempListName = useRef();
 
@@ -41,13 +24,11 @@ export const ContactsKanban = () => {
 
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
-        contacts.refetch()
     }
 
     const onContactSearchClear = () => {
         contacts.clearFilter()
     }
-
 
     const onAddList = (listName) => {
         if (lists.find(list => list.name === listName) === undefined) {
@@ -62,7 +43,7 @@ export const ContactsKanban = () => {
         tempListName.current = listName
     }
 
-    const onSelectionConfirm = () => {
+    const onSelectionConfirm = (selectedData) => {
         setShowContactSelectDialog(false)
         const listName = tempListName.current
         if (!listName) return
@@ -71,15 +52,13 @@ export const ContactsKanban = () => {
 
         const list = newLists.find(list => list.name === listName)
         if (list !== undefined) {
-            list.contacts = lodash.uniqBy([...list.contacts, ...multipageSelection.selectedData], 'id')
+            list.contacts = lodash.uniqBy([...list.contacts, ...selectedData], 'id')
             setLists(newLists)
         }
-        multipageSelection.clear()
     }
 
     const onCloseSelectionDialog = () => {
         setShowContactSelectDialog(false)
-        multipageSelection.clear()
         onContactSearchClear()
         tempListName.current = null
     }
@@ -180,26 +159,14 @@ export const ContactsKanban = () => {
                 <KanbanAddListButton onAddList={onAddList} />
             </Stack>
 
-            <SelectDialogTab
+            <ContactsSelectDialog
                 open={showContactSelectDialog}
                 onClose={onCloseSelectionDialog}
-                tabs={[{ id: '0', label: 'Contacts' }]}
-                onConfirmSelection={onSelectionConfirm}
+                onSelectionConfirm={onSelectionConfirm}
+                contacts={contacts}
                 onSearch={onContactSearch}
                 onClearSearch={onContactSearchClear}
-                selectionLabel={getSelectionLabel(multipageSelection.count, multipageSelection.clear)}
-            >
-                <TabPanel value={'0'} sx={{ py: 1 }} >
-                    <ContactsTableServerMode
-                        mini
-                        contacts={contacts.items}
-                        pagination={contacts.pagination}
-                        loading={contacts.loading}
-                        {...multipageSelection}
-                    />
-                </TabPanel>
-
-            </SelectDialogTab>
+            />
 
         </BaseContactsPage>
     )
