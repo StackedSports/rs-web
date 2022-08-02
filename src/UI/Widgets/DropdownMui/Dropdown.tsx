@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
 import lodash from "lodash";
 import {
     Box,
@@ -17,18 +17,37 @@ import {
 } from "@mui/material";
 import { Search, KeyboardArrowDown } from "@mui/icons-material";
 import RenderIf from "../RenderIf";
+import { ObjectWithArray, ObjectWithId } from "Interfaces";
+
+type option = ObjectWithId[] | ObjectWithArray;
+
+interface DropdownProps {
+    options?: option;
+    type?: "icon";
+    label: string;
+    icon?: React.ReactNode;
+    loading?: boolean;
+    keepOpen?: boolean;
+    onSearch?: (value: string) => void;
+    onClick: (value: any) => void;
+    getOptionLabel: string | ((option: ObjectWithId) => string);
+    getOptionValue?: string | number | ((option: ObjectWithId) => string);
+    [key: string]: any;
+}
 
 
+export const Dropdown: React.FC<DropdownProps> = (props) => {
 
-export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen,...restOfProps }) => {
-    const buttonRef = useRef(null);
+    const { type, icon, label, options, loading, onSearch, onClick, getOptionLabel, getOptionValue, keepOpen, ...restOfProps } = props
+
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const [buttonWidth, setButtonWidth] = useState(0);
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [searchText, setSearchText] = useState('');
-    const debouncedSearch = useMemo(() => debounce(onSearch, 400), [onSearch]);
+    const debouncedSearch = useMemo(() => onSearch && debounce(onSearch, 400), [onSearch]);
 
     useEffect(() => {
-        if (onSearch)
+        if (debouncedSearch)
             debouncedSearch(searchText)
     }, [searchText])
 
@@ -37,7 +56,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
             setButtonWidth(buttonRef.current.offsetWidth);
     }, [])
 
-    const handleToggle = (event) => {
+    const handleToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
 
@@ -46,7 +65,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
         setSearchText('');
     };
 
-    const handleListKeyDown = (event) => {
+    const handleListKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
         if (event.key === 'Tab') {
             event.preventDefault();
             handleClose();
@@ -55,9 +74,11 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
         }
     }
 
-    const handleClickOption = (option) => {
-        // console.log("option clicked", option)
-        onClick(option);
+    const handleClickOption = (option: any) => {
+        if (getOptionValue)
+            onClick(getOptionValue instanceof Function ? getOptionValue(option) : getOptionValue);
+        else
+            onClick(option);
         if (!keepOpen)
             handleClose();
     }
@@ -128,31 +149,30 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                             <RenderIf condition={loading}>
                                 <ListSubheader>Loading...</ListSubheader>
                             </RenderIf>
-                            <RenderIf condition={!loading && (!options || options?.length == 0)}>
+                            <RenderIf condition={!loading && !options}>
                                 <MenuItem disabled>
                                     No results found
                                 </MenuItem>
                             </RenderIf>
 
-
                             {// if options is array of objects
-                                Array.isArray(options) ? options?.map((option, i) => (
+                                Array.isArray(options) ? options.map((option, i) => (
                                     <MenuItem key={option.id || i} onClick={() => handleClickOption(option)} >
                                         <ListItemText
-                                            primary={getOptionLabel ? getOptionLabel(option) : option}
+                                            primary={getOptionLabel ? getOptionLabel instanceof Function ? getOptionLabel(option) : getOptionLabel : option}
                                             primaryTypographyProps={{ noWrap: true }}
                                         />
                                     </MenuItem>
                                 ))
                                     :
                                     // if options is an object with array will creat subheader to each key
-                                    Object.keys(options).map((key, index) => (
+                                    options && Object.keys(options).map((key, index) => (
                                         [
                                             <ListSubheader sx={{ fontWeight: 'bold', textTransform: 'capitalize' }} >{key.replace('_', ' ')}</ListSubheader>,
-                                            Array.isArray(options[key]) && options[key]?.map((option, i) => (
+                                            options[key].map((option, i) => (
                                                 <MenuItem key={option.id || i} onClick={() => handleClickOption(option)}>
                                                     <ListItemText
-                                                        primary={getOptionLabel ? getOptionLabel(option) : option}
+                                                        primary={getOptionLabel ? getOptionLabel instanceof Function ? getOptionLabel(option) : getOptionLabel : option}
                                                         primaryTypographyProps={{ noWrap: true }}
                                                     />
                                                 </MenuItem>
