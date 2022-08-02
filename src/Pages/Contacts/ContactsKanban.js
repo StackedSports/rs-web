@@ -1,9 +1,9 @@
 import { useState, useRef, useContext, useEffect } from 'react'
 import { useContacts } from 'Api/ReactQuery';
 import BaseContactsPage from './BaseContactsPage';
+import lodash from 'lodash';
 
 import { AppContext } from 'Context/AppProvider';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
 import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
@@ -13,6 +13,7 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'  
 
+import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
 export const ContactsKanban = () => {
     const app = useContext(AppContext);
@@ -23,7 +24,9 @@ export const ContactsKanban = () => {
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
     const [lists, setLists] = useState([]);
-    const tempContactIndex = useRef(0);
+    const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
+
+    const tempColumnName = useRef();
 
     useEffect(() => {
         const unsub = getKanban('test', (kanban) => {
@@ -41,7 +44,6 @@ export const ContactsKanban = () => {
 
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
-        contacts.refetch()
     }
 
     const onContactSearchClear = () => {
@@ -72,30 +74,39 @@ export const ContactsKanban = () => {
     }
 
     const onAddContact = (columnName) => {
-        const contact = contacts.items[tempContactIndex.current]
+        setShowContactSelectDialog(true)
+        tempColumnName.current = columnName
+    }
 
-        setKanban(kanban => {
-            const newColumns = [...kanban.columns]
-            const column = newColumns.find(c => c.name === columnName)
-            column.contacts.push(contact)
+    const onSelectionConfirm = (selectedData) => {
+        setShowContactSelectDialog(false)
 
-            // Save to firebase
-            updateColumns(kanbanId.current, newColumns)
+        const listName = tempColumnName.current
 
-            return {
-                ...kanban,
-                columns: newColumns
-            }
-        })
+        if (!listName) 
+            return
 
-        // setLists(lists => {
-        //     const newLists = [...lists]
-        //     const list = newLists.find(l => l.name === listName)
-        //     list.contacts.push(contact)
-        //     return newLists
-        // })
+        const newColumns = Object.assign([], kanban.columns)
+        const column = newColumns.find(list => list.name === listName)
 
-        tempContactIndex.current++
+        if(column === undefined)
+            return
+
+        column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
+
+        setKanban(kanban => ({
+            ...kanban,
+            columns: newColumns
+        }))
+
+        // Save to firebase
+        updateColumns(kanbanId.current, newColumns)
+    }
+
+    const onCloseSelectionDialog = () => {
+        setShowContactSelectDialog(false)
+        onContactSearchClear()
+        tempColumnName.current = null
     }
 
     const onDeleteColumn = (columnName) => {
@@ -230,6 +241,16 @@ export const ContactsKanban = () => {
                     <KanbanAddListButton onAddList={onAddColumn} />
                 </RenderIf>
             </Stack>
+
+            <ContactsSelectDialog
+                open={showContactSelectDialog}
+                onClose={onCloseSelectionDialog}
+                onSelectionConfirm={onSelectionConfirm}
+                contacts={contacts}
+                onSearch={onContactSearch}
+                onClearSearch={onContactSearchClear}
+            />
+
         </BaseContactsPage>
     )
 }
