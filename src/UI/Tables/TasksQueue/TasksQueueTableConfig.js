@@ -1,4 +1,4 @@
-import { getFullName, formatDateWithoutUTC } from "utils/Parser"
+import { getFullName, formatDateWithoutUTC, formatDate } from "utils/Parser"
 import { format } from "date-fns"
 import { Link } from 'react-router-dom'
 import { messageRoutes } from 'Routes/Routes';
@@ -17,7 +17,8 @@ const formatRecipientsStatuses = (recipient_count) => {
 const SendTime = {
     field: 'send_at',
     headerName: 'Send Time',
-    valueGetter: (params) => params.row?.send_at ? format(formatDateWithoutUTC(params.row.send_at), 'Pp') : '',
+    valueGetter: (params) => params.row?.first_sent_at ? formatDate(params.row.first_sent_at, 'medium', 'short') : formatDate(params.row.send_at, 'medium', 'short'),
+    // valueGetter: (params) => params.row?.send_at ? format(formatDateWithoutUTC(params.row.send_at), 'Pp') : '',
     flex: 1
 }
 const Sender = {
