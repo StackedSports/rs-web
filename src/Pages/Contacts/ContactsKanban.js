@@ -259,8 +259,9 @@ export const ContactsKanban = () => {
             contacts={contacts}
             onSendMessage={onSendMessageClick}
             tableId="kanban-table"
-            onContactSearch={onContactSearch}
-            onContactSearchClear={onContactSearchClear}
+            hideTag
+            // onContactSearch={onContactSearch}
+            // onContactSearchClear={onContactSearchClear}
             kanbanView={true}
         >
             <RenderIf condition={loading}>
