@@ -75,11 +75,11 @@ export default function SelectDialogTab(props) {
             </Stack>
             <Stack flex={1}
               direction='row'
-              justify='flex-end'
+              justifyContent='flex-end'
               alignItems='center'
             >
               <RenderIf condition={!props.tabs[tabIndex]?.hideSearch}>
-                <SearchBar style={{ marginLeft: 20 }}
+                <SearchBar
                   placeholder={`Search ${props.tabs[tabIndex].label}`}
                   onSearch={(search) => props.onSearch(search, tabIndex)}
                   onClear={() => props.onClearSearch(tabIndex)}

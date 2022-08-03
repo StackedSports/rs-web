@@ -6,6 +6,7 @@
     border-radius: 5px;
     padding: 20px 30px;
     position: relative;
+    min-width: 0;
     /* max-width: 1200px; */
 }
 

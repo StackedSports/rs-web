@@ -18,12 +18,12 @@ export default function ErrorPanel(props) {
           justifyContent="center"
           >
             <Stack mt={5} alignItems="center">
-                <span style={{...styles.span, marginBottom: 16 }}>
+                {/* <span style={{...styles.span, marginBottom: 16 }}>
                     Sorry, something bad happened :(
                 </span>
                 <span style={{...styles.span, marginBottom: 60}}>
                     When trying to access your message, we got the following error:
-                </span>
+                </span> */}
                 <h1 style={{ fontWeight: 'bold', textAlign: 'center', color: '#bbb' }}>{props.title}</h1>
                 <span style={{...styles.span, fontSize: 26, color: '#bbb', maxWidth: 400 }}>
                     {props.body}
