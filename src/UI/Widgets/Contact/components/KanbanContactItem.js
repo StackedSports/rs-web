@@ -1,5 +1,9 @@
-import { Avatar, Box, Stack, styled, Typography } from '@mui/material';
-import React from 'react'
+import { useState } from 'react'
+import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText  } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+
+import RenderIf from 'UI/Widgets/RenderIf'
 import { getFullName } from 'utils/Parser';
 
 const getPositionsString = (positions) => {
@@ -16,16 +20,54 @@ export const KanbanContactItem = (props) => {
         provided,
     } = props;
 
+    const [isHovering, setIsHovering] = useState(false)
+
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null)
+    const isMoreOptionsOpen = Boolean(menuAnchorEl)
+ 
+    const onMouseEnter = (e) => {
+        console.log('enter')
+        setIsHovering(true)
+    }
+
+    const onMouseLeave = (e) => {
+        console.log('leave')
+        setIsHovering(false)
+        setMenuAnchorEl(null)
+    } 
+
+    const onClickMoreOptions = (e) => {
+        setMenuAnchorEl(e.currentTarget)
+    }
+
+    const onCloseMoreOptions = (e) => {
+        setMenuAnchorEl(null)
+    }
+
+    const onRemoveContactClick = (e) => {
+        if(props.onRemoveContact)
+            props.onRemoveContact(contact)
+    }
+
     return (
         <Container
             isDragging={isDragging}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
         >
             <Stack direction='row' alignItems='center' gap={2} >
                 <Avatar src={contact.twitter_profile?.profile_image} alt={getFullName(contact)} />
                 <Typography fontSize={18}>{getFullName(contact)}</Typography>
+                <RenderIf condition={isHovering}>
+                    <Stack flex={1} alignItems="flex-end">
+                        <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={onClickMoreOptions}>
+                            <MoreHorizIcon fontSize="inherit" />
+                        </IconButton>
+                    </Stack>
+                </RenderIf>
             </Stack>
             <Stack direction='row' alignItems='center' gap={1} >
                 <Typography fontWeight={600}>{getPositionsString(contact.positions).toUpperCase()}</Typography>
@@ -34,6 +76,22 @@ export const KanbanContactItem = (props) => {
             </Stack>
             <Typography fontSize={14} fontWeight={600}>{contact.high_school ? `${contact.high_school} HS` : ''}</Typography>
             <Typography fontSize={14} fontWeight={600}> {contact.state ? contact.state : ''}</Typography>
+        
+        
+            <Menu
+                id="kanban-item-menu"
+                anchorEl={menuAnchorEl}
+                open={isMoreOptionsOpen}
+                onClose={onCloseMoreOptions}
+            >
+                <MenuItem onClick={onRemoveContactClick} 
+                onMouseLeave={onMouseLeave}>
+                    <ListItemIcon>
+                        <DeleteForeverIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Remove</ListItemText>
+                </MenuItem>
+            </Menu>
         </Container>
     );
 }

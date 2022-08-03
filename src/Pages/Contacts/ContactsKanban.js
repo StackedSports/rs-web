@@ -1,5 +1,6 @@
-import { useState, useRef, useContext, useEffect } from 'react'
+import { useState, useRef, useContext, useEffect, useMemo } from 'react'
 import { useContacts } from 'Api/ReactQuery';
+import { useParams } from 'react-router-dom'
 import BaseContactsPage from './BaseContactsPage';
 import lodash from 'lodash';
 
@@ -10,15 +11,16 @@ import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
 import { Stack } from '@mui/material';
 
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
+import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
 import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'  
 
 import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
 export const ContactsKanban = () => {
+    const { id: kanbanId } = useParams()
     const app = useContext(AppContext);
 
-    const kanbanId = useRef('test')
     const contacts = useContacts();
 
     const [loading, setLoading] = useState(true)
@@ -29,14 +31,18 @@ export const ContactsKanban = () => {
     const tempColumnName = useRef();
 
     useEffect(() => {
-        const unsub = getKanban('test', (kanban) => {
+        if(!kanbanId)
+            return
+
+        const unsub = getKanban(kanbanId, (kanban) => {
             console.log(kanban)
+
             setKanban(kanban)
             setLoading(false)
         })
 
         return () => unsub()
-    }, [])
+    }, [kanbanId])
 
     const onSendMessageClick = (selectedData) => {
         app.sendMessageToContacts(selectedData)
@@ -58,7 +64,7 @@ export const ContactsKanban = () => {
             // setLists(lists => [...lists, { name: columnName, contacts: [] }])
             
             // Create new columns array
-            const newColumns = [...kanban.columns, { name: columnName, contacts: [] }]
+            const newColumns = [...kanban.columns, { id: Date.now(), name: columnName, contacts: [] }]
 
             // Update state
             setKanban(kanban => ({
@@ -67,7 +73,7 @@ export const ContactsKanban = () => {
             }))
 
             // Save to firebase
-            updateColumns(kanbanId.current, newColumns)
+            updateColumns(kanbanId, newColumns)
         } else {
             app.alert.setWarning(`Column ${columnName} already exists, please choose a different name`)
         }
@@ -76,6 +82,44 @@ export const ContactsKanban = () => {
     const onAddContact = (columnName) => {
         setShowContactSelectDialog(true)
         tempColumnName.current = columnName
+    }
+
+    const onRemoveContact = (contact, listId) => {
+        const newColumns = Object.assign([], kanban.columns)
+        const column = newColumns.find(list => list.id === listId)
+
+        if(column === undefined)
+            return
+
+        // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
+        column.contacts = column.contacts.filter(c => c.id != contact.id)
+
+        setKanban(kanban => ({
+            ...kanban,
+            columns: newColumns
+        }))
+
+        // Save to firebase
+        updateColumns(kanbanId, newColumns)
+    }
+
+    const onColumnNameChange = (newColumnName, listId) => {
+        const newColumns = Object.assign([], kanban.columns)
+        const column = newColumns.find(list => list.id === listId)
+
+        if(column === undefined)
+            return
+
+        // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
+        column.name = newColumnName
+
+        setKanban(kanban => ({
+            ...kanban,
+            columns: newColumns
+        }))
+
+        // Save to firebase
+        updateColumns(kanbanId, newColumns)
     }
 
     const onSelectionConfirm = (selectedData) => {
@@ -100,7 +144,7 @@ export const ContactsKanban = () => {
         }))
 
         // Save to firebase
-        updateColumns(kanbanId.current, newColumns)
+        updateColumns(kanbanId, newColumns)
     }
 
     const onCloseSelectionDialog = () => {
@@ -115,7 +159,7 @@ export const ContactsKanban = () => {
             const newColumns = kanban.columns.filter(column => column.name !== columnName)
 
             // Save to firebase
-            updateColumns(kanbanId.current, newColumns)
+            updateColumns(kanbanId, newColumns)
 
             return {
                 ...kanban,
@@ -188,7 +232,7 @@ export const ContactsKanban = () => {
                 columns: ordered
             }))
 
-            updateColumns(kanbanId.current, ordered)
+            updateColumns(kanbanId, ordered)
 
             return;
         }
@@ -202,17 +246,16 @@ export const ContactsKanban = () => {
                 columns: result
             }))
 
-            updateColumns(kanbanId.current, result)
+            updateColumns(kanbanId, result)
 
             return
         }
 
     }
 
-
     return (
         <BaseContactsPage
-            title={loading ? `Kanban` : `Kanban "${kanban.name}"`}
+            title={loading ? `Kanban` : `Kanban: ${kanban?.name || 'undefined'}`}
             contacts={contacts}
             onSendMessage={onSendMessageClick}
             tableId="kanban-table"
@@ -222,6 +265,12 @@ export const ContactsKanban = () => {
         >
             <RenderIf condition={loading}>
                 <LoadingPanel/>
+            </RenderIf>
+            <RenderIf condition={!loading && !kanban}>
+                <ErrorPanel
+                    title="Kanban Not Found"
+                    body="The Kanban with the specified id does not exist"
+                />
             </RenderIf>
             <Stack direction={'row'} flex={1} spacing={.5} sx={{ overflow: 'auto', overflowX: 'auto', minWidth: 0 }}>
                 <RenderIf condition={!loading && kanban && kanban.columns && Array.isArray(kanban.columns)}>
@@ -233,11 +282,13 @@ export const ContactsKanban = () => {
                             index={index}
                             onAddContact={onAddContact}
                             onDeleteBoard={onDeleteColumn}
+                            onRemoveContact={(contact) => onRemoveContact(contact, list.id)}
+                            onNameChange={(name) => onColumnNameChange(name, list.id)}
                             />
                         ))}
                     </KanbanWorkspace>
                 </RenderIf>
-                <RenderIf condition={!loading}>
+                <RenderIf condition={!loading && kanban}>
                     <KanbanAddListButton onAddList={onAddColumn} />
                 </RenderIf>
             </Stack>

@@ -10,7 +10,8 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
+import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog'
+import CreateKanbanDialog from 'UI/Widgets/Dialogs/CreateKanbanDialog'
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
 import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
@@ -23,7 +24,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
 import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, useTags, usePositions } from 'Api/ReactQuery';
-
+import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
 import {
     addTagsToContactsWithNewTags,
     archiveContacts,
@@ -51,6 +52,8 @@ export default function BaseContactsPage(props) {
     const [privateBoards, setPrivateBoards] = useState([])
     const [teamBoards, setTeamBoards] = useState([])
 
+    const [isCreateKanbanDialogOpen, setIsCreateKanbanDialogOpen] = useState(false)
+
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
@@ -69,6 +72,7 @@ export default function BaseContactsPage(props) {
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
+    const kanbans = useKanbans()
 
     const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
@@ -161,12 +165,12 @@ export default function BaseContactsPage(props) {
 
 
     let mainActions = [
-        {
-            name: 'List View | Boards View',
-            path: '/contacts/kanban',
-            icon: AccountBox,
-            variant: 'text',
-        },
+        // {
+        //     name: 'List View | Boards View',
+        //     path: '/contacts/kanban',
+        //     icon: AccountBox,
+        //     variant: 'text',
+        // },
         {
             name: 'Save as Board',
             icon: AccountBox,
@@ -192,6 +196,12 @@ export default function BaseContactsPage(props) {
             id: '0',
             name: 'All Contacts',
             path: contactsRoutes.all,
+        },
+        {
+            id: 'kanbans',
+            name: 'Team Kanbans',
+            items: kanbans.items?.map(kanban => ({ id: kanban.id, name: kanban.name, path: `${contactsRoutes.kanban}/${kanban.id}`})),
+            button: { label: '+ New Kanban', onClick: () => setIsCreateKanbanDialogOpen(true) } 
         },
         { // Category
             id: '1',
@@ -484,6 +494,12 @@ export default function BaseContactsPage(props) {
                     />
                 )
             }
+
+            <CreateKanbanDialog
+                open={isCreateKanbanDialogOpen}
+                onClose={() => setIsCreateKanbanDialogOpen(false)}
+                onSuccess={() => setIsCreateKanbanDialogOpen(false)}
+            />
 
 
             <CreateBoardDialog

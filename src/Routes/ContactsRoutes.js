@@ -21,7 +21,7 @@ const ContactsRoutes = (props) => (
     />
     <Route
       exact
-      path={`${contactsRoutes.kanban}`}
+      path={`${contactsRoutes.kanban}/:id`}
       component={ContactsKanban}
     />
     <Route

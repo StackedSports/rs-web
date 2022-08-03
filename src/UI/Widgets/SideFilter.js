@@ -44,6 +44,11 @@ function Category(props) {
                 <ArrowForwardIosIcon className={iconClass} />
             </div>
             <div className={contentClass}>
+            {props.button && (
+                    <p onClick={(e) => props.button.onClick(e)}>
+                      {props.button.label}
+                    </p>
+                )}
                 {props.items.map((item, index) => {
                     if (item.path)
                         return (
@@ -60,6 +65,7 @@ function Category(props) {
                             </p>
                         )
                 })}
+                
             </div>
         </div>
     )
@@ -79,6 +85,7 @@ export default function SideFilter(props) {
                     <Category key={category.id}
                       title={category.name}
                       items={category.items}
+                      button={category.button}
                       onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
                       path={category.path}
                     />

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, TextField } from '@mui/material';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
@@ -7,10 +7,17 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { KanbanListItems } from './KanbanListItems';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
+import Button from 'UI/Widgets/Buttons/Button'
+
+export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    const [nameInputAnchorEl, setNameInputAnchorEl] = useState(null)
+    const isNameInputMenuOpen = Boolean(nameInputAnchorEl)
+
+    const [nameInput, setNameInput] = useState(list.name)
 
     const handleClickMoreOptions = (event) => {
         setAnchorEl(event.currentTarget);
@@ -22,6 +29,30 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
     const handleDeleteBoard = () => {
         handleCloseMoreOptions();
         onDeleteBoard(list.name)
+    }
+
+    const onNameClick = (e) => {
+        setNameInputAnchorEl(e.currentTarget)
+    }
+
+    const onCloseNameEdit = (e) => {
+        setNameInputAnchorEl(null)
+    }
+
+    const onNameInputChange = (e) => {
+        setNameInput(e.target.value)
+    }
+
+    const onNameInputKeyPress = (e) => {
+        console.log(e.key)
+
+        if(e.key === 'Enter' && onNameChange)
+            onNameChange(nameInput)
+    }
+
+    const onSaveNameClick = (e) => {
+        if(onNameChange)
+            onNameChange(nameInput)
     }
 
     const getListStyle = isDraggingOver => ({
@@ -47,7 +78,7 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}
                         >
-                            <Typography variant='h6' fontWeight={600}>{title}</Typography>
+                            <Typography variant='h6' fontWeight={600} onClick={onNameClick}>{title}</Typography>
                             <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2 }}>{contacts.length}</Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>
                                 <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={() => onAddContact(title)} >
@@ -63,8 +94,30 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard }) => {
                             listId={title}
                             listType="CONTACT"
                             contacts={contacts}
+                            onRemoveContact={onRemoveContact}
                         />
                     </Stack>
+
+                    <Menu
+                        id="name-edit-menu"
+                        anchorEl={nameInputAnchorEl}
+                        open={isNameInputMenuOpen}
+                        onClose={onCloseNameEdit}
+                    >
+                        <Stack direction="row" pr={1} pl={1}>
+                            <TextField
+                                value={nameInput}
+                                placeholder="Name"
+                                onChange={onNameInputChange}
+                                onKeyPress={onNameInputKeyPress}
+                            />
+                            <Button
+                                name="Done"
+                                variant="contained"
+                                onClick={onSaveNameClick}
+                            />
+                        </Stack>
+                    </Menu>
 
                     <Menu
                         id="basic-menu"

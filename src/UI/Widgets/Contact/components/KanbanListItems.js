@@ -14,7 +14,7 @@ export const getBackgroundColor = (isDraggingOver, isDraggingFrom,) => {
     return 'transparent';
 };
 
-const InnerContactList = ({ contacts }) => {
+const InnerContactList = ({ contacts, ...props }) => {
     return contacts.map((contact, index) => (
         <Draggable key={contact.id} draggableId={contact.id} index={index}>
             {(
@@ -26,6 +26,7 @@ const InnerContactList = ({ contacts }) => {
                     contact={contact}
                     isDragging={dragSnapshot.isDragging}
                     provided={dragProvided}
+                    onRemoveContact={props.onRemoveContact}
                 />
             )}
         </Draggable>
@@ -39,6 +40,7 @@ export const KanbanListItems = (props) => {
         listType,
         contacts,
         style,
+        onRemoveContact
     } = props;
 
     return (
@@ -59,7 +61,7 @@ export const KanbanListItems = (props) => {
                     {...dropProvided.droppableProps}
                     ref={dropProvided.innerRef}
                 >
-                    <InnerContactList contacts={contacts} />
+                    <InnerContactList contacts={contacts} onRemoveContact={onRemoveContact}/>
                     {dropProvided.placeholder}
                 </Wrapper>
             )}
