@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 import { useQueryClient } from 'react-query'
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import SendIcon from '@mui/icons-material/Send'
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
@@ -424,6 +425,7 @@ const MessageDetailsPage = (props) => {
 
         if (message.item.status === 'In Progress' || message.item.status === 'Pending') {
             actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
+            actions.push({ name: 'Edit', onClick: onEditMessageClick, variant: 'contained', icon: ModeEditIcon })
         }
 
         return actions
