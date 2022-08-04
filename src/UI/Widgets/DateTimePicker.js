@@ -4,14 +4,15 @@ import { useState, useRef } from 'react'
 import {
     Grid,
     Dialog,
+    TextField,
+    Stack
 } from '@mui/material'
 
-import TextField from '@mui/material/TextField';
-import AdapterMoment from '@mui/lab/AdapterMoment';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import StaticDatePicker from '@mui/lab/StaticDatePicker';
-import StaticTimePicker from '@mui/lab/StaticTimePicker';
-import moment from "moment";
+import { DesktopTimePicker, StaticDatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import enLocale from 'date-fns/locale/en-US';
+import { isValid } from 'date-fns';
 
 import { Divider } from 'UI'
 
@@ -20,13 +21,13 @@ import { deconstructDate } from 'utils/Parser'
 const NumberInput = (props) => {
     return (
         <input
-          type='number'
-          name={props.name}
-          min={props.min}
-          max={props.max}
-          maxLength={props.maxLength}
-          value={props.value}
-          onChange={props.onChange}
+            type='number'
+            name={props.name}
+            min={props.min}
+            max={props.max}
+            maxLength={props.maxLength}
+            value={props.value}
+            onChange={props.onChange}
         />
     )
 }
@@ -38,12 +39,11 @@ export default function DateTimePicker(props) {
     const [asap, setAsap] = useState(true)
 
     const onTimeChange = (time) => {
-        console.log(time['_d'])
-        console.log(date)
+        //console.log(date)
         now.current = new Date()
-        setDate(time['_d'])
+        setDate(time)
         setAsap(false)
-        
+
     }
 
     const onAsapClick = (e) => {
@@ -53,122 +53,125 @@ export default function DateTimePicker(props) {
     }
 
     const onSave = (e) => {
-        props.onSave(asap ? 'ASAP' : date)
+        let _date = isValid(date) ? date : now.current
+        _date = _date < now.current ? now.current : _date
+        onAsapClick()
+        props.onSave(asap ? 'ASAP' : _date)
+    }
+
+    const onClose = () => {
+        !isValid(date) && onAsapClick()
+        props.onClose()
     }
 
     return (
         <Dialog
-          open={props.open}
-          maxWidth='md'
-          fullWidth={true}
-          onClose={props.onClose}
-          scroll={"body"}
-          PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" }}}
+            open={props.open}
+            maxWidth='md'
+            fullWidth={true}
+            onClose={props.onClose}
+            scroll={"body"}
+            PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" } }}
         >
             <Grid className='DateTimePicker'>
-                <Grid className='Header'>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
+
+                    <Grid className='Header'>
+                        <Grid
+                            container
+                            direction='row'
+                            justify='flex-start'
+                            alignItems='center'
+                        >
+                            <h2>SELECT DATE & TIME</h2>
+                        </Grid>
+                        <Grid
+                            container
+                            direction='row'
+                            justify='flex-end'
+                            alignItems='center'
+                        >
+                            <p>
+                                {asap ?
+                                    'ASAP'
+                                    : date && date.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' })
+                                }
+                            </p>
+                        </Grid>
+                    </Grid>
                     <Grid
                         container
                         direction='row'
-                        justify='flex-start'
-                        alignItems='center'
+                        sx={{ pt: 3 }}
                     >
-                        <h2>SELECT DATE & TIME</h2>
-                    </Grid>
-                    <Grid
-                      container
-                      direction='row'
-                      justify='flex-end'
-                      alignItems='center'
-                    >
-                        <p>
-                            {asap ? 
-                                'ASAP'
-                            :   date.toLocaleString('en-US', { dateStyle: 'full' , timeStyle: 'short'})
-                            }
-                        </p>
-                    </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction='row'
-                >
-                    <Grid item md={6} xs={12}
-                      container
-                      justify='center'
-                      alignItems='center'
-                      style={{ paddingTop: 50 }}
-                    >
-                        {/* <Calendar
+                        <Grid item md={6} xs={12}
+                            container
+                            justifyContent={'center'}
+                            alignItems='center'
+                        >
+                            {/* <Calendar
                           onChange={onCalendarChange}
                           value={date}
                         /> */}
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
                             <StaticDatePicker className='MuiCalendarPicker'
                                 displayStaticWrapperAs="desktop"
-                                // openTo="year"
-                                minDate={moment(now.current)}
+                                showToolbar
+                                disablePast
                                 value={date}
                                 onChange={onTimeChange}
                                 renderInput={(params) => <TextField {...params} />}
                             />
-                        </LocalizationProvider>
-                    </Grid>
-                    <Grid item md={6} xs={12}
-                      container
-                      justify='center'
-                      alignItems='center'
-                    >
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
-                            <StaticTimePicker
-                                ampm
-                                minTime={moment(now.current)}
-                                // orientation="landscape"
-                                // openTo="minutes"
+                        </Grid>
+                        <Grid item md={6} xs={12}
+                            container
+                            justifyContent={'center'}
+                            alignItems='center'
+                        >
+                            <DesktopTimePicker
                                 value={date}
                                 onChange={onTimeChange}
                                 renderInput={(params) => <TextField {...params} />}
                             />
-                        </LocalizationProvider>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid
-                  container
-                  direction='row'
-                  alignItems='center'
-                  justify='flex-end'
-                  style={{ paddingRight: 16 }}
-                >
-                    <button
-                      className={asap ? 'Action' : 'Action Outline'}
-                      onClick={onAsapClick}
+                    <Grid
+                        container
+                        direction='row'
+                        alignItems='center'
+                        justify='flex-end'
+                        style={{ paddingRight: 16 }}
                     >
-                        ASAP
-                    </button>
-                </Grid>
-                
-                <Divider/>
-                <Grid
-                  container
-                  direction='row'
-                  alignItems='center'
-                  justify='flex-end'
-                  style={{ paddingBottom: 16, paddingRight: 16 }}
-                >
-                    <button
-                      className='Cancel'
-                      onClick={props.onClose}
+                        <button
+                            className={asap ? 'Action' : 'Action Outline'}
+                            onClick={onAsapClick}
+                        >
+                            ASAP
+                        </button>
+                    </Grid>
+
+                    <Divider />
+                    <Stack
+                        direction='row'
+                        alignItems='center'
+                        justifyContent={'flex-end'}
+                        style={{ paddingBottom: 16, paddingRight: 16 }}
                     >
-                        Cancel
-                    </button>
-                    
-                    <button
-                      className='Action Bold'
-                      onClick={onSave}
-                    >
-                        SAVE
-                    </button>
-                </Grid>
+                        <button
+                            className='Cancel'
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            className='Action Bold'
+                            onClick={onSave}
+                        >
+                            SAVE
+                        </button>
+                    </Stack>
+
+                </LocalizationProvider>
             </Grid>
         </Dialog>
     )

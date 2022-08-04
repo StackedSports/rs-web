@@ -1,12 +1,14 @@
 .Panel {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
     background-color: white;
     border-radius: 5px;
     padding: 20px 30px;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    min-width: 0;
+    /* min-width: 0; */
     /* max-width: 1200px; */
 }
 
@@ -14,7 +16,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #fff;
     border-radius: 5px;
     position: relative;
     /* max-width: 1200px; */
@@ -25,7 +27,8 @@
     flex-direction: row;
     align-items: center;
     /* margin-bottom: 10px; */
-    /* background-color: #999; */
+    background-color: white;
+    padding-top: 20px;
 }
 
 .Panel .Content {

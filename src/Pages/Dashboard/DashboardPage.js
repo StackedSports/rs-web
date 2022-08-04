@@ -1,5 +1,5 @@
 import { useContext, useState, useCallback, useEffect, useMemo } from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Box } from '@mui/material';
 import { format, startOfQuarter, endOfQuarter, subMonths, startOfYear, endOfYear, subYears, startOfMonth, endOfMonth, subDays } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ export const DashboardPage = () => {
   const [lastQuarterStats, setLastQuarterStates] = useState({ data: null, loading: false });
   const [lastYearStats, setLastYearStates] = useState({ data: null, loading: false });
   const [last30DaysStats, setLast30DaysStats] = useState({ data: null, loading: false });
-   const stats = useStats(format(startOfMonth(new Date()), 'yyyy-MM-dd'),format(endOfMonth(new Date()), 'yyyy-MM-dd'));
+  const stats = useStats(format(startOfMonth(new Date()), 'yyyy-MM-dd'), format(endOfMonth(new Date()), 'yyyy-MM-dd'));
 
   // first fetch stats for this month when component is mounted
   useEffect(() => {
@@ -196,7 +196,7 @@ export const DashboardPage = () => {
   }, [monthlyStats, last30DaysStats, quarterlyStats, yearlyStats, lastMonthStats, lastQuarterStats, lastYearStats]);
 
   const onTopActionClick = () => {
-     history.push("messages/create");
+    history.push("messages/create");
   }
 
   return (
@@ -204,14 +204,14 @@ export const DashboardPage = () => {
       topActionName="+ New"
       onTopActionClick={onTopActionClick}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ pb: 2 }}>
         <Grid item xs={12} lg={8} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Typography variant="h5" fontWeight='bold'>Welcome Back, {/*getFullName(user)*/ user.first_name} </Typography>
           <TeamQueue />
           <MessagesGraphs stats={statsData} />
         </Grid>
 
-        <Grid item xs={12} lg={4} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Grid container item xs={12} lg={4} direction='column' gap={3}  >
           <PersonalScore user={user} stats={monthlyStats} />
           <StackUp stats={statsData} />
         </Grid>

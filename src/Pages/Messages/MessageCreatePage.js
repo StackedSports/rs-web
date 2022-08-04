@@ -798,9 +798,8 @@ export default function MessageCreatePage(props) {
                 textPlaceholders={textPlaceholders}
                 value={textMessage}
                 onChange={onTextAreaChange}
+                style={{ marginBottom: 50 }}
             />
-
-            <div style={{ marginBottom: 50 }} />
         </BaseMessagePage>
     )
 }
