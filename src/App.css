@@ -176,8 +176,7 @@ select-search {
   overflow: hidden;
 }
 
-.select-search:not(.is-loading):not(.select-search--multiple)
-  .select-search__value::after {
+.select-search:not(.is-loading):not(.select-search--multiple) .select-search__value::after {
   transform: rotate(45deg);
   border-right: 1px solid #000;
   border-bottom: 1px solid #000;
@@ -229,6 +228,8 @@ select-search {
 
 .body {
   font-family: ProximaNovaRegular;
+  min-height: 100vh;
+  display: flex;
 }
 
 .Toastify__progress-bar--default {
@@ -524,22 +525,6 @@ select-search {
   border-radius: 0px !important;
   border: 3px solid transparent !important;
 }
-
-.card {
-  border: 3px solid transparent !important;
-  /* height: 56px !important; */
-}
-
-.hoverHighlight:hover {
-  /* border: 1px solid #3871da !important; */
-}
-.focusHighlight:focus {
-  /* border: 1px solid #5c5e62 !important; */
-}
-
-.MuiCheckbox-colorPrimary.Mui-checked {
-  /* color: #3871da !important; */
-}
 button:focus {
   outline: none;
   border: none;
@@ -556,16 +541,7 @@ button:focus {
   color: #f2f2f2 !important;
   background: #3871da !important;
 }
-#simple-tabpanel-1 {
-  width: 100%;
-}
-#simple-tabpanel-0 {
-  width: 100%;
-}
-#simple-tabpanel-2 {
-  width: 100%;
-}
 
-a{
+a {
   text-decoration: none;
 }

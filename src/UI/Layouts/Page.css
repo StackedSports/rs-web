@@ -1,44 +1,31 @@
 .Page {
     /* position: relative; */
     width: 100%;
-    min-height: 100vh;
-    /* max-height: 100vh; */
+    min-height: 0;
+    height: 100vh;
     background-color: rgb(233, 234, 239);
-    /* background-color: #999; */
-    display: flex;
-    flex: 1;
-    flex-direction: column;
     transition: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .Page .Content {
-    /* position: relative; */
-    /* top: 70px;
-    left: 0;
-    right: 0;
-    min-height: calc(100vh - 70px); */
-    /* for some reason content is being push down by Sidbar's height.
-        removing Sidebar resolves the issue
-    */
-    margin-top: calc(-100vh + 70px);
-    margin-left: 60px;
-    max-width: calc(100vw - 60px);
-    padding: 16px;
+    position: relative;
+    margin-left: 0;
+    padding: 10px;
     transition: all 300ms cubic-bezier(1, 0, 0, 1);
     display: flex;
     flex-direction: row;
-    flex: 1;
-    /* background-color: rgb(233, 234, 239); */
-    /* background-color: #777; */
+    flex: 1 0 0;
+    overflow-y: auto;
+    max-height: 100vh;
+    margin-bottom: 8px;
 }
 
 @media screen and (min-width: 1000px) {
-    .Page {
-        /* padding-left: 270px; */
-    }
-
     .Page .Content {
-        left: 60px;
-        padding: 20px;
+        padding-right: 16px;
+        margin-left: 60px;
     }
 }

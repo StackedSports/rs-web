@@ -13,7 +13,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import BackIcon from "images/back.png";
 import DrawerIcon from "images/drawer_contact.png";
-import { Tooltip, Box } from '@mui/material';
+import { Tooltip, Box, Divider } from '@mui/material';
 
 export const PanelDropdown = ({ action, header }) => {
 
@@ -31,8 +31,6 @@ export const PanelDropdown = ({ action, header }) => {
             />
         )
     }
-
-    //console.log('ok 2')
 
     const content = () => (
         <Dropdown.List style={{ alignItems: 'flex-end' }}>
@@ -117,7 +115,7 @@ export default function Panel(props) {
     return (
         <Box className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} sx={props.sx} >
             {!props.hideHeader &&
-                <div style={{ marginBottom: 10 }}>
+                <div style={{ marginBottom: 10, position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1000 }}>
                     <div className='Header'>
                         {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick} />}
                         {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick} />}
