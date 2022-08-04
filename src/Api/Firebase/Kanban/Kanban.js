@@ -40,8 +40,8 @@ export const useKanban = (id) => {
     const [kanban, setKanban] = useState(null)
 
     useEffect(() => {
-        const unsub = getKanban(id, (kanbans => {
-            setKanban(kanbans)
+        const unsub = getKanban(id, (kanban => {
+            setKanban(kanban)
             setIsLoading(false)
         }))
 
@@ -82,6 +82,7 @@ export const getKanbans = (listener) => {
 
 export const getKanban = (id, listener) => {
     const user = getRSUser()
+    console.log(user)
 
     const kanbanRef = doc(db, 'orgs', user.team.org.id, 'kanbans', id)
     
