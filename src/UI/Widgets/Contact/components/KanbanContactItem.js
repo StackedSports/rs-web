@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText  } from '@mui/material';
+import { useState, useContext } from 'react'
+import { AppContext } from 'Context/AppProvider'
+import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import SendIcon from '@mui/icons-material/Send'
 
 import RenderIf from 'UI/Widgets/RenderIf'
 import { getFullName } from 'utils/Parser';
@@ -21,20 +23,19 @@ export const KanbanContactItem = (props) => {
     } = props;
 
     const [isHovering, setIsHovering] = useState(false)
+    const app = useContext(AppContext)
 
     const [menuAnchorEl, setMenuAnchorEl] = useState(null)
     const isMoreOptionsOpen = Boolean(menuAnchorEl)
- 
+
     const onMouseEnter = (e) => {
-        console.log('enter')
         setIsHovering(true)
     }
-
+    
     const onMouseLeave = (e) => {
-        console.log('leave')
         setIsHovering(false)
         setMenuAnchorEl(null)
-    } 
+    }
 
     const onClickMoreOptions = (e) => {
         setMenuAnchorEl(e.currentTarget)
@@ -45,7 +46,7 @@ export const KanbanContactItem = (props) => {
     }
 
     const onRemoveContactClick = (e) => {
-        if(props.onRemoveContact)
+        if (props.onRemoveContact)
             props.onRemoveContact(contact)
     }
 
@@ -76,20 +77,32 @@ export const KanbanContactItem = (props) => {
             </Stack>
             <Typography fontSize={14} fontWeight={600}>{contact.high_school ? `${contact.high_school} HS` : ''}</Typography>
             <Typography fontSize={14} fontWeight={600}> {contact.state ? contact.state : ''}</Typography>
-        
-        
+
+
             <Menu
                 id="kanban-item-menu"
                 anchorEl={menuAnchorEl}
                 open={isMoreOptionsOpen}
                 onClose={onCloseMoreOptions}
+                MenuListProps={{
+                    onMouseLeave: onCloseMoreOptions
+                }}
             >
-                <MenuItem onClick={onRemoveContactClick} 
-                onMouseLeave={onMouseLeave}>
+                <MenuItem
+                    onClick={onRemoveContactClick}
+                >
                     <ListItemIcon>
                         <DeleteForeverIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Remove</ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => app.sendMessageToContacts([contact])}
+                >
+                    <ListItemIcon>
+                        <SendIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Send Message</ListItemText>
                 </MenuItem>
             </Menu>
         </Container>
@@ -101,8 +114,6 @@ const Container = styled(Box)((props) => `
   border: 1px solid transparent;
   background-color: ${props.isDragging ? '#dadada' : '#ffff'};
   border-color: ${props.isDragging ? '#afafaf' : '#dadada'};
-  box-shadow: ${({ isDragging }) =>
-        isDragging ? `2px 2px 1px #f0f` : 'none'};
   box-sizing: border-box;
   padding: 12px;
   margin-bottom: 4px;

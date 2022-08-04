@@ -23,7 +23,6 @@ import {
     createMessage,
     updateMessage,
 } from 'Api/Endpoints'
-import { updateContact } from 'ApiHelper'
 
 import {
     coachTypes,
@@ -417,8 +416,6 @@ export default function MessageCreatePage(props) {
     }
 
     const onPreviewSendClick = () => {
-        console.log('preview and send')
-
         onCreateMessage('preview')
     }
 

@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, TextField } from '@mui/material';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { useState, useContext } from 'react'
+import { Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, TextField } from '@mui/material';
+import { Draggable } from 'react-beautiful-dnd';
 
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import SendIcon from '@mui/icons-material/Send'
 import { KanbanListItems } from './KanbanListItems';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Button from 'UI/Widgets/Buttons/Button'
 
-export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange }) => {
-
+export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange, onSendMessage }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -18,6 +18,9 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
     const isNameInputMenuOpen = Boolean(nameInputAnchorEl)
 
     const [nameInput, setNameInput] = useState(list.name)
+
+    const title = list.name;
+    const contacts = list.contacts;
 
     const handleClickMoreOptions = (event) => {
         setAnchorEl(event.currentTarget);
@@ -46,12 +49,12 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
     const onNameInputKeyPress = (e) => {
         console.log(e.key)
 
-        if(e.key === 'Enter' && onNameChange)
+        if (e.key === 'Enter' && onNameChange)
             onNameChange(nameInput)
     }
 
     const onSaveNameClick = (e) => {
-        if(onNameChange)
+        if (onNameChange)
             onNameChange(nameInput)
     }
 
@@ -60,9 +63,6 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
         //padding: grid,
         width: 275,
     });
-
-    const title = list.name;
-    const contacts = list.contacts;
 
     return (
         <Draggable draggableId={title} index={index} direction="horizontal">
@@ -130,6 +130,12 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
                                 <DeleteForeverIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>Delete Column</ListItemText>
+                        </MenuItem>
+                        <MenuItem onClick={() => onSendMessage(contacts)}>
+                            <ListItemIcon>
+                                <SendIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText>Send Message To Column</ListItemText>
                         </MenuItem>
                     </Menu>
 
