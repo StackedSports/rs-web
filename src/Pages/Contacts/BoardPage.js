@@ -35,10 +35,10 @@ const parseCriteriaNames = (criteria) => {
 export default function BoardPage(props) {
     const app = useContext(AppContext);
     const { boardId } = useParams();
-    const TABLE_ID = `board-${boardId}`
+    const TABLE_ID = `board-perPage`
 
     const searchParams = useSearchParams();
-    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`${TABLE_ID}-perPage`, 50)
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(TABLE_ID, 50)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
     const board = useBoard(boardId)

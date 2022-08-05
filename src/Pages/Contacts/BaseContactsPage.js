@@ -101,7 +101,9 @@ export default function BaseContactsPage(props) {
             return
 
         const privateBoards = boards.items.filter(board => !board.is_shared)
+        privateBoards.sort((a, b) => a.name.localeCompare(b.name))
         const teamBoards = boards.items.filter(board => board.is_shared)
+        teamBoards.sort((a, b) => a.name.localeCompare(b.name))
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
@@ -200,8 +202,8 @@ export default function BaseContactsPage(props) {
         {
             id: 'kanbans',
             name: 'Team Kanbans',
-            items: kanbans.items?.map(kanban => ({ id: kanban.id, name: kanban.name, path: `${contactsRoutes.kanban}/${kanban.id}`})),
-            button: { label: '+ New Kanban', onClick: () => setIsCreateKanbanDialogOpen(true) } 
+            items: kanbans.items?.map(kanban => ({ id: kanban.id, name: kanban.name, path: `${contactsRoutes.kanban}/${kanban.id}` })),
+            button: { label: '+ New Kanban', onClick: () => setIsCreateKanbanDialogOpen(true) }
         },
         { // Category
             id: '1',
@@ -483,20 +485,20 @@ export default function BaseContactsPage(props) {
 
             {
                 props.kanbanView ? props.children
-                 : (
-                    <ContactsTableServerMode
-                        id={props.tableId}
-                        redirectToDetails
-                        contacts={contacts.items}
-                        pagination={contacts.pagination}
-                        loading={contacts.loading}
-                        apiRef={gridApiRef}
-                        columnsControl={props.columnsControl}
-                        onSortModelChange={props.onSortingChange}
-                        sortingMode={props.sortingMode}
-                        {...contactsMultipageSelection}
-                    />
-                )
+                    : (
+                        <ContactsTableServerMode
+                            id={props.tableId}
+                            redirectToDetails
+                            contacts={contacts.items}
+                            pagination={contacts.pagination}
+                            loading={contacts.loading}
+                            apiRef={gridApiRef}
+                            columnsControl={props.columnsControl}
+                            onSortModelChange={props.onSortingChange}
+                            sortingMode={props.sortingMode}
+                            {...contactsMultipageSelection}
+                        />
+                    )
             }
 
             <CreateKanbanDialog
