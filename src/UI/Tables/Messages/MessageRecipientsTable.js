@@ -63,8 +63,8 @@ const MessageRecipientsTable = (props) => {
             setCarouselIndex(contacts.indexOf(row))
     }
 
-    return (    
-        <Stack spacing={2} style={{ width: '100%', height: 600, position: 'relative' }}>
+    return (
+        <Stack spacing={2} sx={{ flex: 1, minHeight: '500px', position: 'relative' }}>
             {props.loading && <LoadingOverlay />}
             <DataGridPro sx={{ m: 0 }}
                 rows={contacts}

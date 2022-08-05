@@ -15,6 +15,7 @@ const fullName = {
 const boardName = {
     field: 'filterName',
     headerName: 'Board Name',
+    minWidth:180,
     maxWidth:250,
     flex: 1,
     resizable: true,
@@ -31,6 +32,7 @@ const sender = {
 const twitterName = {
     field: 'twitter_profile',
     headerName: 'Twitter',
+    minWidth:180,
     maxWidth:250,
     flex: 1,
     // resizable: true,

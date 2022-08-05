@@ -107,7 +107,7 @@ export const useMediaMutation = () => {
     const update = useMutation(({ id, data }) => updateMedia(id, data),
         {
             onSuccess: (data, variables, context) => {
-                queryClient.invalidateQueries('media', { active: true })
+                queryClient.invalidateQueries(['media', variables.id], { active: true })
                 queryClient.invalidateQueries('medias')
             },
         })

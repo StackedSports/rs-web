@@ -18,11 +18,7 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import useArray from 'Hooks/ArrayHooks'
 
-import { useTeamMembers, useSnippets, useMediaMutation, useTextPlaceholders } from 'Api/ReactQuery'
-import {
-    createMessage,
-    updateMessage,
-} from 'Api/Endpoints'
+import { useTeamMembers, useSnippets, useMediaMutation, useTextPlaceholders, useMessageMutation } from 'Api/ReactQuery'
 
 import {
     coachTypes,
@@ -49,6 +45,7 @@ export default function MessageCreatePage(props) {
     const { control } = useParams()
     const teamMembers = useTeamMembers()
     const { create: uploadMedia } = useMediaMutation()
+    const { create: createMessage, update: updateMessage } = useMessageMutation()
 
     const [loading, setLoading] = useState(false)
 
@@ -598,13 +595,11 @@ export default function MessageCreatePage(props) {
 
         setLoading(true)
 
-        // const endpoint = props.edit ? updateMessage : createMessage
-
         if (props.edit) {
             console.log('Update Message')
             // return
-            updateMessage(props.messageId, messageData)
-                .then(result => {
+            updateMessage({ id: props.messageId, data: messageData }, {
+                onSuccess: (result) => {
                     console.log(result)
                     let message = result.data
 
@@ -614,22 +609,23 @@ export default function MessageCreatePage(props) {
                         setRedirect(`${messageRoutes.details}/${props.messageId}`)
 
                     // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
-                })
-                .catch(error => {
+                },
+                onError: (error) => {
                     console.log(error)
 
                     if (save)
                         showErrorMessage('We could not update your message')
                     else
                         showErrorMessage('Something went wrong. We could not update your message')
-                })
-                .finally(() => setLoading(false))
+                },
+                onSettled: () => setLoading(false)
+            })
 
         } else {
             console.log('Create Message')
             // return
-            createMessage(messageData)
-                .then(result => {
+            createMessage(messageData, {
+                onSuccess: (result) => {
                     console.log(result)
                     let message = result.data
 
@@ -639,16 +635,17 @@ export default function MessageCreatePage(props) {
                         setRedirect(`${messageRoutes.details}/${message.id}`)
 
                     // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
-                })
-                .catch(error => {
+                },
+                onError: (error) => {
                     console.log(error)
 
                     if (save)
                         showErrorMessage('We could not save your message')
                     else
                         showErrorMessage('Something went wrong. We could not create your message')
-                })
-                .finally(() => setLoading(false))
+                },
+                onSettled: () => setLoading(false)
+            })
         }
     }
 
