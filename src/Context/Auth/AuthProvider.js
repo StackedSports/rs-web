@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, createContext, useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Redirect } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 
 import { AppContext } from 'Context/AppProvider'
@@ -17,18 +17,25 @@ const AuthProvider = (props) => {
     const auth = getAuth();
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         // console.log(app.location)
 
+        setIsLoading(true)
+
         // save current location so when the user signs in
         // we redirect them to that location
-        if (!user && app.location.pathname !== '/')
+        if (!user && app.location.pathname !== '/') {
             app.redirect('/')
+        }
         else if (user && app.location.pathname === '/') {
             // console.log('hey')
             app.redirect('/dashboard')
         }
+
+        
+        setIsLoading(false)
 
     }, [user, app.location])
 
@@ -111,7 +118,7 @@ const AuthProvider = (props) => {
 
     return (
         <AuthContext.Provider value={utils}>
-            {props.children}
+            {!user && app.location.pathname !== '/' ? <Redirect to="/" /> : props.children}
         </AuthContext.Provider>
     )
 }
