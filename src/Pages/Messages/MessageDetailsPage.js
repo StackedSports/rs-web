@@ -17,6 +17,8 @@ import MessageRecipientsTable from 'UI/Tables/Messages/MessageRecipientsTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { AppContext } from 'Context/AppProvider'
+import { ConfirmDialogContext } from 'Context/ConfirmDialogProvider'
+
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 
 import { useMessage, useMessageRecipients } from 'Api/ReactQuery';
@@ -40,6 +42,7 @@ import { objectNotNull } from 'utils/Validation'
 
 const MessageDetailsPage = (props) => {
     const app = useContext(AppContext)
+    const confirmDialog = useContext(ConfirmDialogContext)
 
     const messageId = useRef(props.match.params.id)
     const [loading, setLoading] = useState(false)
@@ -175,33 +178,35 @@ const MessageDetailsPage = (props) => {
     const onSendMessageClick = () => {
         console.log('send')
 
-        // return
-
-        sendMessage(message.item)
-            .then(res => {
-                console.log(res)
-                alert.setSuccess('Message queued successfully!')
-            })
-            .catch(error => {
-                console.log(error)
-                alert.setError('Failed to send the message.')
-            })
-            .finally(() => refreshMessage())
+        confirmDialog.show('Send Message', 'Are you sure you want to send this message right now?', () => {
+            sendMessage(message.item)
+                .then(res => {
+                    console.log(res)
+                    alert.setSuccess('Message queued successfully!')
+                })
+                .catch(error => {
+                    console.log(error)
+                    alert.setError('Failed to send the message.')
+                })
+                .finally(() => refreshMessage())
+        })
     }
 
     const onScheduleMessageClick = () => {
         console.log('schedule')
 
-        sendMessage(message.item)
-            .then(res => {
-                console.log(res)
-                alert.setSuccess('Message scheduled successfully!')
-            })
-            .catch(error => {
-                console.log(error)
-                alert.setError('Failed to schedule message.')
-            })
-            .finally(() => refreshMessage())
+        confirmDialog.show('Schedule Message', `Are you sure you want to schedule this message? `, () => {
+            sendMessage(message.item)
+                .then(res => {
+                    console.log(res)
+                    alert.setSuccess('Message scheduled successfully!')
+                })
+                .catch(error => {
+                    console.log(error)
+                    alert.setError('Failed to schedule message.')
+                })
+                .finally(() => refreshMessage())
+        })
     }
 
     const onRemoveRecipients = () => {
@@ -424,8 +429,8 @@ const MessageDetailsPage = (props) => {
         }
 
         if (message.item.status === 'In Progress' || message.item.status === 'Pending') {
-            actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
             actions.push({ name: 'Edit', onClick: onEditMessageClick, variant: 'contained', icon: ModeEditIcon })
+            actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
         }
 
         return actions

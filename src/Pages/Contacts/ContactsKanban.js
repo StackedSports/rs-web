@@ -257,11 +257,8 @@ export const ContactsKanban = () => {
         <BaseContactsPage
             title={loading ? `Kanban` : `Kanban: ${kanban?.name || 'undefined'}`}
             contacts={contacts}
-            onSendMessage={onSendMessageClick}
             tableId="kanban-table"
             hideTag
-            // onContactSearch={onContactSearch}
-            // onContactSearchClear={onContactSearchClear}
             kanbanView={true}
         >
             <RenderIf condition={loading}>
@@ -278,13 +275,14 @@ export const ContactsKanban = () => {
                     <KanbanWorkspace onDragEnd={onDragEnd}>
                         {kanban?.columns?.map((list, index) => (
                             <KanbanList
-                            key={list.name}
-                            list={list}
-                            index={index}
-                            onAddContact={onAddContact}
-                            onDeleteBoard={onDeleteColumn}
-                            onRemoveContact={(contact) => onRemoveContact(contact, list.id)}
-                            onNameChange={(name) => onColumnNameChange(name, list.id)}
+                                key={list.name}
+                                list={list}
+                                index={index}
+                                onAddContact={onAddContact}
+                                onDeleteBoard={onDeleteColumn}
+                                onRemoveContact={(contact) => onRemoveContact(contact, list.id)}
+                                onNameChange={(name) => onColumnNameChange(name, list.id)}
+                                onSendMessage={onSendMessageClick}
                             />
                         ))}
                     </KanbanWorkspace>
