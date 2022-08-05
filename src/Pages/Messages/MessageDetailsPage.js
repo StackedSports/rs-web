@@ -429,8 +429,8 @@ const MessageDetailsPage = (props) => {
         }
 
         if (message.item.status === 'In Progress' || message.item.status === 'Pending') {
-            actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
             actions.push({ name: 'Edit', onClick: onEditMessageClick, variant: 'contained', icon: ModeEditIcon })
+            actions.push({ name: 'Cancel Message', variant: 'contained', icon: CancelScheduleSendIcon, onClick: onCancelMessage })
         }
 
         return actions

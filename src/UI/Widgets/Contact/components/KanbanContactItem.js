@@ -88,22 +88,19 @@ export const KanbanContactItem = (props) => {
                     onMouseLeave: onCloseMoreOptions
                 }}
             >
-                <MenuItem
-                    onClick={onRemoveContactClick}
-                >
-                    <ListItemIcon>
-                        <DeleteForeverIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Remove</ListItemText>
-                </MenuItem>
-                <MenuItem
-                    onClick={() => app.sendMessageToContacts([contact])}
-                >
+                <MenuItem onClick={() => app.sendMessageToContacts([contact])}>
                     <ListItemIcon>
                         <SendIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Send Message</ListItemText>
                 </MenuItem>
+                <MenuItem onClick={onRemoveContactClick}>
+                    <ListItemIcon>
+                        <DeleteForeverIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Remove</ListItemText>
+                </MenuItem>
+                
             </Menu>
         </Container>
     );

@@ -125,18 +125,19 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
                         open={open}
                         onClose={handleCloseMoreOptions}
                     >
-                        <MenuItem onClick={handleDeleteBoard}>
-                            <ListItemIcon>
-                                <DeleteForeverIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>Delete Column</ListItemText>
-                        </MenuItem>
                         <MenuItem onClick={() => onSendMessage(contacts)}>
                             <ListItemIcon>
                                 <SendIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>Send Message To Column</ListItemText>
                         </MenuItem>
+                        <MenuItem onClick={handleDeleteBoard}>
+                            <ListItemIcon>
+                                <DeleteForeverIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText>Delete Column</ListItemText>
+                        </MenuItem>
+                        
                     </Menu>
 
                 </Stack>
