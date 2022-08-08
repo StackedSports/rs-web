@@ -10,17 +10,21 @@ export const ConfirmDialogProvider = ({ children }) => {
     const [message, setMessage] = useState("");
     const [title, setTitle] = useState("");
     const [onSubmit, setOnSubmit] = useState(undefined);
-    
+    const [changePrimaryButton, setChangePrimaryButton] = useState(false);
+
     const close = () => setOnSubmit(undefined);
 
-    const show = (title,message, onSubmit) => {
+    const show = (title, message, onSubmit, changePrimaryButton) => {
         setMessage(message);
         setTitle(title);
-        setOnSubmit(()=>onSubmit);
+        setOnSubmit(() => onSubmit);
+        if (changePrimaryButton) {
+            setChangePrimaryButton(true);
+        }
     };
 
     return (
-        <ConfirmDialogContext.Provider value={{title, message, onSubmit, close, show }}>
+        <ConfirmDialogContext.Provider value={{ title, message, onSubmit,changePrimaryButton, close, show }}>
             {children}
             <ConfirmDialog />
         </ConfirmDialogContext.Provider>
