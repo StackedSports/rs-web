@@ -55,14 +55,17 @@ export interface IApiResponse extends Array<any | IPagination> {
 export interface IPanelFilters {
     [key: string]: {
         label: string;
+        options: IPanelFilterOption[];
         optionsLabel?: string | ((option: IPanelFilterOption) => string);
         optionsValue: (option: IPanelFilterOption) => any;
-        type?: 'date' | 'hidden'; // default is dropdown
-        disableFuture?: boolean; // for type date
-        format?: string; // for type date
-        options?: IPanelFilterOption[];
+        selected?: IPanelSelectedFilterOption[];
         isUnique?: boolean;
-        onSearch?: (search: string) => void;
+        type?: 'date' | 'hidden';
+        //for type date
+        dateFormat?: string;
+        disableFuture?: boolean;
+        // for default type dropdown
+        onSearch?: (value: string) => void;
         loading?: boolean;
     }
 }

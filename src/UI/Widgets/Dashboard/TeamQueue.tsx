@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import { Typography, Stack, Box } from "@mui/material"
 import { Tune, Event, KeyboardArrowDown } from '@mui/icons-material';
@@ -15,11 +16,14 @@ import PanelFilters from "../PanelFilters";
 import { AuthContext } from "Context/Auth/AuthProvider";
 import { useMessages, useTeamMembers } from "Api/ReactQuery";
 import { getFullName } from "utils/Parser";
+import { IPanelFilters, IPanelSelectedFilterOption } from "Interfaces";
+
+type filterType = "message_status" | "sender" | "platform" | "send_at_dates" | "includeTeam"
 
 export const TeamQueue = () => {
   const [loadedRows, setLoadedRows] = useState([]);
   const filterChanged = useRef(false);
-  const lastFilter = useRef({});
+  const lastFilter = useRef<Partial<Record<filterType, any>>>({});
   const firstRender = useRef(true);
   const [openFilters, setOpenFilters] = useState(false);
   const [dates, setDates] = useState([null, null]);
@@ -27,11 +31,11 @@ export const TeamQueue = () => {
   const senders = useTeamMembers();
   const history = useHistory();
 
-  const getBaseFilter = () => {
+  const getBaseFilter = (): Partial<Record<filterType, any>> => {
     if (dates.includes(null))
       return ({
         message_status: ['Pending', 'In Progress'],
-        includeTeam: user?.role === "Admin"
+        includeTeam: user?.role === "Admin",
       });
     else
       return ({
@@ -84,20 +88,22 @@ export const TeamQueue = () => {
     setOpenFilters(!openFilters);
   }
 
-  const filtersOptions = {
+  const filtersOptions: IPanelFilters = {
     message_status: {
       label: "Status",
       options: [
-        { value: "Pending", label: "Scheduled" },
-        { value: "In Progress", label: "In Progress" },
+        { id: 0, value: "Pending", label: "Scheduled" },
+        { id: 1, value: "In Progress", label: "In Progress" },
       ],
       optionsLabel: "label",
+      optionsValue: (option) => option.value,
       isUnique: true,
     },
     sender: {
       label: "Sender",
       options: senders.items,
       optionsLabel: (sender) => getFullName(sender),
+      optionsValue: (sender) => sender.id,
       onSearch: (search) => senders.search(search),
     },
     platform: {
@@ -106,20 +112,20 @@ export const TeamQueue = () => {
         { id: 1, name: "Twitter", value: "Twitter" },
         { id: 2, name: "Personal Text", value: "Personal Text" },
         { id: 3, name: "RS Text", value: "RS Text" },
-      ]
+      ],
+      optionsLabel: "name",
+      optionsValue: (option) => option.value,
     }
   }
 
-  const onFilterChange = (filters) => {
-    filterChanged.current = filters;
+  const onFilterChange = (filters: Record<filterType, IPanelSelectedFilterOption[]>) => {
+    filterChanged.current = true;
     const filter = lodash.cloneDeep(getBaseFilter());
-    if (filters.sender)
-      filter.sender = filters.sender.map(sender => sender.id);
     if (filters.platform)
-      filter.platform = filters.platform.map(platform => platform.value);
-    lastFilter.current = filter;
+      filter.platform = filters.sender;
     if (filters.message_status)
       filter.message_status = filters.message_status.map(status => status.value);
+    lastFilter.current = filter;
     messages.filter(filter);
   }
 
@@ -129,7 +135,7 @@ export const TeamQueue = () => {
       subtitle={
         <>
           <SectionSubTitle >
-            You have {" "} <SectionSubTitle component="span" color='primary'>{messages.pagination.totalItems} items</SectionSubTitle> in your queue
+            You have {" "} <SectionSubTitle component='span' color='primary'>{messages.pagination.totalItems} items</SectionSubTitle> in your queue
           </SectionSubTitle>
         </>
       }

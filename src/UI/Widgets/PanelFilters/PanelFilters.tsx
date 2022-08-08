@@ -14,7 +14,7 @@ type PanelFiltersProps = {
 	filters: IPanelFilters;
 	selectedFilters?: Record<string, IPanelSelectedFilterOption[]>;
 	onFilterChange: (filters: Record<string, IPanelSelectedFilterOption[]>) => void;
-	setFilter: { filterName: string, filter: any, option: IPanelFilterOption };
+	setFilter?: { filterName: string, filter: any, option: IPanelFilterOption };
 }
 
 /**
@@ -70,7 +70,7 @@ export const PanelFilters: React.FC<PanelFiltersProps> = (props) => {
 	const handleOptionsChange = (filterKey: string, option: IPanelFilterOption) => {
 
 		const filter = props.filters[filterKey];
-		const _selectedOption = { ...option, itemLabel: getItemLabel(filterKey,option), value: filter.optionsValue(option) };
+		const _selectedOption = { ...option, itemLabel: getItemLabel(filterKey, option), value: filter.optionsValue(option) };
 
 		const _selectedFilters = Object.assign({}, selectedFilters)
 
@@ -139,7 +139,7 @@ export const PanelFilters: React.FC<PanelFiltersProps> = (props) => {
 									<DateRangePicker
 										key={filterKey}
 										label={filter.label}
-										format={filter.format}
+										format={filter.dateFormat}
 										disableFuture={filter.disableFuture}
 										onChange={(date: string) => handleOptionsChange(filterKey, ({ id: date, value: date }))
 										}
@@ -151,7 +151,7 @@ export const PanelFilters: React.FC<PanelFiltersProps> = (props) => {
 									<Dropdown
 										key={filterKey}
 										onClick={(option) => handleOptionsChange(filterKey, option)}
-										getOptionLabel={(option) => getItemLabel(filterKey,option)}
+										getOptionLabel={(option) => getItemLabel(filterKey, option)}
 										{...{ ...filter, type: undefined }}
 									/>
 								)
