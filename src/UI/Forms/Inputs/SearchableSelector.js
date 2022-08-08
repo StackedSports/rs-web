@@ -65,6 +65,7 @@ export default function SearchableSelector(props) {
             getOptionLabel={props.getOptionLabel}
             isOptionEqualToValue={props.isOptionEqualToValue || ((option, value) => option?.id === value?.id)}
             onChange={onChange}
+            freeSolo={props.freeSolo}
             onInputChange={onInputChange}
             renderOption={props.renderOption}
             renderInput={(params) => (

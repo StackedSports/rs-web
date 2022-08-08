@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
-import { 
+import {
     ImageOutlined,
     GifBoxOutlined,
     PermMediaOutlined,
@@ -238,7 +238,7 @@ const MediaPreview = ({ type, ...props }) => {
                     )}
                     {selectable && (isHovering || isChecked) &&
                         <StyledCheckBox
-                            // color="primary"
+                            color="primary"
                             checked={isChecked}
                             disableRipple
                             onChange={onCheckboxChange}
@@ -247,12 +247,12 @@ const MediaPreview = ({ type, ...props }) => {
                     }
                     <RenderIf condition={isHovering && props.onPreviewClick}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
-                            <FullscreenIcon/>
+                            <FullscreenIcon />
                         </StyledPreviewButton>
                     </RenderIf>
                     <RenderIf condition={showSendOnHover && isHovering}>
                         <StyledIconButton onMouseDown={onSendClick}>
-                            <SendIcon/>
+                            <SendIcon />
                         </StyledIconButton>
                     </RenderIf>
                 </CardImage>
@@ -321,7 +321,7 @@ const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
     overflow: 'hidden',
 
     '.MuiSvgIcon-root': {
-        color: isHovering ? theme.palette.common.white : theme.palette.grey[700],
+        color: isHovering ? theme.palette.common.white : theme.palette.primary.main,
     },
 
     '&::after': (isHovering && showOverlay) ? {

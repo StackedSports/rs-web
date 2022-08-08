@@ -20,6 +20,7 @@ import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from 'UI/Widgets/RenderIf'
 import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
+import { AssignMediaToPlaceholderDialog } from 'UI/Widgets/Media/AssignMediaToPlaceholderDialog'
 
 export const MainMediaPage = (props) => {
     const history = useHistory()
@@ -32,6 +33,7 @@ export const MainMediaPage = (props) => {
     const [viewGrid, setViewGrid] = useState(true)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+    const [openAssignMediaToPlaceholderDialog, setOpenAssignMediaToPlaceholderDialog] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
     const isTagDialogFunctionRemoveRef = useRef(false)
 
@@ -73,7 +75,8 @@ export const MainMediaPage = (props) => {
                     a.click();
                 }
             })
-        }
+        } else
+            app.alert.setWarning("No media selected")
     }
 
     const getAllMediaIdsFromPlaceholder = (placeholder) => {
@@ -149,6 +152,23 @@ export const MainMediaPage = (props) => {
         }
     }
 
+    const onSendInMessageAction = () => {
+        if (placeholdersMultiPageSelection.count > 0 || mediaMultiPageSelection.count > 0) {
+            const media = mediaMultiPageSelection.selectedData[0]
+            const placeholder = placeholdersMultiPageSelection.selectedData[0]
+            if (media)
+                app.sendMediaInMessage(media, 'media')
+            else if (placeholder)
+                app.sendMediaInMessage(placeholder, 'placeholder')
+        } else {
+            app.alert.setWarning('Please select one media or placeholder')
+        }
+    }
+
+    const onAddToPlaceholderAction = () => {
+        setOpenAssignMediaToPlaceholderDialog(true)
+    }
+
     const mainActions = [
         {
             name: 'Change view',
@@ -162,7 +182,8 @@ export const MainMediaPage = (props) => {
             variant: 'outlined',
             type: 'dropdown',
             options: [
-                { name: 'Send in Message', onClick: () => { console.log("clicked") } },
+                { name: 'Send in Message', onClick: onSendInMessageAction },
+                { name: 'Add to Placeholder', onClick: onAddToPlaceholderAction, disabled: mediaMultiPageSelection.count === 0 },
                 { name: 'Download', onClick: onDownloadAction },
                 { name: 'Archive Media', onClick: onArchiveAction, disabled: mediaMultiPageSelection.count === 0 },
                 { name: 'Untag', onClick: onUntagAction },
@@ -322,6 +343,11 @@ export const MainMediaPage = (props) => {
                 actionLoading={loadingTags}
                 title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
                 isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
+            />
+            <AssignMediaToPlaceholderDialog
+                open={openAssignMediaToPlaceholderDialog}
+                onClose={() => setOpenAssignMediaToPlaceholderDialog(false)}
+                medias={mediaMultiPageSelection.selectedData}
             />
         </MediaPage>
     )
