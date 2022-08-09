@@ -6,7 +6,7 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags, useMediaTypes, useContacts, useTeamMembers } from 'Api/ReactQuery';
+import { useTags, useMediaTypes, useContacts, useTeamMembers, useTagsWithMedia } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
@@ -14,7 +14,7 @@ import lodash from 'lodash';
 
 export const MediaPage = (props) => {
     const searchParams = useSearchParams()
-    const tags = useTags()
+    const tags = useTagsWithMedia()
     const teamMembers = useTeamMembers()
     const mediaTypes = useMediaTypes()
     const contacts = useContacts()

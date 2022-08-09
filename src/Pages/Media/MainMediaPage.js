@@ -14,7 +14,7 @@ import MediaPage from './MediaPage'
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
 
-import { useTags, useMedias, usePlaceholders } from 'Api/ReactQuery';
+import { useTagsWithMedia, useMedias, usePlaceholders } from 'Api/ReactQuery';
 import { archiveMedias, addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import { mediaRoutes } from 'Routes/Routes';
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
@@ -27,7 +27,7 @@ export const MainMediaPage = (props) => {
     const confirmDialog = useContext(ConfirmDialogContext)
     const media = useMedias(1, 6)
     const placeholders = usePlaceholders(1, 6)
-    const tags = useTags()
+    const tags = useTagsWithMedia()
 
     const [viewGrid, setViewGrid] = useState(true)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
