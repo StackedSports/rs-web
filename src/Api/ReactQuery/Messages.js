@@ -25,6 +25,18 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
     }, [reactQuery.isSuccess, reactQuery.data, reactQuery.error])
 
     useEffect(() => {
+        if (initialPage && initialPage != pagination.currentPage) {
+            pagination.getPage(initialPage)
+        }
+    }, [initialPage])
+
+    useEffect(() => {
+        if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
+            pagination.getItemsPerPage(itemsPerPage)
+        }
+    }, [itemsPerPage])
+
+    useEffect(() => {
         if (!lodash.isEqual(initialFilters, filters)) {
             setFilters(initialFilters)
             pagination.getPage(1)

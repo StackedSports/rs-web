@@ -17,6 +17,8 @@ import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from "lodash"
+import { Divider, MenuItem, Select, Typography } from '@mui/material'
+import useLocalStorage from 'Hooks/useLocalStorage'
 
 const MessagesPage = (props) => {
     const searchParams = useSearchParams()
@@ -24,9 +26,10 @@ const MessagesPage = (props) => {
     const senders = useTeamMembers()
     const tags = useTags()
 
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`messages-table-perPage`, 10)
     const page = searchParams.page
     const criteria = useMemo(() => ({ ...getMessagesCriteriaFromQueryString(searchParams.filters), includeTeam: user?.role?.includes('Admin') }), [searchParams.filters])
-    const messages = useMessages(page, 10, criteria)
+    const messages = useMessages(page, perPageLocalStorage, criteria)
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState()
@@ -160,7 +163,35 @@ const MessagesPage = (props) => {
                 )
             })}
             {!messages.loading && messages.items && messages.items.length > 0 && (
-                <Stack justifyContent="center" alignItems="center">
+                <Stack
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{
+                        position: "sticky",
+                        bottom: 0,
+                        bgcolor: 'background.paper',
+                        flexDirection: 'row',
+                        paddingBlock: 1
+                    }}
+                >
+                    <Stack gap={1} direction='row' alignItems='center'>
+                        <Typography variant='subtitle2'>
+                            Contacts per page:
+                        </Typography>
+                        <Select variant='standard'
+                            disableUnderline
+                            value={perPageLocalStorage}
+                            onChange={(e) => setperPageLocalStorage(e.target.value)}
+                        >
+                            <MenuItem value={10}>10</MenuItem>
+                            <MenuItem value={25}>25</MenuItem>
+                            <MenuItem value={50}>50</MenuItem>
+                            <MenuItem value={75}>75</MenuItem>
+                            <MenuItem value={100}>100</MenuItem>
+                            <MenuItem value={200}>200</MenuItem>
+                        </Select>
+                    </Stack>
+
                     <Pagination
                         count={messages.pagination.totalPages}
                         page={messages.pagination.currentPage}
