@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery } from "react-query"
-import { getPlaceholder, getPlaceholderMedia, getPlaceholders } from "Api/Endpoints"
+import { useMutation, useQuery, useQueryClient } from "react-query"
+import { createPlaceholder, deletePlaceholder, getPlaceholder, getPlaceholderMedia, getPlaceholders, updatePlaceholder } from "Api/Endpoints"
 
 export const usePlaceholder = (id) => {
-    const reactQuery = useQuery(`placeholder/${id}`, () => getPlaceholder(id), {
+    const reactQuery = useQuery(['placeholder', id], () => getPlaceholder(id), {
         select: (data) => data[0],
         enabled: !!id,
     })
@@ -21,7 +21,7 @@ export const usePlaceholders = (currentPage, itemsPerPage, initialFilters) => {
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [filters, setFilters] = useState(initialFilters)
 
-    const reactQuery = useQuery([`placeholders/${pagination.currentPage}/${pagination.itemsPerPage}`, filters], () => getPlaceholders(pagination.currentPage, pagination.itemsPerPage, filters), {
+    const reactQuery = useQuery(['placeholders', pagination.currentPage, pagination.itemsPerPage, filters], () => getPlaceholders(pagination.currentPage, pagination.itemsPerPage, filters), {
         refetchOnWindowFocus: false,
         staleTime: 60000,
     })
@@ -77,5 +77,40 @@ export const usePlaceholderMedia = (id, currentPage, itemsPerPage) => {
         items: medias,
         pagination,
         loading: reactQuery.isLoading,
+    }
+}
+
+export const usePlaceholderMutation = () => {
+    const queryClient = useQueryClient();
+
+    const update = useMutation(({ id, name }) => updatePlaceholder(id, name),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.invalidateQueries(['placeholder', variables.id])
+                queryClient.invalidateQueries('placeholders')
+            },
+        })
+
+    const remove = useMutation((id) => deletePlaceholder(id),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.invalidateQueries(['placeholder', variables.id])
+                queryClient.resetQueries('placeholders')
+            }
+        })
+
+    const create = useMutation((name) => createPlaceholder(name),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('placeholders')
+            },
+        })
+
+    return {
+        update: update.mutate,
+        updateAsync: update.mutateAsync,
+        remove: remove.mutate,
+        create: create.mutate,
+        createAsync: create.mutateAsync,
     }
 }

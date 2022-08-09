@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import BaseDialog from '../Dialogs/BaseDialog'
-import { useMediaMutation, usePlaceholders } from 'Api/ReactQuery'
-import { createPlaceholder } from 'Api/Endpoints'
+import { useMediaMutation, usePlaceholders, usePlaceholderMutation } from 'Api/ReactQuery'
+//import { createPlaceholder } from 'Api/Endpoints'
 import { debounce, Typography } from '@mui/material'
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import { AppContext } from 'Context/AppProvider'
@@ -9,9 +9,16 @@ import { AppContext } from 'Context/AppProvider'
 export const AssignMediaToPlaceholderDialog = (props) => {
   const app = useContext(AppContext)
   const { updateAsync: mediaUpdate } = useMediaMutation()
+  const { create: createPlaceholder } = usePlaceholderMutation()
   const placeholders = usePlaceholders()
   const [selectedPlaceholder, setSelectedPlaceholder] = useState([])
   const [loading, setLoading] = useState(false)
+
+  const onClose = () => {
+    setSelectedPlaceholder([])
+    setLoading(false)
+    props.onClose()
+  }
 
   const onPlaceholdersInputChange = debounce((value) => {
     if (value) {
@@ -39,15 +46,24 @@ export const AssignMediaToPlaceholderDialog = (props) => {
       setSelectedPlaceholder([newPlaceholder])
   }
 
-  const updateMediasPlaceholder = async (placeholderId) => {
-    return Promise.all(props.medias.map((media) => {
+  const updateMediasPlaceholder = (placeholder) => {
+    Promise.all(props.medias.map((media) => {
       mediaUpdate({
         id: media.id,
         data: {
-          media_placeholder_id: placeholderId
+          media_placeholder_id: placeholder.id
         }
       })
-    }))
+    })).then(() => {
+      app.alert.setSuccess(`${props.medias.length} medias  associate to placeholder: ${placeholder.name}`)
+      setSelectedPlaceholder([])
+      onClose()
+    }).catch((e) => {
+      console.log("Error on update medias placeholder", e)
+      app.alert.setWarning(`Error on update medias placeholder: ${e.message}`)
+    }).finally(() => {
+      setLoading(false)
+    })
   }
 
   const onConfirm = async () => {
@@ -60,42 +76,33 @@ export const AssignMediaToPlaceholderDialog = (props) => {
 
     // If the placeholder is new, create it
     if (placeholderId.startsWith('new-')) {
-      try {
-        const res = await createPlaceholder(placeholder.name)
-        placeholderId = res.data.id
-      }
-      catch (e) {
-        console.log("Error on create new placeholder", e)
-        app.alert.setWarning(`Error on create new placeholder: ${e.message}`)
-        setLoading(false)
-        return
-      }
+      createPlaceholder(placeholder.name, {
+        onSuccess: (data) => {
+          console.log(data)
+          placeholder.id = data.data.id
+          updateMediasPlaceholder(placeholder)
+        },
+        onError: (error) => {
+          console.log("Error on create new placeholder", error.response)
+          app.alert.setWarning(`Error on create new placeholder: ${error.response?.data?.errors[0]?.message}`)
+          setLoading(false)
+        },
+      })
+    } else {
+      updateMediasPlaceholder(placeholder)
     }
-
-    try {
-      await updateMediasPlaceholder(placeholderId)
-      app.alert.setSuccess(`${props.medias.length} medias  associate to placeholder ${placeholder.name}`)
-      setSelectedPlaceholder([])
-    } catch (e) {
-      console.log("Error on update medias placeholder", e)
-      app.alert.setWarning(`Error on update medias placeholder: ${e.message}`)
-      setLoading(false)
-      return
-    }
-    setLoading(false)
-    props.onClose()
   }
 
   return (
     <BaseDialog
       title="Assign Media to Placeholder"
       open={props.open}
-      onClose={props.onClose}
+      onClose={onClose}
       onConfirm={onConfirm}
       actionLoading={loading}
     >
       <Typography sx={{ mb: 2 }}>
-        {`${props.medias.length || 0} Selected Medias will be assigned to this placeholder.`}
+        {`${props.medias.length || 0} Selected medias will be assigned to this placeholder.`}
       </Typography>
 
       <SearchableSelector
@@ -104,7 +111,7 @@ export const AssignMediaToPlaceholderDialog = (props) => {
         loading={placeholders.loading}
         value={selectedPlaceholder}
         label={null}
-        placeholder="Search a Placeholder or Type to Create New"
+        placeholder="Search a placeholder and select or press enter to create a new one"
         onChange={onPlaceholdersChange}
         getOptionLabel={(option) => option?.name || ''}
         getChipLabel={(option) => option.name}
