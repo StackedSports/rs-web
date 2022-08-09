@@ -38,7 +38,7 @@ export default function TopBar(props) {
             )}
             <div className='FlexRight'>
                 {/* <SearchBar placeholder='Power search' /> */}
-                <BiBell className='IconBtn' />
+                {/* <BiBell className='IconBtn' /> */}
                 <Link to="/new-chat"><BiChat className='IconBtn' /></Link>
                 {/* <BiChat className='IconBtn' /> */}
                 <img className='Logo' src={Logo} />

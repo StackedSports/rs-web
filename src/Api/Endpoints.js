@@ -223,6 +223,10 @@ export const logout = () => {
     return POST('logout')
 }
 
+export const getMessageInbox = () => {
+    return AXIOS('get', 'messages/inbox')
+}
+
 export const getPlatform = () => {
     return AXIOS('get', `team/settings/platforms`)
 }

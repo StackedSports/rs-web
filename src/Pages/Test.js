@@ -6,7 +6,7 @@ import { httpsCallable } from 'firebase/functions'
 import { db, functions } from 'Api/Firebase'
 
 import { useUser, useRanks, useContacts, useTags, useContact } from 'Api/Hooks'
-import { getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters } from 'Api/Endpoints'
+import { getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters, getMessageInbox } from 'Api/Endpoints'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
@@ -98,19 +98,23 @@ const Test = () => {
 
         // console.log(JSON.parse(`{"message":"Request failed with status code 503","name":"AxiosError","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json; version=1","Content-Type":"application/json","Authorization":"RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452","X-Auth-Token":"eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjEyMSwiZW1haWwiOiJSU2FkbWluUFNVQHN0YWNrZWRzcG9ydHMuY29tIiwiZXhwIjoxNjYwMzM0ODM5fQ.Ud3xHo0wFNPswhaFSt_d5qLfixjWrqhbquJCTllj_Nk","User-Agent":"axios/0.27.2","Content-Length":63},"method":"post","url":"https://api.recruitsuite.co/api/contacts/filter","data":"{\"page\":1,\"per_page\":3,\"criteria\":{\"search\":\"braedyn78047181\"}}"},"code":"ERR_BAD_RESPONSE","status":503}`))
 
-        const q = query(collection(db, 'test-task'))
-        const unsubq = onSnapshot(q, (snapshot) => {
-            let tasks = []
+        // const q = query(collection(db, 'test-task'))
+        // const unsubq = onSnapshot(q, (snapshot) => {
+        //     let tasks = []
 
-            snapshot.forEach(doc => {
-                tasks.push(doc.data())
-            })
+        //     snapshot.forEach(doc => {
+        //         tasks.push(doc.data())
+        //     })
 
-            console.log('tasks = ', tasks)
-            setTasks(tasks)
-        })
+        //     console.log('tasks = ', tasks)
+        //     setTasks(tasks)
+        // })
 
-        return () => unsubq()
+        // return () => unsubq()
+
+        getMessageInbox()
+            .then(res => console.log(res))
+            .catch(error => console.log(error))
     }, [])
 
     // useEffect(() => {
