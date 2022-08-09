@@ -1,18 +1,24 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useMemo } from 'react'
 import BaseDialog from '../Dialogs/BaseDialog'
 import { useMediaMutation, usePlaceholders, usePlaceholderMutation } from 'Api/ReactQuery'
-//import { createPlaceholder } from 'Api/Endpoints'
 import { debounce, Typography } from '@mui/material'
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 import { AppContext } from 'Context/AppProvider'
+import { useLocalStorage } from 'Hooks/useLocalStorage'
+import lodash from 'lodash'
 
 export const AssignMediaToPlaceholderDialog = (props) => {
   const app = useContext(AppContext)
+  const [storagePlaceholders, setStoragePlaceholders] = useLocalStorage('placeholders', []) // this is the list of placeholders that are stored in localStorage because api doens't show new placeholders until they are saved with medias
   const { updateAsync: mediaUpdate } = useMediaMutation()
   const { create: createPlaceholder } = usePlaceholderMutation()
   const placeholders = usePlaceholders()
   const [selectedPlaceholder, setSelectedPlaceholder] = useState([])
   const [loading, setLoading] = useState(false)
+
+  const placeholderWithStorage = useMemo(() => {
+    return lodash.uniqBy([...placeholders.items, ...storagePlaceholders], 'id')
+  }, [placeholders.items, storagePlaceholders])
 
   const onClose = () => {
     setSelectedPlaceholder([])
@@ -78,9 +84,10 @@ export const AssignMediaToPlaceholderDialog = (props) => {
     if (placeholderId.startsWith('new-')) {
       createPlaceholder(placeholder.name, {
         onSuccess: (data) => {
-          console.log(data)
+          console.log(data.data)
           placeholder.id = data.data.id
           updateMediasPlaceholder(placeholder)
+          setStoragePlaceholders([...storagePlaceholders, placeholder])
         },
         onError: (error) => {
           console.log("Error on create new placeholder", error.response)
@@ -107,7 +114,7 @@ export const AssignMediaToPlaceholderDialog = (props) => {
 
       <SearchableSelector
         multiple
-        options={placeholders.items}
+        options={placeholderWithStorage}
         loading={placeholders.loading}
         value={selectedPlaceholder}
         label={null}
