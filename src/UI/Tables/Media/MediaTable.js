@@ -1,5 +1,5 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
-import { Box, CircularProgress, Pagination, styled } from '@mui/material'
+import { useState, useMemo, useEffect } from 'react'
+import { Box, CircularProgress, styled } from '@mui/material'
 
 import DataTable from 'UI/Tables/DataTable'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
@@ -8,6 +8,7 @@ import MediaGrid from './MediaGrid'
 
 import { columnsMedias, columnsPlaceHolders } from './MediaTableConfig'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
+import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination'
 
 /**
  * 
@@ -21,7 +22,6 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, ...props }) => {
     const columns = useMemo(() => type === 'media' ? columnsMedias : columnsPlaceHolders, [type])
 
-    const scrollToTopTableRef = useRef(null)
     const [carouselIndex, setCarouselIndex] = useState(null)
     const multiPageSelection = props.multiPageSelection || useMultiPageSelection_V2(props.items)
 
@@ -52,11 +52,21 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
         }
     }
 
-    // scroll to top of element ref
-    const scrollToTop = () => {
-        if (scrollToTopTableRef.current)
-            scrollToTopTableRef.current.scrollIntoView({ behavior: 'smooth' })
+    const onPageChange = (e, page) => {
+        if (props.scrollToTopRef && props.scrollToTopRef.current) {
+            props.scrollToTopRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        }
+
+        props.pagination?.getPage(page)
     }
+
+    const onPerPageChange = (value) => {
+        if (props.scrollToTopRef && props.scrollToTopRef.current)
+            props.scrollToTopRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+
+        props.pagination?.getItemsPerPage(value)
+    }
+
 
     return (
         <Box
@@ -64,11 +74,9 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 width: '100%',
                 height: props.mini ? 500 : 'fit-content',
                 flex: 1,
-                pb: 2,
                 display: 'flex',
                 flexDirection: 'column',
             }}
-            ref={scrollToTopTableRef}
         >
             <Box position='relative' flex={1}>
                 {!props.loading && props.items && props.items.length === 0 && (
@@ -107,13 +115,15 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                 </StyledLoadingOverlay>
             </Box>
             <RenderIf condition={props.pagination && props.pagination?.totalPages > 1}>
-                <Box display='flex' justifyContent='center' mt={2}>
-                    <Pagination
-                        count={props.pagination?.totalPages}
-                        page={props.pagination?.currentPage}
-                        onChange={(event, page) => { scrollToTop(); props.pagination?.getPage(page) }}
-                    />
-                </Box>
+                <CustomPagination
+                    totalPages={props.pagination?.totalPages}
+                    currentPage={props.pagination?.currentPage}
+                    perPage={props.pagination?.itemsPerPage}
+                    totalItems={props.pagination?.totalItems}
+                    onPageChange={onPageChange}
+                    onPerPageChange={onPerPageChange}
+                    perPageOptions={[24, 48, 50, 100]}
+                />
             </RenderIf>
 
             <MediaCarousel

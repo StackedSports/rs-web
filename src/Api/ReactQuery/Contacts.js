@@ -44,6 +44,7 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
     useEffect(() => {
         if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
             pagination.getItemsPerPage(itemsPerPage)
+            
         }
     }, [itemsPerPage])
 

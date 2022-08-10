@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack'
 import { getColumns } from './DataGridConfig'
 import MediaCarousel from 'UI/Widgets/Media/MediaCarousel'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
+import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
 
 const MessageRecipientsTable = (props) => {
     if (!props.recipients || props.recipients.length === 0)
@@ -84,15 +85,24 @@ const MessageRecipientsTable = (props) => {
                 //   onPageChange={() => {}}
                 onCellClick={onCellClick}
             />
-            {props.pagination && props.pagination.totalPages > 0 && (
-                <Stack justifyContent="center" alignItems="center">
+            {props.pagination && (
+                <CustomPagination
+                    currentPage={props.pagination.currentPage}
+                    perPage={props.pagination.itemsPerPage}
+                    totalPages={props.pagination.totalPages}
+                    totalItems={props.pagination.totalItems}
+                    onPageChange={onPageChange}
+                    onPerPageChange={props.onPerPageChange}
+                    perPageOptions={[5,25, 50, 100,200]}
+                />
+                /* <Stack justifyContent="center" alignItems="center">
                     <Pagination
                         count={props.pagination.totalPages}
                         page={props.pagination.currentPage}
                         onChange={onPageChange}
                         disabled={props.loading}
                     />
-                </Stack>
+                </Stack> */
             )}
 
             <MediaCarousel

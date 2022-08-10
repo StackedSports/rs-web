@@ -39,17 +39,19 @@ import { messageRoutes } from 'Routes/Routes'
 
 import { getStringListOfIds } from 'utils/Helper'
 import { objectNotNull } from 'utils/Validation'
+import useLocalStorage from 'Hooks/useLocalStorage';
 
 const MessageDetailsPage = (props) => {
     const app = useContext(AppContext)
     const confirmDialog = useContext(ConfirmDialogContext)
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`recipients-table-perPage`, 50)
 
     const messageId = useRef(props.match.params.id)
     const [loading, setLoading] = useState(false)
     const [redirect, setRedirect] = useState('')
 
     const message = useMessage(messageId.current)
-    const recipients = useMessageRecipients(messageId.current, 1, 50)
+    const recipients = useMessageRecipients(messageId.current, 1, perPageLocalStorage)
 
     const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
     // const [selectedRecipients.items, setSelectedRecipients] = useState([])
@@ -487,6 +489,7 @@ const MessageDetailsPage = (props) => {
                 hasMedia={hasMedia || hasMediaPlaceholder}
                 pagination={recipients.pagination}
                 onPageChange={onRecipientsPageChange}
+                onPerPageChange={perPage => setperPageLocalStorage(perPage)}
             />
         </BaseMessagePage>
     )
