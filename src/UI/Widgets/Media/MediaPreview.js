@@ -229,6 +229,7 @@ const MediaPreview = ({ type, ...props }) => {
                 <CardImage
                     isHovering={isHovering}
                     showOverlay={selectable || showSendOnHover}
+                    isChecked={isChecked}
                     size={width}
                 >
                     {isMedia ? (
@@ -237,13 +238,15 @@ const MediaPreview = ({ type, ...props }) => {
                         <PlaceholderImage placeholder={props.item} size={width} />
                     )}
                     {selectable && (isHovering || isChecked) &&
-                        <StyledCheckBox
-                            // color="primary"
-                            checked={isChecked}
-                            disableRipple
-                            onChange={onCheckboxChange}
-                            onClick={e => e.stopPropagation()}
-                        />
+                        <StyledCheckBoxContainer isHovering={isHovering}>
+                            <StyledCheckBox
+                                color="primary"
+                                checked={isChecked}
+                                disableRipple
+                                onChange={onCheckboxChange}
+                                onClick={e => e.stopPropagation()}
+                            />
+                        </StyledCheckBoxContainer>
                     }
                     <RenderIf condition={isHovering && props.onPreviewClick}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
@@ -310,7 +313,7 @@ const StyledCard = styled(Card)(({ theme, width }) => ({
 
 }));
 
-const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
+const CardImage = styled(Box)(({ theme, isHovering, isChecked, showOverlay, size }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -321,10 +324,10 @@ const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
     overflow: 'hidden',
 
     '.MuiSvgIcon-root': {
-        color: isHovering ? theme.palette.common.white : theme.palette.grey[700],
+        color: isHovering ? theme.palette.common.white : theme.palette.primary.main,
     },
 
-    '&::after': (isHovering && showOverlay) ? {
+    '&::after': ((isHovering || isChecked) && showOverlay) ? {
         content: '""',
         position: 'absolute',
         top: 0,
@@ -337,11 +340,22 @@ const CardImage = styled(Box)(({ theme, isHovering, showOverlay, size }) => ({
 
 }));
 
-const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
+const StyledCheckBoxContainer = styled(Box)(({ theme, isHovering }) => ({
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: 5,
+    left: 5,
     zIndex: 1,
+    backgroundColor: isHovering ? 'transparent' : 'white',
+    borderRadius: 4
+}))
+
+const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // zIndex: 1,
+    color: 'primary',
+    padding: 0
 }));
 
 const StyledPreviewButton = styled(IconButton)(({ theme }) => ({
