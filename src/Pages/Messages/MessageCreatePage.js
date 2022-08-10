@@ -253,8 +253,6 @@ export default function MessageCreatePage(props) {
 
     const onSenderSelected = (sender) => {
 
-        console.log(sender)
-
         if (typeof sender == 'string') {
             // console.log('sender = ' + sender)
 
@@ -315,7 +313,7 @@ export default function MessageCreatePage(props) {
     }
 
     const onReceiverSelected = (selectedPrivateBoards, selectedTeamBoards, selectedContacts) => {
-        console.log(selectedContacts)
+        //console.log(selectedContacts)
         setRecipientSelected({
             privateBoards: selectedPrivateBoards,
             teamBoards: selectedTeamBoards,
@@ -326,7 +324,7 @@ export default function MessageCreatePage(props) {
     }
 
     const onReceiverSelectedClick = (index, type) => {
-        console.log('Clicked on ' + index + ' from ' + type)
+        // console.log('Clicked on ' + index + ' from ' + type)
 
         if (type === 'recipients')
             return
@@ -337,7 +335,7 @@ export default function MessageCreatePage(props) {
 
     const onRemoveReceiver = (index, id, type, e) => {
         e.stopPropagation()
-        console.log('Remove ' + index + ' from ' + type)
+        // console.log('Remove ' + index + ' from ' + type)
 
         // pass down index, id, and type to receiverRemovedItems so the dialog can handle
         // their removal from its selection. For this component
@@ -586,7 +584,7 @@ export default function MessageCreatePage(props) {
 
         // delete messageData.user_id
 
-        console.log(messageData)
+        //console.log(messageData)
 
         // return
 
@@ -596,7 +594,7 @@ export default function MessageCreatePage(props) {
         setLoading(true)
 
         if (props.edit) {
-            console.log('Update Message')
+            //console.log('Update Message')
             // return
             updateMessage({ id: props.messageId, data: messageData }, {
                 onSuccess: (result) => {

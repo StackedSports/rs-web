@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import MessageCreatePage from './MessageCreatePage'
 
 import { useMessage, useMessageRecipients } from 'Api/ReactQuery'
+import { getCoachLabel } from 'utils/Data'
 
 const MessageEditPage = (props) => {
     const messageId = useRef(props.match.params.id)
@@ -33,7 +34,7 @@ const MessageEditPage = (props) => {
         if (!message.item || !message.item.platform)
             return
 
-        console.log(message.item)
+        //console.log(message.item)
 
         let platform = message.item.platform.name
         let selectedPlatform = null
@@ -54,10 +55,12 @@ const MessageEditPage = (props) => {
         if (!message.item)
             return
 
-        let sender = message.item.sender
+        const sender = message.item.sender
+        const send_as_coach = getCoachLabel(message.item.send_as_coach)
+        const selectedSenders = [sender, send_as_coach].filter(item => !!item)
 
-        if (sender)
-            setSenderSelected([sender])
+        if (selectedSenders.length > 0)
+            setSenderSelected(selectedSenders)
 
     }, [message.item])
 
