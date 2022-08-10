@@ -46,7 +46,7 @@ export const CustomPagination = (props) => {
                     {
                         itemsPerPageOptions.map((value) => {
                             return (
-                                <MenuItem value={value}>{value}</MenuItem>
+                                <MenuItem key={value} value={value}>{value}</MenuItem>
                             )
                         })
                     }
