@@ -82,6 +82,8 @@ export default function MessageCreatePage(props) {
     const snippets = useSnippets().items
     const textPlaceholders = useTextPlaceholders().items
 
+    console.log('Send at ', sendAt)
+
     // Error
     const [error, setError] = useState({
         show: false,
@@ -554,13 +556,22 @@ export default function MessageCreatePage(props) {
         }
 
         if (sendAt) {
+            console.log('has sendAt')
             // Send at is optional. If no send_at field is provided to messageData, the server
             // will try to send the message right away. In the client, sendAt can either be
             // 'ASAP' or a js Date.
 
             // Only add send_at if our selection is an object of type Date
-            if (Object.prototype.toString.call(sendAt) === '[object Date]')
+            // if (Object.prototype.toString.call(sendAt) === '[object Date]') {
+            //     messageData['send_at'] = sendAt
+            //     console.log('yoooooo')
+            // }
+
+            if (sendAt !== 'ASAP') {
                 messageData['send_at'] = sendAt
+                console.log('yoooooo')
+            }
+                
         }
 
         // Message requires either a body or media attachment. They can't be both empty
@@ -583,8 +594,8 @@ export default function MessageCreatePage(props) {
         }
 
         // delete messageData.user_id
-
-        //console.log(messageData)
+        console.log(sendAt)
+        console.log(messageData)
 
         // return
 
@@ -721,6 +732,7 @@ export default function MessageCreatePage(props) {
 
             <DateTimePicker
                 open={showTimePicker}
+                value={sendAt}
                 onSave={onDateTimeSave}
                 onClose={() => setShowTimePicker(false)}
             />

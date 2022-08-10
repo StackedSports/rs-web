@@ -35,6 +35,9 @@ import {
     addTagsToMessagesWithNewTags,
 } from 'Api/Endpoints'
 
+import { useMessageMutation } from 'Api/ReactQuery'
+
+
 import { messageRoutes } from 'Routes/Routes'
 
 import { getStringListOfIds } from 'utils/Helper'
@@ -63,6 +66,8 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
+    
+    const { update: updateMessage } = useMessageMutation()
     // console.log(message.item)
     // console.log(recipients.items)
 
@@ -89,7 +94,18 @@ const MessageDetailsPage = (props) => {
 
     const onEditMessageClick = () => {
         console.log('edit message')
-        setRedirect(`${messageRoutes.edit}/${message.item.id}`)
+
+        setLoading(true)
+
+        updateMessage({ id: message.item.id, data: { status: 'Draft'} }, {
+            onSuccess: () => {
+                setRedirect(`${messageRoutes.edit}/${message.item.id}`)
+            },
+            onError: err => {
+                console.log(err)
+                setLoading(false)
+            }
+        })
     }
 
     const onSaveMessageAndExitClick = () => {

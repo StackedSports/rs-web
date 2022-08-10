@@ -675,6 +675,8 @@ export const updateMessage = (messageId, data) => {
         message: { ...data }
     }
 
+    console.log(body)
+
     return PUT(`messages/${messageId}`, body)
 }
 

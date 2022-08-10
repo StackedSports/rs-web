@@ -1,5 +1,5 @@
 import './DateTimePicker.css'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 import {
     Grid,
@@ -35,15 +35,22 @@ const NumberInput = (props) => {
 export default function DateTimePicker(props) {
     const now = useRef(new Date())
 
-    const [date, setDate] = useState(now.current)
-    const [asap, setAsap] = useState(true)
+    const [date, setDate] = useState(props.value && props.value !== 'ASAP' ? new Date(props.value) : now.current)
+    const [asap, setAsap] = useState(props.value && props.value !== 'ASAP' ? false : true)
+
+    useEffect(() => {
+        if(!props.value)
+            return
+
+        setDate(new Date(props.value))
+        setAsap(props.value === 'ASAP' ? true : false)
+    }, [props.value])
 
     const onTimeChange = (time) => {
         //console.log(date)
         now.current = new Date()
         setDate(time)
         setAsap(false)
-
     }
 
     const onAsapClick = (e) => {
