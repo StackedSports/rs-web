@@ -122,7 +122,7 @@ export const MediaPage = (props) => {
             options: tags.items,
             onSearch: (search) => tags.search(search),
         },
-    }), [tags.items, mediaTypes.items, teamMembers.items, contacts.items, contacts.loading])
+    }), [tags.items, mediaTypes.items, teamMembers.items])
 
     const onTopActionClick = (e) => {
         setUploadDialogOpen(true)

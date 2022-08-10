@@ -1,13 +1,15 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 
 import TabPanel from '@mui/lab/TabPanel';
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 
-import { useMedias, usePlaceholders } from "Api/ReactQuery"
+import { useMedias, useMediaTypes, usePlaceholders, useTagsWithMedia, useTeamMembers } from "Api/ReactQuery"
 
 import { AppContext } from 'Context/AppProvider';
+import PanelFilters from '../PanelFilters';
+import { getFullName } from 'utils/Parser';
 
 
 const tabs = [
@@ -31,6 +33,11 @@ export default function MediaSelectDialog(props) {
     const [selectedItem, setSelectedItem] = useState(null)
     const [selectedType, setSelectedType] = useState('')
     const [disableOnConfirmSelection, setDisableOnConfirmSelection] = useState(false)
+
+    //filters
+    const tags = useTagsWithMedia()
+    const teamMembers = useTeamMembers()
+    const mediaTypes = useMediaTypes()
 
     useEffect(() => {
         if (mediaSelectedId === props.removedItem) {
@@ -96,6 +103,49 @@ export default function MediaSelectDialog(props) {
             placeholders.clearFilter()
     }
 
+    const panelFiltersData = useMemo(() =>
+    ({
+        "type": {
+            label: 'File Type',
+            options: mediaTypes.items,
+            isUnique: true,
+        },
+        "owner_id": {
+            label: 'Owner',
+            options: teamMembers.items,
+            optionsLabel: (item) => getFullName(item),
+            onSearch: (search) => teamMembers.search(search),
+        },
+        "created_at": {
+            label: 'Date Uploaded',
+            type: 'date',
+            optionsLabel: (dates) => dates.value.join(' - '),
+            disableFuture: true,
+            isUnique: true
+        },
+        "tag_id": {
+            label: 'Tag',
+            options: tags.items,
+            onSearch: (search) => tags.search(search),
+        },
+    }), [tags.items, mediaTypes.items, teamMembers.items])
+
+    const onPanelFiltersChange = (filters) => {
+        console.log(filters)
+        const parserFilters = {}
+        if (filters.type)
+            parserFilters.type = filters.type.map(item => item.id)[0]
+        if (filters.owner_id)
+            parserFilters.owner_id = filters.owner_id.map(item => item.id)
+        if (filters.created_at)
+            parserFilters.created_at = filters.created_at[0].value.map(date => new Date(date).toISOString())
+        if (filters.tag_id)
+            parserFilters.tag_id = filters.tag_id.map(item => item.id)
+        console.log(parserFilters)
+        media.filter(parserFilters)
+
+    }
+
     return (
         <SelectDialogTab
             tabs={tabs}
@@ -109,7 +159,8 @@ export default function MediaSelectDialog(props) {
             onClose={props.onClose}
             disableOnConfirmSelection={disableOnConfirmSelection}
         >
-            <TabPanel value={'0'} index={0}>
+            <TabPanel value={'0'} index={0} sx={{ pt: 0 }}>
+                <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFiltersChange} />
                 <MediaTable
                     mini
                     disableMultipleSelection={props.uniqueSelection}
