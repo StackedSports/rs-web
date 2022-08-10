@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { AppContext } from 'Context/AppProvider'
-import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import SendIcon from '@mui/icons-material/Send'
@@ -31,7 +31,7 @@ export const KanbanContactItem = (props) => {
     const onMouseEnter = (e) => {
         setIsHovering(true)
     }
-    
+
     const onMouseLeave = (e) => {
         setIsHovering(false)
         setMenuAnchorEl(null)
@@ -60,7 +60,15 @@ export const KanbanContactItem = (props) => {
             onMouseLeave={onMouseLeave}
         >
             <Stack direction='row' alignItems='center' gap={2} >
-                <Avatar src={contact.twitter_profile?.profile_image} alt={getFullName(contact)} />
+                {
+                    isHovering ?
+                        <Checkbox checked={contact?.isSelected} onChange={(e) => console.log(e.target.checked)} /> :
+                        <Avatar
+                            src={contact.twitter_profile?.profile_image}
+                            alt={getFullName(contact)}
+                            sx={{ width: 42, height: 42 }}
+                        />
+                }
                 <Typography fontSize={18}>{getFullName(contact)}</Typography>
                 <RenderIf condition={isHovering}>
                     <Stack flex={1} alignItems="flex-end">
@@ -100,7 +108,7 @@ export const KanbanContactItem = (props) => {
                     </ListItemIcon>
                     <ListItemText>Remove</ListItemText>
                 </MenuItem>
-                
+
             </Menu>
         </Container>
     );

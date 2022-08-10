@@ -10,7 +10,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Button from 'UI/Widgets/Buttons/Button'
 
-export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange, onSendMessage }) => {
+export const KanbanColumn = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange, onSendMessage }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -146,4 +146,4 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
     )
 }
 
-export default KanbanList;
+export default KanbanColumn;

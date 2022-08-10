@@ -7,13 +7,13 @@ import lodash from 'lodash';
 import { AppContext } from 'Context/AppProvider';
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
-import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
+import KanbanColumn from 'UI/Widgets/Contact/components/KanbanColumn';
 import { Stack } from '@mui/material';
 
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
-import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'  
+import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'
 
 import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
@@ -25,17 +25,16 @@ export const ContactsKanban = () => {
 
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
-    const [lists, setLists] = useState([]);
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
 
     const tempColumnName = useRef();
 
     useEffect(() => {
-        if(!kanbanId)
+        if (!kanbanId)
             return
 
         const unsub = getKanban(kanbanId, (kanban) => {
-            console.log(kanban)
+            //console.log(kanban)
 
             setKanban(kanban)
             setLoading(false)
@@ -59,10 +58,10 @@ export const ContactsKanban = () => {
     const onAddColumn = (columnName) => {
         console.log('on Add Column')
 
-        if (!kanban.columns || kanban.columns.find(column => column.name === columnName) === undefined) {
+        if (!kanban.columns || !kanban.columns.some(column => column.name === columnName)) {
             console.log('column does not exist yet')
             // setLists(lists => [...lists, { name: columnName, contacts: [] }])
-            
+
             // Create new columns array
             const newColumns = [...kanban.columns, { id: Date.now(), name: columnName, contacts: [] }]
 
@@ -88,7 +87,7 @@ export const ContactsKanban = () => {
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.id === listId)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
         // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
@@ -107,7 +106,7 @@ export const ContactsKanban = () => {
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.id === listId)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
         // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
@@ -127,13 +126,13 @@ export const ContactsKanban = () => {
 
         const listName = tempColumnName.current
 
-        if (!listName) 
+        if (!listName)
             return
 
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.name === listName)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
         column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
@@ -205,6 +204,7 @@ export const ContactsKanban = () => {
 
     function onDragEnd(result) {
         const { source, destination } = result;
+        console.log(result)
 
         // dropped outside the list
         if (!destination) {
@@ -262,7 +262,7 @@ export const ContactsKanban = () => {
             kanbanView={true}
         >
             <RenderIf condition={loading}>
-                <LoadingPanel/>
+                <LoadingPanel />
             </RenderIf>
             <RenderIf condition={!loading && !kanban}>
                 <ErrorPanel
@@ -274,7 +274,7 @@ export const ContactsKanban = () => {
                 <RenderIf condition={!loading && kanban && kanban.columns && Array.isArray(kanban.columns)}>
                     <KanbanWorkspace onDragEnd={onDragEnd}>
                         {kanban?.columns?.map((list, index) => (
-                            <KanbanList
+                            <KanbanColumn
                                 key={list.name}
                                 list={list}
                                 index={index}
