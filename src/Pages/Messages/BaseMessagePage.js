@@ -98,6 +98,7 @@ const BaseMessagePage = (props) => {
             loading={props.loading}
             redirect={props.redirect || redirect}
             actions={props.actions}
+            panelRef={props.panelRef}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: props.panelFilters,

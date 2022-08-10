@@ -20,6 +20,7 @@ export const AllMediaPlaceholderPage = (props) => {
   const searchParams = useSearchParams()
   const confirmDialog = useContext(ConfirmDialogContext)
   const app = useContext(AppContext)
+  const panelRef = useRef()
 
   const page = searchParams.page
   const placeholders = usePlaceholders(page, 24)
@@ -152,6 +153,7 @@ export const AllMediaPlaceholderPage = (props) => {
     <MediaPage
       title="Placeholders"
       actions={mainActions}
+      panelRef={panelRef}
     >
 
       <RenderIf condition={placeholders.items && placeholders.items.length > 0}>
@@ -181,6 +183,7 @@ export const AllMediaPlaceholderPage = (props) => {
         linkTo={mediaRoutes.placeholderDetails}
         multiPageSelection={multiPageSelection}
         onSendClick={(placeholder) => app.sendMediaInMessage(placeholder, 'placeholder')}
+        scrollToTopRef={panelRef}
       />
 
       <SelectTagDialog

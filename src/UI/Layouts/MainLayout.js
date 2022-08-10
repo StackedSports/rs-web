@@ -42,6 +42,7 @@ export default function MainLayout(props) {
                     propsPanelFilters={props.propsPanelFilters}
                     showBackBoardToContacts={props.showBackBoardToContacts}
                     onBackBoardToContacts={props.onBackBoardToContacts}
+                    panelRef={props.panelRef}
                 >
                     {props.alert && (
                         <Snackbar

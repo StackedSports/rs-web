@@ -17,9 +17,11 @@ import RenderIf from "UI/Widgets/RenderIf"
 
 import { getMediaCriteriaFromQueryString } from "Api/Parser"
 import useSearchParams from 'Hooks/SearchParamsHook';
+import useLocalStorage from "Hooks/useLocalStorage"
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
+	const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`medias-table-perPage`, 24)
 
 	const page = searchParams.page
 	const mediaCriteriaFilters = getMediaCriteriaFromQueryString(searchParams.filters)
@@ -29,9 +31,10 @@ export const AllMediaPage = () => {
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
+	const panelRef = useRef()
 	const app = useContext(AppContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
-	const medias = useMedias(page, 24, mediaCriteriaFilters)
+	const medias = useMedias(page, perPageLocalStorage, mediaCriteriaFilters)
 	const multiPageSelection = useMultiPageSelection_V2(medias.items)
 
 	const {
@@ -44,6 +47,10 @@ export const AllMediaPage = () => {
 	useEffect(() => {
 		searchParams.appendSearchParams('page', medias.pagination.currentPage)
 	}, [medias.pagination.currentPage])
+
+	useEffect(() => {
+		setperPageLocalStorage(medias.pagination.itemsPerPage)
+	}, [medias.pagination.itemsPerPage])
 
 	const onFilterChange = (filter) => {
 		//return
@@ -187,6 +194,7 @@ export const AllMediaPage = () => {
 			filter={onFilterChange}
 			actions={mainActions}
 			showPanelFilters={showPanelFilters}
+			panelRef={panelRef}
 		>
 			<RenderIf condition={medias.items && medias.items.length > 0}>
 				<Typography fontWeight='bold'>
@@ -214,6 +222,7 @@ export const AllMediaPage = () => {
 				linkTo={mediaRoutes.mediaDetails}
 				multiPageSelection={multiPageSelection}
 				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
+				scrollToTopRef={panelRef}
 			/>
 
 			<SelectTagDialog

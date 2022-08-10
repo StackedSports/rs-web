@@ -43,12 +43,6 @@ export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
         }
     }, [initialFilters])
 
-    useEffect(() => {
-        if (initialPage && initialPage != pagination.currentPage) {
-            pagination.getPage(initialPage)
-        }
-    }, [initialPage])
-
     const filter = (filters) => {
         setFilters(filters)
         pagination.getPage(1)
@@ -81,8 +75,8 @@ export const useMessage = (id) => {
     }
 }
 
-export const useMessageRecipients = (id, currentPage, itemsPerPage) => {
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+export const useMessageRecipients = (id, initialPage, itemsPerPage) => {
+    const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
     const [recipients, setRecipients] = useState()
 
     const reactQuery = useQuery([`message/${id}/recipients/${pagination.currentPage}/${pagination.itemsPerPage}`], () => getMessageRecipients(id, pagination.currentPage, pagination.itemsPerPage))
@@ -94,6 +88,18 @@ export const useMessageRecipients = (id, currentPage, itemsPerPage) => {
             setRecipients(apiRecipients)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
+
+    useEffect(() => {
+        if (initialPage && initialPage != pagination.currentPage) {
+            pagination.getPage(initialPage)
+        }
+    }, [initialPage])
+
+    useEffect(() => {
+        if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
+            pagination.getItemsPerPage(itemsPerPage)
+        }
+    }, [itemsPerPage])
 
     return {
         ...reactQuery,

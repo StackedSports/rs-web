@@ -12,6 +12,10 @@
     /* max-width: 1200px; */
 }
 
+.Panel > :last-child {
+    margin-bottom: 8px;
+}
+
 .PainelBlank {
     flex: 1;
     display: flex;

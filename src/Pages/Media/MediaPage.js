@@ -141,6 +141,7 @@ export const MediaPage = (props) => {
             onTopActionClick={onTopActionClick}
             filters={filtersOptions}
             actions={props.actions}
+            panelRef={props.panelRef}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: panelFiltersData,

@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo, useContext } from 'react'
+import { useState, useEffect, useMemo, useContext, useRef } from 'react'
 
 import Stack from '@mui/material/Stack'
-import Pagination from '@mui/material/Pagination'
 import { Tune } from '@mui/icons-material'
 
 import BaseMessagePage from './BaseMessagePage'
@@ -17,12 +16,14 @@ import { useTags, useTeamMembers } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from "lodash"
-import { Divider, MenuItem, Select, Typography } from '@mui/material'
 import useLocalStorage from 'Hooks/useLocalStorage'
+import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination'
+import { Box } from '@mui/material'
 
 const MessagesPage = (props) => {
     const searchParams = useSearchParams()
     const { user } = useContext(AuthContext)
+    const scrollToTopTableRef = useRef()
     const senders = useTeamMembers()
     const tags = useTags()
 
@@ -74,14 +75,17 @@ const MessagesPage = (props) => {
     ]
 
     const onPageChange = (e, page) => {
-        //console.log(page)
-        messages.pagination.getPage(page)
+        if (scrollToTopTableRef.current)
+            scrollToTopTableRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        })
+        messages.pagination.getPage(page)
+    }
+
+    const onPerPageChange = (value) => {
+        if (scrollToTopTableRef.current) {
+            scrollToTopTableRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        }
+        setperPageLocalStorage(value)
     }
 
     const panelFilters = useMemo(() => ({
@@ -139,6 +143,7 @@ const MessagesPage = (props) => {
             panelFilters={panelFilters}
             onPanelFilterChange={onFilterChange}
             selectedFilters={selectedFilters}
+            panelRef={scrollToTopTableRef}
         >
             <RenderIf condition={!messages.loading}>
                 <Stack direction="row" alignItems="center" mb={2}>
@@ -153,7 +158,6 @@ const MessagesPage = (props) => {
                     </Stack>
                 </Stack>
             </RenderIf>
-
             {messages.items && messages.items.map((message, index) => {
                 // console.log('rendering message ' + index)
                 // console.log(message.recipient_count.status)
@@ -162,42 +166,18 @@ const MessagesPage = (props) => {
                     <MessagePreview key={index} message={message} mini style={styles.divider} link />
                 )
             })}
-            {!messages.loading && messages.items && messages.items.length > 0 && (
-                <Stack
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{
-                        position: "sticky",
-                        bottom: 0,
-                        bgcolor: 'background.paper',
-                        flexDirection: 'row',
-                        paddingBlock: 1
-                    }}
-                >
-                    <Stack gap={1} direction='row' alignItems='center'>
-                        <Typography variant='subtitle2'>
-                            Contacts per page:
-                        </Typography>
-                        <Select variant='standard'
-                            disableUnderline
-                            value={perPageLocalStorage}
-                            onChange={(e) => setperPageLocalStorage(e.target.value)}
-                        >
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={25}>25</MenuItem>
-                            <MenuItem value={50}>50</MenuItem>
-                            <MenuItem value={75}>75</MenuItem>
-                            <MenuItem value={100}>100</MenuItem>
-                            <MenuItem value={200}>200</MenuItem>
-                        </Select>
-                    </Stack>
 
-                    <Pagination
-                        count={messages.pagination.totalPages}
-                        page={messages.pagination.currentPage}
-                        onChange={onPageChange}
-                        disabled={messages.loading} />
-                </Stack>
+            {!messages.loading && messages.items && messages.items.length > 0 && (
+                <CustomPagination
+                    totalPages={messages.pagination.totalPages}
+                    currentPage={messages.pagination.currentPage}
+                    perPage={messages.pagination.itemsPerPage}
+                    totalItems={messages.pagination.totalItems}
+                    disabled={messages.loading}
+                    onPageChange={onPageChange}
+                    onPerPageChange={onPerPageChange}
+                    perPageOptions={[10, 20, 50, 100]}
+                />
             )}
             {messages.loading && (
                 <LoadingOverlay />

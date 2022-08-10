@@ -113,7 +113,7 @@ export default function Panel(props) {
     const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled])
 
     return (
-        <Box className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} sx={props.sx} >
+        <Box className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} sx={props.sx} ref={props.panelRef} >
             {!props.hideHeader &&
                 <div style={{ marginBottom: 10, position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1000 }}>
                     <div className='Header'>

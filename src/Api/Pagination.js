@@ -36,6 +36,7 @@ export const usePagination = (initialPage, itemsPerPag) => {
 
     const getItemsPerPage = (itemsPerPage) => {
         setItemsPerPage(Number(itemsPerPage) || 50)
+        setCurrentPage(1)
     }
 
     return [
