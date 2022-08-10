@@ -80,7 +80,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                 open={open}
                 anchorEl={anchorEl}
                 placement="bottom-start"
-                sx={{ zIndex: 5 }}
+                sx={{ zIndex: 'fab' }}
             >
                 <Paper
                     elevation={3}
