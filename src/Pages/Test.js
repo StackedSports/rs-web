@@ -112,9 +112,9 @@ const Test = () => {
 
         // return () => unsubq()
 
-        getMessageInbox()
-            .then(res => console.log(res))
-            .catch(error => console.log(error))
+        // getMessageInbox()
+        //     .then(res => console.log(res))
+        //     .catch(error => console.log(error))
     }, [])
 
     // useEffect(() => {
@@ -138,12 +138,12 @@ const Test = () => {
         //     })
         //     .catch(err => console.log(err))
 
-        const id = `test-${tasks.length}`
+        // const id = `test-${tasks.length}`
 
-        setDoc(doc(db, 'test-task', id), {
-            id,
-            count: 0
-        })
+        // setDoc(doc(db, 'test-task', id), {
+        //     id,
+        //     count: 0
+        // })
 
         // filterContacts(1, 10, { search: 'abxc__'})
         //     .then(res => {
@@ -154,7 +154,7 @@ const Test = () => {
         //     })
 
         // if(contact) {
-            // updateContact(contact.id, { graduation_year: 2010})
+            // updateContact('ZApLaeTxLzPO', { phone: '16159996350'})
             //     .then(res => {
             //         console.log(res)
             //     })

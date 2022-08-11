@@ -66,7 +66,6 @@ function App() {
 
 							{/** New Routes */}
 							<Route path="/tweet-create" exact component={TweetCreate} />
-							{/* <Route path='/test' component={Test} /> */}
 							<Route path="/" exact component={Signup} />
 							<Route path={routes.contacts.path} component={ContactsRoutes} />
 							<Route path={routes.messages.path} component={MessagesRoutes} />
@@ -77,6 +76,8 @@ function App() {
 							<Route path={routes.tweet.path} component={TweetRoutes} />
 							<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 							<Route path={chatRoutes.all} component={ChatRoutes} />
+							
+							{/* <Route path='/test' component={Test} /> */}
 						</Switch>
 					</div>
 				</AppProvider>
