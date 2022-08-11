@@ -5,7 +5,9 @@ import {
     Grid,
     Dialog,
     TextField,
-    Stack
+    Stack,
+    Button,
+    Box
 } from '@mui/material'
 
 import { DesktopTimePicker, StaticDatePicker } from '@mui/x-date-pickers';
@@ -13,6 +15,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import enLocale from 'date-fns/locale/en-US';
 import { isValid } from 'date-fns';
+import { useGetMostRecentSendTimes } from 'Api/ReactQuery';
 
 import { Divider } from 'UI'
 
@@ -33,22 +36,35 @@ const NumberInput = (props) => {
 }
 
 export default function DateTimePicker(props) {
+    const mostRecentSendTimes = useGetMostRecentSendTimes()
     const now = useRef(new Date())
 
     const [date, setDate] = useState(props.value && props.value !== 'ASAP' ? new Date(props.value) : now.current)
     const [asap, setAsap] = useState(props.value && props.value !== 'ASAP' ? false : true)
 
     useEffect(() => {
-        if(!props.value)
+        if (!props.value)
             return
 
-        setDate(new Date(props.value))
+        setDate(props.value !== 'ASAP' ? new Date(props.value) : now.current)
         setAsap(props.value === 'ASAP' ? true : false)
     }, [props.value])
 
+    const parseTime = (time) => {
+        const matches = time.toLowerCase().match(/(\d{1,2}):(\d{2})([ap]m)/)
+        const parsedTime = (parseInt(matches[1]) + (matches[3] == 'pm' ? 12 : 0)) + ':' + matches[2]
+        date.setHours(parsedTime.split(':')[0], parsedTime.split(':')[1], 0)
+        
+        setAsap(false)
+        setDate(oldDate => {
+            const newDate = new Date(oldDate)
+            newDate.setHours(parsedTime.split(':')[0], parsedTime.split(':')[1], 0)
+            return newDate
+        })
+    }
+
     const onTimeChange = (time) => {
         //console.log(date)
-        now.current = new Date()
         setDate(time)
         setAsap(false)
     }
@@ -60,6 +76,7 @@ export default function DateTimePicker(props) {
     }
 
     const onSave = (e) => {
+        now.current = new Date()
         let _date = isValid(date) ? date : now.current
         _date = _date < now.current ? now.current : _date
         onAsapClick()
@@ -116,10 +133,6 @@ export default function DateTimePicker(props) {
                             justifyContent={'center'}
                             alignItems='center'
                         >
-                            {/* <Calendar
-                          onChange={onCalendarChange}
-                          value={date}
-                        /> */}
                             <StaticDatePicker className='MuiCalendarPicker'
                                 displayStaticWrapperAs="desktop"
                                 showToolbar
@@ -134,6 +147,18 @@ export default function DateTimePicker(props) {
                             justifyContent={'center'}
                             alignItems='center'
                         >
+                            <Box>
+                                {
+                                    mostRecentSendTimes.data && mostRecentSendTimes.data.length > 0 &&
+                                    mostRecentSendTimes.data.map(time => {
+                                        return (
+                                            <Button key={time} onClick={() => parseTime(time)}>
+                                                {time}
+                                            </Button>
+                                        )
+                                    })
+                                }
+                            </Box>
                             <DesktopTimePicker
                                 value={date}
                                 onChange={onTimeChange}

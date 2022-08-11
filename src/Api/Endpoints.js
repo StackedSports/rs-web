@@ -1336,3 +1336,7 @@ export const getStats = (startDate, endDate) => {
 export const getTasksQueue = (date) => {
     return GET(`task_queues${date ? `?date=${date}` : ''}`)
 }
+
+export const getMostRecentSendTimes = (timezone) => {
+    return GET(`messages/most_recent_send_times${timezone ? `?timezone=${timezone}` : ''}`)
+}
