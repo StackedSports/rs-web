@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useContext, useMemo } from 'react'
 import { Link } from "react-router-dom"
 
 import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
-import { 
+import {
     ImageOutlined,
     GifBoxOutlined,
     PermMediaOutlined,
@@ -250,12 +250,12 @@ const MediaPreview = ({ type, ...props }) => {
                     }
                     <RenderIf condition={isHovering && props.onPreviewClick}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
-                            <FullscreenIcon/>
+                            <FullscreenIcon />
                         </StyledPreviewButton>
                     </RenderIf>
                     <RenderIf condition={showSendOnHover && isHovering}>
                         <StyledIconButton onMouseDown={onSendClick}>
-                            <SendIcon/>
+                            <SendIcon />
                         </StyledIconButton>
                     </RenderIf>
                 </CardImage>

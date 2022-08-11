@@ -5,7 +5,7 @@ import { useContext } from "react";
 import ConfirmDialogContext from "Context/ConfirmDialogProvider";
 
 export const ConfirmDialog = () => {
-    const { title, message, onSubmit, close } = useContext(ConfirmDialogContext);
+    const { title, message, onSubmit, close, changePrimaryButton } = useContext(ConfirmDialogContext);
 
     return (
         <BaseDialog
@@ -14,15 +14,20 @@ export const ConfirmDialog = () => {
             open={Boolean(onSubmit)}
             onClose={close}
             title={title}
-            onConfirm={close}
+            onConfirm={changePrimaryButton ? onSubmit : close}
             secondaryAction={() => {
-                if (onSubmit)
-                    onSubmit();
-                close();
+                if (changePrimaryButton) {
+                    close();
+                } else {
+                    if (onSubmit)
+                        onSubmit();
+                    close();
+                }
             }}
-            confirmLabel="Cancel"
-            cancelLabel="Confirm"
-            sx={{ zIndex: theme => theme.zIndex.modal + 1 }}
+            confirmLabel={changePrimaryButton ? "Confirm" : "Cancel"}
+            cancelLabel={changePrimaryButton ? "Cancel" : "Confirm"}
+            sx={{ zIndex: theme => theme.zIndex.modal + 1 }
+            }
         >
             <Typography>{message}</Typography>
         </BaseDialog>

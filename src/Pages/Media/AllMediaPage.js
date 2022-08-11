@@ -18,6 +18,7 @@ import RenderIf from "UI/Widgets/RenderIf"
 import { getMediaCriteriaFromQueryString } from "Api/Parser"
 import useSearchParams from 'Hooks/SearchParamsHook';
 import useLocalStorage from "Hooks/useLocalStorage"
+import { AssignMediaToPlaceholderDialog } from "UI/Widgets/Media/AssignMediaToPlaceholderDialog"
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
@@ -29,6 +30,7 @@ export const AllMediaPage = () => {
 	const [viewGrid, setViewGrid] = useState(true)
 	const [showPanelFilters, setShowPanelFilters] = useState(false)
 	const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
+	const [openAssignMediaToPlaceholderDialog, setOpenAssignMediaToPlaceholderDialog] = useState(false)
 	const [loadingTags, setLoadingTags] = useState(false)
 	const isTagDialogFunctionRemoveRef = useRef(false)
 	const panelRef = useRef()
@@ -153,6 +155,10 @@ export const AllMediaPage = () => {
 		}
 	}
 
+	const onAddToPlaceholderAction = () => {
+		setOpenAssignMediaToPlaceholderDialog(true)
+	}
+
 	const mainActions = [
 		{
 			name: 'Change view',
@@ -168,6 +174,7 @@ export const AllMediaPage = () => {
 			disabled: selectedMediasCount === 0,
 			options: [
 				{ name: 'Send in Message', onClick: onSendInMessageAction },
+				{ name: 'Add to Placeholder', onClick: onAddToPlaceholderAction },
 				{ name: 'Download', onClick: onDownloadAction },
 				{ name: 'Archive Media', onClick: onArchiveMedia },
 				{ name: 'Untag', onClick: onUntagAction },
@@ -232,6 +239,12 @@ export const AllMediaPage = () => {
 				actionLoading={loadingTags}
 				title={isTagDialogFunctionRemoveRef.current ? 'Untag' : 'Add Tag'}
 				isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
+			/>
+
+			<AssignMediaToPlaceholderDialog
+				open={openAssignMediaToPlaceholderDialog}
+				onClose={() => setOpenAssignMediaToPlaceholderDialog(false)}
+				medias={multiPageSelection.selectedData}
 			/>
 
 		</MediaPage>

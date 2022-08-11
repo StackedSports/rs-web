@@ -207,7 +207,7 @@ const MessageDetailsPage = (props) => {
                     alert.setError('Failed to send the message.')
                 })
                 .finally(() => refreshMessage())
-        })
+        },true)
     }
 
     const onScheduleMessageClick = () => {
@@ -224,7 +224,7 @@ const MessageDetailsPage = (props) => {
                     alert.setError('Failed to schedule message.')
                 })
                 .finally(() => refreshMessage())
-        })
+        },true)
     }
 
     const onRemoveRecipients = () => {
