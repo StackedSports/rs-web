@@ -54,7 +54,7 @@ export default function DateTimePicker(props) {
         const matches = time.toLowerCase().match(/(\d{1,2}):(\d{2})([ap]m)/)
         const parsedTime = (parseInt(matches[1]) + (matches[3] == 'pm' ? 12 : 0)) + ':' + matches[2]
         date.setHours(parsedTime.split(':')[0], parsedTime.split(':')[1], 0)
-        
+
         setAsap(false)
         setDate(oldDate => {
             const newDate = new Date(oldDate)
@@ -97,7 +97,7 @@ export default function DateTimePicker(props) {
             scroll={"body"}
             PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" } }}
         >
-            <Grid className='DateTimePicker'>
+            <Stack className='DateTimePicker'>
                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
 
                     <Grid className='Header'>
@@ -143,10 +143,20 @@ export default function DateTimePicker(props) {
                             />
                         </Grid>
                         <Grid item md={6} xs={12}
-                            container
-                            justifyContent={'center'}
-                            alignItems='center'
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: 3
+
+                            }}
                         >
+                            <DesktopTimePicker
+                                value={date}
+                                onChange={onTimeChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
                             <Box>
                                 {
                                     mostRecentSendTimes.data && mostRecentSendTimes.data.length > 0 &&
@@ -159,11 +169,6 @@ export default function DateTimePicker(props) {
                                     })
                                 }
                             </Box>
-                            <DesktopTimePicker
-                                value={date}
-                                onChange={onTimeChange}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
                         </Grid>
                     </Grid>
                     <Grid
@@ -174,6 +179,7 @@ export default function DateTimePicker(props) {
                         style={{ paddingRight: 16 }}
                     >
                         <button
+                            style={{ marginLeft: 'auto' }}
                             className={asap ? 'Action' : 'Action Outline'}
                             onClick={onAsapClick}
                         >
@@ -204,7 +210,7 @@ export default function DateTimePicker(props) {
                     </Stack>
 
                 </LocalizationProvider>
-            </Grid>
+            </Stack>
         </Dialog>
     )
 }
