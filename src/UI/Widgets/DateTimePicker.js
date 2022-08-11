@@ -142,14 +142,16 @@ export default function DateTimePicker(props) {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </Grid>
-                        <Grid item md={6} xs={12}
+                        <Stack
+                          spacing={2}
+                          mt={4}
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: 3
-
+                                // justifyContent: 'center',
+                                // alignItems: 'center',
+                                // backgroundColor: '#999',
+                                maxWidth: 300
                             }}
                         >
                             <DesktopTimePicker
@@ -169,7 +171,7 @@ export default function DateTimePicker(props) {
                                     })
                                 }
                             </Box>
-                        </Grid>
+                        </Stack>
                     </Grid>
                     <Grid
                         container
