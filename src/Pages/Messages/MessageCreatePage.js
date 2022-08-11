@@ -82,8 +82,6 @@ export default function MessageCreatePage(props) {
     const snippets = useSnippets().items
     const textPlaceholders = useTextPlaceholders().items
 
-    console.log('Send at ', sendAt)
-
     // Error
     const [error, setError] = useState({
         show: false,
