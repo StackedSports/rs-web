@@ -137,7 +137,7 @@ export const useMessageMutation = () => {
 export const useGetMostRecentSendTimes = (timeZone) => {
     const reactQuery = useQuery(['getMostRecentSendTimes', timeZone], () => getMostRecentSendTimes(timeZone), {
         refetchOnWindowFocus: false,
-        select: (data) =>  data[0],
+        select: (data) =>  lodash.uniq(data[0]),
     })
 
     return {

@@ -93,7 +93,7 @@ export default function ReceiverSelectDialog(props) {
         if (!boards.items)
             return
 
-        console.log(boards.items)
+        // console.log(boards.items)
 
         let tempTeam = []
         let tempPrivate = []
@@ -145,7 +145,7 @@ export default function ReceiverSelectDialog(props) {
         else
             tmp.splice(index, 1)
 
-        console.log(tmp)
+        // console.log(tmp)
 
         if (type === 'contacts') {
             if (index === 'all') {

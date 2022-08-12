@@ -39,6 +39,8 @@ export default function DateTimePicker(props) {
     const mostRecentSendTimes = useGetMostRecentSendTimes()
     const now = useRef(new Date())
 
+    // console.log(mostRecentSendTimes.data)
+
     const [date, setDate] = useState(props.value && props.value !== 'ASAP' ? new Date(props.value) : now.current)
     const [asap, setAsap] = useState(props.value && props.value !== 'ASAP' ? false : true)
 
@@ -59,6 +61,9 @@ export default function DateTimePicker(props) {
         setDate(oldDate => {
             const newDate = new Date(oldDate)
             newDate.setHours(parsedTime.split(':')[0], parsedTime.split(':')[1], 0)
+
+            console.log(newDate)
+
             return newDate
         })
     }

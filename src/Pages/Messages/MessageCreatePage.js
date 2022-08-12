@@ -415,7 +415,7 @@ export default function MessageCreatePage(props) {
     }
 
     const onCreateMessage = (control) => {
-        console.log('create message: ' + control)
+        // console.log('create message: ' + control)
 
         if (loading)
             return
@@ -432,7 +432,7 @@ export default function MessageCreatePage(props) {
         // console.log(senderSelected)
         // console.log(recipientSelected)
         // console.log(message)
-        console.log(mediaSelected)
+        // console.log(mediaSelected)
         // console.log(sendAt)
 
         // return
@@ -554,7 +554,7 @@ export default function MessageCreatePage(props) {
         }
 
         if (sendAt) {
-            console.log('has sendAt')
+            // console.log('has sendAt')
             // Send at is optional. If no send_at field is provided to messageData, the server
             // will try to send the message right away. In the client, sendAt can either be
             // 'ASAP' or a js Date.
@@ -567,7 +567,7 @@ export default function MessageCreatePage(props) {
 
             if (sendAt !== 'ASAP') {
                 messageData['send_at'] = sendAt
-                console.log('yoooooo')
+                // console.log('yoooooo')
             }
                 
         }
