@@ -6,7 +6,7 @@ import { httpsCallable } from 'firebase/functions'
 import { db, functions } from 'Api/Firebase'
 
 import { useUser, useRanks, useContacts, useTags, useContact } from 'Api/Hooks'
-import { getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters, getMessageInbox } from 'Api/Endpoints'
+import { getContactAssociatedMedia, getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters, getMessageInbox } from 'Api/Endpoints'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
@@ -162,6 +162,10 @@ const Test = () => {
             //         console.log(error)
             //     })
         // }
+
+        getContactAssociatedMedia('ZApLaeTxLzPO')
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
     }
 
     let filters = [

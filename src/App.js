@@ -77,7 +77,7 @@ function App() {
 							<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 							<Route path={chatRoutes.all} component={ChatRoutes} />
 							
-							{/* <Route path='/test' component={Test} /> */}
+							<Route path='/test' component={Test} />
 						</Switch>
 					</div>
 				</AppProvider>

@@ -247,6 +247,10 @@ export const archiveContact = (id) => {
     return DELETE(`contacts/${id}`)
 }
 
+export const getContactAssociatedMedia = (id) => {
+    return GET(`contacts/${id}/associated_media`)
+}
+
 /**
  * Iterates over an array of contact ids and archives
  * each contact
