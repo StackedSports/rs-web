@@ -287,6 +287,7 @@ export const ContactsKanban = () => {
             tableId="kanban-table"
             kanbanView={true}
             multiPageSelection={multipageSelection}
+            onSendMessage={onSendMessageClick}
         >
             <RenderIf condition={loading}>
                 <LoadingPanel />
