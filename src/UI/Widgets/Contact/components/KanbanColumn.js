@@ -10,7 +10,17 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Button from 'UI/Widgets/Buttons/Button'
 
-export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange, onSendMessage }) => {
+export const KanbanColumn = ({
+    list,
+    index,
+    onAddContact,
+    onDeleteColumn,
+    onRemoveContact,
+    onNameChange,
+    onSendMessage,
+    onSelectContact,
+    selectedContacts
+}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -31,7 +41,7 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
 
     const handleDeleteBoard = () => {
         handleCloseMoreOptions();
-        onDeleteBoard(list.name)
+        onDeleteColumn(list.name)
     }
 
     const onNameClick = (e) => {
@@ -72,14 +82,18 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
                         <Stack
                             direction='row'
                             alignItems='center'
-                            sx={{ borderRadius: 1.2, padding: 1, width: '100%', height: '50px' }}
+                            sx={{ borderRadius: 1.2, padding: 2, width: '100%', height: '50px' }}
                             bgcolor={snapshot.isDragging ? '#afafaf' : '#f5f6fa'}
                             isDragging={snapshot.isDragging}
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}
                         >
-                            <Typography variant='h6' fontWeight={600} onClick={onNameClick}>{title}</Typography>
-                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2 }}>{contacts.length}</Typography>
+                            <Typography variant='h6' fontWeight={600} onClick={onNameClick} sx={{ fontSize: 16 }}>
+                                {title}
+                            </Typography>
+                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
+                                {contacts.length}
+                            </Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>
                                 <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={() => onAddContact(title)} >
                                     <AddCircleOutlineRoundedIcon fontSize="inherit" />
@@ -95,6 +109,8 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
                             listType="CONTACT"
                             contacts={contacts}
                             onRemoveContact={onRemoveContact}
+                            onSelectContact={onSelectContact}
+                            selectedContacts={selectedContacts}
                         />
                     </Stack>
 
@@ -137,7 +153,7 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
                             </ListItemIcon>
                             <ListItemText>Delete Column</ListItemText>
                         </MenuItem>
-                        
+
                     </Menu>
 
                 </Stack>
@@ -146,4 +162,4 @@ export const KanbanList = ({ list, index, onAddContact, onDeleteBoard, onRemoveC
     )
 }
 
-export default KanbanList;
+export default KanbanColumn;

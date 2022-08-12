@@ -7,31 +7,35 @@ import lodash from 'lodash';
 import { AppContext } from 'Context/AppProvider';
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
-import KanbanList from 'UI/Widgets/Contact/components/KanbanList';
+import KanbanColumn from 'UI/Widgets/Contact/components/KanbanColumn';
 import { Stack } from '@mui/material';
 
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
-import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'  
+import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'
 
 import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
+
 
 export const ContactsKanban = () => {
     const { id: kanbanId } = useParams()
     const app = useContext(AppContext);
+    const multipageSelection = useMultiPageSelection_V2([]) // only use set
+    const { set: setSelectedContacts, selectedData: selectedContacts } = multipageSelection
 
     const contacts = useContacts();
 
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
-    const [lists, setLists] = useState([]);
+    //const [selectContacts, setSelectContacts] = useState([])
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
 
     const tempColumnName = useRef();
 
     useEffect(() => {
-        if(!kanbanId)
+        if (!kanbanId)
             return
 
         const unsub = getKanban(kanbanId, (kanban) => {
@@ -43,6 +47,17 @@ export const ContactsKanban = () => {
 
         return () => unsub()
     }, [kanbanId])
+
+    const haveContactInMultipleColumns = (contact) => {
+        let count = 0
+        kanban.columns.forEach(column => {
+            if (column.contacts.some(c => c.id === contact.id))
+                count++
+        })
+        return count > 1
+    }
+
+    const isContactSelected = (contact) => selectedContacts.some(c => c.id === contact.id)
 
     const onSendMessageClick = (selectedData) => {
         app.sendMessageToContacts(selectedData)
@@ -59,10 +74,10 @@ export const ContactsKanban = () => {
     const onAddColumn = (columnName) => {
         console.log('on Add Column')
 
-        if (!kanban.columns || kanban.columns.find(column => column.name === columnName) === undefined) {
+        if (!kanban.columns || !kanban.columns.some(column => column.name === columnName)) {
             console.log('column does not exist yet')
             // setLists(lists => [...lists, { name: columnName, contacts: [] }])
-            
+
             // Create new columns array
             const newColumns = [...kanban.columns, { id: Date.now(), name: columnName, contacts: [] }]
 
@@ -88,10 +103,14 @@ export const ContactsKanban = () => {
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.id === listId)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
-        // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
+        // before removing, check if the contact is checked and if is not in other columns whe deselect it
+        if (isContactSelected(contact) && !haveContactInMultipleColumns(contact)) {
+            onSelectContact(contact)
+        }
+
         column.contacts = column.contacts.filter(c => c.id != contact.id)
 
         setKanban(kanban => ({
@@ -107,7 +126,7 @@ export const ContactsKanban = () => {
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.id === listId)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
         // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
@@ -127,13 +146,13 @@ export const ContactsKanban = () => {
 
         const listName = tempColumnName.current
 
-        if (!listName) 
+        if (!listName)
             return
 
         const newColumns = Object.assign([], kanban.columns)
         const column = newColumns.find(list => list.name === listName)
 
-        if(column === undefined)
+        if (column === undefined)
             return
 
         column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
@@ -166,6 +185,13 @@ export const ContactsKanban = () => {
                 columns: newColumns
             }
         })
+    }
+
+    const onSelectContact = (contact) => {
+        if (selectedContacts.some(c => c.id === contact.id))
+            setSelectedContacts(selectedContacts.filter(c => c.id !== contact.id))
+        else
+            setSelectedContacts([...selectedContacts, contact])
     }
 
     // a little function to help us with reordering the result
@@ -205,6 +231,7 @@ export const ContactsKanban = () => {
 
     function onDragEnd(result) {
         const { source, destination } = result;
+        console.log(result)
 
         // dropped outside the list
         if (!destination) {
@@ -258,11 +285,12 @@ export const ContactsKanban = () => {
             title={loading ? `Kanban` : `Kanban: ${kanban?.name || 'undefined'}`}
             contacts={contacts}
             tableId="kanban-table"
-            hideTag
             kanbanView={true}
+            multiPageSelection={multipageSelection}
+            onSendMessage={onSendMessageClick}
         >
             <RenderIf condition={loading}>
-                <LoadingPanel/>
+                <LoadingPanel />
             </RenderIf>
             <RenderIf condition={!loading && !kanban}>
                 <ErrorPanel
@@ -274,15 +302,17 @@ export const ContactsKanban = () => {
                 <RenderIf condition={!loading && kanban && kanban.columns && Array.isArray(kanban.columns)}>
                     <KanbanWorkspace onDragEnd={onDragEnd}>
                         {kanban?.columns?.map((list, index) => (
-                            <KanbanList
+                            <KanbanColumn
                                 key={list.name}
                                 list={list}
                                 index={index}
                                 onAddContact={onAddContact}
-                                onDeleteBoard={onDeleteColumn}
+                                onDeleteColumn={onDeleteColumn}
                                 onRemoveContact={(contact) => onRemoveContact(contact, list.id)}
                                 onNameChange={(name) => onColumnNameChange(name, list.id)}
                                 onSendMessage={onSendMessageClick}
+                                onSelectContact={onSelectContact}
+                                selectedContacts={selectedContacts}
                             />
                         ))}
                     </KanbanWorkspace>
@@ -300,7 +330,6 @@ export const ContactsKanban = () => {
                 onSearch={onContactSearch}
                 onClearSearch={onContactSearchClear}
             />
-
         </BaseContactsPage>
     )
 }

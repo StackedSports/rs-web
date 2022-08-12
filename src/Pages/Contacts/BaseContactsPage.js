@@ -75,7 +75,7 @@ export default function BaseContactsPage(props) {
     const kanbans = useKanbans()
 
     const gridApiRef = useGridApiRef()
-    const contactsMultipageSelection = useMultiPageSelection_V2(contacts.items)
+    const contactsMultipageSelection = props.multiPageSelection || useMultiPageSelection_V2(contacts.items)
 
     useEffect(() => {
         if (props.selectedFilters)
@@ -100,7 +100,6 @@ export default function BaseContactsPage(props) {
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
-
 
     const panelFiltersData = useMemo(() =>
     ({
@@ -160,12 +159,6 @@ export default function BaseContactsPage(props) {
 
 
     let mainActions = props.kanbanView ? null : [
-        // {
-        //     name: 'List View | Boards View',
-        //     path: '/contacts/kanban',
-        //     icon: AccountBox,
-        //     variant: 'text',
-        // },
         {
             name: 'Save as Board',
             icon: AccountBox,
@@ -182,7 +175,6 @@ export default function BaseContactsPage(props) {
     ]
 
     const onTopActionClick = (e) => {
-        console.log("Cliquei")
         setOpenCreateContactDialog(true)
     }
 
@@ -382,99 +374,101 @@ export default function BaseContactsPage(props) {
                 selectedFilters: selectedFilters
             }}
         >
-            <RenderIf condition={!props.kanbanView}>
-                <Stack direction="row" alignItems="center" mb={2}>
-                    <Stack minHeight='53px' flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
-                        <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                            <span style={{ fontWeight: 'bold' }}>
-                                You have{' '}
-                                <span style={{ color: '#3871DA' }}>
-                                    {contacts.pagination.totalItems || 0}
-                                </span>
-                                {' '}contacts
-                            </span>
-                        </Stack>
-                        {contactsMultipageSelection.count > 0 &&
-                            <Stack flex={1} minHeight='28px' direction="row" justifyContent="flex-start" alignItems="center">
-                                <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
-                                    <span >
-                                        {contactsMultipageSelection.count}
-                                    </span>
-                                    {' '}contact{contactsMultipageSelection.count > 1 && "s"} selected
-                                </span>
-                                <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => contactsMultipageSelection.clear()}>
-                                    <Clear fontSize="inherit" />
-                                </IconButton>
-                            </Stack>
-                        }
-                    </Stack>
+            {/* <RenderIf condition={!props.kanbanView}> */}
+            <Stack direction="row" alignItems="center" mb={2}>
+                <Stack minHeight='53px' flex={1} direction="column" justifyContent="center" alignItems="start" spacing={0}>
                     <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                        <Button
-                            name="Send Message"
-                            variant="contained"
-                            endIcon={<SendIcon />}
-                            onClick={onSendMessageClick}
-                            disabled={props.enableSendMessageWithoutSelection ?
-                                false : contactsMultipageSelection.count == 0}
-                        />
+                        <span style={{ fontWeight: 'bold' }}>
+                            You have{' '}
+                            <span style={{ color: '#3871DA' }}>
+                                {contacts.pagination.totalItems || 0}
+                            </span>
+                            {' '}contacts
+                        </span>
                     </Stack>
-                    <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                        <RenderIf condition={props.boardInfo}>
-                            <PanelDropdown
-                                action={{
-                                    name: 'Actions',
-                                    variant: 'outlined',
-                                    icon: AutoFixHighIcon,
-                                    options: props.title.includes("Board") ?
-                                        [
-                                            { name: 'Export Board as CSV', onClick: onExportAsCSVClick },
-                                            { name: 'Edit Board', onClick: onEditBoard },
-                                            { name: 'Delete Board', onClick: onDeleteBoard },
-                                        ]
-                                        :
-                                        []
-                                }}
-                            />
-                        </RenderIf>
-                        <RenderIf condition={props.onContactSearch}>
-                            <MiniSearchBar
-                                placeholder="Search Contacts"
-                                onSearch={props.onContactSearch}
-                                onClear={props.onContactSearchClear}
-                            />
-                        </RenderIf>
-                        <RenderIf condition={contactsMultipageSelection.count > 0}>
-                            <PanelDropdown
-                                action={{
-                                    id: 'selected-contacts-actions',
-                                    name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
-                                    type: 'dropdown',
-                                    variant: 'contained',
-                                    icon: ArrowDropDownIcon,
-                                    disabled: contactsMultipageSelection.count === 0,
-                                    style: { whiteSpace: "nowrap" },
-                                    options: [
+                    {contactsMultipageSelection.count > 0 &&
+                        <Stack flex={1} minHeight='28px' direction="row" justifyContent="flex-start" alignItems="center">
+                            <span style={{ fontWeight: 'bold', fontSize: 14, color: '#3871DA' }}>
+                                <span >
+                                    {contactsMultipageSelection.count}
+                                </span>
+                                {' '}contact{contactsMultipageSelection.count > 1 && "s"} selected
+                            </span>
+                            <IconButton size='small' sx={{ color: '#3871DA' }} onClick={() => contactsMultipageSelection.clear()}>
+                                <Clear fontSize="inherit" />
+                            </IconButton>
+                        </Stack>
+                    }
+                </Stack>
+                <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                    <Button
+                        name="Send Message"
+                        variant="contained"
+                        endIcon={<SendIcon />}
+                        onClick={onSendMessageClick}
+                        disabled={props.enableSendMessageWithoutSelection ?
+                            false : contactsMultipageSelection.count == 0}
+                    />
+                </Stack>
+                <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
+                    <RenderIf condition={props.boardInfo}>
+                        <PanelDropdown
+                            action={{
+                                name: 'Actions',
+                                variant: 'outlined',
+                                icon: AutoFixHighIcon,
+                                options: props.title.includes("Board") ?
+                                    [
+                                        { name: 'Export Board as CSV', onClick: onExportAsCSVClick },
+                                        { name: 'Edit Board', onClick: onEditBoard },
+                                        { name: 'Delete Board', onClick: onDeleteBoard },
+                                    ]
+                                    :
+                                    []
+                            }}
+                        />
+                    </RenderIf>
+                    <RenderIf condition={props.onContactSearch}>
+                        <MiniSearchBar
+                            placeholder="Search Contacts"
+                            onSearch={props.onContactSearch}
+                            onClear={props.onContactSearchClear}
+                        />
+                    </RenderIf>
+                    <RenderIf condition={contactsMultipageSelection.count > 0}>
+                        <PanelDropdown
+                            action={{
+                                id: 'selected-contacts-actions',
+                                name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
+                                type: 'dropdown',
+                                variant: 'contained',
+                                icon: ArrowDropDownIcon,
+                                disabled: contactsMultipageSelection.count === 0,
+                                style: { whiteSpace: "nowrap" },
+                                options: props.kanbanView ? [
+                                    { name: 'Remove Tag', onClick: onRemoveTagClick },
+                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                                    { name: 'Archive Contact', onClick: onArchiveContactClick }
+                                ] :
+                                    [
                                         { name: 'Export as CSV', onClick: onExportAsCSVClick },
                                         { name: 'Remove Tag', onClick: onRemoveTagClick },
                                         { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
                                         { name: 'Archive Contact', onClick: onArchiveContactClick }
                                     ]
-                                }}
-                            />
-                        </RenderIf>
-                        <RenderIf condition={!props.hideTag}>
-                            <Button
-                                name="Tag"
-                                variant="outlined"
-                                endIcon={<LocalOfferOutlinedIcon />}
-                                onClick={onAddTagClick}
-                                disabled={contactsMultipageSelection.count == 0}
-                            />
-                        </RenderIf>
-
-                    </Stack>
+                            }}
+                        />
+                    </RenderIf>
+                    <Button
+                        name="Tag"
+                        variant="outlined"
+                        endIcon={<LocalOfferOutlinedIcon />}
+                        onClick={onAddTagClick}
+                        disabled={contactsMultipageSelection.count == 0}
+                    />
                 </Stack>
-            </RenderIf>
+            </Stack>
+            {/*  </RenderIf> */}
 
             {
                 props.kanbanView ? props.children

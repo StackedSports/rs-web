@@ -14,7 +14,7 @@ export const getBackgroundColor = (isDraggingOver, isDraggingFrom,) => {
     return 'transparent';
 };
 
-const InnerContactList = ({ contacts, ...props }) => {
+const RenderContacts = ({ contacts, ...props }) => {
     return contacts.map((contact, index) => (
         <Draggable key={contact.id} draggableId={contact.id} index={index}>
             {(
@@ -27,6 +27,7 @@ const InnerContactList = ({ contacts, ...props }) => {
                     isDragging={dragSnapshot.isDragging}
                     provided={dragProvided}
                     onRemoveContact={props.onRemoveContact}
+                    onSelectContact={props.onSelectContact}
                 />
             )}
         </Draggable>
@@ -40,7 +41,9 @@ export const KanbanListItems = (props) => {
         listType,
         contacts,
         style,
-        onRemoveContact
+        onRemoveContact,
+        onSelectContact,
+        selectedContacts
     } = props;
 
     return (
@@ -61,7 +64,27 @@ export const KanbanListItems = (props) => {
                     {...dropProvided.droppableProps}
                     ref={dropProvided.innerRef}
                 >
-                    <InnerContactList contacts={contacts} onRemoveContact={onRemoveContact}/>
+                    {/* <RenderContacts contacts={contacts} onRemoveContact={onRemoveContact} onSelectContact={onSelectContact}/> */}
+                    {
+                        contacts.map((contact, index) => (
+                            <Draggable key={contact.id} draggableId={contact.id} index={index}>
+                                {(
+                                    dragProvided,
+                                    dragSnapshot,
+                                ) => (
+                                    <KanbanContactItem
+                                        key={contact.id}
+                                        contact={contact}
+                                        isDragging={dragSnapshot.isDragging}
+                                        provided={dragProvided}
+                                        onRemoveContact={onRemoveContact}
+                                        onSelectContact={onSelectContact}
+                                        selectedContacts={selectedContacts}
+                                    />
+                                )}
+                            </Draggable>
+                        ))
+                    }
                     {dropProvided.placeholder}
                 </Wrapper>
             )}
