@@ -82,14 +82,18 @@ export const KanbanColumn = ({
                         <Stack
                             direction='row'
                             alignItems='center'
-                            sx={{ borderRadius: 1.2, padding: 1, width: '100%', height: '50px' }}
+                            sx={{ borderRadius: 1.2, padding: 2, width: '100%', height: '50px' }}
                             bgcolor={snapshot.isDragging ? '#afafaf' : '#f5f6fa'}
                             isDragging={snapshot.isDragging}
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}
                         >
-                            <Typography variant='h6' fontWeight={600} onClick={onNameClick}>{title}</Typography>
-                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2 }}>{contacts.length}</Typography>
+                            <Typography variant='h6' fontWeight={600} onClick={onNameClick} sx={{ fontSize: 16 }}>
+                                {title}
+                            </Typography>
+                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
+                                {contacts.length}
+                            </Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>
                                 <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={() => onAddContact(title)} >
                                     <AddCircleOutlineRoundedIcon fontSize="inherit" />
