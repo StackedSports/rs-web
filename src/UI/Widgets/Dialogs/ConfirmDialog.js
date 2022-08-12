@@ -14,7 +14,14 @@ export const ConfirmDialog = () => {
             open={Boolean(onSubmit)}
             onClose={close}
             title={title}
-            onConfirm={changePrimaryButton ? onSubmit : close}
+            onConfirm={() => {
+                if (changePrimaryButton) {
+                    onSubmit()
+                    close()
+                } else {
+                    close()
+                }
+            }}
             secondaryAction={() => {
                 if (changePrimaryButton) {
                     close();
