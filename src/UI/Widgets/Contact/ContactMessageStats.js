@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 const ContactMessageStats = (props) => {
+  const { stats } = props;
 
   const onRefresh = () => {
     console.log("onRefresh")
@@ -15,10 +16,10 @@ const ContactMessageStats = (props) => {
   return (
     <Stack sx={{ width: "100%" }} flex={1} justifyContent="flex-start" alignItems="center" spacing={2}>
       <Stack sx={{ width: "100%", maxHeight: 50 }}
-        flex={1} 
-        direction="row" 
-        justifyContent="space-between" 
-        alignItems="center" 
+        flex={1}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
         spacing={1}
         mb={2}
       >
@@ -36,21 +37,21 @@ const ContactMessageStats = (props) => {
             <LaptopIcon />
             <span>DMS's</span>
           </div>
-          <span style={{ color: "blue", fontSize: "25px", fontWeight: "700" }}>{props.countDm || 0}</span>
+          <span style={{ color: "blue", fontSize: "25px", fontWeight: "700" }}>{stats?.dms || 0}</span>
         </Stack>
         <Stack justifyContent="space-between" alignItems="center" spacing={1}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <SmartphoneIcon />
             <span>Personal Text</span>
           </div>
-          <span style={{ color: "red", fontSize: "25px", fontWeight: "700" }}>{props.countPersonalText || 0}</span>
+          <span style={{ color: "red", fontSize: "25px", fontWeight: "700" }}>{stats?.pts || 0}</span>
         </Stack>
         <Stack justifyContent="space-between" alignItems="center" spacing={1}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <SmartphoneIcon />
             <span>RS Text</span>
           </div>
-          <span style={{ color: "yellow", fontSize: "25px", fontWeight: "700" }}>{props.countRsText || 0}</span>
+          <span style={{ color: "yellow", fontSize: "25px", fontWeight: "700" }}>{stats?.sms || 0}</span>
         </Stack>
       </Stack>
     </Stack>
