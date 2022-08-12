@@ -1,12 +1,14 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useMemo } from 'react'
 import { AppContext } from 'Context/AppProvider'
-import { Avatar, Box, Stack, styled, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
+import { Avatar, Box, Stack, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import SendIcon from '@mui/icons-material/Send'
 
 import RenderIf from 'UI/Widgets/RenderIf'
 import { getFullName } from 'utils/Parser';
+
+import styled from 'styled-components';
 
 const getPositionsString = (positions) => {
     if (positions.length == 0)
@@ -20,7 +22,10 @@ export const KanbanContactItem = (props) => {
         contact,
         isDragging,
         provided,
+        selectedContacts,
     } = props;
+
+    const isSelected = useMemo(() => selectedContacts.some(c => c.id === contact.id), [selectedContacts, contact.id])
 
     const [isHovering, setIsHovering] = useState(false)
     const app = useContext(AppContext)
@@ -46,8 +51,13 @@ export const KanbanContactItem = (props) => {
     }
 
     const onRemoveContactClick = (e) => {
-        if (props.onRemoveContact)
+        if (props.onRemoveContact){
             props.onRemoveContact(contact)
+        }
+    }
+    const onSelectContactClick = (e) => {
+        if (props.onSelectContact)
+            props.onSelectContact(contact)
     }
 
     return (
@@ -61,8 +71,8 @@ export const KanbanContactItem = (props) => {
         >
             <Stack direction='row' alignItems='center' gap={2} >
                 {
-                    isHovering ?
-                        <Checkbox checked={contact?.isSelected} onChange={(e) => console.log(e.target.checked)} /> :
+                    (isHovering || isSelected) ?
+                        <Checkbox checked={isSelected} onChange={(e) => onSelectContactClick(e)} /> :
                         <Avatar
                             src={contact.twitter_profile?.profile_image}
                             alt={getFullName(contact)}

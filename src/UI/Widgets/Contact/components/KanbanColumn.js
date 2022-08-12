@@ -10,7 +10,17 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import Button from 'UI/Widgets/Buttons/Button'
 
-export const KanbanColumn = ({ list, index, onAddContact, onDeleteBoard, onRemoveContact, onNameChange, onSendMessage }) => {
+export const KanbanColumn = ({
+    list,
+    index,
+    onAddContact,
+    onDeleteColumn,
+    onRemoveContact,
+    onNameChange,
+    onSendMessage,
+    onSelectContact,
+    selectedContacts
+}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -31,7 +41,7 @@ export const KanbanColumn = ({ list, index, onAddContact, onDeleteBoard, onRemov
 
     const handleDeleteBoard = () => {
         handleCloseMoreOptions();
-        onDeleteBoard(list.name)
+        onDeleteColumn(list.name)
     }
 
     const onNameClick = (e) => {
@@ -95,6 +105,8 @@ export const KanbanColumn = ({ list, index, onAddContact, onDeleteBoard, onRemov
                             listType="CONTACT"
                             contacts={contacts}
                             onRemoveContact={onRemoveContact}
+                            onSelectContact={onSelectContact}
+                            selectedContacts={selectedContacts}
                         />
                     </Stack>
 
@@ -137,7 +149,7 @@ export const KanbanColumn = ({ list, index, onAddContact, onDeleteBoard, onRemov
                             </ListItemIcon>
                             <ListItemText>Delete Column</ListItemText>
                         </MenuItem>
-                        
+
                     </Menu>
 
                 </Stack>

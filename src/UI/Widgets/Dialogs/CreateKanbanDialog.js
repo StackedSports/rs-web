@@ -31,7 +31,6 @@ const validationSchema = yup.object({
  * 
  * @param {boolean} open controls the state of the dialog open/close
  * @param {function} onClose callback function to be called when the dialog is closed
- * @param {object} selectedFilters Object with the selected filters Object.Keys are the filter names and the values[] are the array with selected filters name
  * @returns 
  */
 export const CreateKanbanDialog = (props) => {
@@ -47,17 +46,17 @@ export const CreateKanbanDialog = (props) => {
     onSubmit: (values, formikHelpers) => {
       const { name } = values
 
-    //   return console.log('new kanban ' + name)
+      //   return console.log('new kanban ' + name)
 
       createKanban(name)
         .then(() => {
-            formikHelpers.setSubmitting(false)
-            if(props.onSuccess)
-                props.onSuccess()
+          formikHelpers.setSubmitting(false)
+          if (props.onSuccess)
+            props.onSuccess()
         })
         .catch((error) => {
-            console.log(error)
-            formikHelpers.setSubmitting(false)
+          console.log(error)
+          formikHelpers.setSubmitting(false)
         })
     }
   });
@@ -160,7 +159,6 @@ export const CreateKanbanDialog = (props) => {
           <LoadingButton
             loading={formik.isSubmitting}
             disabled={formik.isSubmitting}
-            loadingPosition="end"
             variant='contained'
             type='submit'
           >

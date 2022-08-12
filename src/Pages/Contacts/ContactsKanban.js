@@ -10,6 +10,7 @@ import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
 import KanbanColumn from 'UI/Widgets/Contact/components/KanbanColumn';
 import { Stack } from '@mui/material';
 
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
@@ -17,14 +18,18 @@ import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'
 
 import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
+
 export const ContactsKanban = () => {
     const { id: kanbanId } = useParams()
     const app = useContext(AppContext);
+    const multipageSelection = useMultiPageSelection_V2([]) // only use set
+    const { set: setSelectedContacts, selectedData: selectedContacts } = multipageSelection
 
     const contacts = useContacts();
 
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
+    //const [selectContacts, setSelectContacts] = useState([])
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
 
     const tempColumnName = useRef();
@@ -34,7 +39,7 @@ export const ContactsKanban = () => {
             return
 
         const unsub = getKanban(kanbanId, (kanban) => {
-            //console.log(kanban)
+            console.log(kanban)
 
             setKanban(kanban)
             setLoading(false)
@@ -42,6 +47,17 @@ export const ContactsKanban = () => {
 
         return () => unsub()
     }, [kanbanId])
+
+    const haveContactInMultipleColumns = (contact) => {
+        let count = 0
+        kanban.columns.forEach(column => {
+            if (column.contacts.some(c => c.id === contact.id))
+                count++
+        })
+        return count > 1
+    }
+
+    const isContactSelected = (contact) => selectedContacts.some(c => c.id === contact.id)
 
     const onSendMessageClick = (selectedData) => {
         app.sendMessageToContacts(selectedData)
@@ -90,7 +106,11 @@ export const ContactsKanban = () => {
         if (column === undefined)
             return
 
-        // column.contacts = lodash.uniqBy([...column.contacts, ...selectedData], 'id')
+        // before removing, check if the contact is checked and if is not in other columns whe deselect it
+        if (isContactSelected(contact) && !haveContactInMultipleColumns(contact)) {
+            onSelectContact(contact)
+        }
+
         column.contacts = column.contacts.filter(c => c.id != contact.id)
 
         setKanban(kanban => ({
@@ -165,6 +185,13 @@ export const ContactsKanban = () => {
                 columns: newColumns
             }
         })
+    }
+
+    const onSelectContact = (contact) => {
+        if (selectedContacts.some(c => c.id === contact.id))
+            setSelectedContacts(selectedContacts.filter(c => c.id !== contact.id))
+        else
+            setSelectedContacts([...selectedContacts, contact])
     }
 
     // a little function to help us with reordering the result
@@ -258,8 +285,8 @@ export const ContactsKanban = () => {
             title={loading ? `Kanban` : `Kanban: ${kanban?.name || 'undefined'}`}
             contacts={contacts}
             tableId="kanban-table"
-            hideTag
             kanbanView={true}
+            multiPageSelection={multipageSelection}
         >
             <RenderIf condition={loading}>
                 <LoadingPanel />
@@ -279,10 +306,12 @@ export const ContactsKanban = () => {
                                 list={list}
                                 index={index}
                                 onAddContact={onAddContact}
-                                onDeleteBoard={onDeleteColumn}
+                                onDeleteColumn={onDeleteColumn}
                                 onRemoveContact={(contact) => onRemoveContact(contact, list.id)}
                                 onNameChange={(name) => onColumnNameChange(name, list.id)}
                                 onSendMessage={onSendMessageClick}
+                                onSelectContact={onSelectContact}
+                                selectedContacts={selectedContacts}
                             />
                         ))}
                     </KanbanWorkspace>
@@ -300,7 +329,6 @@ export const ContactsKanban = () => {
                 onSearch={onContactSearch}
                 onClearSearch={onContactSearchClear}
             />
-
         </BaseContactsPage>
     )
 }
