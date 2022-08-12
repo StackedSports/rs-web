@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
-import { useBoards, useContact } from 'Api/ReactQuery';
+import { useBoards, useContact, useContactAssociatedMedia, useContactSentMedia, useContactConversation, useContactStats } from 'Api/ReactQuery';
 
 import { contactsRoutes, messageRoutes } from 'Routes/Routes'
 
@@ -29,6 +29,10 @@ export default function ContactsProfilePage(props) {
     // const teamMembers = useTeamMembers()
     const history = useHistory()
     const contact = useContact(id)
+    const contactAssociatedMedia = useContactAssociatedMedia(id, 1, 20)
+    const contactConversation = useContactConversation(id)
+    const contactSentMedia = useContactSentMedia(id)
+    const contactStats = useContactStats(id)
     const boards = useBoards()
 
     const [updatedContact, setUpdatedContact] = useState(null)
@@ -39,33 +43,17 @@ export default function ContactsProfilePage(props) {
         console.log(contact.item)
     }, [id])
 
-    // const contactPositions = useMemo(() => contact?.positions.map(position => {
-    //     return {
-    //         abbreviation: position.toUpperCase(),
-    //     }
-    // }), [positions, contact])
-    // console.log(contactPositions)
+    /*     useEffect(() => {
+            if (!contactConversation.item)
+                return
+            console.log("conversation", contactConversation.item)
+        }, [contactConversation.item]) */
 
-    // const teamMembersItems = teamMembers.items?.map(item => ({ id: item.id, name: `${item.first_name} ${item.last_name}` })) || []
-
-    // const mainActions = [
-    //     {
-    //         name: 'Save as Board',
-    //         icon: AccountBox,
-    //         onClick: () => setOpenCreateBoardDialog(true),
-    //         variant: 'outlined',
-    //         disabled: Object.keys(selectedFilters).length === 0,
-    //     },
-    //     {
-    //         name: 'Filter',
-    //         icon: Tune,
-    //         onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-    //         variant: 'contained',
-    //     }
-    // ]
-
-    // console.log(Object.keys(selectedFilters).length === 0)
-
+    useEffect(() => {
+        if (!contactStats.item)
+            return
+        console.log("stats", contactStats.item)
+    }, [contactStats.item])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -101,7 +89,12 @@ export default function ContactsProfilePage(props) {
                     onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={updatedContact || contact.item} />
-                <ContactMessageDetails contact={updatedContact || contact.item} />
+                <ContactMessageDetails
+                    contact={updatedContact || contact.item}
+                    sentMedias={contactSentMedia.items}
+                    associatedMedias={contactAssociatedMedia.items}
+                    stats={contactStats.item}
+                />
             </Stack>
         </MainLayout>
     )

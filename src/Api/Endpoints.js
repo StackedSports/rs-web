@@ -247,8 +247,21 @@ export const archiveContact = (id) => {
     return DELETE(`contacts/${id}`)
 }
 
-export const getContactAssociatedMedia = (id) => {
-    return GET(`contacts/${id}/associated_media`)
+export const getContactAssociatedMedia = (id,page,perPage) => {
+    return GET(`contacts/${id}/associated_media?page=${page}&per_page=${perPage}`)
+}
+
+export const getContactSentMedia = (id,page,perPage) => {
+    return GET(`contacts/${id}/sent_media?page=${page}&per_page=${perPage}`)
+}
+
+export const getContactConversation = (id) => {
+    return GET(`contacts/${id}/conversation`)
+}
+
+export const getContactStats = (id) => {
+    console.log("eu sou o getContactStats")
+    return GET(`contacts/${id}/stats`)
 }
 
 /**

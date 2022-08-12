@@ -42,7 +42,7 @@ export const MediaCarousel = (props) => {
 
   useEffect(() => {
     if (props.items) {
-      setUrl(props.items[index]?.urls?.original)
+      setUrl(props.items[index]?.urls?.original || props.items[index])
       setType(getFileType(props.items[index]))
     }
   }, [props.items, index])

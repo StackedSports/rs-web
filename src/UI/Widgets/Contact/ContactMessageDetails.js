@@ -24,20 +24,20 @@ const ContactMessageDetails = (props) => {
 		setVisibleContainer(containerVisible)
 	}
 
-	const urlsSentMedia = props.contact?.sent_media?.map(media => media.urls?.original)
+	const urlsSentMedia = props.sentMedias.map(media => media.urls?.original)
 
-	const urlsAssociatedMedia = props.contact?.associated_media?.map(media => media.urls?.original)
+	const urlsAssociatedMedia = props.associatedMedias.map(media => media.url?.original)
 
 	return (
-		<Stack ref={self} 
-		  sx={{ width: "300px", borderLeft: "#efefef  1px solid" }} 
-		  alignItems="center" 
-		  justifyContent="start"
-		  pl={1}
+		<Stack ref={self}
+			sx={{ width: "300px", borderLeft: "#efefef  1px solid" }}
+			alignItems="center"
+			justifyContent="start"
+			pl={1}
 		>
 			<Collapse flex={1} in={visibleContainer === "preview"} sx={{ height: '100%', display: 'flex' }}>
 				<Stack spacing={2} flex={1} sx={{ height: '100%' }}>
-					<ContactMessageStats />
+					<ContactMessageStats stats={props.stats} />
 					<ContactMediaPreview
 						id="sentMedia"
 						title="Sent Media"
