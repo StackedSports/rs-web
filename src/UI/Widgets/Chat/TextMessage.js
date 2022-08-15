@@ -10,7 +10,7 @@ export const TextMessage = (props) => {
         <ListItem
             sx={{
                 paddingBlock: 1,
-                paddingInlineStart: props.owner ? 2 : 2,
+                paddingInlineStart:  2,
                 paddingInlineEnd: props.owner ? 1 : 2,
                 justifyContent: props.owner ? 'flex-end' : 'flex-start',
             }}
@@ -31,7 +31,7 @@ export const TextMessage = (props) => {
                 backgroundColor: props.owner ? "primary.main" : "grey.200",
                 borderRadius: props.owner ? "20px 20px 0 20px" : "20px 20px 20px 0",
             }}>
-                {props.message.message}
+                {props.message.text}
             </Typography>
             {props.owner &&
                 <Avatar sx={{
@@ -41,7 +41,7 @@ export const TextMessage = (props) => {
                     alignSelf: "flex-end",
                 }}
                     aria-label="avatar"
-                    src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+                    src={props.owmnerAvatar}
                 />}
         </ListItem>
     )

@@ -4,7 +4,7 @@ import { TextMessage } from 'UI/Widgets/Chat';
 
 
 const ContactChatMessages = (props) => {
-  const { messages, contact_profile_image, coach_profile_image } = props.messages;
+  const { messages, contact_profile_image, coach_profile_image } = props.messages || {};
 
   const onCheckMessages = (message) => {
     console.log("check message", message);
@@ -37,8 +37,10 @@ const ContactChatMessages = (props) => {
           owner={message.direction === 'out'}
           onCheck={onCheckMessages}
           //checked={isMessageChecked(message)}
-          message={message.text}
+          message={message}
           actionActive={false}
+          owmnerAvatar={coach_profile_image}
+          contactAvatar={contact_profile_image}
         />
       ))}
     </List>
