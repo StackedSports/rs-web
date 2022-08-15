@@ -97,7 +97,7 @@ const MessageDetailsPage = (props) => {
 
         setLoading(true)
 
-        updateMessage({ id: message.item.id, data: { status: 'Draft'} }, {
+        updateMessage({ id: message.item.id, data: { status: 'Draft', user_id: message.item.sender.id, } }, {
             onSuccess: () => {
                 setRedirect(`${messageRoutes.edit}/${message.item.id}`)
             },

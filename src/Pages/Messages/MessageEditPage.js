@@ -55,6 +55,8 @@ const MessageEditPage = (props) => {
         if (!message.item)
             return
 
+        // console.log(message.item)
+
         const sender = message.item.sender
         const send_as_coach = getCoachLabel(message.item.send_as_coach)
         const selectedSenders = [sender, send_as_coach].filter(item => !!item)
