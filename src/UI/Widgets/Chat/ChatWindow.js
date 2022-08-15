@@ -29,7 +29,6 @@ import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import MediaPreview from '../Media/MediaPreview';
 import { stringSplice } from 'utils/Helper';
 
-
 export const ChatWindow = (props) => {
   const [textMessage, setTextMessage] = useState("")
   const [checkedMessages, setCheckedMessages] = useState([])
