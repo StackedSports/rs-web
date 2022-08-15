@@ -6,16 +6,16 @@ import ContactChatMessages from "./ContactChatMessages";
 const ContactChat = (props) => {
 
   return (
-    <Stack 
-      flex={1} 
+    <Stack
+      flex={1}
       // justifyContent="flex-start" 
       // alignItems="start" 
       spacing={1}
-      
-      // sx={{ wheight: '100%' }}
+
+    // sx={{ wheight: '100%' }}
     >
       <ContactChatHeader contact={props.contact} />
-      <ContactChatMessages />
+      <ContactChatMessages messages={props.messages} />
       <ContactChatInput />
     </Stack>
   )
