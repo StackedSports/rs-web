@@ -1,7 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import ContactChatInput from "./ContactChatInput";
 import ContactChatHeader from "./ContactChatHeader";
-import ContactChatMessages from "./ContactChatMessages";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import { MessagesDisplay } from "../Chat/MessagesDisplay";
