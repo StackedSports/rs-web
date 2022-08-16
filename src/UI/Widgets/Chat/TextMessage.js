@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Checkbox, ListItem, Typography } from '@mui/material';
+import { Avatar, Box, Checkbox, ListItem, Typography } from '@mui/material';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import { RenderMediaType } from '../Media/RenderMediaType';
+import { getFileType } from 'utils/Helper';
 
 export const TextMessage = (props) => {
 
@@ -10,7 +12,7 @@ export const TextMessage = (props) => {
         <ListItem
             sx={{
                 paddingBlock: 1,
-                paddingInlineStart:  2,
+                paddingInlineStart: 2,
                 paddingInlineEnd: props.owner ? 1 : 2,
                 justifyContent: props.owner ? 'flex-end' : 'flex-start',
             }}
@@ -29,8 +31,14 @@ export const TextMessage = (props) => {
                 padding: '10px',
                 color: props.owner ? "common.white" : "common.black",
                 backgroundColor: props.owner ? "primary.main" : "grey.200",
-                borderRadius: props.owner ? "20px 20px 0 20px" : "20px 20px 20px 0",
+                borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
+                userSelect: 'text',
             }}>
+                {props.message.media && (
+                    <Box sx={{ maxWidth: '420px', '> *': { borderRadius: '5px' } }}>
+                        <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
+                    </Box>
+                )}
                 {props.message.text}
             </Typography>
             {props.owner &&

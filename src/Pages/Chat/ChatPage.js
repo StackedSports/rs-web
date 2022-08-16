@@ -27,7 +27,7 @@ const conversations = [
       {
         id: "0",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
 
       },
       {
@@ -37,7 +37,7 @@ const conversations = [
       {
         id: "2",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "3",
@@ -52,7 +52,7 @@ const conversations = [
       {
         id: "0",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "1",
@@ -61,7 +61,7 @@ const conversations = [
       {
         id: "2",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "3",
@@ -76,7 +76,7 @@ const conversations = [
       {
         id: "0",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "1",
@@ -85,7 +85,7 @@ const conversations = [
       {
         id: "2",
         text: "lorem ipsumt",
-        owner: true,
+        direction: "out",
       },
       {
         id: "3",
@@ -94,12 +94,12 @@ const conversations = [
       {
         id: "4",
         text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "5",
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-        owner: true,
+        direction: "out",
       }
     ]
   },
@@ -110,7 +110,7 @@ const conversations = [
       {
         id: "0",
         text: "lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "1",
@@ -119,7 +119,7 @@ const conversations = [
       {
         id: "2",
         text: "lorem ipsumt",
-        owner: true,
+        direction: "out",
       },
       {
         id: "3",
@@ -128,12 +128,12 @@ const conversations = [
       {
         id: "4",
         text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-        owner: true,
+        direction: "out",
       },
       {
         id: "5",
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-        owner: true,
+        direction: "out",
       }
     ]
   },

@@ -7,20 +7,14 @@ import {
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
-import { EmojiPicker } from 'UI/Forms/Inputs/MessageInput';
-import { Dropdown } from 'UI/Widgets/DropdownMui';
-import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
-import MediaPreview from '../Media/MediaPreview';
-import { stringSplice } from 'utils/Helper';
 
 export const MessagesDisplay = (props) => {
     const { messages,
         contact_profile_image,
         coach_profile_image,
-        actions,
     } = props.messages || {};
 
-    const [checkedMessages, setCheckedMessages] = useState([])
+    const [checkedMessagesIds, setCheckedMessagesIds] = useState([])
     const [showActions, setShowActions] = useState(false)
 
     const onActionClick = () => {
@@ -28,23 +22,23 @@ export const MessagesDisplay = (props) => {
     }
 
     const onCancelClick = () => {
-        setCheckedMessages([])
+        setCheckedMessagesIds([])
         setShowActions(false)
     }
 
     const onCheckMessages = (message) => {
-        checkedMessages.includes(message) ?
-            setCheckedMessages(checkedMessages.filter(m => m !== message)) :
-            setCheckedMessages([...checkedMessages, message])
+        checkedMessagesIds.includes(message) ?
+            setCheckedMessagesIds(checkedMessagesIds.filter(m => m !== message)) :
+            setCheckedMessagesIds([...checkedMessagesIds, message])
     }
 
     const isMessageChecked = useCallback((message) => {
-        return checkedMessages.includes(message)
-    }, [checkedMessages])
+        return checkedMessagesIds.some(m => m.id === message.id)
+    }, [checkedMessagesIds])
 
     return (
         <>
-            {actions && (
+            {props.actions && (
                 <Stack /* actions */
                     direction="row"
                     justifyContent="space-between"
@@ -56,7 +50,7 @@ export const MessagesDisplay = (props) => {
                         variant="text"
                         onClick={onCancelClick}
                     />
-                    {checkedMessages.length === 0 ?
+                    {checkedMessagesIds.length === 0 ?
                         <Button
                             name="Action"
                             variant="text"
@@ -67,11 +61,7 @@ export const MessagesDisplay = (props) => {
                             action={{
                                 name: 'Action',
                                 variant: 'text',
-                                options: [
-                                    { name: 'Sync with CRM', onClick: onSyncMessageClick },
-                                    { name: 'Export as CSV', onClick: onExportCSV },
-                                    { name: 'Archive', onClick: onArchiveMessage, color: "red" },
-                                ]
+                                options: props.actions,
                             }}
                         />
                     }
@@ -99,11 +89,12 @@ export const MessagesDisplay = (props) => {
             >
                 {messages && messages.map(message => (
                     <TextMessage
+                        key={message.id}
                         owner={message.direction === 'out'}
                         onCheck={onCheckMessages}
-                        //checked={isMessageChecked(message)}
+                        checked={isMessageChecked(message)}
                         message={message}
-                        actionActive={false}
+                        actionActive={showActions}
                         owmnerAvatar={coach_profile_image}
                         contactAvatar={contact_profile_image}
                     />

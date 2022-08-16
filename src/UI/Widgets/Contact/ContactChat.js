@@ -23,7 +23,6 @@ const ContactChat = (props) => {
         alignSelf='center'
       >
         <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
-        {/* <ContactChatMessages messages={props.messages} /> */}
         <MessagesDisplay messages={props.messages} />
       </Box>
     </Stack>
