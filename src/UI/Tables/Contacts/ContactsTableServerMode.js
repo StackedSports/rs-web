@@ -28,7 +28,6 @@ export default function ContactsTableServerMode({
     sortingMode,
     ...restOfProps
 }) {
-    const searchParams = useSearchParams();
     const history = useHistory();
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)

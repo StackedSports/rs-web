@@ -193,7 +193,7 @@ export const MediaUploadItem = (props) => {
       props.onSearch(input)
     else
       props.onClearSearch()
-  })
+  },500)
 
   // const onInputChange = (input) => {
   //   console.log(input)

@@ -46,7 +46,8 @@ const detailsFormValidation = Yup.object().shape({
 		.nullable()
 		.max(new Date(), "Date of birth must be in the past")
 		.min(subYears(new Date(), 120), `Min date is ${subYears(new Date(), 120)}`)
-		.typeError("Format must be MM/DD/YYYY")
+		.typeError("Format must be MM/DD/YYYY"),
+	ets_code: Yup.number().required("ETS code is required"),
 })
 
 const ContactProfileDetails = (props) => {
@@ -106,6 +107,7 @@ const ContactProfileDetails = (props) => {
 			status: props.contact?.status?.status,
 			status_2: props.contact?.status_2 || "",
 			rank: props.contact?.rank?.rank,
+			ets_code: props.contact?.ets_code || "",
 		},
 		coaches: {
 			position_coach: props.contact?.position_coach,
@@ -574,6 +576,20 @@ const ContactProfileDetails = (props) => {
 								},
 							]}
 						>
+							<SearchableSelector
+								label="ETS Code"
+								placeholder="Search"
+								value={formikProps.values.ets_code}
+								options={[]}
+								getOptionLabel={(option) => option || ""}
+								getChipLabel={(option) => option || ''}
+								onChange={(newValue) => {
+									console.log(newValue)
+									formikProps.setFieldValue("ets_code", newValue)
+									onAccordionFieldChange(1)
+								}}
+								clearOnBlur
+							/>
 							<DatePicker
 								label='Birthday'
 								name='dob'
@@ -1001,6 +1017,7 @@ const ContactProfileDetails = (props) => {
 			// 	{ label: 'Archive', name: 'archived', value: values.archived, component: TextField },
 			// ]}
 			/>
+
 		</Stack>
 	)
 }
