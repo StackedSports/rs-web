@@ -84,7 +84,6 @@ export const AssignMediaToPlaceholderDialog = (props) => {
     if (placeholderId.startsWith('new-')) {
       createPlaceholder(placeholder.name, {
         onSuccess: (data) => {
-          console.log(data.data)
           placeholder.id = data.data.id
           updateMediasPlaceholder(placeholder)
           setStoragePlaceholders([...storagePlaceholders, placeholder])

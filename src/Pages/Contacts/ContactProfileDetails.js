@@ -13,7 +13,7 @@ import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
-import { states } from 'utils/Data';
+import { states, timeZones } from 'utils/Data';
 
 import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
 
@@ -47,7 +47,7 @@ const detailsFormValidation = Yup.object().shape({
 		.max(new Date(), "Date of birth must be in the past")
 		.min(subYears(new Date(), 120), `Min date is ${subYears(new Date(), 120)}`)
 		.typeError("Format must be MM/DD/YYYY"),
-	ets_code: Yup.number().required("ETS code is required"),
+	ets_code: Yup.number("ETS code must be a number"),
 })
 
 const ContactProfileDetails = (props) => {
@@ -108,6 +108,7 @@ const ContactProfileDetails = (props) => {
 			status_2: props.contact?.status_2 || "",
 			rank: props.contact?.rank?.rank,
 			ets_code: props.contact?.ets_code || "",
+			time_zone: props.contact?.time_zone,
 		},
 		coaches: {
 			position_coach: props.contact?.position_coach,
@@ -224,7 +225,6 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onUpdateDetails = (values, actions) => {
-		console.log(values)
 		onUpdateContact(values, 'details', 1)
 	}
 
@@ -546,7 +546,7 @@ const ContactProfileDetails = (props) => {
 				validationSchema={detailsFormValidation}
 			>
 				{(formikProps) => (
-					<Form style={{ width: '100%' }}>
+					<Form style={{ width: '100%' }} onSubmit={(e) => { e.preventDefault(); formikProps.handleSubmit() }}>
 						<AccordionComponent
 							key='details'
 							id='details'
@@ -574,22 +574,14 @@ const ContactProfileDetails = (props) => {
 									value: formikProps.values.high_school,
 									component: TextField,
 								},
+								{
+									label: 'ETS Code',
+									name: 'ets_code',
+									value: formikProps.values.ets_code,
+									component: TextField,
+								},
 							]}
 						>
-							<SearchableSelector
-								label="ETS Code"
-								placeholder="Search"
-								value={formikProps.values.ets_code}
-								options={[]}
-								getOptionLabel={(option) => option || ""}
-								getChipLabel={(option) => option || ''}
-								onChange={(newValue) => {
-									console.log(newValue)
-									formikProps.setFieldValue("ets_code", newValue)
-									onAccordionFieldChange(1)
-								}}
-								clearOnBlur
-							/>
 							<DatePicker
 								label='Birthday'
 								name='dob'
@@ -618,7 +610,19 @@ const ContactProfileDetails = (props) => {
 								}}
 								clearOnBlur
 							/>
-
+							<SearchableSelector
+								label="Timezone"
+								placeholder="Search"
+								value={formikProps.values.time_zone}
+								options={timeZones}
+								getOptionLabel={(option) => option.name}
+								getChipLabel={(option) => option.name}
+								onChange={(newValue) => {
+									formikProps.setFieldValue("time_zone", newValue)
+									onAccordionFieldChange(1)
+								}}
+								clearOnBlur
+							/>
 							<SearchableSelector
 								label="Status"
 								placeholder="Search"
@@ -639,22 +643,19 @@ const ContactProfileDetails = (props) => {
 							<SearchableSelector
 								label="Status2"
 								placeholder="Search"
-								// multiple
 								value={formikProps.values.status_2}
 								options={status2.items || []}
 								loading={status2.loading}
 								isOptionEqualToValue={(option, value) => option === value}
 								getOptionLabel={(option) => option || ""}
-								onInputChange={(e, newValue) => {
-									onStatus2Change(formikProps.setFieldValue, newValue)
-								}}
+								freeSolo
 								onChange={(newValue) => {
 									// console.log(newValue)
 									// formikProps.setFieldValue('status_2', newValue)
 									// onAccordionFieldChange(1)
 									onStatus2Change(formikProps.setFieldValue, newValue)
 								}}
-								clearOnBlur
+								clearOnBlur={false}
 							/>
 
 							<SearchableSelector
