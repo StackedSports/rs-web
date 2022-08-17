@@ -15,6 +15,7 @@ import Signup from "Pages/Auth/SignUp";
 // import Chat from "./Pages/Chat";
 
 import Test from './Pages/Test'
+import StuckMessages from './Pages/AdminPanel/StuckMessages'
 
 // import Media from "./Pages/Media";
 // import MessageCreate from "./Pages/MessageCreate";
@@ -78,6 +79,7 @@ function App() {
 							<Route path={chatRoutes.all} component={ChatRoutes} />
 							
 							<Route path='/test' component={Test} />
+							<Route path="/super" component={StuckMessages}/>
 						</Switch>
 					</div>
 				</AppProvider>

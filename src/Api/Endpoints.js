@@ -1357,3 +1357,11 @@ export const getTasksQueue = (date) => {
 export const getMostRecentSendTimes = (timezone) => {
     return GET(`messages/most_recent_send_times${timezone ? `?timezone=${timezone}` : ''}`)
 }
+
+export const getStuckMessages = () => {
+    return GET('messages/stuck')
+}
+
+export const requeueMessage = (id) => {
+    return PUT('messages/' + id)
+}

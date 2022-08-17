@@ -46,6 +46,8 @@ export default function BaseContactsPage(props) {
     const confirmDialog = useContext(ConfirmDialogContext)
     const isTagDialogFunctionRemoveRef = useRef(false)
 
+    console.log(app)
+
     const [redirect, setRedirect] = useState('')
     const [loading, setLoading] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
