@@ -63,3 +63,19 @@ export const separeteNewTagsNameFromExistingTagsIds = (selectedTags) => {
 
     return [newTagsNames, alreadyExistingTags]
 }
+
+export const getFileType = (file) => {
+    switch (file?.file_type) {
+        case 'image/png':
+        case 'image/jpeg':
+            return 'image'
+        case 'image/gif':
+            return 'gif'
+        case 'application/pdf':
+            return 'pdf'
+        case 'video/mp4':
+            return 'video'
+        default:
+            return 'unknown'
+    }
+}

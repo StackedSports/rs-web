@@ -88,7 +88,7 @@ export default function ContactsProfilePage(props) {
                     refreshContact={contact.refetch}
                     onContactUpdated={onContactUpdated}
                 />
-                <ContactChat contact={updatedContact || contact.item} />
+                <ContactChat contact={updatedContact || contact.item} messages={contactConversation.item} />
                 <ContactMessageDetails
                     contact={updatedContact || contact.item}
                     sentMedias={contactSentMedia.items}

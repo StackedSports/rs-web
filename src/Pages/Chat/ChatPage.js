@@ -26,22 +26,22 @@ const conversations = [
     messages: [
       {
         id: "0",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
 
       },
       {
         id: "1",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "2",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "3",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       }
     ]
   },
@@ -51,21 +51,21 @@ const conversations = [
     messages: [
       {
         id: "0",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "1",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "2",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "3",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       }
     ]
   },
@@ -75,31 +75,31 @@ const conversations = [
     messages: [
       {
         id: "0",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "1",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "2",
-        message: "lorem ipsumt",
-        owner: true,
+        text: "lorem ipsumt",
+        direction: "out",
       },
       {
         id: "3",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "4",
-        message: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "5",
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-        owner: true,
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+        direction: "out",
       }
     ]
   },
@@ -109,31 +109,31 @@ const conversations = [
     messages: [
       {
         id: "0",
-        message: "lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "1",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "2",
-        message: "lorem ipsumt",
-        owner: true,
+        text: "lorem ipsumt",
+        direction: "out",
       },
       {
         id: "3",
-        message: "lorem ipsum dolor sit amet",
+        text: "lorem ipsum dolor sit amet",
       },
       {
         id: "4",
-        message: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-        owner: true,
+        text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+        direction: "out",
       },
       {
         id: "5",
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-        owner: true,
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+        direction: "out",
       }
     ]
   },
