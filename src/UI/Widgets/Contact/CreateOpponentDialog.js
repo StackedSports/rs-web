@@ -82,7 +82,7 @@ export const CreateOpponentDialog = (props) => {
           }).finally(() => {
             formik.setSubmitting(false);
           })
-      })
+      }, true)
     }
   }
 

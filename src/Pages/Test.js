@@ -63,13 +63,13 @@ const Test = () => {
     const onTopActionClick = (e) => {
         console.log('top action click')
 
-        const contactId = 'JkyvnTvBympO'
+        // const contactId = 'JkyvnTvBympO'
 
-        updateContact(contactId, { time_zone: 'America/Chicago' })
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+        // updateContact(contactId, { time_zone: 'America/Chicago' })
+        //     .then(res => console.log(res))
+        //     .catch(err => console.log(err))
 
-        return
+        // return
 
         // 
 
