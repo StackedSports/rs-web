@@ -12,6 +12,7 @@ export default function AccordionComponent(props) {
 	const handleChange = (accordionId, event, newExpanded) => {
 		props.setExpanded(newExpanded ? accordionId : false);
 	};
+
 	return (
 		<Accordion
 			sx={{ width: '100%' }}
@@ -28,7 +29,7 @@ export default function AccordionComponent(props) {
 				id={`${props.id}-header`}
 			>
 				<Stack sx={{ width: "95%" }} direction="row" spacing={1} justifyContent="space-between" alignItems="center">
-					<Typography fontWeight="bold">
+					<Typography fontWeight="bold" sx={{ flex: 1}}>
 						{props.title}
 					</Typography>
 					<LoadingButton
