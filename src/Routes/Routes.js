@@ -136,6 +136,7 @@ export const userRoutes = {
 
 export const tweetRoutes = {
     ranking: "/tweet-ranking/new",
+    archived: '/tweet-ranking/archived',
     search: "/tweet-search",
     tweets: "/tweet-ranking",
 }

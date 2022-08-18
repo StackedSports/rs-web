@@ -10,10 +10,11 @@ import { AuthContext } from 'Context/Auth/AuthProvider';
 
 import RenderIf from 'UI/Widgets/RenderIf'
 import Button from 'UI/Widgets/Buttons/Button';
+import DropdownButton from 'UI/Widgets/Buttons/DropdownButton'
 import { TweetRankingDialog } from 'UI/Widgets/Dialogs/TweetRankingDialog';
 import TweetDisplay from './TweetDisplay'
 import { db } from 'Api/Firebase'
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
 
 const round = (num) => {
     let m = Number((Math.abs(num) * 100).toPrecision(15))
@@ -97,6 +98,8 @@ const TweetDetails = (props) => {
     const [contactsLikes, setContactsLikes] = useState([])
     const [contactsRetweets, setContactsRetweets] = useState([])
 
+    console.log(props.details)
+
     useEffect(() => {
         const likesColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`)
         const unsub = onSnapshot(likesColRef, (snapshot) => {
@@ -114,6 +117,17 @@ const TweetDetails = (props) => {
             
         return () => unsub()
     }, [])
+
+    const onArchive = (e) => {
+        updateDoc(
+            doc(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}`), 
+            { archived: !props.details.archived }
+        )
+    }
+
+    const onDelete = (e) => {
+
+    }
 
     return (
         <Stack ml={10} direction="row">
@@ -150,7 +164,13 @@ const TweetDetails = (props) => {
                         />
                     </RenderIf>
 
-
+                    <DropdownButton
+                      id={`tweet-details-more-btn-${props.tweetId}`}
+                      actions={[
+                        { label: props.details.archived ? 'Unarchive' : 'Archive', onClick: onArchive }
+                        // { label: 'Delete', onClick: onDelete }
+                      ]}
+                    />
 
                 </Stack>
 

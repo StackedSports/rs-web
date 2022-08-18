@@ -24,7 +24,7 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import { tweetRoutes } from 'Routes/Routes'
 
-const TweetsPage = (props) => {
+const TweetsArchivedPage = (props) => {
     const { redirect } = useContext(AppContext)
 
 	const { user } = useContext(AuthContext)
@@ -39,7 +39,7 @@ const TweetsPage = (props) => {
 
 	useEffect(() => {
 		const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
-            where('archived', '==', false),
+            where('archived', '==', true),
             orderBy('timestamp', 'desc'),
             // limit(10))
         )
@@ -107,9 +107,9 @@ const TweetsPage = (props) => {
                 <RenderIf condition={tweets && tweets.length == 0}>
                     <Stack sx={{  }} alignItems="center" justifyContent="center">
                         <p style={{ fontWeight: 'bold', marginTop: 20 }}> 
-                            You have no Tweet Reports at the moment
+                            You have no archived Tweet Reports at the moment.
                         </p>
-                        <p style={{ fontSize: 16, margin: 0 }}>
+                        {/* <p style={{ fontSize: 16, margin: 0 }}>
                             Click on the button bellow to take your next step
                         </p>
                         <p style={{ fontSize: 16, margin: 0 }}>
@@ -122,7 +122,7 @@ const TweetsPage = (props) => {
                             name='+ New Search'
                             sx={{ minWidth: 120, marginTop: 5 }}
                             onClick={onNewSearchClick}
-                        />
+                        /> */}
                     </Stack>
                 </RenderIf>
 			</Stack >
@@ -130,4 +130,4 @@ const TweetsPage = (props) => {
 	)
 }
 
-export default TweetsPage
+export default TweetsArchivedPage

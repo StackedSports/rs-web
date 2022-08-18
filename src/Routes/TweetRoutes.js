@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import {
   TweetRankingPage,
   TweetCreatePage,
+  TweetsArchivedPage,
   TweetsPage
 } from 'Pages/Tweet';
 
@@ -14,6 +15,11 @@ const TweetRoutes = (props) => (
       exact
       path={tweetRoutes.tweets}
       component={TweetsPage}
+    />
+    <Route
+      exact
+      path={tweetRoutes.archived}
+      component={TweetsArchivedPage}
     />
     <Route
       exact

@@ -13,7 +13,8 @@ const filters = [
         name: 'Tweet Reports',
         items: [
             // Filters
-            { id: '0', name: 'History', path: tweetRoutes.tweets },
+            { id: '0', name: 'All', path: tweetRoutes.tweets },
+            { id: 'archived', name: 'Archived', path: tweetRoutes.archived },
         ]
     },
     // { // Category
