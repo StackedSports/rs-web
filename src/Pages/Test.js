@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react'
 
-import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, updateDoc, query, where } from 'firebase/firestore'
+import { addDoc, setDoc, getDoc, getDocs, collection, doc, onSnapshot, updateDoc, query, where, writeBatch} from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 
 import { db, functions } from 'Api/Firebase'
 
 import { useUser, useRanks, useContacts, useTags, useContact } from 'Api/Hooks'
-import { getContactAssociatedMedia, getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters, getMessageInbox } from 'Api/Endpoints'
+import { getContactAssociatedMedia, updateContact, getStats, getBoards, getBoard, filterContacts, archiveContact, getContact, getFilters, getMessageInbox, getMessageRecipientsX } from 'Api/Endpoints'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
@@ -15,7 +15,7 @@ import useArray from 'Hooks/ArrayHooks'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import MessageInput from 'UI/Forms/Inputs/MessageInput'
-import { updateContact } from 'ApiHelper'
+// import { updateContact } from 'ApiHelper'
 
 const testTweetId = '1548323821777653763'
 
@@ -35,86 +35,23 @@ const Test = () => {
     // setUsers.push()
     // setUsers.clear()
 
-    useEffect(() => {
-        // getContact('wPDWyTrRvApL')
-        //     .then(res => {
-        //         console.log(res)
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
+    useEffect(() => { //        
+        
 
-        // const q = query(collection(db, 'orgs', 'YlGkWYFKzGxP', 'tweet-ranking', '1548323821777653763', 'tweet-likes'))
-        // const unsub = onSnapshot(q, (snapshot) => {
-        //     let likers = []
+        // NOVAvSkeYwGE
 
-        //     snapshot.forEach(doc => {
-        //         likers.push(doc.data())
-        //     })
-
-        //     console.log('likes = ', likers)
-        // })
-
-        // const q2 = query(collection(db, 'orgs', 'YlGkWYFKzGxP', 'tweet-ranking', '1548323821777653763', 'tweet-retweets'))
-        // const unsub2 = onSnapshot(q2, (snapshot) => {
-        //     let retweets = []
-
-        //     snapshot.forEach(doc => {
-        //         retweets.push(doc.data())
-        //     })
-
-        //     console.log('retweets = ', retweets)
-        // })
-
-        // return () => {
-        //     unsub()
-        //     unsub2()
-        // }
-
-        // /test-tweet-token-res/${tweetId}/tweet-${action}
-
-        // const q = query(collection(db, 'test-tweet-token-res', testTweetId, 'tweet-likes'))
-        // const unsub = onSnapshot(q, (snapshot) => {
-        //     let likers = []
-        //     let map = new Map()
-
-        //     snapshot.forEach(doc => {
-        //         const user = doc.data()
-        //         map.set(user.username, map.get(user.username) + 1)
-        //         likers.push(doc.data())
-        //     })
-
-        //     console.log('likes = ', likers)
-        //     console.log('map size = ', map.size)
-        // })
-
-        // return () => unsub()
-
-        // const unsub = onSnapshot(doc(db, 'test-task', 'test'), (snapshot) => {
-        //     console.log('task test: ', snapshot.data())
-        // })
-
-        // return () => unsub()
-
-        // console.log(JSON.parse(`{"message":"Request failed with status code 503","name":"AxiosError","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json; version=1","Content-Type":"application/json","Authorization":"RecruitSuiteAuthKey key=7b64dc29-ee30-4bb4-90b4-af2e877b6452","X-Auth-Token":"eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjEyMSwiZW1haWwiOiJSU2FkbWluUFNVQHN0YWNrZWRzcG9ydHMuY29tIiwiZXhwIjoxNjYwMzM0ODM5fQ.Ud3xHo0wFNPswhaFSt_d5qLfixjWrqhbquJCTllj_Nk","User-Agent":"axios/0.27.2","Content-Length":63},"method":"post","url":"https://api.recruitsuite.co/api/contacts/filter","data":"{\"page\":1,\"per_page\":3,\"criteria\":{\"search\":\"braedyn78047181\"}}"},"code":"ERR_BAD_RESPONSE","status":503}`))
-
-        // const q = query(collection(db, 'test-task'))
-        // const unsubq = onSnapshot(q, (snapshot) => {
-        //     let tasks = []
-
-        //     snapshot.forEach(doc => {
-        //         tasks.push(doc.data())
-        //     })
-
-        //     console.log('tasks = ', tasks)
-        //     setTasks(tasks)
-        // })
-
-        // return () => unsubq()
-
-        // getMessageInbox()
+        // getMessageRecipientsX('NOVAvSkeYwGE')
         //     .then(res => console.log(res))
-        //     .catch(error => console.log(error))
+        //     .catch(err => console.log(err))
+
+        // const q = query(collection(db, 'orgs'))
+        // getDocs(q, snapshot => {
+        //     console.log(snapshot)
+        //     snapshot.forEach(doc => console.log(doc.id))
+        // })
+
+        // return () => unsub()
+
     }, [])
 
     // useEffect(() => {
@@ -126,46 +63,51 @@ const Test = () => {
     const onTopActionClick = (e) => {
         console.log('top action click')
 
+        const contactId = 'JkyvnTvBympO'
 
-        // const ref = doc(db, 'test-tweet-token', testTweetId)
-        // setDoc(ref, { 
-        //         tweetId: testTweetId,
-        //         userRSToken: user.token,
-        //         totalLikes: 662
-        //     })
-        //     .then(() => {
-        //         console.log('request made')
-        //     })
-        //     .catch(err => console.log(err))
-
-        // const id = `test-${tasks.length}`
-
-        // setDoc(doc(db, 'test-task', id), {
-        //     id,
-        //     count: 0
-        // })
-
-        // filterContacts(1, 10, { search: 'abxc__'})
-        //     .then(res => {
-        //         console.log(res)
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
-
-        // if(contact) {
-            // updateContact('ZApLaeTxLzPO', { phone: '16159996350'})
-            //     .then(res => {
-            //         console.log(res)
-            //     })
-            //     .catch(error => {
-            //         console.log(error)
-            //     })
-        // }
-
-        getContactAssociatedMedia('ZApLaeTxLzPO')
+        updateContact(contactId, { time_zone: 'America/Chicago' })
             .then(res => console.log(res))
             .catch(err => console.log(err))
+
+        return
+
+        // 
+
+        const link1 = 'https://stakdsocial.s3.us-east-2.amazonaws.com/variants/fgo1j36y7j59aujgbjz9epw69wgx/09c3e62196e5f328397b403abb19ca073c463ca8fd2b58b152c9182b6ff5e764?response-content-disposition=inline%3B%20filename%3D%22Good_Luck_This_Season.jpg%22%3B%20filename%2A%3DUTF-8%27%27Good_Luck_This_Season.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220818%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220818T203623Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=697b08f7513a2daa743128868b17b5f50197b3f1d2a43146beff9f801745a0f4'
+        const link2 = 'https://stakdsocial.s3.us-east-2.amazonaws.com/variants/fgo1j36y7j59aujgbjz9epw69wgx/21aa2287386a1fbe8432a2a06480f0eca50d25b324505ba43b43d9e1e4bd8dcf?response-content-disposition=inline%3B%20filename%3D%22Good_Luck_This_Season.jpg%22%3B%20filename%2A%3DUTF-8%27%27Good_Luck_This_Season.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220818%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220818T205009Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=c046efa35a363aee7d12940e63b296644790dee7e2cd35a68f865560e1185d9e'
+
+
+        const orgIds = ['KeDeBZFpKGEn', 'MZdXLvFrrdXe', 'QJdYlqFNmRPk', 'VwGMBbFkBRaW',
+            'YlGkWYFKzGxP', 'ayGOrMFjvDJb', 'beWDpYKFeGmQ', 'pZdgkvFANdBy', 'rkPDZxBFJRJW',
+            'yQAGjkNFKRre', 'zqdAQOFPNdwP', 'zqdAQOFrxdwP']
+
+        const now = Date.now()
+        console.log(now)
+
+        return
+        const batch = writeBatch(db)
+
+        orgIds.forEach(orgId => {
+            const q = query(collection(db, 'orgs', orgId, 'tweet-ranking'))
+            getDocs(q, snapshot => {
+                console.log(snapshot)
+                snapshot.forEach((doc, index) => {
+                    const docRef = doc(db, 'orgs', orgId, 'tweet-ranking', doc.id)
+
+                    if(doc.timestamp) return
+
+                    batch.update(docRef, { timestamp: now - 1000 * 60 * 60 * 24 * 60 + index})
+                })
+            })
+        })
+
+        batch.commit()
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+
+        // getContactAssociatedMedia('ZApLaeTxLzPO')
+        //     .then(res => console.log(res))
+        //     .catch(err => console.log(err))
     }
 
     let filters = [

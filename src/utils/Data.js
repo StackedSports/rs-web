@@ -253,22 +253,30 @@ export const states = [
     }
 ];
 
-export const timeZones = [
+export const timeZones = [,
     {
-        id: "PT",
-        name: "Pacific"
+        id: "EST",
+        name: "Eastern"
     },
     {
-        id: "MT",
-        name: "Mountain"
-    },
-    {
-        id: "CT",
+        id: "CST",
         name: "Central"
     },
     {
-        id: "ET",
-        name: "Eastern"
+        id: "MST",
+        name: "Mountain"
+    },
+    {
+        id: "PST",
+        name: "Pacific"
+    },
+    {
+        id: "AKST",
+        name: "Alaska"
+    },
+    {
+        id: "HST",
+        name: "Hawaiian"
     }
 ];
 

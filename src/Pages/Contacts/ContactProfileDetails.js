@@ -161,8 +161,12 @@ const ContactProfileDetails = (props) => {
 				// 			return position.abbreviation
 				// 	})
 				// 	break
+				case 'time_zone':
+					newData[key] = data[key].name
+					break
 				default:
 					newData[key] = data[key] || ''
+					break
 			}
 		})
 
@@ -181,6 +185,8 @@ const ContactProfileDetails = (props) => {
 			return app.alert.setInfo('No fields have changed, did not update profile')
 
 		console.log('saving contact')
+
+		// return
 
 		setSavingContactAtIndex(index, true)
 
@@ -615,8 +621,8 @@ const ContactProfileDetails = (props) => {
 								placeholder="Search"
 								value={formikProps.values.time_zone}
 								options={timeZones}
-								getOptionLabel={(option) => option.name}
-								getChipLabel={(option) => option.name}
+								getOptionLabel={(option) => option.name || option}
+								getChipLabel={(option) => option.name || option}
 								onChange={(newValue) => {
 									formikProps.setFieldValue("time_zone", newValue)
 									onAccordionFieldChange(1)

@@ -532,6 +532,10 @@ export const getMessageRecipients = (id, page = 1, perPage = 50) => {
     return AXIOS('get', `messages/${id}/recipients?page=${page}&per_page=${perPage}`)
 }
 
+export const getMessageRecipientsX = (id, page = 1, perPage = 50) => {
+    return AXIOS('get', `messages/${id}/recipients`)
+}
+
 export const getFilters = () => {
     return AXIOS('get', 'filters?is_shared=false')
 }
