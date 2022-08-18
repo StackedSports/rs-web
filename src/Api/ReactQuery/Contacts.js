@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery, useQueryClient } from "react-query"
+import { useQuery, useQueryClient, useMutation } from "react-query"
 import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact } from "Api/Endpoints"
 import lodash from "lodash"
 
@@ -154,7 +154,7 @@ export const useContactMutation = () => {
             onSuccess: (data, variables, context) => {
                 queryClient.invalidateQueries(['contact', variables.id], { active: true })
                 queryClient.invalidateQueries('contacts')
-            },         
+            },
         })
 
 

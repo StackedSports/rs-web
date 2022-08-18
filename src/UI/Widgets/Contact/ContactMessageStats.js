@@ -1,16 +1,18 @@
 import Stack from '@mui/material/Stack';
-import { Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useQueryClient } from 'react-query';
 
 
 const ContactMessageStats = (props) => {
+  const queryClient = useQueryClient();
   const { stats } = props;
 
   const onRefresh = () => {
-    console.log("onRefresh")
+    queryClient.refetchQueries(['contact'], { active: true });
   }
 
   return (
@@ -21,39 +23,45 @@ const ContactMessageStats = (props) => {
         justifyContent="space-between"
         alignItems="center"
         spacing={1}
-        mb={2}
       >
         <Typography align='left' variant='subtitle1' component="p">
           Message Stats
         </Typography>
-        <CachedIcon sx={{ cursor: "pointer" }} /* onClick={onRefresh} */ />
+        <IconButton onClick={onRefresh}>
+          <CachedIcon />
+        </IconButton>
       </Stack>
 
-      {props.loading && <CircularProgress sx={{ width: 36, height: 36 }} />}
-
-      <Stack sx={{ width: "100%" }} direction="row" flex={2} justifyContent="space-evenly" alignItems="center" spacing={1} mb={2}>
-        <Stack justifyContent="space-between" alignItems="center" spacing={1}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <LaptopIcon />
-            <span>DMS's</span>
-          </div>
-          <span style={{ color: "blue", fontSize: "25px", fontWeight: "700" }}>{stats?.dms || 0}</span>
-        </Stack>
-        <Stack justifyContent="space-between" alignItems="center" spacing={1}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <SmartphoneIcon />
-            <span>Personal Text</span>
-          </div>
-          <span style={{ color: "red", fontSize: "25px", fontWeight: "700" }}>{stats?.pts || 0}</span>
-        </Stack>
-        <Stack justifyContent="space-between" alignItems="center" spacing={1}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <SmartphoneIcon />
-            <span>RS Text</span>
-          </div>
-          <span style={{ color: "yellow", fontSize: "25px", fontWeight: "700" }}>{stats?.sms || 0}</span>
-        </Stack>
-      </Stack>
+      {props.loading ?
+        <Stack sx={{ width: "100%" }} direction="row" flex={2} justifyContent="space-evenly" alignItems="center" spacing={1}>
+          <CircularProgress sx={{ width: 37, height: 37 }} />
+        </Stack> :
+        (
+          <Stack sx={{ width: "100%" }} direction="row" flex={2} justifyContent="space-evenly" alignItems="center" spacing={1}>
+            <Stack justifyContent="space-between" alignItems="center" spacing={1}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <LaptopIcon />
+                <span>DMS's</span>
+              </div>
+              <span style={{ color: "blue", fontSize: "25px", fontWeight: "700" }}>{stats?.dms || 0}</span>
+            </Stack>
+            <Stack justifyContent="space-between" alignItems="center" spacing={1}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <SmartphoneIcon />
+                <span>Personal Text</span>
+              </div>
+              <span style={{ color: "red", fontSize: "25px", fontWeight: "700" }}>{stats?.pts || 0}</span>
+            </Stack>
+            <Stack justifyContent="space-between" alignItems="center" spacing={1}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <SmartphoneIcon />
+                <span>RS Text</span>
+              </div>
+              <span style={{ color: "yellow", fontSize: "25px", fontWeight: "700" }}>{stats?.sms || 0}</span>
+            </Stack>
+          </Stack>
+        )
+      }
     </Stack>
   )
 }

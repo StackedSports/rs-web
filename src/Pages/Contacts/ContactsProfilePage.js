@@ -93,7 +93,7 @@ export default function ContactsProfilePage(props) {
                     contact={updatedContact || contact.item}
                     sentMedias={contactSentMedia.items}
                     associatedMedias={contactAssociatedMedia.items}
-                    stats={contactStats.item}
+                    stats={contactStats}
                 />
             </Stack>
         </MainLayout>

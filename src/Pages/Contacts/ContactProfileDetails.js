@@ -190,21 +190,7 @@ const ContactProfileDetails = (props) => {
 
 		setSavingContactAtIndex(index, true)
 
-		/* 		updateContact(props.contact.id, parseValues(data))
-					.then(res => {
-						props.onContactUpdated(res.data)
-						app.alert.setSuccess('Contact updated successfully!')
-						onAccordionFieldReset(index)
-						console.log(res.data)
-					})
-					.catch(error => {
-						console.log(error)
-						app.alert.setError('Contact failed to update.')
-						// re(error)
-					})
-					.finally(() => setSavingContactAtIndex(index, false)) */
-
-		updateContact(props.contact.id, parseValues(data), {
+		updateContact({ id: props.contact.id, data: parseValues(data) }, {
 			onSuccess: (res) => {
 				props.onContactUpdated(res.data)
 				app.alert.setSuccess('Contact updated successfully!')
@@ -217,13 +203,9 @@ const ContactProfileDetails = (props) => {
 			},
 			onSettled: () => {
 				setSavingContactAtIndex(index, false)
-
 			}
 		})
 
-		// return new Promise((resolve, reject) => {
-
-		// })
 	}
 
 	const getOnlyNewValues = (previous, current) => {
