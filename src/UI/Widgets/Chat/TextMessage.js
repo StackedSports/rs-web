@@ -41,16 +41,17 @@ export const TextMessage = (props) => {
                 )}
                 {props.message.text}
             </Typography>
-            {props.owner &&
-                <Avatar sx={{
-                    margin: '5px 0 5px 10px',
-                    width: "26px",
-                    height: "26px",
-                    alignSelf: "flex-end",
-                }}
-                    aria-label="avatar"
-                    src={props.owmnerAvatar}
-                />}
+
+            <Avatar sx={{
+                margin: props.owner ? '0 0 0 10px' : '0 10px 0 0',
+                width: "26px",
+                height: "26px",
+                alignSelf: 'flex-end',
+                order: props.owner ? 0 : -1,
+            }}
+                aria-label="avatar"
+                src={props.owner ? props.owmnerAvatar : props.contactAvatar}
+            />
         </ListItem>
     )
 }

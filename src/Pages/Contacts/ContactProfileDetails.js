@@ -15,12 +15,11 @@ import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states, timeZones } from 'utils/Data';
 
-import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
+import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags, useContactMutation } from 'Api/ReactQuery';
 
 import {
 	addTagsToContact,
 	untagContact,
-	updateContact,
 } from 'Api/Endpoints'
 
 import { AppContext } from 'Context/AppProvider'
@@ -63,6 +62,7 @@ const ContactProfileDetails = (props) => {
 		)
 
 	const app = useContext(AppContext)
+	const { update: updateContact } = useContactMutation()
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
@@ -190,19 +190,36 @@ const ContactProfileDetails = (props) => {
 
 		setSavingContactAtIndex(index, true)
 
-		updateContact(props.contact.id, parseValues(data))
-			.then(res => {
+		/* 		updateContact(props.contact.id, parseValues(data))
+					.then(res => {
+						props.onContactUpdated(res.data)
+						app.alert.setSuccess('Contact updated successfully!')
+						onAccordionFieldReset(index)
+						console.log(res.data)
+					})
+					.catch(error => {
+						console.log(error)
+						app.alert.setError('Contact failed to update.')
+						// re(error)
+					})
+					.finally(() => setSavingContactAtIndex(index, false)) */
+
+		updateContact(props.contact.id, parseValues(data), {
+			onSuccess: (res) => {
 				props.onContactUpdated(res.data)
 				app.alert.setSuccess('Contact updated successfully!')
 				onAccordionFieldReset(index)
 				console.log(res.data)
-			})
-			.catch(error => {
+			},
+			onError: (error) => {
 				console.log(error)
 				app.alert.setError('Contact failed to update.')
-				// re(error)
-			})
-			.finally(() => setSavingContactAtIndex(index, false))
+			},
+			onSettled: () => {
+				setSavingContactAtIndex(index, false)
+
+			}
+		})
 
 		// return new Promise((resolve, reject) => {
 

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
-import { useQuery } from "react-query"
-import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats } from "Api/Endpoints"
+import { useQuery, useQueryClient } from "react-query"
+import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useContact = (id) => {
     const reactQuery = useQuery(['contact', id], () => getContact(id), {
         select: (data) => data[0],
+        enabled: !!id
     })
 
     return {
@@ -142,5 +143,32 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
         loading: reactQuery.isLoading,
         filter,
         clearFilter,
+    }
+}
+
+export const useContactMutation = () => {
+    const queryClient = useQueryClient();
+
+    const update = useMutation(({ id, data }) => updateContact(id, data),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.invalidateQueries(['contact', variables.id], { active: true })
+                queryClient.invalidateQueries('contacts')
+            },         
+        })
+
+
+    const create = useMutation((contact) => createContact(contact),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('contacts')
+            },
+        })
+
+    return {
+        update: update.mutate,
+        updateAsync: update.mutateAsync,
+        create: create.mutate,
+        createAsync: create.mutateAsync,
     }
 }

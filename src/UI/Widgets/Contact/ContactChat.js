@@ -15,14 +15,8 @@ const ContactChat = (props) => {
       spacing={1}
     >
       <ContactChatHeader contact={props.contact} />
-      <Box
-        maxWidth="1200px"
-        width="100%"
-        alignSelf='center'
-      >
-        <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
-        <MessagesDisplay messages={props.messages} />
-      </Box>
+      <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
+      <MessagesDisplay messages={props.messages} />
     </Stack>
   )
 }
