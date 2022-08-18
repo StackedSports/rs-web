@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 //import "bootstrap/dist/css/bootstrap.min.css";
@@ -77,12 +78,13 @@ function App() {
 							<Route path={routes.tweet.path} component={TweetRoutes} />
 							<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 							<Route path={chatRoutes.all} component={ChatRoutes} />
-							
+
 							<Route path='/test' component={Test} />
 							<Route path="/super" component={StuckMessages}/>
 						</Switch>
 					</div>
 				</AppProvider>
+				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 			</QueryClientProvider>
 		</ThemeProvider>
 	);
