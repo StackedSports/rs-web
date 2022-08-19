@@ -7,6 +7,7 @@ import {
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
+import { useBottomScrollListener } from 'Hooks/useBottomScrollListener';
 
 const messagesTest = [
     {
@@ -261,6 +262,8 @@ export const MessagesDisplay = (props) => {
         coach_profile_image,
     } = props.messages || {};
 
+    const scrollRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd) : null;
+
     const [checkedMessagesIds, setCheckedMessagesIds] = useState([])
     const [showActions, setShowActions] = useState(false)
 
@@ -316,6 +319,7 @@ export const MessagesDisplay = (props) => {
             )}
 
             <List // messages list
+                ref={scrollRef}
                 sx={{
                     flex: '1 0 0',
                     overflowY: 'auto',

@@ -482,7 +482,7 @@ const ContactProfileDetails = (props) => {
 		<Stack
 			pr={1}
 			spacing={1}
-			sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			sx={{ width: '350px', overflowY: "auto", borderRight: "#efefef  1px solid" }}
 		>
 			<CreatePersonDialog
 				open={openNewFamilyMemberDialog}

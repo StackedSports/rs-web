@@ -16,7 +16,7 @@ const ContactChat = (props) => {
     >
       <ContactChatHeader contact={props.contact} />
       <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
-      <MessagesDisplay messages={props.messages} />
+      <MessagesDisplay messages={props.messages} onScrollEnd={()=>{console.log("cheguei no fim")}} />
     </Stack>
   )
 }
