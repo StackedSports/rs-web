@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
 
-import { Stack } from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import CachedIcon from '@mui/icons-material/Cached'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import MessagePreview from 'UI/Widgets/Messages/MessagePreview'
@@ -52,6 +55,7 @@ const StuckMessages = () => {
     }, [])
 
     const onRequeueMessage = (messageId) => {
+        console.log('requeue message ' + messageId)
         requeueMessage(messageId)
             .then(res => {
                 console.log(res)
@@ -69,8 +73,13 @@ const StuckMessages = () => {
           filtersDisabled
         >
             {!stuckMessages.loading && stuckMessages.items && stuckMessages.items.map(message => (
-                <Stack direction="column">
-                    <h3 onClick={() => onRequeueMessage(message.id)}>Requeue</h3>
+                <Stack direction="column" sx={{ position: 'relative' }}>      
+                    <IconButton
+                      sx={{ position: 'absolute', bottom: 32, right: 0 }}
+                      onClick={() => onRequeueMessage(message.id)}
+                    >
+                        <CachedIcon sx={{ cursor: "pointer" }} /* onClick={onRefresh} */ />
+                    </IconButton>
                     <MessagePreview key={message.id} message={message} mini style={styles.divider} link />
                 </Stack>
             ))}
