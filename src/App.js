@@ -31,6 +31,8 @@ import TwitterStream from './components/TwitterStream/TwitterStream'
 
 // import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
+import FirebaseDataCollection from 'Api/Firebase/FirebaseDataCollection'
+
 import {
 	ContactsRoutes,
 	MessagesRoutes,
@@ -61,28 +63,30 @@ function App() {
 		<ThemeProvider>
 			<QueryClientProvider client={queryClient}>
 				<AppProvider>
-					<div className="body">
-						<Switch>
-							{/** Only Route left from old code */}
-							<Route path="/twitter-stream" exact component={TwitterStream} />
+					<FirebaseDataCollection>
+						<div className="body">
+							<Switch>
+								{/** Only Route left from old code */}
+								<Route path="/twitter-stream" exact component={TwitterStream} />
 
-							{/** New Routes */}
-							<Route path="/tweet-create" exact component={TweetCreate} />
-							<Route path="/" exact component={Signup} />
-							<Route path={routes.contacts.path} component={ContactsRoutes} />
-							<Route path={routes.messages.path} component={MessagesRoutes} />
-							<Route path={routes.media.path} component={MediaRoutes} />
-							<Route path={routes.settings.path} component={SettingsRoutes} />
-							<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
-							<Route path={routes.dashboard.path} component={NewDashboard} />
-							<Route path={routes.tweet.path} component={TweetRoutes} />
-							<Route path={routes.tweetPost.path} component={TweetCreatePage} />
-							<Route path={chatRoutes.all} component={ChatRoutes} />
+								{/** New Routes */}
+								<Route path="/tweet-create" exact component={TweetCreate} />
+								<Route path="/" exact component={Signup} />
+								<Route path={routes.contacts.path} component={ContactsRoutes} />
+								<Route path={routes.messages.path} component={MessagesRoutes} />
+								<Route path={routes.media.path} component={MediaRoutes} />
+								<Route path={routes.settings.path} component={SettingsRoutes} />
+								<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
+								<Route path={routes.dashboard.path} component={NewDashboard} />
+								<Route path={routes.tweet.path} component={TweetRoutes} />
+								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
+								<Route path={chatRoutes.all} component={ChatRoutes} />
 
-							{/* <Route path='/test' component={Test} /> */}
-							<Route path="/super" component={StuckMessages}/>
-						</Switch>
-					</div>
+								{/* <Route path='/test' component={Test} /> */}
+								<Route path="/super" component={StuckMessages}/>
+							</Switch>
+						</div>
+					</FirebaseDataCollection>
 				</AppProvider>
 				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 			</QueryClientProvider>
