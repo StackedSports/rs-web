@@ -9,19 +9,13 @@ import {
 import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
 
 
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"; // ----
-import ClearIcon from "@material-ui/icons/Clear"; // ----
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"; // ----
+import ClearIcon from "@mui/icons-material/Clear"; // ----
 
-import {
-  SearchableOptions,
-  SearchableOptionDropdown,
-  SearchableOptionListItem,
-  constructProperty
-} from 'UI/Forms/Inputs/SearchableOptions'
 
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 
-import { formatDate, getFullName } from "utils/Parser"
+import { getFullName } from "utils/Parser"
 
 const useStyles = makeStyles({
   tags: {

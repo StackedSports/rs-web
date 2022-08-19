@@ -2,7 +2,7 @@ import './SideFilter.css'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 function Category(props) {
     // TODO: change to expanded
