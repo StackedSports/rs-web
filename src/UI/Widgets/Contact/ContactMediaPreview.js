@@ -22,13 +22,13 @@ const ContactMediaPreview = (props) => {
   return (
     <Stack
       flex={1}
-      spacing={1}
+      gap={1}
       // alignItems="center"
       sx={{ width: "100%", borderTop: "#efefef  1px solid" }}
       pt={1}
       justifyContent="start"
     >
-      <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
         <Typography align='left' variant='subtitle1' component="p">
           {props.title}
         </Typography>
@@ -41,6 +41,7 @@ const ContactMediaPreview = (props) => {
           {props.media?.length || 0}
         </Button>
       </Stack>
+
       {props.media?.length > 0 ? (
         <ImageList sx={{ width: "100%" }} cols={2} rowHeight={120} >
           {props.media?.filter((media, index) => index < 2 && media)
@@ -48,7 +49,7 @@ const ContactMediaPreview = (props) => {
               <ImageListItem
                 key={media}
                 onClick={() => onMediaClick(media)}
-                style={{ margin: 15, cursor: "pointer", }}
+                style={{ cursor: "pointer" }}
               >
                 <img
                   loading="lazy"
@@ -56,8 +57,6 @@ const ContactMediaPreview = (props) => {
                   style={{ borderRadius: 5 }}
                   src={media}
                   srcSet={media}
-                // src={`${media}?w=164&h=164&fit=crop&auto=format`}
-                // srcSet={`${media}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                 />
               </ImageListItem>
             ))

@@ -53,6 +53,7 @@ const ContactMessageDetails = (props) => {
 						bottom: 0,
 						minHeight: 0,
 						overflowY: 'auto',
+						overflowX: 'hidden',
 					}}
 					elevation={0}
 					component={Paper}
@@ -65,24 +66,13 @@ const ContactMessageDetails = (props) => {
 							Associated Media
 						</Typography>
 					</Stack>
-					<Box sx={{ width: '100px', bgcolor: '#f0f', height: '200px', my: 2 }}>
-						oi
-					</Box>
-					<Box sx={{ width: '100px', bgcolor: '#f00', height: '200px', my: 2 }}>
-						oi
-					</Box>
-					<Box sx={{ width: '100px', bgcolor: '#f0f', height: '200px', my: 2 }}>
-						oi
-					</Box>
-					<Box sx={{ width: '100px', bgcolor: '#f00', height: '200px', my: 2 }}>
-						oi
-					</Box>
-					<Box sx={{ width: '100px', bgcolor: '#f00', height: '200px', my: 2 }}>
-						oi
-					</Box>
-					<Box sx={{ width: '100px', bgcolor: '#f64', height: '200px', my: 2 }}>
-						oi
-					</Box>
+					<ContactMediaPreview
+						id="sentMedia"
+						title="Sent Media"
+						onViewMore={onViewMore}
+						media={urlsSentMedia}
+					/>
+
 				</Box>
 			</Slide>
 		</Stack>
