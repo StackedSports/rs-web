@@ -28,4 +28,4 @@ export const functions = getFunctions(app)
 
 
 // connectFirestoreEmulator (db, 'localhost', 8080)
-// connectFunctionsEmulator(functions, "localhost", 5001)
+connectFunctionsEmulator(functions, "localhost", 5001)

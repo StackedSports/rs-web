@@ -59,7 +59,11 @@ const StuckMessages = () => {
         requeueMessage(messageId)
             .then(res => {
                 console.log(res)
-                app.alert.setSuccess('Message requeue successfuly!')
+                app.alert.setSuccess('Message requeued successfuly!')
+                setStuckMessages(value => ({
+                    ...value,
+                    items: value.items.filter(message => message.id !== messageId)
+                }))
             })
             .catch(err => {
                 console.log(err)

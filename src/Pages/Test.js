@@ -71,6 +71,13 @@ const Test = () => {
 
         return
 
+        const testDatabase = httpsCallable(functions, 'contacts-testDatabase')
+        testDatabase()
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+
+        return
+
         // 
 
         // const link1 = 'https://stakdsocial.s3.us-east-2.amazonaws.com/variants/fgo1j36y7j59aujgbjz9epw69wgx/09c3e62196e5f328397b403abb19ca073c463ca8fd2b58b152c9182b6ff5e764?response-content-disposition=inline%3B%20filename%3D%22Good_Luck_This_Season.jpg%22%3B%20filename%2A%3DUTF-8%27%27Good_Luck_This_Season.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJF7DFXH2NIHI3MLA%2F20220818%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20220818T203623Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=697b08f7513a2daa743128868b17b5f50197b3f1d2a43146beff9f801745a0f4'

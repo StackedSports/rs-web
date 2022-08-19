@@ -1367,5 +1367,5 @@ export const getStuckMessages = () => {
 }
 
 export const requeueMessage = (id) => {
-    return PUT('messages/' + id)
+    return PUT(`messages/${id}/requeue`)
 }
