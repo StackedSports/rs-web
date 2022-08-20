@@ -576,7 +576,7 @@ export default function MessageCreatePage(props) {
         if (textMessage === '' && !mediaSelected)
             return showErrorMessage('Message must either have a Text Message or a Media attachment')
 
-        if (textMessage !== '') {
+        if (true || textMessage !== '') {
             // Adds message as body to messageData
             messageData['body'] = textMessage
         }
