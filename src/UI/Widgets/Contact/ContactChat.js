@@ -1,13 +1,15 @@
+import { useCallback } from "react";
 import { Box, Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
-import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
+import { useSnippets, useTextPlaceholders, useContactConversation } from 'Api/ReactQuery'
 import { MessagesDisplay } from "../Chat/MessagesDisplay";
 
 const ContactChat = (props) => {
 
   const snippets = useSnippets()
   const textPlaceholders = useTextPlaceholders()
+  const contactConversation = useContactConversation(props.contact?.id)
 
   return (
     <Stack
@@ -16,7 +18,7 @@ const ContactChat = (props) => {
     >
       <ContactChatHeader contact={props.contact} />
       <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
-      <MessagesDisplay messages={props.messages} onScrollEnd={()=>{console.log("cheguei no fim")}} />
+      <MessagesDisplay messages={contactConversation.item} onScrollEnd={() => console.log("end")} />
     </Stack>
   )
 }

@@ -5,9 +5,7 @@ import Stack from '@mui/material/Stack';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
-import { useContact, useContactAssociatedMedia, useContactSentMedia, useContactConversation, useContactStats } from 'Api/ReactQuery';
-
-import { contactsRoutes, messageRoutes } from 'Routes/Routes'
+import { useContact } from 'Api/ReactQuery';
 
 import ContactProfileDetails from './ContactProfileDetails';
 import ContactMessageDetails from 'UI/Widgets/Contact/ContactMessageDetails';
@@ -23,30 +21,12 @@ export default function ContactsProfilePage(props) {
 
     const history = useHistory()
     const contact = useContact(id)
-    const contactAssociatedMedia = useContactAssociatedMedia(id, 1, 20)
-    const contactConversation = useContactConversation(id)
-    const contactSentMedia = useContactSentMedia(id)
-    const contactStats = useContactStats(id)
-
-    //const [updatedContact, setUpdatedContact] = useState(null)
 
     useEffect(() => {
         if (!contact)
             return
         console.log(contact.item)
     }, [id])
-
-    /*     useEffect(() => {
-            if (!contactConversation.item)
-                return
-            console.log("conversation", contactConversation.item)
-        }, [contactConversation.item]) */
-
-    useEffect(() => {
-        if (!contactStats.item)
-            return
-        console.log("stats", contactStats.item)
-    }, [contactStats.item])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -76,12 +56,9 @@ export default function ContactsProfilePage(props) {
                     refreshContact={contact.refetch}
                     onContactUpdated={onContactUpdated}
                 />
-                <ContactChat contact={contact.item} messages={contactConversation.item} />
+                <ContactChat contact={contact.item} />
                 <ContactMessageDetails
                     contact={contact.item}
-                    sentMedias={contactSentMedia.items}
-                    associatedMedias={contactAssociatedMedia.items}
-                    stats={contactStats}
                 />
             </Stack>
         </MainLayout>

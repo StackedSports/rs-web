@@ -29,7 +29,7 @@ export const useContactAssociatedMedia = (id, page, perPage) => {
     useEffect(() => {
         if (reactQuery.isSuccess) {
             const [apiAssociatedMedia, apiPagination] = reactQuery.data
-            setAssociatedMedia(apiAssociatedMedia)
+            setAssociatedMedia(apiAssociatedMedia.map(item => ({ ...item, urls: item.url })))
             setPagination(apiPagination)
         }
     }, [reactQuery.isSuccess, reactQuery.data])
@@ -70,7 +70,9 @@ export const useContactSentMedia = (id, page, perPage) => {
 export const useContactConversation = (id) => {
     const reactQuery = useQuery(['contact', 'conversation', id], () => getContactConversation(id), {
         enabled: !!id,
-        select: (data) => data[0],
+        select: (data) => {
+            return data[0]
+        },
     })
 
     return {

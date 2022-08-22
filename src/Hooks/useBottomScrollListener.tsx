@@ -9,14 +9,14 @@ import { debounce } from 'lodash';
  * @param {number} offset - Offset from bottom of page in pixels. E.g. 300 will trigger onBottom 300px from the bottom of the page
  * @returns {RefObject} ref - If passed to a element as a ref, e.g. a div it will register scrolling to the bottom of that div instead of document viewport
  */
-export const useBottomScrollListener = <T extends HTMLElement>(onBottom: () => void, offset: number = 0): RefObject<T> => {
+export const useBottomScrollListener = (onBottom: () => void, offset: number = 0): RefObject<HTMLElement> => {
 
-    const debouncedOnBottom = useCallback(() => debounce(onBottom, 200, { leading: true }), [onBottom]);
-    const containerRef = useRef<T>(null);
+    const debouncedOnBottom = useMemo(() => debounce(onBottom, 200, { leading: true }), [onBottom]);
+    const containerRef = useRef<HTMLElement>(null);
 
     const handleOnScroll = useCallback(() => {
         if (containerRef.current != null) {
-            const scrollNode: T = containerRef.current;
+            const scrollNode: HTMLElement = containerRef.current;
             const scrollContainerBottomPosition = Math.round(scrollNode.scrollTop + scrollNode.clientHeight);
             const scrollPosition = Math.round(scrollNode.scrollHeight - offset);
 
@@ -35,7 +35,7 @@ export const useBottomScrollListener = <T extends HTMLElement>(onBottom: () => v
     }, [offset, onBottom, containerRef.current]);
 
     useEffect((): (() => void) => {
-        const ref: T | null = containerRef.current;
+        const ref: HTMLElement | null = containerRef.current;
         if (ref != null) {
             ref.addEventListener('scroll', handleOnScroll);
         } else {
