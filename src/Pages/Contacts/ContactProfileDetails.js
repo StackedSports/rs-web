@@ -517,6 +517,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.general}
 				onSubmit={onUpdateGeneral}
 				validationSchema={formValidation}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -549,6 +550,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
 				validationSchema={detailsFormValidation}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }} onSubmit={(e) => { e.preventDefault(); formikProps.handleSubmit() }}>
@@ -687,6 +689,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.coaches}
 				onSubmit={onUpdateCoaches}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -757,6 +760,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.positions}
 				onSubmit={onUpdatePositions}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -797,6 +801,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.relationships}
 				onSubmit={onUpdateRelationships}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -881,6 +886,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.opponents}
 				onSubmit={onUpdateOpponents}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -945,6 +951,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.external}
 				onSubmit={onUpdateExternal}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -972,6 +979,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.tags}
 				onSubmit={onUpdateTags}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
