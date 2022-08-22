@@ -1,9 +1,7 @@
 
 import { useState, useEffect, useRef, useContext } from 'react'
-import axios from 'axios'
 
-import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@material-ui/core';
-import { Stack } from '@mui/material'
+import { Stack,Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
 import { collection, onSnapshot, query, where, orderBy, limit } from 'firebase/firestore'

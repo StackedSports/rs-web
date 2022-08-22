@@ -2,12 +2,14 @@ import { useState, useCallback } from 'react';
 import {
     Stack,
     List,
+    CircularProgress,
 } from "@mui/material";
 
 import Button from 'UI/Widgets/Buttons/Button';
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
 import { useBottomScrollListener } from 'Hooks/useBottomScrollListener';
+import RenderIf from '../RenderIf';
 
 const messagesTest = [
     {
@@ -350,6 +352,9 @@ export const MessagesDisplay = (props) => {
                         contactAvatar={contact_profile_image}
                     />
                 ))}
+                <RenderIf condition={props.loading}>
+                    <CircularProgress size={20} sx={{ mx: "auto" }} />
+                </RenderIf>
             </List>
         </>
     )

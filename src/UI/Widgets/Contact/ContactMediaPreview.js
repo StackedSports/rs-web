@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Typography, Stack } from '@mui/material';
+import { Typography, Stack, CircularProgress } from '@mui/material';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Button from '@mui/material/Button';
@@ -11,11 +11,11 @@ import RenderIf from '../RenderIf';
 
 const ContactMediaPreview = (props) => {
 
-  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd) : null;
+  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 200) : null;
   const [carouselIndex, setCarouselIndex] = useState(null);
 
   const onViewMore = () => {
-    props.onViewMore(props.id, props.title)
+    props.onViewMore(props.id)
   }
 
   const onMediaClick = (media) => {
@@ -30,7 +30,7 @@ const ContactMediaPreview = (props) => {
       flex={1}
       gap={1}
       // alignItems="center"
-      sx={{ width: "100%", borderTop: "#efefef  1px solid", minHeight:0 }}
+      sx={{ width: "100%", borderTop: "#efefef  1px solid", minHeight: 0 }}
       pt={1}
       justifyContent="start"
     >
@@ -51,30 +51,41 @@ const ContactMediaPreview = (props) => {
       </RenderIf>
 
       {thumbs?.length > 0 ? (
-        <ImageList cols={2} rowHeight={100} ref={scrolRef} sx={{flex:1}} >
-          {thumbs?.
-            map((media, index) => (
-              <ImageListItem
-                key={props.id + media?.thumb}
-                onClick={() => onMediaClick(media)}
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  loading="lazy"
-                  alt={`${props.title} ${index}`}
-                  style={{ borderRadius: 5, width:'100%', height:'100%' }}
-                  src={media?.thumb}
-                />
-              </ImageListItem>
-            ))
-          }
-        </ImageList>
+        <>
+          <ImageList cols={2} rowHeight={100} ref={scrolRef} sx={{ flex: 1 }} >
+            {thumbs?.
+              map((media, index) => (
+                <ImageListItem
+                  key={props.id + media?.thumb}
+                  onClick={() => onMediaClick(media)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    loading="lazy"
+                    alt={`${props.title} ${index}`}
+                    style={{ borderRadius: 5, width: '100%', height: '100%' }}
+                    src={media?.thumb}
+                  />
+                </ImageListItem>
+              ))
+            }
+          </ImageList>
+          <RenderIf condition={props.loading}>
+            <CircularProgress size={20} sx={{ marginX: 'auto' }} />
+          </RenderIf>
+        </>
       )
-        :
-        <Typography style={{ flex: 1, alignSelf: "center" }} variant="body2">
-          No media to show
-        </Typography>
-      }
+        : (
+          props.loading ? (
+            <CircularProgress size={20} sx={{ marginX: 'auto' }} />
+          ) : (
+            <Typography style={{ flex: 1, alignSelf: "center" }} variant="body2">
+              No media to show
+            </Typography>
+
+          )
+        )}
+
       <MediaCarousel
         index={carouselIndex}
         items={props.media.map(urls => urls.original)}

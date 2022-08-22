@@ -21,51 +21,35 @@ const ContactMessageDetails = (props) => {
 
 	useEffect(() => {
 		if (!sentMedias.loading) {
-			setLoadedSentMedias(prev => {
-				const page = sentMedias.pagination.currentPage;
-				const data = sentMedias.items
-				prev[page] = data;
-				return prev;
-			})
+			setLoadedSentMedias(prev => lodash.uniqBy([...prev, ...sentMedias.items], 'id'))
 		}
-	}), [sentMedias.loading, setLoadedSentMedias, sentMedias.items, sentMedias.pagination.currentPage];
+	}, [sentMedias.loading, setLoadedSentMedias, sentMedias.items]);
 
 	useEffect(() => {
 		if (!associatedMedias.loading) {
-			setLoadedAssociatedMedias(prev => {
-				const page = associatedMedias.pagination.currentPage;
-				const data = associatedMedias.items
-				prev[page] = data;
-				return prev;
-			})
+			setLoadedAssociatedMedias(prev => lodash.uniqBy([...prev, ...associatedMedias.items], 'id'))
 		}
-	}), [associatedMedias.loading, setLoadedAssociatedMedias, associatedMedias.items, associatedMedias.pagination.currentPage];
+	}, [associatedMedias.loading, setLoadedAssociatedMedias, associatedMedias.items]);
 
-	const sentMediasUrl = (() => {
-		const medias = Object.values(loadedSentMedias).flat();
-		const urls = medias.map(media => media.urls);
-		return urls;
-	})()
+	const sentMediasUrl = useMemo(() => {
+		return loadedSentMedias.map(media => media.urls)
+	}, [loadedSentMedias])
 
-	const associatedMediasUrl = (() => {
-		const medias = Object.values(loadedAssociatedMedias).flat();
-		const urls = medias.map(media => media.urls);
-		return urls;
-	})();
+	const associatedMediasUrl = useMemo(() => {
+		return loadedAssociatedMedias.map(media => media.urls)
+	}, [loadedAssociatedMedias])
 
-	const onViewMore = (id, containerVisible) => {
+	const onViewMore = (id) => {
 		setExpandedMedia(id);
 		setOpen(!open)
 	}
 
 	const handleOnScrollEnd = () => {
-		console.log("scrolled to bottom")
 		const pagination = expandedMedia === "associated" ? associatedMedias.pagination : sentMedias.pagination;
 		const loading = expandedMedia === "associated" ? associatedMedias.loading : sentMedias.loading;
 
 		const { currentPage, totalPages, getPage } = pagination;
 		if (currentPage < totalPages && !loading) {
-			console.log("fetching next page")
 			getPage(currentPage + 1)
 		}
 	}
@@ -85,6 +69,7 @@ const ContactMessageDetails = (props) => {
 					title="Sent Media"
 					onViewMore={onViewMore}
 					media={sentMediasUrl}
+					loading={sentMedias.loading}
 					limit={2}
 					total={sentMedias.pagination.totalItems}
 				/>
@@ -93,6 +78,7 @@ const ContactMessageDetails = (props) => {
 					title="Associated Media"
 					onViewMore={onViewMore}
 					media={associatedMediasUrl}
+					loading={associatedMedias.loading}
 					limit={2}
 					total={associatedMedias.pagination.totalItems}
 				/>
@@ -125,6 +111,7 @@ const ContactMessageDetails = (props) => {
 						title={expandedMedia === "associated" ? "Associated Media" : "Sent Media"}
 						onViewMore={onViewMore}
 						media={expandedMedia === "associated" ? associatedMediasUrl : sentMediasUrl}
+						loading={expandedMedia === "associated" ? associatedMedias.loading : sentMedias.loading}
 						onScrollEnd={handleOnScrollEnd}
 						hideHeader
 					/>

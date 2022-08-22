@@ -7,10 +7,7 @@ import {
 import {Button as MuiButton } from '@mui/material';
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
-
 import { Accordion, AccordionContext, Card } from "react-bootstrap";
-// import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 
 const useStyles = makeStyles((theme) => ({
     icons: {
@@ -48,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
         margin: 0,
         fontWeight: 600,
         fontSize: 16,
-        // width: "85%",
         flex: 1,
         textTransform: "uppercase",
         [theme.breakpoints.up("xl")]: {
@@ -65,35 +61,6 @@ const useStyles = makeStyles((theme) => ({
         height: 36,
     },
 }));
-
-// const ContextAwareToggle = ({ children, eventKey, callback }) => {
-//     const classes = useStyles()
-
-//     const { activeEventKey } = useContext(AccordionContext)
-
-//     const onClick = useAccordionButton(
-//         eventKey,
-//         () => callback && callback(eventKey)
-//     )
-
-//     const ArrowIcon = activeEventKey === eventKey ? ArrowDropUpIcon : ArrowDropDownIcon
-
-//     return (
-//         <Card.Header onClick={onClick}>
-//             <Grid
-//               container
-//               direction="row"
-//               alignItems="center"
-//               className={classes.accordionGridHeight}
-//             >
-//                 {children}
-//                 <ArrowIcon
-//                     style={{ fontSize: 15, marginLeft: 20 }}
-//                 ></ArrowIcon>
-//             </Grid>
-//         </Card.Header>
-//     )
-// }
 
 function AccordionContactDetails(props) {
     const classes = useStyles()

@@ -1,30 +1,20 @@
 import { useContext, useEffect, useState } from 'react'
 
 import Stack from '@mui/material/Stack'
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField'
 import Avatar from '@mui/material/Avatar'
-import favicon from 'images/stacked-favicon.png'
 import Typography from '@mui/material/Typography'
-import { makeStyles } from '@material-ui/core/styles'
 
 import SettingsPage from './SettingsPage'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import DefaultTeamLogo from "images/stacked-favicon.png"
 
-const useStyles = makeStyles(theme => ({
-    textField: {
-        border: "#dadada 1px solid",
-        borderRadius: "5px"
-    },
-}));
 
 const OrganizationSettingsPage = (props) => {
-    const classes = useStyles();
 
     const { user } = useContext(AuthContext)
     const [teamLogo, setTeamLogo] = useState(DefaultTeamLogo)
@@ -61,7 +51,7 @@ const OrganizationSettingsPage = (props) => {
     const onRemovePicture = (e) => {
         console.log("onRemovePicture")
     }
-    
+
     return (
         <SettingsPage
             title='Organization'
@@ -103,8 +93,11 @@ const OrganizationSettingsPage = (props) => {
                                 <TextField
                                     id="organization"
                                     InputProps={inputProps}
-                                    className={classes.textField}//
                                     defaultValue={initialValues.organization}
+                                    sx={{
+                                        border: "#dadada 1px solid",
+                                        borderRadius: "5px"
+                                    }}
                                 />
                                 <FormHelperText id="organization" >Organization</FormHelperText>
                             </FormControl>

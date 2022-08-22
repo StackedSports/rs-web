@@ -26,21 +26,25 @@ export const TextMessage = (props) => {
                     sx={{ mr: props.owner ? 'auto' : 0 }}
                 />
             }
-            <Typography sx={{
-                margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
-                padding: '10px',
-                color: props.owner ? "common.white" : "common.black",
-                backgroundColor: props.owner ? "primary.main" : "grey.200",
-                borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
-                userSelect: 'text',
-            }}>
+            <Box
+                sx={{
+                    margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
+                    padding: '10px',
+                    color: props.owner ? "common.white" : "common.black",
+                    backgroundColor: props.owner ? "primary.main" : "grey.200",
+                    borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
+                    userSelect: 'text',
+                }}
+            >
                 {props.message.media && (
                     <Box sx={{ maxWidth: '420px', '> *': { borderRadius: '5px' } }}>
                         <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
                     </Box>
                 )}
-                {props.message.text}
-            </Typography>
+                <Typography >
+                    {props.message.text}
+                </Typography>
+            </Box>
 
             <Avatar sx={{
                 margin: props.owner ? '0 0 0 10px' : '0 10px 0 0',

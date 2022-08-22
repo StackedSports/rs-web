@@ -18,7 +18,6 @@ const profileImg = {
     sortable: false,
     valueGetter: (params) => params.row.twitter_profile,
     renderCell: (params) => {
-        console.log(params.row)
         return (
             <Avatar
                 alt={params.row.first_name}

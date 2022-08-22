@@ -67,20 +67,31 @@ export const useContactSentMedia = (id, page, perPage) => {
     }
 }
 
-export const useContactConversation = (id) => {
-    const reactQuery = useQuery(['contact', 'conversation', id], () => getContactConversation(id), {
-        enabled: !!id,
-        select: (data) => {
-            return data[0]
-        },
-    })
+export const useContactConversation = (id, page, perPage) => {
+    const [pagination, setPagination] = usePagination(page, perPage)
+    const [conversation, setConversation] = useState([])
+
+    const reactQuery = useQuery(['contact', 'conversation', id, pagination.currentPage, pagination.itemsPerPage],
+        () => getContactConversation(id, pagination.currentPage, pagination.itemsPerPage), 
+        { enabled: !!id }
+    )
+
+    useEffect(() => {
+        if (reactQuery.isSuccess) {
+            const [apiConversation, apiPagination] = reactQuery.data
+            setConversation(apiConversation)
+            setPagination(apiPagination)
+        }
+    }, [reactQuery.isSuccess, reactQuery.data])
 
     return {
         ...reactQuery,
-        item: reactQuery.data,
+        items: conversation,
+        pagination,
         loading: reactQuery.isLoading,
     }
 }
+
 export const useContactStats = (id) => {
     const reactQuery = useQuery(['contact', 'stats', id], () => getContactStats(id), {
         enabled: !!id,
