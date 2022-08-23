@@ -20,9 +20,11 @@ import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
+import { useQueryClient } from "react-query"
 
 export const MediaDetailsPage = () => {
     const app = useContext(AppContext)
+    const queryClient = useQueryClient();
     const { id } = useParams()
     const history = useHistory()
     const { update, remove } = useMediaMutation()
@@ -152,6 +154,9 @@ export const MediaDetailsPage = () => {
                 alert.setWarning(err.message)
             })
         }
+        queryClient.invalidateQueries(["media"], { active: true })
+        queryClient.invalidateQueries(["medias"])
+
     }
 
     const handleChangeOwner = (owner) => {

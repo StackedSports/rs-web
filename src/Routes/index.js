@@ -5,5 +5,6 @@ export { default as SettingsRoutes } from './SettingsRoutes'
 export { default as UserSettingsRoutes } from './UserSettingsRoutes'
 export { default as TweetRoutes } from './TweetRoutes'
 export { default as ChatRoutes } from './ChatRoutes'
+export { ScoresSchedulesRoutes } from './ScoresSchedulesRoutes'
 
 export { routes as routes } from './Routes'

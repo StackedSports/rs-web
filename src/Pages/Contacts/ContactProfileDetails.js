@@ -320,8 +320,8 @@ const ContactProfileDetails = (props) => {
 
 	const onUpdateTags = (values, actions) => {
 
-		console.log(values)
-		console.log(initialValues.tags)
+		//console.log(values)
+		//console.log(initialValues.tags)
 		const indexAccordion = 7
 		let data = {
 			// includeTagsIds: ['379', '15110'],
@@ -371,7 +371,7 @@ const ContactProfileDetails = (props) => {
 		//console.log(data)
 
 		if (data.includeTagsIds) {
-			console.log("includeTagsIds", data.includeTagsIds)
+			//console.log("includeTagsIds", data.includeTagsIds)
 			setSavingContactAtIndex(indexAccordion, true)
 			addTagsToContact(data.includeTagsIds, props.contact.id)
 				.then(res => {
@@ -550,7 +550,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
 				validationSchema={detailsFormValidation}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }} onSubmit={(e) => { e.preventDefault(); formikProps.handleSubmit() }}>
@@ -689,7 +689,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.coaches}
 				onSubmit={onUpdateCoaches}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -760,7 +760,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.positions}
 				onSubmit={onUpdatePositions}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -801,7 +801,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.relationships}
 				onSubmit={onUpdateRelationships}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -886,7 +886,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.opponents}
 				onSubmit={onUpdateOpponents}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -951,7 +951,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.external}
 				onSubmit={onUpdateExternal}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -979,7 +979,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.tags}
 				onSubmit={onUpdateTags}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>

@@ -6,6 +6,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 export const routes = {
     dashboard: {
@@ -28,11 +29,6 @@ export const routes = {
         path: '/media',
         icon: ImageOutlinedIcon
     },
-    // twitterPosts: {
-    //     title: 'Tweets',
-    //     path: '/tweet-create',
-    //     icon: TwitterIcon
-    // },
     twitterStream: {
         title: 'Twitter Stream',
         path: '/twitter-stream',
@@ -58,6 +54,11 @@ export const routes = {
         path: '/user',
         // icon: SettingsIcon
     },
+    scoresSchedules: {
+        title: 'Scores & Schedules',
+        path: '/scores-schedule',
+        icon: EventAvailableIcon
+    }
 }
 
 export const messageRoutes = {
@@ -143,4 +144,8 @@ export const tweetRoutes = {
 
 export const chatRoutes = {
     all: "/new-chat",
+}
+
+export const scoresSchedulesRoutes = {
+    all: "/scores-schedule",
 }
