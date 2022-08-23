@@ -247,15 +247,15 @@ export const archiveContact = (id) => {
     return DELETE(`contacts/${id}`)
 }
 
-export const getContactAssociatedMedia = (id,page,perPage) => {
+export const getContactAssociatedMedia = (id, page, perPage) => {
     return GET(`contacts/${id}/associated_media?page=${page}&per_page=${perPage}`)
 }
 
-export const getContactSentMedia = (id,page,perPage) => {
+export const getContactSentMedia = (id, page, perPage) => {
     return GET(`contacts/${id}/sent_media?page=${page}&per_page=${perPage}`)
 }
 
-export const getContactConversation = (id,page,perPage) => {
+export const getContactConversation = (id, page, perPage) => {
     return GET(`contacts/${id}/conversation?page=${page}&per_page=${perPage}`)
 }
 
@@ -364,6 +364,16 @@ export const getTagsWithMessages = () => {
 }
 export const getRanks = () => {
     return AXIOS('get', `team/settings/ranks`)
+}
+
+export const updateTag = (id, name) => {
+    const body = {
+        "tag": {
+            "name": name
+        }
+    }
+
+    return PUT(`tags/${id}`, body)
 }
 
 export const createRank = (data) => {

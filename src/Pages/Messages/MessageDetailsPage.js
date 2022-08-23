@@ -461,8 +461,6 @@ const MessageDetailsPage = (props) => {
     // console.log(hasMediaPlaceholder)
     // console.log(hasMedia || hasMediaPlaceholder)
 
-    console.log(message.item)
-
     return (
         <BaseMessagePage
             title='Message Preview'

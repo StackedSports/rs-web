@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { getTags, getTagsWithContacts, getTagsWithMedia, getTagsWithMessages } from "Api/Endpoints"
-import { useQuery } from "react-query"
+import { getTags, getTagsWithContacts, getTagsWithMedia, getTagsWithMessages, updateTag } from "Api/Endpoints"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 
 export const useTags = () => {
     const [tags, setTags] = useState([])
@@ -122,5 +122,27 @@ export const useTagsWithMessage = () => {
         items: tags,
         loading: reactQuery.isLoading,
         search
+    }
+}
+
+export const useTagMutation = () => {
+    const queryClient = useQueryClient();
+
+    const update = useMutation(({ id, name }) => updateTag(id, name),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.invalidateQueries(['media'])
+                queryClient.invalidateQueries(['medias'])
+                queryClient.invalidateQueries(['contact'])
+                queryClient.invalidateQueries(['contacts'])
+                queryClient.invalidateQueries(['message'])
+                queryClient.invalidateQueries(['messages'])
+                queryClient.invalidateQueries(['tags'])
+            },
+        })
+
+    return {
+        update: update.mutate,
+        updateAsync: update.mutateAsync,
     }
 }
