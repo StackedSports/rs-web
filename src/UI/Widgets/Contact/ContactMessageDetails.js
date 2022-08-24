@@ -45,8 +45,8 @@ const ContactMessageDetails = (props) => {
 		const loading = expandedMedia === "associated" ? associatedMedias.loading : sentMedias.loading;
 
 		const { currentPage, totalPages, getPage } = pagination;
-		if (currentPage > 0 && !loading) {
-			getPage(currentPage - 1)
+		if (currentPage < totalPages && !loading) {
+			getPage(currentPage + 1)
 		}
 	}
 

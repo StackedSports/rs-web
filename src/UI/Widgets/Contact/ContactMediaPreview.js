@@ -11,7 +11,7 @@ import RenderIf from '../RenderIf';
 
 const ContactMediaPreview = (props) => {
 
-  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 400,true) : null;
+  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 400, true) : null;
   const [carouselIndex, setCarouselIndex] = useState(null);
 
   const onViewMore = () => {
@@ -23,6 +23,8 @@ const ContactMediaPreview = (props) => {
   }
 
   const thumbs = useMemo(() => props.limit ? props.media.slice(0, props.limit) : props.media, [props.media, props.limit])
+  console.log("t", thumbs)
+  console.log("me", props.media)
 
 
   return (
@@ -52,7 +54,7 @@ const ContactMediaPreview = (props) => {
 
       {thumbs?.length > 0 ? (
         <>
-          <ImageList cols={2} rowHeight={100} ref={scrolRef} sx={{ flex: 1 }} >
+          <ImageList cols={2} rowHeight={100} ref={scrolRef} flex={1} >
             {thumbs?.
               map((media, index) => (
                 <ImageListItem
@@ -63,7 +65,7 @@ const ContactMediaPreview = (props) => {
                   <img
                     loading="lazy"
                     alt={`${props.title} ${index}`}
-                    style={{ borderRadius: 5, width: '100%', height: '100%' }}
+                    style={{ borderRadius: 5, height:'100%' }}
                     src={media?.thumb}
                   />
                 </ImageListItem>
