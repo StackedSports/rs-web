@@ -13,23 +13,37 @@ const ContactMessageDetails = (props) => {
 	const sentMedias = useContactSentMedia(props.contact?.id, 1, 30)
 	const contactStats = useContactStats(props.contact?.id)
 	const containerRef = useRef(null);
-	const [open, setOpen] = useState(false);
+	const isFirstRequestSent = useRef(true)
+	const isFirstRequestAssociated = useRef(true)
 
+	const [open, setOpen] = useState(false);
 	const [loadedSentMedias, setLoadedSentMedias] = useState([]);
 	const [loadedAssociatedMedias, setLoadedAssociatedMedias] = useState([]);
 	const [expandedMedia, setExpandedMedia] = useState(null);
 
 	useEffect(() => {
-		if (!sentMedias.loading) {
+		if (isFirstRequestSent.current) {
+			const { totalPages, getPage } = sentMedias.pagination;
+			getPage(totalPages)
+
+			if (sentMedias.pagination.totalPages !== 0)
+				isFirstRequestSent.current = false
+		} else {
 			setLoadedSentMedias(prev => lodash.uniqBy([...prev, ...sentMedias.items], 'id'))
 		}
-	}, [sentMedias.loading, setLoadedSentMedias, sentMedias.items]);
+	}, [setLoadedSentMedias, sentMedias.items]);
 
 	useEffect(() => {
-		if (!associatedMedias.loading) {
+		if (isFirstRequestAssociated.current) {
+			const { totalPages, getPage } = associatedMedias.pagination;
+			getPage(totalPages)
+
+			if (associatedMedias.pagination.totalPages !== 0)
+				isFirstRequestAssociated.current = false
+		} else {
 			setLoadedAssociatedMedias(prev => lodash.uniqBy([...prev, ...associatedMedias.items], 'id'))
 		}
-	}, [associatedMedias.loading, setLoadedAssociatedMedias, associatedMedias.items]);
+	}, [setLoadedAssociatedMedias, associatedMedias.items]);
 
 	const sentMediasUrl = useMemo(() => {
 		return loadedSentMedias.map(media => media.urls)
@@ -49,8 +63,8 @@ const ContactMessageDetails = (props) => {
 		const loading = expandedMedia === "associated" ? associatedMedias.loading : sentMedias.loading;
 
 		const { currentPage, totalPages, getPage } = pagination;
-		if (currentPage < totalPages && !loading) {
-			getPage(currentPage + 1)
+		if (currentPage > 0 && !loading) {
+			getPage(currentPage - 1)
 		}
 	}
 

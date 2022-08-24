@@ -7,9 +7,10 @@ import { debounce } from 'lodash';
  *
  * @param onBottom Required callback that will be invoked when scrolled to bottom
  * @param {number} offset - Offset from bottom of page in pixels. E.g. 300 will trigger onBottom 300px from the bottom of the page
+ * @param {boolean} triggerOnNoScroll - Triggers the onBottom callback when the page has no scrollbar
  * @returns {RefObject} ref - If passed to a element as a ref, e.g. a div it will register scrolling to the bottom of that div instead of document viewport
  */
-export const useBottomScrollListener = (onBottom: () => void, offset: number = 0): RefObject<HTMLElement> => {
+export const useBottomScrollListener = (onBottom: () => void, offset: number = 0, triggerOnNoScroll: boolean = false): RefObject<HTMLElement> => {
 
     const debouncedOnBottom = useMemo(() => debounce(onBottom, 200, { leading: true }), [onBottom]);
     const containerRef = useRef<HTMLElement>(null);
@@ -40,6 +41,10 @@ export const useBottomScrollListener = (onBottom: () => void, offset: number = 0
             ref.addEventListener('scroll', handleOnScroll);
         } else {
             window.addEventListener('scroll', handleOnScroll);
+        }
+
+        if (triggerOnNoScroll) {
+            handleOnScroll();
         }
 
         return () => {
