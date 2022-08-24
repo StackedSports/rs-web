@@ -18,6 +18,7 @@ const regularItems = [
     routes.tweetPost,
     // routes.twitterPosts,
     // routes.twitterStream,
+    routes.scoresSchedules,
     routes.settings,
 ]
 

@@ -6,9 +6,13 @@ import { Box, Button, Divider, InputAdornment, Stack, TextField, Typography } fr
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
-import {LoginCollegeWarroomApi, SearchCollegeWarroomApi} from 'Api/CollegeWarroomApi'
+import { search } from './PlaceholderData'
 
 export const BaseScoresSchedulesPage = () => {
+
+  //test data
+  const { data } = search
+  const response = data[0] || {}
 
   // TODO: add useMEMO to show boards when have the endpoint
   const sideFilters = [
@@ -25,7 +29,7 @@ export const BaseScoresSchedulesPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    SearchCollegeWarroomApi({...data , access_token:""}) // add token when login
+    //call api
   };
 
   return (
@@ -76,9 +80,40 @@ export const BaseScoresSchedulesPage = () => {
           View Scores & Schedules
         </Button>
       </Stack>
-      <Button onClick={()=>LoginCollegeWarroomApi()}>
-        Login api!
-      </Button>
+
+      <Divider sx={{ my: 3 }} />
+
+      <Stack direction='row' justifyContent='space-between' alignItems='flex-start'>
+        <Stack color='text.secondary' gap={2}>
+          <Typography variant='h6' fontWeight='800' >
+            {response.name}
+          </Typography>
+          <Box>
+            <Typography fontWeight='bold' >
+              Location
+            </Typography>
+            <Typography fontWeight='600' >
+              {response.address}
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography fontWeight='bold' >
+              ETS
+            </Typography>
+            <Typography fontWeight='600' >
+              {response.ets_code}
+            </Typography>
+          </Box>
+        </Stack>
+
+        <Button
+          variant='contained'
+          endIcon={<AutoFixHighIcon />}
+        >
+          Action
+        </Button>
+      </Stack>
 
     </MainLayout>
   )

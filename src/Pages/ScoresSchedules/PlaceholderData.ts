@@ -1,4 +1,57 @@
-export const search = {
+export interface IData {
+    high_school_ID: string;
+    name: string;
+    mascot: string;
+    address: string;
+    country?: any;
+    city: string;
+    state: string;
+    postal_code: string;
+    office_phone: string;
+    time_zone: string;
+    time_zone_offset: string;
+    division: string;
+    league: string;
+    color1: string;
+    color2: string;
+    head_coach_name: string;
+    max_prep_team_ID: string;
+    max_prep_schedule_url: string;
+    max_prep_logo_url: string;
+    ets_code: string;
+    points: string;
+    points_against: string;
+    overall_wins: string;
+    overall_losses: string;
+    overall_ties: string;
+    conference_wins: string;
+    conference_losses: string;
+    conference_ties: string;
+    home_wins: string;
+    home_losses: string;
+    home_ties: string;
+    away_wins: string;
+    away_losses: string;
+    away_ties: string;
+    neutral_wins: string;
+    neutral_losses: string;
+    neutral_ties: string;
+    winning_percentage: string;
+    conference_winning_percentage: string;
+    streak: string;
+    streak_result: string;
+    last_updated: string;
+}
+
+export interface ISearch {
+    status: number;
+    startRow: number;
+    endRow: number;
+    totalRows: number;
+    data: IData[];
+}
+
+export const search: ISearch = {
     "status": 0,
     "startRow": 0,
     "endRow": 1,
@@ -21,9 +74,8 @@ export const search = {
         "color2": "00341E",
         "head_coach_name": "Corey Dodds",
         "max_prep_team_ID": "2f533e77-09c2-4363-8b72-3132147dac55",
-        "max_prep_schedule_url":
-            "https://www.maxpreps.com/ut/west-jordan/copper-hills-grizzlies/ football/schedule/",
-        "max_prep_logo_url": "https://images.maxpreps.com/school mascot/2/f/5/2f533e77-09c2-4363-8b72-3132147dac55.gif? version=636861616200000000 & width=1024& height=1024",
+        "max_prep_schedule_url": "https://www.maxpreps.com/ut/west-jordan/copper-hills-grizzlies/ football/schedule/",
+        "max_prep_logo_url": "https://images.maxpreps.com/schoolmascot/2/f/5/2f533e77-09c2-4363-8b72-3132147dac55.gif?version=636861616200000000&width=1024&height=1024",
         "ets_code": "450450",
         "points": "35",
         "points_against": "42",
@@ -74,16 +126,15 @@ export const searchEvent = {
         "home_team_school_ID": "102",
         "game_type": "non-conference",
         "overtime_periods": "0",
-        "max_prep_contest_url":
-            "https://www.maxpreps.com/games/8-12-2022/football-22/cedar-valley-vs copper-hills.htm?c=BOwjVVJlQEGKmWrc3QFx4g",
+        "max_prep_contest_url": "https://www.maxpreps.com/games/8-12-2022/football-22/cedar-valley-vscopper-hills.htm?c=BOwjVVJlQEGKmWrc3QFx4g",
         "year": "2022",
         "last_updated": "2022-08-13 12:06:58",
         "team1_name": "Copper Hills",
-        "team1_logo_url": "https://images.maxpreps.com/school mascot/2/f/5/2f533e77-09c2-4363-8b72-3132147dac55.gif? version=636861616200000000&width=1024&height=1024",
+        "team1_logo_url": "https://images.maxpreps.com/schoolmascot/2/f/5/2f533e77-09c2-4363-8b72-3132147dac55.gif?version=636861616200000000&width=1024&height=1024",
         "team1_color1": "022C66",
         "team1_color2": "00341E",
         "team2_name": "Cedar Valley",
-        "team2_logo_url": "https://images.maxpreps.com/school mascot/e/b/5/eb53555a-f7d5-456f-8f7b-b6b7eed38f90.gif? version=637650478200000000&width=1024&height=1024",
+        "team2_logo_url": "https://images.maxpreps.com/schoolmascot/e/b/5/eb53555a-f7d5-456f-8f7b-b6b7eed38f90.gif?version=637650478200000000&width=1024&height=1024",
         "team2_color1": "52000E",
         "team2_color2": "454444"
     }, {
