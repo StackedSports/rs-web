@@ -11,7 +11,7 @@ import RenderIf from '../RenderIf';
 
 const ContactMediaPreview = (props) => {
 
-  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 200,true) : null;
+  const scrolRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 400,true) : null;
   const [carouselIndex, setCarouselIndex] = useState(null);
 
   const onViewMore = () => {
