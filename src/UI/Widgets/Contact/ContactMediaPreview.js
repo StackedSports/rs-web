@@ -54,7 +54,7 @@ const ContactMediaPreview = (props) => {
 
       {thumbs?.length > 0 ? (
         <>
-          <ImageList cols={2} rowHeight={100} ref={scrolRef} flex={1} >
+          <ImageList cols={2} rowHeight={100} ref={scrolRef} >
             {thumbs?.
               map((media, index) => (
                 <ImageListItem
@@ -65,7 +65,7 @@ const ContactMediaPreview = (props) => {
                   <img
                     loading="lazy"
                     alt={`${props.title} ${index}`}
-                    style={{ borderRadius: 5, height:'100%' }}
+                    style={{ borderRadius: 5, height: '100%' }}
                     src={media?.thumb}
                   />
                 </ImageListItem>
