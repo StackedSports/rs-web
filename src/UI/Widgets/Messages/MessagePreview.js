@@ -185,7 +185,7 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                 </Grid>
             </Grid>
 
-            {!mini && <Label label={`Queud by ${getFullName(message.sender)} at ${formatDate(message.created_at, 'medium', 'short')}`} />}
+            {!mini && <Label label={`Queued by ${getFullName(message.sender)} at ${formatDate(message.created_at, 'medium', 'short')}`} />}
         </Grid>
     )
 }
