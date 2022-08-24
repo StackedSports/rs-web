@@ -48,19 +48,21 @@ export const PanelFilters = (props) => {
 	}, [props.setFilter]);
 
 	const getOptionLabel = (filter, option) => {
+		// console.log(filter)
+		// console.log(option)
 
 		if (filter.optionsLabel && filter.optionsLabel instanceof Function) {
 			return filter.optionsLabel(option);
 		} else if (filter.optionsLabel && (typeof filter.optionsLabel === 'string' || filter.optionsLabel instanceof String)) {
-			return option[filter.optionsLabel];
+			return option[filter.optionsLabel] || option.name;
 		} else {
 			return option.name;
 		}
 	}
 
 	const handleOptionsChange = (filterName, option, filter) => {
-		//console.log(filterName)
-		//console.log(option)
+		// console.log(filterName)
+		// console.log(option)
 		option = { ...option, itemLabel: getOptionLabel(filter, option) }
 		let filters = Object.assign({}, selectedFilters)
 
@@ -105,48 +107,55 @@ export const PanelFilters = (props) => {
 
 	return (
 		<>
-			<Stack direction='row' flexWrap='wrap' pb={1}>
+			<Stack id="selected-filters-stack" direction='row' flexWrap='wrap' pb={1}>
 				{selectedFilters && Object.keys(selectedFilters).map(key =>
-					selectedFilters[key].map((filter, index) => (
-						<SearchableOptionSelected
-							style={{ marginLeft: 0 }}
-							key={index + key}
-							item={`${props.filters[key].label}: ${filter.itemLabel || getOptionLabel(props.filters[key], filter)}`}
-							disabled={filter.disabled}
-							onRemove={(e) => onRemoveFilter(key, filter)}
-						/>
-					)))}
+					selectedFilters[key].map((filter, index) => {
+						// console.log(props.filters[key])
+						// console.log(filter)
+						// getOptionLabel(props.filters[key], filter)
+						return (
+							<SearchableOptionSelected
+								style={{ marginLeft: 0 }}
+								key={index + key}
+								item={`${props.filters[key].label}: ${filter.itemLabel || getOptionLabel(props.filters[key], filter)}`}
+								disabled={filter.disabled}
+								onRemove={(e) => onRemoveFilter(key, filter)}
+							/>
+						)
+					}))}
 			</Stack>
 
-			<Collapse in={props.open}>
-				<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
-					{props.filters && Object.keys(props.filters).map(filterName => {
-						const filter = props.filters[filterName];
+			{false && (
+				<Collapse in={props.open}>
+					<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
+						{props.filters && Object.keys(props.filters).map(filterName => {
+							const filter = props.filters[filterName];
 
-						if (filter.type === 'hidden') return
-						else if (filter.type === 'date')
-							return (
-								<DateRangePicker
-									key={filterName}
-									label={filter.label}
-									format={filter.format}
-									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
-									endIcon={<KeyboardArrowDown />}
-								/>
-							)
-						else
-							return (
-								<Dropdown
-									key={filterName}
-									onClick={(option) => handleOptionsChange(filterName, option, filter)}
-									getOptionLabel={(option) => getOptionLabel(filter, option)}
-									{...filter}
-								/>
-							)
-					})}
-				</Stack>
-			</Collapse>
+							if (filter.type === 'hidden') return
+							else if (filter.type === 'date')
+								return (
+									<DateRangePicker
+										key={filterName}
+										label={filter.label}
+										format={filter.format}
+										disableFuture={filter.disableFuture}
+										onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
+										endIcon={<KeyboardArrowDown />}
+									/>
+								)
+							else
+								return (
+									<Dropdown
+										key={filterName}
+										onClick={(option) => handleOptionsChange(filterName, option, filter)}
+										getOptionLabel={(option) => getOptionLabel(filter, option)}
+										{...filter}
+									/>
+								)
+						})}
+					</Stack>
+				</Collapse>
+			)}
 		</>
 	)
 }

@@ -24,7 +24,7 @@ export const ConfirmDialogProvider = ({ children }) => {
     };
 
     return (
-        <ConfirmDialogContext.Provider value={{ title, message, onSubmit,changePrimaryButton, close, show }}>
+        <ConfirmDialogContext.Provider value={{ title, message, onSubmit, changePrimaryButton, close, show }}>
             {children}
             <ConfirmDialog />
         </ConfirmDialogContext.Provider>

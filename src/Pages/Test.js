@@ -24,6 +24,9 @@ const Test = () => {
 
     const [tasks, setTasks] = useState([])
 
+    const contacts = useContacts(1, 20)
+    console.log(contacts.items)
+
     // const contacts = useContacts()
     // const ranks = useRanks()
 

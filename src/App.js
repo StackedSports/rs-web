@@ -18,15 +18,10 @@ import Signup from "Pages/Auth/SignUp";
 import Test from './Pages/Test'
 import StuckMessages from './Pages/AdminPanel/StuckMessages'
 
-// import Media from "./Pages/Media";
-// import MessageCreate from "./Pages/MessageCreate";
-// import UserProfile from "./Pages/UserProfile";
-import TweetCreate from "./Pages/TweetCreate";
-// import TeamSettings from "./Pages/TeamSettings";
 
 import NewDashboard from "./Pages/Dashboard";
 
-import TwitterStream from './components/TwitterStream/TwitterStream'
+// import TwitterStream from './components/TwitterStream/TwitterStream'
 // import MediaC from "./components/MediaComponent/Media";
 
 // import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
@@ -67,10 +62,10 @@ function App() {
 						<div className="body">
 							<Switch>
 								{/** Only Route left from old code */}
-								<Route path="/twitter-stream" exact component={TwitterStream} />
+								{/* <Route path="/twitter-stream" exact component={TwitterStream} /> */}
 
 								{/** New Routes */}
-								<Route path="/tweet-create" exact component={TweetCreate} />
+								{/* <Route path="/tweet-create" exact component={TweetCreate} /> */}
 								<Route path="/" exact component={Signup} />
 								<Route path={routes.contacts.path} component={ContactsRoutes} />
 								<Route path={routes.messages.path} component={MessagesRoutes} />
@@ -82,7 +77,7 @@ function App() {
 								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 
-								{/* <Route path='/test' component={Test} /> */}
+								<Route path='/test' component={Test} />
 								<Route path="/super" component={StuckMessages}/>
 							</Switch>
 						</div>

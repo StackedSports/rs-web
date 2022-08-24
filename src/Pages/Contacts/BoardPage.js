@@ -101,7 +101,7 @@ export default function BoardPage(props) {
                 })
             })
 
-        //console.log("filters", filters)
+        console.log("filters", filters)
 
         return filters
     }, [board.item])
