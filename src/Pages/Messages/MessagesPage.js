@@ -35,8 +35,6 @@ const MessagesPage = (props) => {
     const [selectedFilters, setSelectedFilters] = useState()
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Something Went Wrong', body: '' })
 
-    console.log(messages.items)
-
     useEffect(() => {
         searchParams.appendSearchParams('page', messages.pagination.currentPage)
     }, [messages.pagination.currentPage])
