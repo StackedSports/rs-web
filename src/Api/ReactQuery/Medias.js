@@ -109,10 +109,13 @@ export const useMediaMutation = () => {
             onSuccess: (data, variables, context) => {
                 queryClient.invalidateQueries(['media', variables.id], { active: true })
                 queryClient.invalidateQueries('medias')
-                if (variables?.data?.media_placeholder_id) {
-                    queryClient.invalidateQueries('placeholders', { active: true })
-                }
+
             },
+            onSettled: (data, error, variables) => {
+                if (variables?.data?.media_placeholder_id) {
+                    setTimeout(() => queryClient.refetchQueries('placeholders', { active: true }), 100);
+                }
+            }
         })
 
     const remove = useMutation((id) => deleteMedia(id),
