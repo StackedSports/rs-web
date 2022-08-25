@@ -3,12 +3,21 @@ import React from 'react'
 import { BaseScoresSchedulesPage } from './BaseScoresSchedulesPage'
 import { EventCard } from './EventCard'
 import { searchEvent } from './PlaceholderData'
+import { GridView } from '@mui/icons-material'
 
 export const EventPage = () => {
     const { data } = searchEvent
 
+    const actions = [
+        {
+            variant: 'outlined',
+            type: 'icon',
+            icon: GridView,
+        }
+    ]
+
     return (
-        <BaseScoresSchedulesPage>
+        <BaseScoresSchedulesPage actions={actions} >
             <Grid container spacing={2}>
                 {
                     data.map((data, index) => {

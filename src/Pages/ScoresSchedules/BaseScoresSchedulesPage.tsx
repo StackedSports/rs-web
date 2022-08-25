@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import MainLayout from 'UI/Layouts/MainLayout'
 import { scoresSchedulesRoutes } from 'Routes/Routes'
 import { Box, Button, Divider, InputAdornment, Stack, TextField, Typography } from '@mui/material'
-import { GridView } from '@mui/icons-material'
 
 import { search, searchEvent } from './PlaceholderData'
 
 interface IProps {
-  children?: JSX.Element[] | JSX.Element
+  children?: JSX.Element[] | JSX.Element;
+  actions?: unknown[]
 }
 
 export const BaseScoresSchedulesPage = (props: IProps) => {
@@ -29,19 +29,11 @@ export const BaseScoresSchedulesPage = (props: IProps) => {
     },
   ]
 
-  const filters = [
-    {
-      variant: 'outlined',
-      type:'icon',
-      icon: GridView,
-    }
-  ]
-
   return (
     <MainLayout
       title={'Scores & Schedules'}
       filters={sideFilters}
-      actions={filters}
+      actions={props.actions}
     >
       <Divider sx={{ mb: 3 }} />
 
