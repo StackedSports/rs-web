@@ -344,7 +344,7 @@ export default function BaseContactsPage(props) {
 
         setEditBoard(false)
         setOpenCreateBoardDialog(false)
-        setSelectedFilters(props.selectedFilters)
+        //setSelectedFilters(props.selectedFilters)
     }
 
     const onBackBoardToContacts = (redirect) => {

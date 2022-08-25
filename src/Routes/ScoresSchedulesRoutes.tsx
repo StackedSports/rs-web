@@ -1,16 +1,24 @@
 import { Route } from 'react-router-dom';
 import { scoresSchedulesRoutes } from './Routes';
-import { BaseScoresSchedulesPage } from 'Pages/ScoresSchedules/BaseScoresSchedulesPage';
+import { SearchPage } from 'Pages/ScoresSchedules/SearchPage';
+import { EventPage } from 'Pages/ScoresSchedules/EventPage';
 
 import React from 'react'
 
 export const ScoresSchedulesRoutes = () => {
     return (
-        <Route
-            exact
-            path={scoresSchedulesRoutes.all}
-            component={BaseScoresSchedulesPage}
-        />
+        <>
+            <Route
+                exact
+                path={scoresSchedulesRoutes.all}
+                component={SearchPage}
+            />
+            <Route
+                exact
+                path={scoresSchedulesRoutes.event}
+                component={EventPage}
+            />
+        </>
     )
 }
 

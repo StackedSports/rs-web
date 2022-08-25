@@ -148,4 +148,5 @@ export const chatRoutes = {
 
 export const scoresSchedulesRoutes = {
     all: "/scores-schedule",
+    event:"/scores-schedule/event"
 }
