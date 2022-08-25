@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useContext, useMemo } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 
@@ -6,9 +6,11 @@ import { getFullName } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
 import { useTeamMembers } from 'Api/ReactQuery'
+import { AuthContext } from 'Context/Auth/AuthProvider'
 import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
 
 const BaseMessagePage = (props) => {
+    const { isAdmin } = useContext(AuthContext)
     const [redirect, setRedirect] = useState('')
     const teamMembers = useTeamMembers()
 
@@ -81,7 +83,7 @@ const BaseMessagePage = (props) => {
                 })),
             },
         ]
-    }, [teamMembers.items])
+    }, [teamMembers.items, isAdmin])
 
     const onTopActionClick = (e) => {
         console.log('top action click')

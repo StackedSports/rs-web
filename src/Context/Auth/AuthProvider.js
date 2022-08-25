@@ -34,7 +34,7 @@ const AuthProvider = (props) => {
             app.redirect('/dashboard')
         }
 
-        
+
         setIsLoading(false)
 
     }, [user, app.location])
@@ -113,7 +113,11 @@ const AuthProvider = (props) => {
     }
 
     const utils = useMemo(() => ({
-        user, login, loginWithTwitter, logout
+        user,
+        login,
+        loginWithTwitter,
+        logout,
+        isAdmin: user?.role === "Admin"
     }), [user])
 
     return (
