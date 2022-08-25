@@ -26,31 +26,36 @@ export const TextMessage = (props) => {
                     sx={{ mr: props.owner ? 'auto' : 0 }}
                 />
             }
-            <Typography sx={{
-                margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
-                padding: '10px',
-                color: props.owner ? "common.white" : "common.black",
-                backgroundColor: props.owner ? "primary.main" : "grey.200",
-                borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
-                userSelect: 'text',
-            }}>
+            <Box
+                sx={{
+                    margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
+                    padding: '10px',
+                    color: props.owner ? "common.white" : "common.black",
+                    backgroundColor: props.owner ? "primary.main" : "grey.200",
+                    borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
+                    userSelect: 'text',
+                }}
+            >
                 {props.message.media && (
                     <Box sx={{ maxWidth: '420px', '> *': { borderRadius: '5px' } }}>
                         <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
                     </Box>
                 )}
-                {props.message.text}
-            </Typography>
-            {props.owner &&
-                <Avatar sx={{
-                    margin: '5px 0 5px 10px',
-                    width: "26px",
-                    height: "26px",
-                    alignSelf: "flex-end",
-                }}
-                    aria-label="avatar"
-                    src={props.owmnerAvatar}
-                />}
+                <Typography >
+                    {props.message.text}
+                </Typography>
+            </Box>
+
+            <Avatar sx={{
+                margin: props.owner ? '0 0 0 10px' : '0 10px 0 0',
+                width: "26px",
+                height: "26px",
+                alignSelf: 'flex-end',
+                order: props.owner ? 0 : -1,
+            }}
+                aria-label="avatar"
+                src={props.owner ? props.owmnerAvatar : props.contactAvatar}
+            />
         </ListItem>
     )
 }

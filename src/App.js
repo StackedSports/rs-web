@@ -9,7 +9,6 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import "./App.css";
 
-//import Signup from "./components/signup";
 import Signup from "Pages/Auth/SignUp";
 // import Dashboard from "./components/dashboard/index";
 // import Contacts from "./Pages/Contacts";
@@ -17,12 +16,7 @@ import Signup from "Pages/Auth/SignUp";
 
 import Test from './Pages/Test'
 import StuckMessages from './Pages/AdminPanel/StuckMessages'
-
-
 import NewDashboard from "./Pages/Dashboard";
-
-// import TwitterStream from './components/TwitterStream/TwitterStream'
-// import MediaC from "./components/MediaComponent/Media";
 
 // import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 

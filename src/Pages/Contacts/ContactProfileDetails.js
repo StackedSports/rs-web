@@ -15,12 +15,11 @@ import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
 import { states, timeZones } from 'utils/Data';
 
-import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags } from 'Api/ReactQuery';
+import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags, useContactMutation } from 'Api/ReactQuery';
 
 import {
 	addTagsToContact,
 	untagContact,
-	updateContact,
 } from 'Api/Endpoints'
 
 import { AppContext } from 'Context/AppProvider'
@@ -63,6 +62,7 @@ const ContactProfileDetails = (props) => {
 		)
 
 	const app = useContext(AppContext)
+	const { update: updateContact } = useContactMutation()
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
@@ -190,23 +190,22 @@ const ContactProfileDetails = (props) => {
 
 		setSavingContactAtIndex(index, true)
 
-		updateContact(props.contact.id, parseValues(data))
-			.then(res => {
+		updateContact({ id: props.contact.id, data: parseValues(data) }, {
+			onSuccess: (res) => {
 				props.onContactUpdated(res.data)
 				app.alert.setSuccess('Contact updated successfully!')
 				onAccordionFieldReset(index)
 				console.log(res.data)
-			})
-			.catch(error => {
+			},
+			onError: (error) => {
 				console.log(error)
 				app.alert.setError('Contact failed to update.')
-				// re(error)
-			})
-			.finally(() => setSavingContactAtIndex(index, false))
+			},
+			onSettled: () => {
+				setSavingContactAtIndex(index, false)
+			}
+		})
 
-		// return new Promise((resolve, reject) => {
-
-		// })
 	}
 
 	const getOnlyNewValues = (previous, current) => {
@@ -483,7 +482,7 @@ const ContactProfileDetails = (props) => {
 		<Stack
 			pr={1}
 			spacing={1}
-			sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			sx={{ width: '350px', overflowY: "auto", borderRight: "#efefef  1px solid" }}
 		>
 			<CreatePersonDialog
 				open={openNewFamilyMemberDialog}
@@ -518,6 +517,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.general}
 				onSubmit={onUpdateGeneral}
 				validationSchema={formValidation}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -550,6 +550,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
 				validationSchema={detailsFormValidation}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }} onSubmit={(e) => { e.preventDefault(); formikProps.handleSubmit() }}>
@@ -688,6 +689,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.coaches}
 				onSubmit={onUpdateCoaches}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -758,6 +760,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.positions}
 				onSubmit={onUpdatePositions}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -798,6 +801,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.relationships}
 				onSubmit={onUpdateRelationships}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -882,6 +886,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.opponents}
 				onSubmit={onUpdateOpponents}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -946,6 +951,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.external}
 				onSubmit={onUpdateExternal}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -973,6 +979,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.tags}
 				onSubmit={onUpdateTags}
+				enableReinitialize= {true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>

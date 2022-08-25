@@ -5,9 +5,7 @@ import Stack from '@mui/material/Stack';
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
 
-import { useBoards, useContact, useContactAssociatedMedia, useContactSentMedia, useContactConversation, useContactStats } from 'Api/ReactQuery';
-
-import { contactsRoutes, messageRoutes } from 'Routes/Routes'
+import { useContact } from 'Api/ReactQuery';
 
 import ContactProfileDetails from './ContactProfileDetails';
 import ContactMessageDetails from 'UI/Widgets/Contact/ContactMessageDetails';
@@ -20,22 +18,9 @@ export default function ContactsProfilePage(props) {
 
     const [loading, setLoading] = useState(false)
 
-    // handle filters options
-    // const positions = usePositions()
-    // const peopleTypes = usePeopleTypes()
-    // const status = useStatuses()
-    // const ranks = useRanks()
-    // const tags = useTags2()
-    // const teamMembers = useTeamMembers()
+
     const history = useHistory()
     const contact = useContact(id)
-    const contactAssociatedMedia = useContactAssociatedMedia(id, 1, 20)
-    const contactConversation = useContactConversation(id)
-    const contactSentMedia = useContactSentMedia(id)
-    const contactStats = useContactStats(id)
-    const boards = useBoards()
-
-    const [updatedContact, setUpdatedContact] = useState(null)
 
     useEffect(() => {
         if (!contact)
@@ -43,30 +28,13 @@ export default function ContactsProfilePage(props) {
         console.log(contact.item)
     }, [id])
 
-    /*     useEffect(() => {
-            if (!contactConversation.item)
-                return
-            console.log("conversation", contactConversation.item)
-        }, [contactConversation.item]) */
-
-    useEffect(() => {
-        if (!contactStats.item)
-            return
-        console.log("stats", contactStats.item)
-    }, [contactStats.item])
-
     const onTopActionClick = (e) => {
         console.log('top action click')
     }
 
     const onContactUpdated = (newContact) => {
-        setUpdatedContact(newContact)
+        contact.refetch()
     }
-
-    // const onTagsSelected = (selectedTagsIds) => {
-    //     // setLoading(true)
-
-    // }
 
     return (
         <MainLayout
@@ -84,16 +52,13 @@ export default function ContactsProfilePage(props) {
             >
                 <ContactProfileDetails
                     loading={contact.loading}
-                    contact={updatedContact || contact.item}
+                    contact={contact.item}
                     refreshContact={contact.refetch}
                     onContactUpdated={onContactUpdated}
                 />
-                <ContactChat contact={updatedContact || contact.item} messages={contactConversation.item} />
+                <ContactChat contact={contact.item} />
                 <ContactMessageDetails
-                    contact={updatedContact || contact.item}
-                    sentMedias={contactSentMedia.items}
-                    associatedMedias={contactAssociatedMedia.items}
-                    stats={contactStats.item}
+                    contact={contact.item}
                 />
             </Stack>
         </MainLayout>

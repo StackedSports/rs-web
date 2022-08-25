@@ -1,9 +1,5 @@
-import * as React from 'react';
 import styled from 'styled-components';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { Divider, Typography } from "@material-ui/core";
-import { useFormik, Field } from 'formik';
+import { Divider } from "@mui/material";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -18,8 +14,6 @@ const SelectNotificationButtons = styled.div`
 
 
 const UserSettingsNotificationsList = (props) => {
-
-
 
   return (
     <List
