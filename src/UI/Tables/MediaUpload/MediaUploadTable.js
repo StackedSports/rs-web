@@ -113,12 +113,7 @@ export const MediaTableItemLoading = (props) => {
         ...props.style
       }}
     >
-      <LinearProgress
-        style={{
-          width: 240
-        }}
-      />
-      {/* <p>Loading...</p> */}
+      <LinearProgress />
     </Grid>
   )
 }
@@ -187,7 +182,7 @@ export const MediaUploadItem = (props) => {
       props.onSearch(input)
     else
       props.onClearSearch()
-  },500)
+  }, 500)
 
   // const onInputChange = (input) => {
   //   console.log(input)
@@ -196,9 +191,9 @@ export const MediaUploadItem = (props) => {
   // }
 
   return (
-    <Grid container padding={1.5}  spacing={1} alignItems="center" >
+    <Grid container padding={1.5} spacing={1} alignItems="center" >
       <Grid item xs={5} >
-        <Typography sx={{wordWrap:'break-word'}} className={classes.tableP}> {props.item.name}</Typography>
+        <Typography sx={{ wordWrap: 'break-word' }} className={classes.tableP}> {props.item.name}</Typography>
       </Grid>
       <Grid item xs={4}>
         {props.optionSelected === "loading" &&
@@ -278,9 +273,9 @@ export const MediaUploadItem = (props) => {
       </Grid>
       <Grid item xs={3}>
         <Stack direction='row' >
-        <Box flex={1}>
-          <MediaUploadStatus status={props.itemUploadStatus} />
-        </Box>
+          <Box flex={1}>
+            <MediaUploadStatus status={props.itemUploadStatus} />
+          </Box>
 
           {!props.disableAssociateInput &&
             <DeleteForeverIcon
