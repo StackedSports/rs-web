@@ -11,8 +11,8 @@ const SnippetsTable = (props) => {
       selectionModel={props.selection}
       onSelectionChange={props.onSelectionChange}
       loading={props.loading}
-      onRowClick={(e)=>props.onRowClick(e.row)}
-      checkboxSelection
+      onRowClick={(e) => props.onRowClick(e.row)}
+      checkboxSelection={props.checkboxSelection}
       disableSelectionOnClick
     />
   )

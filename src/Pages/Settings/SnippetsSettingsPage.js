@@ -8,8 +8,10 @@ import SnippetsDialog from 'UI/Widgets/Settings/SnippetsDialog'
 import { useSnippets } from 'Api/ReactQuery'
 import { deleteSnippets } from 'Api/Endpoints';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import { AuthContext } from 'Context/Auth/AuthProvider'
 
 const SnippetsSettingsPage = () => {
+    const { isAdmin } = useContext(AuthContext)
     const snippets = useSnippets()
     const confirmDialog = useContext(ConfirmDialogContext)
     const [openSnippetDialog, setOpenSnippetDialog] = useState(false)
@@ -36,6 +38,7 @@ const SnippetsSettingsPage = () => {
     }
 
     const onRowClick = (e) => {
+        if (!isAdmin) return
         setSelectedRowSnippet(e)
         setOpenSnippetDialog(true)
     }
@@ -46,14 +49,14 @@ const SnippetsSettingsPage = () => {
 
     const onDeleteAction = () => {
         const title = `Delete ${selectedSnippets.length > 1 ? 'Snippets' : 'Snippet'}`
-        confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
-        Promise.all(selectedSnippets.map(snippet => deleteSnippets(snippet)))
-            .then(() => {
-                snippets.refetch()
-            }
-            ).catch(err => {
-                console.log(err)
-            })
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+            Promise.all(selectedSnippets.map(snippet => deleteSnippets(snippet)))
+                .then(() => {
+                    snippets.refetch()
+                }
+                ).catch(err => {
+                    console.log(err)
+                })
         })
     }
 
@@ -82,6 +85,7 @@ const SnippetsSettingsPage = () => {
                 loading={snippets.loading}
                 onRowClick={onRowClick}
                 onSelectionChange={onSelectionChange}
+                checkboxSelection={isAdmin}
             />
             <SnippetsDialog
                 open={openSnippetDialog}

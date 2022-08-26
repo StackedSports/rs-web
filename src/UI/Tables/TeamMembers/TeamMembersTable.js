@@ -12,6 +12,7 @@ const TeamMembersTable = (props) => {
           onSelectionChange={props.onSelectionChange}
           loading={props.loading}
           checkboxSelection
+          disableSelectionOnClick
         />
     )
 }

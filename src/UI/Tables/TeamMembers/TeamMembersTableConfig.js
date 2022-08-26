@@ -42,7 +42,7 @@ const fullName = {
     },
     renderCell: (params) => (
         <Link
-            style={{ color: 'inherit' }}
+            style={{ color: 'inherit', width:'100%' }}
             to={`${settingsRoutes.general.member}/${params.row.id}`}
         >
             {params.value}

@@ -108,13 +108,13 @@ export const settingsRoutes = {
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
 
-        // tags: '/settings/tags',
         // gradYears: '/settings/grad-years',
         // placeholders: '/settings/placeholders',
         // getSendCoachTypes: '/settings/get_send_as_coaches',
         // peopleTypes: '/settings/people_types',
     },
     tags: {
+        tags: '/settings/tags',
         mediaTags: '/settings/media-tags',
         contactsTags: '/settings/contacts-tags',
         messageTags: '/settings/message-tags',

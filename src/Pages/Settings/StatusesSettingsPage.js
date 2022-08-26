@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useContext } from 'react'
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import SettingsPage from './SettingsPage'
@@ -8,8 +9,10 @@ import { StatusesDialog } from 'UI/Widgets/Settings/StatusesDialog'
 import { useStatuses } from 'Api/ReactQuery'
 import { deleteStatus } from 'Api/Endpoints'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import { AuthContext } from 'Context/Auth/AuthProvider'
 
 const StatusesSettingsPage = () => {
+    const { isAdmin } = useContext(AuthContext)
     const statuses = useStatuses()
     const confirmDialog = useContext(ConfirmDialogContext)
     const [openStatusesDialog, setOpenStatusesDialog] = useState(false)
@@ -36,6 +39,8 @@ const StatusesSettingsPage = () => {
     }
 
     const onRowClick = (e) => {
+        if (!isAdmin) return
+
         setSelectedRowStatus(e)
         setOpenStatusesDialog(true)
     }
@@ -46,14 +51,14 @@ const StatusesSettingsPage = () => {
 
     const onDeleteAction = () => {
         const title = `Delete ${selectedStatuses.length > 1 ? 'Statuses' : 'Status'}`
-        confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
-        Promise.all(selectedStatuses.map(snippet => deleteStatus(snippet)))
-            .then(() => {
-                statuses.refetch()
-            }
-            ).catch(err => {
-                console.log(err)
-            })
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+            Promise.all(selectedStatuses.map(snippet => deleteStatus(snippet)))
+                .then(() => {
+                    statuses.refetch()
+                }
+                ).catch(err => {
+                    console.log(err)
+                })
         })
     }
 
@@ -73,7 +78,7 @@ const StatusesSettingsPage = () => {
     return (
         <SettingsPage
             title='Status'
-            topActionName='+ New Statuses'
+            topActionName={isAdmin && '+ New Statuses'}
             onTopActionClick={onTopActionClick}
             actions={actions}
         >
@@ -81,6 +86,7 @@ const StatusesSettingsPage = () => {
                 items={statuses.items}
                 loading={statuses.loading}
                 onRowClick={onRowClick}
+                checkboxSelection={isAdmin}
                 onSelectionChange={onSelectionChange}
             />
             <StatusesDialog

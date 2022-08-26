@@ -11,24 +11,23 @@ import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import useSearchParams from 'Hooks/SearchParamsHook';
-import { useMessages, useTagsWithMessage,useTeamMembers } from 'Api/ReactQuery'
+import { useMessages, useTagsWithMessage, useTeamMembers } from 'Api/ReactQuery'
 import { getFullName } from 'utils/Parser'
 import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from "lodash"
 import useLocalStorage from 'Hooks/useLocalStorage'
 import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination'
-import { Box } from '@mui/material'
 
 const MessagesPage = (props) => {
     const searchParams = useSearchParams()
-    const { user } = useContext(AuthContext)
+    const { isAdmin,user } = useContext(AuthContext)
     const scrollToTopTableRef = useRef()
     const senders = useTeamMembers()
     const tags = useTagsWithMessage()
 
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`messages-table-perPage`, 10)
     const page = searchParams.page
-    const criteria = useMemo(() => ({ ...getMessagesCriteriaFromQueryString(searchParams.filters), includeTeam: user?.role?.includes('Admin') }), [searchParams.filters])
+    const criteria = useMemo(() => ({ ...getMessagesCriteriaFromQueryString(searchParams.filters), includeTeam: isAdmin }), [searchParams.filters])
     const messages = useMessages(page, perPageLocalStorage, criteria)
 
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -87,46 +86,52 @@ const MessagesPage = (props) => {
         setperPageLocalStorage(value)
     }
 
-    const panelFilters = useMemo(() => ({
-        'platform': {
-            label: 'Platform',
-            options: [{ id: 1, name: 'Twitter' }, { id: 2, name: 'Personal Text' }, { id: 3, name: 'RS Text' }],
-        },
-        'sender': {
-            label: 'Sender',
-            options: senders.items || [],
-            optionsLabel: (sender) => getFullName(sender),
-            onSearch: (search) => senders.search(search),
-        },
-        'recipient_status': {
-            label: 'Recipient Status',
-            options: [{ id: 1, name: 'Cancelled' }, { id: 2, name: 'Error' }, { id: 3, name: 'Ignored' }, { id: 4, name: 'Skipped' }, { id: 5, name: 'Sent' }, { id: 6, name: 'Pending' }],
-        },
-        'tags': {
-            label: 'Tags',
-            options: tags.items || [],
-            onSearch: (search) => tags.search(search),
+    const panelFilters = useMemo(() => {
+        const filter = {
+            'platform': {
+                label: 'Platform',
+                options: [{ id: 1, name: 'Twitter' }, { id: 2, name: 'Personal Text' }, { id: 3, name: 'RS Text' }],
+            },
+            'sender': {
+                label: 'Sender',
+                options: senders.items || [],
+                optionsLabel: (sender) => getFullName(sender),
+                onSearch: (search) => senders.search(search),
+            },
+            'recipient_status': {
+                label: 'Recipient Status',
+                options: [{ id: 1, name: 'Cancelled' }, { id: 2, name: 'Error' }, { id: 3, name: 'Ignored' }, { id: 4, name: 'Skipped' }, { id: 5, name: 'Sent' }, { id: 6, name: 'Pending' }],
+            },
+            'tags': {
+                label: 'Tags',
+                options: tags.items || [],
+                onSearch: (search) => tags.search(search),
 
-        },
-        'send_at_dates': {
-            label: 'Send At Dates',
-            type: 'date',
-            isUnique: true,
-            optionsLabel: (dates) => dates.value.join(' - '),
-        },
-        'sent_at_dates': {
-            label: 'Sent At Dates',
-            type: 'date',
-            isUnique: true,
-            optionsLabel: (dates) => dates.value.join(' - '),
-        },
-        'message_status': {
-            label: 'Status',
-            type: 'hidden',
-            isUnique: true,
-            options: [{ id: 'all', name: 'All' }, { id: 'drafts', name: 'Drafts' }, { id: 'scheduled', name: 'Scheduled' }, { id: 'in_progress', name: 'In Progress' }, { id: 'finished', name: 'Finished' }, { id: 'archived', name: 'Archived' }],
+            },
+            'send_at_dates': {
+                label: 'Send At Dates',
+                type: 'date',
+                isUnique: true,
+                optionsLabel: (dates) => dates.value.join(' - '),
+            },
+            'sent_at_dates': {
+                label: 'Sent At Dates',
+                type: 'date',
+                isUnique: true,
+                optionsLabel: (dates) => dates.value.join(' - '),
+            },
+            'message_status': {
+                label: 'Status',
+                type: 'hidden',
+                isUnique: true,
+                options: [{ id: 'all', name: 'All' }, { id: 'drafts', name: 'Drafts' }, { id: 'scheduled', name: 'Scheduled' }, { id: 'in_progress', name: 'In Progress' }, { id: 'finished', name: 'Finished' }, { id: 'archived', name: 'Archived' }],
+            }
         }
-    }), [senders.items, tags.items])
+
+        !isAdmin && delete filter['sender']
+        return filter
+
+    }, [senders.items, tags.items, isAdmin])
 
     const onFilterChange = (filters) => {
         setSelectedFilters(filters)

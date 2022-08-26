@@ -40,7 +40,7 @@ const ALL_PLATFORMS = {
 }
 
 export default function MessageCreatePage(props) {
-    const { user } = useContext(AuthContext)
+    const { user, isAdmin } = useContext(AuthContext)
     const app = useContext(AppContext)
     const { control } = useParams()
     const teamMembers = useTeamMembers()
@@ -183,7 +183,13 @@ export default function MessageCreatePage(props) {
         if (!teamMembers.items)
             return
 
-        setSendContacts(coachTypes.concat(teamMembers.items))
+        if (isAdmin) {
+            setSendContacts(coachTypes.concat(teamMembers.items))
+        } else {
+            const me = teamMembers.items.find(member => member.id === user.id)
+            me && setSendContacts([me])
+            me && setSenderSelected.push(me)
+        }
 
     }, [teamMembers.items])
 
@@ -569,7 +575,7 @@ export default function MessageCreatePage(props) {
                 messageData['send_at'] = sendAt
                 // console.log('yoooooo')
             }
-                
+
         }
 
         // Message requires either a body or media attachment. They can't be both empty

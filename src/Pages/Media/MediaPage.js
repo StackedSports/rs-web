@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
@@ -11,8 +11,10 @@ import { getFullName } from 'utils/Parser'
 import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
+import { AuthContext } from 'Context/Auth/AuthProvider'
 
 export const MediaPage = (props) => {
+    const { isAdmin, user } = useContext(AuthContext)
     const searchParams = useSearchParams()
     const tags = useTagsWithMedia()
     const teamMembers = useTeamMembers()
@@ -45,21 +47,24 @@ export const MediaPage = (props) => {
             {
                 id: ++index,
                 name: 'My Media',
-                items: teamMembers.items.map(item => ({
-                    id: item.id,
-                    name: getFullName(item),
-                    path: {
-                        pathname: mediaRoutes.media,
-                        search: new URLSearchParams({
-                            page: 1,
-                            filters: filterObjectToQueryParams({
-                                owner_id: {
-                                    itemLabel: getFullName(item), value: item.id
-                                }
-                            }),
-                        }).toString(),
-                    },
-                })),
+                items: teamMembers.items.map(item => {
+                    const obj = {
+                        id: item.id,
+                        name: getFullName(item),
+                        path: {
+                            pathname: mediaRoutes.media,
+                            search: new URLSearchParams({
+                                page: 1,
+                                filters: filterObjectToQueryParams({
+                                    owner_id: {
+                                        itemLabel: getFullName(item), value: item.id
+                                    }
+                                }),
+                            }).toString(),
+                        },
+                    }
+                    return isAdmin ? obj : item.id === user.id ? obj : null
+                }).filter(item => !!item ) ,
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
@@ -82,7 +87,7 @@ export const MediaPage = (props) => {
                 path: `${mediaRoutes.placeholders}?page=1`,
             }
         ]
-    }, [mediaTypes.items, teamMembers.items])
+    }, [mediaTypes.items, teamMembers.items, user, isAdmin])
 
     const panelFiltersData = useMemo(() =>
     ({
