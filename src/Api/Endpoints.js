@@ -390,7 +390,7 @@ export const getGradYears = () => {
 }
 
 export const getBoards = () => {
-    return AXIOS('get', `filters?page=1&per_page=50`)
+    return AXIOS('get', `filters?page=1&per_page=100`)
 }
 
 export const getPositions = () => {
