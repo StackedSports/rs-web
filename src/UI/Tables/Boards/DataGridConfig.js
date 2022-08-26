@@ -27,13 +27,14 @@ const profileImg = {
 const name = { 
     field: 'name',
     headerName: 'Name',
-    width: 180,
+    flex: 1,
     resizable: true
 }
 
 const contacts = {
     field: 'contacts',
     headerName: 'Contacts',
+    flex: 1,
     // TODO: we need to figure out why athletes is coming back from filters, it should only be contacts
     valueGetter: (params) => params.row.contacts?.count || params.row.athletes?.count || '--'
 }
