@@ -6,6 +6,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
+import CachedIcon from '@mui/icons-material/Cached'
 
 export const routes = {
     dashboard: {
@@ -54,9 +55,14 @@ export const routes = {
         icon: TwitterIcon
     },
     userSettings: {
-        title: ' User Settings',
+        title: 'User Settings',
         path: '/user',
         // icon: SettingsIcon
+    },
+    super: {
+        title: 'Message Reqeueu',
+        path: '/super',
+        icon: CachedIcon
     },
 }
 

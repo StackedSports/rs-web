@@ -27,13 +27,51 @@ const Test = () => {
     // const contacts = useContacts(1, 20)
     // console.log(contacts.items)
 
+    console.log(user)
+
 
     useEffect(() => { //        
-        
+        if(!user) return
+
+        const kanbanRef = doc(db, 'orgs', user.team.org.id, 'kanbans', 'KgOQnrwZQS1XnZHdNuYN')
+        getDoc(kanbanRef)
+            .then(snapshot => {
+                const kanban = snapshot.data()
+
+                
+
+                console.log(kanban)
+
+                let promises = []
+
+                console.log('Building promises')
+
+                let count = 0
+
+                kanban.columns.forEach(column => {
+                    column.contacts.forEach(contact => {
+                        count++
+                        promises.push(getContact(contact.id))
+                    })
+                })
+
+                console.log(`Making ${count} API requests...`)
+
+                const start = Date.now()
+
+                Promise.all(promises)
+                    .then(result => {
+                        console.log(result)
+
+                        const end = Date.now()
+
+                        console.log(`Function took ${end - start} ms to execute`)
+                    })
+            })
 
         
 
-    }, [])
+    }, [user])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
