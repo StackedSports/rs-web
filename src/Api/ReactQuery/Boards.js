@@ -18,12 +18,12 @@ export const useBoard = (id) => {
 
 export const useBoards = () => {
     const reactQuery = useQuery(`boards`, getBoards, {
-        select: (data) => data[0],
+        select: (data) => data[0].sort((a, b) => a.name.localeCompare(b.name)),
     })
 
     return {
         ...reactQuery,
-        items: reactQuery.data.sort((a, b) => a.name.localeCompare(b.name)),
+        items: reactQuery.data,
         loading: reactQuery.isLoading,
     }
 }
