@@ -6,6 +6,18 @@
     overflow-y: auto;
 }
 
+/* width */
+.SideFilter::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+/* width */
+.SideFilter:hover::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
 .SideFilter .Title {
     font-weight: bold;
     font-size: 20px;

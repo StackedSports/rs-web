@@ -94,9 +94,9 @@ export default function BaseContactsPage(props) {
             return
 
         const privateBoards = boards.items.filter(board => !board.is_shared)
-        privateBoards.sort((a, b) => a.name.localeCompare(b.name))
+        // privateBoards.sort((a, b) => a.name.localeCompare(b.name))
         const teamBoards = boards.items.filter(board => board.is_shared)
-        teamBoards.sort((a, b) => a.name.localeCompare(b.name))
+        // teamBoards.sort((a, b) => a.name.localeCompare(b.name))
         setPrivateBoards(privateBoards)
         setTeamBoards(teamBoards)
     }, [boards.items])
