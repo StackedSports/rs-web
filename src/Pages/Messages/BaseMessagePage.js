@@ -23,8 +23,8 @@ const BaseMessagePage = (props) => {
         }).toString()
     }
 
-    const filtersWithTeamMembers = useMemo(() => {
-        return [
+    const sideFilters = useMemo(() => {
+        const filter = [
             {
                 id: 'create',
                 name: 'Message Create',
@@ -63,6 +63,9 @@ const BaseMessagePage = (props) => {
                     },
                 ]
             },
+        ]
+
+        const teamMembersSideFilter = [
             {
                 id: 'teamMembers',
                 name: 'Team Members',
@@ -81,8 +84,11 @@ const BaseMessagePage = (props) => {
                         }).toString(),
                     },
                 })),
-            },
+            }
         ]
+
+        return isAdmin ? [...filter, ...teamMembersSideFilter] : filter
+
     }, [teamMembers.items, isAdmin])
 
     const onTopActionClick = (e) => {
@@ -95,7 +101,7 @@ const BaseMessagePage = (props) => {
             title={props.title || 'Messages'}
             topActionName={props.topActionName || '+ New Message'}
             onTopActionClick={onTopActionClick}
-            filters={filtersWithTeamMembers}
+            filters={sideFilters}
             alert={props.alert}
             loading={props.loading}
             redirect={props.redirect || redirect}

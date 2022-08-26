@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useContext } from 'react'
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import SettingsPage from './SettingsPage'
@@ -7,10 +8,11 @@ import PositionDialog from 'UI/Widgets/Settings/PositionDialog'
 
 import { usePositions } from 'Api/ReactQuery'
 import { deletePosition } from 'Api/Endpoints';
+import { AuthContext } from 'Context/Auth/AuthProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
 const PositionsSettingsPage = () => {
-
+    const { isAdmin } = useContext(AuthContext)
     const confirmDialog = useContext(ConfirmDialogContext)
     const [openPositionDialog, setOpenPositionDialog] = useState(false)
     // row position selected to edit
@@ -20,14 +22,13 @@ const PositionsSettingsPage = () => {
 
 
     const positions = usePositions()
-    // const loading = useGradeYears().loading
 
-    useEffect(() => {
-        if (!positions.items)
-            return
-
-        console.log(positions.items)
-    }, [positions.items])
+    /*     useEffect(() => {
+            if (!positions.items)
+                return
+    
+            console.log(positions.items)
+        }, [positions.items]) */
 
     const onTopActionClick = (e) => {
         setSelectedRowPosition(null)
@@ -40,6 +41,7 @@ const PositionsSettingsPage = () => {
     }
 
     const onRowClick = (e) => {
+        if (!isAdmin) return
         setSelectedRowPosition(e)
         setOpenPositionDialog(true)
     }
@@ -49,15 +51,15 @@ const PositionsSettingsPage = () => {
     }
 
     const onDeleteAction = () => {
-        const title = `Delete ${selectedPositions.length >1 ? 'Positions': 'Position'}?`
-        confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
-        Promise.all(selectedPositions.map(position => deletePosition(position)))
-            .then(() => {
-                positions.refetch()
-            }
-            ).catch(err => {
-                console.log(err)
-            })
+        const title = `Delete ${selectedPositions.length > 1 ? 'Positions' : 'Position'}?`
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+            Promise.all(selectedPositions.map(position => deletePosition(position)))
+                .then(() => {
+                    positions.refetch()
+                }
+                ).catch(err => {
+                    console.log(err)
+                })
         })
     }
 
@@ -77,7 +79,7 @@ const PositionsSettingsPage = () => {
     return (
         <SettingsPage
             title='Positions'
-            topActionName='+ New Position'
+            topActionName={isAdmin && '+ New Position'}
             onTopActionClick={onTopActionClick}
             actions={actions}
         >
@@ -86,6 +88,7 @@ const PositionsSettingsPage = () => {
                 loading={positions.loading}
                 onRowClick={onRowClick}
                 onSelectionChange={onSelectionChange}
+                checkboxSelection={isAdmin}
             />
             <PositionDialog
                 open={openPositionDialog}

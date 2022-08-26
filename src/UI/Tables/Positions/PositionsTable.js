@@ -12,7 +12,7 @@ const PositionsTable = (props) => {
       onSelectionChange={props.onSelectionChange}
       loading={props.loading}
       onRowClick={(e)=>props.onRowClick(e.row)}
-      checkboxSelection
+      checkboxSelection = {props.checkboxSelection}
       disableSelectionOnClick
     />
   )

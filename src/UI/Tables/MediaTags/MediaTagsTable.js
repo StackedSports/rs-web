@@ -11,7 +11,7 @@ const MediaTagsTable = (props) => {
       selectionModel={props.selection}
       onSelectionModelChange={props.onSelectionChange}
       loading={props.loading}
-      checkboxSelection
+      checkboxSelection={props.checkboxSelection}
       hidePagination
     />
   )

@@ -1,55 +1,89 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 
 import SettingsPage from './SettingsPage'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
 
-import { useTags, useTagsWithMedia,useTagsWithContacts } from 'Api/ReactQuery';
+import { useTags } from 'Api/ReactQuery';
+import { AuthContext } from 'Context/Auth/AuthProvider'
+import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 
 const TagSettingsPage = () => {
+    const { isAdmin } = useContext(AuthContext)
+    const confirmDialog = useContext(ConfirmDialogContext)
     const tags = useTags()
-    const tagsWithContacts = useTagsWithContacts()
-    const tagsWithMedia = useTagsWithMedia()
 
-    const [selectedTags, setSelectedTags] = useState([])
-    const [tagsSelected, setTagsSelected] = useState([])
+    const [openPositionDialog, setOpenPositionDialog] = useState(false)
+    // row position selected to edit
+    const [selectedRowPosition, setSelectedRowPosition] = useState(null)
+    // selection from checkbox
+    const [selectedPositions, setSelectedPositions] = useState([])
 
-    useEffect(() => {
-        if (!tags.items)
-            return
-
-        console.log(tags.items)
-    }, [tags.items])
-
-    useEffect(() => {
-        if (!tagsWithContacts.items)
-            return
-
-        console.log(tagsWithContacts.items)
-    }, [tagsWithContacts.items])
-
-    useEffect(() => {
-        if (!tagsWithMedia.items)
-            return
-
-        console.log(tagsWithMedia.items)
-    }, [tagsWithMedia.items])
+    /*     useEffect(() => {
+            if (!tags.items)
+                return
+    
+            console.log(tags.items)
+        }, [tags.items]) */
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setSelectedRowPosition(null)
+        setOpenPositionDialog(true)
     }
+
+    const handleSusccess = () => {
+        setSelectedRowPosition(null)
+        positions.refetch()
+    }
+
+    const onRowClick = (e) => {
+        if (!isAdmin) return
+        setSelectedRowPosition(e)
+        setOpenPositionDialog(true)
+    }
+
+    const onSelectionChange = (e) => {
+        setSelectedPositions(e)
+    }
+
+    const onDeleteAction = () => {
+        const title = `Delete ${selectedPositions.length > 1 ? 'Positions' : 'Position'}?`
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
+            Promise.all(selectedPositions.map(position => deletePosition(position)))
+                .then(() => {
+                    positions.refetch()
+                }
+                ).catch(err => {
+                    console.log(err)
+                })
+        })
+    }
+
+    const actions = useMemo(() => {
+        if (selectedPositions.length > 0)
+            return [
+                {
+                    name: 'Delete (' + selectedPositions.length + ')',
+                    icon: DeleteForeverIcon,
+                    variant: 'outlined',
+                    onClick: onDeleteAction,
+                }
+            ]
+        return []
+    }, [selectedPositions])
 
     return (
         <SettingsPage
-            title='Tags'
-            topActionName='+ New Tag'
+            title='All Tags'
+            topActionName={false && '+ New Tag'}
             onTopActionClick={onTopActionClick}
+            actions={actions}
         >
-
             <TagsTable
                 tags={tags.items}
-                //   selection={selectedTags}
-                //   onSelectionChange={onSelectedTagsChange}
                 loading={tags.loading}
+                //onRowClick={onRowClick}
+                onSelectionChange={onSelectionChange}
+                checkboxSelection={isAdmin}
             />
         </SettingsPage>
     )
