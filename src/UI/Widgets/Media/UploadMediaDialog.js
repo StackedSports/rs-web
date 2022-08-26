@@ -288,27 +288,6 @@ export default function UploadMediaDialog(props) {
 			return
 		}
 
-		// uploadingMedia
-		// associatedPeople
-		// uploadProgress
-		// dropFiles
-
-		// selectedPlaceholders[0]
-		// selectedTags
-		// selectedOwner[0]
-
-		// console.log('testing')
-
-		// setSelectedPlaceholders(oldValue => ([{ id: oldValue[0].id, name: oldValue[0].name, test: 'worked'}]))
-		// 	.then(() => {
-		// 		console.log('finsihed')
-		// 		console.log(selectedPlaceholders)
-		// 	})
-
-
-		// return
-		// return console.log(selectedOwner)
-
 		if (selectedPlaceholders[0] && selectedPlaceholders[0].id.toString().includes('new-')) {
 			//console.log(selectedPlaceholders[0])
 

@@ -110,8 +110,8 @@ const MediaImage = (props) => {
         <img
             style={{
                 objectFit: 'contain',
-                width: props.size,
-                height: props.size
+                width: props.size || '100%',
+                height: props.size || '100%'
             }}
             src={props.media?.urls?.large || props.media?.urls?.thumb}
         />
@@ -233,7 +233,7 @@ const MediaPreview = ({ type, ...props }) => {
                     size={width}
                 >
                     {isMedia ? (
-                        <MediaImage media={props.item} size={width} />
+                        <MediaImage media={props.item}  />
                     ) : (
                         <PlaceholderImage placeholder={props.item} size={width} />
                     )}
