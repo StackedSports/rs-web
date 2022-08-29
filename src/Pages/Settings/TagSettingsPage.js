@@ -81,7 +81,7 @@ const TagSettingsPage = () => {
             <TagsTable
                 tags={tags.items}
                 loading={tags.loading}
-                //onRowClick={onRowClick}
+                onRowClick={onRowClick}
                 onSelectionChange={onSelectionChange}
                 checkboxSelection={isAdmin}
             />

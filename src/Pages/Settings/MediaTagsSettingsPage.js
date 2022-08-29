@@ -19,13 +19,13 @@ const MediaTagsSettingsPage = () => {
   return (
     <SettingsPage
       title='Media Tags'
-      topActionName={false && '+ New Media Tag'}
+      topActionName={'+ New Media Tag'}
       onTopActionClick={onTopActionClick}
     >
       <MediaTagsTable
         items={tagsWithMedia.items}
         loading={tagsWithMedia.loading}
-        checkboxSelection={false}
+        checkboxSelection={isAdmin}
       />
     </SettingsPage>
   )
