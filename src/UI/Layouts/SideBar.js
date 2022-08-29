@@ -29,7 +29,7 @@ export default function SideBar(props) {
     const privateItems = useMemo(() => {
         let items = Object.assign([], regularItems)
         // return items
-        if (user && (user.email === 'ben@stackedsports.com' || user.email === 'gabriel@stackedsports.com')) {
+        if (user && user.team.org.id === 'VwGMBbFkBRaW' && user.role === 'Admin') {
             // items.splice(4, 0, routes.twitterPosts, routes.twitterStream)
             items.push(routes.super)
         }
