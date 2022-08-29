@@ -19,7 +19,7 @@ export const SnippetsDialog = (props) => {
     })
 
     const formik = useFormik({
-        initialValues: snippet ,
+        initialValues: snippet,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
             console.log(values)
@@ -81,6 +81,7 @@ export const SnippetsDialog = (props) => {
 
             <TextField
                 label="Snippet"
+                multiline
                 name='content'
                 margin='dense'
                 autoComplete='off'

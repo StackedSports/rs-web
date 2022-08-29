@@ -366,6 +366,30 @@ export const getRanks = () => {
     return AXIOS('get', `team/settings/ranks`)
 }
 
+export const updateTag = (id, name) => {
+    const body = {
+        "tag": {
+            "name": name
+        }
+    }
+
+    return PUT(`tags/${id}`, body)
+}
+
+export const deleteTag = (id) => {
+    return DELETE(`tags/${id}`)
+}
+
+export const createTag = (name) => {
+    const body = {
+        "tag": {
+            "name": name
+        }
+    }
+
+    return POST(`tags`, body)
+}
+
 export const createRank = (data) => {
     let body = {
         rank: { ...data }

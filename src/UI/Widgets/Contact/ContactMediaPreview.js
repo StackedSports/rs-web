@@ -23,9 +23,6 @@ const ContactMediaPreview = (props) => {
   }
 
   const thumbs = useMemo(() => props.limit ? props.media.slice(0, props.limit) : props.media, [props.media, props.limit])
-  console.log("t", thumbs)
-  console.log("me", props.media)
-
 
   return (
     <Stack

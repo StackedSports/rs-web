@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useContext, useMemo } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 
@@ -6,9 +6,11 @@ import { getFullName } from 'utils/Parser'
 
 import { messageRoutes } from 'Routes/Routes'
 import { useTeamMembers } from 'Api/ReactQuery'
+import { AuthContext } from 'Context/Auth/AuthProvider'
 import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
 
 const BaseMessagePage = (props) => {
+    const { isAdmin } = useContext(AuthContext)
     const [redirect, setRedirect] = useState('')
     const teamMembers = useTeamMembers()
 
@@ -21,8 +23,8 @@ const BaseMessagePage = (props) => {
         }).toString()
     }
 
-    const filtersWithTeamMembers = useMemo(() => {
-        return [
+    const sideFilters = useMemo(() => {
+        const filter = [
             {
                 id: 'create',
                 name: 'Message Create',
@@ -61,6 +63,9 @@ const BaseMessagePage = (props) => {
                     },
                 ]
             },
+        ]
+
+        const teamMembersSideFilter = [
             {
                 id: 'teamMembers',
                 name: 'Team Members',
@@ -79,9 +84,12 @@ const BaseMessagePage = (props) => {
                         }).toString(),
                     },
                 })),
-            },
+            }
         ]
-    }, [teamMembers.items])
+
+        return isAdmin ? [...filter, ...teamMembersSideFilter] : filter
+
+    }, [teamMembers.items, isAdmin])
 
     const onTopActionClick = (e) => {
         console.log('top action click')
@@ -93,7 +101,7 @@ const BaseMessagePage = (props) => {
             title={props.title || 'Messages'}
             topActionName={props.topActionName || '+ New Message'}
             onTopActionClick={onTopActionClick}
-            filters={filtersWithTeamMembers}
+            filters={sideFilters}
             alert={props.alert}
             loading={props.loading}
             redirect={props.redirect || redirect}

@@ -23,7 +23,6 @@ const filters = [
             { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
             { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
             { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
-            // { id: 'tags', name: 'Tags', path: settingsRoutes.team.tags },
             // { id: 'grad-years', name: 'Grad Years', path: settingsRoutes.team.gradYears },
             // { id: 'platforms', name: 'Board', path: settingsRoutes.team.platforms },
             // { id: 'placeholders', name: 'Placeholders', path: settingsRoutes.team.placeholders },
@@ -36,6 +35,7 @@ const filters = [
         name: 'Tags',
         items: [
             // Filters
+            { id: 'tags', name: 'All Tags', path: settingsRoutes.tags.tags },
             { id: 'media-tags', name: 'Media Tags', path: settingsRoutes.tags.mediaTags },
             { id: 'contacts-tags', name: 'Contacts Tags', path: settingsRoutes.tags.contactsTags },
             { id: 'message-tags', name: 'Message Tags', path: settingsRoutes.tags.messageTags },

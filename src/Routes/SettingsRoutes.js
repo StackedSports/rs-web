@@ -18,6 +18,7 @@ import {
 } from 'Pages/Settings'
 
 import { settingsRoutes } from './Routes'
+import TagSettingsPage from 'Pages/Settings/TagSettingsPage'
 
 const SettingsRoutes = (props) => (
   <>
@@ -77,12 +78,13 @@ const SettingsRoutes = (props) => (
       path={settingsRoutes.tags.messageTags}
       component={MessageTagsSettingsPage}
     />
-
-    {/* <Route
+    <Route
       exact
-      path={settingsRoutes.team.tags}
+      path={settingsRoutes.tags.tags}
       component={TagSettingsPage}
     />
+
+    {/* 
     <Route
       exact
       path={settingsRoutes.team.gradYears}

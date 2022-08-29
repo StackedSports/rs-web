@@ -2,7 +2,7 @@
 const rank = {
     field: 'rank',
     headerName: 'Rank',
-    width: 120,
+    flex: 1,
     valueGetter: (params) => params.row.rank ? params.row.rank : '',
 }
 

@@ -8,9 +8,10 @@ import RankDialog from 'UI/Widgets/Settings/RankDialog'
 import { useRanks } from 'Api/ReactQuery'
 import { deleteRank } from 'Api/Endpoints';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import { AuthContext } from 'Context/Auth/AuthProvider'
 
 const RanksSettingsPage = () => {
-
+    const { isAdmin } = useContext(AuthContext)
     const confirmDialog = useContext(ConfirmDialogContext)
     const ranks = useRanks()
     const [openRankDialog, setOpenRankDialog] = useState(false)
@@ -19,12 +20,12 @@ const RanksSettingsPage = () => {
     // selection from checkbox
     const [selectedRanks, setSelectedRanks] = useState([])
 
-    useEffect(() => {
-        if (!ranks.items)
-            return
-
-        console.log(ranks.items)
-    }, [ranks.items])
+    /*     useEffect(() => {
+            if (!ranks.items)
+                return
+    
+            console.log(ranks.items)
+        }, [ranks.items]) */
 
     const onTopActionClick = (e) => {
         setSelectedRowRank(null)
@@ -37,6 +38,8 @@ const RanksSettingsPage = () => {
     }
 
     const onRowClick = (e) => {
+        if (!isAdmin) return
+
         setSelectedRowRank(e)
         setOpenRankDialog(true)
     }
@@ -46,8 +49,8 @@ const RanksSettingsPage = () => {
     }
 
     const onDeleteAction = () => {
-        const title = `Delete ${selectedRanks.length >1 ? 'Ranks': 'Rank'}?`
-        confirmDialog.show(title,"This action can not be undone. Do you wish to continue? ", () => {
+        const title = `Delete ${selectedRanks.length > 1 ? 'Ranks' : 'Rank'}?`
+        confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
             Promise.all(selectedRanks.map(rank => deleteRank(rank)))
                 .then(() => {
                     ranks.refetch()
@@ -74,7 +77,7 @@ const RanksSettingsPage = () => {
     return (
         <SettingsPage
             title='Ranks'
-            topActionName='+ New Rank'
+            topActionName={isAdmin && '+ New Rank'}
             onTopActionClick={onTopActionClick}
             actions={actions}
         >
@@ -83,6 +86,7 @@ const RanksSettingsPage = () => {
                 loading={ranks.loading}
                 onRowClick={onRowClick}
                 onSelectionChange={onSelectionChange}
+                checkboxSelection={isAdmin}
             />
             <RankDialog
                 open={openRankDialog}
