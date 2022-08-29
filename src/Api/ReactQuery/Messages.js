@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery, useMutation, useQueryClient } from "react-query"
-import { createMessage, getMessage, getMessageRecipients, getMessages, getMostRecentSendTimes, updateMessage } from "Api/Endpoints"
+import { createMessage, deleteMessage, getMessage, getMessageRecipients, getMessages, getMostRecentSendTimes, updateMessage } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useMessages = (initialPage, itemsPerPage, initialFilters) => {
@@ -127,17 +127,26 @@ export const useMessageMutation = () => {
             },
         })
 
+    const remove = useMutation((id) => deleteMessage(id),
+        {
+            onSuccess: (data, variables, context) => {
+                queryClient.cancelQueries(['message', variables.id])
+                queryClient.cancelQueries('messages')
+            }
+        })
+
     return {
         update: update.mutate,
         create: create.mutate,
         createAsync: create.mutateAsync,
+        remove: remove.mutate,
     }
 }
 
 export const useGetMostRecentSendTimes = (timeZone) => {
     const reactQuery = useQuery(['getMostRecentSendTimes', timeZone], () => getMostRecentSendTimes(timeZone), {
         refetchOnWindowFocus: false,
-        select: (data) =>  lodash.uniq(data[0]),
+        select: (data) => lodash.uniq(data[0]),
     })
 
     return {
