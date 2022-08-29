@@ -176,7 +176,7 @@ export default function BaseContactsPage(props) {
                 variant: 'contained',
             }
         ]
-    }, [props.kanbanView, props.mainActions])
+    }, [props.kanbanView, props.mainActions, selectedFilters])
 
     const onTopActionClick = (e) => {
         setOpenCreateContactDialog(true)
