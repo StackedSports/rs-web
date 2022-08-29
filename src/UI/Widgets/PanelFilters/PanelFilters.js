@@ -125,7 +125,6 @@ export const PanelFilters = (props) => {
 					}))}
 			</Stack>
 
-			{false && (
 				<Collapse in={props.open}>
 					<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
 						{props.filters && Object.keys(props.filters).map(filterName => {
@@ -155,7 +154,6 @@ export const PanelFilters = (props) => {
 						})}
 					</Stack>
 				</Collapse>
-			)}
 		</>
 	)
 }
