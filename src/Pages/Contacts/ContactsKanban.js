@@ -1,20 +1,23 @@
 import { useState, useRef, useContext, useEffect, useMemo } from 'react'
-import { useContacts } from 'Api/ReactQuery';
+import { Stack } from '@mui/material';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+
 import { useParams } from 'react-router-dom'
-import BaseContactsPage from './BaseContactsPage';
 import lodash from 'lodash';
 
+import BaseContactsPage from './BaseContactsPage';
 import { AppContext } from 'Context/AppProvider';
 import { KanbanAddListButton } from 'UI/Widgets/Contact/components/KanbanAddListButton';
 import KanbanWorkspace from 'UI/Widgets/Contact/components/KanbanWorkspace';
 import KanbanColumn from 'UI/Widgets/Contact/components/KanbanColumn';
-import { Stack } from '@mui/material';
 
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
-import { getKanban, updateColumns } from 'Api/Firebase/Kanban/Kanban'
+
+import { getKanban, updateColumns, deleteKanban } from 'Api/Firebase/Kanban/Kanban'
+import { useContacts } from 'Api/ReactQuery';
 
 import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSelectDialog';
 
@@ -229,7 +232,7 @@ export const ContactsKanban = () => {
         return _lists
     };
 
-    function onDragEnd(result) {
+    const onDragEnd = (result) => {
         const { source, destination } = result;
         console.log(result)
 
@@ -280,12 +283,36 @@ export const ContactsKanban = () => {
 
     }
 
+    const onDeleteKanban = () => {
+        deleteKanban(kanbanId)
+            .then(() => {
+                app.redirect('/contacts')
+            })
+    }
+
+    const mainActions = useMemo(() => {
+        let action = {
+            name: 'Action',
+            type: 'dropdown',
+            variant: 'outlined',
+            icon: AutoFixHighIcon,
+            options: [
+                { name: 'Delete', onClick: onDeleteKanban },
+                // { name: 'Save As Draft & Exit', onClick: onSaveMessageAndExitClick },
+                // { name: 'Delete Message', color: 'red', onClick: onDeleteMessageClick }
+            ]
+        }
+
+        return [action]
+    }, [])
+
     return (
         <BaseContactsPage
             title={loading ? `Kanban` : `Kanban: ${kanban?.name || 'undefined'}`}
             contacts={contacts}
             tableId="kanban-table"
             kanbanView={true}
+            mainActions={mainActions}
             multiPageSelection={multipageSelection}
             onSendMessage={onSendMessageClick}
         >

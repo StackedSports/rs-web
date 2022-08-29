@@ -157,22 +157,26 @@ export default function BaseContactsPage(props) {
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
+    const mainActions = useMemo(() => {
+        if(props.kanbanView)
+            return props.mainActions
 
-    let mainActions = props.kanbanView ? null : [
-        {
-            name: 'Save as Board',
-            icon: AccountBox,
-            onClick: () => setOpenCreateBoardDialog(true),
-            variant: 'outlined',
-            disabled: Object.keys(selectedFilters).length === 0,
-        },
-        {
-            name: 'Filter',
-            icon: Tune,
-            onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
-            variant: 'contained',
-        }
-    ]
+        return [
+            {
+                name: 'Save as Board',
+                icon: AccountBox,
+                onClick: () => setOpenCreateBoardDialog(true),
+                variant: 'outlined',
+                disabled: Object.keys(selectedFilters).length === 0,
+            },
+            {
+                name: 'Filter',
+                icon: Tune,
+                onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
+                variant: 'contained',
+            }
+        ]
+    }, [props.kanbanView, props.mainActions])
 
     const onTopActionClick = (e) => {
         setOpenCreateContactDialog(true)

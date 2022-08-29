@@ -7,7 +7,8 @@ import {
     collection, 
     doc, 
     onSnapshot, 
-    updateDoc, 
+    updateDoc,
+    deleteDoc, 
     query, 
     where 
 } from 'firebase/firestore'
@@ -98,6 +99,12 @@ export const updateColumns = (id, columns) => {
     updateDoc(doc(db, 'orgs', user.team.org.id, 'kanbans', id), {
         columns
     })
+}
+
+export const deleteKanban = (id) => {
+    const user = getRSUser()
+
+    return deleteDoc(doc(db, 'orgs', user.team.org.id, 'kanbans', id))
 }
 
 export const addToTest = (columns) => {
