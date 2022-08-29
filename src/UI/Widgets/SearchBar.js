@@ -82,6 +82,7 @@ export default function SearchBar(props) {
     useEffect(() => {
         if (props.value !== undefined && !isInternalChange.current)
             setInput(props.value)
+            
         isInternalChange.current = false
     }, [props.value])
 

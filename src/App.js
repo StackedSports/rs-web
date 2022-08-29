@@ -14,7 +14,6 @@ import Signup from "Pages/Auth/SignUp";
 // import Contacts from "./Pages/Contacts";
 // import Chat from "./Pages/Chat";
 
-import Test from './Pages/Test'
 import StuckMessages from './Pages/AdminPanel/StuckMessages'
 import NewDashboard from "./Pages/Dashboard";
 
@@ -71,7 +70,6 @@ function App() {
 								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 
-								{/* <Route path='/test' component={Test} /> */}
 								<Route path="/super" component={StuckMessages}/>
 							</Switch>
 						</div>
