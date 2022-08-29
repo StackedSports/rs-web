@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useContext } from 'react'
 import { useQueryClient } from 'react-query'
+import { useHistory } from 'react-router-dom';
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -24,9 +25,7 @@ import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import { useMessage, useMessageRecipients } from 'Api/ReactQuery';
 import {
     sendMessage,
-    deleteMessage,
     archiveMessage,
-    updateMessage,
     removeRecipients,
     addTagsToMessage,
     addTagsToContacts,
@@ -46,6 +45,7 @@ import useLocalStorage from 'Hooks/useLocalStorage';
 
 const MessageDetailsPage = (props) => {
     const app = useContext(AppContext)
+    const history = useHistory()
     const confirmDialog = useContext(ConfirmDialogContext)
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`recipients-table-perPage`, 50)
 
@@ -55,6 +55,7 @@ const MessageDetailsPage = (props) => {
 
     const message = useMessage(messageId.current)
     const recipients = useMessageRecipients(messageId.current, 1, perPageLocalStorage)
+    const { update: updateMessage, remove: deleteMessage } = useMessageMutation()
 
     const selectedRecipients = useMultiPageSelection(recipients.pagination.currentPage)
     // const [selectedRecipients.items, setSelectedRecipients] = useState([])
@@ -66,8 +67,7 @@ const MessageDetailsPage = (props) => {
 
     const [errorPanelMessage, setErrorPanelMessage] = useState({ title: 'Media Not Found', body: '' })
 
-    
-    const { update: updateMessage } = useMessageMutation()
+
     // console.log(message.item)
     // console.log(recipients.items)
 
@@ -135,28 +135,21 @@ const MessageDetailsPage = (props) => {
     }
 
     const onDeleteMessageClick = () => {
-        console.log('delete message')
 
         console.log(message.item.id)
 
         // return
 
-        deleteMessage(message.item.id)
-            .then(res => {
-                console.log(res)
-                alert.setSuccess('Message deleted succesfully!')
-                useQueryClient().invalidateQueries('messages')
-
-                setTimeout(() => {
-                    setRedirect(`${messageRoutes.all}`)
-                }, 1700)
-
-            })
-            .catch(error => {
+        deleteMessage(message.item.id, {
+            onSuccess: () => {
+                app.alert.setSuccess('Message deleted succesfully!')
+                history.replace(messageRoutes.all)
+            },
+            onError: (error) => {
                 console.log(error)
-
                 alert.setError('Something happened and we could not delete your message')
-            })
+            }
+        })
 
     }
 
@@ -207,7 +200,7 @@ const MessageDetailsPage = (props) => {
                     alert.setError('Failed to send the message.')
                 })
                 .finally(() => refreshMessage())
-        },true)
+        }, true)
     }
 
     const onScheduleMessageClick = () => {
@@ -224,7 +217,7 @@ const MessageDetailsPage = (props) => {
                     alert.setError('Failed to schedule message.')
                 })
                 .finally(() => refreshMessage())
-        },true)
+        }, true)
     }
 
     const onRemoveRecipients = () => {
