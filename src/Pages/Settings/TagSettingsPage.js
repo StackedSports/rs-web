@@ -2,21 +2,23 @@ import { useState, useEffect, useContext, useMemo } from 'react'
 
 import SettingsPage from './SettingsPage'
 import TagsTable from 'UI/Tables/Tags/TagsTable'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import { useTags } from 'Api/ReactQuery';
+import { useTags, useTagMutation } from 'Api/ReactQuery';
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
+import { TagDialog } from 'UI/Widgets/Settings/TagDialog';
 
 const TagSettingsPage = () => {
     const { isAdmin } = useContext(AuthContext)
     const confirmDialog = useContext(ConfirmDialogContext)
     const tags = useTags()
+    const { removeAsync: deleteTag } = useTagMutation()
 
-    const [openPositionDialog, setOpenPositionDialog] = useState(false)
-    // row position selected to edit
-    const [selectedRowPosition, setSelectedRowPosition] = useState(null)
+    const [openEditDialog, setOpenEditDialog] = useState(false)
+    const [tagToEdit, setTagToEdit] = useState(null)
     // selection from checkbox
-    const [selectedPositions, setSelectedPositions] = useState([])
+    const [selectedTagsIds, setSelectedTagsIds] = useState([])
 
     /*     useEffect(() => {
             if (!tags.items)
@@ -26,31 +28,32 @@ const TagSettingsPage = () => {
         }, [tags.items]) */
 
     const onTopActionClick = (e) => {
-        setSelectedRowPosition(null)
-        setOpenPositionDialog(true)
+        setTagToEdit(null)
+        setOpenEditDialog(true)
     }
 
-    const handleSusccess = () => {
-        setSelectedRowPosition(null)
-        positions.refetch()
+    const onSusccess = () => {
+        setTagToEdit(null)
+        tags.refetch()
     }
 
     const onRowClick = (e) => {
         if (!isAdmin) return
-        setSelectedRowPosition(e)
-        setOpenPositionDialog(true)
+        setTagToEdit(e)
+        setOpenEditDialog(true)
     }
 
     const onSelectionChange = (e) => {
-        setSelectedPositions(e)
+        setSelectedTagsIds(e)
     }
 
     const onDeleteAction = () => {
-        const title = `Delete ${selectedPositions.length > 1 ? 'Positions' : 'Position'}?`
+        const title = `Delete ${selectedTagsIds.length > 1 ? 'Tags' : 'Tag'}?`
         confirmDialog.show(title, "This action can not be undone. Do you wish to continue? ", () => {
-            Promise.all(selectedPositions.map(position => deletePosition(position)))
+            Promise.all(selectedTagsIds.map(id => deleteTag(id)))
                 .then(() => {
-                    positions.refetch()
+                    tags.refetch()
+                    setSelectedTagsIds([])
                 }
                 ).catch(err => {
                     console.log(err)
@@ -59,22 +62,22 @@ const TagSettingsPage = () => {
     }
 
     const actions = useMemo(() => {
-        if (selectedPositions.length > 0)
+        if (selectedTagsIds.length > 0)
             return [
                 {
-                    name: 'Delete (' + selectedPositions.length + ')',
+                    name: 'Delete (' + selectedTagsIds.length + ')',
                     icon: DeleteForeverIcon,
                     variant: 'outlined',
                     onClick: onDeleteAction,
                 }
             ]
         return []
-    }, [selectedPositions])
+    }, [selectedTagsIds])
 
     return (
         <SettingsPage
             title='All Tags'
-            topActionName={false && '+ New Tag'}
+            topActionName={'+ New Tag'}
             onTopActionClick={onTopActionClick}
             actions={actions}
         >
@@ -83,7 +86,15 @@ const TagSettingsPage = () => {
                 loading={tags.loading}
                 onRowClick={onRowClick}
                 onSelectionChange={onSelectionChange}
+                selection={selectedTagsIds}
                 checkboxSelection={isAdmin}
+            />
+            <TagDialog
+                open={openEditDialog}
+                onClose={() => setOpenEditDialog(false)}
+                tag={tagToEdit}
+                onSusccess={onSusccess}
+                title={tagToEdit ? "Edit Tag Name" : "Create new Tag"}
             />
         </SettingsPage>
     )

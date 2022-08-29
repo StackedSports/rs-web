@@ -255,7 +255,7 @@ export const getContactSentMedia = (id, page, perPage) => {
     return GET(`contacts/${id}/sent_media?page=${page}&per_page=${perPage}`)
 }
 
-export const getContactConversation = (id,  page,  perPage) => {
+export const getContactConversation = (id, page, perPage) => {
     return GET(`contacts/${id}/conversation?page=${page}&per_page=${perPage}`)
 }
 
@@ -374,6 +374,20 @@ export const updateTag = (id, name) => {
     }
 
     return PUT(`tags/${id}`, body)
+}
+
+export const deleteTag = (id) => {
+    return DELETE(`tags/${id}`)
+}
+
+export const createTag = (name) => {
+    const body = {
+        "tag": {
+            "name": name
+        }
+    }
+
+    return POST(`tags`, body)
 }
 
 export const createRank = (data) => {

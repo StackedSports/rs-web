@@ -17,7 +17,7 @@ const defaultTag = {
 }
 
 export const TagDialog = (props) => {
-    const { update: updateTag } = useTagMutation()
+    const { update: updateTag, create: createTag } = useTagMutation()
     const [error, setError] = useState(null);
     const [tag, setTag] = useState(props.tag || defaultTag)
 
@@ -25,18 +25,33 @@ export const TagDialog = (props) => {
         initialValues: tag,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
-            updateTag({ id: values.id, name: values.name }, {
-                onSuccess: () => {
-                    props.onSusccess && props.onSusccess()
-                    handleClose()
-                },
-                onError: (err) => {
-                    setError(err.message)
-                },
-                onSettled: () => {
-                    formikHelpers.setSubmitting(false)
-                }
-            })
+            if (props.tag) {
+                updateTag({ id: values.id, name: values.name }, {
+                    onSuccess: () => {
+                        props.onSusccess && props.onSusccess()
+                        handleClose()
+                    },
+                    onError: (err) => {
+                        setError(err.message)
+                    },
+                    onSettled: () => {
+                        formikHelpers.setSubmitting(false)
+                    }
+                })
+            } else {
+                createTag(values.name, {
+                    onSuccess: () => {
+                        props.onSusccess && props.onSusccess()
+                        handleClose()
+                    },
+                    onError: (err) => {
+                        setError(err.message)
+                    },
+                    onSettled: () => {
+                        formikHelpers.setSubmitting(false)
+                    }
+                })
+            }
         },
         enableReinitialize: true,
     });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getTags, getTagsWithContacts, getTagsWithMedia, getTagsWithMessages, updateTag } from "Api/Endpoints"
+import { createTag, deleteTag, getTags, getTagsWithContacts, getTagsWithMedia, getTagsWithMessages, updateTag } from "Api/Endpoints"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 
 export const useTags = () => {
@@ -35,7 +35,7 @@ export const useTags = () => {
 export const useTagsWithMedia = () => {
     const [tags, setTags] = useState([])
 
-    const reactQuery = useQuery('tagsWithMedia', getTagsWithMedia, {
+    const reactQuery = useQuery(['tags', 'WithMedia'], getTagsWithMedia, {
         select: (data) => data[0],
         refetchOnWindowFocus: false,
     })
@@ -66,7 +66,7 @@ export const useTagsWithMedia = () => {
 export const useTagsWithContacts = () => {
     const [tags, setTags] = useState([])
 
-    const reactQuery = useQuery('tagsWithContacts', getTagsWithContacts, {
+    const reactQuery = useQuery(['tags', 'WithContacts'], getTagsWithContacts, {
         select: (data) => data[0],
         refetchOnWindowFocus: false,
     })
@@ -97,7 +97,7 @@ export const useTagsWithContacts = () => {
 export const useTagsWithMessage = () => {
     const [tags, setTags] = useState([])
 
-    const reactQuery = useQuery('tagsWithMessages', getTagsWithMessages, {
+    const reactQuery = useQuery(['tags', 'WithMessages'], getTagsWithMessages, {
         select: (data) => data[0],
         refetchOnWindowFocus: false,
     })
@@ -128,6 +128,18 @@ export const useTagsWithMessage = () => {
 export const useTagMutation = () => {
     const queryClient = useQueryClient();
 
+    const create = useMutation((name) => createTag(name), {
+        onSuccess: (data, variables, context) => {
+            queryClient.invalidateQueries(['media'])
+            queryClient.invalidateQueries(['medias'])
+            queryClient.invalidateQueries(['contact'])
+            queryClient.invalidateQueries(['contacts'])
+            queryClient.invalidateQueries(['message'])
+            queryClient.invalidateQueries(['messages'])
+            queryClient.invalidateQueries(['tags'])
+        },
+    });
+
     const update = useMutation(({ id, name }) => updateTag(id, name),
         {
             onSuccess: (data, variables, context) => {
@@ -141,8 +153,23 @@ export const useTagMutation = () => {
             },
         })
 
+    const remove = useMutation((id) => deleteTag(id), {
+        onSuccess: (data, variables, context) => {
+            queryClient.invalidateQueries(['media'])
+            queryClient.invalidateQueries(['medias'])
+            queryClient.invalidateQueries(['contact'])
+            queryClient.invalidateQueries(['contacts'])
+            queryClient.invalidateQueries(['message'])
+            queryClient.invalidateQueries(['messages'])
+            queryClient.invalidateQueries(['tags'])
+        },
+    })
+
     return {
+        create: create.mutate,
         update: update.mutate,
         updateAsync: update.mutateAsync,
+        remove: remove.mutate,
+        removeAsync: remove.mutateAsync,
     }
 }

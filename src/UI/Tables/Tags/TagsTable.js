@@ -8,7 +8,7 @@ const TagsTable = (props) => {
     <DataTable
       items={props.tags}
       columns={columns}
-      selectionModel={props.selection}
+      selection={props.selection}
       onSelectionChange={props.onSelectionChange}
       loading={props.loading}
       onRowClick={props.onRowClick && ((e) => props.onRowClick(e.row))}
