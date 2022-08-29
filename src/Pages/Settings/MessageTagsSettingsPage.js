@@ -31,7 +31,7 @@ const MessageTagsSettingsPage = () => {
             <MessageTagsTable
                 items={tagsWithMessage.items}
                 loading={tagsWithMessage.loading}
-                checkboxSelection={false} // todo Add delete
+                checkboxSelection={isAdmin}
             />
         </SettingsPage>
     )
