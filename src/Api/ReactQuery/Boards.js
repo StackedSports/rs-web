@@ -23,7 +23,7 @@ export const useBoards = () => {
 
     return {
         ...reactQuery,
-        items: reactQuery.data.sort((a, b) => a.name.localeCompare(b.name)),
+        items: reactQuery.data,
         loading: reactQuery.isLoading,
     }
 }

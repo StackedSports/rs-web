@@ -148,6 +148,7 @@ export const PanelFilters = (props) => {
 									key={filterName}
 									onClick={(option) => handleOptionsChange(filterName, option, filter)}
 									getOptionLabel={(option) => getOptionLabel(filter, option)}
+									selectionModel={selectedFilters[filterName]}
 									{...filter}
 								/>
 							)

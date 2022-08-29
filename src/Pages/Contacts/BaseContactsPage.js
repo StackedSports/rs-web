@@ -106,35 +106,43 @@ export default function BaseContactsPage(props) {
         status: {
             label: 'Status',
             options: status.items || [],
-            optionsLabel: 'status'
+            optionsLabel: 'status',
+            checkboxSelection: true,
         },
         rank: {
             label: 'Rank',
             options: ranks.items || [],
-            optionsLabel: 'rank'
+            optionsLabel: 'rank',
+            checkboxSelection: true,
+            keepOpen: true,
         },
         gradYear: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
+            checkboxSelection: true,
         },
         tags: {
             label: 'Tags',
             options: tags.items || [],
             onSearch: (search) => tags.search(search),
+            checkboxSelection: true,
         },
         position: {
             label: 'Position',
             options: positions.items || [],
+            checkboxSelection: true,
         },
         areaCoach: {
             label: 'Area Coach',
             options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option)
+            optionsLabel: (option) => getFullName(option),
+            checkboxSelection: true,
         },
         positionCoach: {
             label: 'Position Coach',
             options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option)
+            optionsLabel: (option) => getFullName(option),
+            checkboxSelection: true,
         },
         timeZone: {
             label: 'Time Zone',
@@ -149,7 +157,9 @@ export default function BaseContactsPage(props) {
         },
         state: {
             label: 'State',
-            options: states
+            options: states,
+            checkboxSelection: true,
+            showSearchInput: true,
         },
         status_2: {
             label: 'Status 2',
@@ -210,7 +220,7 @@ export default function BaseContactsPage(props) {
     }
 
     const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
+        // console.log('Filters selected', filter)
         setSelectedFilters(filter)
         if (props.onPanelFilterChange)
             props.onPanelFilterChange(filter)
