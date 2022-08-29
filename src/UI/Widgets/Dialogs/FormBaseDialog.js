@@ -11,10 +11,10 @@ export const FormBaseDialog = (props) => {
         }
     }, [props.error])
 
-    const handleClose = () => {
+    const handleClose = (e,reason) => {
         setError(null)
         if (props.onClose)
-            props.onClose()
+            props.onClose(e,reason)
     }
 
     return (

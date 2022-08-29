@@ -11,8 +11,8 @@ const MessageTagsTable = (props) => {
       selectionModel={props.selection}
       onSelectionModelChange={props.onSelectionChange}
       loading={props.loading}
+      onRowClick={(e) => props.onRowClick(e.row)}
       checkboxSelection = {props.checkboxSelection}
-      hidePagination
       disableSelectionOnClick
     />
   )

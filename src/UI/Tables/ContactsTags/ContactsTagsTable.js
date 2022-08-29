@@ -11,7 +11,7 @@ const ContactsTagsTable = (props) => {
       selectionModel={props.selection}
       onSelectionModelChange={props.onSelectionChange}
       loading={props.loading}
-      checkboxSelection={props.checkboxSelection}
+      onRowClick={(e) => props.onRowClick(e.row)}={props.checkboxSelection}
       disableSelectionOnClick
       hidePagination
     />

@@ -1,8 +1,8 @@
 import { useEffect, useContext } from 'react'
 
 import SettingsPage from './SettingsPage'
-
 import ContactsTagsTable from 'UI/Tables/ContactsTags/ContactsTagsTable'
+import { TagDialog } from 'UI/Widgets/Settings/TagDialog'
 
 import { useTagsWithContacts } from 'Api/ReactQuery'
 import { AuthContext } from 'Context/Auth/AuthProvider'
@@ -10,7 +10,8 @@ import { AuthContext } from 'Context/Auth/AuthProvider'
 const ContactsTagsSettingsPage = (props) => {
     const { isAdmin } = useContext(AuthContext)
     const tagsWithContacts = useTagsWithContacts()
-    // row position selected to edit
+    const [openEditDialog, setOpenEditDialog] = useState(false)
+    const [tagToEdit, SetTagToEdit] = useState()
 
     /*     useEffect(() => {
             if (!tagsWithContacts.items)
@@ -20,7 +21,17 @@ const ContactsTagsSettingsPage = (props) => {
         }, [tagsWithContacts.items]) */
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        /* SetTagToEdit(null)
+        setOpenEditDialog(true) */
+    }
+
+    const onRowClick = (tag) => {
+        SetTagToEdit(tag)
+        setOpenEditDialog(true)
+    }
+
+    const onSusccess = () => {
+        tagsWithContacts.refetch()
     }
 
     return (
@@ -33,6 +44,14 @@ const ContactsTagsSettingsPage = (props) => {
                 items={tagsWithContacts.items}
                 loading={tagsWithContacts.loading}
                 checkboxSelection={isAdmin}
+                onRowClick={onRowClick}
+            />
+            <TagDialog
+                open={openEditDialog}
+                onClose={() => setOpenEditDialog(false)}
+                tag={tagToEdit}
+                onSusccess={onSusccess}
+                title={tagToEdit ? "Edit Tag Name" : "Create new Tag"}
             />
         </SettingsPage>
     )
