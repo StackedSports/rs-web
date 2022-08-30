@@ -1,7 +1,17 @@
+import { IPaginationApi } from 'Interfaces';
 import { useState, useRef, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
-export const getPagination = (res) => {
+interface IPagination {
+    currentPage: number;
+    itemsPerPage: number;
+    totalPages: number;
+    totalItems: number;
+    getPage: (page: number) => void;
+    getItemsPerPage: (itemsPerPage: number) => void;
+}
+
+export const getPagination = (res: any) => {
     //console.log(res.headers)
 
     return {
@@ -12,35 +22,33 @@ export const getPagination = (res) => {
     }
 }
 
-export const paginationConfig = (currentPage, itemsPerPage) => ({ currentPage, itemsPerPage })
+export const paginationConfig = (currentPage: number, itemsPerPage: number) => ({ currentPage, itemsPerPage })
 
-export const usePagination = (initialPage, itemsPerPag) => {
+export const usePagination = (initialPage: number, itemsPerPag: number): [IPagination, (pagination: IPaginationApi) => void] => {
 
     const [currentPage, setCurrentPage] = useState(Number(initialPage) || 1)
     const [itemsPerPage, setItemsPerPage] = useState(Number(itemsPerPag) || 50)
     const [totalItems, setTotalItems] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
 
-    const lastPage = useRef(currentPage)
-
-    const setPagination = (pagination) => {
+    const setPagination = (pagination: IPaginationApi) => {
         setCurrentPage(pagination.currentPage || 1)
         setItemsPerPage(pagination.itemsPerPage || 50)
         setTotalItems(pagination.totalItems)
         setTotalPages(pagination.totalPages)
     }
 
-    const getPage = (page) => {
+    const getPage = (page: number) => {
         setCurrentPage(Number(page) || 1)
     }
 
-    const getItemsPerPage = (itemsPerPage) => {
+    const getItemsPerPage = (itemsPerPage: number) => {
         setItemsPerPage(Number(itemsPerPage) || 50)
         setCurrentPage(1)
     }
 
     return [
-        { currentPage, itemsPerPage, totalItems, totalPages, lastPage: lastPage.current, getPage,getItemsPerPage }, // pagination
+        { currentPage, itemsPerPage, totalItems, totalPages, getPage, getItemsPerPage }, // pagination
         setPagination//{ setPagination, getPage } // utils
     ]
 }

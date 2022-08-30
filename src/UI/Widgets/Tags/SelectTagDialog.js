@@ -168,6 +168,7 @@ const SelectTagDialog = (props) => {
                 loading={tags.loading}
                 onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
                 filterModel={filterModel}
+                checkboxSelection
                 components={{
                     NoResultsOverlay: NoResultsOverlay,
                     NoRowsOverlay: NoRowsOverlay,

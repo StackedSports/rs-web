@@ -130,7 +130,7 @@ export const useMessageMutation = () => {
     const remove = useMutation((id) => deleteMessage(id),
         {
             onSuccess: (data, variables, context) => {
-                queryClient.cancelQueries(['message', variables.id])
+                queryClient.cancelQueries(['message', variables])
                 queryClient.cancelQueries('messages')
             }
         })

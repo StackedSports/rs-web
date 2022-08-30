@@ -23,8 +23,7 @@ export const useContactAssociatedMedia = (id, page, perPage) => {
 
     const reactQuery = useQuery(['contact', 'associatedMedia', id, pagination.currentPage, pagination.itemsPerPage],
         () => getContactAssociatedMedia(id, pagination.currentPage, pagination.itemsPerPage),
-        { enabled: !!id,
-        select:(data)=>{console.log(data);return data} }
+        { enabled: !!id }
     )
 
     useEffect(() => {

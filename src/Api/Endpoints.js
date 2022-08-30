@@ -321,16 +321,6 @@ export const filterContacts = (page, perPage, filters) => {
     if (filters?.sort_dir)
         data.sort_dir = filters.sort_dir
 
-    // data = {
-    //     filter: {
-    //         name: 'Name',
-    //         is_shared: true,
-    //         criteria: { ...getFilterContactsCriteria(filters) }
-    //     }
-    // }
-
-    //console.log(data)
-
     return AXIOS('post', 'contacts/filter', data)
 }
 

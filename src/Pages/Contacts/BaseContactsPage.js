@@ -17,14 +17,22 @@ import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
-
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, usePositions, useTagsWithContacts } from 'Api/ReactQuery';
+import {
+    useBoards,
+    useStatus2,
+    useGradYears,
+    useStatuses,
+    useRanks,
+    useTeamMembers,
+    usePositions,
+    useTagsWithContacts
+} from 'Api/ReactQuery';
 import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
+
 import {
     addTagsToContactsWithNewTags,
     archiveContacts,
@@ -158,7 +166,7 @@ export default function BaseContactsPage(props) {
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
     const mainActions = useMemo(() => {
-        if(props.kanbanView)
+        if (props.kanbanView)
             return props.mainActions
 
         return [
