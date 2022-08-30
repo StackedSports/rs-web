@@ -1,3 +1,4 @@
+import { IFilterOption } from "./Shared";
 
 interface IStatus {
     id: string;
@@ -19,7 +20,7 @@ interface IPositionCoach {
     full_name: string;
 }
 
-interface Criteria {
+export interface IBoardCriteriaApi {
     status?: IStatus[];
     ranks?: IRank[];
     years?: number[];
@@ -31,7 +32,6 @@ interface Criteria {
     timezones?: string[];
     status_2?: string[];
 }
-
 interface Contacts {
     count: number;
 }
@@ -40,13 +40,48 @@ interface Settings {
     selected_columns: string[];
 }
 
-export interface IBoard {
+//Board api response
+export interface IBoardApi {
     id: string;
     name: string;
     is_shared: boolean;
-    criteria: Criteria;
+    criteria: IBoardCriteriaApi;
     contacts: Contacts;
     url: string;
     settings?: Settings;
 }
 
+// transformations response from the server
+interface IStatusFilter extends IStatus, IFilterOption<string> { }
+interface IRankFilter extends IRank, IFilterOption<string> { }
+interface IAreaCoachesFilter extends IAreaCoach, IFilterOption<string> { }
+interface IPositionCoachesFilter extends IPositionCoach, IFilterOption<string> { }
+interface IYearFilter extends IFilterOption<string | number> { }
+interface ITagsFilter extends IFilterOption<string> { }
+interface IPositionsFilter extends IFilterOption<string> { }
+interface IStatesFilter extends IFilterOption<string> { }
+interface ITimezonesFilter extends IFilterOption<string> { }
+interface IStatus_2Filter extends IFilterOption<string> { }
+
+
+export interface IBoardCriteria {
+    status?: IStatusFilter[];
+    ranks?: IRankFilter[];
+    years?: IYearFilter[];
+    tags?: ITagsFilter[];
+    positions?: IPositionsFilter[];
+    area_coaches?: IAreaCoachesFilter[];
+    position_coaches?: IPositionCoachesFilter[];
+    states?: IStatesFilter[];
+    timezones?: ITimezonesFilter[];
+    status_2?: IStatus_2Filter[];
+}
+export interface IBoard {
+    id: string;
+    name: string;
+    is_shared: boolean;
+    criteria: IBoardCriteria;
+    contacts: Contacts;
+    url: string;
+    settings?: Settings;
+}

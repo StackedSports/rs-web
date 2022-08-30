@@ -4,3 +4,8 @@ export interface IPaginationApi {
     itemsPerPage: number;
     totalItems: number;
 }
+
+export interface IFilterOption<T> {
+    itemLabel: string;
+    itemValue: T;
+}

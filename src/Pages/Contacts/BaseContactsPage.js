@@ -116,12 +116,12 @@ export default function BaseContactsPage(props) {
             options: status.items || [],
             optionsLabel: 'status'
         },
-        rank: {
+        ranks: {
             label: 'Rank',
             options: ranks.items || [],
             optionsLabel: 'rank'
         },
-        gradYear: {
+        years: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
@@ -130,32 +130,32 @@ export default function BaseContactsPage(props) {
             options: tags.items || [],
             onSearch: (search) => tags.search(search),
         },
-        position: {
+        positions: {
             label: 'Position',
             options: positions.items || [],
         },
-        areaCoach: {
+        area_coaches: {
             label: 'Area Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option)
         },
-        positionCoach: {
+        position_coaches: {
             label: 'Position Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option)
         },
-        timeZone: {
+        timezones: {
             label: 'Time Zone',
             options: timeZones
         },
-        birthday: {
+        dob: {
             label: 'Birthday',
             type: 'date',
             format: 'MM/dd',
             optionsLabel: (dates) => dates.value.join(' - '),
             isUnique: true
         },
-        state: {
+        states: {
             label: 'State',
             options: states
         },
