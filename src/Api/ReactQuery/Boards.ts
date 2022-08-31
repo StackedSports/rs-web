@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from "react-query"
 import { createNewBoard, updateBoard, getBoard, getBoardContacts, getBoards, deleteBoard } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 import { IBoard, IBoardApi, IBoardCriteria, IBoardCriteriaApi, IPaginationApi } from "Interfaces"
-import { keys } from "@mui/system"
 
 export const useBoard = (id: string) => {
     const reactQuery = useQuery(['board', id], () => getBoard(id), {
@@ -23,7 +22,9 @@ export const useBoard = (id: string) => {
 
 export const useBoards = () => {
     const reactQuery = useQuery(`boards`, getBoards, {
-        select: (data: [IBoardApi[], IPaginationApi]) => data[0].sort((a, b) => a.name.localeCompare(b.name)),
+        select: (data: [IBoardApi[], IPaginationApi]): IBoard[] => data[0].
+            sort((a, b) => a.name.localeCompare(b.name)).
+            map(board => ({ ...board, criteria: parseCriteriaBoard(board.criteria) })),
     })
 
     return {
@@ -106,7 +107,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }) => ({
                     ...status,
                     itemLabel: status.status,
-                    itemValue: status.id
+                    value: status.id
                 }))
                 break;
             case 'ranks':
@@ -115,25 +116,25 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }) => ({
                     ...rank,
                     itemLabel: rank.rank,
-                    itemValue: rank.id
+                    value: rank.id
                 }))
                 break;
             case 'years':
                 output[key] = value.map((year: number) => ({
                     itemLabel: year,
-                    itemValue: year
+                    value: year
                 }))
                 break;
             case 'tags':
                 output[key] = value.map((tag: string) => ({
                     itemLabel: tag,
-                    itemValue: tag
+                    value: tag
                 }))
                 break;
             case 'positions':
                 output[key] = value.map((position: string) => ({
                     itemLabel: position,
-                    itemValue: position
+                    value: position
                 }))
                 break;
             case 'area_coaches':
@@ -142,7 +143,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }) => ({
                     ...areaCoach,
                     itemLabel: areaCoach.full_name,
-                    itemValue: areaCoach.id
+                    value: areaCoach.id
                 }))
                 break;
             case 'position_coaches':
@@ -151,25 +152,25 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }) => ({
                     ...positionCoach,
                     itemLabel: positionCoach.full_name,
-                    itemValue: positionCoach.id
+                    value: positionCoach.id
                 }))
                 break;
             case 'states':
                 output[key] = value.map((state: string) => ({
                     itemLabel: state,
-                    itemValue: state
+                    value: state
                 }))
                 break;
             case 'timezones':
                 output[key] = value.map((timezone: string) => ({
                     itemLabel: timezone,
-                    itemValue: timezone
+                    value: timezone,
                 }))
                 break;
             case 'status_2':
                 output[key] = value.map((status2: string) => ({
                     itemLabel: status2,
-                    itemValue: status2
+                    value: status2
                 }))
                 break;
             default:

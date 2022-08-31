@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useContext, useRef } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
+import { useQueryClient } from 'react-query';
 
 import Stack from '@mui/material/Stack';
 import { AccountBox, Tune, Clear } from '@mui/icons-material';
@@ -51,6 +52,7 @@ import RenderIf from 'UI/Widgets/RenderIf';
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)
+    const queryClient = useQueryClient();
     const confirmDialog = useContext(ConfirmDialogContext)
     const isTagDialogFunctionRemoveRef = useRef(false)
 
@@ -323,6 +325,9 @@ export default function BaseContactsPage(props) {
         else
             app.alert.setWarning(`${res.success.count} out of ${contactsMultipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
 
+        queryClient.invalidateQueries(['tags'])
+        queryClient.invalidateQueries(['contacts'])
+        queryClient.invalidateQueries(['contact'], { active: true })
     }
 
     const onRemoveTagsFromContacts = async (selectedTagsIds) => {
@@ -338,6 +343,10 @@ export default function BaseContactsPage(props) {
                 else
                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
+
+        queryClient.invalidateQueries(['tags'])
+        queryClient.invalidateQueries(['contacts'])
+        queryClient.invalidateQueries(['contact'], { active: true })
     }
 
     const handleTagsDialogConfirm = async (selectedTagsIds) => {

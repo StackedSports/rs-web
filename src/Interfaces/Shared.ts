@@ -7,5 +7,5 @@ export interface IPaginationApi {
 
 export interface IFilterOption<T> {
     itemLabel: string;
-    itemValue: T;
+    value: T;
 }

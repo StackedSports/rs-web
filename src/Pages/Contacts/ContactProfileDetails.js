@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { ListItemButton, List, ListItem } from '@mui/material';
 import * as Yup from "yup";
-import { parse, isDate, subYears } from "date-fns";
+import { subYears } from "date-fns";
 
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
@@ -13,8 +13,8 @@ import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 import DatePicker from 'UI/Forms/Inputs/DatePicker';
 
-import { states, timeZones } from 'utils/Data';
 
+import { states, timeZones } from 'utils/Data';
 import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags, useContactMutation } from 'Api/ReactQuery';
 
 import {
@@ -26,7 +26,6 @@ import { AppContext } from 'Context/AppProvider'
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { objectNotNull } from 'utils/Validation'
-import { getStringListOfIds } from 'utils/Helper'
 import Button from 'UI/Widgets/Buttons/Button';
 import PeopleDialog from 'UI/Widgets/Dialogs/PeopleDialog';
 import OpponentDialog from 'UI/Widgets/Dialogs/OpponentDialog';
@@ -74,8 +73,6 @@ const ContactProfileDetails = (props) => {
 	const [opponent, setOpponent] = useState(null)
 	const [openOpponentDialog, setOpenOpponentDialog] = useState(false)
 
-	const [openCollapsePeople, setOpenCollapsePeople] = useState(false)
-
 	const teamMembers = useTeamMembers()
 	const positions = usePositions()
 	const status = useStatuses()
@@ -86,8 +83,10 @@ const ContactProfileDetails = (props) => {
 	//console.log(status2)
 
 	useEffect(() => {
-		if (props.contact)
+		if (props.contact) {
+			console.log("Effect details contact")
 			console.log(props.contact)
+		}
 	}, [props.contact])
 
 	const initialValues = useMemo(() => ({
@@ -132,14 +131,6 @@ const ContactProfileDetails = (props) => {
 			tags: props.contact?.tags || [],
 		}
 	}), [props.contact])
-
-	useEffect(() => {
-		// console.log(savingContact)
-	}, [savingContact])
-
-	useEffect(() => {
-		// console.log(showSaveButton)
-	}, [showSaveButton])
 
 	const parseValues = (data) => {
 		let newData = {}
@@ -195,7 +186,7 @@ const ContactProfileDetails = (props) => {
 				props.onContactUpdated(res.data)
 				app.alert.setSuccess('Contact updated successfully!')
 				onAccordionFieldReset(index)
-				console.log(res.data)
+				//console.log(res.data)
 			},
 			onError: (error) => {
 				console.log(error)
@@ -246,8 +237,6 @@ const ContactProfileDetails = (props) => {
 			// exclude: ['as']
 		}
 
-		console.log('hello')
-
 		// Add position from values (formik) to our data object
 		// if they don't already exist in the initial position values
 		values.position_tags.forEach(newPosition => {
@@ -291,9 +280,6 @@ const ContactProfileDetails = (props) => {
 				data.exclude.push(currentPosition)
 			}
 		})
-
-		console.log(data)
-
 
 		// return
 		onUpdateContact({ position_tags: data }, 'positions', 3)
@@ -550,7 +536,7 @@ const ContactProfileDetails = (props) => {
 				initialValues={initialValues.details}
 				onSubmit={onUpdateDetails}
 				validationSchema={detailsFormValidation}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }} onSubmit={(e) => { e.preventDefault(); formikProps.handleSubmit() }}>
@@ -668,11 +654,10 @@ const ContactProfileDetails = (props) => {
 							<SearchableSelector
 								label="Rank"
 								placeholder="Search"
-								// multiple
 								value={formikProps.values.rank}
-								options={ranks.items || []}
+								options={ranks.items }
 								loading={ranks.loading}
-								isOptionEqualToValue={(option, value) => option?.rank === value}
+								isOptionEqualToValue={(option, value) => option.rank === value || option.rank === value?.rank}
 								getOptionLabel={(option) => option.rank || option}
 								getChipLabel={(option) => option.rank}
 								onChange={(newValue) => {
@@ -689,7 +674,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.coaches}
 				onSubmit={onUpdateCoaches}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -760,7 +745,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.positions}
 				onSubmit={onUpdatePositions}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -801,7 +786,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.relationships}
 				onSubmit={onUpdateRelationships}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -886,7 +871,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.opponents}
 				onSubmit={onUpdateOpponents}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -951,7 +936,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.external}
 				onSubmit={onUpdateExternal}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>
@@ -979,7 +964,7 @@ const ContactProfileDetails = (props) => {
 			<Formik
 				initialValues={initialValues.tags}
 				onSubmit={onUpdateTags}
-				enableReinitialize= {true}
+				enableReinitialize={true}
 			>
 				{(formikProps) => (
 					<Form style={{ width: '100%' }}>

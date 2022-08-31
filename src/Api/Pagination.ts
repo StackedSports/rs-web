@@ -22,8 +22,6 @@ export const getPagination = (res: any) => {
     }
 }
 
-export const paginationConfig = (currentPage: number, itemsPerPage: number) => ({ currentPage, itemsPerPage })
-
 export const usePagination = (initialPage: number, itemsPerPag: number): [IPagination, (pagination: IPaginationApi) => void] => {
 
     const [currentPage, setCurrentPage] = useState(Number(initialPage) || 1)

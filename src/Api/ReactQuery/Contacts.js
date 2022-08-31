@@ -72,7 +72,7 @@ export const useContactConversation = (id, page, perPage) => {
     const [conversation, setConversation] = useState([])
 
     const reactQuery = useQuery(['contact', 'conversation', id, pagination.currentPage, pagination.itemsPerPage],
-        () => getContactConversation(id, pagination.currentPage, pagination.itemsPerPage), 
+        () => getContactConversation(id, pagination.currentPage, pagination.itemsPerPage),
         { enabled: !!id }
     )
 
