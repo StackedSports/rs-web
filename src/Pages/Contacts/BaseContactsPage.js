@@ -23,7 +23,7 @@ import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 
-import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, usePositions, useTagsWithContacts } from 'Api/ReactQuery';
+import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, usePositions, useTags, useTagsWithContacts } from 'Api/ReactQuery';
 import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
 import {
     addTagsToContactsWithNewTags,
@@ -68,7 +68,7 @@ export default function BaseContactsPage(props) {
     const status2 = useStatus2()
     const ranks = useRanks()
     const gradYears = useGradYears()
-    const tags = useTagsWithContacts()
+    const tags = useTags() //useTagsWithContacts()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
