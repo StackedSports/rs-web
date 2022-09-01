@@ -130,30 +130,34 @@ export const PanelFilters = (props) => {
 						{props.filters && Object.keys(props.filters).map(filterName => {
 							const filter = props.filters[filterName];
 
-							if (filter.type === 'hidden') return
-							else if (filter.type === 'date')
-								return (
-									<DateRangePicker
-										key={filterName}
-										label={filter.label}
-										format={filter.format}
-										disableFuture={filter.disableFuture}
-										onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
-										endIcon={<KeyboardArrowDown />}
-									/>
-								)
-							else
-								return (
-									<Dropdown
-										key={filterName}
-										onClick={(option) => handleOptionsChange(filterName, option, filter)}
-										getOptionLabel={(option) => getOptionLabel(filter, option)}
-										{...filter}
-									/>
-								)
-						})}
-					</Stack>
-				</Collapse>
+
+						if (filter.type === 'hidden') return
+						else if (filter.type === 'date')
+							return (
+								<DateRangePicker
+									key={filterName}
+									label={filter.label}
+									format={filter.format}
+									disableFuture={filter.disableFuture}
+									onChange={(date) => handleOptionsChange(filterName, ({ value: date }), filter)}
+									endIcon={<KeyboardArrowDown />}
+								/>
+							)
+						else
+							return (
+								<Dropdown
+									key={filterName}
+									onClick={(option) => handleOptionsChange(filterName, option, filter)}
+									getOptionLabel={(option) => getOptionLabel(filter, option)}
+									selectionModel={selectedFilters[filterName]}
+									checkboxSelection
+									showSearchInput
+									{...filter}
+								/>
+							)
+					})}
+				</Stack>
+			</Collapse>
 		</>
 	)
 }

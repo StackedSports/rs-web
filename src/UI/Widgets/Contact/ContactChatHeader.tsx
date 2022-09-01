@@ -68,7 +68,9 @@ const ContactChatHeader = (props) => {
 		}
 
 		setAvailablePlatforms(availablePlatforms)
-		setPlatformSelectedId(availablePlatforms[0].id)
+
+		if(availablePlatforms.length > 0)
+			setPlatformSelectedId(availablePlatforms[0].id)
 
 	}, [props.contact])
 

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useLayoutEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import lodash from "lodash";
 import {
     Box,
@@ -14,28 +14,53 @@ import {
     ClickAwayListener,
     debounce,
     ListItemText,
+    ListItemIcon,
+    Checkbox,
 } from "@mui/material";
 import { Search, KeyboardArrowDown } from "@mui/icons-material";
 import RenderIf from "../RenderIf";
 
-
-
-export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClick, getOptionLabel, keepOpen,...restOfProps }) => {
+export const Dropdown = ({
+    type,
+    icon,
+    label,
+    options,
+    loading,
+    showSearchInput,
+    onSearch,
+    onClick,
+    getOptionLabel,
+    getOptionValue,
+    keepOpen,
+    selectionModel,
+    checkboxSelection,
+    ...restOfProps
+}) => {
     const buttonRef = useRef(null);
-    const [buttonWidth, setButtonWidth] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchText, setSearchText] = useState('');
+    const [checkedItemsId, setCheckedItemsId] = useState([]);
     const debouncedSearch = useMemo(() => debounce(onSearch, 400), [onSearch]);
+    const [filteredOptions, setFilteredOptions] = useState();
 
     useEffect(() => {
         if (onSearch)
             debouncedSearch(searchText)
+        else if (showSearchInput) {
+            setFilteredOptions(options.filter(option => {
+                const text = getOptionLabel ? getOptionLabel(option) : option
+                return text.toString().toLowerCase().includes(searchText.toLowerCase().trim())
+            }));
+        }
     }, [searchText])
 
-    useLayoutEffect(() => {
-        if (buttonRef.current)
-            setButtonWidth(buttonRef.current.offsetWidth);
-    }, [])
+
+    useEffect(() => {
+        if (selectionModel && selectionModel.length > 0)
+            setCheckedItemsId(selectionModel.map(item => item.id))
+        else
+            setCheckedItemsId([])
+    }, [selectionModel?.length])
 
     const handleToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -54,15 +79,27 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
             handleClose();
         }
     }
+    const activeOptions = useMemo(() => searchText ? onSearch ? options : filteredOptions : options, [searchText, onSearch, filteredOptions, options])
 
     const handleClickOption = (option) => {
-        // console.log("option clicked", option)
+
         onClick(option);
-        if (!keepOpen)
+        if (!keepOpen && !checkboxSelection)
             handleClose();
     }
 
     const open = Boolean(anchorEl);
+
+    const isChecked = (option) => {
+
+        if (getOptionValue) {
+            return checkedItemsId.indexOf(getOptionValue(option)) > - 1;
+        } else if ('id' in option) {
+            return checkedItemsId.indexOf(option.id) > - 1;
+        } else {
+            return checkedItemsId.indexOf(option) > - 1;
+        }
+    }
 
     return (
         <Box {...restOfProps}>
@@ -86,12 +123,13 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                 <Paper
                     elevation={3}
                     sx={{
-                        minWidth: buttonWidth,
+                        minWidth: buttonRef.current?.offsetWidth || 'fit-content',
                         maxWidth: '350px',
                         maxHeight: '250px',
                         overflowY: 'auto',
                         '& .MuiMenuItem-root': {
                             maxWidth: '350px',
+                            px: 1,
                         }
                     }}
                 >
@@ -100,7 +138,7 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                             autoFocusItem={open}
                             onKeyDown={handleListKeyDown}
                         >
-                            <RenderIf condition={onSearch && onSearch instanceof Function}>
+                            <RenderIf condition={(onSearch && onSearch instanceof Function) || showSearchInput}>
                                 <ListSubheader sx={{ pt: 1 }}>
                                     <TextField
                                         size="small"
@@ -135,10 +173,17 @@ export const Dropdown = ({ type, icon, label, options, loading, onSearch, onClic
                                 </MenuItem>
                             </RenderIf>
 
-
                             {// if options is array of objects
-                                Array.isArray(options) ? options?.map((option, i) => (
-                                    <MenuItem key={option.id || i} onClick={() => handleClickOption(option)} >
+                                Array.isArray(activeOptions) ? activeOptions?.map((option, i) => (
+                                    <MenuItem
+                                        key={option.id || i}
+                                        onClick={() => handleClickOption(option)}
+                                    >
+                                        <RenderIf condition={checkboxSelection}>
+                                            <ListItemIcon>
+                                                <Checkbox checked={isChecked(option)} />
+                                            </ListItemIcon>
+                                        </RenderIf>
                                         <ListItemText
                                             primary={getOptionLabel ? getOptionLabel(option) : option}
                                             primaryTypographyProps={{ noWrap: true }}

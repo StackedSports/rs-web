@@ -117,12 +117,12 @@ export default function BaseContactsPage(props) {
         status: {
             label: 'Status',
             options: status.items || [],
-            optionsLabel: 'status'
+            optionsLabel: 'status',
         },
         ranks: {
             label: 'Rank',
             options: ranks.items || [],
-            optionsLabel: 'rank'
+            optionsLabel: 'rank',
         },
         years: {
             label: 'Grad Year',
@@ -140,16 +140,16 @@ export default function BaseContactsPage(props) {
         area_coaches: {
             label: 'Area Coach',
             options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option)
+            optionsLabel: (option) => getFullName(option),
         },
         position_coaches: {
             label: 'Position Coach',
             options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option)
+            optionsLabel: (option) => getFullName(option),
         },
         timezones: {
             label: 'Time Zone',
-            options: timeZones
+            options: timeZones,
         },
         dob: {
             label: 'Birthday',
@@ -160,11 +160,12 @@ export default function BaseContactsPage(props) {
         },
         states: {
             label: 'State',
-            options: states
+            options: states,
+
         },
         status_2: {
             label: 'Status 2',
-            options: status2.items.map((status2, index) => ({ name: status2 })) || []
+            options: status2.items.map((status2, index) => ({ name: status2 })) || [],
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
@@ -233,7 +234,7 @@ export default function BaseContactsPage(props) {
     }
 
     const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
+        // console.log('Filters selected', filter)
         setSelectedFilters(filter)
         if (props.onPanelFilterChange)
             props.onPanelFilterChange(filter)
