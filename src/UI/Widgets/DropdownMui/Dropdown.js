@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import useDeepCompareEffect from 'use-deep-compare-effect'
 import lodash from "lodash";
 import {
     Box,
@@ -63,7 +62,7 @@ export const Dropdown = ({
             setCheckedItemsId(selectionModel.map(item => item.id))
         else
             setCheckedItemsId([])
-    }, [selectionModel])
+    }, [selectionModel?.length])
 
     useEffect(() => {
         console.log(checkedItemsId)
