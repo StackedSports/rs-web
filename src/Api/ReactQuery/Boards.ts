@@ -13,6 +13,8 @@ export const useBoard = (id: string) => {
         enabled: !!id,
     })
 
+    console.log(reactQuery.data)
+
     return {
         ...reactQuery,
         item: reactQuery.data,

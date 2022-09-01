@@ -66,6 +66,8 @@ export default function BoardPage(props) {
             }))
         ]))
 
+        console.log(filters)
+
         return filters
     }, [board.item])
 
