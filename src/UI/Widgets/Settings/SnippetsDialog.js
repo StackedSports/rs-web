@@ -82,6 +82,8 @@ export const SnippetsDialog = (props) => {
             <TextField
                 label="Snippet"
                 multiline
+                minRows={3}
+                maxRows={10}
                 name='content'
                 margin='dense'
                 autoComplete='off'
