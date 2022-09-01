@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune, Clear } from '@mui/icons-material'
 import { Stack, Typography, Box, CircularProgress, IconButton } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { useQueryClient } from 'react-query'
 import lodash from "lodash"
 
 import Button from 'UI/Widgets/Buttons/Button'
@@ -23,7 +24,7 @@ import { filterObjectToQueryParams } from 'Hooks/SearchParamsHook'
 import { AssignMediaToPlaceholderDialog } from 'UI/Widgets/Media/AssignMediaToPlaceholderDialog'
 
 export const MainMediaPage = (props) => {
-    const history = useHistory()
+    const queryClient = useQueryClient();
     const app = useContext(AppContext)
     const confirmDialog = useContext(ConfirmDialogContext)
     const media = useMedias(1, 6)
@@ -39,6 +40,11 @@ export const MainMediaPage = (props) => {
 
     const mediaMultiPageSelection = useMultiPageSelection_V2(media.items)
     const placeholdersMultiPageSelection = useMultiPageSelection_V2(placeholders.items)
+
+    const invalidateMediasCache = () => {
+        queryClient.invalidateQueries(['medias'])
+        queryClient.invalidateQueries(['placeholders'])
+    }
 
     const onSwitchView = () => {
         setViewGrid(oldViewGrid => !oldViewGrid)
@@ -60,6 +66,7 @@ export const MainMediaPage = (props) => {
                 }
             }
         )
+        invalidateMediasCache()
     }
 
     // Find way to download all selected medias
@@ -131,6 +138,7 @@ export const MainMediaPage = (props) => {
         } else {
             await onAddTags(selectedTagsIds, uniqueMediaIds)
         }
+        invalidateMediasCache()
         setLoadingTags(false)
     }
 

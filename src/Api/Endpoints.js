@@ -1065,7 +1065,8 @@ export const archiveMedia = (mediaId) => {
 /**
  *  
  * @param {string[]} mediasIds array of media ids to archive
- * @returns {Object} returns an object with the following keys: success.count, success.ids, error.count, error.ids
+ * @returns {Promise} returns an object with the following keys: success.count, success.ids, error.count, error.ids
+ * 
  */
 export const archiveMedias = async (mediasIds) => {
     let response = {

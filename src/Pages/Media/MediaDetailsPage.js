@@ -20,8 +20,10 @@ import { getPlaceholder } from "Api/Endpoints"
 import { mediaRoutes } from "Routes/Routes"
 import { addTagsToMedia, deleteTagsFromMedia } from "Api/Endpoints"
 import { formatDate, getFullName } from "utils/Parser"
+import { useQueryClient } from "react-query"
 
 export const MediaDetailsPage = () => {
+    const queryClient = useQueryClient();
     const app = useContext(AppContext)
     const { id } = useParams()
     const history = useHistory()
@@ -61,8 +63,10 @@ export const MediaDetailsPage = () => {
         }
     }, [media])
 
-    //console.log("item contact", itemContact)
-    //console.log(media)
+    const invalidateMediasCache = () => {
+        queryClient.invalidateQueries(['media'], { active: true })
+        queryClient.invalidateQueries(['medias'])
+    }
 
     const onArchiveAction = () => {
         update({ id: media.id, data: { archive: true } }, {
@@ -152,6 +156,7 @@ export const MediaDetailsPage = () => {
                 alert.setWarning(err.message)
             })
         }
+        invalidateMediasCache()
     }
 
     const handleChangeOwner = (owner) => {

@@ -185,8 +185,6 @@ const ContactProfileDetails = (props) => {
 
 		updateContact({ id: props.contact.id, data: updateData }, {
 			onSuccess: (res) => {
-				console.log("Response", res.data)
-				console.log("Update Data", updateData)
 
 				let countEqual = 0
 				let countDif = 0
