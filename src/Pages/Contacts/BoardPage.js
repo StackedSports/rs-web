@@ -10,27 +10,6 @@ import useLocalStorage from "Hooks/useLocalStorage";
 import { useBoard, useBoardContacts } from 'Api/ReactQuery'
 import { parseColumnsNames } from 'UI/Tables/Contacts/DataGridConfig';
 
-const parseCriteriaNames = (criteria) => {
-    switch (criteria) {
-        case 'ranks':
-            return 'rank'
-        case 'years':
-            return 'gradYear'
-        case 'positions':
-            return 'position'
-        case 'area_coaches':
-            return 'areaCoach'
-        case 'position_coaches':
-            return 'positionCoach'
-        case 'timezones':
-            return 'timeZone'
-        case 'states':
-            return 'state'
-        default:
-            return criteria
-
-    }
-}
 
 export default function BoardPage(props) {
     const app = useContext(AppContext);
@@ -66,7 +45,6 @@ export default function BoardPage(props) {
     }, [board.item])
 
     const onSendMessage = (selectedData) => {
-        console.log(selectedData)
 
         if (selectedData && selectedData.length > 0) {
             app.sendMessageToContacts(selectedData)
@@ -79,29 +57,14 @@ export default function BoardPage(props) {
         if (!board.item)
             return null
 
-        let criteria = board.item.criteria
-        //console.log(criteria)
-        let filters = {}
-        if (criteria)
-            Object.keys(criteria).forEach(key => {
-                // console.log(key)
-                // console.log(criteria[key])
+        const { criteria } = board.item
 
-                let filterName = parseCriteriaNames(key)
-
-                if (!filters[filterName])
-                    filters[filterName] = []
-
-                criteria[key].forEach(item => {
-                    filters[filterName].push({
-                        id: item,
-                        name: item,
-                        disabled: true
-                    })
-                })
-            })
-
-        console.log("filters", filters)
+        const filters = Object.fromEntries(Object.entries(criteria).map(([k, v]) => [k,
+            v.map(v => ({
+                ...v,
+                disabled: true
+            }))
+        ]))
 
         return filters
     }, [board.item])

@@ -5,30 +5,6 @@ import { styled, TextField, Autocomplete, Chip, Avatar } from "@mui/material"
 import lodash from "lodash"
 
 export default function SearchableSelector(props) {
-    const [value, setValue] = useState(props.multiple ? [] : null)
-    const [options, setOptions] = useState([])
-
-    const [inputValue, setInputValue] = useState('')
-
-    useEffect(() => {
-        if (!props.options)
-            return
-
-        setOptions(oldOptions => {
-            return lodash.uniqBy(oldOptions.concat(props.options), 'id')
-        })
-    }, [props.options])
-
-    useEffect(() => {
-        if (!props.value)
-            return
-
-        setOptions(oldOptions => {
-            return lodash.uniqBy(oldOptions.concat(props.value), 'id')
-        })
-        setValue(props.value)
-        // if props.value changed
-    }, [props.value])
 
     const onChange = (event, newValue) => {
         if (props.onChange)
@@ -56,10 +32,10 @@ export default function SearchableSelector(props) {
         <Autocomplete
             style={props.style}
             multiple={props.multiple || false}
-            options={props.options || []}
+            options={props.options || (props.multiple ? [] : null)}
             selectOnFocus={props.selectOnFocus || true}
             clearOnBlur={props.clearOnBlur !== null ? props.clearOnBlur : true}
-            value={props.value === "" ? null : props.value}
+            value={props.value || null}
             // inputValue={props.inputValue}
             loading={props.loading}
             getOptionLabel={props.getOptionLabel}

@@ -39,7 +39,6 @@ export default function ContactsPage(props) {
     }
 
     const onPanelFilterChange = (filter) => {
-        console.log('Filters selected', filter)
         setSelectedFilters(filter)
         contacts.filter({ ...filter, ...selectedSort })
     }

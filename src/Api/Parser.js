@@ -15,18 +15,14 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['status'] = filters.status.map(status => status.id)
     }
 
-    if (filters.rank) {
-        criteria['ranks'] = []
-
-        filters.rank.forEach(rank => {
-            criteria.ranks.push(rank.id)
-        })
+    if (filters.ranks) {
+        criteria['ranks'] = filters.ranks.map(rank => rank.id)
     }
 
-    if (filters.gradYear) {
+    if (filters.years) {
         criteria['years'] = []
 
-        filters.gradYear.forEach(year => {
+        filters.years.forEach(year => {
             criteria.years.push(year.name)
         })
     }
@@ -39,50 +35,49 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if (filters.position) {
+    if (filters.positions) {
         criteria['positions'] = []
 
-        filters.position.forEach(position => {
+        filters.positions.forEach(position => {
             criteria.positions.push(position.abbreviation)
         })
     }
 
-    if (filters.areaCoach) {
+    if (filters.area_coaches) {
         criteria['area_coaches'] = []
 
-        filters.areaCoach.forEach(areaCoach => {
+        filters.area_coaches.forEach(areaCoach => {
             criteria.area_coaches.push(areaCoach.id)
         })
     }
 
-    if (filters.positionCoach) {
+    if (filters.position_coaches) {
         criteria['position_coaches'] = []
 
-        filters.positionCoach.forEach(positionCoach => {
+        filters.position_coaches.forEach(positionCoach => {
             criteria.position_coaches.push(positionCoach.id)
         })
     }
 
-    if (filters.state) {
+    if (filters.states) {
         criteria['states'] = []
 
-        filters.state.forEach(state => {
+        filters.states.forEach(state => {
             criteria.states.push(state.abbreviation)
-            criteria.states.push(state.name)
         })
     }
 
-    if (filters.timeZone) {
+    if (filters.timezones) {
         criteria['timezones'] = []
 
-        filters.timeZone.forEach(timezone => {
+        filters.timezones.forEach(timezone => {
             criteria.timezones.push(timezone.name)
         })
     }
 
-    if (filters.birthday) {
+    if (filters.dob) {
         //console.log(filters.birthday[0])
-        criteria['dob'] = filters.birthday[0]
+        criteria['dob'] = filters.dob[0].value
     }
 
     if (filters.status_2) {

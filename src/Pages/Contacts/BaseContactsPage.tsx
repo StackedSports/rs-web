@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useContext, useRef } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
+import { useQueryClient } from 'react-query';
 
 import Stack from '@mui/material/Stack';
 import { AccountBox, Tune, Clear } from '@mui/icons-material';
@@ -17,14 +18,22 @@ import Button from 'UI/Widgets/Buttons/Button';
 import { MiniSearchBar } from 'UI/Widgets/SearchBar'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog';
 import { PanelDropdown } from 'UI/Layouts/Panel';
-
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
-
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-
-import { useBoards, useStatus2, useGradYears, useStatuses, useRanks, useTeamMembers, usePositions, useTags, useTagsWithContacts } from 'Api/ReactQuery';
+import {
+    useBoards,
+    useStatus2,
+    useGradYears,
+    useStatuses,
+    useRanks,
+    useTeamMembers,
+    usePositions,
+    useTags,
+    useTagsWithContacts
+} from 'Api/ReactQuery';
 import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
+
 import {
     addTagsToContactsWithNewTags,
     archiveContacts,
@@ -40,9 +49,11 @@ import { AppContext } from 'Context/AppProvider';
 import { Box, IconButton } from '@mui/material';
 import RenderIf from 'UI/Widgets/RenderIf';
 
+import { ISideFilter } from 'Interfaces'
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)
+    const queryClient = useQueryClient();
     const confirmDialog = useContext(ConfirmDialogContext)
     const isTagDialogFunctionRemoveRef = useRef(false)
 
@@ -108,12 +119,12 @@ export default function BaseContactsPage(props) {
             options: status.items || [],
             optionsLabel: 'status'
         },
-        rank: {
+        ranks: {
             label: 'Rank',
             options: ranks.items || [],
             optionsLabel: 'rank'
         },
-        gradYear: {
+        years: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
         },
@@ -122,32 +133,32 @@ export default function BaseContactsPage(props) {
             options: tags.items || [],
             onSearch: (search) => tags.search(search),
         },
-        position: {
+        positions: {
             label: 'Position',
             options: positions.items || [],
         },
-        areaCoach: {
+        area_coaches: {
             label: 'Area Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option)
         },
-        positionCoach: {
+        position_coaches: {
             label: 'Position Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option)
         },
-        timeZone: {
+        timezones: {
             label: 'Time Zone',
             options: timeZones
         },
-        birthday: {
+        dob: {
             label: 'Birthday',
             type: 'date',
             format: 'MM/dd',
             optionsLabel: (dates) => dates.value.join(' - '),
             isUnique: true
         },
-        state: {
+        states: {
             label: 'State',
             options: states
         },
@@ -158,7 +169,7 @@ export default function BaseContactsPage(props) {
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
     const mainActions = useMemo(() => {
-        if(props.kanbanView)
+        if (props.kanbanView)
             return props.mainActions
 
         return [
@@ -182,32 +193,40 @@ export default function BaseContactsPage(props) {
         setOpenCreateContactDialog(true)
     }
 
-    let filters = [
-        { // Category
-            id: '0',
-            name: 'All Contacts',
-            path: contactsRoutes.all,
-        },
-        {
-            id: 'kanbans',
-            name: 'Team Kanbans',
-            items: kanbans.items?.map(kanban => ({ id: kanban.id, name: kanban.name, path: `${contactsRoutes.kanban}/${kanban.id}` })),
-            button: { label: '+ New Kanban', onClick: () => setIsCreateKanbanDialogOpen(true) }
-        },
-        { // Category
-            id: '1',
-            name: 'My Boards',
-            // Filters
-            items: privateBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
+    const filters: ISideFilter[] = useMemo(() => {
+        return  [
+            { // Category
+                id: '0',
+                name: 'Contacts',
+                items: [
+                    { id: 'all-contacts', name: 'All Contacts', path: contactsRoutes.all}
+                ],
+            },
+            {
+                id: 'kanbans',
+                name: 'Team Kanbans',
+                items: kanbans.items?.map(kanban => ({ id: kanban.id, name: kanban.name, path: `${contactsRoutes.kanban}/${kanban.id}` })),
+                button: { label: '+ New Kanban', onClick: () => setIsCreateKanbanDialogOpen(true) }
+            },
+            { // Category
+                id: '1',
+                name: 'My Boards',
+                // Filters
+                items: privateBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
+    
+            },
+            { // Category
+                id: '2',
+                name: 'Team Boards',
+                // Filters
+                items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
+            },
+        ]
+    }, [contactsRoutes, kanbans?.items, privateBoards, teamBoards])
 
-        },
-        { // Category
-            id: '2',
-            name: 'Team Boards',
-            // Filters
-            items: teamBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
-        },
-    ]
+    // let filters = [
+        
+    // ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
         console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
@@ -315,6 +334,9 @@ export default function BaseContactsPage(props) {
         else
             app.alert.setWarning(`${res.success.count} out of ${contactsMultipageSelection.count} contacts were tagged successfully. ${res.error.count} contacts failed to be tagged.`)
 
+        queryClient.invalidateQueries(['tags'])
+        queryClient.invalidateQueries(['contacts'])
+        queryClient.invalidateQueries(['contact'], { active: true })
     }
 
     const onRemoveTagsFromContacts = async (selectedTagsIds) => {
@@ -330,6 +352,10 @@ export default function BaseContactsPage(props) {
                 else
                     app.alert.setWarning(`${res.success} out of ${res.total} contacts were untagged successfully. ${res.error} contacts failed to be untagged.`)
             })
+
+        queryClient.invalidateQueries(['tags'])
+        queryClient.invalidateQueries(['contacts'])
+        queryClient.invalidateQueries(['contact'], { active: true })
     }
 
     const handleTagsDialogConfirm = async (selectedTagsIds) => {
@@ -403,34 +429,10 @@ export default function BaseContactsPage(props) {
                         </Stack>
                     }
                 </Stack>
-                <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                    <Button
-                        name="Send Message"
-                        variant="contained"
-                        endIcon={<SendIcon />}
-                        onClick={onSendMessageClick}
-                        disabled={props.enableSendMessageWithoutSelection ?
-                            false : contactsMultipageSelection.count == 0}
-                    />
-                </Stack>
+                {/* <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                    
+                </Stack> */}
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                    <RenderIf condition={props.boardInfo}>
-                        <PanelDropdown
-                            action={{
-                                name: 'Actions',
-                                variant: 'outlined',
-                                icon: AutoFixHighIcon,
-                                options: props.title.includes("Board") ?
-                                    [
-                                        { name: 'Export Board as CSV', onClick: onExportAsCSVClick },
-                                        { name: 'Edit Board', onClick: onEditBoard },
-                                        { name: 'Delete Board', onClick: onDeleteBoard },
-                                    ]
-                                    :
-                                    []
-                            }}
-                        />
-                    </RenderIf>
                     <RenderIf condition={props.onContactSearch}>
                         <MiniSearchBar
                             placeholder="Search Contacts"
@@ -468,6 +470,32 @@ export default function BaseContactsPage(props) {
                         endIcon={<LocalOfferOutlinedIcon />}
                         onClick={onAddTagClick}
                         disabled={contactsMultipageSelection.count == 0}
+                    />
+                    <RenderIf condition={props.boardInfo}>
+                        <PanelDropdown
+                            action={{
+                                name: 'Actions',
+                                variant: 'outlined',
+                                icon: AutoFixHighIcon,
+                                options: props.title.includes("Board") ?
+                                    [
+                                        { name: 'Export Board as CSV', onClick: onExportAsCSVClick },
+                                        { name: 'Edit Board', onClick: onEditBoard },
+                                        { name: 'Delete Board', onClick: onDeleteBoard },
+                                    ]
+                                    :
+                                    []
+                            }}
+                        />
+                    </RenderIf>
+                    
+                    <Button
+                        name="Send Message"
+                        variant="contained"
+                        endIcon={<SendIcon />}
+                        onClick={onSendMessageClick}
+                        disabled={props.enableSendMessageWithoutSelection ?
+                            false : contactsMultipageSelection.count == 0}
                     />
                 </Stack>
             </Stack>

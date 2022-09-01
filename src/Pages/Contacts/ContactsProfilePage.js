@@ -54,6 +54,7 @@ export default function ContactsProfilePage(props) {
                     loading={contact.loading}
                     contact={contact.item}
                     refreshContact={contact.refetch}
+                    isRefetching={contact.isRefetching}
                     onContactUpdated={onContactUpdated}
                 />
                 <ContactChat contact={contact.item} />
