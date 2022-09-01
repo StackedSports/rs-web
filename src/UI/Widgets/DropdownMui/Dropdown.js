@@ -31,7 +31,7 @@ export const Dropdown = ({
     onClick,
     getOptionLabel,
     getOptionValue,
-    keepOpen,
+    keepOpen = true,
     selectionModel,
     checkboxSelection,
     ...restOfProps
@@ -47,11 +47,9 @@ export const Dropdown = ({
         if (onSearch)
             debouncedSearch(searchText)
         else if (showSearchInput) {
-            if (!searchText)
-                setFilteredOptions(null)
             setFilteredOptions(options.filter(option => {
-                console.log(getOptionLabel)
-                return true
+                const text = getOptionLabel ? getOptionLabel(option) : option
+                return text.toString().toLowerCase().includes(searchText.toLowerCase().trim())
             }));
         }
     }, [searchText])
@@ -63,10 +61,6 @@ export const Dropdown = ({
         else
             setCheckedItemsId([])
     }, [selectionModel?.length])
-
-    useEffect(() => {
-        console.log(checkedItemsId)
-    }, [checkedItemsId])
 
     const handleToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -85,7 +79,7 @@ export const Dropdown = ({
             handleClose();
         }
     }
-    const activeOptions = useMemo(() => filteredOptions ?? options, [filteredOptions, options])
+    const activeOptions = useMemo(() => searchText ? onSearch ? options : filteredOptions : options, [searchText, onSearch, filteredOptions, options])
 
     const handleClickOption = (option) => {
 

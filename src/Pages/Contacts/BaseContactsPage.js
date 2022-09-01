@@ -114,12 +114,12 @@ export default function BaseContactsPage(props) {
             options: ranks.items || [],
             optionsLabel: 'rank',
             checkboxSelection: true,
-            keepOpen: true,
         },
         gradYear: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
             checkboxSelection: true,
+            showSearchInput: true
         },
         tags: {
             label: 'Tags',
@@ -131,22 +131,27 @@ export default function BaseContactsPage(props) {
             label: 'Position',
             options: positions.items || [],
             checkboxSelection: true,
+            showSearchInput: true
         },
         areaCoach: {
             label: 'Area Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option),
             checkboxSelection: true,
+            showSearchInput: true
         },
         positionCoach: {
             label: 'Position Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option),
             checkboxSelection: true,
+            showSearchInput: true
         },
         timeZone: {
             label: 'Time Zone',
-            options: timeZones
+            options: timeZones,
+            checkboxSelection: true,
+            showSearchInput: true
         },
         birthday: {
             label: 'Birthday',
@@ -163,7 +168,9 @@ export default function BaseContactsPage(props) {
         },
         status_2: {
             label: 'Status 2',
-            options: status2.items.map((status2, index) => ({ name: status2 })) || []
+            options: status2.items.map((status2, index) => ({ name: status2 })) || [],
+            checkboxSelection: true,
+            showSearchInput: true
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
