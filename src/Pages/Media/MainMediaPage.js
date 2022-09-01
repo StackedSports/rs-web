@@ -9,7 +9,7 @@ import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
-import MediaPage from './MediaPage'
+import MediaPage from './BaseMediaPage'
 
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'

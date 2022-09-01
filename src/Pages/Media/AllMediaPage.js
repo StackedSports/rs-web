@@ -4,21 +4,20 @@ import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined, Cl
 
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
+import useSearchParams from 'Hooks/SearchParamsHook'
+import useLocalStorage from "Hooks/useLocalStorage"
+import { getMediaCriteriaFromQueryString } from "Api/Parser"
 
-import MediaPage from "./MediaPage"
+import MediaPage from "./BaseMediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
-
-import { useMedias, usePlatform } from "Api/ReactQuery"
-import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
-import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
-import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
-
-import { getMediaCriteriaFromQueryString } from "Api/Parser"
-import useSearchParams from 'Hooks/SearchParamsHook';
-import useLocalStorage from "Hooks/useLocalStorage"
 import { AssignMediaToPlaceholderDialog } from "UI/Widgets/Media/AssignMediaToPlaceholderDialog"
+
+import { useMedias, invalidateMediasCache } from "Api/ReactQuery"
+import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
+import { mediaRoutes } from "Routes/Routes"
 
 export const AllMediaPage = () => {
 	const searchParams = useSearchParams()
@@ -73,6 +72,7 @@ export const AllMediaPage = () => {
 						app.alert.setWarning(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
 				}
 			})
+		invalidateMediasCache()
 	}
 
 	const onAddTagsToMedias = async (tagsIds) => {
@@ -86,6 +86,8 @@ export const AllMediaPage = () => {
 			app.alert.setError('An error occurred while adding tags')
 		else
 			app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+			
+		invalidateMediasCache()
 	}
 
 	const onDeleteTagsFromMedias = async (tagsIds) => {

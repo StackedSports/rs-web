@@ -4,7 +4,7 @@ import { Typography, IconButton } from "@mui/material"
 import lodash from "lodash"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
-import MediaPage from "./MediaPage"
+import MediaPage from "./BaseMediaPage"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { AppContext } from 'Context/AppProvider'

@@ -141,3 +141,9 @@ export const useMediaMutation = () => {
         createAsync: create.mutateAsync,
     }
 }
+
+export const invalidateMediasCache = () => {
+    const queryClient = useQueryClient();
+    queryClient.invalidateQueries(['media'], { active: true })
+    queryClient.invalidateQueries(['medias'])
+}
