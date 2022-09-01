@@ -23,6 +23,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
 import {
     useBoards,
+    useBoardMutation,
     useStatus2,
     useGradYears,
     useStatuses,
@@ -37,7 +38,6 @@ import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
 import {
     addTagsToContactsWithNewTags,
     archiveContacts,
-    deleteBoard,
     untagContacts,
 } from 'Api/Endpoints';
 
@@ -56,6 +56,7 @@ export default function BaseContactsPage(props) {
     const queryClient = useQueryClient();
     const confirmDialog = useContext(ConfirmDialogContext)
     const isTagDialogFunctionRemoveRef = useRef(false)
+    const { remove: deleteBoard } = useBoardMutation()
 
     const [redirect, setRedirect] = useState('')
     const [loading, setLoading] = useState(false)
@@ -64,7 +65,6 @@ export default function BaseContactsPage(props) {
     const [teamBoards, setTeamBoards] = useState([])
 
     const [isCreateKanbanDialogOpen, setIsCreateKanbanDialogOpen] = useState(false)
-
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
     const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
@@ -307,19 +307,20 @@ export default function BaseContactsPage(props) {
     const onDeleteBoard = (e) => {
         const title = "Delete Board"
         confirmDialog.show(title, "You cannot undo this action. Are you sure you want to continue? ", () => {
-            // console.log("onDeleteBoard")
+
             setLoading(true)
-            deleteBoard(props.boardInfo.id)
-                .then(res => {
+            deleteBoard(props.boardInfo.id, {
+                onSuccess: (res) => {
                     app.alert.setSuccess('Board deleted successfully!')
                     boards.refetch()
                     setRedirect(contactsRoutes.all)
-                })
-                .catch(error => {
+                },
+                onError: (error) => {
                     console.log(error)
                     app.alert.setError('Failed to delete board.')
-                })
-                .finally(() => setLoading(false))
+                },
+                onSettled: () => setLoading(false)
+            })
         })
     }
 

@@ -4,23 +4,24 @@ import { GridView, FormatListBulleted, AutoFixHigh, Tune, LocalOfferOutlined, Cl
 
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from "Context/ConfirmDialogProvider"
+import useSearchParams from 'Hooks/SearchParamsHook'
+import useLocalStorage from "Hooks/useLocalStorage"
+import { getMediaCriteriaFromQueryString } from "Api/Parser"
 
-import MediaPage from "./MediaPage"
+import MediaPage from "./BaseMediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
-
-import { useMedias, usePlatform } from "Api/ReactQuery"
-import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
-import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
-import { mediaRoutes } from "Routes/Routes"
 import RenderIf from "UI/Widgets/RenderIf"
-
-import { getMediaCriteriaFromQueryString } from "Api/Parser"
-import useSearchParams from 'Hooks/SearchParamsHook';
-import useLocalStorage from "Hooks/useLocalStorage"
 import { AssignMediaToPlaceholderDialog } from "UI/Widgets/Media/AssignMediaToPlaceholderDialog"
 
+import { useMedias } from "Api/ReactQuery"
+import { addTagsToMedias, deleteTagsFromMedias, archiveMedias } from "Api/Endpoints"
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
+import { mediaRoutes } from "Routes/Routes"
+import { useQueryClient } from "react-query"
+
 export const AllMediaPage = () => {
+	const queryClient = useQueryClient();
 	const searchParams = useSearchParams()
 	const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`medias-table-perPage`, 24)
 
@@ -54,6 +55,10 @@ export const AllMediaPage = () => {
 		setperPageLocalStorage(medias.pagination.itemsPerPage)
 	}, [medias.pagination.itemsPerPage])
 
+	const invalidateMediasCache = () => {
+		queryClient.invalidateQueries(['medias'])
+	}
+
 	const onFilterChange = (filter) => {
 		//return
 		//medias.filter(filter)
@@ -72,6 +77,7 @@ export const AllMediaPage = () => {
 					if (response.error.status.includes(422))
 						app.alert.setWarning(`Unable to archive ${response.error.count} media${response.error.count > 1 ? 's' : ''} that has been previously used in a message. Please contact support to get media deleted`)
 				}
+				invalidateMediasCache()
 			})
 	}
 
@@ -86,6 +92,8 @@ export const AllMediaPage = () => {
 			app.alert.setError('An error occurred while adding tags')
 		else
 			app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+
+		invalidateMediasCache()
 	}
 
 	const onDeleteTagsFromMedias = async (tagsIds) => {
@@ -102,13 +110,15 @@ export const AllMediaPage = () => {
 				}
 				else
 					app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+
+				invalidateMediasCache()
 			})
 	}
 
 	const handleTagsDialogConfirm = async (selectedTagsIds) => {
 		setLoadingTags(true)
 		if (isTagDialogFunctionRemoveRef.current) {
-			await onDeleteTagsFromMedias(selectedTagsIds)
+			onDeleteTagsFromMedias(selectedTagsIds)
 		} else {
 			await onAddTagsToMedias(selectedTagsIds)
 		}

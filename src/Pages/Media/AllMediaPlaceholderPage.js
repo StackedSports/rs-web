@@ -1,10 +1,11 @@
 import { useState, useContext, useRef, useEffect } from "react"
+import lodash from "lodash"
+import { useQueryClient } from "react-query"
 import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted, Clear } from '@mui/icons-material'
 import { Typography, IconButton } from "@mui/material"
-import lodash from "lodash"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
-import MediaPage from "./MediaPage"
+import MediaPage from "./BaseMediaPage"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { AppContext } from 'Context/AppProvider'
@@ -17,6 +18,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from "UI/Widgets/RenderIf"
 
 export const AllMediaPlaceholderPage = (props) => {
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams()
   const confirmDialog = useContext(ConfirmDialogContext)
   const app = useContext(AppContext)
@@ -37,6 +39,11 @@ export const AllMediaPlaceholderPage = (props) => {
     clear: clearSelection
   } = multiPageSelection
 
+  const invalidateMediasCache = () => {
+    queryClient.invalidateQueries(['placeholders'])
+    queryClient.invalidateQueries(['medias'])
+  }
+
   useEffect(() => {
     searchParams.appendSearchParams('page', placeholders.pagination.currentPage)
   }, [placeholders.pagination.currentPage])
@@ -52,6 +59,8 @@ export const AllMediaPlaceholderPage = (props) => {
       app.alert.setError('An error occurred while adding tags')
     else
       app.alert.setWarning(`Some tags (${error.count}) could not be added`)
+
+    invalidateMediasCache()
   }
 
   const onDeleteTagsFromMedias = async (tagsIds, mediasIds) => {
@@ -67,6 +76,8 @@ export const AllMediaPlaceholderPage = (props) => {
           app.alert.setError('An error occurred while removing tags')
         else
           app.alert.setWarning(`Some tags (${error.count}) could not be removed`)
+
+        invalidateMediasCache()
       })
   }
 
@@ -79,10 +90,11 @@ export const AllMediaPlaceholderPage = (props) => {
     const uniqueMediasIds = lodash.uniqBy(mediasFromSelectedPlaceholders, 'id').map(media => media.id)
 
     if (isTagDialogFunctionRemoveRef.current) {
-      await onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
+      onDeleteTagsFromMedias(selectedTagsIds, uniqueMediasIds)
     } else {
       await onAddTagsToMedias(selectedTagsIds, uniqueMediasIds)
     }
+
     setLoadingTags(false)
   }
 

@@ -6,7 +6,7 @@ import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 
 import { mediaRoutes } from 'Routes/Routes'
-import { useTags, useMediaTypes, useContacts, useTeamMembers, useTagsWithMedia } from 'Api/ReactQuery';
+import { useMediaTypes, useContacts, useTeamMembers, useTagsWithMedia } from 'Api/ReactQuery';
 import { getFullName } from 'utils/Parser'
 import useSearchParams, { filterObjectToQueryParams } from 'Hooks/SearchParamsHook';
 import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'

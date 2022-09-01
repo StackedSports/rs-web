@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import { ListItemButton, List, ListItem } from '@mui/material';
 import * as Yup from "yup";
 import { subYears } from "date-fns";
+import lodash from 'lodash'
 
 import AccordionComponent from 'UI/Widgets/Accordion';
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector';
@@ -180,13 +181,34 @@ const ContactProfileDetails = (props) => {
 		// return
 
 		setSavingContactAtIndex(index, true)
+		const updateData = parseValues(data)
 
-		updateContact({ id: props.contact.id, data: parseValues(data) }, {
+		updateContact({ id: props.contact.id, data: updateData }, {
 			onSuccess: (res) => {
-				props.onContactUpdated(res.data)
-				app.alert.setSuccess('Contact updated successfully!')
-				onAccordionFieldReset(index)
-				//console.log(res.data)
+
+				let countEqual = 0
+				let countDif = 0
+
+				Object.keys(updateData)
+					.forEach(key => {
+						if (lodash.isEqual(updateData[key], res.data[key]))
+							countEqual++
+						else
+							countDif++
+					})
+
+				if (countEqual === 0) {
+					app.alert.setError('Contact updated faild!')
+				} else if (countDif === 0) {
+					props.onContactUpdated(res.data)
+					app.alert.setSuccess('Contact updated successfully!')
+					onAccordionFieldReset(index)
+				} else {
+					app.alert.setWarning('Some fields failed to update!')
+					onAccordionFieldReset(index)
+					props.onContactUpdated(res.data)
+				}
+
 			},
 			onError: (error) => {
 				console.log(error)
@@ -608,6 +630,7 @@ const ContactProfileDetails = (props) => {
 								placeholder="Search"
 								value={formikProps.values.time_zone}
 								options={timeZones}
+								isOptionEqualToValue={(option, value) => option.name === value || option.name === value.name}
 								getOptionLabel={(option) => option.name || option}
 								getChipLabel={(option) => option.name || option}
 								onChange={(newValue) => {
@@ -655,7 +678,7 @@ const ContactProfileDetails = (props) => {
 								label="Rank"
 								placeholder="Search"
 								value={formikProps.values.rank}
-								options={ranks.items }
+								options={ranks.items}
 								loading={ranks.loading}
 								isOptionEqualToValue={(option, value) => option.rank === value || option.rank === value?.rank}
 								getOptionLabel={(option) => option.rank || option}

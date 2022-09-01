@@ -64,16 +64,6 @@ export const CreateBoardDialog = (props) => {
             formikHelpers.setSubmitting(false)
           }
         })
-       /*  updateBoard(props.boardInfo?.id, data)
-          .then(res => {
-            console.log(res)
-            props.boardEditedSuccess(res)
-          })
-          .catch(error => {
-            console.log(error)
-            props.boardEditedFailure(error)
-          })
-          .finally(() => formikHelpers.setSubmitting(false)) */
 
       } else {
         createBoard({ data: values, filters: props.selectedFilters }, {
