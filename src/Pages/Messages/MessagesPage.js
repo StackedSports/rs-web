@@ -11,7 +11,7 @@ import RenderIf from 'UI/Widgets/RenderIf'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import useSearchParams from 'Hooks/SearchParamsHook';
-import { useMessages, useTagsWithMessage,useTeamMembers } from 'Api/ReactQuery'
+import { useMessages, useTagsWithMessage, useTeamMembers } from 'Api/ReactQuery'
 import { getFullName } from 'utils/Parser'
 import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from "lodash"
@@ -108,7 +108,6 @@ const MessagesPage = (props) => {
             label: 'Tags',
             options: tags.items || [],
             onSearch: (search) => tags.search(search),
-
         },
         'send_at_dates': {
             label: 'Send At Dates',

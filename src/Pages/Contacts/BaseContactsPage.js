@@ -107,51 +107,38 @@ export default function BaseContactsPage(props) {
             label: 'Status',
             options: status.items || [],
             optionsLabel: 'status',
-            checkboxSelection: true,
         },
         rank: {
             label: 'Rank',
             options: ranks.items || [],
             optionsLabel: 'rank',
-            checkboxSelection: true,
         },
         gradYear: {
             label: 'Grad Year',
             options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
-            checkboxSelection: true,
-            showSearchInput: true
         },
         tags: {
             label: 'Tags',
             options: tags.items || [],
             onSearch: (search) => tags.search(search),
-            checkboxSelection: true,
         },
         position: {
             label: 'Position',
             options: positions.items || [],
-            checkboxSelection: true,
-            showSearchInput: true
         },
         areaCoach: {
             label: 'Area Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option),
-            checkboxSelection: true,
-            showSearchInput: true
         },
         positionCoach: {
             label: 'Position Coach',
             options: teamMembers.items || [],
             optionsLabel: (option) => getFullName(option),
-            checkboxSelection: true,
-            showSearchInput: true
         },
         timeZone: {
             label: 'Time Zone',
             options: timeZones,
-            checkboxSelection: true,
-            showSearchInput: true
         },
         birthday: {
             label: 'Birthday',
@@ -163,14 +150,11 @@ export default function BaseContactsPage(props) {
         state: {
             label: 'State',
             options: states,
-            checkboxSelection: true,
-            showSearchInput: true,
+
         },
         status_2: {
             label: 'Status 2',
             options: status2.items.map((status2, index) => ({ name: status2 })) || [],
-            checkboxSelection: true,
-            showSearchInput: true
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 

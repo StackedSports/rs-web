@@ -31,7 +31,7 @@ export const Dropdown = ({
     onClick,
     getOptionLabel,
     getOptionValue,
-    keepOpen = true,
+    keepOpen,
     selectionModel,
     checkboxSelection,
     ...restOfProps
@@ -83,16 +83,8 @@ export const Dropdown = ({
 
     const handleClickOption = (option) => {
 
-        /*         if (!selectionModel)
-                    setCheckedItemsId(prev => {
-                        if (prev.some(item => item === option.id))
-                            return prev.filter(item => item !== option.id)
-                        else
-                            return [...prev, option.id]
-                    }); */
-
         onClick(option);
-        if (!keepOpen)
+        if (!keepOpen && !checkboxSelection)
             handleClose();
     }
 

@@ -149,6 +149,8 @@ export const PanelFilters = (props) => {
 									onClick={(option) => handleOptionsChange(filterName, option, filter)}
 									getOptionLabel={(option) => getOptionLabel(filter, option)}
 									selectionModel={selectedFilters[filterName]}
+									checkboxSelection
+									showSearchInput
 									{...filter}
 								/>
 							)
