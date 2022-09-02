@@ -11,7 +11,6 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import MainLayout from 'UI/Layouts/MainLayout';
 import CreateBoardDialog from 'UI/Widgets/Dialogs/CreateBoardDialog';
-import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog'
 import CreateKanbanDialog from 'UI/Widgets/Dialogs/CreateKanbanDialog'
 import FollowOnTwitterDialog from 'UI/Widgets/Contact/FollowOnTwitterDialog';
 import Button from 'UI/Widgets/Buttons/Button';
@@ -50,6 +49,7 @@ import { Box, IconButton } from '@mui/material';
 import RenderIf from 'UI/Widgets/RenderIf';
 
 import { ISideFilter } from 'Interfaces'
+import CreateContactDialog from 'UI/Widgets/Contact/CreateContactDialog';
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)

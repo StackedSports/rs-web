@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Avatar, Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
@@ -12,7 +12,7 @@ interface IMessagingPlatform {
 }
 
 enum EPlatformType {
-    TwitterDm = 'twitter-dm',
+	TwitterDm = 'twitter-dm',
 	RsText = 'rs-text',
 	PersonalText = 'personal-text'
 }
@@ -40,46 +40,46 @@ const PERSONAL_TEXT = {
 	label: PLATFORM_LABEL[EPlatformType.PersonalText]
 }
 
-const ContactChatHeader = (props) => {
+const ContactChatHeader = (props: any) => {
 
 	const fullName = props.contact ? getFullName(props.contact) : "Loading..."
 	const profileImage = props.contact?.twitter_profile.profile_image
 	const phone = props.contact ? props.contact.phone : "Loading..."
 
 	const [open, setOpen] = useState(false);
-	const anchorRef = useRef(null);
+	const anchorRef = useRef<HTMLButtonElement>(null);
 
 	const [availablePlatforms, setAvailablePlatforms] = useState<IMessagingPlatform[] | null>(null)
-	const [platformSelectedId, setPlatformSelectedId] = useState<TMessagingPlatformID | null>(null)
+	const [platformSelectedId, setPlatformSelectedId] = useState<string | null>(null)
 
 	console.log(props.contact)
 
 	useEffect(() => {
-		if(!props.contact)
+		if (!props.contact)
 			return
 
 		let availablePlatforms = []
 
-		if(props.contact.twitter_profile && props.contact.twitter_profile.screen_name)
+		if (props.contact.twitter_profile && props.contact.twitter_profile.screen_name)
 			availablePlatforms.push(TWITTER_DM)
-		if(props.contact.phone) {
+		if (props.contact.phone) {
 			availablePlatforms.push(RS_TEXT)
 			availablePlatforms.push(PERSONAL_TEXT)
 		}
 
 		setAvailablePlatforms(availablePlatforms)
 
-		if(availablePlatforms.length > 0)
+		if (availablePlatforms.length > 0)
 			setPlatformSelectedId(availablePlatforms[0].id)
 
 	}, [props.contact])
 
 	const platformLabel = useMemo(() => {
-		if(!props.contact)
+		if (!props.contact)
 			return 'Loading...'
-		switch(platformSelectedId) {
+		switch (platformSelectedId) {
 			case EPlatformType.TwitterDm:
-				return props.contact.twitter_profile.screen_name
+				return `@${props.contact.twitter_profile.screen_name}`
 			case EPlatformType.RsText:
 				return formatPhoneNumber(props.contact.phone)
 			case EPlatformType.PersonalText:
@@ -91,15 +91,18 @@ const ContactChatHeader = (props) => {
 		setOpen((prevOpen) => !prevOpen);
 	};
 
-	const handleClose = (event) => {
-		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+	const handleClose = (event: Event | React.SyntheticEvent) => {
+		if (
+			anchorRef.current &&
+			anchorRef.current.contains(event.target)
+		) {
 			return;
 		}
 
 		setOpen(false);
 	};
 
-	function handleListKeyDown(event) {
+	function handleListKeyDown(event: React.KeyboardEvent) {
 		if (event.key === 'Tab') {
 			event.preventDefault();
 			setOpen(false);
@@ -138,34 +141,34 @@ const ContactChatHeader = (props) => {
 				sx={{ zIndex: 'fab' }}
 			>
 				{({ TransitionProps, placement }) => (
-				<Grow
-					{...TransitionProps}
-					style={{
-					transformOrigin:
-						placement === 'bottom-start' ? 'left top' : 'left bottom',
-					}}
-				>
-					<Paper
-					sx={{
-						minWidth: anchorRef.current?.offsetWidth || 'fit-content',
-					}}
+					<Grow
+						{...TransitionProps}
+						style={{
+							transformOrigin:
+								placement === 'bottom-start' ? 'left top' : 'left bottom',
+						}}
 					>
-					<ClickAwayListener onClickAway={handleClose}>
-						<MenuList
-						  autoFocusItem={open}
-						  id="composition-menu"
-						  aria-labelledby="composition-button"
-						  onKeyDown={handleListKeyDown}
+						<Paper
+							sx={{
+								minWidth: anchorRef.current?.offsetWidth || 'fit-content',
+							}}
 						>
-							{availablePlatforms && availablePlatforms.map(platform => (
-								<MenuItem key={platform.id} onClick={() => onPlatformSelected(platform.id)}>
-									{platform.label}
-								</MenuItem>
-							))}
-						</MenuList>
-					</ClickAwayListener>
-					</Paper>
-				</Grow>
+							<ClickAwayListener onClickAway={handleClose}>
+								<MenuList
+									autoFocusItem={open}
+									id="composition-menu"
+									aria-labelledby="composition-button"
+									onKeyDown={handleListKeyDown}
+								>
+									{availablePlatforms && availablePlatforms.map(platform => (
+										<MenuItem key={platform.id} onClick={() => onPlatformSelected(platform.id)}>
+											{platform.label}
+										</MenuItem>
+									))}
+								</MenuList>
+							</ClickAwayListener>
+						</Paper>
+					</Grow>
 				)}
 			</Popper>
 		</Stack>
