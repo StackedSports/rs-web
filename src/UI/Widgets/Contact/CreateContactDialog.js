@@ -22,9 +22,11 @@ import * as yup from 'yup';
 import { Link } from 'react-router-dom'
 
 import Button from 'UI/Widgets/Buttons/Button';
+import ImportCsvStepper from './ImportCsvStepper';
 
 import { createContact } from 'Api/Endpoints';
 import { contactsRoutes } from 'Routes/Routes'
+import RenderIf from '../RenderIf';
 
 const validationSchema = yup.object({
     first_name: yup
@@ -52,7 +54,7 @@ const validationSchema = yup.object({
 export const CreateContactDialog = (props) => {
 
     const [error, setError] = useState(null)
-    const [showCreatedContact, setShowCreatedContact] = useState(false)
+    const [contentIndex, setContentIndex] = useState(0)
     const [id, setId] = useState(null)
 
     const formik = useFormik({
@@ -73,7 +75,7 @@ export const CreateContactDialog = (props) => {
                     setId(res.data.id)
                     props.onContactCreated()
                     formikHelpers.resetForm()
-                    setShowCreatedContact(true)
+                    setContentIndex(1)
                 }).catch(error => {
                     setError(error)
                     formikHelpers.setSubmitting(false)
@@ -89,17 +91,18 @@ export const CreateContactDialog = (props) => {
     const handleClose = (e, reason) => {
         if (reason && reason == "backdropClick")
             return;
-
+        setContentIndex(0)
         formik.resetForm()
         setError(null)
         props.onClose()
     }
 
+    // The form component
     const FormPanel = useMemo(() => (
         <>
             <DialogContent>
 
-                <Stack direction='row' gap={2} mb={1}>
+                <Stack direction='row' gap={2} mb={3} mt={1}>
 
                     <TextField
                         margin='dense'
@@ -150,7 +153,7 @@ export const CreateContactDialog = (props) => {
                     }}
                     fullWidth
                 />
-                <Divider>
+                <Divider sx={{ my: 1 }}>
                     AND/OR
                 </Divider>
                 <TextField
@@ -191,6 +194,17 @@ export const CreateContactDialog = (props) => {
 
             </DialogContent>
             <DialogActions sx={{ padding: '0 20px 24px' }}>
+
+                <Button
+                    onClick={() => setContentIndex(2)}
+                    color='primary'
+                    size='large'
+                    disabled={formik.isSubmitting}
+                    variant='contained'
+                    name='Import CSV'
+                    sx={{ mr: 'auto' }}
+                />
+
                 <Button
                     onClick={handleClose}
                     color='primary'
@@ -232,7 +246,7 @@ export const CreateContactDialog = (props) => {
             </DialogContent>
             <DialogActions sx={{ padding: '0 20px 24px' }}>
                 <Button
-                    onClick={() => setShowCreatedContact(old => !old)}
+                    onClick={() => setContentIndex(0)}
                     variant='contained'
                     name='Create Another Contact'
                 />
@@ -240,22 +254,38 @@ export const CreateContactDialog = (props) => {
         </>
     ), [id])
 
+    const getContent = (index) => {
+        switch (index) {
+            case 1:
+                return CreatedProfilePanel;
+            case 2:
+                return <ImportCsvStepper onBack={() => setContentIndex(0)} onClose={handleClose} />;
+            default:
+                return FormPanel;
+        }
+    }
+
+
     return (
         <Dialog
             component="form"
             open={props.open}
             onClose={handleClose}
             fullWidth
-            maxWidth='sm'
+            maxWidth='md'
             onSubmit={formik.handleSubmit}
         >
             <DialogTitle
                 sx={{
                     fontWeight: 'bold',
                     fontSize: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2
                 }}
             >
                 <PersonOutline color='primary' /> New Contact Profile
+
                 <IconButton
                     aria-label="close"
                     onClick={handleClose}
@@ -270,11 +300,7 @@ export const CreateContactDialog = (props) => {
                 </IconButton>
             </DialogTitle>
 
-            {
-                showCreatedContact ?
-                    CreatedProfilePanel :
-                    FormPanel
-            }
+            {getContent(contentIndex)}
 
         </Dialog>
     )
