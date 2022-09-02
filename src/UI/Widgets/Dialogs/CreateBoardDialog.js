@@ -169,7 +169,7 @@ export const CreateBoardDialog = (props) => {
                 fontWeight='700 !important'
                 textTransform='capitalize'
               >
-                {`${key}: ${filter?.map(f => f.name).join(', ')}${index === selectedFiltersKeys.length - 1 ? '' : '; '}`}
+                {`${key}: ${filter?.map(f => f.itemLabel).join(', ')}${index === selectedFiltersKeys.length - 1 ? '' : '; '}`}
               </Typography>
             )
           })
