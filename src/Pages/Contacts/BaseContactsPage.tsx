@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useContext, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useContext, useRef } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 import { useQueryClient } from 'react-query';
 
@@ -41,12 +41,12 @@ import {
     untagContacts,
 } from 'Api/Endpoints';
 
-import { contactsRoutes, messageRoutes } from 'Routes/Routes';
+import { contactsRoutes } from 'Routes/Routes';
 import { getFullName } from 'utils/Parser';
 import { timeZones, states } from 'utils/Data';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AppContext } from 'Context/AppProvider';
-import { Box, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import RenderIf from 'UI/Widgets/RenderIf';
 
 import { ISideFilter } from 'Interfaces'
@@ -195,12 +195,12 @@ export default function BaseContactsPage(props) {
     }
 
     const filters: ISideFilter[] = useMemo(() => {
-        return  [
+        return [
             { // Category
                 id: '0',
                 name: 'Contacts',
                 items: [
-                    { id: 'all-contacts', name: 'All Contacts', path: contactsRoutes.all}
+                    { id: 'all-contacts', name: 'All Contacts', path: contactsRoutes.all }
                 ],
             },
             {
@@ -214,7 +214,7 @@ export default function BaseContactsPage(props) {
                 name: 'My Boards',
                 // Filters
                 items: privateBoards.map(board => ({ id: board.id, name: board.name, path: `${contactsRoutes.board}/${board.id}` }))
-    
+
             },
             { // Category
                 id: '2',
@@ -226,7 +226,7 @@ export default function BaseContactsPage(props) {
     }, [contactsRoutes, kanbans?.items, privateBoards, teamBoards])
 
     // let filters = [
-        
+
     // ]
 
     const onFilterSelected = (filter, filterIndex, categoryIndex) => {
@@ -378,7 +378,7 @@ export default function BaseContactsPage(props) {
         setOpenCreateBoardDialog(false)
     }
 
-    const onBackBoardToContacts = (redirect) => {
+    const onBackBoardToContacts = () => {
         setRedirect(contactsRoutes.all)
     }
 
@@ -490,7 +490,7 @@ export default function BaseContactsPage(props) {
                             }}
                         />
                     </RenderIf>
-                    
+
                     <Button
                         name="Send Message"
                         variant="contained"
