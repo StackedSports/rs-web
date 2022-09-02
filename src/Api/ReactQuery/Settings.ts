@@ -1,9 +1,11 @@
 import { useQuery } from "react-query"
 import { getAllStatus2, getGradYears, getPeopleTypes, getPlatform, getPositions, getRanks, getSnippets, getStatuses, getTextPlaceholders } from "Api/Endpoints"
+import { IPositions, IPositionsApi } from "Interfaces/ISettings"
+import { IPaginationApi } from "Interfaces"
 
 export const usePositions = () => {
     const reactQuery = useQuery("positions", getPositions, {
-        select: (data) => data[0],
+        select: (data: [IPositionsApi[], IPaginationApi]): IPositions[] => data[0].map(position => ({ ...position, itemLabel: position.name, value: position.id })),
     })
 
     return {
