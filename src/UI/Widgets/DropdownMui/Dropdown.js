@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import lodash from "lodash";
+import { useState, useMemo, useEffect, useRef, ReactElement } from "react";
+
 import {
     Box,
     MenuList,
@@ -57,7 +57,17 @@ export const Dropdown = ({
 
     useEffect(() => {
         if (selectionModel && selectionModel.length > 0)
-            setCheckedItemsId(selectionModel.map(item => item.id))
+            setCheckedItemsId(selectionModel.map(item => {
+                if ('id' in item) {
+                    return item.id
+                } else if ('value' in item) {
+                    return item.value
+                } else if (getOptionValue) {
+                    return getOptionValue(item)
+                } else {
+                    return item
+                }
+            }))
         else
             setCheckedItemsId([])
     }, [selectionModel?.length])
@@ -92,10 +102,12 @@ export const Dropdown = ({
 
     const isChecked = (option) => {
 
-        if (getOptionValue) {
-            return checkedItemsId.indexOf(getOptionValue(option)) > - 1;
-        } else if ('id' in option) {
+        if ('id' in option) {
             return checkedItemsId.indexOf(option.id) > - 1;
+        } else if ('value' in option) {
+            return checkedItemsId.indexOf(option.value) > - 1;
+        } else if (getOptionValue) {
+            return checkedItemsId.indexOf(getOptionValue(option)) > - 1;
         } else {
             return checkedItemsId.indexOf(option) > - 1;
         }

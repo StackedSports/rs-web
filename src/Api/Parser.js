@@ -191,22 +191,22 @@ export const getMessagesQueryCriteriaObjFromFilters = (filters) => {
     const criteria = {}
 
     if (filters.message_status)
-        criteria.message_status = filters.message_status.map(status => ({ itemLabel: status.itemLabel, value: status.name || status.value }))
+        criteria.message_status = filters.message_status.map(status => ({ label: status.label, value: status.name || status.value }))
     if (filters.platform)
-        criteria.platform = filters.platform.map(platform => ({ itemLabel: platform.itemLabel, value: platform.name || platform.value }))
+        criteria.platform = filters.platform.map(platform => ({ label: platform.label, value: platform.name || platform.value }))
     if (filters.sender)
-        criteria.sender = filters.sender.map(sender => ({ itemLabel: sender.itemLabel, value: sender.id || sender.value }))
+        criteria.sender = filters.sender.map(sender => ({ label: sender.label, value: sender.id || sender.value }))
     if (filters.recipient_status)
-        criteria.recipient_status = filters.recipient_status.map(status => ({ itemLabel: status.itemLabel, value: status.name || status.value }))
+        criteria.recipient_status = filters.recipient_status.map(status => ({ label: status.label, value: status.name || status.value }))
     if (filters.tags)
-        criteria.tags = filters.tags.map(tag => ({ itemLabel: tag.itemLabel, value: tag.name || tag.value }))
+        criteria.tags = filters.tags.map(tag => ({ label: tag.label, value: tag.name || tag.value }))
     if (filters.send_at_dates) {
-        const { itemLabel, value } = filters.send_at_dates[0]
-        criteria.send_at_dates = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
+        const { label, value } = filters.send_at_dates[0]
+        criteria.send_at_dates = [{ label: label, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
     if (filters.sent_at_dates) {
-        const { itemLabel, value } = filters.sent_at_dates[0]
-        criteria.sent_at_dates = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
+        const { label, value } = filters.sent_at_dates[0]
+        criteria.sent_at_dates = [{ label: label, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
     return criteria
 }
@@ -291,7 +291,7 @@ export const getFilterMediasCriteria = (filters) => {
     return criteria
 }
 
-// this function is used to normalize the data between the api criteria filters and url params {itemLabel,value}
+// this function is used to normalize the data between the api criteria filters and url params {label,value}
 export const getMediaQueryCriteriaObjFromFilters = (filters) => {
     if (!filters)
         return null
@@ -299,31 +299,31 @@ export const getMediaQueryCriteriaObjFromFilters = (filters) => {
     let criteria = {}
 
     if (filters.name) {
-        criteria['name'] = { itemLabel: filters.itemLabel, value: filters.name }
+        criteria['name'] = { label: filters.label, value: filters.name }
     }
 
     if (filters.type)
-        criteria['type'] = filters.type.map(type => ({ itemLabel: type.itemLabel, value: type.id || type.value }))
+        criteria['type'] = filters.type.map(type => ({ label: type.label, value: type.id || type.value }))
 
     if (filters.tag_id) {
-        criteria['tag_id'] = filters.tag_id.map(tag => ({ itemLabel: tag.itemLabel, value: tag.id || tag.value }))
+        criteria['tag_id'] = filters.tag_id.map(tag => ({ label: tag.label, value: tag.id || tag.value }))
     }
 
     if (filters.placeholder)
-        criteria['placeholder_id'] = filters.placeholder.map(placeholder => ({ itemLabel: placeholder.itemLabel, value: placeholder.id || placeholder.value }))
+        criteria['placeholder_id'] = filters.placeholder.map(placeholder => ({ label: placeholder.label, value: placeholder.id || placeholder.value }))
 
     if (filters.owner_id) {
-        criteria['owner_id'] = filters.owner_id.map(owner => ({ itemLabel: owner.itemLabel, value: owner.id || owner.value }))
+        criteria['owner_id'] = filters.owner_id.map(owner => ({ label: owner.label, value: owner.id || owner.value }))
     }
 
     if (filters.created_at) {
-        const { itemLabel, value } = filters.created_at[0]
-        criteria['created_at'] = [{ itemLabel: itemLabel, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
+        const { label, value } = filters.created_at[0]
+        criteria['created_at'] = [{ label: label, value: value.map(date => format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd')) }]
     }
 
     // TODO: need add it on the server side
     /*     if (filters.contact_id)
-            criteria['contact_id'] = { label: filters.itemLabel, value: filters.contact_id.map(contact => contact.id) } */
+            criteria['contact_id'] = { label: filters.label, value: filters.contact_id.map(contact => contact.id) } */
 
     if (Object.keys(criteria).length === 0)
         return null

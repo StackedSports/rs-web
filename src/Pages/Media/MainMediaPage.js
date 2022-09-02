@@ -311,7 +311,7 @@ export const MainMediaPage = (props) => {
                                     page: 1,
                                     filters: filterObjectToQueryParams({
                                         tag_id: {
-                                            itemLabel: tag.name, value: tag.id
+                                            label: tag.name, value: tag.id
                                         }
                                     }),
                                 }).toString(),

@@ -5,7 +5,7 @@ import { IPaginationApi } from "Interfaces"
 
 export const usePositions = () => {
     const reactQuery = useQuery("positions", getPositions, {
-        select: (data: [IPositionsApi[], IPaginationApi]): IPositions[] => data[0].map(position => ({ ...position, itemLabel: position.name, value: position.id })),
+        select: (data: [IPositionsApi[], IPaginationApi]): IPositions[] => data[0].map(position => ({ ...position, label: position.name, value: position.id })),
     })
 
     return {

@@ -72,12 +72,12 @@ export function filterObjectToQueryParams(filters) {
     Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
             const reduce = value.reduce((acc, item) => {
-                return [...acc, `${item.itemLabel}:${item.value}`]
+                return [...acc, `${item.label}:${item.value}`]
             }, [])
             parserFilters.append(key, reduce.join(';'))
         }
         else {
-            parserFilters.append(key, `${value.itemLabel}:${value.value}`)
+            parserFilters.append(key, `${value.label}:${value.value}`)
         }
     })
     return parserFilters.toString()
@@ -89,8 +89,8 @@ export function queryParamsToFilterObject(searchParams) {
         const filterObject = {}
         filtersSearchParams.forEach((string, key) => {
             filterObject[key] = filtersSearchParams.get(key).split(';').map(item => {
-                const [itemLabel, value] = item.split(':')
-                return { itemLabel: itemLabel, value: value?.includes(',') ? value.split(',') : (Number(value) || value) }
+                const [label, value] = item.split(':')
+                return { label: label, value: value?.includes(',') ? value.split(',') : (Number(value) || value) }
             })
         })
         return filterObject
