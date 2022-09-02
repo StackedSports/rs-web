@@ -18,7 +18,7 @@ const BaseMessagePage = (props) => {
         return new URLSearchParams({
             page: 1,
             filters: filterObjectToQueryParams({
-                message_status: { itemLabel: status, value: status }
+                message_status: { label: status, value: status }
             })
         }).toString()
     }
@@ -78,7 +78,7 @@ const BaseMessagePage = (props) => {
                             page: 1,
                             filters: filterObjectToQueryParams({
                                 sender: {
-                                    itemLabel: getFullName(member), value: member.id
+                                    label: getFullName(member), value: member.id
                                 }
                             }),
                         }).toString(),

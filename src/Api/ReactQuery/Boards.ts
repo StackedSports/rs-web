@@ -101,14 +101,14 @@ export const useBoardMutation = () => {
 
 function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
     const output: IBoardCriteria = {}
-    Object.entries(criteria).forEach(([key, value], index) => {
+    Object.entries(criteria).forEach(([key, value]) => {
         switch (key) {
             case 'status':
                 output[key] = value.map((status: {
                     status: string; id: string
                 }) => ({
                     ...status,
-                    itemLabel: status.status,
+                    label: status.status,
                     value: status.id
                 }))
                 break;
@@ -117,25 +117,25 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                     rank: string; id: string
                 }) => ({
                     ...rank,
-                    itemLabel: rank.rank,
+                    label: rank.rank,
                     value: rank.id
                 }))
                 break;
             case 'years':
                 output[key] = value.map((year: number) => ({
-                    itemLabel: year,
+                    label: year,
                     value: year
                 }))
                 break;
             case 'tags':
                 output[key] = value.map((tag: string) => ({
-                    itemLabel: tag,
+                    label: tag,
                     value: tag
                 }))
                 break;
             case 'positions':
                 output[key] = value.map((position: string) => ({
-                    itemLabel: position,
+                    label: position,
                     value: position
                 }))
                 break;
@@ -144,7 +144,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                     full_name: string; id: string
                 }) => ({
                     ...areaCoach,
-                    itemLabel: areaCoach.full_name,
+                    label: areaCoach.full_name,
                     value: areaCoach.id
                 }))
                 break;
@@ -153,25 +153,25 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                     full_name: string; id: string
                 }) => ({
                     ...positionCoach,
-                    itemLabel: positionCoach.full_name,
+                    label: positionCoach.full_name,
                     value: positionCoach.id
                 }))
                 break;
             case 'states':
                 output[key] = value.map((state: string) => ({
-                    itemLabel: state,
+                    label: state,
                     value: state
                 }))
                 break;
             case 'timezones':
                 output[key] = value.map((timezone: string) => ({
-                    itemLabel: timezone,
+                    label: timezone,
                     value: timezone,
                 }))
                 break;
             case 'status_2':
                 output[key] = value.map((status2: string) => ({
-                    itemLabel: status2,
+                    label: status2,
                     value: status2
                 }))
                 break;

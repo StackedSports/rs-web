@@ -39,6 +39,6 @@ export interface ISettings {
 }
 
 export interface IFilterOption<T> {
-    itemLabel: string;
+    label: string;
     value: T;
 }

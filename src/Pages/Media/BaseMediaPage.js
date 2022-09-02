@@ -57,7 +57,7 @@ export const MediaPage = (props) => {
                                 page: 1,
                                 filters: filterObjectToQueryParams({
                                     owner_id: {
-                                        itemLabel: getFullName(item), value: item.id
+                                        label: getFullName(item), value: item.id
                                     }
                                 }),
                             }).toString(),
@@ -75,7 +75,7 @@ export const MediaPage = (props) => {
                         page: 1,
                         filters: filterObjectToQueryParams({
                             type: {
-                                itemLabel: item.name, value: item.id
+                                label: item.name, value: item.id
                             }
                         }),
                     }).toString()
