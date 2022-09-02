@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "module": "esnext",
     "strict": true,
+    "removeComments": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,6 +16,11 @@
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
+    "allowUnreachableCode": false,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -22,6 +28,10 @@
     "baseUrl": "src",
   },
   "include": [
-    "src/**/*"
-  ]
+    "src/**/*",
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }
