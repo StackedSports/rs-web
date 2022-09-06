@@ -49,7 +49,8 @@ import { AppContext } from 'Context/AppProvider';
 import { IconButton } from '@mui/material';
 import RenderIf from 'UI/Widgets/RenderIf';
 
-import { ISideFilter } from 'Interfaces'
+import { IBoard, ISideFilter } from 'Interfaces'
+import { IPanelFilters, ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)
@@ -61,8 +62,8 @@ export default function BaseContactsPage(props) {
     const [redirect, setRedirect] = useState('')
     const [loading, setLoading] = useState(false)
     const [loadingTags, setLoadingTags] = useState(false)
-    const [privateBoards, setPrivateBoards] = useState([])
-    const [teamBoards, setTeamBoards] = useState([])
+    const [privateBoards, setPrivateBoards] = useState<IBoard[]>([])
+    const [teamBoards, setTeamBoards] = useState<IBoard[]>([])
 
     const [isCreateKanbanDialogOpen, setIsCreateKanbanDialogOpen] = useState(false)
     const [openCreateBoardDialog, setOpenCreateBoardDialog] = useState(false)
@@ -112,40 +113,37 @@ export default function BaseContactsPage(props) {
         setTeamBoards(teamBoards)
     }, [boards.items])
 
-    const panelFiltersData = useMemo(() =>
+    const panelFiltersData: IPanelFilters = useMemo(() =>
     ({
         status: {
             label: 'Status',
-            options: status.items || [],
-            optionsLabel: 'status',
+            options: status.items,
         },
         ranks: {
             label: 'Rank',
-            options: ranks.items || [],
-            optionsLabel: 'rank',
+            options: ranks.items,
         },
         years: {
             label: 'Grad Year',
-            options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
+            options: gradYears.items,
         },
         tags: {
             label: 'Tags',
-            options: tags.items || [],
+            options: tags.items,
             onSearch: (search) => tags.search(search),
         },
         positions: {
             label: 'Position',
-            options: positions.items || [],
+            options: positions.items,
         },
         area_coaches: {
             label: 'Area Coach',
-            options: teamMembers.items || [],
+            options: teamMembers.items,
             optionsLabel: (option) => getFullName(option),
         },
         position_coaches: {
             label: 'Position Coach',
-            options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option),
+            options: teamMembers.items,
         },
         timezones: {
             label: 'Time Zone',
@@ -155,7 +153,7 @@ export default function BaseContactsPage(props) {
             label: 'Birthday',
             type: 'date',
             format: 'MM/dd',
-            optionsLabel: (dates) => dates.value.join(' - '),
+            optionsLabel: (dates) => dates.join(' - '),
             isUnique: true
         },
         states: {
@@ -165,7 +163,7 @@ export default function BaseContactsPage(props) {
         },
         status_2: {
             label: 'Status 2',
-            options: status2.items.map((status2, index) => ({ name: status2 })) || [],
+            options: status2.items,
         },
     }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
@@ -190,7 +188,7 @@ export default function BaseContactsPage(props) {
         ]
     }, [props.kanbanView, props.mainActions, selectedFilters])
 
-    const onTopActionClick = (e) => {
+    const onTopActionClick = () => {
         setOpenCreateContactDialog(true)
     }
 
@@ -229,11 +227,7 @@ export default function BaseContactsPage(props) {
 
     // ]
 
-    const onFilterSelected = (filter, filterIndex, categoryIndex) => {
-        console.log('Filter ' + filters[categoryIndex].items[filterIndex].name + ' selected from ' + filters[categoryIndex].name)
-    }
-
-    const onPanelFilterChange = (filter) => {
+    const onPanelFilterChange = (filter: ISelectedFilters) => {
         // console.log('Filters selected', filter)
         setSelectedFilters(filter)
         if (props.onPanelFilterChange)
@@ -395,7 +389,6 @@ export default function BaseContactsPage(props) {
             onTopActionClick={onTopActionClick}
             filters={filters}
             actions={props.disabledMainActions ? [] : mainActions}
-            onFilterSelected={onFilterSelected}
             loading={loading}
             redirect={redirect}
             propsPanelFilters={{

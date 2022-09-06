@@ -112,13 +112,13 @@ const MessagesPage = (props) => {
                 label: 'Send At Dates',
                 type: 'date',
                 isUnique: true,
-                optionsLabel: (dates) => dates.value.join(' - '),
+                optionsLabel: (dates) => dates.join(' - '),
             },
             'sent_at_dates': {
                 label: 'Sent At Dates',
                 type: 'date',
                 isUnique: true,
-                optionsLabel: (dates) => dates.value.join(' - '),
+                optionsLabel: (dates) => dates.join(' - '),
             },
             'message_status': {
                 label: 'Status',

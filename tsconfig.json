@@ -18,7 +18,6 @@
     "moduleResolution": "node",
     "allowUnreachableCode": false,
     "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,

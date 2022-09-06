@@ -108,7 +108,7 @@ export const BaseMediaPage = (props) => {
         }, */
         "owner_id": {
             label: 'Owner',
-            options: teamMembers.items || [],
+            options: teamMembers.items,
             optionsLabel: (item) => getFullName(item),
             onSearch: (search) => teamMembers.search(search),
         },
@@ -123,7 +123,7 @@ export const BaseMediaPage = (props) => {
         "created_at": {
             label: 'Date Uploaded',
             type: 'date',
-            optionsLabel: (dates) => dates.value.join(' - '),
+            optionsLabel: (dates) => dates.join(' - '),
             disableFuture: true,
             isUnique: true
         },
