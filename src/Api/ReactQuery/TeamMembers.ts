@@ -2,11 +2,17 @@ import { useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { getTeamMember, getTeamMembers } from "Api/Endpoints"
 import { getFullName } from "utils/Parser"
+import { IApiResponse, IPaginationApi } from "Interfaces"
+import { IMember, IMemberApi } from "Interfaces/ISettings"
 
 export const useTeamMembers = () => {
-    const [teamMembers, setTeamMembers] = useState([])
+    const [teamMembers, setTeamMembers] = useState<IMember[]>([])
     const reactQuery = useQuery("teamMembers", getTeamMembers, {
-        select: (data) => data[0],
+        select: (data: IApiResponse<IMemberApi>): IMember[] => data[0].map(member => ({
+            ...member,
+            label: getFullName(member),
+            value: member.id
+        })),
     })
 
     useEffect(() => {
@@ -15,7 +21,7 @@ export const useTeamMembers = () => {
         }
     }, [reactQuery.data, reactQuery.isSuccess])
 
-    const search = (value) => {
+    const search = (value: string) => {
         if (!reactQuery.data) return
         if (value && value.length > 0 && reactQuery.data) {
             const filteredTeamMembers = reactQuery.data.
@@ -36,9 +42,14 @@ export const useTeamMembers = () => {
     }
 }
 
-export const useTeamMember = (id) => {
+export const useTeamMember = (id: string) => {
     const reactQuery = useQuery(`teamMember/${id}`, () => getTeamMember(id), {
-        select: (data) => data[0],
+        enabled: !!id,
+        select: (data: [IMemberApi, IPaginationApi]): IMember => ({
+            ...data[0],
+            value: data[0].id,
+            label: getFullName(data[0])
+        }),
     })
 
     return {

@@ -5,6 +5,8 @@ export interface IPaginationApi {
     totalItems: number;
 }
 
+export type IApiResponse<T> = [T[], IPaginationApi]
+
 export interface ITwitterProfile {
     screen_name: string;
     profile_image: string;

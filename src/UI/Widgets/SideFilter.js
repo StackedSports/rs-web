@@ -44,9 +44,9 @@ function Category(props) {
                 <ArrowForwardIosIcon className={iconClass} />
             </div>
             <div className={contentClass}>
-            {props.button && (
+                {props.button && (
                     <p onClick={(e) => props.button.onClick(e)}>
-                      {props.button.label}
+                        {props.button.label}
                     </p>
                 )}
                 {props.items.map((item, index) => {
@@ -59,13 +59,13 @@ function Category(props) {
                     else
                         return (
                             <p key={item.id}
-                              onClick={(e) => onItemClick(e, item, index)}
+                                onClick={(e) => onItemClick(e, item, index)}
                             >
                                 {item.name}
                             </p>
                         )
                 })}
-                
+
             </div>
         </div>
     )
@@ -83,11 +83,11 @@ export default function SideFilter(props) {
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
-                      title={category.name}
-                      items={category.items}
-                      button={category.button}
-                      onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
-                      path={category.path}
+                        title={category.name}
+                        items={category.items}
+                        button={category.button}
+                        onItemClick={(item, itemIndex) => props.onFilterSelected && props.onFilterSelected(item, itemIndex, index)}
+                        path={category.path}
                     />
                 )
             })}

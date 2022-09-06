@@ -20,11 +20,7 @@ export const getFilterContactsCriteria = (filters) => {
     }
 
     if (filters.years) {
-        criteria['years'] = []
-
-        filters.years.forEach(year => {
-            criteria.years.push(year.name)
-        })
+        criteria['years'] = filters.years.map(year => year.value)
     }
 
     if (filters.tags) {
@@ -82,7 +78,7 @@ export const getFilterContactsCriteria = (filters) => {
 
     if (filters.status_2) {
         //console.log(filters.status_2)
-        criteria['status_2'] = filters.status_2.map(status => status.name)
+        criteria['status_2'] = filters.status_2.map(status => status.value)
     }
 
     // "criteria": {

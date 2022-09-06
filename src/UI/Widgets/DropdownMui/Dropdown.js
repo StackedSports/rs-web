@@ -70,7 +70,7 @@ export const Dropdown = ({
             }))
         else
             setCheckedItemsId([])
-    }, [selectionModel?.length])
+    }, [selectionModel?.length, selectionModel])
 
     const handleToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);

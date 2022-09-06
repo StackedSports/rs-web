@@ -24,6 +24,11 @@ export interface IPositionsApi {
     alternate_names: string;
 }
 
+export interface ISnippetsApi {
+    id: string;
+    content: string;
+}
+
 export interface IMemberApi {
     id: string;
     first_name: string;
@@ -40,8 +45,32 @@ export interface IMemberApi {
     url: string;
 }
 
+export interface IPlatformApi {
+    id: number;
+    name: string;
+}
+
+export interface ITextPlaceholderApi {
+    contact_details: string[];
+    relationships: string[];
+    opponents: string[];
+}
+
+export interface IPeopleTypeApi {
+    id: number;
+    description: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
 // transformations response from the server
 export interface ITag extends ITagApi, IFilterOption<string> { }
 export interface IStatus extends IStatusApi, IFilterOption<string> { }
+export interface IStatus_2 extends IFilterOption<string> { }
 export interface IPositions extends IPositionsApi, IFilterOption<string> { }
 export interface IMember extends IMemberApi, IFilterOption<string> { }
+export interface IRank extends IRankApi, IFilterOption<string> { }
+export interface ISnippets extends ISnippetsApi, IFilterOption<string> { }
+export interface IGradYears extends IFilterOption<string | number> { }
+export interface IPlatform extends IPlatformApi, IFilterOption<string | number> { }
+export interface IPeopleType extends IPeopleTypeApi, IFilterOption<string | number> { }
