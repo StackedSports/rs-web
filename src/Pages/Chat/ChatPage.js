@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useEffect } from 'react';
+import { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
@@ -15,7 +15,10 @@ import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
-import { ChatWindow, ChatListItem } from '../../UI/Widgets/Chat';
+import { ChatWindow, ChatListItem, ChatInbox } from 'UI/Widgets/Chat';
+
+import { getInboxes, getInbox, getInboxConversation } from 'Api/Endpoints'
+import { useTeamInboxes, useUserInbox } from 'Api/ReactQuery/Chat'
 
 // Data for test
 const conversations = [
@@ -143,6 +146,10 @@ const conversations = [
 export default function ChatPage(props) {
   const confirmDialog = useContext(ConfirmDialogContext)
   const { user } = useContext(AuthContext)
+
+  const teamInboxes = useTeamInboxes()
+  const userInbox = useUserInbox()
+
   const snippets = useSnippets()
   const textPlaceholders = useTextPlaceholders()
 
@@ -156,6 +163,16 @@ export default function ChatPage(props) {
       const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
       setConversationViewer(pinned)
     }
+  }, [])
+
+  useEffect(() => {
+    // getInboxes -> ok
+    // getInbox
+    // getInboxConversation
+
+    getInbox()
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
   }, [])
 
   const isPinned = useCallback((conversation) => {
@@ -241,18 +258,20 @@ export default function ChatPage(props) {
     setConversationViewer(reorder(conversationViewer, source.index, destination.index))
   }
 
-  const Icon = displayFilters ? MenuOpenIcon : MenuIcon
+  const onFilterSelected = (item, itemIndex, index) => {
+    
+  }
+  
 
-  const filters = [
-    {
-      id: 'Ben Graves',
-      name: 'Ben Graves',
-      items: [
-        { id: '0', name: '@BG615', /* path: contactsRoutes.all */ },
-        { id: '1', name: '615.999.9999', /* path: contactsRoutes.all */ }
-      ]
-    },
-  ]
+  const filters = useMemo(() => {
+    return [
+      {
+        id: 'inboxes',
+        name: 'Inboxes',
+        items: teamInboxes?.items?.map(inbox => ({ id: inbox.id, name: `${inbox.name} (${inbox.type})` }))
+      }
+    ]
+  }, [teamInboxes])
 
   return (
     <Page>
@@ -266,55 +285,20 @@ export default function ChatPage(props) {
           visible={displayFilters}
           filters={filters}
           collapsed={true}
-        // onFilterSelected={onFilterSelected}
+          onFilterSelected={onFilterSelected}
         />
         <Panel hideHeader sx={{ minWidth: 0 }}>
           <Grid container flex={1} flexWrap='nowrap' >
 
-            <Grid item sx={{//conversation summary list
-              width: "370px",
-              overflowY: "auto",
-              overscrollBehaviorBlock: 'contain',
-              border: "red solid 1px",
-              borderEndStartRadius: '5px',
-              borderStartStartRadius: '5px',
-              border: "solid 1px #dadada",
-            }} >
-              <Stack
-                p="20px 40px 20px 20px"
-                direction="row"
-                flexWrap="nowrap"
-                gap={1}
-                alignItems="center"
-                borderBottom="solid 1px #dadada"
-              >
-                <Icon sx={{ cursor: "pointer" }} onClick={onBackClick} />
-                <Typography component="h2" variant="h6" sx={{ ml: '20px' }}><b>Ben Garves</b></Typography>
-                <Typography sx={{ color: "#dadada", fontSize: "12px", }} component="span" variant="subtitle1">@BD615</Typography>
-              </Stack>
-
-              <Box sx={{ p: '20px' }}>
-                <SearchBar
-                  style={{ margin: 0 }}
-                  searchOnChange
-                  placeholder="Search"
-                  onSearch={onChatSearch}
-                  onClear={onChatSearchClear}
-                />
-              </Box>
-              <List >
-
-                {conversations.map(conversation => (
-                  <ChatListItem
-                    key={conversation.id}
-                    conversation={conversation}
-                    onToggleChat={onClickChatListItem}
-                    onArchiveConversation={onArchiveConversation}
-                  />
-                ))
-                }
-              </List>
-            </Grid>
+            <ChatInbox
+            filterOpen={displayFilters}
+            items={userInbox.items}
+            onChatSearch={onChatSearch}
+            onChatSearchClear={onChatSearchClear}
+            onChatClick={onClickChatListItem}
+            onArchiveConversation={onArchiveConversation}
+            onBackClick={onBackClick}
+            />
 
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="droppable" direction="horizontal">
