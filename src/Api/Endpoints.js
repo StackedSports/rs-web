@@ -1396,6 +1396,22 @@ export const getInbox = (id) => {
     return GET(`inboxes`)
 }
 
+export const getInboxSMS = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_sms`, body)
+}
+
+export const getInboxDM = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_dms`, body)
+}
+
 export const getInboxConversation = () => {
     const body = {
         team_contact_id: '',

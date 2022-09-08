@@ -1,10 +1,12 @@
 
 
+export type InboxType = 'sms' | 'dm' 
+
 export interface ITeamInboxItem {
     id: number,
     name: string,
     channel?: number | string,
-    type: 'sms' | 'dm'
+    type: InboxType
 }
 
 export interface ITeamInboxAPI {
@@ -18,7 +20,7 @@ export interface IUserInboxItem {
     id: string,
     name: string,
     profile_img: string,
-    type: 'sms' | 'dm',
+    type: InboxType,
     from: string,
     preview: string,
     time: string

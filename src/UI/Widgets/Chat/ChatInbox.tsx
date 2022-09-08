@@ -1,4 +1,4 @@
-
+import { useMemo } from 'react'
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
 import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
@@ -11,6 +11,8 @@ import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInb
 
 
 interface IChatInboxProps {
+    name: string | null,
+    channel: string | null,
     items: IUserInboxItem[],
     conversations: any,
     onChatSearch: Function,
@@ -23,6 +25,8 @@ interface IChatInboxProps {
 
 export const ChatInbox = (props: IChatInboxProps) => {
     const Icon = props.filterOpen ? MenuOpenIcon : MenuIcon
+
+    
 
     return (
         <Grid item sx={{
@@ -45,13 +49,13 @@ export const ChatInbox = (props: IChatInboxProps) => {
             >
                 <Icon sx={{ cursor: "pointer" }} onClick={props.onBackClick} />
                 <Typography component="h2" variant="h6" sx={{ ml: '20px' }}>
-                    <b>Ben Graves</b>
+                    <b>{props.name}</b>
                 </Typography>
                 <Typography 
                   sx={{ color: "#dadada", fontSize: "12px", }} 
                   component="span" 
                   variant="subtitle1">
-                    @BD615
+                    {props.channel}
                 </Typography>
             </Stack>
 
