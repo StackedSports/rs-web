@@ -13,14 +13,14 @@ import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from './TweetPage'
+import TweetPage from '../Tweet/TweetPage'
 
 import TweetDetails from './Components/TweetDetails'
 
 import { AppContext } from 'Context/AppProvider'
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
-import { tweetRoutes } from 'Routes/Routes'
+import { tweetPostRoutes } from 'Routes/Routes'
 
 const TweetsArchivedPage = (props) => {
     const { redirect } = useContext(AppContext)
@@ -38,6 +38,7 @@ const TweetsArchivedPage = (props) => {
 	useEffect(() => {
 		const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
             where('archived', '==', true),
+            where('error', '==', false),
             orderBy('timestamp', 'desc'),
             // limit(10))
         )
@@ -71,7 +72,7 @@ const TweetsArchivedPage = (props) => {
 	}, [listener.current])
 	
 	const onNewSearchClick = (e) => {
-        redirect(tweetRoutes.ranking)
+        redirect(tweetPostRoutes.ranking)
     }
 
 	return (

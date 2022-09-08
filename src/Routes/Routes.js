@@ -140,11 +140,16 @@ export const userRoutes = {
     notifications: "/user/notifications",
 }
 
-export const tweetRoutes = {
+export const tweetRankingRoutes = {
     ranking: "/tweet-ranking/new",
     archived: '/tweet-ranking/archived',
     search: "/tweet-search",
     tweets: "/tweet-ranking",
+    details: '/tweet-ranking/details'
+}
+
+export const tweetPostRoutes = {
+    main: '/tweet-post'
 }
 
 export const chatRoutes = {

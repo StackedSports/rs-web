@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useContext } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 
-import { tweetRoutes } from 'Routes/Routes'
+import { tweetRankingRoutes } from 'Routes/Routes'
 
 import { AppContext } from 'Context/AppProvider'
 import build from '@date-io/date-fns'
@@ -13,18 +13,10 @@ const filters = [
         name: 'Tweet Reports',
         items: [
             // Filters
-            { id: '0', name: 'All', path: tweetRoutes.tweets },
-            { id: 'archived', name: 'Archived', path: tweetRoutes.archived },
+            { id: '0', name: 'All', path: tweetRankingRoutes.tweets },
+            { id: 'archived', name: 'Archived', path: tweetRankingRoutes.archived },
         ]
     },
-    // { // Category
-    //     id: '1',
-    //     name: 'Tweets',
-    //     items: [
-    //         // Filters
-    //         { id: 'tweets', name: 'Tweets', path: tweetRoutes.tweets },
-    //     ]
-    // },
 ]
 
 
@@ -33,7 +25,7 @@ export default function TweetPage(props) {
     const { redirect } = useContext(AppContext)
 
     const onTopActionClick = (e) => {
-        redirect(tweetRoutes.ranking)
+        redirect(tweetRankingRoutes.ranking)
     }
 
     return (

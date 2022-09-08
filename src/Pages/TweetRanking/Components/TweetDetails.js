@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 
 import {
     Box,
@@ -12,9 +12,12 @@ import RenderIf from 'UI/Widgets/RenderIf'
 import Button from 'UI/Widgets/Buttons/Button';
 import DropdownButton from 'UI/Widgets/Buttons/DropdownButton'
 import { TweetRankingDialog } from 'UI/Widgets/Dialogs/TweetRankingDialog';
+import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import TweetDisplay from './TweetDisplay'
 import { db } from 'Api/Firebase'
 import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
+
+import { formatDate } from 'utils/Parser'
 
 const round = (num) => {
     let m = Number((Math.abs(num) * 100).toPrecision(15))
@@ -27,7 +30,7 @@ const Stat = (props) => (
             variant="h6"
             style={{ width: "100%", textAlign: "center", fontWeight: 'bold', fontSize: 36 }}
         >
-            {`${round(props.value / props.total * 100)}%`}
+            {`${props.value === 0 ? 0 : round(props.value / props.total * 100)}%`}
         </Typography>
         <Typography
             variant="subtitle2"
@@ -63,12 +66,12 @@ const Status = ({ status }) => (
         >
             {`Status: ${status?.status}`}
         </Typography>
-        <Typography
+        {/* <Typography
             variant="subtitle2"
             style={{ width: "100%", textAlign: "center" }}
         >
             {`Message: ${status?.message}`}
-        </Typography>
+        </Typography> */}
         <Typography
             variant="subtitle2"
             style={{ width: "100%", textAlign: "center" }}
@@ -98,7 +101,7 @@ const TweetDetails = (props) => {
     const [contactsLikes, setContactsLikes] = useState([])
     const [contactsRetweets, setContactsRetweets] = useState([])
 
-    console.log(props.details)
+    // console.log(props.details)
 
     useEffect(() => {
         const likesColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`)
@@ -129,6 +132,13 @@ const TweetDetails = (props) => {
 
     }
 
+    const reportDate = useMemo(() => {
+        if(!props.details | !props.details.timestamp)
+            return ''
+
+        return formatDate(new Date(props.details.timestamp))
+    }, [props.details])
+
     return (
         <Stack ml={10} direction="row">
             <Stack
@@ -152,18 +162,6 @@ const TweetDetails = (props) => {
                         Tweet Details
                     </Typography>
 
-                    <RenderIf condition={props.showSaveButton}>
-                        <Button
-                            variant="contained"
-                            name={props.details.saved ? 'Saved!' : 'Save'}
-                            onClick={props.onSaveTweet}
-                            loading={props.saving}
-                            style={{
-                                width: "max-content",
-                            }}
-                        />
-                    </RenderIf>
-
                     <DropdownButton
                       id={`tweet-details-more-btn-${props.tweetId}`}
                       actions={[
@@ -176,6 +174,12 @@ const TweetDetails = (props) => {
 
                 <TweetDisplay tweetId={props.tweetId} />
 
+                <Typography
+                    variant="body"
+                    // style={{ fontWeight: 'bold' }}
+                >
+                    Created at: {reportDate}
+                </Typography>
             </Stack>
 
             <Stack flex={.5}>
@@ -190,67 +194,74 @@ const TweetDetails = (props) => {
 
                 <Divider />
 
-                <Stack spacing={3} p={2}>
-                    <Stat
-                        label="Likes Rate"
-                        value={likes?.found || 0}
-                        total={metrics?.likes || 0}
-                    />
-
-                    <RenderIf condition={likes}>
-                        <Status status={likes} />
-                    </RenderIf>
-
-                    <Stat
-                        label="Retweet Rate"
-                        value={retweets?.found || 0}
-                        total={metrics?.retweets || 0}
-                    />
-
-                    <RenderIf condition={retweets}>
-                        <Status status={retweets} />
-                    </RenderIf>
-                </Stack>
-
-                <Divider />
-
-                <RenderIf condition={metrics}>
-                    <Stack mt={2} direction="row" flex={1} justifyContent="space-around">
-                        <Count label="Likes" value={metrics?.likes} />
-                        <Count label="Retweets" value={metrics?.retweets} />
-                        <Count label="Quotes" value={metrics?.quotes} />
-                        <Count label="Replies" value={metrics?.replies} />
-                    </Stack>
+                <RenderIf condition={props.loading}>
+                    <LoadingPanel/>
                 </RenderIf>
 
-                {/* <Stack direction="row" flex={1}>
-                    <RenderIf condition={true}>
+                <RenderIf condition={!props.loading}>
+                    <Stack spacing={3} p={2}>
+                        <Stat
+                            label="Likes Rate"
+                            value={likes?.found || 0}
+                            total={metrics?.likes || 0}
+                        />
+
+                        <RenderIf condition={likes}>
+                            <Status status={likes} />
+                        </RenderIf>
+
+                        <RenderIf condition={!likes}>
+                            <LoadingPanel height={100}/>
+                        </RenderIf>
+
+                        <Stat
+                            label="Retweet Rate"
+                            value={retweets?.found || 0}
+                            total={metrics?.retweets || 0}
+                        />
+
+                        <RenderIf condition={retweets}>
+                            <Status status={retweets} />
+                        </RenderIf>
+
+                        <RenderIf condition={!retweets}>
+                            <LoadingPanel height={100}/>
+                        </RenderIf>
+                    </Stack>
+
+                    <Divider />
+
+                    <RenderIf condition={metrics}>
+                        <Stack mt={2} mb={2} direction="row" justifyContent="space-around">
+                            <Count label="Likes" value={metrics?.likes} />
+                            <Count label="Retweets" value={metrics?.retweets} />
+                            <Count label="Quotes" value={metrics?.quotes} />
+                            <Count label="Replies" value={metrics?.replies} />
+                        </Stack>
+                    </RenderIf>
+
+                    <Divider />
+
+                    {/* <Stack direction="row" flex={1}>
+                        <RenderIf condition={true}>
+                            <Button
+                                variant="contained"
+                                name="View Contacts"
+                                onClick={props.onSaveTweet}
+                            />
+                        </RenderIf>
+                    </Stack> */}
+
+                    <Box flex={1} sx={{ width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }} p={2}>
                         <Button
                             variant="contained"
                             name="View Contacts"
-                            onClick={props.onSaveTweet}
+                            onClick={() => setOpenDialog(true)}
                         />
-                    </RenderIf>
-                </Stack> */}
+                    </Box>
+                </RenderIf>
 
-                <Box flex={1} sx={{ width: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }} p={2}>
-                    <Button
-                        variant="contained"
-                        name="View Contacts"
-                        onClick={() => setOpenDialog(true)}
-                    />
-                </Box>
-
-                {/* <Box sx={{ width: "100%" }}>
-                    <Divider />
-                    <Typography
-                    variant="subtitle1"
-                    style={{ width: "100%", textAlign: "center" }}
-                    >
-                    Board Engagment Status
-                    </Typography>
-                    <Divider />
-                </Box> */}
+                
             </Stack>
             <TweetRankingDialog
                 open={openDialog}
