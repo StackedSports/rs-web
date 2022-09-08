@@ -33,14 +33,12 @@ interface IFilterTypeDropdown extends IFilterBase {
 	optionsLabel?: ((option: any) => string);
 }
 
-interface IOption extends IFilterOption<unknown> {
-	name?: string;
-	id?: string
-}
+type IOption = ({ id: string | number } & ({ label: string } | { name: string })) | ({ value: unknown } & ({ label: string } | { name: string }))
+type ISelectedOption = IFilterOption<unknown> & { disabled?: boolean }
 
 type IFilter = IFilterTypeDropdown | IFilterTypeDate | IFilterTypeHidden
 export type IPanelFilters = Record<string, IFilter>
-export type ISelectedFilters = Record<string, (IOption & { disabled?: boolean })[]>
+export type ISelectedFilters = Record<string, ISelectedOption[]>
 
 export interface IPanelFilterProps {
 	open?: boolean;
@@ -80,18 +78,10 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 		}
 	}, [selectedFilters])
 
-	/* 	useEffect(() => {
-			if (props.setFilter) {
-				const { filterName, filter, option } = props.setFilter;
-				if (filterName && filter && option) {
-					handleOptionsChange(filterName, option, filter);
-				}
-			}
-		}, [props.setFilter]); */
+	const getOptionLabel = (filter: IFilter, option: IOption): string => {
+		const value = 'id' in option ? option.id : option.value
+		let label = 'name' in option ? option.name : option.label
 
-	const getOptionLabel = (filter: IFilter, option: IOption & { label?: string }): string => {
-		const value = option.value
-		let label = ''
 		switch (filter.type) {
 			case "date":
 				if (value instanceof Array)
@@ -104,35 +94,34 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 			default:
 				if (filter.optionsLabel instanceof Function)
 					label = filter.optionsLabel(option)
-				else if ('label' in option)
-					label = option.label
-				else if ('name' in option)
-					label = option.name
 		}
 		return label
 	}
 
-	const handleOptionsChange = (filterName: string, option: IOption, filter: IFilter) => {
-		// console.log(filterName)
-		// console.log(option)
-		option = { ...option, label: getOptionLabel(filter, option) }
+	const handleOptionsChange = (filterName: string, option: IOption) => {
+		const value = 'value' in option ? option.value : option.id
+		const filter = props.filters?.[filterName]
+
+		if (!filter) return
+
+		const selectedOption: IFilterOption<unknown> = { ...option, label: getOptionLabel(filter, option), value: value }
 		let filters = Object.assign({}, selectedFilters)
 
 		if (filters[filterName]) {
-			if (filter.type === 'date' && option.value instanceof Array && option.value.includes(null)) {
+			if (filter.type === 'date' && selectedOption.value instanceof Array && selectedOption.value.includes(null)) {
 				delete filters[filterName]
 			}
 			else if (filter.isUnique) {
-				filters[filterName] = [option]
+				filters[filterName] = [selectedOption]
 			} else {
-				if (filters[filterName].find(f => f.label === option.label)) {
-					filters[filterName] = filters[filterName].filter(item => item.label !== option.label)
+				if (filters[filterName].find(f => f.label === selectedOption.label)) {
+					filters[filterName] = filters[filterName].filter(item => item.label !== selectedOption.label)
 				} else {
-					filters[filterName].push(option)
+					filters[filterName].push(selectedOption)
 				}
 			}
 		} else {
-			filters[filterName] = [option]
+			filters[filterName] = [selectedOption]
 		}
 
 		if (filters[filterName] && filters[filterName].length === 0) {
@@ -142,11 +131,11 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 		setSelectedFilters(filters)
 	}
 
-	const onRemoveFilter = (filterName: string, option: IOption) => {
+	const onRemoveFilter = (filterName: string, selectedOption: ISelectedOption) => {
 
 		setSelectedFilters(oldSelectFilters => {
 			const newSelectFilters = { ...oldSelectFilters };
-			newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item.label !== option.label);
+			newSelectFilters[filterName] = newSelectFilters[filterName].filter(item => item.label !== selectedOption.label);
 
 			if (newSelectFilters[filterName].length === 0) {
 				delete newSelectFilters[filterName];
@@ -158,19 +147,16 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 	return (
 		<>
 			<Stack id="selected-filters-stack" direction='row' flexWrap='wrap' pb={1}>
-				{props.filters && selectedFilters && Object.keys(selectedFilters).map(key =>
-					selectedFilters[key].map((filter, index) => {
-						// console.log(props.filters[key])
-						// console.log(filter)
-						// getOptionLabel(props.filters[key], filter)
-						if (props?.filters?.[key].label)
+				{props.filters && selectedFilters && Object.keys(selectedFilters).map(filterName =>
+					selectedFilters[filterName].map((selectedOption, index) => {
+						if (props.filters?.[filterName].label)
 							return (
 								<SearchableOptionSelected
 									style={{ marginLeft: 0 }}
-									key={index + key}
-									item={`${props.filters[key].label}: ${filter.label || getOptionLabel(props.filters[key], filter)}`}
-									disabled={filter.disabled}
-									onRemove={() => onRemoveFilter(key, filter)}
+									key={index + filterName}
+									item={`${props.filters[filterName].label}: ${selectedOption.label}`}
+									disabled={selectedOption.disabled}
+									onRemove={() => onRemoveFilter(filterName, selectedOption)}
 								/>
 							)
 					}))}
@@ -190,7 +176,7 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 									label={filter.label}
 									format={filter.format}
 									disableFuture={filter.disableFuture}
-									onChange={(date) => handleOptionsChange(filterName, ({ label: filter.optionsLabel(date), value: date }), filter)}
+									onChange={(date: [string, string]) => handleOptionsChange(filterName, ({ label: filter.optionsLabel(date), value: date }))}
 									endIcon={<KeyboardArrowDown />}
 								/>
 							)
@@ -198,8 +184,8 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 							return (
 								<Dropdown
 									key={filterName}
-									onClick={(option) => handleOptionsChange(filterName, option, filter)}
-									getOptionLabel={(option) => getOptionLabel(filter, option)}
+									onClick={(option: IOption) => handleOptionsChange(filterName, option)}
+									getOptionLabel={(option: IOption) => getOptionLabel(filter, option)}
 									selectionModel={selectedFilters[filterName]}
 									checkboxSelection
 									showSearchInput

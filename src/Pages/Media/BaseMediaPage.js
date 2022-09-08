@@ -156,7 +156,6 @@ export const BaseMediaPage = (props) => {
                 open: props.showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                setFilter: props.setFilter,
                 selectedFilters: selectedFilters
             }}
         >
