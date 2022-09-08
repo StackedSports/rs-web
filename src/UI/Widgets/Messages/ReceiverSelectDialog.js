@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
 
 import TabPanel from '@mui/lab/TabPanel';
@@ -15,10 +15,14 @@ import useArray from 'Hooks/ArrayHooks';
 import useMultiPageSelection from 'Hooks/MultiPageSelectionHook'
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 
-import { useContacts, useBoards } from 'Api/ReactQuery';
+import { useContacts, useBoards, useStatuses, useStatus2, useRanks, useGradYears, useTags, usePositions, useTeamMembers } from 'Api/ReactQuery';
 
 import { findByIds } from 'utils/Helper'
 import { Clear } from '@mui/icons-material';
+import PanelFilters from '../PanelFilters';
+import { states, timeZones } from 'utils/Data';
+import { getFullName } from 'utils/Parser';
+import RenderIf from '../RenderIf';
 
 export const tabs = {
     privateBoard: '0',
@@ -64,7 +68,18 @@ const getSelectionLabel = (privateCount, teamCount, contactCount, clearSelection
 export default function ReceiverSelectDialog(props) {
     // Contacts
     const contacts = useContacts()
+    const status = useStatuses()
+    const status2 = useStatus2()
+    const ranks = useRanks()
+    const gradYears = useGradYears()
+    const tags = useTags() //useTagsWithContacts()
+    const positions = usePositions()
+    const teamMembers = useTeamMembers()
+    // Boards
+    const boards = useBoards()
 
+    const [showContactFilters, setShowContactFilters] = useState(false)
+    const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedContacts, setSelectedContacts] = useState([])
     // When Contacts page change, we need to store the selected contacts data
     // and the current selection somehow. We also need to keep track of each
@@ -74,10 +89,6 @@ export default function ReceiverSelectDialog(props) {
     // 
     //const mpSelection = useMultiPageSelection(contacts.pagination.currentPage)
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
-    // 
-
-    // Boards
-    const boards = useBoards()
 
     // Private Boards
     const [privateBoards, setPrivateBoards] = useArray()
@@ -149,14 +160,8 @@ export default function ReceiverSelectDialog(props) {
 
         if (type === 'contacts') {
             if (index === 'all') {
-                // paginatedContactsSelection.current = {}
-                // setContactsSelectionCount(0)
-                //mpSelection.clear()
                 multipageSelection.clear()
             } else {
-                // removeContactFromPaginatedSelection(id)
-                // setContactsSelectionCount(contactsSelectionCount - 1)
-                //mpSelection.remove(id)
                 multipageSelection.remove(id)
             }
         }
@@ -165,12 +170,30 @@ export default function ReceiverSelectDialog(props) {
 
     }, [props.removedItem])
 
-    const onSearch = (searchTerm, tabIndex) => {
-        contacts.filter({ search: searchTerm })
+    const onPanelFilterChange = (filters) => {
+        setSelectedFilters(prev => {
+            const search = prev?.search
+            const newfilters = search ? { ...filters, search } : filters
+            contacts.filter(newfilters)
+            return newfilters
+        })
     }
 
-    const onClearSearch = (tabIndex) => {
-        contacts.clearFilter()
+    console.log(selectedFilters)
+    const onSearch = (searchTerm) => {
+        //const filters = ({ ...selectedFilters, search: searchTerm })
+        setSelectedFilters(prev => ({ ...prev, search: searchTerm }))
+        contacts.filter(selectedFilters)
+    }
+
+    const onClearSearch = () => {
+        setSelectedFilters(prev => {
+            const filters = { ...prev }
+            delete filters['search']
+            contacts.filter(filters)
+            return filters
+        })
+        // contacts.clearFilter()
     }
 
     const onSelectionConfirm = (e) => {
@@ -205,7 +228,69 @@ export default function ReceiverSelectDialog(props) {
         selectedPrivateBoards.length,
         selectedTeamBoards.length,
         multipageSelection.count,
-        clearAllSelections)
+        clearAllSelections
+    )
+
+    const onTabChange = (tabIndex) => {
+        setShowContactFilters(tabIndex === '2')
+    }
+
+    const panelFiltersData = useMemo(() =>
+    ({
+        status: {
+            label: 'Status',
+            options: status.items || [],
+            optionsLabel: 'status',
+        },
+        ranks: {
+            label: 'Rank',
+            options: ranks.items || [],
+            optionsLabel: 'rank',
+        },
+        years: {
+            label: 'Grad Year',
+            options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
+        },
+        tags: {
+            label: 'Tags',
+            options: tags.items || [],
+            onSearch: (search) => tags.search(search),
+        },
+        positions: {
+            label: 'Position',
+            options: positions.items || [],
+        },
+        area_coaches: {
+            label: 'Area Coach',
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option),
+        },
+        position_coaches: {
+            label: 'Position Coach',
+            options: teamMembers.items || [],
+            optionsLabel: (option) => getFullName(option),
+        },
+        timezones: {
+            label: 'Time Zone',
+            options: timeZones,
+        },
+        dob: {
+            label: 'Birthday',
+            type: 'date',
+            format: 'MM/dd',
+            optionsLabel: (dates) => dates.join(' - '),
+            isUnique: true
+        },
+        states: {
+            label: 'State',
+            options: states,
+
+        },
+        status_2: {
+            label: 'Status 2',
+            options: status2.items.map((status2, index) => ({ name: status2 })) || [],
+        },
+    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
 
     return (
         <SelectDialogTab
@@ -216,7 +301,12 @@ export default function ReceiverSelectDialog(props) {
             onSearch={onSearch}
             onClearSearch={onClearSearch}
             onClose={onClose}
+            onTabChange={onTabChange}
         >
+            <RenderIf condition={showContactFilters}>
+                <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
+            </RenderIf>
+
             <TabPanel value={'0'} index={0}>
                 <BoardsTable mini
                     contacts={privateBoards}
