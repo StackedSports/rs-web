@@ -47,7 +47,7 @@ const ContactChatHeader = (props) => {
 	const phone = props.contact ? props.contact.phone : "Loading..."
 
 	const [open, setOpen] = useState(false);
-	const anchorRef = useRef(null);
+	const anchorRef = useRef<HTMLButtonElement>(null);
 
 	const [availablePlatforms, setAvailablePlatforms] = useState<IMessagingPlatform[] | null>(null)
 	const [platformSelectedId, setPlatformSelectedId] = useState<TMessagingPlatformID | null>(null)
@@ -91,7 +91,7 @@ const ContactChatHeader = (props) => {
 		setOpen((prevOpen) => !prevOpen);
 	};
 
-	const handleClose = (event) => {
+	const handleClose = (event: MouseEvent | TouchEvent) => {
 		if (anchorRef.current && anchorRef.current.contains(event.target)) {
 			return;
 		}
