@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
 import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
@@ -19,7 +19,7 @@ interface IChatInboxProps {
     conversations: any,
     onChatSearch: Function,
     onChatSearchClear: Function,
-    onBackClick: Function,
+    onBackClick: () => void,
     onArchiveConversation: Function,
     onChatClick: Function,
     filterOpen: boolean
@@ -28,35 +28,32 @@ interface IChatInboxProps {
 export const ChatInbox = (props: IChatInboxProps) => {
     const Icon = props.filterOpen ? MenuOpenIcon : MenuIcon
 
-    
-
     return (
-        <Grid item sx={{
+        <Grid item container direction='column' sx={{
             width: "370px",
-            overflowY: "hidden",
             overscrollBehaviorBlock: 'contain',
-            border: "red solid 1px",
+            //border: "red solid 1px",
             borderEndStartRadius: '5px',
             borderStartStartRadius: '5px',
-            border: "solid 1px #dadada",
-          }}
+            border: "1px solid #dadada",
+        }}
         >
             <Stack
-              p="20px 40px 20px 20px"
-              direction="row"
-              flexWrap="nowrap"
-              gap={1}
-              alignItems="center"
-              borderBottom="solid 1px #dadada"
+                p="20px 40px 20px 20px"
+                direction="row"
+                flexWrap="nowrap"
+                gap={1}
+                alignItems="center"
+                borderBottom="solid 1px #dadada"
             >
                 <Icon sx={{ cursor: "pointer" }} onClick={props.onBackClick} />
                 <Typography component="h2" variant="h6" sx={{ ml: '20px' }}>
                     <b>{props.name}</b>
                 </Typography>
-                <Typography 
-                  sx={{ color: "#dadada", fontSize: "12px", }} 
-                  component="span" 
-                  variant="subtitle1">
+                <Typography
+                    sx={{ color: "#dadada", fontSize: "12px", }}
+                    component="span"
+                    variant="subtitle1">
                     {props.channel}
                 </Typography>
             </Stack>
@@ -70,21 +67,21 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     onClear={props.onChatSearchClear}
                 />
             </Box>
-            {props.isLoading && <LoadingPanel/>}
+            {props.isLoading && <LoadingPanel />}
             {props.items && Array.isArray(props.items) && (
-                <List sx={{ overflow: 'auto' }}>
+                <List sx={{ overflowY: 'auto', flex: '1 0 0' }}>
                     {props.items && props.items.map(item => (
                         <ChatListItem
-                        key={item.id}
-                        item={item}
-                        //   conversation={conversation}
-                        onToggleChat={props.onChatClick}
-                        onArchiveConversation={props.onArchiveConversation}
+                            key={item.id}
+                            item={item}
+                            //   conversation={conversation}
+                            onToggleChat={props.onChatClick}
+                            onArchiveConversation={props.onArchiveConversation}
                         />
                     ))}
                 </List>
             )}
-            
+
         </Grid>
     )
 }
