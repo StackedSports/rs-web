@@ -24,7 +24,128 @@ import { useTeamMembers } from 'Api/ReactQuery/TeamMembers'
 import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType } from "Interfaces"
 
-
+// Data for test
+const conversations = [
+	{
+	  id: '0',
+	  name: 'Luke Burke 1',
+	  isTyping: true,
+	  messages: [
+		{
+		  id: "0",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+  
+		},
+		{
+		  id: "1",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "2",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "3",
+		  text: "lorem ipsum dolor sit amet",
+		}
+	  ]
+	},
+	{
+	  id: '1',
+	  name: 'Luke Burke 2',
+	  messages: [
+		{
+		  id: "0",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "1",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "2",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "3",
+		  text: "lorem ipsum dolor sit amet",
+		}
+	  ]
+	},
+	{
+	  id: '2',
+	  name: 'Luke Burke 3',
+	  messages: [
+		{
+		  id: "0",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "1",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "2",
+		  text: "lorem ipsumt",
+		  direction: "out",
+		},
+		{
+		  id: "3",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "4",
+		  text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "5",
+		  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+		  direction: "out",
+		}
+	  ]
+	},
+	{
+	  id: '3',
+	  name: 'Luke Burke 4',
+	  messages: [
+		{
+		  id: "0",
+		  text: "lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "1",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "2",
+		  text: "lorem ipsumt",
+		  direction: "out",
+		},
+		{
+		  id: "3",
+		  text: "lorem ipsum dolor sit amet",
+		},
+		{
+		  id: "4",
+		  text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+		  direction: "out",
+		},
+		{
+		  id: "5",
+		  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+		  direction: "out",
+		}
+	  ]
+	},
+  
+  ]
 
 interface IInboxSelected {
 	inboxId: number | string,
@@ -34,6 +155,10 @@ interface IInboxSelected {
 	type: InboxType
 }
 
+interface IInbox {
+	items: IUserInboxItem[] | null,
+	isLoading: boolean
+}
 
 export default function ChatPage(props) {
 	const { user } = useContext(AuthContext)
@@ -41,10 +166,10 @@ export default function ChatPage(props) {
 
 	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 
-	const [inbox, setInbox] = useState<any>(null)
+	const [inbox, setInbox] = useState<IInbox | null>(null)
 	
-	const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
-	console.log(inboxSMS)
+	// const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
+	// console.log(inboxSMS)
 	const teamInboxes = useTeamInboxes()
 	// const userInbox = useInbox(inboxSelected?.inboxId, inboxSelected?.type)
 
@@ -74,6 +199,8 @@ export default function ChatPage(props) {
 
 		const getMethod = inboxSelected.type === 'dm' ? getInboxDM : getInboxSMS
 
+		setInbox({ items: null, isLoading: true})
+
 		getMethod(inboxSelected.inboxId)
 			.then((data: [IUserInboxAPI[], IPaginationApi]) => {
 				const inbox = data[0]
@@ -89,7 +216,7 @@ export default function ChatPage(props) {
 
 				console.log(inbox)
 
-				setInbox(inbox)
+				setInbox({ items: inbox, isLoading: false})
 			})
 	}, [inboxSelected])
 
@@ -109,16 +236,17 @@ export default function ChatPage(props) {
 		setDisplayFilters(!displayFilters)
 	}
 
-	const onClickChatListItem = (conversation) => {
-		let index = 0
-		const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
-		if (conv.length === 0) {
+	const onClickChatListItem = (id: string | number) => {
+		console.log(id)
+		// let index = 0
+		// const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
+		// if (conv.length === 0) {
 
-			setConversationViewer([conversation, ...conversationViewer])
-		} else {
-			// index = conversationViewer.indexOf(conversation)
-			// console.log(conv)
-		}
+		// 	setConversationViewer([conversation, ...conversationViewer])
+		// } else {
+		// 	// index = conversationViewer.indexOf(conversation)
+		// 	// console.log(conv)
+		// }
 	}
 
 	const onCloseConversation = (conversation) => {
@@ -226,10 +354,14 @@ export default function ChatPage(props) {
 			{
 				id: 'inboxes',
 				name: 'Inboxes',
-				items: teamInboxes?.items?.map(inbox => ({ id: inbox.id, name: `${inbox.name} (${inbox.type})` }))
+				items: teamInboxes?.items?.map(inbox => ({ 
+					id: inbox.id,
+					name: `${inbox.name} (${inbox.type})`,
+					isSelected: inboxSelected?.inboxId === inbox.id
+				}))
 			}
 		]
-	}, [teamInboxes])
+	}, [teamInboxes, inboxSelected])
 
   return (
     <Page>
@@ -245,19 +377,20 @@ export default function ChatPage(props) {
           collapsed={true}
           onFilterSelected={onFilterSelected}
         />
-        <Panel hideHeader sx={{ minWidth: 0 }}>
+        <Panel hideHeader sx={{ minWidth: 0, overflow: 'hidden' }}>
           <Grid container flex={1} flexWrap='nowrap' >
 
             <ChatInbox
 			  name={inboxSelected?.name}
 			  channel={inboxSelected?.channel}
-            filterOpen={displayFilters}
-            items={[]}
-            onChatSearch={onChatSearch}
-            onChatSearchClear={onChatSearchClear}
-            onChatClick={onClickChatListItem}
-            onArchiveConversation={onArchiveConversation}
-            onBackClick={onBackClick}
+              filterOpen={displayFilters}
+              items={inbox?.items}
+			  isLoading={inbox?.isLoading}
+              onChatSearch={onChatSearch}
+              onChatSearchClear={onChatSearchClear}
+              onChatClick={onClickChatListItem}
+              onArchiveConversation={onArchiveConversation}
+              onBackClick={onBackClick}
             />
 
             <DragDropContext onDragEnd={onDragEnd}>

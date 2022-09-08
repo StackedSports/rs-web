@@ -1401,7 +1401,7 @@ export const getInboxSMS = (teamMemberId) => {
         user_id: teamMemberId,
     }
 
-    return GET(`inboxes_sms`, body)
+    return GET(`inboxes_sms?per_page=15`, body)
 }
 
 export const getInboxDM = (teamMemberId) => {
@@ -1409,7 +1409,7 @@ export const getInboxDM = (teamMemberId) => {
         user_id: teamMemberId,
     }
 
-    return GET(`inboxes_dms`, body)
+    return GET(`inboxes_dms?per_page=15`, body)
 }
 
 export const getInboxConversation = () => {

@@ -31,8 +31,8 @@ export const ChatListItem = (props) => {
 		  sx={{
 			padding: "15px",
 			position: "relative",
-			borderTop: "solid 1px #dadada",
-			borderBottom: "solid 1px #dadada",
+			borderTop: "solid 1px #efefef",
+			// borderBottom: "solid 1px #efefef",
 		}}
 		  key={props.item.id}
 		  onMouseEnter={() => setShowIconClose(true)}
@@ -80,7 +80,7 @@ export const ChatListItem = (props) => {
 						{from}
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						{props.item.preview}
+						{props.item.preview.slice(0, 35) + '...'}
 					</Typography>
 				</Stack>
 			</Stack>

@@ -5,7 +5,8 @@ import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { useLocalStorage } from 'Hooks/useLocalStorage';
-import { ChatWindow, ChatListItem } from 'UI/Widgets/Chat';
+import { ChatWindow, ChatListItem } from 'UI/Widgets/Chat'
+import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
 
@@ -13,7 +14,8 @@ import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInb
 interface IChatInboxProps {
     name: string | null,
     channel: string | null,
-    items: IUserInboxItem[],
+    items: IUserInboxItem[] | null,
+    isLoading: boolean,
     conversations: any,
     onChatSearch: Function,
     onChatSearchClear: Function,
@@ -31,7 +33,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
     return (
         <Grid item sx={{
             width: "370px",
-            overflowY: "auto",
+            overflowY: "hidden",
             overscrollBehaviorBlock: 'contain',
             border: "red solid 1px",
             borderEndStartRadius: '5px',
@@ -68,17 +70,21 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     onClear={props.onChatSearchClear}
                 />
             </Box>
-            <List >
-                {props.items && props.items.map(item => (
-                    <ChatListItem
-                      key={item.id}
-                      item={item}
-                    //   conversation={conversation}
-                      onToggleChat={props.onChatClick}
-                      onArchiveConversation={props.onArchiveConversation}
-                    />
-                ))}
-            </List>
+            {props.isLoading && <LoadingPanel/>}
+            {props.items && Array.isArray(props.items) && (
+                <List sx={{ overflow: 'auto' }}>
+                    {props.items && props.items.map(item => (
+                        <ChatListItem
+                        key={item.id}
+                        item={item}
+                        //   conversation={conversation}
+                        onToggleChat={props.onChatClick}
+                        onArchiveConversation={props.onArchiveConversation}
+                        />
+                    ))}
+                </List>
+            )}
+            
         </Grid>
     )
 }

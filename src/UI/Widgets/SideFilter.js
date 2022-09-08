@@ -59,6 +59,7 @@ function Category(props) {
                     else
                         return (
                             <p key={item.id}
+                              style={item.isSelected ? { color: '#222', fontWeight: 'bold'} : null}
                               onClick={(e) => onItemClick(e, item, index)}
                             >
                                 {item.name}
