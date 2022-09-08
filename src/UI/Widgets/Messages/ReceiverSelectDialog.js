@@ -68,11 +68,12 @@ const getSelectionLabel = (privateCount, teamCount, contactCount, clearSelection
 export default function ReceiverSelectDialog(props) {
     // Contacts
     const contacts = useContacts()
+    //filters
     const status = useStatuses()
     const status2 = useStatus2()
     const ranks = useRanks()
     const gradYears = useGradYears()
-    const tags = useTags() //useTagsWithContacts()
+    const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
     // Boards
@@ -179,11 +180,12 @@ export default function ReceiverSelectDialog(props) {
         })
     }
 
-    console.log(selectedFilters)
     const onSearch = (searchTerm) => {
-        //const filters = ({ ...selectedFilters, search: searchTerm })
-        setSelectedFilters(prev => ({ ...prev, search: searchTerm }))
-        contacts.filter(selectedFilters)
+        setSelectedFilters(prev => {
+            const newFilters = { ...prev, search: searchTerm }
+            contacts.filter(newFilters)
+            return newFilters
+        })
     }
 
     const onClearSearch = () => {
@@ -193,7 +195,6 @@ export default function ReceiverSelectDialog(props) {
             contacts.filter(filters)
             return filters
         })
-        // contacts.clearFilter()
     }
 
     const onSelectionConfirm = (e) => {
