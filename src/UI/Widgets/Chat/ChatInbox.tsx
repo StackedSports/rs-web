@@ -69,7 +69,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
             </Box>
             {props.isLoading && <LoadingPanel />}
             {props.items && Array.isArray(props.items) && (
-                <List sx={{ overflowY: 'auto', flex: '1 0 0' }}>
+                <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
                     {props.items && props.items.map(item => (
                         <ChatListItem
                             key={item.contact_id}
