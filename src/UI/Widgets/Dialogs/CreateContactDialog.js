@@ -104,8 +104,8 @@ export const CreateContactDialog = (props) => {
                     <TextField
                         margin='dense'
                         name='first_name'
-                        label='Fist Name'
-                        placeholder='Fist Name'
+                        label='First Name'
+                        placeholder='First Name'
                         type='text'
                         InputLabelProps={{ shrink: true }}
                         value={formik.values.first_name}

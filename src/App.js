@@ -28,7 +28,7 @@ import {
 	SettingsRoutes,
 	UserSettingsRoutes,
 	routes,
-	TweetRoutes,
+	TweetRankingRoutes,
 	ChatRoutes
 } from 'Routes'
 
@@ -66,7 +66,7 @@ function App() {
 								<Route path={routes.settings.path} component={SettingsRoutes} />
 								<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 								<Route path={routes.dashboard.path} component={NewDashboard} />
-								<Route path={routes.tweet.path} component={TweetRoutes} />
+								<Route path={routes.tweet.path} component={TweetRankingRoutes} />
 								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 

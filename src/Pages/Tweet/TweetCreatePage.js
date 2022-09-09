@@ -4,7 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import SendIcon from '@mui/icons-material/Send';
 import { Divider, Stack } from '@mui/material';
 
-import { tweetRoutes } from 'Routes/Routes';
+import { tweetPostRoutes } from 'Routes/Routes';
 import { AppContext } from 'Context/AppProvider';
 
 import TweetPage from "./TweetPage";
@@ -60,7 +60,7 @@ const TweetCreatePage = (props) => {
       name: 'Drafts',
       items: [
         // Filters
-        { id: '0', name: 'Ben Graves', path: tweetRoutes.search },
+        { id: '0', name: 'Ben Graves', path: tweetPostRoutes.main },
       ]
     },
     { // Category
@@ -68,10 +68,10 @@ const TweetCreatePage = (props) => {
       name: 'Posts',
       items: [
         // Filters
-        { id: 'scheduled', name: 'Scheduled', path: tweetRoutes.tweets },
-        { id: 'published', name: 'Published', path: tweetRoutes.tweets },
-        { id: 'expired', name: 'Expired', path: tweetRoutes.tweets },
-        { id: 'archived', name: 'Archived', path: tweetRoutes.tweets },
+        { id: 'scheduled', name: 'Scheduled', path: tweetPostRoutes.main },
+        { id: 'published', name: 'Published', path: tweetPostRoutes.main },
+        { id: 'expired', name: 'Expired', path: tweetPostRoutes.main },
+        { id: 'archived', name: 'Archived', path: tweetPostRoutes.main },
       ]
     },
   ]
