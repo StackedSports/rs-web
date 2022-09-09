@@ -1,6 +1,6 @@
 
 
-export type InboxType = 'sms' | 'dm' 
+export type InboxType = 'sms' | 'dm'
 
 export interface ITeamInboxItem {
     team_member_id: number,
@@ -22,7 +22,7 @@ export interface IUserInboxItem {
     profile_img: string,
     type: InboxType,
     from: string,
-    preview: string,
+    preview: string | null,
     time: string
 }
 
@@ -35,7 +35,7 @@ interface IUserInboxContactAPI {
 
 interface IUserInboxMessageAPI {
     from: string,
-    last_message_preview: string,
+    last_message_preview: string | null,
     last_received_time: string,
     message_type: string
 }

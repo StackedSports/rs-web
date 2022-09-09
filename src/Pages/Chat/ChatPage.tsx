@@ -18,134 +18,133 @@ import { AuthContext } from 'Context/Auth/AuthProvider';
 import { ChatWindow, ChatListItem, ChatInbox } from 'UI/Widgets/Chat';
 
 import { getInboxSMS, getInboxDM, getInbox, getInboxConversation } from 'Api/Endpoints'
-import { useTeamInboxes, useInbox, useInboxSMS, useInboxDM } from 'Api/ReactQuery/Chat'
+import { useTeamInboxes, useInbox } from 'Api/ReactQuery/Chat'
 import { useTeamMembers } from 'Api/ReactQuery/TeamMembers'
 
-import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType } from "Interfaces"
 
 // Data for test
 const conversations = [
 	{
-	  id: '0',
-	  name: 'Luke Burke 1',
-	  isTyping: true,
-	  messages: [
-		{
-		  id: "0",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-  
-		},
-		{
-		  id: "1",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "2",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "3",
-		  text: "lorem ipsum dolor sit amet",
-		}
-	  ]
+		id: '0',
+		name: 'Luke Burke 1',
+		isTyping: true,
+		messages: [
+			{
+				id: "0",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+
+			},
+			{
+				id: "1",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "2",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "3",
+				text: "lorem ipsum dolor sit amet",
+			}
+		]
 	},
 	{
-	  id: '1',
-	  name: 'Luke Burke 2',
-	  messages: [
-		{
-		  id: "0",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "1",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "2",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "3",
-		  text: "lorem ipsum dolor sit amet",
-		}
-	  ]
+		id: '1',
+		name: 'Luke Burke 2',
+		messages: [
+			{
+				id: "0",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "1",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "2",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "3",
+				text: "lorem ipsum dolor sit amet",
+			}
+		]
 	},
 	{
-	  id: '2',
-	  name: 'Luke Burke 3',
-	  messages: [
-		{
-		  id: "0",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "1",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "2",
-		  text: "lorem ipsumt",
-		  direction: "out",
-		},
-		{
-		  id: "3",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "4",
-		  text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "5",
-		  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-		  direction: "out",
-		}
-	  ]
+		id: '2',
+		name: 'Luke Burke 3',
+		messages: [
+			{
+				id: "0",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "1",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "2",
+				text: "lorem ipsumt",
+				direction: "out",
+			},
+			{
+				id: "3",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "4",
+				text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "5",
+				text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+				direction: "out",
+			}
+		]
 	},
 	{
-	  id: '3',
-	  name: 'Luke Burke 4',
-	  messages: [
-		{
-		  id: "0",
-		  text: "lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "1",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "2",
-		  text: "lorem ipsumt",
-		  direction: "out",
-		},
-		{
-		  id: "3",
-		  text: "lorem ipsum dolor sit amet",
-		},
-		{
-		  id: "4",
-		  text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
-		  direction: "out",
-		},
-		{
-		  id: "5",
-		  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
-		  direction: "out",
-		}
-	  ]
+		id: '3',
+		name: 'Luke Burke 4',
+		messages: [
+			{
+				id: "0",
+				text: "lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "1",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "2",
+				text: "lorem ipsumt",
+				direction: "out",
+			},
+			{
+				id: "3",
+				text: "lorem ipsum dolor sit amet",
+			},
+			{
+				id: "4",
+				text: "lorem ipsum dolor sit amet lipsum dolor sit amet lamet lorem ipsum dolor sit amet",
+				direction: "out",
+			},
+			{
+				id: "5",
+				text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis ligula enim, vel vulputate magna hendrerit eget. Morbi diam ante, gravida in pretium gravida, dictum sit amet nunc. Sed felis magna, feugiat quis finibus eget, venenatis at ex. Suspendisse interdum sed augue a porta. Etiam commodo id turpis at lobortis. Suspendisse blandit erat est, quis malesuada ex euismod ac. Morbi ac ipsum ante. Integer vel neque vitae elit posuere euismod. Aliquam quis libero eu augue porta pellentesque. Vivamus cursus tellus vitae lectus varius malesuada.",
+				direction: "out",
+			}
+		]
 	},
-  
-  ]
+
+]
 
 interface IInboxSelected {
 	team_member_id: number,
@@ -155,19 +154,14 @@ interface IInboxSelected {
 	type: InboxType
 }
 
-interface IInbox {
-	items: IUserInboxItem[] | null,
-	isLoading: boolean
-}
-
 export default function ChatPage(props) {
 	const { user } = useContext(AuthContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 
 	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
+	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
+	console.log(inbox.items)
 
-	const [inbox, setInbox] = useState<IInbox | null>(null)
-	
 	// const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
 	// console.log(inboxSMS)
 	const teamInboxes = useTeamInboxes()
@@ -175,8 +169,6 @@ export default function ChatPage(props) {
 
 	// console.log(userInbox)
 	const teamMembers = useTeamMembers()
-
-	
 
 	const snippets = useSnippets()
 	const textPlaceholders = useTextPlaceholders()
@@ -192,35 +184,6 @@ export default function ChatPage(props) {
 			setConversationViewer(pinned)
 		}
 	}, [])
-
-	useEffect(() => {
-		if(!inboxSelected)
-			return
-
-		const getMethod = inboxSelected.type === 'dm' ? getInboxDM : getInboxSMS
-
-		setInbox({ items: null, isLoading: true})
-
-		getMethod(inboxSelected.team_member_id)
-			.then((data: [IUserInboxAPI[], IPaginationApi]) => {
-				const inbox = data[0]
-					.map((inbox: IUserInboxAPI): IUserInboxItem => ({
-						contact_id: inbox.team_contact.team_contact_id,
-						name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
-						profile_img: inbox.team_contact.profile_image,
-						type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
-						from: inbox.last_message.from,
-						preview: inbox.last_message.last_message_preview,
-						time: inbox.last_message.last_received_time
-					}))
-
-				console.log(inbox)
-
-				setInbox({ items: inbox, isLoading: false})
-			})
-	}, [inboxSelected])
-
-
 
 	const isPinned = useCallback((conversation) => {
 		if (user && pinnedChats[user.id]) {
@@ -239,7 +202,7 @@ export default function ChatPage(props) {
 	}
 
 	const onClickChatListItem = (chatListItem: IUserInboxItem) => {
-		if(!inboxSelected)
+		if (!inboxSelected)
 			return
 
 		// user_id -> inbox_id
@@ -249,7 +212,7 @@ export default function ChatPage(props) {
 		console.log(chatListItem)
 		console.log(inboxSelected)
 
-		getInboxConversation(chatListItem.contact_id, inboxSelected.userId, chatListItem.type)
+		getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
 			.then(res => console.log(res))
 			.catch(err => console.log(err))
 
@@ -283,7 +246,7 @@ export default function ChatPage(props) {
 	const onArchiveConversation = (conversation) => {
 		const title = "Archive Conversation"
 		confirmDialog.show(title, "Are you sure you would like to archive this conversation? ", () => {
-		console.log("archiveConversation", conversation)
+			console.log("archiveConversation", conversation)
 
 		})
 	}
@@ -323,7 +286,7 @@ export default function ChatPage(props) {
 	}
 
 	const onFilterSelected = (item, itemIndex, index) => {
-		if(!teamInboxes.items || !teamMembers.items)
+		if (!teamInboxes.items || !teamMembers.items)
 			return
 
 		console.log(teamMembers.items)
@@ -333,17 +296,17 @@ export default function ChatPage(props) {
 		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id === item.id)
 		console.log(inbox)
 
-		if(!inbox)
+		if (!inbox)
 			return
 
 		const teamMember = teamMembers.items?.find(teamMember => {
-		const fullName = `${teamMember.first_name} ${teamMember.last_name}`
-		return inbox.name.includes(fullName)
+			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
+			return inbox.name.includes(fullName)
 		})
 
 		console.log(teamMember)
 
-		if(!teamMember)
+		if (!teamMember)
 			return
 
 
@@ -364,14 +327,14 @@ export default function ChatPage(props) {
 
 		setInboxSelected(selected)
 	}
-  
+
 
 	const filters = useMemo(() => {
 		return [
 			{
 				id: 'inboxes',
 				name: 'Inboxes',
-				items: teamInboxes?.items?.map(inbox => ({ 
+				items: teamInboxes?.items?.map(inbox => ({
 					id: inbox.team_member_id,
 					name: `${inbox.name} (${inbox.type})`,
 					isSelected: inboxSelected?.inboxId === inbox.team_member_id
@@ -380,84 +343,84 @@ export default function ChatPage(props) {
 		]
 	}, [teamInboxes, inboxSelected])
 
-  return (
-    <Page>
-      <TopBar
-        actionTitle="+ New Message"
-        onActionClick={onTopActionClick}
-      />
-      <SideBar />
-      <Content>
-        <SideFilter
-          visible={displayFilters}
-          filters={filters}
-          collapsed={true}
-          onFilterSelected={onFilterSelected}
-        />
-        <Panel hideHeader sx={{ minWidth: 0, overflow: 'hidden' }}>
-          <Grid container flex={1} flexWrap='nowrap' >
+	return (
+		<Page>
+			<TopBar
+				actionTitle="+ New Message"
+				onActionClick={onTopActionClick}
+			/>
+			<SideBar />
+			<Content>
+				<SideFilter
+					visible={displayFilters}
+					filters={filters}
+					collapsed={true}
+					onFilterSelected={onFilterSelected}
+				/>
+				<Panel hideHeader sx={{ minWidth: 0, overflow: 'hidden' }}>
+					<Grid container flex={1} flexWrap='nowrap' >
 
-            <ChatInbox
-			  name={inboxSelected?.name}
-			  channel={inboxSelected?.channel}
-              filterOpen={displayFilters}
-              items={inbox?.items}
-			  isLoading={inbox?.isLoading}
-              onChatSearch={onChatSearch}
-              onChatSearchClear={onChatSearchClear}
-              onChatClick={onClickChatListItem}
-              onArchiveConversation={onArchiveConversation}
-              onBackClick={onBackClick}
-            />
+						<ChatInbox
+							name={inboxSelected?.name}
+							channel={inboxSelected?.channel}
+							filterOpen={displayFilters}
+							items={inbox?.items}
+							isLoading={inbox?.isLoading}
+							onChatSearch={onChatSearch}
+							onChatSearchClear={onChatSearchClear}
+							onChatClick={onClickChatListItem}
+							onArchiveConversation={onArchiveConversation}
+							onBackClick={onBackClick}
+						/>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="droppable" direction="horizontal">
-                {(provided, snapshot) => (
-                  <Grid item xs  //conversation details container
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    sx={{
-                      borderEndEndRadius: '5px',
-                      borderStartEndRadius: '5px',
-                      display: 'grid',
-                      gridAutoFlow: 'column',
-                      gridAutoColumns: '450px',
-                      overflowX: 'auto',
-                      overscrollBehaviorInline: 'contain',
-                      gap: 1,
-                      minHeight: 0,
-                      '::-webkit-scrollbar': {
-                        height: '8px',
-                        background: 'transparent',
-                      },
-                      '::-webkit-scrollbar-thumb': {
-                        background: (theme) => theme.palette.grey[400],
-                        borderRadius: '4px',
-                      }
-                    }}
-                  >
-                    {conversationViewer.map((conversation, index) => (
-                      <ChatWindow
-                        isPinned={isPinned(conversation)}
-                        index={index}
-                        key={conversation.id}
-                        conversation={conversation}
-                        onCloseConversation={onCloseConversation}
-                        onPin={() => onPin(conversation)}
-                        snippets={snippets}
-                        textPlaceholders={textPlaceholders}
-                      />
-                    ))}
-                    {provided.placeholder}
-                  </Grid>
-                )}
-              </Droppable>
-            </DragDropContext>
+						<DragDropContext onDragEnd={onDragEnd}>
+							<Droppable droppableId="droppable" direction="horizontal">
+								{(provided, snapshot) => (
+									<Grid item xs  //conversation details container
+										ref={provided.innerRef}
+										{...provided.droppableProps}
+										sx={{
+											borderEndEndRadius: '5px',
+											borderStartEndRadius: '5px',
+											display: 'grid',
+											gridAutoFlow: 'column',
+											gridAutoColumns: '450px',
+											overflowX: 'auto',
+											overscrollBehaviorInline: 'contain',
+											gap: 1,
+											minHeight: 0,
+											'::-webkit-scrollbar': {
+												height: '8px',
+												background: 'transparent',
+											},
+											'::-webkit-scrollbar-thumb': {
+												background: (theme) => theme.palette.grey[400],
+												borderRadius: '4px',
+											}
+										}}
+									>
+										{conversationViewer.map((conversation, index) => (
+											<ChatWindow
+												isPinned={isPinned(conversation)}
+												index={index}
+												key={conversation.id}
+												conversation={conversation}
+												onCloseConversation={onCloseConversation}
+												onPin={() => onPin(conversation)}
+												snippets={snippets}
+												textPlaceholders={textPlaceholders}
+											/>
+										))}
+										{provided.placeholder}
+									</Grid>
+								)}
+							</Droppable>
+						</DragDropContext>
 
-          </Grid>
+					</Grid>
 
-        </Panel>
-      </Content>
-    </Page>
-  )
+				</Panel>
+			</Content>
+		</Page>
+	)
 }
