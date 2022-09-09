@@ -134,7 +134,7 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
 
     return (
         <SelectDialogTab
-            maxWidth={'xl'}
+            maxWidth={'lg'}
             open={open}
             onClose={handleClose}
             tabs={[{ id: '0', label: 'Contacts' }]}
