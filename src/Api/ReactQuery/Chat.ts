@@ -132,8 +132,7 @@ export const useInboxConversation = (contact_id?: number | string, inboxType?: I
     const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], {
         enabled: !!contact_id && !!inboxType,
         select: (data: [any, IPaginationApi]) => data[0]
-    }
-    )
+    })
 
     return {
         ...reactQuery,
