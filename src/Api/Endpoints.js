@@ -1412,10 +1412,11 @@ export const getInboxDM = (teamMemberId) => {
     return GET(`inboxes_dms?per_page=15`, body)
 }
 
-export const getInboxConversation = () => {
+export const getInboxConversation = (contactId, userId, inboxType) => {
     const body = {
-        team_contact_id: '',
-        inbox_type: 'sms' // 'sms' | 'dm'
+        team_contact_id: contactId,
+        inbox_type: inboxType, // 'sms' | 'dm'
+        user_id: userId
     }
 
     return GET(`inboxes_conversations`, body)

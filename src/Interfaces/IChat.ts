@@ -3,7 +3,7 @@
 export type InboxType = 'sms' | 'dm' 
 
 export interface ITeamInboxItem {
-    id: number,
+    team_member_id: number,
     name: string,
     channel?: number | string,
     type: InboxType
@@ -17,7 +17,7 @@ export interface ITeamInboxAPI {
 }
 
 export interface IUserInboxItem {
-    id: string,
+    contact_id: string,
     name: string,
     profile_img: string,
     type: InboxType,

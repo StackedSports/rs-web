@@ -7,22 +7,22 @@ import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInb
 export const useTeamInboxes = () => {
     const reactQuery = useQuery('team_inboxes', () => getInboxes(), {
         select: (data: [ITeamInboxAPI[], IPaginationApi]): ITeamInboxItem[] => data[0]
-            .map((inbox: ITeamInboxAPI) => {
+            .map((inbox: ITeamInboxAPI): ITeamInboxItem => {
                 if(inbox.twitter_enable)
                     return {
-                        id: inbox.id,
+                        team_member_id: inbox.id,
                         name: inbox.full_name,
                         channel: '',
                         type: 'dm'
                     }
                 
-                else //if(inbox.phone_number)
+                else 
                     return {
-                    id: inbox.id,
-                    name: inbox.full_name,
-                    channel: inbox.phone_number,
-                    type: 'sms'
-                }
+                        team_member_id: inbox.id,
+                        name: inbox.full_name,
+                        channel: inbox.phone_number,
+                        type: 'sms'
+                    }
             })
             .sort((a: ITeamInboxItem, b: ITeamInboxItem) => a.name.localeCompare(b.name))
     })
@@ -39,7 +39,7 @@ export const useUserInbox = (userId: string, inboxType: IInboxType) => {
     const reactQuery = useQuery('user_inbox', () => getInbox(), {
         select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
             .map((inbox: IUserInboxAPI) => ({
-                id: inbox.team_contact.team_contact_id,
+                contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
                 profile_img: inbox.team_contact.profile_image,
                 type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
@@ -60,7 +60,7 @@ export const useInboxDM = (inboxId: number | string) => {
     const reactQuery = useQuery(['inbox_dm', inboxId], () => getInboxDM(), {
         select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
             .map((inbox: IUserInboxAPI) => ({
-                id: inbox.team_contact.team_contact_id,
+                contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
                 profile_img: inbox.team_contact.profile_image,
                 type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
@@ -84,7 +84,7 @@ export const useInboxSMS = (inboxId: number | string | null) => {
     const reactQuery = useQuery(['inbox_dm', inboxId], () => getInboxSMS(), {
         select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
             .map((inbox: IUserInboxAPI) => ({
-                id: inbox.team_contact.team_contact_id,
+                contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
                 profile_img: inbox.team_contact.profile_image,
                 type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',

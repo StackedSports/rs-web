@@ -148,7 +148,7 @@ const conversations = [
   ]
 
 interface IInboxSelected {
-	inboxId: number | string,
+	team_member_id: number,
 	userId: string,
 	name: string,
 	channel: number | string,
@@ -201,11 +201,11 @@ export default function ChatPage(props) {
 
 		setInbox({ items: null, isLoading: true})
 
-		getMethod(inboxSelected.inboxId)
+		getMethod(inboxSelected.team_member_id)
 			.then((data: [IUserInboxAPI[], IPaginationApi]) => {
 				const inbox = data[0]
-					.map((inbox: IUserInboxAPI) => ({
-						id: inbox.team_contact.team_contact_id,
+					.map((inbox: IUserInboxAPI): IUserInboxItem => ({
+						contact_id: inbox.team_contact.team_contact_id,
 						name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
 						profile_img: inbox.team_contact.profile_image,
 						type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
@@ -219,6 +219,8 @@ export default function ChatPage(props) {
 				setInbox({ items: inbox, isLoading: false})
 			})
 	}, [inboxSelected])
+
+
 
 	const isPinned = useCallback((conversation) => {
 		if (user && pinnedChats[user.id]) {
@@ -236,8 +238,23 @@ export default function ChatPage(props) {
 		setDisplayFilters(!displayFilters)
 	}
 
-	const onClickChatListItem = (id: string | number) => {
-		console.log(id)
+	const onClickChatListItem = (chatListItem: IUserInboxItem) => {
+		if(!inboxSelected)
+			return
+
+		// user_id -> inbox_id
+		// contact_id -> team_contact_id
+		// inbox_type -> sms | dm 
+
+		console.log(chatListItem)
+		console.log(inboxSelected)
+
+		getInboxConversation(chatListItem.contact_id, inboxSelected.userId, chatListItem.type)
+			.then(res => console.log(res))
+			.catch(err => console.log(err))
+
+
+
 		// let index = 0
 		// const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
 		// if (conv.length === 0) {
@@ -313,7 +330,7 @@ export default function ChatPage(props) {
 		console.log(teamInboxes.items)
 		// console.log(item, itemIndex, index)
 
-		const inbox = teamInboxes.items?.find(inbox => inbox.id === item.id)
+		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id === item.id)
 		console.log(inbox)
 
 		if(!inbox)
@@ -336,7 +353,7 @@ export default function ChatPage(props) {
 		//   .then(res => console.log(res))
 		//   .catch(err => console.log(err))
 		const selected: IInboxSelected = {
-			inboxId: inbox.id,
+			team_member_id: inbox.team_member_id,
 			userId: teamMember.id,
 			name: inbox.name,
 			channel: inbox.channel,
@@ -355,9 +372,9 @@ export default function ChatPage(props) {
 				id: 'inboxes',
 				name: 'Inboxes',
 				items: teamInboxes?.items?.map(inbox => ({ 
-					id: inbox.id,
+					id: inbox.team_member_id,
 					name: `${inbox.name} (${inbox.type})`,
-					isSelected: inboxSelected?.inboxId === inbox.id
+					isSelected: inboxSelected?.inboxId === inbox.team_member_id
 				}))
 			}
 		]

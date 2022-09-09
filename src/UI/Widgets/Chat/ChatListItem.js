@@ -37,7 +37,7 @@ export const ChatListItem = (props) => {
 		  key={props.item.id}
 		  onMouseEnter={() => setShowIconClose(true)}
 		  onMouseLeave={() => setShowIconClose(false)}
-		  onClick={() => props.onToggleChat(props.item.id)}
+		  onClick={() => props.onToggleChat(props.item)}
 		>
 			<Stack flex={1} direction="row" spacing={2} alignItems="center">
 				<IconButton

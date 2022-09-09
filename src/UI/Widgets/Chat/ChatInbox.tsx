@@ -72,7 +72,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 <List sx={{ overflowY: 'auto', flex: '1 0 0' }}>
                     {props.items && props.items.map(item => (
                         <ChatListItem
-                            key={item.id}
+                            key={item.contact_id}
                             item={item}
                             //   conversation={conversation}
                             onToggleChat={props.onChatClick}
