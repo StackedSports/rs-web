@@ -47,7 +47,7 @@ export default function SelectDialogTab(props) {
 
   return (
     <Dialog
-      maxWidth='md'
+      maxWidth={props.maxWidth || 'md'}
       fullWidth
       open={props.open}
       onClose={props.onClose}

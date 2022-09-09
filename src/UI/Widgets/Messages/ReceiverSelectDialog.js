@@ -221,8 +221,10 @@ export default function ReceiverSelectDialog(props) {
     }
 
     const onClose = () => {
-        props.onClose()
         clearAllSelections()
+        setSelectedFilters({})
+        contacts.clearFilter()
+        props.onClose()
     }
 
     const selectionLabel = getSelectionLabel(

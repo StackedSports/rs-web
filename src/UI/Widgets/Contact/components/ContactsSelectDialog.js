@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from 'react'
 import { TabPanel } from '@mui/lab'
-import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
-import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
-import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
-
-
 import { IconButton } from '@mui/material';
 import { Clear } from '@mui/icons-material';
-import { useContacts, useGradYears, usePositions, useRanks, useStatus2, useStatuses, useTags, useTeamMembers } from 'Api/ReactQuery'
+import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
+import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import PanelFilters from 'UI/Widgets/PanelFilters'
+
+
+import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
+import { useContacts, useGradYears, usePositions, useRanks, useStatus2, useStatuses, useTags, useTeamMembers } from 'Api/ReactQuery'
 import { states, timeZones } from 'utils/Data'
 import { getFullName } from 'utils/Parser'
 
@@ -39,12 +39,13 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
 
     const handleSelectionConfirm = () => {
         onSelectionConfirm(multipageSelection.selectedData)
-        multipageSelection.clear()
-        onClose()
+        handleClose()
     }
 
     const handleClose = () => {
         multipageSelection.clear()
+        setSelectedFilters({})
+        contacts.clearFilter()
         onClose()
     }
 
@@ -133,6 +134,7 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
 
     return (
         <SelectDialogTab
+            maxWidth={'xl'}
             open={open}
             onClose={handleClose}
             tabs={[{ id: '0', label: 'Contacts' }]}
@@ -144,7 +146,6 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
             <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
             <TabPanel value={'0'} sx={{ py: 1 }} >
                 <ContactsTableServerMode
-                    mini
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}

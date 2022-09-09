@@ -162,7 +162,6 @@ export const ContactsKanban = () => {
 
     const onCloseSelectionDialog = () => {
         setShowContactSelectDialog(false)
-        onContactSearchClear()
         tempColumnName.current = null
     }
 
