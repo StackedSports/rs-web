@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 
 
 import TabPanel from '@mui/lab/TabPanel';
-import { Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 
 
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
@@ -297,6 +297,7 @@ export default function ReceiverSelectDialog(props) {
 
     return (
         <SelectDialogTab
+            maxWidth={'lg'}
             tabs={myTabs}
             selectionLabel={selectionLabel}
             open={props.open}
@@ -307,7 +308,9 @@ export default function ReceiverSelectDialog(props) {
             onTabChange={onTabChange}
         >
             <RenderIf condition={showContactFilters}>
-                <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
+                <Box paddingX={3}>
+                    <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
+                </Box>
             </RenderIf>
 
             <TabPanel value={'0'} index={0}>
@@ -330,7 +333,6 @@ export default function ReceiverSelectDialog(props) {
             </TabPanel>
             <TabPanel value={'2'} index={2}>
                 <ContactsTableServerMode
-                    mini
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}
