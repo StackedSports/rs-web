@@ -129,14 +129,14 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 
 export const useInboxConversation = (contact_id?: number | string, inboxType?: InboxType, userId?: number | string) => {
 
-    const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], {
+    const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], () => getInboxConversation(contact_id, inboxType, userId), {
         enabled: !!contact_id && !!inboxType,
         select: (data: [any, IPaginationApi]) => data[0]
     })
 
     return {
         ...reactQuery,
-        item: reactQuery.data,
+        items: reactQuery.data,
         loading: reactQuery.isLoading
     }
 }
