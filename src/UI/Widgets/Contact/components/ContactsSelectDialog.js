@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { TabPanel } from '@mui/lab'
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode'
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
@@ -143,7 +143,9 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
             onClearSearch={onClearSearch}
             selectionLabel={getSelectionLabel(multipageSelection.count, multipageSelection.clear)}
         >
-            <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
+            <Box sx={{ paddingInline: 3 }}>
+                <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
+            </Box>
             <TabPanel value={'0'} sx={{ py: 1 }} >
                 <ContactsTableServerMode
                     contacts={contacts.items}
