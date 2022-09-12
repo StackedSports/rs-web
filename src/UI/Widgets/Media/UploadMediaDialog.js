@@ -652,6 +652,7 @@ export default function UploadMediaDialog(props) {
 						{files.map((item, index) => (
 							<MediaUploadItem
 								id={index}
+								key={index}
 								disableAssociateInput={uploadFinished}
 								item={item}
 								options={contacts.items}
