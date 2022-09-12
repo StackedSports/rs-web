@@ -10,7 +10,7 @@ import Button from 'UI/Widgets/Buttons/Button'
 import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
-import MediaPage from './BaseMediaPage'
+import BaseMediaPage from './BaseMediaPage'
 
 import { AppContext } from 'Context/AppProvider'
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider'
@@ -212,7 +212,7 @@ export const MainMediaPage = (props) => {
     ]
 
     return (
-        <MediaPage
+        <BaseMediaPage
             //filter={media.filter}
             actions={mainActions}
             showPanelFilters={showPanelFilters}
@@ -357,7 +357,7 @@ export const MainMediaPage = (props) => {
                 onClose={() => setOpenAssignMediaToPlaceholderDialog(false)}
                 medias={mediaMultiPageSelection.selectedData}
             />
-        </MediaPage>
+        </BaseMediaPage>
     )
 }
 
