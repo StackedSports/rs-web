@@ -228,9 +228,9 @@ export default function ReceiverSelectDialog(props) {
 
     const onClose = () => {
         clearAllSelections()
-        getPropsRecipientsSeletectionModel()
         setSelectedFilters({})
         contacts.clearFilter()
+        getPropsRecipientsSeletectionModel()
         props.onClose()
     }
 
