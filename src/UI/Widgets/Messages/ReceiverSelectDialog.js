@@ -76,8 +76,6 @@ export default function ReceiverSelectDialog(props) {
     const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
-    // Boards
-    const boards = useBoards()
 
     const [showContactFilters, setShowContactFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})
@@ -87,9 +85,11 @@ export default function ReceiverSelectDialog(props) {
     // page's selection, otherwise we could run into duplication issues, or
     // having to iterate over selected ids for contacts we already retrieved
     // the data from. So here's a hook for that!
-    // 
-    //const mpSelection = useMultiPageSelection(contacts.pagination.currentPage)
+    //
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
+
+    // Boards
+    const boards = useBoards()
 
     // Private Boards
     const [privateBoards, setPrivateBoards] = useArray()
@@ -121,6 +121,10 @@ export default function ReceiverSelectDialog(props) {
     }, [boards.items])
 
     useEffect(() => {
+        getPropsRecipientsSeletectionModel()
+    }, [props.recipientsSelected])
+
+    useEffect(() => {
         if (!props.removedItem)
             return
 
@@ -128,12 +132,6 @@ export default function ReceiverSelectDialog(props) {
         let { index, type, id } = props.removedItem
 
         let tmp = null, set = null
-
-        let control = {
-            privateBoards: { items: Object.assign([], selectedPrivateBoards), set: setSelectedPrivateBoards },
-            teamBoards: { items: Object.assign([], selectedTeamBoards), set: setSelectedTeamBoards },
-            contacts: { items: Object.assign([], selectedContacts), set: setSelectedContacts },
-        }
 
         // type = privateBoards | teamBoards | contacts
         switch (type) {
@@ -145,10 +143,6 @@ export default function ReceiverSelectDialog(props) {
                 tmp = Object.assign([], selectedTeamBoards)
                 set = setSelectedTeamBoards
                 break
-            case 'contacts':
-                tmp = Object.assign([], selectedContacts)
-                set = setSelectedContacts
-                break
             default: return
         }
 
@@ -156,8 +150,6 @@ export default function ReceiverSelectDialog(props) {
             tmp = []
         else
             tmp.splice(index, 1)
-
-        // console.log(tmp)
 
         if (type === 'contacts') {
             if (index === 'all') {
@@ -179,6 +171,21 @@ export default function ReceiverSelectDialog(props) {
             return newfilters
         })
     }
+    
+    const getPropsRecipientsSeletectionModel = () => {
+        if (!props.recipientsSelected) return
+
+        if (props.recipientsSelected?.contacts)
+            multipageSelection.set(props.recipientsSelected?.contacts)
+
+        if (props.recipientsSelected?.privateBoards)
+            setSelectedPrivateBoards(props.recipientsSelected.privateBoards.map(b => b.id))
+
+        if (props.recipientsSelected?.teamBoards)
+            setSelectedTeamBoards(props.recipientsSelected.teamBoards.map(b => b.id))
+    }
+
+    
 
     const onSearch = (searchTerm) => {
         setSelectedFilters(prev => {
@@ -215,13 +222,13 @@ export default function ReceiverSelectDialog(props) {
 
     const clearAllSelections = () => {
         multipageSelection.clear()
-        setSelectedContacts([])
         setSelectedPrivateBoards([])
         setSelectedTeamBoards([])
     }
 
     const onClose = () => {
         clearAllSelections()
+        getPropsRecipientsSeletectionModel()
         setSelectedFilters({})
         contacts.clearFilter()
         props.onClose()

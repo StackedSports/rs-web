@@ -1,7 +1,7 @@
 import { useReducer } from 'react'
 import lodash from 'lodash'
 
-const initialState = {
+const INITIAL_STATE = {
     selectedIds: [],
     selectedData: [],
     count: 0,
@@ -56,8 +56,8 @@ const reducer = (state, action) => {
     }
 }
 
-export default function useMultiPageSelection_V2(data) {
-    const [state, dispatch] = useReducer(reducer, initialState)
+export default function useMultiPageSelection_V2(data, initalSelection) {
+    const [state, dispatch] = useReducer(reducer, initalSelection ?? INITIAL_STATE)
 
     const onSelectionModelChange = (selection) => {
         let newIds = lodash.difference(selection, state.selectedIds)

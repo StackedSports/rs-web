@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react'
-
 import { useParams } from "react-router-dom"
+
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 import CheckIcon from '@mui/icons-material/Check'
@@ -8,7 +8,6 @@ import SendIcon from '@mui/icons-material/Send'
 
 import BaseMessagePage from './BaseMessagePage'
 import MessageInput from 'UI/Forms/Inputs/MessageInput'
-
 import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
@@ -28,10 +27,7 @@ import {
     getRecipientSelectedContacts
 } from 'utils/Data'
 import { formatDate } from 'utils/Parser'
-
 import { messageRoutes } from 'Routes/Routes'
-import { object } from 'yup'
-import { platform } from 'chart.js'
 
 const ALL_PLATFORMS = {
     twitter: true,
@@ -40,8 +36,8 @@ const ALL_PLATFORMS = {
 }
 
 export default function MessageCreatePage(props) {
-    const { user, isAdmin } = useContext(AuthContext)
     const app = useContext(AppContext)
+    const { user, isAdmin } = useContext(AuthContext)
     const { control } = useParams()
     const teamMembers = useTeamMembers()
     const { create: uploadMedia } = useMediaMutation()
@@ -51,7 +47,6 @@ export default function MessageCreatePage(props) {
 
     // Platform
     const [platforms, setPlatforms] = useState(ALL_PLATFORMS)
-
     const [platformSelected, setPlatformSelected] = useState(props.platformSelected || null)
 
     // Sender
@@ -77,7 +72,6 @@ export default function MessageCreatePage(props) {
     const [uploadingMedia, setUploadingMedia] = useState(false)
 
     // TextArea
-    // const textArea = useRef(null)
     const [textMessage, setTextMessage] = useState('')
     const snippets = useSnippets().items
     const textPlaceholders = useTextPlaceholders().items
@@ -93,14 +87,11 @@ export default function MessageCreatePage(props) {
     useEffect(() => {
         if (!control)
             return
-
-        console.log(control)
+        //console.log("control", control)
 
         let payload = JSON.parse(localStorage.getItem('new-message-payload'))
+        //console.log("payload", payload)
 
-        console.log(payload)
-
-        // return
         let newRecipients = []
         let newContacts = []
         let newPrivateBoards = []
@@ -132,8 +123,6 @@ export default function MessageCreatePage(props) {
             contacts: newContacts,
             recipients: newRecipients
         })
-
-        return
 
     }, [control])
 
@@ -202,7 +191,7 @@ export default function MessageCreatePage(props) {
     }, [senderSelected, setPlatforms])
 
     const onPlatformSelected = (platform, index) => {
-        console.log('platform selected = ' + platform)
+        //console.log('platform selected = ' + platform)
         setPlatformSelected(platform)
     }
 
@@ -319,7 +308,6 @@ export default function MessageCreatePage(props) {
     }
 
     const onReceiverSelected = (selectedPrivateBoards, selectedTeamBoards, selectedContacts) => {
-        //console.log(selectedContacts)
         setRecipientSelected({
             privateBoards: selectedPrivateBoards,
             teamBoards: selectedTeamBoards,
@@ -379,7 +367,7 @@ export default function MessageCreatePage(props) {
         uploadMedia(media, {
             onSuccess: (res) => {
                 app.alert.setSuccess("Uploaded media successfully!")
-                console.log(res)
+                // console.log(res)
                 onMediaSelected(res, "media")
             },
             onError: (error) => {
@@ -411,8 +399,6 @@ export default function MessageCreatePage(props) {
     }
 
     const onSaveCloseClick = () => {
-        console.log('save and close')
-
         onCreateMessage('save')
     }
 
@@ -451,32 +437,6 @@ export default function MessageCreatePage(props) {
         //     user_id: "vebEQEiMPqbl",
         //     body: 'Hey'
         // }
-
-        // console.log(messageData)
-
-        // createMessage(messageData)
-        //     .then(result => {
-        //         console.log(result)
-        //         let message = result.data
-
-        //         if(save)
-        //             setRedirect(`${messageRoutes.all}`)
-        //         else
-        //             setRedirect(`${messageRoutes.details}/${message.id}`)
-
-        //         // {"errors":[{"code":"no_method","message":"undefined method `id' for nil:NilClass"}]}
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-
-        //         if(save)
-        //             showErrorMessage('We could not save your message')
-        //         else
-        //             showErrorMessage('Something went wrong. We could not create your message')
-        //     })
-        //     .finally(() => setLoading(false))
-
-        // return
 
         // Twitter, SMS, Personal Text
 
@@ -613,8 +573,7 @@ export default function MessageCreatePage(props) {
             // return
             updateMessage({ id: props.messageId, data: messageData }, {
                 onSuccess: (result) => {
-                    console.log(result)
-                    let message = result.data
+                    // console.log(result)
 
                     if (save)
                         setRedirect(`${messageRoutes.all}`)
@@ -635,8 +594,7 @@ export default function MessageCreatePage(props) {
             })
 
         } else {
-            console.log('Create Message')
-            // return
+            // console.log('Create Message')
             createMessage(messageData, {
                 onSuccess: (result) => {
                     console.log(result)
@@ -699,14 +657,11 @@ export default function MessageCreatePage(props) {
         }
     }
 
-    // console.log(senderSelected)
-
     const panelActions = [
         { name: 'Save & Close', variant: 'outlined', icon: CheckIcon, onClick: onSaveCloseClick },
         { name: 'Preview & Send', variant: 'contained', icon: SendIcon, onClick: onPreviewSendClick }
 
     ]
-
 
     return (
         <BaseMessagePage
@@ -732,6 +687,7 @@ export default function MessageCreatePage(props) {
                 removedItem={receiverRemoved}
                 onSelected={onReceiverSelected}
                 onClose={() => setShowReceiverDialog(false)}
+                recipientsSelected={recipientSelected}
             />
 
             <DateTimePicker
