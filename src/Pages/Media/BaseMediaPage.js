@@ -164,7 +164,7 @@ export const BaseMediaPage = (props) => {
             <Box
                 sx={{
                     position: 'relative',
-                    padding: isDropingOver ? 2 : 0,
+                    padding: isDropingOver ? 0 : 0,
                     transition: 'padding .1s'
                 }}
                 onDragEnter={(e) => {
@@ -202,9 +202,10 @@ export const BaseMediaPage = (props) => {
                             position: 'sticky',
                             top: '85%',
                             left: '50%',
-                            transform: 'translateX(-50%)',
+                            transform: `translateX(-50%)`,
                             pointerEvents: 'none',
                             color: 'common.white',
+                            transition: 'all .1s'
                             // backgroundColor: 'white'
                         }}
                     >
@@ -241,10 +242,10 @@ export const BaseMediaPage = (props) => {
 const DropZoneOverlay = styled(Box)(({ theme, isVisible }) => ({
     display: isVisible ? 'block' : 'none',
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: -10,
+    left: -10,
+    right: -10,
+    bottom: -10,
     backgroundColor: 'rgba(56, 113, 218, 0.1)', //theme.palette.divider,
     border: isVisible ? `3px solid ${theme.palette.primary.main}` : 0,
 }));
