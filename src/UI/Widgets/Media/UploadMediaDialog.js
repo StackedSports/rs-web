@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Dialog, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
 import Tooltip from '@mui/material/Tooltip';
@@ -127,7 +127,10 @@ export default function UploadMediaDialog(props) {
 
 	const [associatedPeople, setAssociatedPeople] = useState(dummyAssociatedPeople)
 
-	// console.log(placeholders)
+	useEffect(() => {
+		if (!props.files) return
+		handleImportFiles(props.files)
+	}, [props.files])
 
 	const onMediaAlertClose = (index) => {
 		setAlerts.remove(index)
@@ -649,6 +652,7 @@ export default function UploadMediaDialog(props) {
 						{files.map((item, index) => (
 							<MediaUploadItem
 								id={index}
+								key={index}
 								disableAssociateInput={uploadFinished}
 								item={item}
 								options={contacts.items}

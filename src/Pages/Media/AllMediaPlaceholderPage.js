@@ -5,7 +5,7 @@ import { AutoFixHigh, LocalOfferOutlined, GridView, FormatListBulleted, Clear } 
 import { Typography, IconButton } from "@mui/material"
 
 import MediaTable from 'UI/Tables/Media/MediaTable'
-import MediaPage from "./BaseMediaPage"
+import BaseMediaPage from "./BaseMediaPage"
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 
 import { AppContext } from 'Context/AppProvider'
@@ -162,7 +162,7 @@ export const AllMediaPlaceholderPage = (props) => {
   ]
 
   return (
-    <MediaPage
+    <BaseMediaPage
       title="Placeholders"
       actions={mainActions}
       panelRef={panelRef}
@@ -207,7 +207,7 @@ export const AllMediaPlaceholderPage = (props) => {
         isAddTag={isTagDialogFunctionRemoveRef.current ? false : true}
       />
 
-    </MediaPage>
+    </BaseMediaPage>
   )
 }
 

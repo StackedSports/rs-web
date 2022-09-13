@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo, useContext } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
-
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
+import { Box, Stack, styled, Typography } from '@mui/material'
+import CloudIcon from '@mui/icons-material/Cloud'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 
 import { mediaRoutes } from 'Routes/Routes'
 import { useMediaTypes, useContacts, useTeamMembers, useTagsWithMedia } from 'Api/ReactQuery';
@@ -13,7 +16,7 @@ import { getMediaQueryCriteriaObjFromFilters } from 'Api/Parser'
 import lodash from 'lodash';
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
-export const MediaPage = (props) => {
+export const BaseMediaPage = (props) => {
     const { isAdmin, user } = useContext(AuthContext)
     const searchParams = useSearchParams()
     const tags = useTagsWithMedia()
@@ -23,6 +26,8 @@ export const MediaPage = (props) => {
 
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState(searchParams.filters)
+    const [dropFiles, setDropFiles] = useState([]);
+    const [isDropingOver, setIsDropingOver] = useState(false)
 
     useEffect(() => {
         const criteria = getMediaQueryCriteriaObjFromFilters(selectedFilters)
@@ -64,7 +69,7 @@ export const MediaPage = (props) => {
                         },
                     }
                     return isAdmin ? obj : item.id === user.id ? obj : null
-                }).filter(item => !!item ) ,
+                }).filter(item => !!item),
             },
             ...mediaTypes.items.map(item => ({
                 id: ++index,
@@ -156,16 +161,93 @@ export const MediaPage = (props) => {
             }}
         >
             <Divider />
+            <Box
+                sx={{
+                    position: 'relative',
+                    padding: isDropingOver ? 0 : 0,
+                    transition: 'padding .1s'
+                }}
+                onDragEnter={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setIsDropingOver(true)
+                }}
+                onDragOver={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }}
+                onDrop={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault()
+                    setIsDropingOver(false)
+                    if (e.dataTransfer.files.length > 0) {
+                        setDropFiles(e.dataTransfer.files)
+                        setUploadDialogOpen(true)
+                    }
+                }}
+            >
+                {props.children}
 
-            {props.children}
+                <DropZoneOverlay
+                    onDragLeave={(e) => {
+                        e.preventDefault();
+                        setIsDropingOver(false)
+                    }}
+                    isVisible={isDropingOver}
+                >
+                    <Stack
+                        alignItems='center'
+                        sx={{
+                            maxWidth: '300px',
+                            position: 'sticky',
+                            top: '85%',
+                            left: '50%',
+                            transform: `translateX(-50%)`,
+                            pointerEvents: 'none',
+                            color: 'common.white',
+                            transition: 'all .1s'
+                            // backgroundColor: 'white'
+                        }}
+                    >
+                        <CloudIcon sx={{ fontSize: 70, color: 'primary.main', position: 'absolute', top: -75 }} />
+                        <CloudUploadIcon sx={{ fontSize: 80, color: 'common.white', position: 'absolute', top: -80 }} />
+                        
+                        <Typography
+                            sx={{
+                                backgroundColor: 'primary.main',
+                                p: 2,
+                                borderRadius: .5,
+                                boxShadow: 6,
+                                fontSize: '16px'
+                            }}
+                            variant="h6"
+                            letterSpacing='1px'
+                        >
+                            Drop files to upload
+                        </Typography>
+                    </Stack>
+                </DropZoneOverlay>
+            </Box>
 
             <UploadMediaDialog
                 open={uploadDialogOpen}
                 onClose={() => setUploadDialogOpen(false)}
+                files={dropFiles}
             />
 
         </MainLayout>
     )
 }
 
-export default MediaPage
+const DropZoneOverlay = styled(Box)(({ theme, isVisible }) => ({
+    display: isVisible ? 'block' : 'none',
+    position: 'absolute',
+    top: -10,
+    left: -10,
+    right: -10,
+    bottom: -10,
+    backgroundColor: 'rgba(56, 113, 218, 0.1)', //theme.palette.divider,
+    border: isVisible ? `3px solid ${theme.palette.primary.main}` : 0,
+}));
+
+export default BaseMediaPage
