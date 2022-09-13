@@ -162,11 +162,7 @@ export const BaseMediaPage = (props) => {
         >
             <Divider />
             <Box
-                sx={{
-                    position: 'relative',
-                    padding: isDropingOver ? 0 : 0,
-                    transition: 'padding .1s'
-                }}
+                sx={{ position: 'relative' }}
                 onDragEnter={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
