@@ -1454,7 +1454,6 @@ export const useContactTableColumns = (control, id) => {
     }, [control])
 
     const onChange = (newValue) => {
-        console.log(newValue)
         localStorage.setItem(id + '-table-columns', JSON.stringify(newValue))
         setColumns(newValue)
     }

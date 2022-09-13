@@ -381,6 +381,8 @@ export const parseColumnsNames = (property) => {
             return 'timeZone'
         case 'states':
             return 'state'
+        case 'dob':
+            return 'birthday'
         default:
             return property
     }
