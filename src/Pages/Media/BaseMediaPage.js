@@ -4,6 +4,8 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { Box, Stack, styled, Typography } from '@mui/material'
+import CloudIcon from '@mui/icons-material/Cloud'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 
 import { mediaRoutes } from 'Routes/Routes'
@@ -185,6 +187,7 @@ export const BaseMediaPage = (props) => {
                 }}
             >
                 {props.children}
+
                 <DropZoneOverlay
                     onDragLeave={(e) => {
                         e.preventDefault();
@@ -197,20 +200,24 @@ export const BaseMediaPage = (props) => {
                         sx={{
                             maxWidth: '300px',
                             position: 'sticky',
-                            top: '50%',
+                            top: '85%',
                             left: '50%',
                             transform: 'translateX(-50%)',
                             pointerEvents: 'none',
                             color: 'common.white',
+                            // backgroundColor: 'white'
                         }}
                     >
-                        <CloudUploadTwoToneIcon sx={{ fontSize: 60, color: 'primary.main' }} />
+                        <CloudIcon sx={{ fontSize: 70, color: 'primary.main', position: 'absolute', top: -75 }} />
+                        <CloudUploadIcon sx={{ fontSize: 80, color: 'common.white', position: 'absolute', top: -80 }} />
+                        
                         <Typography
                             sx={{
                                 backgroundColor: 'primary.main',
                                 p: 2,
                                 borderRadius: .5,
-                                boxShadow: 6
+                                boxShadow: 6,
+                                fontSize: '16px'
                             }}
                             variant="h6"
                             letterSpacing='1px'
@@ -238,7 +245,7 @@ const DropZoneOverlay = styled(Box)(({ theme, isVisible }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: theme.palette.divider,
+    backgroundColor: 'rgba(56, 113, 218, 0.1)', //theme.palette.divider,
     border: isVisible ? `3px solid ${theme.palette.primary.main}` : 0,
 }));
 
