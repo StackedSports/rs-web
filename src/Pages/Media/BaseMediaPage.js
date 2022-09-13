@@ -4,7 +4,7 @@ import MainLayout from 'UI/Layouts/MainLayout'
 import { Divider } from 'UI'
 import UploadMediaDialog from 'UI/Widgets/Media/UploadMediaDialog'
 import { Box, Stack, styled, Typography } from '@mui/material'
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 
 import { mediaRoutes } from 'Routes/Routes'
 import { useMediaTypes, useContacts, useTeamMembers, useTagsWithMedia } from 'Api/ReactQuery';
@@ -160,9 +160,10 @@ export const BaseMediaPage = (props) => {
         >
             <Divider />
             <Box
-                flex={1}
                 sx={{
                     position: 'relative',
+                    padding: true||isDropingOver ? 2 : 0,
+                    transition: 'padding .1s'
                 }}
                 onDragEnter={(e) => {
                     e.stopPropagation();
@@ -177,8 +178,10 @@ export const BaseMediaPage = (props) => {
                     e.stopPropagation();
                     e.preventDefault()
                     setIsDropingOver(false)
-                    setDropFiles(e.dataTransfer.files)
-                    setUploadDialogOpen(true)
+                    if (e.dataTransfer.files.length > 0) {
+                        setDropFiles(e.dataTransfer.files)
+                        setUploadDialogOpen(true)
+                    }
                 }}
             >
                 {props.children}
@@ -187,14 +190,33 @@ export const BaseMediaPage = (props) => {
                         e.preventDefault();
                         setIsDropingOver(false)
                     }}
-                    isVisible={isDropingOver}
+                    isVisible={true||isDropingOver}
                 >
                     <Stack
                         alignItems='center'
-                        sx={{ position: 'sticky', top: '50%', left: '50%', pointerEvents: 'none' }}
+                        sx={{
+                            maxWidth: '300px',
+                            position: 'sticky',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            pointerEvents: 'none',
+                            color: 'common.white',
+                        }}
                     >
-                        <UploadFileIcon sx={{ fontSize: 80 }} />
-                        <Typography variant="h4" fontWeight='bold'>Drop files here to upload</Typography>
+                        <CloudUploadTwoToneIcon sx={{ fontSize: 60, color: 'primary.main' }} />
+                        <Typography
+                            sx={{
+                                backgroundColor: 'primary.main',
+                                p: 2,
+                                borderRadius: .5,
+                                boxShadow: 6
+                            }}
+                            variant="h6"
+                            letterSpacing='1px'
+                        >
+                            Drop files to upload
+                        </Typography>
                     </Stack>
                 </DropZoneOverlay>
             </Box>
@@ -217,7 +239,7 @@ const DropZoneOverlay = styled(Box)(({ theme, isVisible }) => ({
     right: 0,
     bottom: 0,
     backgroundColor: theme.palette.divider,
-    backdropFilter: "blur(2px)",
+    border: isVisible ? `3px solid ${theme.palette.primary.main}` : 0,
 }));
 
 export default BaseMediaPage
