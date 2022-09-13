@@ -162,7 +162,7 @@ export const BaseMediaPage = (props) => {
             <Box
                 sx={{
                     position: 'relative',
-                    padding: true||isDropingOver ? 2 : 0,
+                    padding: isDropingOver ? 2 : 0,
                     transition: 'padding .1s'
                 }}
                 onDragEnter={(e) => {
@@ -190,7 +190,7 @@ export const BaseMediaPage = (props) => {
                         e.preventDefault();
                         setIsDropingOver(false)
                     }}
-                    isVisible={true||isDropingOver}
+                    isVisible={isDropingOver}
                 >
                     <Stack
                         alignItems='center'
