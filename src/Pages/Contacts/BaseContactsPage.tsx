@@ -305,7 +305,7 @@ export default function BaseContactsPage(props) {
 
             setLoading(true)
             deleteBoard(props.boardInfo.id, {
-                onSuccess: (res) => {
+                onSuccess: () => {
                     app.alert.setSuccess('Board deleted successfully!')
                     boards.refetch()
                     setRedirect(contactsRoutes.all)
@@ -335,7 +335,7 @@ export default function BaseContactsPage(props) {
         queryClient.invalidateQueries(['contact'], { active: true })
     }
 
-    const onRemoveTagsFromContacts = async (selectedTagsIds) => {
+    const onRemoveTagsFromContacts = async (selectedTagsIds: string) => {
 
         const contactIds = contactsMultipageSelection.selectionModel
 
@@ -354,7 +354,7 @@ export default function BaseContactsPage(props) {
         queryClient.invalidateQueries(['contact'], { active: true })
     }
 
-    const handleTagsDialogConfirm = async (selectedTagsIds) => {
+    const handleTagsDialogConfirm = async (selectedTagsIds: string) => {
         setLoadingTags(true)
         if (isTagDialogFunctionRemoveRef.current) {
             await onRemoveTagsFromContacts(selectedTagsIds)
@@ -424,9 +424,7 @@ export default function BaseContactsPage(props) {
                         </Stack>
                     }
                 </Stack>
-                {/* <Stack flex={1} direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                    
-                </Stack> */}
+
                 <Stack flex={1} direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
                     <RenderIf condition={props.onContactSearch}>
                         <MiniSearchBar
