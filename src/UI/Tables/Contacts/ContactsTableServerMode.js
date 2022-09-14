@@ -46,7 +46,7 @@ export default function ContactsTableServerMode({
         else {
             setTempVisibleColumns(null)
         }
-    }, [selectedFilters])
+    }, [selectedFilters, visibleColumns.items])
 
 
     const onColumnVisibilityModelChange = (newModel) => {

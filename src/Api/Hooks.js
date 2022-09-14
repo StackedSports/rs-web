@@ -1428,7 +1428,7 @@ const getColumns = (control) => ({
     positionCoach: false,
     recruitingCoach: false,
     status: false,
-    status2: false,
+    status_2: false,
     tags: false,
     rank: false,
     // lastMessaged: false,
