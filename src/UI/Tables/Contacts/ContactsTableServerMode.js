@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -12,10 +12,9 @@ import {
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
-import { columnsMini, columnsFull } from './DataGridConfig';
+import { columnsMini, columnsFull, parseColumnsNames } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
-import useLocalStorage from "Hooks/useLocalStorage";
-import useSearchParams from "Hooks/SearchParamsHook";
+import lodash from 'lodash'
 
 export default function ContactsTableServerMode({
     contacts,
@@ -26,11 +25,29 @@ export default function ContactsTableServerMode({
     redirectToDetails,
     columnsControl,
     sortingMode,
+    selectedFilters,
     ...restOfProps
 }) {
     const history = useHistory();
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
+    const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
+
+    useEffect(() => {
+        if (!selectedFilters) return
+        const collums = Object.keys(selectedFilters).map(key => parseColumnsNames(key))
+        const activeCollums = Object.entries(visibleColumns.items).
+            filter(([, value]) => value === true).
+            map(([key]) => key)
+        const dif = lodash.difference(collums, activeCollums).reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
+        if (!lodash.isEmpty(dif)) {
+            setTempVisibleColumns({ ...visibleColumns.items, ...dif })
+        }
+        else {
+            setTempVisibleColumns(null)
+        }
+    }, [selectedFilters, visibleColumns.items])
+
 
     const onColumnVisibilityModelChange = (newModel) => {
         visibleColumns.onChange(newModel)
@@ -112,7 +129,7 @@ export default function ContactsTableServerMode({
                 pageSize={pagination?.itemsPerPage}
                 page={(pagination?.currentPage - 1) || 0}
                 onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-                columnVisibilityModel={visibleColumns.items}
+                columnVisibilityModel={tempVisibleColumns ?? visibleColumns.items}
                 onPageChange={onPageChange}
                 onPageSizeChange={onPageSizeChange}
                 components={{
@@ -121,6 +138,7 @@ export default function ContactsTableServerMode({
                 }}
                 onCellClick={redirectToDetails && redirectToDetailsPage}
                 hideFooter={contacts?.length === 0}
+
                 {...restOfProps}
             />
         </Stack>
