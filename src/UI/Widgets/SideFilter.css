@@ -49,12 +49,12 @@
 
 .SideFilter .Category-Header .IconNormal {
     font-size: 12px;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 .SideFilter .Category-Header .Icon {
     font-size: 12px;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
     transform: rotate(90deg);
     /* transition: all 300ms cubic-bezier(1, 0, 0, 1); */
     /* style={{ fontSize: 15, marginLeft: 20, transform: arrowTransform, transition: '200ms all' }} */

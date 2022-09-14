@@ -29,8 +29,8 @@ function Category(props) {
             <div className='Category'>
                 <div className='Category-Header'>
                     <NavLink exact={false} className='Category-Header link' to={props?.path || ''}>
-                        <h3 className='Title'>{props.title}</h3>
                         <ArrowForwardIosIcon className='IconNormal' />
+                        <h3 className='Title'>{props.title}</h3>
                     </NavLink>
                 </div>
             </div>
@@ -40,8 +40,8 @@ function Category(props) {
     return (
         <div className='Category'>
             <div className='Category-Header' onClick={onHeaderClick}>
-                <h3 className='Title'>{props.title}</h3>
                 <ArrowForwardIosIcon className={iconClass} />
+                <h3 className='Title'>{props.title}</h3>
             </div>
             <div className={contentClass}>
             {props.button && (
