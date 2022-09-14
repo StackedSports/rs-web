@@ -62,7 +62,7 @@ export const BaseMediaPage = (props) => {
                                 page: 1,
                                 filters: filterObjectToQueryParams({
                                     owner_id: {
-                                        itemLabel: getFullName(item), value: item.id
+                                        label: getFullName(item), value: item.id
                                     }
                                 }),
                             }).toString(),
@@ -80,7 +80,7 @@ export const BaseMediaPage = (props) => {
                         page: 1,
                         filters: filterObjectToQueryParams({
                             type: {
-                                itemLabel: item.name, value: item.id
+                                label: item.name, value: item.id
                             }
                         }),
                     }).toString()
@@ -108,7 +108,7 @@ export const BaseMediaPage = (props) => {
         }, */
         "owner_id": {
             label: 'Owner',
-            options: teamMembers.items || [],
+            options: teamMembers.items,
             optionsLabel: (item) => getFullName(item),
             onSearch: (search) => teamMembers.search(search),
         },
@@ -123,7 +123,7 @@ export const BaseMediaPage = (props) => {
         "created_at": {
             label: 'Date Uploaded',
             type: 'date',
-            optionsLabel: (dates) => dates.value.join(' - '),
+            optionsLabel: (dates) => dates.join(' - '),
             disableFuture: true,
             isUnique: true
         },
@@ -156,7 +156,6 @@ export const BaseMediaPage = (props) => {
                 open: props.showPanelFilters,
                 filters: panelFiltersData,
                 onFilterChange: onPanelFilterChange,
-                setFilter: props.setFilter,
                 selectedFilters: selectedFilters
             }}
         >
