@@ -1419,5 +1419,5 @@ export const getInboxConversation = (contactId, inboxType,userId) => {
         user_id: userId
     }
 
-    return GET(`inboxes_conversations`, body)
+    return GET(`inboxes_conversations?per_page=20`, body)
 }

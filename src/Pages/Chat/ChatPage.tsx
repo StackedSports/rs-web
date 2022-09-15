@@ -160,7 +160,7 @@ export default function ChatPage(props) {
 
 	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
-	console.log(inbox.items)
+	//console.log(inbox.items)
 
 	// const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
 	// console.log(inboxSMS)
@@ -212,7 +212,7 @@ export default function ChatPage(props) {
 		console.log(chatListItem)
 		console.log(inboxSelected)
 
-		getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
+		getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.team_member_id)
 			.then(res => console.log(res))
 			.catch(err => console.log(err))
 

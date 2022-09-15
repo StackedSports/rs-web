@@ -112,7 +112,7 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
                 contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
                 profile_img: inbox.team_contact.profile_image,
-                type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
+                type: inbox.last_message.message_type === 'sms_events' ? 'sms' : 'dm',
                 from: inbox.last_message.from,
                 preview: inbox.last_message.last_message_preview,
                 time: inbox.last_message.last_received_time
