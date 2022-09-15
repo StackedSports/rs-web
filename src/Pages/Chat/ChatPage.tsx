@@ -11,7 +11,6 @@ import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
 import SideFilter from 'UI/Widgets/SideFilter';
 import SearchBar from 'UI/Widgets/SearchBar';
-import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
@@ -162,39 +161,37 @@ export interface IConversationControl {
 	user_id: number,
 }
 
-export default function ChatPage(props) {
+export default function ChatPage() {
 	const { user } = useContext(AuthContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 
 	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
 
-	// const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
 	// console.log(inboxSMS)
 	const teamInboxes = useTeamInboxes()
-	// const userInbox = useInbox(inboxSelected?.inboxId, inboxSelected?.type)
 
 	// console.log(userInbox)
 	const teamMembers = useTeamMembers()
 
-	const snippets = useSnippets()
-	const textPlaceholders = useTextPlaceholders()
-
-	const [pinnedChats, setPinnedChats] = useLocalStorage('pinnedChats', {})
+	const [pinnedChats, setPinnedChats] = useLocalStorage<Record<string, IConversationControl[]>>('pinnedChats', {})
 
 	const [displayFilters, setDisplayFilters] = useState(true)
 	const [selectedConversationControl, setSelectedConversationControl] = useState<IConversationControl[]>([])
 
 	useEffect(() => {
 		if (user) {
-			const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
-			setSelectedConversationControl(pinned)
+			const pinned = pinnedChats[user?.id]
+			if (pinned) {
+				console.log(pinned)
+				setSelectedConversationControl(pinned)
+			}
 		}
 	}, [])
 
 	const isPinned = useCallback((conversation) => {
 		if (user && pinnedChats[user.id]) {
-			return pinnedChats[user.id]?.includes(conversation.id)
+			return pinnedChats[user.id]?.includes(conversation)
 		}
 		return false
 	}, [pinnedChats, user])
@@ -219,7 +216,7 @@ export default function ChatPage(props) {
 		console.log("chat list item", chatListItem)
 		console.log("inbox", inboxSelected)
 
-		const conversationId = chatListItem.contact_id + chatListItem.from
+		const conversationId = chatListItem.contact_id + chatListItem.from + inboxSelected.userId
 		const newConversationControl = {
 			id: conversationId,
 			contact_id: chatListItem.contact_id,
@@ -228,18 +225,11 @@ export default function ChatPage(props) {
 			inbox_type: chatListItem.type,
 			user_id: inboxSelected.team_member_id
 		}
-		/* 
-				getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
-					.then(res => console.log(res))
-					.catch(err => console.log(err)) */
-
-		// useInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
-
 		const conv = selectedConversationControl.find(conv => conv.id === conversationId)
 		if (conv) {
 			setSelectedConversationControl(prev => prev.filter(conv => conv.id !== conversationId))
 		} else {
-			setSelectedConversationControl(prev => ([...prev, newConversationControl]))
+			setSelectedConversationControl(prev => ([newConversationControl, ...prev]))
 		}
 	}
 
@@ -270,17 +260,17 @@ export default function ChatPage(props) {
 		const conversationId = conversation.id;
 
 		newPinnedChats[user.id] = newPinnedChats[user.id] || [];
-		if (newPinnedChats[user.id].includes(conversationId)) {
-			newPinnedChats[user.id] = newPinnedChats[user.id].filter(id => id !== conversationId)
+		if (newPinnedChats[user.id].find(control => control.id === conversationId)) {
+			newPinnedChats[user.id] = newPinnedChats[user.id].filter(control => control.id !== conversationId)
 		}
 		else {
-			newPinnedChats[user.id].push(conversationId)
+			newPinnedChats[user.id].push(conversation)
 		}
 
 		setPinnedChats(newPinnedChats)
 	}
 
-	const reorder = (list: unknown, startIndex: number, endIndex: number) => {
+	const reorder = (list: IConversationControl[], startIndex: number, endIndex: number) => {
 		const result = [...list];
 		const [removed] = result.splice(startIndex, 1);
 		result.splice(endIndex, 0, removed);
@@ -303,12 +293,11 @@ export default function ChatPage(props) {
 		if (!teamInboxes.items || !teamMembers.items)
 			return
 
-		console.log(teamMembers.items)
-		console.log(teamInboxes.items)
+		//console.log(teamMembers.items)
 		// console.log(item, itemIndex, index)
 
 		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id === item.id)
-		console.log(inbox)
+		console.log("inbox", inbox)
 
 		if (!inbox)
 			return
@@ -318,17 +307,11 @@ export default function ChatPage(props) {
 			return inbox.name.includes(fullName)
 		})
 
-		console.log(teamMember)
+		console.log("team member", teamMember)
 
 		if (!teamMember)
 			return
 
-
-		// const get = inbox.type === 'dm' ? getInboxDM : getInboxSMS
-
-		// get(inbox.id)
-		//   .then(res => console.log(res))
-		//   .catch(err => console.log(err))
 		const selected: IInboxSelected = {
 			team_member_id: inbox.team_member_id,
 			userId: teamMember.id,
@@ -337,7 +320,7 @@ export default function ChatPage(props) {
 			type: inbox.type
 		}
 
-		console.log(selected)
+		console.log("Selected inbox", selected)
 
 		setInboxSelected(selected)
 	}
@@ -421,8 +404,6 @@ export default function ChatPage(props) {
 												conversationControl={conversation}
 												onCloseConversation={onCloseConversation}
 												onPin={() => onPin(conversation)}
-												snippets={snippets}
-												textPlaceholders={textPlaceholders}
 											/>
 										))}
 										{provided.placeholder}

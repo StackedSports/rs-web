@@ -21,7 +21,7 @@ import { IConversationControl } from 'Pages/Chat/ChatPage';
 interface ChatWindowProps {
   index: number;
   conversationControl: IConversationControl;
-  onCloseConversation: (conversationControl: IConversationControl | unknown) => void;
+  onCloseConversation: (conversationControl: IConversationControl) => void;
   isPinned?: boolean;
   onPin?: () => void;
 }
@@ -32,6 +32,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
     props.conversationControl.inbox_type,
     props.conversationControl.user_id
   )
+
+  console.log("open conversation", props.conversationControl)
 
 
   const onCloseConversation = () => {
@@ -117,7 +119,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
       <Draggable
         draggableId={props.conversationControl.id}
         index={props.index}
-      //isDragDisabled={props.isPinned}
+        isDragDisabled={props.isPinned}
       >
         {(provided) => (
           <Paper

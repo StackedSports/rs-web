@@ -12,11 +12,10 @@ import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInb
 
 
 interface IChatInboxProps {
-    name: string | null,
-    channel: string | null,
-    items: IUserInboxItem[] | null,
+    name?: string | null,
+    channel?: string | number | null,
+    items?: IUserInboxItem[] | null,
     isLoading: boolean,
-    conversations: any,
     onChatSearch: Function,
     onChatSearchClear: Function,
     onBackClick: () => void,

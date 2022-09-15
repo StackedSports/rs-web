@@ -134,7 +134,7 @@ export const useInboxConversation = (contact_id?: number | string, inboxType?: I
             console.log('react query')
             console.log(data[0])
 
-            return data[0].map(conversation => ({ ...conversation, id: `${contact_id}${userId}`, text: conversation.message }))
+            return data[0].map(conversation => ({ ...conversation, id: `${conversation.created_at}${conversation.message}`, text: conversation.message }))
         }
     })
 
