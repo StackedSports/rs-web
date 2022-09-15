@@ -24,11 +24,14 @@ import { Dropdown } from 'UI/Widgets/DropdownMui';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import MediaPreview from '../Media/MediaPreview';
 import { stringSplice } from 'utils/Helper';
+import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery';
 
 export const ChatInput = (props) => {
 
     // props
-    const { isTyping, textPlaceholders, snippets } = props;
+    const { isTyping } = props;
+    const snippets = useSnippets()
+    const textPlaceholders = useTextPlaceholders()
 
     const [textMessage, setTextMessage] = useState("")
     const [showMediaDialog, setShowMediaDialog] = useState(false)
@@ -81,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p="20px">
+            <Box p="20px" sx={{ backgroundColor: '#fff' }}>
                 <TextField
                     fullWidth
                     multiline
@@ -146,8 +149,8 @@ export const ChatInput = (props) => {
                         type='icon'
                         onClick={onAddTextPlaceholder}
                         icon={<WrapTextIcon />}
-                        options={props.textPlaceholders.items}
-                        loading={props.textPlaceholders.loading}
+                        options={textPlaceholders.items}
+                        loading={textPlaceholders.loading}
                     />
 
                     <Divider
@@ -159,9 +162,9 @@ export const ChatInput = (props) => {
                         type='icon'
                         onClick={onAddSnippet}
                         icon={<ShortTextIcon />}
-                        options={props.snippets.items}
+                        options={snippets.items}
                         getOptionLabel={(snippet) => snippet.content}
-                        loading={props.snippets.loading}
+                        loading={snippets.loading}
                     />
 
                     <Button name="Send" variant="contained" sx={{ ml: 'auto' }} onClick={onSendMessage} />

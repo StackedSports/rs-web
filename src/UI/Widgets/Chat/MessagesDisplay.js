@@ -262,7 +262,7 @@ export const MessagesDisplay = (props) => {
     const { messages,
         contact_profile_image,
         coach_profile_image,
-    } = props.messages || {};
+    } = props;
 
     const scrollRef = props.onScrollEnd && useBottomScrollListener(props.onScrollEnd);
 
@@ -340,9 +340,8 @@ export const MessagesDisplay = (props) => {
                     }
                 }}
             >
-                {messages && messages.map(message => (
+                {messages && messages.map((message, index) => (
                     <TextMessage
-                        key={message.id}
                         owner={message.direction === 'out'}
                         onCheck={onCheckMessages}
                         checked={isMessageChecked(message)}

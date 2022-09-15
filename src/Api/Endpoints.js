@@ -1383,3 +1383,41 @@ export const getStuckMessages = () => {
 export const requeueMessage = (id) => {
     return PUT(`messages/${id}/requeue`)
 }
+
+// /api/inboxes -> para receber os contatos com a ultimas mensagens 
+// /api/inboxes_contacts -> para receber os team_contacts se for admin ou o próprio user
+// /api/inboxes_conversations 
+
+export const getInboxes = () => {
+    return GET(`inboxes_contacts`)
+}
+
+export const getInbox = (id) => {
+    return GET(`inboxes`)
+}
+
+export const getInboxSMS = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_sms?per_page=15`, body)
+}
+
+export const getInboxDM = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_dms?per_page=15`, body)
+}
+
+export const getInboxConversation = (contactId, inboxType,userId) => {
+    const body = {
+        team_contact_id: contactId,
+        inbox_type: inboxType, // 'sms' | 'dm'
+        user_id: userId
+    }
+
+    return GET(`inboxes_conversations?per_page=20`, body)
+}
