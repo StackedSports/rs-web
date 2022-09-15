@@ -4,279 +4,393 @@ export const states = [
     {
         id: "1",
         name: "Alabama",
-        abbreviation: "AL"
+        abbreviation: "AL",
+        label: "Alabama",
+        value: "AL"
+        
     },
     {
         id: "2",
         name: "Alaska",
-        abbreviation: "AK"
+        abbreviation: "AK",
+        label: "Alaska",
+        value: "AK",
+
     },
     {
         id: "3",
         name: "Arizona",
-        abbreviation: "AZ"
+        abbreviation: "AZ",
+        label: "Arizona",
+        value: "AZ",
     },
     {
         id: "4",
         name: "Arkansas",
-        abbreviation: "AR"
+        abbreviation: "AR",
+        label: "Arkansas",
+        value: "AR",
     },
     {
         id: "5",
         name: "California",
-        abbreviation: "CA"
+        abbreviation: "CA",
+        label: "California",
+        value: "CA",
     },
     {
         id: "6",
         name: "Colorado",
-        abbreviation: "CO"
+        label: "Colorado",
+        abbreviation: "CO",
+        value: "CO"
     },
     {
         id: "7",
         name: "Connecticut",
-        abbreviation: "CT"
+        label: "Connecticut",
+        abbreviation: "CT",
+        value: "CT"
     },
     {
         id: "8",
         name: "Delaware",
-        abbreviation: "DE"
+        label: "Delaware",
+        abbreviation: "DE",
+        value: "DE"
     },
     {
         id: "9",
         name: "Florida",
-        abbreviation: "FL"
+        label: "Florida",
+        abbreviation: "FL",
+        value: "FL"
     },
     {
         id: "10",
         name: "Georgia",
-        abbreviation: "GA"
+        label: "Georgia",
+        abbreviation: "GA",
+        value: "GA"
     },
     {
         id: "11",
         name: "Hawaii",
-        abbreviation: "HI"
+        label: "Hawaii",
+        abbreviation: "HI",
+        value: "HI"
     },
     {
         id: "12",
         name: "Idaho",
-        abbreviation: "ID"
+        label: "Idaho",
+        abbreviation: "ID",
+        value: "ID"
     },
     {
         id: "13",
         name: "Illinois",
-        abbreviation: "IL"
+        label: "Illinois",
+        abbreviation: "IL",
+        value: "IL"
     },
     {
         id: "14",
         name: "Indiana",
-        abbreviation: "IN"
+        label: "Indiana",
+        abbreviation: "IN",
+        value: "IN"
     },
     {
         id: "15",
         name: "Iowa",
-        abbreviation: "IA"
+        label: "Iowa",
+        abbreviation: "IA",
+        value: "IA"
     },
     {
         id: "16",
         name: "Kansas",
-        abbreviation: "KS"
+        label: "Kansas",
+        abbreviation: "KS",
+        value: "KS"
     },
     {
         id: "17",
         name: "Kentucky",
-        abbreviation: "KY"
+        label: "Kentucky",
+        abbreviation: "KY",
+        value: "KY"
     },
     {
         id: "18",
         name: "Louisiana",
-        abbreviation: "LA"
+        label: "Louisiana",
+        abbreviation: "LA",
+        value: "LA"
     },
     {
         id: "19",
         name: "Maine",
-        abbreviation: "ME"
+        label: "Maine",
+        abbreviation: "ME",
+        value: "ME"
     },
     {
         id: "20",
         name: "Maryland",
-        abbreviation: "MD"
+        label: "Maryland",
+        abbreviation: "MD",
+        value: "MD"
     },
     {
         id: "21",
         name: "Massachusetts",
-        abbreviation: "MA"
+        label: "Massachusetts",
+        abbreviation: "MA",
+        value: "MA"
     },
     {
         id: "22",
         name: "Michigan",
-        abbreviation: "MI"
+        label: "Michigan",
+        abbreviation: "MI",
+        value: "MI"
     },
     {
         id: "23",
         name: "Minnesota",
-        abbreviation: "MN"
+        label: "Minnesota",
+        abbreviation: "MN",
+        value: "MN"
     },
     {
         id: "24",
         name: "Mississippi",
-        abbreviation: "MS"
+        label: "Mississippi",
+        abbreviation: "MS",
+        value: "MS"
     },
     {
         id: "25",
         name: "Missouri",
-        abbreviation: "MO"
+        label: "Missouri",
+        abbreviation: "MO",
+        value: "MO"
     },
     {
         id: "26",
         name: "Montana",
-        abbreviation: "MT"
+        label: "Montana",
+        abbreviation: "MT",
+        value: "MT"
     },
     {
         id: "27",
         name: "Nebraska",
-        abbreviation: "NE"
+        label: "Nebraska",
+        abbreviation: "NE",
+        value: "NE"
     },
     {
         id: "28",
         name: "Nevada",
-        abbreviation: "NV"
+        label: "Nevada",
+        abbreviation: "NV",
+        value: "NV"
     },
     {
         id: "29",
         name: "New Hampshire",
-        abbreviation: "NH"
+        label: "New Hampshire",
+        abbreviation: "NH",
+        value: "NH"
     },
     {
         id: "30",
         name: "New Jersey",
-        abbreviation: "NJ"
+        label: "New Jersey",
+        abbreviation: "NJ",
+        value: "NJ"
     },
     {
         id: "31",
         name: "New Mexico",
-        abbreviation: "NM"
+        label: "New Mexico",
+        abbreviation: "NM",
+        value: "NM"
     },
     {
         id: "32",
         name: "New York",
-        abbreviation: "NY"
+        label: "New York",
+        abbreviation: "NY",
+        value: "NY"
     },
     {
         id: "33",
         name: "North Carolina",
-        abbreviation: "NC"
+        label: "North Carolina",
+        abbreviation: "NC",
+        value: "NC"
     },
     {
         id: "34",
         name: "North Dakota",
-        abbreviation: "ND"
+        label: "North Dakota",
+        abbreviation: "ND",
+        value: "ND"
     },
     {
         id: "35",
         name: "Ohio",
-        abbreviation: "OH"
+        label: "Ohio",
+        abbreviation: "OH",
+        value: "OH"
     },
     {
         id: "36",
         name: "Oklahoma",
-        abbreviation: "OK"
+        label: "Oklahoma",
+        abbreviation: "OK",
+        value: "OK"
     },
     {
         id: "37",
         name: "Oregon",
-        abbreviation: "OR"
+        label: "Oregon",
+        abbreviation: "OR",
+        value: "OR"
     },
     {
         id: "38",
         name: "Pennsylvania",
-        abbreviation: "PA"
+        label: "Pennsylvania",
+        abbreviation: "PA",
+        value: "PA"
     },
     {
         id: "39",
         name: "Rhode Island",
-        abbreviation: "RI"
+        label: "Rhode Island",
+        abbreviation: "RI",
+        value: "RI"
     },
     {
         id: "40",
         name: "South Carolina",
-        abbreviation: "SC"
+        label: "South Carolina",
+        abbreviation: "SC",
+        value: "SC"
     },
     {
         id: "41",
         name: "South Dakota",
-        abbreviation: "SD"
+        label: "South Dakota",
+        abbreviation: "SD",
+        value: "SD"
     },
     {
         id: "42",
         name: "Tennessee",
-        abbreviation: "TN"
+        label: "Tennessee",
+        abbreviation: "TN",
+        value: "TN"
     },
     {
         id: "43",
         name: "Texas",
-        abbreviation: "TX"
+        label: "Texas",
+        abbreviation: "TX",
+        value: "TX"
     },
     {
         id: "44",
         name: "Utah",
-        abbreviation: "UT"
+        label: "Utah",
+        abbreviation: "UT",
+        value: "UT"
     },
     {
         id: "45",
         name: "Vermont",
-        abbreviation: "VT"
+        label: "Vermont",
+        abbreviation: "VT",
+        value: "VT"
     },
     {
         id: "46",
         name: "Virginia",
-        abbreviation: "VA"
+        label: "Virginia",
+        abbreviation: "VA",
+        value: "VA"
     },
     {
         id: "47",
         name: "Washington",
-        abbreviation: "WA"
+        label: "Washington",
+        abbreviation: "WA",
+        value: "WA"
     },
     {
         id: "48",
         name: "West Virginia",
-        abbreviation: "WV"
+        label: "West Virginia",
+        abbreviation: "WV",
+        value: "WV"
     },
     {
         id: "49",
         name: "Wisconsin",
-        abbreviation: "WI"
+        label: "Wisconsin",
+        abbreviation: "WI",
+        value: "WI"
     },
     {
         id: "50",
         name: "Wyoming",
-        abbreviation: "WY"
+        label: "Wyoming",
+        abbreviation: "WY",
+        value: "WY"
     }
 ];
 
-export const timeZones = [,
+export const timeZones = [
     {
         id: "EST",
-        name: "Eastern"
+        value: "EST",
+        name: "Eastern",
+        label: "Eastern"
     },
     {
         id: "CST",
-        name: "Central"
+        value: "CST",
+        name: "Central",
+        label: "Central"
     },
     {
         id: "MST",
-        name: "Mountain"
+        value: "MST",
+        name: "Mountain",
+        label: "Mountain"
     },
     {
         id: "PST",
-        name: "Pacific"
+        value: "PST",
+        name: "Pacific",
+        label: "Pacific"
     },
     {
         id: "AKST",
-        name: "Alaska"
+        value: "AKST",
+        name: "Alaska",
+        label: "Alaska"
     },
     {
         id: "HST",
-        name: "Hawaiian"
+        value: "HST",
+        name: "Hawaiian",
+        label: "Hawaiian"
     }
 ];
 

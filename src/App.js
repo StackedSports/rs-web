@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { persistQueryClient } from 'react-query/persistQueryClient-experimental'
 import { createWebStoragePersistor } from 'react-query/createWebStoragePersistor-experimental'
-
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 

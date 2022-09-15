@@ -8,7 +8,7 @@ import useSearchParams from 'Hooks/SearchParamsHook'
 import useLocalStorage from "Hooks/useLocalStorage"
 import { getMediaCriteriaFromQueryString } from "Api/Parser"
 
-import MediaPage from "./BaseMediaPage"
+import BaseMediaPage from "./BaseMediaPage"
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import RenderIf from "UI/Widgets/RenderIf"
@@ -206,7 +206,7 @@ export const AllMediaPage = () => {
 	]
 
 	return (
-		<MediaPage
+		<BaseMediaPage
 			title="Media"
 			filter={onFilterChange}
 			actions={mainActions}
@@ -257,7 +257,7 @@ export const AllMediaPage = () => {
 				medias={multiPageSelection.selectedData}
 			/>
 
-		</MediaPage>
+		</BaseMediaPage>
 	)
 }
 

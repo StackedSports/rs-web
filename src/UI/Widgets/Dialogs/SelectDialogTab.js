@@ -36,17 +36,18 @@ const getSelectionLabel = (privateCount, teamCount, contactCount) => {
 }
 
 export default function SelectDialogTab(props) {
-  const [tabIndex, setTabIndex] = useState(props.currentTab ? props.currentTab : '0')
+  const [tabIndex, setTabIndex] = useState(props.currentTab || '0')
 
-  const handleChange = (e, newValue) => {
-    setTabIndex(newValue)
+  const handleChange = (e, index) => {
+    setTabIndex(index)
+    props.onTabChange && props.onTabChange(index)
   }
 
   const marginLeft = props.tabsMarginLeft | 10
 
   return (
     <Dialog
-      maxWidth='md'
+      maxWidth={props.maxWidth || 'md'}
       fullWidth
       open={props.open}
       onClose={props.onClose}

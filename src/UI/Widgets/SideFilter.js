@@ -29,8 +29,8 @@ function Category(props) {
             <div className='Category'>
                 <div className='Category-Header'>
                     <NavLink exact={false} className='Category-Header link' to={props?.path || ''}>
-                        <h3 className='Title'>{props.title}</h3>
                         <ArrowForwardIosIcon className='IconNormal' />
+                        <h3 className='Title'>{props.title}</h3>
                     </NavLink>
                 </div>
             </div>
@@ -40,13 +40,13 @@ function Category(props) {
     return (
         <div className='Category'>
             <div className='Category-Header' onClick={onHeaderClick}>
-                <h3 className='Title'>{props.title}</h3>
                 <ArrowForwardIosIcon className={iconClass} />
+                <h3 className='Title'>{props.title}</h3>
             </div>
             <div className={contentClass}>
-            {props.button && (
+                {props.button && (
                     <p onClick={(e) => props.button.onClick(e)}>
-                      {props.button.label}
+                        {props.button.label}
                     </p>
                 )}
                 {props.items.map((item, index) => {
@@ -66,7 +66,7 @@ function Category(props) {
                             </p>
                         )
                 })}
-                
+
             </div>
         </div>
     )
@@ -84,11 +84,11 @@ export default function SideFilter(props) {
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
-                      title={category.name}
-                      items={category.items}
-                      button={category.button}
-                      onItemClick={(item, itemIndex) => props.onFilterSelected(item, itemIndex, index)}
-                      path={category.path}
+                        title={category.name}
+                        items={category.items}
+                        button={category.button}
+                        onItemClick={(item, itemIndex) => props.onFilterSelected && props.onFilterSelected(item, itemIndex, index)}
+                        path={category.path}
                     />
                 )
             })}

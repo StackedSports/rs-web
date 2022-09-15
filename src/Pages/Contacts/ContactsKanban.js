@@ -32,7 +32,6 @@ export const ContactsKanban = () => {
 
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
-    //const [selectContacts, setSelectContacts] = useState([])
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
 
     const tempColumnName = useRef();
@@ -64,14 +63,6 @@ export const ContactsKanban = () => {
 
     const onSendMessageClick = (selectedData) => {
         app.sendMessageToContacts(selectedData)
-    }
-
-    const onContactSearch = (searchTerm) => {
-        contacts.filter({ search: searchTerm })
-    }
-
-    const onContactSearchClear = () => {
-        contacts.clearFilter()
     }
 
     const onAddColumn = (columnName) => {
@@ -171,7 +162,6 @@ export const ContactsKanban = () => {
 
     const onCloseSelectionDialog = () => {
         setShowContactSelectDialog(false)
-        onContactSearchClear()
         tempColumnName.current = null
     }
 
@@ -353,9 +343,6 @@ export const ContactsKanban = () => {
                 open={showContactSelectDialog}
                 onClose={onCloseSelectionDialog}
                 onSelectionConfirm={onSelectionConfirm}
-                contacts={contacts}
-                onSearch={onContactSearch}
-                onClearSearch={onContactSearchClear}
             />
         </BaseContactsPage>
     )

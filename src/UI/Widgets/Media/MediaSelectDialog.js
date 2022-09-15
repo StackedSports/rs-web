@@ -119,7 +119,7 @@ export default function MediaSelectDialog(props) {
         "created_at": {
             label: 'Date Uploaded',
             type: 'date',
-            optionsLabel: (dates) => dates.value.join(' - '),
+            optionsLabel: (dates) => dates.join(' - '),
             disableFuture: true,
             isUnique: true
         },

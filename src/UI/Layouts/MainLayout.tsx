@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import { Redirect } from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
@@ -14,7 +14,29 @@ import LoadingOverlay from '../Widgets/LoadingOverlay'
 
 export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'
 
-export default function MainLayout(props) {
+import { ISideFilter } from 'Interfaces'
+import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
+
+interface MainLayoutProps {
+    topActionName?: string;
+    onTopActionClick?: () => void;
+    filtersDisabled?: boolean;
+    title?: string;
+    filters?: ISideFilter[];
+    onFilterSelected?: (item: any, itemIndex: number, index: number) => void;
+    actions?: Record<string, unknown>[];
+    onBackClick?: () => void;
+    propsPanelFilters?: IPanelFilterProps;
+    panelRef?: React.Ref<unknown> | undefined;
+    showBackBoardToContacts?: boolean;
+    onBackBoardToContacts?: () => void;
+    redirect?: string;
+    loading?: boolean;
+    children?: React.ReactNode;
+    alert?: any;
+}
+
+export default function MainLayout(props: MainLayoutProps) {
     const [displayFilters, setDisplayFilters] = useState(true)
 
     return (
@@ -37,7 +59,7 @@ export default function MainLayout(props) {
                     actions={props.actions}
                     menuOpen={displayFilters}
                     menuDisabled={props.filtersDisabled}
-                    onMenuIconClick={(e) => setDisplayFilters(!displayFilters)}
+                    onMenuIconClick={() => setDisplayFilters(!displayFilters)}
                     onBackClick={props.onBackClick}
                     propsPanelFilters={props.propsPanelFilters}
                     showBackBoardToContacts={props.showBackBoardToContacts}

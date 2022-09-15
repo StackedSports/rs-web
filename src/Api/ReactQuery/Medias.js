@@ -86,6 +86,7 @@ export const useMediaTypes = () => {
                     ...item,
                     id: item.key,
                     name: item.type,
+                    value: item.key,
                 }))
             )
         }
