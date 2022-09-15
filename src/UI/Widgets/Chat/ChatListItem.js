@@ -12,13 +12,13 @@ export const ChatListItem = (props) => {
 	}
 
 	const date = useMemo(() => {
-		console.log(new Date(props.item.time))
+		//console.log(new Date(props.item.time))
 
 		return formatDate(new Date(props.item.time), 'short', 'short')
 	}, [props.item])
 
 	const from = useMemo(() => {
-		console.log(props.item)
+		//console.log(props.item)
 
 		if (props.item.type === 'sms')
 			return formatPhoneNumber(props.item.from)
