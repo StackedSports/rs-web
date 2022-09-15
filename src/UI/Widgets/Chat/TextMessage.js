@@ -31,9 +31,10 @@ export const TextMessage = (props) => {
                     margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
                     padding: '10px',
                     color: "common.black", // props.owner ? "common.white" : "common.black",
-                    backgroundColor: props.owner ? "#e8f0ff" : "grey.100",
+                    backgroundColor: props.owner ? "#e8f0ff" : "common.white",
                     borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
                     userSelect: 'text',
+                    boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)'
                 }}
             >
                 {props.message.media && (

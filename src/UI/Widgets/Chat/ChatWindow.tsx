@@ -135,7 +135,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 				{(provided) => (
 					<Paper
 						{...provided.draggableProps}
-						sx={{ height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}
+						sx={{ 
+							height: '100%', 
+							minHeight: 0, 
+							display: 'flex', 
+							flexDirection: 'column',
+							backgroundColor: '#fbfbfb'
+						}}
 						ref={provided.innerRef}
 					>
 

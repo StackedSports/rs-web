@@ -30,8 +30,8 @@ export const ChatInput = (props) => {
 
     // props
     const { isTyping } = props;
-      const snippets = useSnippets()
-  const textPlaceholders = useTextPlaceholders()
+    const snippets = useSnippets()
+    const textPlaceholders = useTextPlaceholders()
 
     const [textMessage, setTextMessage] = useState("")
     const [showMediaDialog, setShowMediaDialog] = useState(false)
@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p="20px">
+            <Box p="20px" sx={{ backgroundColor: '#fff' }}>
                 <TextField
                     fullWidth
                     multiline
