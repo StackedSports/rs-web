@@ -1,22 +1,25 @@
-import { useState, useContext, useEffect, createContext, useMemo } from 'react'
-import { useLocation, Redirect } from 'react-router-dom'
+ // @ts-nocheck
+import React, { useState, useContext, useEffect, createContext, useMemo } from 'react'
+import { Redirect } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 
 import { AppContext } from 'Context/AppProvider'
 import { login as apiLogin, logout as apiLogout, loginWithTwitter as apiLoginWithTwitter } from 'Api/Endpoints'
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import { IMemberApi } from 'Interfaces/ISettings'
+import { useLocalStorage } from 'usehooks-ts'
 
 
-const AuthContext = createContext()
+const AuthContext = createContext(null)
 AuthContext.displayName = 'AuthContext'
 
-const AuthProvider = (props) => {
+const AuthProvider: React.FC = (props) => {
     const queryClient = useQueryClient()
     const app = useContext(AppContext)
     const provider = new TwitterAuthProvider();
     const auth = getAuth();
 
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
+    const [user, setUser] = useLocalStorage<IMemberApi | null>('user', null)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
@@ -45,7 +48,7 @@ const AuthProvider = (props) => {
                 .then(res => {
                     console.log(res.data)
                     setUser(res.data)
-                    localStorage.setItem('user', JSON.stringify(res.data))
+                    //localStorage.setItem('user', JSON.stringify(res.data))
                     resolve(res.data)
                 })
                 .catch(error => {
@@ -70,7 +73,7 @@ const AuthProvider = (props) => {
                     apiLoginWithTwitter({ token, secret, email, handle, id }).then((res) => {
                         console.log(res.data)
                         setUser(res.data)
-                        localStorage.setItem('user', JSON.stringify(res.data))
+                        //localStorage.setItem('user', JSON.stringify(res.data))
                         resolve(res.data)
                     }).catch((error) => {
                         console.log(error)
@@ -96,20 +99,13 @@ const AuthProvider = (props) => {
             .catch(error => {
                 console.log(error)
                 // TODO: only temporary, don't know if this should
-                // still be here
-                setUser(null)
-                localStorage.removeItem('user')
-                //app.redirect('/')
             })
             .finally(() => {
                 setUser(null)
-                localStorage.removeItem('user')
+                // localStorage.removeItem('user')
                 app.redirect('/')
                 queryClient.clear()
             })
-        // localStorage.removeItem('user')
-        //setUser(null)
-        //localStorage.removeItem('user')
     }
 
     const utils = useMemo(() => ({

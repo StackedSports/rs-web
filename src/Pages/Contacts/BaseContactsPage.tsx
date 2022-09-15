@@ -1,3 +1,4 @@
+ // @ts-nocheck
 import React, { useState, useMemo, useEffect, useContext, useRef } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 import { useQueryClient } from 'react-query';
@@ -258,7 +259,7 @@ export default function BaseContactsPage(props) {
         setOpenFollowOnTwitterDialog(true)
     }
 
-    const onArchiveContactClick = (e) => {
+    const onArchiveContactClick = () => {
         console.log("onArchiveContactClick")
         let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
         setLoading(true)
@@ -287,7 +288,7 @@ export default function BaseContactsPage(props) {
         setOpenCreateBoardDialog(true)
     }
 
-    const boardEditedSuccess = (res) => {
+    const boardEditedSuccess = () => {
         setOpenCreateBoardDialog(false)
         app.alert.setSuccess('Board edited successfully!')
         boards.refetch()
@@ -297,7 +298,6 @@ export default function BaseContactsPage(props) {
 
     const boardEditedFailure = () => {
         app.alert.setError('Failed to edit board.')
-        // setEditBoard(false)
     }
 
     const onDeleteBoard = () => {

@@ -14,7 +14,7 @@ import { mask, unMask } from 'remask';
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
-import UserSettingsPage from "./UserSettingsPage";
+import {UserSettingsPage} from "./UserSettingsPage";
 import { updateUser } from 'Api/Endpoints';
 import { useUser } from 'Api/Hooks';
 

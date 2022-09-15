@@ -138,7 +138,8 @@ export const contactsRoutes = {
 export const userRoutes = {
     profile: "/user/profile",
     account: "/user/account",
-    notifications: "/user/notifications",
+    preferences: "/user/preferences",
+    //notifications: "/user/notifications",
 }
 
 export const tweetRankingRoutes = {

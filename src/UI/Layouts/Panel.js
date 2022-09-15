@@ -94,7 +94,7 @@ const renderActions = (actions) => {
                         key={action.name}
                         name={action.name}
                         variant={action.variant}
-                        endIcon={<action.icon />}
+                        endIcon={action.icon && <action.icon />}
                         onClick={action.onClick}
                         disabled={action.disabled}
                         color={action.color}

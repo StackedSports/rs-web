@@ -63,6 +63,7 @@ export default function ContactsPage(props) {
         } else {
             const field = sorting[0].field
             filter.sort_dir = sorting[0].sort
+            console.log(field)
 
             switch (field) {
                 case 'lastName':
@@ -117,7 +118,7 @@ export default function ContactsPage(props) {
                     filter.sort_column = 'dob'
                     break
                 default:
-                    filter.sort_column = 'first_name'
+                    filter.sort_column = field
                     break
             }
             setSelectedSort({

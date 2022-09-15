@@ -82,7 +82,7 @@ export const useBoardMutation = () => {
     });
 
     const remove = useMutation((id: string) => deleteBoard(id), {
-        onSuccess: (data, variables, context) => {
+        onSuccess: (_data, variables, _context) => {
             queryClient.cancelQueries(['board', variables])
             queryClient.cancelQueries('boards')
         }

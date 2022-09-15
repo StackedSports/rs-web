@@ -1,7 +1,5 @@
 import { IPaginationApi } from 'Interfaces';
-import { useState, useRef, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-
+import { useState } from 'react'
 interface IPagination {
     currentPage: number;
     itemsPerPage: number;

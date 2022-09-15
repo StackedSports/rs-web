@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
-import UserSettingsPage from "./UserSettingsPage";
+import {UserSettingsPage} from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';

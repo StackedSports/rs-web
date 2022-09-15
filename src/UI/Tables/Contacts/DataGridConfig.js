@@ -387,3 +387,44 @@ export const parseColumnsNames = (property) => {
             return property
     }
 }
+
+export const parseColumnsFieldToApiName = (field) => {
+    switch (field) {
+        case 'lastName':
+            return 'last_name'
+        case 'nickName':
+            return 'nick_name'
+        case 'twitterProfile':
+            return 'twitter_profile'
+        case 'phone':
+            return 'phone'
+        case 'state':
+            return 'state'
+        case 'school':
+            return 'high_school'
+        case 'gradYear':
+            return 'grad_year'
+        case 'position':
+            return 'positions'
+        case 'areaCoach':
+            return 'area_coach'
+        case 'positionCoach':
+            return 'position_coach'
+        case 'recruitingCoach':
+            return 'coordinator'
+        case 'status':
+            return 'status'
+        case 'status2':
+            return 'status_2'
+        case 'tags':
+            return 'tags'
+        case 'rank':
+            return 'rank'
+        case 'timeZone':
+            return 'time_zone'
+        case 'birthday':
+            return 'dob'
+        default:
+            return field
+    }
+}
