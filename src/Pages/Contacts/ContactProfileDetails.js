@@ -198,7 +198,7 @@ const ContactProfileDetails = (props) => {
 					})
 
 				if (countEqual === 0) {
-					app.alert.setError('Contact updated faild!')
+					app.alert.setError('Contact update failed!')
 				} else if (countDif === 0) {
 					props.onContactUpdated(res.data)
 					app.alert.setSuccess('Contact updated successfully!')
