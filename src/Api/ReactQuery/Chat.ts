@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react"
 import { useQuery, useQueryClient, useMutation } from "react-query"
 import { getInboxes, getInbox, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType } from "Interfaces"
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI } from "Interfaces"
 
 export const useTeamInboxes = () => {
     const reactQuery = useQuery('team_inboxes', () => getInboxes(), {
@@ -112,7 +112,7 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
                 contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
                 profile_img: inbox.team_contact.profile_image,
-                type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
+                type: inbox.last_message.message_type === 'sms_events' ? 'sms' : 'dm',
                 from: inbox.last_message.from,
                 preview: inbox.last_message.last_message_preview,
                 time: inbox.last_message.last_received_time
@@ -128,10 +128,9 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 }
 
 export const useInboxConversation = (contact_id?: number | string, inboxType?: InboxType, userId?: number | string) => {
-
     const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], () => getInboxConversation(contact_id, inboxType, userId), {
         enabled: !!contact_id && !!inboxType,
-        select: (data: [any, IPaginationApi]) => data[0]
+        select: (data: [IConversatitionAPI[], IPaginationApi]): IConversatitionAPI[] => data[0].map(conversation => ({ ...conversation, id: `${contact_id}${userId}`, text: conversation.message }))
     })
 
     return {

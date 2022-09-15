@@ -44,3 +44,50 @@ export interface IUserInboxAPI {
     last_message: IUserInboxMessageAPI,
     team_contact: IUserInboxContactAPI
 }
+
+export interface Urls {
+    thumb: string;
+    medium: string;
+    large: string;
+    original: string;
+}
+interface Media {
+    id?: number;
+    name: string;
+    file_type: string;
+    urls: Urls;
+    hashid: string;
+}
+
+export interface IConversatitionAPI {
+    message: string;
+    direction: 'out' | 'in';
+    from: string;
+    to?: any;
+    created_at: Date;
+    media: Media;
+    team_contact_id: number;
+}
+export interface IConversatition {
+    id: string
+    text: string;
+    direction: 'out' | 'in';
+    from: string;
+    to?: any;
+    created_at: Date;
+    media: Media;
+    team_contact_id: number;
+}
+
+//from contacts
+/* export interface RootObject {
+    id: string;
+    message_type: string;
+    text: string;
+    created_at: Date;
+    direction: string;
+    media: Media;
+    platform: Platform;
+    placeholders: Placeholders;
+    recipient_media: RecipientMedia;
+} */

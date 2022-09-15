@@ -1,5 +1,5 @@
-import { useState, useContext, useCallback, useEffect, useMemo } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -17,11 +17,10 @@ import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
 import { ChatWindow, ChatListItem, ChatInbox } from 'UI/Widgets/Chat';
 
-import { getInboxSMS, getInboxDM, getInbox, getInboxConversation } from 'Api/Endpoints'
 import { useTeamInboxes, useInbox } from 'Api/ReactQuery/Chat'
 import { useTeamMembers } from 'Api/ReactQuery/TeamMembers'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType } from "Interfaces"
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition } from "Interfaces"
 
 // Data for test
 const conversations = [
@@ -154,13 +153,19 @@ interface IInboxSelected {
 	type: InboxType
 }
 
+export interface IConversationControl {
+	id: string;
+	contact_id: string;
+	inbox_type: InboxType;
+	user_id: string
+}
+
 export default function ChatPage(props) {
 	const { user } = useContext(AuthContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 
 	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
-	console.log(inbox.items)
 
 	// const inboxSMS = useInboxSMS(inboxSelected && inboxSelected.type === 'sms' ? inboxSelected.inboxId : null)
 	// console.log(inboxSMS)
@@ -176,12 +181,12 @@ export default function ChatPage(props) {
 	const [pinnedChats, setPinnedChats] = useLocalStorage('pinnedChats', {})
 
 	const [displayFilters, setDisplayFilters] = useState(true)
-	const [conversationViewer, setConversationViewer] = useState([])
+	const [selectedConversationControl, setSelectedConversationControl] = useState<IConversationControl[]>([])
 
 	useEffect(() => {
 		if (user) {
 			const pinned = conversations.filter(conversation => pinnedChats[user.id]?.includes(conversation.id))
-			setConversationViewer(pinned)
+			setSelectedConversationControl(pinned)
 		}
 	}, [])
 
@@ -209,33 +214,38 @@ export default function ChatPage(props) {
 		// contact_id -> team_contact_id
 		// inbox_type -> sms | dm 
 
-		console.log(chatListItem)
-		console.log(inboxSelected)
+		console.log("chat list item", chatListItem)
+		console.log("inbox", inboxSelected)
 
-		getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
-			.then(res => console.log(res))
-			.catch(err => console.log(err))
+		const conversationId = chatListItem.contact_id + chatListItem.from
+		const newConversationControl = {
+			id: conversationId,
+			contact_id: chatListItem.contact_id,
+			inbox_type: chatListItem.type,
+			user_id: inboxSelected.userId
+		}
+		/* 
+				getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
+					.then(res => console.log(res))
+					.catch(err => console.log(err)) */
 
+		// useInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)
 
-
-		// let index = 0
-		// const conv = conversationViewer.filter(conv => conv?.id === conversation.id && conversation)
-		// if (conv.length === 0) {
-
-		// 	setConversationViewer([conversation, ...conversationViewer])
-		// } else {
-		// 	// index = conversationViewer.indexOf(conversation)
-		// 	// console.log(conv)
-		// }
+		const conv = selectedConversationControl.find(conv => conv.id === conversationId)
+		if (conv) {
+			setSelectedConversationControl(prev => prev.filter(conv => conv.id !== conversationId))
+		} else {
+			setSelectedConversationControl(prev => ([...prev, newConversationControl]))
+		}
 	}
 
-	const onCloseConversation = (conversation) => {
-		const index = conversationViewer.indexOf(conversation)
-		conversationViewer.splice(index, 1)
-		setConversationViewer([...conversationViewer])
+	const onCloseConversation = (conversation: IConversationControl) => {
+		const index = selectedConversationControl.indexOf(conversation)
+		selectedConversationControl.splice(index, 1)
+		setSelectedConversationControl([...selectedConversationControl])
 	}
 
-	const onChatSearch = (searchTerm) => {
+	const onChatSearch = (searchTerm: string) => {
 		console.log("onChatSearch", searchTerm)
 	}
 
@@ -251,7 +261,7 @@ export default function ChatPage(props) {
 		})
 	}
 
-	const onPin = (conversation) => {
+	const onPin = (conversation: IConversationControl) => {
 		const newPinnedChats = { ...pinnedChats };
 		const conversationId = conversation.id;
 
@@ -266,14 +276,14 @@ export default function ChatPage(props) {
 		setPinnedChats(newPinnedChats)
 	}
 
-	const reorder = (list, startIndex, endIndex) => {
+	const reorder = (list: unknown, startIndex: number, endIndex: number) => {
 		const result = [...list];
 		const [removed] = result.splice(startIndex, 1);
 		result.splice(endIndex, 0, removed);
 		return result;
 	};
 
-	const onDragEnd = (result) => {
+	const onDragEnd = (result: DropResult) => {
 		const { destination, source, draggableId } = result;
 		// dropped outside the list
 		if (!destination)
@@ -282,10 +292,10 @@ export default function ChatPage(props) {
 		if (destination.index === source.index)
 			return;
 
-		setConversationViewer(reorder(conversationViewer, source.index, destination.index))
+		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item, itemIndex, index) => {
+	const onFilterSelected = (item, itemIndex: number, index: number) => {
 		if (!teamInboxes.items || !teamMembers.items)
 			return
 
@@ -399,12 +409,12 @@ export default function ChatPage(props) {
 											}
 										}}
 									>
-										{conversationViewer.map((conversation, index) => (
+										{selectedConversationControl.map((conversation, index) => (
 											<ChatWindow
 												isPinned={isPinned(conversation)}
 												index={index}
 												key={conversation.id}
-												conversation={conversation}
+												conversationControl={conversation}
 												onCloseConversation={onCloseConversation}
 												onPin={() => onPin(conversation)}
 												snippets={snippets}
