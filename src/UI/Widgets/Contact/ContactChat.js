@@ -3,15 +3,13 @@ import lodash from "lodash";
 
 import { Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
-import { useSnippets, useTextPlaceholders, useContactConversation } from 'Api/ReactQuery'
+import { useContactConversation } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 
 
 const ContactChat = (props) => {
 
-  const snippets = useSnippets()
-  const textPlaceholders = useTextPlaceholders()
   const contactConversation = useContactConversation(props.contact?.id)
   const [loadedMessages, setLoadedMessages] = useState({})
 
@@ -43,9 +41,11 @@ const ContactChat = (props) => {
       spacing={1}
     >
       <ContactChatHeader contact={props.contact} />
-      <ChatInput snippets={snippets} textPlaceholders={textPlaceholders} />
+      <ChatInput />
       <MessagesDisplay
-        messages={loadedMessages}
+        contact_profile_image={loadedMessages.contact_profile_image}
+        coach_profile_image={loadedMessages.coach_profile_image}
+        messages={loadedMessages.messages}
         onScrollEnd={handleOnScrollEnd}
         loading={contactConversation.isLoading}
       />

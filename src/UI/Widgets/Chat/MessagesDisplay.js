@@ -262,7 +262,9 @@ export const MessagesDisplay = (props) => {
     const { messages,
         contact_profile_image,
         coach_profile_image,
-    } = props.messages || {};
+    } = props;
+
+    console.log(messages)
 
     const scrollRef = props.onScrollEnd && useBottomScrollListener(props.onScrollEnd);
 
