@@ -154,10 +154,12 @@ interface IInboxSelected {
 }
 
 export interface IConversationControl {
-	id: string;
-	contact_id: string;
-	inbox_type: InboxType;
-	user_id: string
+	id: string,
+	contact_id: string,
+	contact_name: string,
+	from: string,
+	inbox_type: InboxType,
+	user_id: number,
 }
 
 export default function ChatPage(props) {
@@ -221,8 +223,10 @@ export default function ChatPage(props) {
 		const newConversationControl = {
 			id: conversationId,
 			contact_id: chatListItem.contact_id,
+			contact_name: chatListItem.name,
+			from: chatListItem.from,
 			inbox_type: chatListItem.type,
-			user_id: inboxSelected.userId
+			user_id: inboxSelected.team_member_id
 		}
 		/* 
 				getInboxConversation(chatListItem.contact_id, chatListItem.type, inboxSelected.userId)

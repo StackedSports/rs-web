@@ -149,10 +149,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
                 src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
               />
               <Typography fontWeight={600}>
-                {props.conversationControl.user_id}
+                {props.conversationControl.contact_name}
               </Typography>
               <Typography variant="subtitle2" >
-                @charles
+                {props.conversationControl.from}
               </Typography>
               <IconButton onClick={onCloseConversation} size='small' color='inherit' sx={{ ml: 'auto' }} >
                 <CloseIcon />

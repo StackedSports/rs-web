@@ -130,7 +130,12 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 export const useInboxConversation = (contact_id?: number | string, inboxType?: InboxType, userId?: number | string) => {
     const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], () => getInboxConversation(contact_id, inboxType, userId), {
         enabled: !!contact_id && !!inboxType,
-        select: (data: [IConversatitionAPI[], IPaginationApi]): IConversatitionAPI[] => data[0].map(conversation => ({ ...conversation, id: `${contact_id}${userId}`, text: conversation.message }))
+        select: (data: [IConversatitionAPI[], IPaginationApi]): IConversatitionAPI[] => {
+            console.log('react query')
+            console.log(data[0])
+
+            return data[0].map(conversation => ({ ...conversation, id: `${contact_id}${userId}`, text: conversation.message }))
+        }
     })
 
     return {
