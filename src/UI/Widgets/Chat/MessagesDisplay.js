@@ -342,7 +342,6 @@ export const MessagesDisplay = (props) => {
             >
                 {messages && messages.map((message, index) => (
                     <TextMessage
-                        key={message.id || index}
                         owner={message.direction === 'out'}
                         onCheck={onCheckMessages}
                         checked={isMessageChecked(message)}

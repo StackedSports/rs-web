@@ -157,7 +157,7 @@ export interface IConversationControl {
 	name: string;
 	contact_id: string;
 	inbox_type: InboxType;
-	user_id: string;
+	user_id: string | number;
 }
 
 export default function ChatPage() {
