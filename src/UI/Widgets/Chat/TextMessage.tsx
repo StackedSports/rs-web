@@ -55,7 +55,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                             <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
                         </Box>
                     )}
-                    <Typography >
+                    <Typography sx={{wordBreak: 'break-all', hyphens: 'auto' }} >
                         {props.message.text}
                     </Typography>
                 </Box>
