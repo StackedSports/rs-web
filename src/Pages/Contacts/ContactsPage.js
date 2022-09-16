@@ -12,10 +12,10 @@ import BaseContactsPage from './BaseContactsPage';
 export default function ContactsPage(props) {
     const app = useContext(AppContext)
     const searchParams = useSearchParams();
-    const [perPageLocalStorage,setperPageLocalStorage ] = useLocalStorage(`contacts-table-perPage`, 50)
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-table-perPage`, 50)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
-    const contacts = useContacts(page, perPage)
+    const contacts = useContacts(page, perPage, { archived: true })
 
     const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedSort, setSelectedSort] = useState({})
