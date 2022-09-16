@@ -14,9 +14,7 @@ function parseJSON<T>(value: string | null): T | undefined {
 function getStorageValue<T>(key: string, defaultValue: T): T {
   // getting stored value
   const saved = localStorage.getItem(key);
-  console.log(saved)
-  const initial =  parseJSON<T>(saved);
-  console.log("Inital", initial)
+  const initial = parseJSON<T>(saved);
   return initial || defaultValue;
 }
 

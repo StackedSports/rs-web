@@ -1,15 +1,12 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
-import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { useLocalStorage } from 'Hooks/useLocalStorage';
-import { ChatWindow, ChatListItem } from 'UI/Widgets/Chat'
+import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
-
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"  
 
 interface IChatInboxProps {
     name?: string | null,

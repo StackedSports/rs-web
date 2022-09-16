@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from "react"
-import { useQuery, useQueryClient, useMutation } from "react-query"
-import { getInboxes, getInbox, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
+import { useState, useEffect } from "react"
+import { useQuery, useQueryClient, useMutation, useInfiniteQuery, InfiniteData } from "react-query"
+import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI } from "Interfaces"
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
 
 export const useTeamInboxes = () => {
     const reactQuery = useQuery('team_inboxes', () => getInboxes(), {
@@ -35,53 +35,8 @@ export const useTeamInboxes = () => {
 
 }
 
-export const useUserInbox = (userId: string, inboxType: InboxType) => {
+/* export const useUserInbox = (userId: string, inboxType: InboxType) => {
     const reactQuery = useQuery('user_inbox', () => getInbox(), {
-        select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
-            .map((inbox: IUserInboxAPI) => ({
-                contact_id: inbox.team_contact.team_contact_id,
-                name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
-                profile_img: inbox.team_contact.profile_image,
-                type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
-                from: inbox.last_message.from,
-                preview: inbox.last_message.last_message_preview,
-                time: inbox.last_message.last_received_time
-            }))
-    })
-
-    return {
-        ...reactQuery,
-        items: reactQuery.data,
-        loading: reactQuery.isLoading
-    }
-}
-
-/* export const useInboxDM = (inboxId: number | string) => {
-    const reactQuery = useQuery(['inbox_dm', inboxId], () => getInboxDM(), {
-        select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
-            .map((inbox: IUserInboxAPI) => ({
-                contact_id: inbox.team_contact.team_contact_id,
-                name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,
-                profile_img: inbox.team_contact.profile_image,
-                type: inbox.last_message.message_type === 'sms' ? 'sms' : 'dm',
-                from: inbox.last_message.from,
-                preview: inbox.last_message.last_message_preview,
-                time: inbox.last_message.last_received_time
-            }))
-    })
-
-    return {
-        ...reactQuery,
-        items: reactQuery.data,
-        loading: reactQuery.isLoading
-    }
-}
-
-export const useInboxSMS = (inboxId: number | string | null) => {
-    if (!inboxId)
-        return null
-
-    const reactQuery = useQuery(['inbox_dm', inboxId], () => getInboxSMS(), {
         select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
             .map((inbox: IUserInboxAPI) => ({
                 contact_id: inbox.team_contact.team_contact_id,
@@ -127,20 +82,85 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 
 }
 
-export const useInboxConversation = (contact_id?: number | string, inboxType?: InboxType, userId?: number | string) => {
-    const reactQuery = useQuery(['inbox', 'conversation', contact_id, userId, inboxType], () => getInboxConversation(contact_id, inboxType, userId), {
-        enabled: !!contact_id && !!inboxType,
-        select: (data: [IConversatitionAPI[], IPaginationApi]): IConversatitionAPI[] => {
-            console.log('react query')
-            console.log(data[0])
+interface getInboxConversationParams {
+    contact_id?: number | string,
+    inbox_type?: InboxType,
+    user_id?: number | string
+}
 
-            return data[0].map(conversation => ({ ...conversation, id: `${conversation.created_at}${conversation.message}`, text: conversation.message }))
+export const useInboxConversation = (params: getInboxConversationParams, initialPage: number = 1, itemsPerPage: number = 20) => {
+    const [conversation, setConversation] = useState<IConversatition[]>([])
+    const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
+
+
+
+    const reactQuery = useQuery(['inbox', 'conversation', params, initialPage, itemsPerPage],
+        // @ts-ignore: Unreachable code error 
+        () => getInboxConversation(params, initialPage, itemsPerPage),
+        {
+            enabled: !!params.contact_id && !!params.inbox_type,
+            select: (data: IApiResponse<IConversatitionAPI>): IApiResponse<IConversatition> => {
+                const parsedConversation = data[0].map(conversation => ({
+                    ...conversation,
+                    id: `${conversation.created_at}${conversation.message}`,
+                    text: conversation.message
+                }))
+                return [parsedConversation, data[1]];
+            }
+        })
+
+    useEffect(() => {
+        if (reactQuery.isSuccess) {
+            const [conversationApi, paginationApi] = reactQuery.data
+            setConversation(conversationApi)
+            setPagination(paginationApi)
+        } else {
+            setConversation([])
         }
-    })
+
+    }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
 
     return {
         ...reactQuery,
-        items: reactQuery.data,
+        items: conversation,
+        pagination,
+        loading: reactQuery.isLoading
+    }
+}
+
+export const useInboxConversationInfinte = (params: getInboxConversationParams, itemsPerPage: number = 20) => {
+    const [conversation, setConversation] = useState<IConversatition[]>([])
+
+    const reactQuery = useInfiniteQuery<IApiResponse<IConversatitionAPI>>(['inbox', 'conversation', params],
+        // @ts-ignore: Unreachable code error 
+        ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
+        {
+            enabled: !!params.contact_id && !!params.inbox_type,
+            getNextPageParam: (lasPage) => {
+                return lasPage[1].currentPage >= lasPage[1].totalPages ? undefined : lasPage[1].currentPage + 1
+            },
+        })
+
+    useEffect(() => {
+        if (reactQuery.isSuccess) {
+            const { pages } = reactQuery.data
+            const conversations = pages.map(data => data[0].map(conversation => ({
+                ...conversation,
+                id: `${conversation.created_at}${conversation.message}`,
+                text: conversation.message
+            }))).flat()
+            setConversation(conversations)
+
+        } else {
+            console.log("error", reactQuery.error)
+            setConversation([])
+        }
+
+    }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
+
+    return {
+        ...reactQuery,
+        items: conversation,
         loading: reactQuery.isLoading
     }
 }

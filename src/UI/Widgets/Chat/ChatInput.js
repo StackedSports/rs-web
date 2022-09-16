@@ -84,11 +84,11 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p="20px" sx={{ backgroundColor: '#fff' }}>
+            <Box p="20px 10px" sx={{ backgroundColor: '#fff' }}>
                 <TextField
                     fullWidth
                     multiline
-                    rows={4}
+                    maxRows={4}
                     inputRef={chatInputRef}
                     variant="outlined"
                     placeholder="Type your message here"

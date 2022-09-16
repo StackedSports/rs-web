@@ -1,25 +1,21 @@
 import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-import { Stack, List, Typography, Grid, Box } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { Grid } from "@mui/material";
 
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
 import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
 import SideFilter from 'UI/Widgets/SideFilter';
-import SearchBar from 'UI/Widgets/SearchBar';
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
-import { ChatWindow, ChatListItem, ChatInbox } from 'UI/Widgets/Chat';
+import { ChatWindow, ChatInbox } from 'UI/Widgets/Chat';
 
-import { useTeamInboxes, useInbox } from 'Api/ReactQuery/Chat'
-import { useTeamMembers } from 'Api/ReactQuery/TeamMembers'
+import { useTeamInboxes, useInbox, useTeamMembers } from 'Api/ReactQuery'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition } from "Interfaces"
+import { InboxType, IUserInboxItem } from "Interfaces"
 
 // Data for test
 const conversations = [
@@ -247,7 +243,7 @@ export default function ChatPage() {
 		console.log("onChatSearchClear")
 	}
 
-	const onArchiveConversation = (conversation) => {
+	const onArchiveConversation = (conversation: IConversationControl) => {
 		const title = "Archive Conversation"
 		confirmDialog.show(title, "Are you sure you would like to archive this conversation? ", () => {
 			console.log("archiveConversation", conversation)
@@ -278,7 +274,7 @@ export default function ChatPage() {
 	};
 
 	const onDragEnd = (result: DropResult) => {
-		const { destination, source, draggableId } = result;
+		const { destination, source } = result;
 		// dropped outside the list
 		if (!destination)
 			return;
@@ -297,7 +293,7 @@ export default function ChatPage() {
 		// console.log(item, itemIndex, index)
 
 		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id === item.id)
-		console.log("inbox", inbox)
+		//console.log("inbox", inbox)
 
 		if (!inbox)
 			return
@@ -307,7 +303,7 @@ export default function ChatPage() {
 			return inbox.name.includes(fullName)
 		})
 
-		console.log("team member", teamMember)
+		//console.log("team member", teamMember)
 
 		if (!teamMember)
 			return
@@ -320,7 +316,7 @@ export default function ChatPage() {
 			type: inbox.type
 		}
 
-		console.log("Selected inbox", selected)
+		//console.log("Selected inbox", selected)
 
 		setInboxSelected(selected)
 	}
@@ -372,7 +368,7 @@ export default function ChatPage() {
 
 						<DragDropContext onDragEnd={onDragEnd}>
 							<Droppable droppableId="droppable" direction="horizontal">
-								{(provided, snapshot) => (
+								{(provided) => (
 									<Grid item xs  //conversation details container
 										ref={provided.innerRef}
 										{...provided.droppableProps}

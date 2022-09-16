@@ -313,7 +313,7 @@ export const MessagesDisplay = (props) => {
                             action={{
                                 name: 'Action',
                                 variant: 'text',
-                                options: props.actions,
+                                options: props.actions || [],
                             }}
                         />
                     }
@@ -342,6 +342,7 @@ export const MessagesDisplay = (props) => {
             >
                 {messages && messages.map((message, index) => (
                     <TextMessage
+                        key={message.id}
                         owner={message.direction === 'out'}
                         onCheck={onCheckMessages}
                         checked={isMessageChecked(message)}
