@@ -264,7 +264,7 @@ export const MessagesDisplay = (props) => {
         coach_profile_image,
     } = props;
 
-    const scrollRef = props.onScrollEnd && useBottomScrollListener(props.onScrollEnd);
+    const scrollRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd,0,true) : null;
 
     const [checkedMessagesIds, setCheckedMessagesIds] = useState([])
     const [showActions, setShowActions] = useState(false)
