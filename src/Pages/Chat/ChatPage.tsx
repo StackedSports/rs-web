@@ -329,13 +329,24 @@ export default function ChatPage() {
 	const filters = useMemo(() => {
 		return [
 			{
-				id: 'inboxes',
-				name: 'Inboxes',
-				items: teamInboxes?.items?.map(inbox => ({
-					id: inbox.team_member_id,
-					name: `${inbox.name} (${inbox.type})`,
-					isSelected: inboxSelected?.inboxId === inbox.team_member_id
-				}))
+				id: 'inboxes-sms',
+				name: 'Twitter DM',
+				items: teamInboxes?.items?.filter(inbox => inbox.type === 'dm')
+					.map(inbox => ({
+						id: inbox.team_member_id,
+						name: inbox.name,
+						isSelected: inboxSelected?.team_member_id === inbox.team_member_id
+					}))
+			},
+			{
+				id: 'inboxes-dm',
+				name: 'Stacked Text',
+				items: teamInboxes?.items?.filter(inbox => inbox.type === 'sms')
+					.map(inbox => ({
+						id: inbox.team_member_id,
+						name: inbox.name,
+						isSelected: inboxSelected?.team_member_id === inbox.team_member_id
+					}))
 			}
 		]
 	}, [teamInboxes, inboxSelected])
