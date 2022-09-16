@@ -81,6 +81,10 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['status_2'] = filters.status_2.map(status => status.value)
     }
 
+    if (filters.archived) {
+        criteria['archived'] = filters.archived
+    }
+
     // "criteria": {
     //     "search": "",
     //     "tags": [], //comma delimited list of tags

@@ -129,6 +129,7 @@ export const settingsRoutes = {
 
 export const contactsRoutes = {
     all: '/contacts',
+    archived: '/contacts/archived',
     board: '/contacts/board',
     kanban: '/contacts/kanban',
     profile: '/contacts/profile'

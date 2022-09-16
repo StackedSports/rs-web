@@ -198,7 +198,8 @@ export default function BaseContactsPage(props) {
                 id: '0',
                 name: 'Contacts',
                 items: [
-                    { id: 'all-contacts', name: 'All Contacts', path: contactsRoutes.all }
+                    { id: 'all-contacts', name: 'All Contacts', path: contactsRoutes.all },
+                    { id: 'all-contacts-archived', name: 'Archived Contacts', path: contactsRoutes.all },
                 ],
             },
             {
