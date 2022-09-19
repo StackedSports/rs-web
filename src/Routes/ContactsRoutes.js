@@ -16,6 +16,12 @@ const ContactsRoutes = (props) => (
     />
     <Route
       exact
+      path={contactsRoutes.archived}
+    >
+      <ContactsPage {...props} include_archived={true} />
+    </Route>
+    <Route
+      exact
       path={`${contactsRoutes.board}/:boardId`}
       component={BoardPage}
     />
