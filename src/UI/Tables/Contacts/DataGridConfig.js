@@ -221,7 +221,7 @@ const status = {
 }
 
 const status2 = {
-    field: 'status2',
+    field: 'status_2',
     headerName: 'Status 2',
     flex: 1,
     minWidth: 100,
@@ -368,7 +368,7 @@ export const parseColumnsNames = (property) => {
             return 'twitterName'
         case 'ranks':
             return 'rank'
-        case 'grad_year':
+        case 'years':
             return 'gradYear'
         case 'positions':
         case 'team_positions':
@@ -381,6 +381,8 @@ export const parseColumnsNames = (property) => {
             return 'timeZone'
         case 'states':
             return 'state'
+        case 'dob':
+            return 'birthday'
         default:
             return property
     }

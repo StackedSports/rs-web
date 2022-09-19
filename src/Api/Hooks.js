@@ -1428,7 +1428,7 @@ const getColumns = (control) => ({
     positionCoach: false,
     recruitingCoach: false,
     status: false,
-    status2: false,
+    status_2: false,
     tags: false,
     rank: false,
     // lastMessaged: false,
@@ -1454,7 +1454,6 @@ export const useContactTableColumns = (control, id) => {
     }, [control])
 
     const onChange = (newValue) => {
-        console.log(newValue)
         localStorage.setItem(id + '-table-columns', JSON.stringify(newValue))
         setColumns(newValue)
     }

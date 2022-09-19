@@ -84,7 +84,6 @@ export const KanbanColumn = ({
                             alignItems='center'
                             sx={{ borderRadius: 1.2, padding: 2, width: '100%', height: '50px' }}
                             bgcolor={snapshot.isDragging ? '#afafaf' : '#f5f6fa'}
-                            isDragging={snapshot.isDragging}
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}
                         >

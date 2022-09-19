@@ -52,9 +52,9 @@ export default function SelectDialogTab(props) {
       open={props.open}
       onClose={props.onClose}
     >
-      <Box container style={{ padding: 16 }} direction='column'>
+      <Box style={{ padding: 16 }}>
         <TabContext value={tabIndex}>
-          <Stack container direction='row' mb={2}>
+          <Stack direction='row' mb={2}>
             <Stack flex={1}
               direction='row'
               justify='flex-start'
@@ -136,10 +136,7 @@ export default function SelectDialogTab(props) {
                 marginRight: 20
               }}
               onClick={props.onConfirmSelection}
-              //loading={uploadingMedia}
-              //endIcon={uploadingMedia || uploadFinished ? <span></span> : <CloudUploadIcon style={{ color: "white" }}/> }
               disableElevation
-              // color="#3871da"
               variant="contained"
               disabled={props.disableOnConfirmSelection}
             >

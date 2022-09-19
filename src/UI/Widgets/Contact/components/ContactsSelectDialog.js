@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { TabPanel } from '@mui/lab'
 import { Box, IconButton } from '@mui/material';
 import { Clear } from '@mui/icons-material';
@@ -11,6 +11,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import { useContacts, useGradYears, usePositions, useRanks, useStatus2, useStatuses, useTags, useTeamMembers } from 'Api/ReactQuery'
 import { states, timeZones } from 'utils/Data'
 import { getFullName } from 'utils/Parser'
+import useLocalStorage from 'Hooks/useLocalStorage';
 
 const getSelectionLabel = (selectionCount, clearSelection) => {
     return (
@@ -25,7 +26,8 @@ const getSelectionLabel = (selectionCount, clearSelection) => {
 
 export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
 
-    const contacts = useContacts();
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-select-dialog-perPage`, 50)
+    const contacts = useContacts(1, perPageLocalStorage);
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
     const [selectedFilters, setSelectedFilters] = useState({})
     //filters
@@ -36,6 +38,10 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
     const tags = useTags()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
+
+    useEffect(() => {
+        setperPageLocalStorage(contacts.pagination.itemsPerPage)
+    }, [contacts.pagination.itemsPerPage])
 
     const handleSelectionConfirm = () => {
         onSelectionConfirm(multipageSelection.selectedData)
@@ -148,9 +154,11 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
             </Box>
             <TabPanel value={'0'} sx={{ py: 1 }} >
                 <ContactsTableServerMode
+                    id={"contacts-select-dialog"}
                     contacts={contacts.items}
                     pagination={contacts.pagination}
                     loading={contacts.loading}
+                    selectedFilters={selectedFilters}
                     {...multipageSelection}
                 />
             </TabPanel>
