@@ -6,7 +6,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"  
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
 
 interface IChatInboxProps {
     name?: string | null,
@@ -28,7 +28,6 @@ export const ChatInbox = (props: IChatInboxProps) => {
         <Grid item container direction='column' sx={{
             width: "370px",
             overscrollBehaviorBlock: 'contain',
-            //border: "red solid 1px",
             borderEndStartRadius: '5px',
             borderStartStartRadius: '5px',
             border: "1px solid #dadada",
@@ -70,7 +69,6 @@ export const ChatInbox = (props: IChatInboxProps) => {
                         <ChatListItem
                             key={item.contact_id}
                             item={item}
-                            //   conversation={conversation}
                             onToggleChat={props.onChatClick}
                             onArchiveConversation={props.onArchiveConversation}
                         />

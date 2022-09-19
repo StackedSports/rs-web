@@ -12,7 +12,7 @@ import { debounce } from 'lodash';
  */
 export const useBottomScrollListener = (onBottom: () => void, offset: number = 0, triggerOnNoScroll: boolean = false): RefObject<HTMLElement> => {
 
-    const debouncedOnBottom = useMemo(() => debounce(onBottom, 200, { leading: true }), [onBottom]);
+    const debouncedOnBottom = useMemo(() => debounce(onBottom, 400, { leading: true }), [onBottom]);
     const containerRef = useRef<HTMLElement>(null);
 
     const handleOnScroll = useCallback(() => {

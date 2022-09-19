@@ -3,7 +3,7 @@ import { Avatar, IconButton, ListItemButton, Stack, Typography } from '@mui/mate
 import { formatDate, formatPhoneNumber } from 'utils/Parser';
 import ArchiveIcon from '@mui/icons-material/Archive';
 
-export const ChatListItem = (props) => {
+export const ChatInboxItem = (props) => {
 
 	const [showIconClose, setShowIconClose] = useState(false)
 
@@ -32,7 +32,7 @@ export const ChatListItem = (props) => {
 				padding: "15px",
 				position: "relative",
 				borderTop: "solid 1px #efefef",
-				// borderBottom: "solid 1px #efefef",
+				backgroundColor: props.active ? 'divider' : 'background.paper'
 			}}
 			key={props.item.id}
 			onMouseEnter={() => setShowIconClose(true)}
@@ -88,4 +88,4 @@ export const ChatListItem = (props) => {
 	)
 }
 
-export default ChatListItem
+export default ChatInboxItem

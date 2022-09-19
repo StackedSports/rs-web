@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useQuery, useQueryClient, useMutation, useInfiniteQuery, InfiniteData } from "react-query"
+import { useQuery, useQueryClient, useMutation, useInfiniteQuery } from "react-query"
 import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
@@ -62,7 +62,7 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 
     const reactQuery = useQuery(['inbox', inboxId, inboxType], () => get(inboxId), {
         enabled: !!inboxId && !!inboxType,
-        select: (data: [IUserInboxAPI[], IPaginationApi]): IUserInboxItem[] => data[0]
+        select: (data: IApiResponse<IUserInboxAPI>): IUserInboxItem[] => data[0]
             .map((inbox) => ({
                 contact_id: inbox.team_contact.team_contact_id,
                 name: inbox.team_contact.first_name + ' ' + inbox.team_contact.last_name,

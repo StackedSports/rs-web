@@ -42,10 +42,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 	}, [infinity.items])
 
 	const loadNextPageMessages = useCallback(() => {
-		console.log("next page")
-		if (infinity.isFetchingNextPage) return
+		if (infinity.isLoading || infinity.isFetching) return
 		infinity.fetchNextPage()
-	},[])
+	}, [])
 
 	const onCloseConversation = () => {
 		props.onCloseConversation(props.conversationControl)

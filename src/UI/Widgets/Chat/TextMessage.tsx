@@ -55,11 +55,11 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                             <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
                         </Box>
                     )}
-                    <Typography sx={{wordBreak: 'break-all', hyphens: 'auto' }} >
+                    <Typography sx={{ wordBreak: 'break-all', hyphens: 'auto' }} >
                         {props.message.text}
                     </Typography>
                 </Box>
-                <Time fontSize={9.5} color='text.secondary'>
+                <Time fontSize={9.5} color='text.secondary' textAlign={props.owner ? 'right' : 'left'}>
                     {formatDate(props.message.created_at)}
                 </Time>
             </Box>
@@ -80,5 +80,5 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
 
 const Time = styled(Typography)`
   margin-top: 6px;
-  margin-left: 4px;
+  margin-inline: 4px;
 `
