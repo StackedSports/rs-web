@@ -115,7 +115,7 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
             setConversation(conversationApi)
             setPagination(paginationApi)
         } else {
-            setConversation([])
+            console.log(reactQuery.error)
         }
 
     }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
@@ -153,7 +153,6 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
 
         } else {
             console.log("error", reactQuery.error)
-            setConversation([])
         }
 
     }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])

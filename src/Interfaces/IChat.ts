@@ -5,7 +5,7 @@ export type InboxType = 'sms' | 'dm'
 export interface ITeamInboxItem {
     team_member_id: number,
     name: string,
-    channel?: number | string,
+    channel: number | string,
     type: InboxType
 }
 

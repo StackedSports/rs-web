@@ -15,7 +15,7 @@ import { ChatWindow, ChatInbox } from 'UI/Widgets/Chat';
 
 import { useTeamInboxes, useInbox, useTeamMembers } from 'Api/ReactQuery'
 
-import { InboxType, IUserInboxItem } from "Interfaces"
+import { InboxType, ISideFilter, IUserInboxItem } from "Interfaces"
 
 // Data for test
 const conversations = [
@@ -253,14 +253,19 @@ export default function ChatPage() {
 
 	const onPin = (conversation: IConversationControl) => {
 		const newPinnedChats = { ...pinnedChats };
+
+		const USER_ID = user.id
+		const INBOX_ID = inboxSelected?.team_member_id
+		newPinnedChats[USER_ID] = newPinnedChats[USER_ID] || [];
+
+		console.log(conversation)
 		const conversationId = conversation.id;
 
-		newPinnedChats[user.id] = newPinnedChats[user.id] || [];
-		if (newPinnedChats[user.id].find(control => control.id === conversationId)) {
-			newPinnedChats[user.id] = newPinnedChats[user.id].filter(control => control.id !== conversationId)
+		if (newPinnedChats[USER_ID].find(control => control.id === conversationId)) {
+			newPinnedChats[USER_ID] = newPinnedChats[USER_ID].filter(control => control.id !== conversationId)
 		}
 		else {
-			newPinnedChats[user.id].push(conversation)
+			newPinnedChats[USER_ID].push(conversation)
 		}
 
 		setPinnedChats(newPinnedChats)
@@ -285,14 +290,12 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item, itemIndex: number, index: number) => {
+	const onFilterSelected = (item: ISideFilter) => {
+
 		if (!teamInboxes.items || !teamMembers.items)
 			return
 
-		//console.log(teamMembers.items)
-		// console.log(item, itemIndex, index)
-
-		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id === item.id)
+		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id == item.id)
 		//console.log("inbox", inbox)
 
 		if (!inbox)
@@ -302,8 +305,8 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-
 		//console.log("team member", teamMember)
+
 
 		if (!teamMember)
 			return
@@ -317,8 +320,8 @@ export default function ChatPage() {
 		}
 
 		//console.log("Selected inbox", selected)
-
 		setInboxSelected(selected)
+		setSelectedConversationControl([])
 	}
 
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Linkify from 'react-linkify';
 import { Avatar, Box, Checkbox, ListItem, styled, Typography } from '@mui/material';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -38,10 +39,9 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     sx={{ mr: props.owner ? 'auto' : 0 }}
                 />
             }
-            <Box>
+            <Box >
                 <Box
                     sx={{
-                        margin: props.owner ? "0 0 0 30px" : "0 30px 0 0",
                         padding: '10px 15px',
                         color: "common.black", // props.owner ? "common.white" : "common.black",
                         backgroundColor: props.owner ? "#e8f0ff" : "common.white",
@@ -51,12 +51,30 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     }}
                 >
                     {props.message.media && (
-                        <Box sx={{ maxWidth: '420px', '> *': { borderRadius: '5px' } }}>
-                            <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
+                        <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
+                            <RenderMediaType
+                                url={props.message.media?.urls?.original}
+                                type={getFileType(props.message?.media)}
+                            />
                         </Box>
                     )}
-                    <Typography sx={{ wordBreak: 'break-all', hyphens: 'auto' }} >
-                        {props.message.text}
+                    <Typography
+                        sx={{
+                            maxWidth: '300px',
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                            '>a': { textDecoration: 'underline', color: 'primary.main' }
+                        }}
+                    >
+                        <Linkify
+                            componentDecorator={(decoratedHref, decoratedText, key) => (
+                                <a target="blank" href={decoratedHref} key={key}>
+                                    {decoratedText}
+                                </a>
+                            )}
+                        >
+                            {props.message.text}
+                        </Linkify>
                     </Typography>
                 </Box>
                 <Time fontSize={9.5} color='text.secondary' textAlign={props.owner ? 'right' : 'left'}>
@@ -74,7 +92,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                 aria-label="avatar"
                 src={props.owner ? props.owmnerAvatar : props.contactAvatar}
             />
-        </ListItem>
+        </ListItem >
     )
 }
 

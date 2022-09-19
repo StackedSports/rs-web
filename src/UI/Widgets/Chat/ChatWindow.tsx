@@ -36,7 +36,6 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 		user_id: props.conversationControl.user_id
 	})
 
-
 	useEffect(() => {
 		console.log("infinity items", infinity.items)
 	}, [infinity.items])
@@ -44,7 +43,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 	const loadNextPageMessages = useCallback(() => {
 		if (infinity.isLoading || infinity.isFetching) return
 		infinity.fetchNextPage()
-	}, [])
+	}, [infinity.fetchNextPage])
 
 	const onCloseConversation = () => {
 		props.onCloseConversation(props.conversationControl)
