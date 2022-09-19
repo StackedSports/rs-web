@@ -15,7 +15,7 @@ export default function ContactsPage(props) {
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-table-perPage`, 50)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
-    const contacts = useContacts(page, perPage, { archived: true })
+    const contacts = useContacts(page, perPage)
 
     const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedSort, setSelectedSort] = useState({})
@@ -38,10 +38,17 @@ export default function ContactsPage(props) {
         timeZone: true,
     }
 
-    const onPanelFilterChange = (filter) => {
+    const handleContactsFilter = (filter) => {
+        console.log("props.include_archived", props.include_archived)
+        if (props.include_archived)
+            contacts.filter({ ...filter, ...selectedSort, include_archived: props.include_archived })
+        else
+            contacts.filter({ ...filter, ...selectedSort })
+    }
 
+    const onPanelFilterChange = (filter) => {
         setSelectedFilters(filter)
-        contacts.filter({ ...filter, ...selectedSort })
+        handleContactsFilter(filter)
     }
 
     const onSendMessageClick = (selectedData) => {
@@ -50,7 +57,6 @@ export default function ContactsPage(props) {
 
     const onContactSearch = (searchTerm) => {
         contacts.filter({ search: searchTerm })
-        contacts.refetch()
     }
 
     const onContactSearchClear = () => {

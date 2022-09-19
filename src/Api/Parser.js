@@ -81,8 +81,8 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['status_2'] = filters.status_2.map(status => status.value)
     }
 
-    if (filters.archived) {
-        criteria['archived'] = filters.archived
+    if (filters.include_archived) {
+        criteria['include_archived'] = filters.include_archived
     }
 
     // "criteria": {

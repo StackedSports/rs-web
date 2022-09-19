@@ -313,13 +313,15 @@ export const filterContacts = (page, perPage, filters) => {
     const data = {
         page: page,
         per_page: perPage,
-        criteria: { ...getFilterContactsCriteria(filters) }
+        criteria: { ...getFilterContactsCriteria(filters) },
     }
 
     if (filters?.sort_column)
         data.sort_column = filters.sort_column
     if (filters?.sort_dir)
         data.sort_dir = filters.sort_dir
+    if (filters?.include_archived)
+        filters.include_archived = filters?.include_archived
 
     return AXIOS('post', 'contacts/filter', data)
 }
