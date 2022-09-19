@@ -1,5 +1,6 @@
 import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import lodash from 'lodash'
 
 import { Grid } from "@mui/material";
 
@@ -155,6 +156,7 @@ export interface IConversationControl {
 	from: string,
 	inbox_type: InboxType,
 	user_id: number,
+	isPinned?: boolean
 }
 
 export default function ChatPage() {
@@ -170,27 +172,36 @@ export default function ChatPage() {
 	// console.log(userInbox)
 	const teamMembers = useTeamMembers()
 
-	const [pinnedChats, setPinnedChats] = useLocalStorage<Record<string, IConversationControl[]>>('pinnedChats', {})
+	const [pinnedChats, setPinnedChats] = useLocalStorage<[string, IConversationControl[]][]>('pinnedConversations', [])
 
 	const [displayFilters, setDisplayFilters] = useState(true)
 	const [selectedConversationControl, setSelectedConversationControl] = useState<IConversationControl[]>([])
 
+	const pinnedChatsMap = useMemo(() => {
+		console.log("pinnedChats", pinnedChats)
+		return new Map(pinnedChats)
+	}, [pinnedChats])
+
 	useEffect(() => {
-		if (user) {
-			const pinned = pinnedChats[user?.id]
+		if (user && inboxSelected) {
+			const pinned = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
 			if (pinned) {
 				console.log(pinned)
-				setSelectedConversationControl(pinned)
+				setSelectedConversationControl(prev => {
+					const newControl = lodash.differenceBy(prev, pinned, 'id')
+					return [...pinned, ...newControl]
+				})
 			}
 		}
-	}, [])
+	}, [user, inboxSelected, pinnedChatsMap])
 
 	const isPinned = useCallback((conversation) => {
-		if (user && pinnedChats[user.id]) {
-			return pinnedChats[user.id]?.includes(conversation)
-		}
-		return false
-	}, [pinnedChats, user])
+		if (user && inboxSelected) {
+			const pinnedConversations = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
+			return pinnedConversations?.includes(conversation)
+		} else
+			return false
+	}, [pinnedChatsMap, user])
 
 	const onTopActionClick = () => {
 		console.log("onTopActionClick")
@@ -219,7 +230,8 @@ export default function ChatPage() {
 			contact_name: chatListItem.name,
 			from: chatListItem.from,
 			inbox_type: chatListItem.type,
-			user_id: inboxSelected.team_member_id
+			user_id: inboxSelected.team_member_id,
+			isPinned: false
 		}
 		const conv = selectedConversationControl.find(conv => conv.id === conversationId)
 		if (conv) {
@@ -251,24 +263,23 @@ export default function ChatPage() {
 		})
 	}
 
-	const onPin = (conversation: IConversationControl) => {
-		const newPinnedChats = { ...pinnedChats };
+	const onTogglePin = (conversationControl: IConversationControl) => {
 
-		const USER_ID = user.id
-		const INBOX_ID = inboxSelected?.team_member_id
-		newPinnedChats[USER_ID] = newPinnedChats[USER_ID] || [];
+		if (!user || !inboxSelected) return
+		const KEY = `${user.id}${inboxSelected.team_member_id}`
 
-		console.log(conversation)
-		const conversationId = conversation.id;
+		const newConversationControl = { ...conversationControl, isPinned: !conversationControl.isPinned }
 
-		if (newPinnedChats[USER_ID].find(control => control.id === conversationId)) {
-			newPinnedChats[USER_ID] = newPinnedChats[USER_ID].filter(control => control.id !== conversationId)
-		}
-		else {
-			newPinnedChats[USER_ID].push(conversation)
+		let pinnedConversations = pinnedChatsMap.get(KEY) || []
+
+		if (conversationControl.isPinned) {
+			pinnedConversations = pinnedConversations.filter(pinned => pinned.id !== conversationControl.id)
+		} else {
+			pinnedConversations?.push(newConversationControl)
 		}
 
-		setPinnedChats(newPinnedChats)
+		setPinnedChats([...pinnedChatsMap.set(KEY, pinnedConversations)])
+
 	}
 
 	const reorder = (list: IConversationControl[], startIndex: number, endIndex: number) => {
@@ -408,12 +419,12 @@ export default function ChatPage() {
 									>
 										{selectedConversationControl.map((conversation, index) => (
 											<ChatWindow
-												isPinned={isPinned(conversation)}
+												isPinned={conversation.isPinned}
 												index={index}
 												key={conversation.id}
 												conversationControl={conversation}
 												onCloseConversation={onCloseConversation}
-												onPin={() => onPin(conversation)}
+												onPin={() => onTogglePin(conversation)}
 											/>
 										))}
 										{provided.placeholder}
