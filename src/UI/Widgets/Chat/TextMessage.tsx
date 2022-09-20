@@ -8,6 +8,7 @@ import { RenderMediaType } from '../Media/RenderMediaType';
 import { getFileType } from 'utils/Helper';
 import { formatDate } from 'utils/Parser';
 import { IConversatition } from 'Interfaces';
+import RenderIf from '../RenderIf';
 
 interface TextMessageProps {
     actionActive?: boolean;
@@ -50,14 +51,25 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                         boxShadow: 3
                     }}
                 >
-                    {props.message.media && (
+
+                    <RenderIf condition={props.message.media && (props.message.media instanceof Object)}>
                         <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
                             <RenderMediaType
                                 url={props.message.media?.urls?.original}
                                 type={getFileType(props.message?.media)}
                             />
                         </Box>
-                    )}
+                    </RenderIf>
+                    <RenderIf condition={props.message.media && Array.isArray(props.message.media)}>
+                        <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
+                            {props.message.media?.map(media =>
+                                <RenderMediaType
+                                    url={media?.urls?.original}
+                                    type={getFileType(media.file_type)}
+                                />
+                            )}
+                        </Box>
+                    </RenderIf>
                     <Typography
                         sx={{
                             maxWidth: '300px',

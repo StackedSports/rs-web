@@ -52,7 +52,7 @@ export interface Urls {
     original: string;
 }
 interface Media {
-    id?: number;
+    id?: number | string;
     name: string;
     file_type: string;
     urls: Urls;
@@ -65,7 +65,7 @@ export interface IConversatitionAPI {
     from: string;
     to?: any;
     created_at: Date;
-    media: Media;
+    media: Media | Media[];
     team_contact_id: number;
 }
 export interface IConversatition {
@@ -75,7 +75,7 @@ export interface IConversatition {
     from: string;
     to?: any;
     created_at: Date;
-    media: Media;
+    media: Media | Media[];
     team_contact_id: number;
 }
 
