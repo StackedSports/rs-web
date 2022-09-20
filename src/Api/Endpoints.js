@@ -321,7 +321,7 @@ export const filterContacts = (page, perPage, filters) => {
     if (filters?.sort_dir)
         data.sort_dir = filters.sort_dir
     if (filters?.include_archived)
-        filters.include_archived = filters?.include_archived
+        data.include_archived = filters?.include_archived
 
     return AXIOS('post', 'contacts/filter', data)
 }
