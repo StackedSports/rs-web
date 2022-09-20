@@ -48,7 +48,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                         backgroundColor: props.owner ? "#e8f0ff" : "common.white",
                         borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
                         userSelect: 'text',
-                        boxShadow: 3
+                        boxShadow: 2
                     }}
                 >
 

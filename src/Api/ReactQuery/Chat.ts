@@ -62,6 +62,7 @@ export const useInbox = (inboxId?: number | string, inboxType?: InboxType) => {
 
     const reactQuery = useQuery(['inbox', inboxId, inboxType], () => get(inboxId), {
         enabled: !!inboxId && !!inboxType,
+        staleTime: 10 * 1000,
         select: (data: IApiResponse<IUserInboxAPI>): IUserInboxItem[] => data[0]
             .map((inbox) => ({
                 contact_id: inbox.team_contact.team_contact_id,
@@ -99,6 +100,7 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
         () => getInboxConversation(params, initialPage, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
+            staleTime: 10 * 1000,
             select: (data: IApiResponse<IConversatitionAPI>): IApiResponse<IConversatition> => {
                 const parsedConversation = data[0].map(conversation => ({
                     ...conversation,
@@ -136,6 +138,7 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
         ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
+            staleTime: 10 * 1000,
             getNextPageParam: (lasPage) => {
                 return lasPage[1].currentPage >= lasPage[1].totalPages ? undefined : lasPage[1].currentPage + 1
             },

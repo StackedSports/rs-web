@@ -138,13 +138,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							</IconButton>
 						</Stack>
 
+						<ChatInput />
+
 						<MessagesDisplay
 							messages={infinity.items}
 							actions={actionOptions}
 							onScrollEnd={loadNextPageMessages}
 							loading={infinity.isFetching}
 						/>
-						<ChatInput />
+						
 					</Paper>
 				)}
 			</Draggable>
