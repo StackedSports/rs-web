@@ -100,16 +100,13 @@ export const ChatInbox = (props: IChatInboxProps) => {
                         <b>{props.name}</b>
                     </Typography>
                     
-                    <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
-                        <Typography
+                    <Typography
                         // sx={{ fontSize: "12px", }}
                         component="span"
                         color="text.secondary"
                         variant="body1">
                         {from}
                     </Typography>	
-                    {/* <PlatformIcon sx={{ color: "text.secondary", fontSize: '16px' }}/>	 */}
-                        </Stack>
                     
                     
                 </Stack>
