@@ -185,23 +185,28 @@ export default function ChatPage() {
 	useEffect(() => {
 		if (user && inboxSelected) {
 			const pinned = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
+			console.log("mudou os pinados", pinned)
 			if (pinned) {
-				console.log(pinned)
 				setSelectedConversationControl(prev => {
 					const newControl = lodash.differenceBy(prev, pinned, 'id')
+					console.log("dife", newControl)
 					return [...pinned, ...newControl]
 				})
 			}
 		}
-	}, [user, inboxSelected, pinnedChatsMap])
+	}, [user, inboxSelected, pinnedChatsMap, setSelectedConversationControl])
 
-	const isPinned = useCallback((conversation) => {
-		if (user && inboxSelected) {
-			const pinnedConversations = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
-			return pinnedConversations?.includes(conversation)
-		} else
-			return false
-	}, [pinnedChatsMap, user])
+	useEffect(() => {
+		console.log("selectec control", selectedConversationControl)
+	}, [selectedConversationControl])
+
+	/* 	const isPinned = useCallback((conversation) => {
+			if (user && inboxSelected) {
+				const pinnedConversations = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
+				return pinnedConversations?.includes(conversation)
+			} else
+				return false
+		}, [pinnedChatsMap, user]) */
 
 	const onTopActionClick = () => {
 		console.log("onTopActionClick")
@@ -220,8 +225,8 @@ export default function ChatPage() {
 		// contact_id -> team_contact_id
 		// inbox_type -> sms | dm 
 
-		console.log("chat list item", chatListItem)
-		console.log("inbox", inboxSelected)
+		//console.log("chat list item", chatListItem)
+		//console.log("inbox", inboxSelected)
 
 		const conversationId = chatListItem.contact_id + chatListItem.from + inboxSelected.userId
 		const newConversationControl = {
@@ -267,18 +272,20 @@ export default function ChatPage() {
 
 		if (!user || !inboxSelected) return
 		const KEY = `${user.id}${inboxSelected.team_member_id}`
-
+		//console.log("conversation toggle", conversationControl)
 		const newConversationControl = { ...conversationControl, isPinned: !conversationControl.isPinned }
-
+		//console.log("new conversation toggle", newConversationControl)
+		
+		//atualizar quando despina 
 		let pinnedConversations = pinnedChatsMap.get(KEY) || []
 
 		if (conversationControl.isPinned) {
 			pinnedConversations = pinnedConversations.filter(pinned => pinned.id !== conversationControl.id)
 		} else {
-			pinnedConversations?.push(newConversationControl)
+			pinnedConversations.push(newConversationControl)
 		}
-
-		setPinnedChats([...pinnedChatsMap.set(KEY, pinnedConversations)])
+		pinnedChatsMap.set(KEY, pinnedConversations)
+		setPinnedChats([...pinnedChatsMap])
 
 	}
 
