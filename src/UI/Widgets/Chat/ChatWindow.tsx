@@ -11,6 +11,9 @@ import { Draggable } from 'react-beautiful-dnd';
 import CloseIcon from '@mui/icons-material/Close';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import TextsmsIcon from '@mui/icons-material/Textsms';
+import SmsIcon from '@mui/icons-material/Sms';
 
 
 import { ChatInput } from './ChatInput';
@@ -30,26 +33,24 @@ interface ChatWindowProps {
 
 export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 
-	const infinity = useInboxConversationInfinte({
+	const messages = useInboxConversationInfinte({
 		contact_id: props.conversationControl.contact_id,
 		inbox_type: props.conversationControl.inbox_type,
 		user_id: props.conversationControl.user_id
 	})
 
 	useEffect(() => {
-		console.log("infinity items", infinity.items)
-	}, [infinity.items])
+		console.log("items", messages.items)
+	}, [messages.items])
 
 	useEffect(() => {
-		console.log("control", props.conversationControl)
+		//console.log("control", props.conversationControl)
 	}, [props.conversationControl])
 
-	const loadNextPageMessages = useCallback(() => {
-		console.log("load next start")
-		if (!infinity.hasNextPage || infinity.isFetchingNextPage) return
-		infinity.fetchNextPage()
-		console.log("Fetchingn nex")
-	}, [infinity.fetchNextPage, infinity.hasNextPage, infinity.isFetchingNextPage])
+	const loadNextPageMessages = () => {
+		if (!messages.hasNextPage || messages.isFetchingNextPage) return
+		messages.fetchNextPage()
+	}
 
 	const onCloseConversation = () => {
 		props.onCloseConversation(props.conversationControl)
@@ -81,6 +82,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 		else
 			return `@${from}`
 	}, [props.conversationControl])
+
+	const PlatformIcon = props.conversationControl.inbox_type === 'sms' ? SmsIcon : TwitterIcon
 
 	return (
 		<>
@@ -122,17 +125,20 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 								height: "38px",
 							}}
 								aria-label="avatar"
-								src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+								src={props.conversationControl.contact_profile_image}
 							/>
-							<Stack>
-								<Typography fontWeight={600}>
-									{props.conversationControl.contact_name}
-								</Typography>
+							<Stack flex={1}>
+								<Stack direction='row' gap={1} alignItems='center'>
+									<Typography fontWeight={600}>
+										{props.conversationControl.contact_name}
+									</Typography>
+								</Stack>
 								<Typography variant="subtitle2" >
 									{from}
 								</Typography>
 							</Stack>
 
+							<PlatformIcon sx={{fontSize:'1em', marginRight: '8px'}}/>
 							<IconButton onClick={onCloseConversation} size='small' color='inherit' sx={{ ml: 'auto' }} >
 								<CloseIcon />
 							</IconButton>
@@ -141,10 +147,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 						<ChatInput />
 							
 						<MessagesDisplay
-							messages={infinity.items}
+							messages={messages.items}
+							contact_profile_image={props.conversationControl.contact_profile_image}
+							coach_profile_image={props.conversationControl.coach_profile_image}
 							actions={actionOptions}
 							onScrollEnd={loadNextPageMessages}
-							loading={infinity.isFetching}
+							loading={messages.isFetching}
 						/>
 						
 					</Paper>
