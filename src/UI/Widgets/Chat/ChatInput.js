@@ -88,7 +88,7 @@ export const ChatInput = (props) => {
                 <TextField
                     fullWidth
                     multiline
-                    rows={4}
+                    maxRows={4}
                     inputRef={chatInputRef}
                     variant="outlined"
                     placeholder="Type your message here"

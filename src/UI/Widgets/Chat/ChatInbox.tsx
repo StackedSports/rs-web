@@ -1,15 +1,13 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
-import { useSnippets, useTextPlaceholders } from 'Api/ReactQuery'
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { useLocalStorage } from 'Hooks/useLocalStorage';
-import { ChatWindow, ChatListItem } from 'UI/Widgets/Chat'
+import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
-
+import { IConversationControl } from 'Pages/Chat/ChatPage';
 
 interface IChatInboxProps {
     name?: string | null,
@@ -21,17 +19,35 @@ interface IChatInboxProps {
     onBackClick: () => void,
     onArchiveConversation: Function,
     onChatClick: Function,
-    filterOpen: boolean
+    filterOpen: boolean,
+    conversationControl: IConversationControl[]
 }
 
 export const ChatInbox = (props: IChatInboxProps) => {
     const Icon = props.filterOpen ? MenuOpenIcon : MenuIcon
 
+    const chatSelected = React.useRef<Map<string, boolean>>(new Map())
+
+    React.useEffect(() => {
+        const { conversationControl } = props
+
+        if(!conversationControl)
+            return
+
+        const map: Map<string, boolean> = new Map()
+
+        conversationControl.forEach(control => {
+            map.set(control.contact_id, true)
+        })
+
+        chatSelected.current = map
+
+    }, [props.conversationControl])
+
     return (
         <Grid item container direction='column' sx={{
             width: "370px",
             overscrollBehaviorBlock: 'contain',
-            //border: "red solid 1px",
             borderEndStartRadius: '5px',
             borderStartStartRadius: '5px',
             border: "1px solid #dadada",
@@ -73,7 +89,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                         <ChatListItem
                             key={item.contact_id}
                             item={item}
-                            //   conversation={conversation}
+                            active={chatSelected.current.get(item.contact_id)}
                             onToggleChat={props.onChatClick}
                             onArchiveConversation={props.onArchiveConversation}
                         />
