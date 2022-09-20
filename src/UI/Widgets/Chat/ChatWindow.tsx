@@ -139,7 +139,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 						</Stack>
 
 						<ChatInput />
-
+							
 						<MessagesDisplay
 							messages={infinity.items}
 							actions={actionOptions}

@@ -90,7 +90,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     </Typography>
                 </Box>
                 <Time fontSize={9.5} color='text.secondary' textAlign={props.owner ? 'right' : 'left'}>
-                    {formatDate(props.message.created_at)}
+                    {formatDate(props.message.created_at, 'short', 'short')}
                 </Time>
             </Box>
 

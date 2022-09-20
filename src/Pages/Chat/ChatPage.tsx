@@ -369,7 +369,6 @@ export default function ChatPage() {
 				/>
 				<Panel hideHeader sx={{ minWidth: 0, overflow: 'hidden' }}>
 					<Grid container flex={1} flexWrap='nowrap' >
-
 						<ChatInbox
 							name={inboxSelected?.name}
 							channel={inboxSelected?.channel}
