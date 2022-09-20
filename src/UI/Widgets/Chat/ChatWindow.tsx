@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import {
 	Stack,
 	Paper,
@@ -40,10 +40,16 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 		console.log("infinity items", infinity.items)
 	}, [infinity.items])
 
+	useEffect(() => {
+		console.log("control", props.conversationControl)
+	}, [props.conversationControl])
+
 	const loadNextPageMessages = useCallback(() => {
-		if (infinity.isLoading || infinity.isFetching) return
+		console.log("load next start")
+		if (!infinity.hasNextPage || infinity.isFetchingNextPage) return
 		infinity.fetchNextPage()
-	}, [infinity.fetchNextPage])
+		console.log("Fetchingn nex")
+	}, [infinity.fetchNextPage, infinity.hasNextPage, infinity.isFetchingNextPage])
 
 	const onCloseConversation = () => {
 		props.onCloseConversation(props.conversationControl)
@@ -81,7 +87,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 			<Draggable
 				draggableId={props.conversationControl.id}
 				index={props.index}
-				isDragDisabled={props.isPinned}
+				isDragDisabled={props.conversationControl.isPinned}
 			>
 				{(provided) => (
 					<Paper
@@ -99,7 +105,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 						<Stack //header
 							{...provided.dragHandleProps}
 							p='20px'
-							bgcolor={props.isPinned ? "#3871DAAA" : '#3871DAFF'}
+							bgcolor={props.conversationControl.isPinned ? "#3871DAAA" : '#3871DAFF'}
 							direction="row"
 							flexWrap="nowrap"
 							alignItems="center"
@@ -108,7 +114,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							sx={{ userSelect: 'none' }}
 						>
 							<IconButton onClick={() => props.onPin && props.onPin()} color='inherit' size='small'>
-								{props.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
+								{props.conversationControl.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
 							</IconButton>
 
 							<Avatar style={{

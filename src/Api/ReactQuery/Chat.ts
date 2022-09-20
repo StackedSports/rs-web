@@ -144,6 +144,7 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
     useEffect(() => {
         if (reactQuery.isSuccess) {
             const { pages } = reactQuery.data
+            //console.log(pages)
             const conversations = pages.map(data => data[0].map(conversation => ({
                 ...conversation,
                 id: `${conversation.created_at}${conversation.message}`,

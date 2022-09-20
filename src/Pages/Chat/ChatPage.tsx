@@ -156,7 +156,7 @@ export interface IConversationControl {
 	from: string,
 	inbox_type: InboxType,
 	user_id: number,
-	isPinned?: boolean
+	isPinned: boolean
 }
 
 export default function ChatPage() {
@@ -177,36 +177,27 @@ export default function ChatPage() {
 	const [displayFilters, setDisplayFilters] = useState(true)
 	const [selectedConversationControl, setSelectedConversationControl] = useState<IConversationControl[]>([])
 
+	const KEY_LOCAL_STORAGE_PIN = `${user?.id}${inboxSelected?.team_member_id}`
+
+
 	const pinnedChatsMap = useMemo(() => {
-		console.log("pinnedChats", pinnedChats)
 		return new Map(pinnedChats)
 	}, [pinnedChats])
 
+	// Load pinned conversations based on user and inbox selected
+	useEffect(() => {
+		if (user && inboxSelected)
+			setSelectedConversationControl(pinnedChatsMap.get(KEY_LOCAL_STORAGE_PIN) || [])
+	}, [user, inboxSelected])
+
+	//SAVE PINNED CONVERSATIONS IN LOCAL STORAGE
 	useEffect(() => {
 		if (user && inboxSelected) {
-			const pinned = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
-			console.log("mudou os pinados", pinned)
-			if (pinned) {
-				setSelectedConversationControl(prev => {
-					const newControl = lodash.differenceBy(prev, pinned, 'id')
-					console.log("dife", newControl)
-					return [...pinned, ...newControl]
-				})
-			}
+			const pinned = selectedConversationControl.filter(conversations => conversations.isPinned)
+			pinnedChatsMap.set(KEY_LOCAL_STORAGE_PIN, pinned)
+			setPinnedChats([...pinnedChatsMap])
 		}
-	}, [user, inboxSelected, pinnedChatsMap, setSelectedConversationControl])
-
-	useEffect(() => {
-		console.log("selectec control", selectedConversationControl)
-	}, [selectedConversationControl])
-
-	/* 	const isPinned = useCallback((conversation) => {
-			if (user && inboxSelected) {
-				const pinnedConversations = pinnedChatsMap.get(`${user.id}${inboxSelected.team_member_id}`)
-				return pinnedConversations?.includes(conversation)
-			} else
-				return false
-		}, [pinnedChatsMap, user]) */
+	}, [user, inboxSelected, selectedConversationControl, setPinnedChats])
 
 	const onTopActionClick = () => {
 		console.log("onTopActionClick")
@@ -268,25 +259,17 @@ export default function ChatPage() {
 		})
 	}
 
-	const onTogglePin = (conversationControl: IConversationControl) => {
+	const onTogglePin = (conversation: IConversationControl) => {
 
-		if (!user || !inboxSelected) return
-		const KEY = `${user.id}${inboxSelected.team_member_id}`
-		//console.log("conversation toggle", conversationControl)
-		const newConversationControl = { ...conversationControl, isPinned: !conversationControl.isPinned }
-		//console.log("new conversation toggle", newConversationControl)
-		
-		//atualizar quando despina 
-		let pinnedConversations = pinnedChatsMap.get(KEY) || []
+		setSelectedConversationControl(prev => {
+			const newControl = [...prev]
+			const index = prev.indexOf(conversation)
+			if (index == -1)
+				return prev
 
-		if (conversationControl.isPinned) {
-			pinnedConversations = pinnedConversations.filter(pinned => pinned.id !== conversationControl.id)
-		} else {
-			pinnedConversations.push(newConversationControl)
-		}
-		pinnedChatsMap.set(KEY, pinnedConversations)
-		setPinnedChats([...pinnedChatsMap])
-
+			newControl[index] = { ...prev[index], isPinned: !prev[index].isPinned }
+			return newControl
+		})
 	}
 
 	const reorder = (list: IConversationControl[], startIndex: number, endIndex: number) => {
