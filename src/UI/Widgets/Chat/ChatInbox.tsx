@@ -9,8 +9,10 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 
+import { formatPhoneNumber } from 'utils/Parser'
 interface IChatInboxProps {
     name?: string | null,
+    type: string,
     channel?: string | number | null,
     items?: IUserInboxItem[] | null,
     isLoading: boolean,
@@ -44,6 +46,15 @@ export const ChatInbox = (props: IChatInboxProps) => {
 
     }, [props.conversationControl])
 
+    const from = React.useMemo(() => {
+		const { type, channel } = props
+
+		if (type === 'sms')
+			return formatPhoneNumber(channel)
+		else
+			return `@${channel}`
+	}, [props.type, props.channel])
+
     return (
         <Grid item container direction='column' sx={{
             width: "370px",
@@ -58,19 +69,22 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 direction="row"
                 flexWrap="nowrap"
                 gap={1}
-                alignItems="center"
+                alignItems="start"
                 borderBottom="solid 1px #dadada"
             >
-                <Icon sx={{ cursor: "pointer" }} onClick={props.onBackClick} />
-                <Typography component="h2" variant="h6" sx={{ ml: '20px' }}>
-                    <b>{props.name}</b>
-                </Typography>
-                <Typography
-                    sx={{ color: "#dadada", fontSize: "12px", }}
-                    component="span"
-                    variant="subtitle1">
-                    {props.channel}
-                </Typography>
+                <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
+                <Stack ml={2}>
+                    <Typography component="h2" variant="h6">
+                        <b>{props.name}</b>
+                    </Typography>
+                    <Typography
+                        // sx={{ fontSize: "12px", }}
+                        component="span"
+                        color="text.secondary"
+                        variant="body1">
+                        {from}
+                    </Typography>
+                </Stack>
             </Stack>
 
             <Box sx={{ p: '20px' }}>

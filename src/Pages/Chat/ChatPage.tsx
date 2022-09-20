@@ -291,13 +291,17 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: ISideFilter) => {
+	const onFilterSelected = (item: ISideFilter, itemIndex: number, filterIndex: number) => {
+		console.log(itemIndex)
+		console.log(filterIndex)
+
+		const type = filterIndex === 0 ? 'dm' : 'sms'
 
 		if (!teamInboxes.items || !teamMembers.items)
 			return
 
-		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id == item.id)
-		//console.log("inbox", inbox)
+		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id == item.id && inbox.type === type)
+		console.log("inbox", inbox)
 
 		if (!inbox)
 			return
@@ -306,6 +310,7 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
+		
 		//console.log("team member", teamMember)
 
 
@@ -316,11 +321,12 @@ export default function ChatPage() {
 			team_member_id: inbox.team_member_id,
 			userId: teamMember.id,
 			name: inbox.name,
-			channel: inbox.channel,
+			channel: type === 'sms' ? inbox.channel : teamMember.twitter_profile.screen_name,
 			type: inbox.type
 		}
 
 		//console.log("Selected inbox", selected)
+
 		setInboxSelected(selected)
 		setSelectedConversationControl([])
 	}
@@ -372,6 +378,7 @@ export default function ChatPage() {
 
 						<ChatInbox
 							name={inboxSelected?.name}
+							type={inboxSelected?.type}
 							channel={inboxSelected?.channel}
 							filterOpen={displayFilters}
 							items={inbox?.items}
