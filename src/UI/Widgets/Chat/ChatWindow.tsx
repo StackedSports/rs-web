@@ -11,6 +11,9 @@ import { Draggable } from 'react-beautiful-dnd';
 import CloseIcon from '@mui/icons-material/Close';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import TextsmsIcon from '@mui/icons-material/Textsms';
+import SmsIcon from '@mui/icons-material/Sms';
 
 
 import { ChatInput } from './ChatInput';
@@ -80,6 +83,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 			return `@${from}`
 	}, [props.conversationControl])
 
+	const PlatformIcon = props.conversationControl.inbox_type === 'sms' ? SmsIcon : TwitterIcon
+
 	return (
 		<>
 			<Draggable
@@ -120,12 +125,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 								height: "38px",
 							}}
 								aria-label="avatar"
-								src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+								src={props.conversationControl.contact_profile_image}
 							/>
 							<Stack>
-								<Typography fontWeight={600}>
-									{props.conversationControl.contact_name}
-								</Typography>
+								<Stack direction='row' gap={1} alignItems='center'>
+									<Typography fontWeight={600}>
+										{props.conversationControl.contact_name}
+									</Typography>
+									<PlatformIcon sx={{fontSize:'1em'}} />
+								</Stack>
 								<Typography variant="subtitle2" >
 									{from}
 								</Typography>
