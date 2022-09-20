@@ -59,7 +59,7 @@ export const ChatInboxItem = (props) => {
 					height: "56px",
 				}}
 					aria-label="avatar"
-					src='https://stakdsocial.s3.us-east-2.amazonaws.com/media/general/contact-missing-image.png'
+					src={props.item.profile_img}
 				/>
 				<Stack flex={1} sx={{ position: "relative" }}>
 					<Typography style={{

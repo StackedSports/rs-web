@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { Stack, List, Typography, Grid, Box } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -13,8 +13,6 @@ interface IChatInboxProps {
     channel?: string | number | null,
     items?: IUserInboxItem[] | null,
     isLoading: boolean,
-    onChatSearch: Function,
-    onChatSearchClear: Function,
     onBackClick: () => void,
     onArchiveConversation: Function,
     onChatClick: Function,
@@ -23,6 +21,24 @@ interface IChatInboxProps {
 
 export const ChatInbox = (props: IChatInboxProps) => {
     const Icon = props.filterOpen ? MenuOpenIcon : MenuIcon
+    const [filterItems, setFilterItems] = useState<IUserInboxItem[] | null>(null)
+
+    const onSearch = (searchTerm: string) => {
+        if (searchTerm === "")
+            onSearchClear()
+        else if (props.items) {
+            setFilterItems(props.items.filter(inbox => inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim())))
+        }
+    }
+
+    const onSearchClear = () => {
+        setFilterItems(null)
+    }
+
+    const activeOptions = useMemo(() => {
+        if (!props.items) return []
+        return filterItems || props.items
+    }, [filterItems, props.items])
 
     return (
         <Grid item container direction='column' sx={{
@@ -58,14 +74,14 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     style={{ margin: 0 }}
                     searchOnChange
                     placeholder="Search"
-                    onSearch={props.onChatSearch}
-                    onClear={props.onChatSearchClear}
+                    onSearch={onSearch}
+                    onClear={onSearchClear}
                 />
             </Box>
             {props.isLoading && <LoadingPanel />}
             {props.items && Array.isArray(props.items) && (
                 <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
-                    {props.items && props.items.map(item => (
+                    {activeOptions.map(item => (
                         <ChatListItem
                             key={item.contact_id}
                             item={item}

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import lodash from 'lodash'
 
@@ -143,6 +143,7 @@ const conversations = [
 
 interface IInboxSelected {
 	team_member_id: number,
+	team_member_profile_image: string,
 	userId: string,
 	name: string,
 	channel: number | string,
@@ -156,7 +157,9 @@ export interface IConversationControl {
 	from: string,
 	inbox_type: InboxType,
 	user_id: number,
-	isPinned: boolean
+	isPinned: boolean,
+	contact_profile_image: string,
+	coach_profile_image: string,
 }
 
 export default function ChatPage() {
@@ -220,20 +223,22 @@ export default function ChatPage() {
 		//console.log("inbox", inboxSelected)
 
 		const conversationId = chatListItem.contact_id + chatListItem.from + inboxSelected.userId
-		const newConversationControl = {
+		const newConversationControl: IConversationControl = {
 			id: conversationId,
 			contact_id: chatListItem.contact_id,
 			contact_name: chatListItem.name,
 			from: chatListItem.from,
 			inbox_type: chatListItem.type,
 			user_id: inboxSelected.team_member_id,
-			isPinned: false
+			isPinned: false,
+			coach_profile_image: inboxSelected.team_member_profile_image,
+			contact_profile_image: chatListItem.profile_img,
 		}
 		const conv = selectedConversationControl.find(conv => conv.id === conversationId)
 		if (conv) {
 			setSelectedConversationControl(prev => prev.filter(conv => conv.id !== conversationId))
 		} else {
-			setSelectedConversationControl(prev => ([newConversationControl, ...prev]))
+			setSelectedConversationControl(prev => [newConversationControl, ...prev])
 		}
 	}
 
@@ -243,13 +248,6 @@ export default function ChatPage() {
 		setSelectedConversationControl([...selectedConversationControl])
 	}
 
-	const onChatSearch = (searchTerm: string) => {
-		console.log("onChatSearch", searchTerm)
-	}
-
-	const onChatSearchClear = () => {
-		console.log("onChatSearchClear")
-	}
 
 	const onArchiveConversation = (conversation: IConversationControl) => {
 		const title = "Archive Conversation"
@@ -306,7 +304,7 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-		//console.log("team member", teamMember)
+		console.log("team member", teamMember)
 
 
 		if (!teamMember)
@@ -314,6 +312,7 @@ export default function ChatPage() {
 
 		const selected: IInboxSelected = {
 			team_member_id: inbox.team_member_id,
+			team_member_profile_image: teamMember.twitter_profile.profile_image,
 			userId: teamMember.id,
 			name: inbox.name,
 			channel: inbox.channel,
@@ -374,8 +373,6 @@ export default function ChatPage() {
 							filterOpen={displayFilters}
 							items={inbox?.items}
 							isLoading={inbox?.isLoading}
-							onChatSearch={onChatSearch}
-							onChatSearchClear={onChatSearchClear}
 							onChatClick={onClickChatListItem}
 							onArchiveConversation={onArchiveConversation}
 							onBackClick={onBackClick}
@@ -407,7 +404,7 @@ export default function ChatPage() {
 											}
 										}}
 									>
-										{selectedConversationControl.map((conversation, index) => (
+										{selectedConversationControl.sort((a, b) => Number(b.isPinned) - Number(a.isPinned)).map((conversation, index) => (
 											<ChatWindow
 												isPinned={conversation.isPinned}
 												index={index}
