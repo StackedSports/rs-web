@@ -30,23 +30,23 @@ interface ChatWindowProps {
 
 export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 
-	const infinity = useInboxConversationInfinte({
+	const messages = useInboxConversationInfinte({
 		contact_id: props.conversationControl.contact_id,
 		inbox_type: props.conversationControl.inbox_type,
 		user_id: props.conversationControl.user_id
 	})
 
 	useEffect(() => {
-		console.log("infinity items", infinity.items)
-	}, [infinity.items])
+		console.log("items", messages.items)
+	}, [messages.items])
 
 	useEffect(() => {
-		console.log("control", props.conversationControl)
+		//console.log("control", props.conversationControl)
 	}, [props.conversationControl])
 
 	const loadNextPageMessages = () => {
-		if (!infinity.hasNextPage || infinity.isFetchingNextPage) return
-		infinity.fetchNextPage()
+		if (!messages.hasNextPage || messages.isFetchingNextPage) return
+		messages.fetchNextPage()
 	}
 
 	const onCloseConversation = () => {
@@ -137,10 +137,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 						</Stack>
 
 						<MessagesDisplay
-							messages={infinity.items}
+							messages={messages.items}
+							contact_profile_image={props.conversationControl.contact_profile_image}
+							coach_profile_image={props.conversationControl.coach_profile_image}
 							actions={actionOptions}
 							onScrollEnd={loadNextPageMessages}
-							loading={infinity.isFetching}
+							loading={messages.isFetching}
 						/>
 						<ChatInput />
 					</Paper>

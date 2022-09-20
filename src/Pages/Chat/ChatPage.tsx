@@ -143,6 +143,7 @@ const conversations = [
 
 interface IInboxSelected {
 	team_member_id: number,
+	team_member_profile_image: string,
 	userId: string,
 	name: string,
 	channel: number | string,
@@ -156,7 +157,9 @@ export interface IConversationControl {
 	from: string,
 	inbox_type: InboxType,
 	user_id: number,
-	isPinned: boolean
+	isPinned: boolean,
+	contact_profile_image: string,
+	coach_profile_image: string,
 }
 
 export default function ChatPage() {
@@ -220,14 +223,16 @@ export default function ChatPage() {
 		//console.log("inbox", inboxSelected)
 
 		const conversationId = chatListItem.contact_id + chatListItem.from + inboxSelected.userId
-		const newConversationControl = {
+		const newConversationControl: IConversationControl = {
 			id: conversationId,
 			contact_id: chatListItem.contact_id,
 			contact_name: chatListItem.name,
 			from: chatListItem.from,
 			inbox_type: chatListItem.type,
 			user_id: inboxSelected.team_member_id,
-			isPinned: false
+			isPinned: false,
+			coach_profile_image: inboxSelected.team_member_profile_image,
+			contact_profile_image: chatListItem.profile_img,
 		}
 		const conv = selectedConversationControl.find(conv => conv.id === conversationId)
 		if (conv) {
@@ -299,7 +304,7 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-		//console.log("team member", teamMember)
+		console.log("team member", teamMember)
 
 
 		if (!teamMember)
@@ -307,6 +312,7 @@ export default function ChatPage() {
 
 		const selected: IInboxSelected = {
 			team_member_id: inbox.team_member_id,
+			team_member_profile_image: teamMember.twitter_profile.profile_image,
 			userId: teamMember.id,
 			name: inbox.name,
 			channel: inbox.channel,
