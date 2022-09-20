@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import lodash from 'lodash'
 
@@ -233,7 +233,7 @@ export default function ChatPage() {
 		if (conv) {
 			setSelectedConversationControl(prev => prev.filter(conv => conv.id !== conversationId))
 		} else {
-			setSelectedConversationControl(prev => ([newConversationControl, ...prev]))
+			setSelectedConversationControl(prev => [newConversationControl, ...prev])
 		}
 	}
 
@@ -243,13 +243,6 @@ export default function ChatPage() {
 		setSelectedConversationControl([...selectedConversationControl])
 	}
 
-	const onChatSearch = (searchTerm: string) => {
-		console.log("onChatSearch", searchTerm)
-	}
-
-	const onChatSearchClear = () => {
-		console.log("onChatSearchClear")
-	}
 
 	const onArchiveConversation = (conversation: IConversationControl) => {
 		const title = "Archive Conversation"
@@ -374,8 +367,6 @@ export default function ChatPage() {
 							filterOpen={displayFilters}
 							items={inbox?.items}
 							isLoading={inbox?.isLoading}
-							onChatSearch={onChatSearch}
-							onChatSearchClear={onChatSearchClear}
 							onChatClick={onClickChatListItem}
 							onArchiveConversation={onArchiveConversation}
 							onBackClick={onBackClick}
@@ -407,7 +398,7 @@ export default function ChatPage() {
 											}
 										}}
 									>
-										{selectedConversationControl.map((conversation, index) => (
+										{selectedConversationControl.sort((a, b) => Number(b.isPinned) - Number(a.isPinned)).map((conversation, index) => (
 											<ChatWindow
 												isPinned={conversation.isPinned}
 												index={index}

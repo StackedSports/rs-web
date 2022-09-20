@@ -74,6 +74,7 @@ export const getFileType = (file) => {
         case 'application/pdf':
             return 'pdf'
         case 'video/mp4':
+        case 'video/3gpp':
             return 'video'
         default:
             return 'unknown'
