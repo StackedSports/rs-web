@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p="20px" sx={{ backgroundColor: '#fff' }}>
+            <Box p={2} sx={{ backgroundColor: '#fff' }}>
                 <TextField
                     fullWidth
                     multiline

@@ -6,25 +6,28 @@ import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInb
 
 export const useTeamInboxes = () => {
     const reactQuery = useQuery('team_inboxes', () => getInboxes(), {
-        select: (data: [ITeamInboxAPI[], IPaginationApi]): ITeamInboxItem[] => data[0]
-            .map((inbox): ITeamInboxItem => {
-                if (inbox.twitter_enable)
-                    return {
-                        team_member_id: inbox.id,
-                        name: inbox.full_name,
-                        channel: '',
-                        type: 'dm'
-                    }
+        select: (data: [ITeamInboxAPI[], IPaginationApi]): ITeamInboxItem[] => {
+            let items: ITeamInboxItem[] = []
 
-                else
-                    return {
+            data[0].forEach((inbox) => {
+                if(inbox.phone_number)
+                    items.push({
                         team_member_id: inbox.id,
                         name: inbox.full_name,
                         channel: inbox.phone_number,
                         type: 'sms'
-                    }
+                    })
+                if(inbox.twitter_enable)
+                    items.push({
+                        team_member_id: inbox.id,
+                        name: inbox.full_name,
+                        channel: '',
+                        type: 'dm'
+                    })
             })
-            .sort((a: ITeamInboxItem, b: ITeamInboxItem) => a.name.localeCompare(b.name))
+
+            return items.sort((a: ITeamInboxItem, b: ITeamInboxItem) => a.name.localeCompare(b.name))
+        }
     })
 
     return {

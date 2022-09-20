@@ -34,7 +34,7 @@ export const TextMessage = (props) => {
                     backgroundColor: props.owner ? "#e8f0ff" : "common.white",
                     borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
                     userSelect: 'text',
-                    boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)'
+                    boxShadow: '0 0 2px rgba(0, 0, 0, 0.3)',
                 }}
             >
                 {props.message.media && (
@@ -42,7 +42,14 @@ export const TextMessage = (props) => {
                         <RenderMediaType url={props.message.media?.urls?.original} type={getFileType(props.message?.media)} />
                     </Box>
                 )}
-                <Typography >
+                <Typography
+                  sx={{
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word',
+                    display: 'inline-block',
+                    maxWidth: '300px'
+                  }}
+                >
                     {props.message.text}
                 </Typography>
             </Box>

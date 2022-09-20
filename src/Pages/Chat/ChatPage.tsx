@@ -336,6 +336,7 @@ export default function ChatPage() {
 						id: inbox.team_member_id,
 						name: inbox.name,
 						isSelected: inboxSelected?.team_member_id === inbox.team_member_id
+							&& inboxSelected.type === inbox.type
 					}))
 			},
 			{
@@ -346,6 +347,7 @@ export default function ChatPage() {
 						id: inbox.team_member_id,
 						name: inbox.name,
 						isSelected: inboxSelected?.team_member_id === inbox.team_member_id
+							&& inboxSelected.type === inbox.type
 					}))
 			}
 		]
