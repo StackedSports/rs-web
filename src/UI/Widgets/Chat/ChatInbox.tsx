@@ -30,7 +30,8 @@ export const ChatInbox = (props: IChatInboxProps) => {
         else if (props.items) {
             setFilterItems(props.items.filter(inbox =>
                 inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
-                formatPhoneNumber(inbox.from).includes(searchTerm)
+                formatPhoneNumber(inbox.from).includes(searchTerm) ||
+                `@${inbox.from}`.toLowerCase().includes(searchTerm)
             ))
         }
     }
@@ -80,6 +81,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     placeholder="Search"
                     onSearch={onSearch}
                     onClear={onSearchClear}
+                    onChange={onSearch}
                 />
             </Box>
             {props.isLoading && <LoadingPanel />}

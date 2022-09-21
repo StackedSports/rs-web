@@ -5,6 +5,7 @@ import {
 	Avatar,
 	Typography,
 	IconButton,
+	Link
 } from "@mui/material";
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -12,7 +13,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import TextsmsIcon from '@mui/icons-material/Textsms';
 import SmsIcon from '@mui/icons-material/Sms';
 
 
@@ -22,6 +22,8 @@ import { useInboxConversationInfinte } from 'Api/ReactQuery'
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 
 import { formatPhoneNumber } from 'utils/Parser'
+import { Link as RouterLink } from 'react-router-dom';
+import { contactsRoutes } from 'Routes/Routes';
 
 interface ChatWindowProps {
 	index: number;
@@ -127,17 +129,22 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 								aria-label="avatar"
 								src={props.conversationControl.contact_profile_image}
 							/>
-							<Stack>
+							<Link
+								color={'common.white'}
+								underline="hover"
+								component={RouterLink}
+								to={`${contactsRoutes.profile}/${props.conversationControl.contact_id}`}
+							>
 								<Stack direction='row' gap={1} alignItems='center'>
 									<Typography fontWeight={600}>
 										{props.conversationControl.contact_name}
 									</Typography>
-									<PlatformIcon sx={{fontSize:'1em'}} />
+									<PlatformIcon sx={{ fontSize: '1em' }} />
 								</Stack>
 								<Typography variant="subtitle2" >
 									{from}
 								</Typography>
-							</Stack>
+							</Link>
 
 							<IconButton onClick={onCloseConversation} size='small' color='inherit' sx={{ ml: 'auto' }} >
 								<CloseIcon />
