@@ -105,6 +105,8 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                     element='ul'
                     loader={<CircularProgress key={0} size={20} sx={{ mx: "auto" }} />}
                     style={{
+                        display: 'flex',
+                        flexDirection: 'column',
                         margin: 0,
                         padding: 0,
                     }}
