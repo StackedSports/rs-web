@@ -41,7 +41,6 @@ const ContactMessageDetails = (props) => {
 	}
 
 	const handleOnScrollEnd = () => {
-		console.log("scrol")
 		const pagination = expandedMedia === "associated" ? associatedMedias.pagination : sentMedias.pagination;
 		const loading = expandedMedia === "associated" ? associatedMedias.loading : sentMedias.loading;
 

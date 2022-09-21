@@ -6,7 +6,8 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
+import { IUserInboxItem } from "Interfaces"
+import { formatPhoneNumber } from 'utils/Parser';
 
 interface IChatInboxProps {
     name?: string | null,
@@ -27,7 +28,11 @@ export const ChatInbox = (props: IChatInboxProps) => {
         if (searchTerm === "")
             onSearchClear()
         else if (props.items) {
-            setFilterItems(props.items.filter(inbox => inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim())))
+            setFilterItems(props.items.filter(inbox =>
+                inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+                formatPhoneNumber(inbox.from).includes(searchTerm) ||
+                `@${inbox.from}`.toLowerCase().includes(searchTerm)
+            ))
         }
     }
 
@@ -76,6 +81,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     placeholder="Search"
                     onSearch={onSearch}
                     onClear={onSearchClear}
+                    onChange={onSearch}
                 />
             </Box>
             {props.isLoading && <LoadingPanel />}

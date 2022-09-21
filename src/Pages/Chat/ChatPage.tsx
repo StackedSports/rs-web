@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import lodash from 'lodash'
+
 
 import { Grid } from "@mui/material";
-
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
 import TopBar from 'UI/Layouts/TopBar';
@@ -304,7 +303,7 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-		console.log("team member", teamMember)
+		//console.log("team member", teamMember)
 
 
 		if (!teamMember)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useQuery, useQueryClient, useMutation, useInfiniteQuery } from "react-query"
+import { useQuery, useInfiniteQuery } from "react-query"
 import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
@@ -101,6 +101,7 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
         {
             enabled: !!params.contact_id && !!params.inbox_type,
             staleTime: 10 * 1000,
+            //keepPreviousData: true,
             select: (data: IApiResponse<IConversatitionAPI>): IApiResponse<IConversatition> => {
                 const parsedConversation = data[0].map(conversation => ({
                     ...conversation,
@@ -145,16 +146,14 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
         })
 
     useEffect(() => {
-        if (reactQuery.isSuccess) {
+        if (reactQuery.data) {
             const { pages } = reactQuery.data
-            //console.log(pages)
             const conversations = pages.map(data => data[0].map(conversation => ({
                 ...conversation,
                 id: `${conversation.created_at}${conversation.message}`,
                 text: conversation.message
-            }))).flat()
+            }))).flat().reverse()
             setConversation(conversations)
-
         } else {
             console.log("error", reactQuery.error)
         }
