@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
 	Stack,
 	Paper,
@@ -148,8 +148,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							contact_profile_image={props.conversationControl.contact_profile_image}
 							coach_profile_image={props.conversationControl.coach_profile_image}
 							actions={actionOptions}
-							onScrollEnd={loadNextPageMessages}
+							onLoadMore={loadNextPageMessages}
 							loading={messages.isFetching}
+							hasMore={messages.hasNextPage}
 						/>
 						<ChatInput />
 					</Paper>

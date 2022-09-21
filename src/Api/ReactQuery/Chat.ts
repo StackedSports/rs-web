@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useQuery, useQueryClient, useMutation, useInfiniteQuery } from "react-query"
+import { useQuery, useInfiniteQuery } from "react-query"
 import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
@@ -99,6 +99,7 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
         () => getInboxConversation(params, initialPage, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
+            //keepPreviousData: true,
             select: (data: IApiResponse<IConversatitionAPI>): IApiResponse<IConversatition> => {
                 const parsedConversation = data[0].map(conversation => ({
                     ...conversation,
@@ -136,7 +137,6 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
         ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
-            keepPreviousData: true,
             getNextPageParam: (lasPage) => {
                 return lasPage[1].currentPage >= lasPage[1].totalPages ? undefined : lasPage[1].currentPage + 1
             },

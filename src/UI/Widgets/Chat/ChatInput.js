@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p="20px 10px" sx={{ backgroundColor: '#fff' }}>
+            <Box p="10px 10px" sx={{ backgroundColor: '#fff', borderTop: 1, borderColor: 'divider' }}>
                 <TextField
                     fullWidth
                     multiline
@@ -120,17 +120,12 @@ export const ChatInput = (props) => {
                 )}
 
                 <Stack
-                    mt={3}
+                    mt={2}
                     direction="row"
                     alignItems="center"
                     gap={1.5}
                 >
                     <EmojiPicker
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            position: 'relative',
-                        }}
                         onEmojiSelected={(emoji) => {
                             setTextMessage(replaceTextSelectionWith(emoji.native))
                             chatInputRef.current.focus()
@@ -170,8 +165,6 @@ export const ChatInput = (props) => {
                     <Button name="Send" variant="contained" sx={{ ml: 'auto' }} onClick={onSendMessage} />
                 </Stack>
             </Box>
-
-            <Divider />
 
             <MediaSelectDialog
                 open={showMediaDialog}

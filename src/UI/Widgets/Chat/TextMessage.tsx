@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Linkify from 'react-linkify';
 import { Avatar, Box, Checkbox, ListItem, styled, Typography } from '@mui/material';
 
@@ -8,8 +8,6 @@ import { RenderMediaType } from '../Media/RenderMediaType';
 import { getFileType } from 'utils/Helper';
 import { formatDate } from 'utils/Parser';
 import { IConversatition } from 'Interfaces';
-import RenderIf from '../RenderIf';
-
 interface TextMessageProps {
     actionActive?: boolean;
     checked?: boolean;
@@ -51,16 +49,15 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                         boxShadow: 3
                     }}
                 >
-
-                    <RenderIf condition={props.message.media && (props.message.media instanceof Object)}>
+                    {props.message.media && !Array.isArray(props.message.media) && (
                         <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
                             <RenderMediaType
                                 url={props.message.media?.urls?.original}
                                 type={getFileType(props.message?.media)}
                             />
                         </Box>
-                    </RenderIf>
-                    <RenderIf condition={props.message.media && Array.isArray(props.message.media)}>
+                    )}
+                    {props.message.media && Array.isArray(props.message.media) && (
                         <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
                             {props.message.media?.map(media =>
                                 <RenderMediaType
@@ -69,7 +66,8 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                                 />
                             )}
                         </Box>
-                    </RenderIf>
+                    )}
+
                     <Typography
                         sx={{
                             maxWidth: '300px',

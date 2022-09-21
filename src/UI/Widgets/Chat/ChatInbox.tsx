@@ -6,7 +6,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
+import { IUserInboxItem } from "Interfaces"
 import { formatPhoneNumber } from 'utils/Parser';
 
 interface IChatInboxProps {
