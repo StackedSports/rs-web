@@ -304,7 +304,7 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-		console.log("team member", teamMember)
+		//console.log("team member", teamMember)
 
 
 		if (!teamMember)

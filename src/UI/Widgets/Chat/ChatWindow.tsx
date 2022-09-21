@@ -41,14 +41,6 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 		user_id: props.conversationControl.user_id
 	})
 
-	useEffect(() => {
-		console.log("items", messages.items)
-	}, [messages.items])
-
-	useEffect(() => {
-		//console.log("control", props.conversationControl)
-	}, [props.conversationControl])
-
 	const loadNextPageMessages = () => {
 		if (!messages.hasNextPage || messages.isFetchingNextPage) return
 		messages.fetchNextPage()

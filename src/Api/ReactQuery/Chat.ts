@@ -136,22 +136,21 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
         ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
+            keepPreviousData: true,
             getNextPageParam: (lasPage) => {
                 return lasPage[1].currentPage >= lasPage[1].totalPages ? undefined : lasPage[1].currentPage + 1
             },
         })
 
     useEffect(() => {
-        if (reactQuery.isSuccess) {
+        if (reactQuery.data) {
             const { pages } = reactQuery.data
-            //console.log(pages)
             const conversations = pages.map(data => data[0].map(conversation => ({
                 ...conversation,
                 id: `${conversation.created_at}${conversation.message}`,
                 text: conversation.message
-            }))).flat()
+            }))).flat().reverse()
             setConversation(conversations)
-
         } else {
             console.log("error", reactQuery.error)
         }
