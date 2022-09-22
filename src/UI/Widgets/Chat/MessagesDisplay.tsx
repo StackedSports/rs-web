@@ -51,7 +51,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
 
     return (
         <>
-            {props.actions && (
+            {props.actions && false && (
                 <Stack /* actions */
                     direction="row"
                     justifyContent="space-between"

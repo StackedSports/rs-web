@@ -143,7 +143,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							</IconButton>
 						</Stack>
 
-						<ChatInput />
+						
 
 						<MessagesDisplay
 							messages={messages.items}
@@ -155,6 +155,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							hasMore={messages.hasNextPage}
 						/>
 						
+						<ChatInput />
 					</Paper>
 				)}
 			</Draggable>
