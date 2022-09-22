@@ -135,7 +135,6 @@ export const useInboxConversationInfinty = (params: getInboxConversationParams, 
         ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
-            cacheTime: 0,
             select: (data: InfiniteData<IApiResponse<IConversatitionAPI>>): InfiniteData<IConversatition[]> => {
                 const pageParams = data.pageParams
                 const pages = data.pages.map((data) => data[0].map(conversation => ({
