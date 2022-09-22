@@ -15,7 +15,7 @@ export default function ContactsPage(props) {
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-table-perPage`, 50)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
-    const contacts = useContacts(page, perPage, {}, props.include_archived)
+    const contacts = useContacts(page, perPage, {}, props.only_archived)
 
     const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedSort, setSelectedSort] = useState({})
@@ -38,17 +38,9 @@ export default function ContactsPage(props) {
         timeZone: true,
     }
 
-    const handleContactsFilter = (filter) => {
-        console.log("props.include_archived", props.include_archived)
-        if (props.include_archived)
-            contacts.filter({ ...filter, ...selectedSort, include_archived: props.include_archived })
-        else
-            contacts.filter({ ...filter, ...selectedSort })
-    }
-
     const onPanelFilterChange = (filter) => {
         setSelectedFilters(filter)
-        handleContactsFilter(filter)
+        contacts.filter({ ...filter, ...selectedSort })
     }
 
     const onSendMessageClick = (selectedData) => {
@@ -140,12 +132,14 @@ export default function ContactsPage(props) {
         <BaseContactsPage
             title="Contacts"
             contacts={contacts}
+            disabledMainActions={props.only_archived}
+            onlyArchived={props.only_archived}
             onSendMessage={onSendMessageClick}
             onSortingChange={onSortingChange}
             onPanelFilterChange={onPanelFilterChange}
             tableId="contacts-table"
             columnsControl={visibleTableRows}
-            onContactSearch={onContactSearch}
+            onContactSearch={!props.only_archived && onContactSearch}
             onContactSearchClear={onContactSearchClear}
         />
 
