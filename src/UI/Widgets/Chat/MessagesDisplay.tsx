@@ -1,18 +1,20 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
     Stack,
     CircularProgress,
     Box,
     Button,
+    List,
 } from "@mui/material";
 
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { IConversatition } from 'Interfaces';
+import RenderIf from '../RenderIf';
 
 interface IMessagesDisplay {
-    messages: IConversatition[];
+    messages?: IConversatition[];
     contact_profile_image: string;
     coach_profile_image: string;
     actions?: any[];
@@ -26,6 +28,22 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
         contact_profile_image,
         coach_profile_image,
     } = props;
+
+    const scrollRef = useRef<HTMLUListElement | null>(null)
+
+    /*     useEffect(() => {
+            const gotToBottom = event => {
+                const { currentTarget: target } = event;
+                target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+            }
+            if (scrollRef.current) {
+    
+                scrollRef.current.addEventListener('DOMNodeInserted', gotToBottom);
+    
+                return () => scrollRef.current?.removeEventListener('DOMNodeInserted', gotToBottom);
+            }
+    
+        }, [scrollRef.current]) */
 
     const [checkedMessagesIds, setCheckedMessagesIds] = useState<string[]>([])
     const [showActions, setShowActions] = useState(false)
@@ -85,31 +103,32 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                     }
                 </Stack>
             )}
-
-            <Stack // messages list
+            <List // messages list
+                id='list-chat'
+                ref={scrollRef}
                 sx={{
                     flex: '1 0 0',
+                    minHeight: 0,
                     overflowY: 'auto',
                     overflowX: 'hidden',
                     overscrollBehaviorBlock: 'contain',
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
+                    alignItems: 'flex-start',
                     '::-webkit-scrollbar': {
                         width: '5px',
                     },
                 }}
             >
                 <InfiniteScroll
-                    loadMore={() => props.onLoadMore && props.onLoadMore()}
-                    hasMore={props.hasMore}
-                    useWindow={false}
-                    isReverse={true}
-                    element='ul'
-                    loader={<CircularProgress key={0} size={20} sx={{ mx: "auto" }} />}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        margin: 0,
-                        padding: 0,
-                    }}
+                    dataLength={messages?.length || 0}
+                    next={() => props.onLoadMore && props.onLoadMore()}
+                    hasMore={props.hasMore || false}
+                    inverse={true}
+                    loader={<div>Loading...</div>}
+                    endMessage={<p>- You have seen it all -</p>}
+                    scrollableTarget='list-chat'
+                     style={{ display: "flex", flexDirection: "column-reverse" }}
                 >
                     {messages && messages.map((message) => (
                         <TextMessage
@@ -124,7 +143,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                         />
                     ))}
                 </InfiniteScroll>
-            </Stack>
+            </List>
         </>
     )
 }

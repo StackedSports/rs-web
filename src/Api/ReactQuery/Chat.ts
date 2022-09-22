@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useQuery, useInfiniteQuery } from "react-query"
+import { useQuery, useInfiniteQuery, InfiniteData } from "react-query"
 import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
 import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
@@ -99,7 +99,6 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
         () => getInboxConversation(params, initialPage, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
-            //keepPreviousData: true,
             select: (data: IApiResponse<IConversatitionAPI>): IApiResponse<IConversatition> => {
                 const parsedConversation = data[0].map(conversation => ({
                     ...conversation,
@@ -129,14 +128,27 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
     }
 }
 
-export const useInboxConversationInfinte = (params: getInboxConversationParams, itemsPerPage: number = 20) => {
+export const useInboxConversationInfinty = (params: getInboxConversationParams, itemsPerPage: number = 20) => {
     const [conversation, setConversation] = useState<IConversatition[]>([])
 
-    const reactQuery = useInfiniteQuery<IApiResponse<IConversatitionAPI>>(['inbox', 'conversation', params],
+    const reactQuery = useInfiniteQuery(['inbox', 'conversation', params],
         // @ts-ignore: Unreachable code error 
         ({ pageParam = 1 }) => getInboxConversation(params, pageParam, itemsPerPage),
         {
             enabled: !!params.contact_id && !!params.inbox_type,
+            cacheTime: 0,
+            select: (data: InfiniteData<IApiResponse<IConversatitionAPI>>): InfiniteData<IConversatition[]> => {
+                const pageParams = data.pageParams
+                const pages = data.pages.map((data) => data[0].map(conversation => ({
+                    ...conversation,
+                    id: `${conversation.created_at}${conversation.message}`,
+                    text: conversation.message
+                })))
+                return {
+                    pageParams: pageParams,
+                    pages: pages
+                }
+            },
             getNextPageParam: (lasPage) => {
                 return lasPage[1].currentPage >= lasPage[1].totalPages ? undefined : lasPage[1].currentPage + 1
             },
@@ -145,14 +157,8 @@ export const useInboxConversationInfinte = (params: getInboxConversationParams, 
     useEffect(() => {
         if (reactQuery.data) {
             const { pages } = reactQuery.data
-            const conversations = pages.map(data => data[0].map(conversation => ({
-                ...conversation,
-                id: `${conversation.created_at}${conversation.message}`,
-                text: conversation.message
-            }))).flat().reverse()
+            const conversations = pages.flat()
             setConversation(conversations)
-        } else {
-            console.log("error", reactQuery.error)
         }
 
     }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
