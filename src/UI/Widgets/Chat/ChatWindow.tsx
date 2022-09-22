@@ -42,9 +42,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 	})
 
 	const loadNextPageMessages = () => {
-		console.log("get next page call")
 		if (messages.hasNextPage && !messages.isFetching) {
-			console.log("getting next page")
 			messages.fetchNextPage()
 		}
 	}
@@ -147,13 +145,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 						</Stack>
 
 						<MessagesDisplay
-							messages={messages.data?.pages.flat()}
+							messages={messages.items}
 							contact_profile_image={props.conversationControl.contact_profile_image}
 							coach_profile_image={props.conversationControl.coach_profile_image}
 							actions={actionOptions}
 							onLoadMore={loadNextPageMessages}
-							loading={messages.isFetching}
-							hasMore={messages.hasNextPage}
+							loading={messages.isLoading}
+							hasMore={messages.hasNextPage || messages.isLoading}
 						/>
 						<ChatInput />
 					</Paper>

@@ -129,7 +129,6 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
 }
 
 export const useInboxConversationInfinty = (params: getInboxConversationParams, itemsPerPage: number = 20) => {
-    const [conversation, setConversation] = useState<IConversatition[]>([])
 
     const reactQuery = useInfiniteQuery(['inbox', 'conversation', params],
         // @ts-ignore: Unreachable code error 
@@ -154,18 +153,9 @@ export const useInboxConversationInfinty = (params: getInboxConversationParams, 
             },
         })
 
-    useEffect(() => {
-        if (reactQuery.data) {
-            const { pages } = reactQuery.data
-            const conversations = pages.flat()
-            setConversation(conversations)
-        }
-
-    }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
-
     return {
         ...reactQuery,
-        items: conversation,
+        items: reactQuery.data?.pages.flat() || [],
         loading: reactQuery.isLoading
     }
 }
