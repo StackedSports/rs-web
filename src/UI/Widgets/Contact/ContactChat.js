@@ -20,17 +20,19 @@ const ContactChat = (props) => {
         const newMessages = contactConversation.items?.messages || []
         return {
           ...contactConversation.items,
-          messages: lodash.uniqBy([...prevMessages, ...newMessages], "id")
+          messages: lodash.uniqBy([...prevMessages, ...newMessages], "id").reverse()
         }
       })
     }
   }, [contactConversation.items])
 
+  const hasMorePages = contactConversation.pagination.currentPage < contactConversation.pagination.currentPage.totalPages
+
   const handleOnScrollEnd = () => {
     const pagination = contactConversation.pagination
     const loading = contactConversation.loading
     const { currentPage, totalPages, getPage } = pagination;
-    if (currentPage < totalPages && !loading) {
+    if (hasMorePages && !loading) {
       getPage(currentPage + 1)
     }
   }
@@ -41,14 +43,14 @@ const ContactChat = (props) => {
       spacing={1}
     >
       <ContactChatHeader contact={props.contact} />
-      <ChatInput />
       <MessagesDisplay
         contact_profile_image={loadedMessages.contact_profile_image}
         coach_profile_image={loadedMessages.coach_profile_image}
         messages={loadedMessages.messages}
-        onScrollEnd={handleOnScrollEnd}
-        loading={contactConversation.isLoading}
+        onLoadMore={handleOnScrollEnd}
+        hasMore={hasMorePages}
       />
+      <ChatInput />
     </Stack>
   )
 }

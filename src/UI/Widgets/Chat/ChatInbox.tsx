@@ -10,9 +10,8 @@ import SmsIcon from '@mui/icons-material/Sms';
 import { ChatListItem } from 'UI/Widgets/Chat'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI } from "Interfaces"
 import { IConversationControl } from 'Pages/Chat/ChatPage';
-
+import { IUserInboxItem } from "Interfaces"
 import { formatPhoneNumber } from 'utils/Parser'
 interface IChatInboxProps {
     name?: string | null,
@@ -35,7 +34,11 @@ export const ChatInbox = (props: IChatInboxProps) => {
         if (searchTerm === "")
             onSearchClear()
         else if (props.items) {
-            setFilterItems(props.items.filter(inbox => inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim())))
+            setFilterItems(props.items.filter(inbox =>
+                inbox.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+                formatPhoneNumber(inbox.from).includes(searchTerm) ||
+                `@${inbox.from}`.toLowerCase().includes(searchTerm)
+            ))
         }
     }
 
@@ -87,7 +90,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
         }}
         >
             <Stack
-                p="20px 20px 20px 20px"
+                p={2}
                 direction="row"
                 flexWrap="nowrap"
                 gap={1}
@@ -95,21 +98,20 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 borderBottom="solid 1px #dadada"
             >
                 <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
+                
                 <Stack ml={2} flex={1}>
                     <Typography component="h2" variant="h6">
                         <b>{props.name}</b>
                     </Typography>
                     
                     <Typography
-                        // sx={{ fontSize: "12px", }}
-                        component="span"
-                        color="text.secondary"
-                        variant="body1">
+                      component="span"
+                      color="text.secondary"
+                      variant="body1">
                         {from}
-                    </Typography>	
-                    
-                    
+                    </Typography>
                 </Stack>
+
                 <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
                     <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }}/>		
                 </Stack>
@@ -123,6 +125,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     placeholder="Search"
                     onSearch={onSearch}
                     onClear={onSearchClear}
+                    onChange={onSearch}
                 />
             </Box>
             {props.isLoading && <LoadingPanel />}
