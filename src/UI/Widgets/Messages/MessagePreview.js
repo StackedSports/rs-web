@@ -23,9 +23,10 @@ import {
 import { objectNotNull } from 'utils/Validation'
 
 import { messageRoutes } from 'Routes/Routes'
+import RenderIf from '../RenderIf'
 
 const getRecipientsLabel = (message) => {
-    if(typeof message.recipient_count === 'number')
+    if (typeof message.recipient_count === 'number')
         return `${message.recipient_count} Recipients`
 
     if (!message.recipient_count?.status || message.recipient_count?.status?.total === 0)
@@ -167,6 +168,9 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     {/* <Details label="Recipient(s)" labelArray value={getMessageRecipientsLabelArray(recipients)}/> */}
                     <Details label="Send As" value={getMessagePlatformLabel(message.platform)} />
                     <Details label="Start Sending At" value={message.first_sent_at ? formatDate(message.first_sent_at, 'medium', 'short') : formatDate(message.send_at, 'medium', 'short')} />
+                    <RenderIf condition={message.expires_at}>
+                        <Details label="Expires At" value={formatDate(message.expires_at, 'medium', 'short')} />
+                    </RenderIf>
                     <Details label="Tags" value={message.tags || '--'} />
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }} />

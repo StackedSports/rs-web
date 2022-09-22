@@ -28,6 +28,7 @@ import {
 } from 'utils/Data'
 import { formatDate } from 'utils/Parser'
 import { messageRoutes } from 'Routes/Routes'
+import RenderIf from 'UI/Widgets/RenderIf'
 
 const ALL_PLATFORMS = {
     twitter: true,
@@ -62,7 +63,9 @@ export default function MessageCreatePage(props) {
     const [receiverRemoved, setReceiverRemoved] = useState(null)
 
     // Time
+    const timeTypeControl = useRef('sendAt')
     const [sendAt, setSendAt] = useState('ASAP')
+    const [expiresAt, setExpiresAt] = useState('No Expiration')
     const [showTimePicker, setShowTimePicker] = useState(false)
 
     // Media
@@ -152,6 +155,12 @@ export default function MessageCreatePage(props) {
             setSendAt(props.sendAt)
 
     }, [props.sendAt])
+
+    useEffect(() => {
+        if (props.expiresAt)
+            setExpiresAt(props.expiresAt)
+
+    }, [props.expiresAt])
 
     // Media from Props
     useEffect(() => {
@@ -388,9 +397,21 @@ export default function MessageCreatePage(props) {
         setMediaSelected(null)
     }
 
+    const handleOpenTimePicker = (type) => {
+        if (type === 'sendAt')
+            timeTypeControl.current = 'sendAt'
+        else
+            timeTypeControl.current = 'expiresAt'
+
+        setShowTimePicker(true)
+    }
+
     const onDateTimeSave = (date) => {
-        // date = 'ASAP' or UTC Date
-        setSendAt(date)
+        if (timeTypeControl.current === 'sendAt')
+            setSendAt(date)
+        else
+            setExpiresAt(date)
+
         setShowTimePicker(false)
     }
 
@@ -450,8 +471,14 @@ export default function MessageCreatePage(props) {
                 }
             }
 
+            const selectedPlatf = getPlatf(platformSelected)
 
-            messageData['platform'] = getPlatf(platformSelected)
+            messageData['platform'] = selectedPlatf
+
+            if (selectedPlatf === 'Personal Text' && expiresAt !== 'No Expiration') {
+                messageData['expires_at'] = expiresAt
+            }
+
         } else {
             // throw error
             return showErrorMessage('You must select a Platform')
@@ -558,10 +585,8 @@ export default function MessageCreatePage(props) {
         }
 
         // delete messageData.user_id
-        console.log(sendAt)
-        console.log(messageData)
-
-        // return
+        //console.log(sendAt)
+        //console.log(messageData)
 
         if (save && Object.keys(messageData).length === 0)
             return showErrorMessage(`Can't save an empty message`)
@@ -689,10 +714,10 @@ export default function MessageCreatePage(props) {
                 onClose={() => setShowReceiverDialog(false)}
                 recipientsSelected={recipientSelected}
             />
-
             <DateTimePicker
+                isExpirationTime={timeTypeControl.current === 'expiresAt'}
                 open={showTimePicker}
-                value={sendAt}
+                value={timeTypeControl.current === 'sendAt' ? sendAt : expiresAt}
                 onSave={onDateTimeSave}
                 onClose={() => setShowTimePicker(false)}
             />
@@ -739,8 +764,17 @@ export default function MessageCreatePage(props) {
                 type='time'
                 label='Begin Sending At:'
                 name={sendAt === 'ASAP' ? sendAt : formatDate(sendAt, 'full', 'short')}
-                onClick={() => setShowTimePicker(true)}
+                onClick={() => handleOpenTimePicker('sendAt')}
             />
+
+            <RenderIf condition={platformSelected === 'Personal Text'}>
+                <MessageInput
+                    type='time'
+                    label='Expiration Date:'
+                    name={expiresAt === 'No Expiration' ? expiresAt : formatDate(expiresAt, 'full', 'short')}
+                    onClick={() => handleOpenTimePicker('expirationTime')}
+                />
+            </RenderIf>
 
             <MessageInput
                 type='media'
