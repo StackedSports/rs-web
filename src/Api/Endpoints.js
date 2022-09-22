@@ -308,6 +308,11 @@ export const getContacts = (page, perPage) => {
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}`)
 }
 
+export const getArchivedContacts = (page, perPage) => {
+    return AXIOS('get', `contacts?page=${page}&per_page=${perPage}&only_archived=true`)
+    //https://api.recruitsuite.co/api/contacts?page=1&per_page=25&sort_column=first_name&sort_dir=asc&only_archived=true
+}
+
 export const filterContacts = (page, perPage, filters) => {
 
     const data = {
@@ -321,7 +326,7 @@ export const filterContacts = (page, perPage, filters) => {
     if (filters?.sort_dir)
         data.sort_dir = filters.sort_dir
     if (filters?.include_archived)
-        filters.include_archived = filters?.include_archived
+        data.include_archived = filters.include_archived
 
     return AXIOS('post', 'contacts/filter', data)
 }

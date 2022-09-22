@@ -15,7 +15,7 @@ export default function ContactsPage(props) {
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-table-perPage`, 50)
     const page = searchParams.page
     const perPage = searchParams.perPage || perPageLocalStorage
-    const contacts = useContacts(page, perPage)
+    const contacts = useContacts(page, perPage, {}, props.include_archived)
 
     const [selectedFilters, setSelectedFilters] = useState({})
     const [selectedSort, setSelectedSort] = useState({})
