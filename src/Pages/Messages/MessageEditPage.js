@@ -22,6 +22,7 @@ const MessageEditPage = (props) => {
 
     // Time
     const [sendAt, setSendAt] = useState(null)
+    const [expiresAt, setExpiresAt] = useState(null)
 
     // Media
     const [mediaSelected, setMediaSelected] = useState(null)
@@ -105,8 +106,9 @@ const MessageEditPage = (props) => {
             return
 
         let sendAt = message.item.send_at
-
         setSendAt(sendAt)
+
+        message.item.expires_at && setExpiresAt(message.item.expires_at)
 
     }, [message.item])
 
@@ -159,6 +161,7 @@ const MessageEditPage = (props) => {
             senderSelected={senderSelected}
             recipientSelected={recipientSelected}
             sendAt={sendAt}
+            expiresAt={expiresAt}
             mediaSelected={mediaSelected}
             textMessage={textMessage}
             loading={message.loading}

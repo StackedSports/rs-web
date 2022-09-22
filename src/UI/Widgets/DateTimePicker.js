@@ -1,5 +1,5 @@
 import './DateTimePicker.css'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 
 import {
     Grid,
@@ -14,7 +14,7 @@ import { DesktopTimePicker, StaticDatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import enLocale from 'date-fns/locale/en-US';
-import { isValid } from 'date-fns';
+import { isValid, addMinutes } from 'date-fns';
 import { useGetMostRecentSendTimes } from 'Api/ReactQuery';
 
 import { Divider } from 'UI'
@@ -39,17 +39,19 @@ export default function DateTimePicker(props) {
     const mostRecentSendTimes = useGetMostRecentSendTimes()
     const now = useRef(new Date())
 
-    // console.log(mostRecentSendTimes.data)
 
-    const [date, setDate] = useState(props.value && props.value !== 'ASAP' ? new Date(props.value) : now.current)
-    const [asap, setAsap] = useState(props.value && props.value !== 'ASAP' ? false : true)
+    const SECONDARY_ACTION_LABEL = props.isExpirationTime ? 'No Expiration' : 'ASAP'
+
+
+    const [date, setDate] = useState(props.value && props.value !== SECONDARY_ACTION_LABEL ? new Date(props.value) : now.current)
+    const [asap, setAsap] = useState(props.value && props.value !== SECONDARY_ACTION_LABEL ? false : true)
 
     useEffect(() => {
         if (!props.value)
             return
 
-        setDate(props.value !== 'ASAP' ? new Date(props.value) : now.current)
-        setAsap(props.value === 'ASAP' ? true : false)
+        setDate(props.value !== SECONDARY_ACTION_LABEL ? new Date(props.value) : now.current)
+        setAsap(props.value === SECONDARY_ACTION_LABEL ? true : false)
     }, [props.value])
 
     const parseTime = (time) => {
@@ -75,17 +77,17 @@ export default function DateTimePicker(props) {
     }
 
     const onAsapClick = (e) => {
-        now.current = new Date()
+        now.current = props.isExpirationTime ? addMinutes(new Date(), 10) : new Date()
         setDate(now.current)
         setAsap(true)
     }
 
     const onSave = (e) => {
-        now.current = new Date()
+        now.current = props.isExpirationTime ? addMinutes(new Date(), 10) : new Date()
         let _date = isValid(date) ? date : now.current
         _date = _date < now.current ? now.current : _date
+        props.onSave(asap ? SECONDARY_ACTION_LABEL : _date)
         onAsapClick()
-        props.onSave(asap ? 'ASAP' : _date)
     }
 
     const onClose = () => {
@@ -122,7 +124,7 @@ export default function DateTimePicker(props) {
                         >
                             <p>
                                 {asap ?
-                                    'ASAP'
+                                    SECONDARY_ACTION_LABEL
                                     : date && date.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' })
                                 }
                             </p>
@@ -148,8 +150,8 @@ export default function DateTimePicker(props) {
                             />
                         </Grid>
                         <Stack
-                          spacing={2}
-                          mt={4}
+                            spacing={2}
+                            mt={4}
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -162,11 +164,14 @@ export default function DateTimePicker(props) {
                             <DesktopTimePicker
                                 value={date}
                                 onChange={onTimeChange}
+                                minTime={props.isExpirationTime ? addMinutes(new Date(), 10) : new Date()}
+                                disableIgnoringDatePartForTimeValidation={true}
                                 renderInput={(params) => <TextField {...params} />}
                             />
                             <Box>
                                 {
-                                    mostRecentSendTimes.data && mostRecentSendTimes.data.length > 0 &&
+                                    mostRecentSendTimes.data &&
+                                    mostRecentSendTimes.data.length > 0 &&
                                     mostRecentSendTimes.data.map(time => {
                                         return (
                                             <Button key={time} onClick={() => parseTime(time)}>
@@ -190,7 +195,7 @@ export default function DateTimePicker(props) {
                             className={asap ? 'Action' : 'Action Outline'}
                             onClick={onAsapClick}
                         >
-                            ASAP
+                            {SECONDARY_ACTION_LABEL}
                         </button>
                     </Grid>
 
