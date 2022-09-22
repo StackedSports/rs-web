@@ -46,7 +46,7 @@ const ContactChat = (props) => {
       <MessagesDisplay
         contact_profile_image={loadedMessages.contact_profile_image}
         coach_profile_image={loadedMessages.coach_profile_image}
-        messages={loadedMessages.messages}
+        messages={loadedMessages.messages || []}
         onLoadMore={handleOnScrollEnd}
         hasMore={hasMorePages}
       />
