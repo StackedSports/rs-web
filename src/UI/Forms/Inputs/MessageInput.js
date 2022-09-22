@@ -32,7 +32,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
 import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
-import { Stack, CircularProgress } from '@mui/material';
+import { Stack, CircularProgress, Popper, Button, IconButton, ClickAwayListener } from '@mui/material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
@@ -446,14 +446,16 @@ const Snippets = ({ snippets, onSelected }) => {
 }
 
 export const EmojiPicker = (props) => {
+    const buttonRef = useRef()
     const [showPicker, setShowPicker] = useState(false)
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const onClick = (e) => {
-        setShowPicker(true)
+        setAnchorEl(anchorEl ? null : e.currentTarget);
     }
 
-    const onMouseLeave = (e) => {
-        setShowPicker(false)
+    const handleClose = (e) => {
+        setAnchorEl(null)
     }
 
     const onSelect = (emoji) => {
@@ -462,23 +464,29 @@ export const EmojiPicker = (props) => {
         props.onEmojiSelected(emoji)
     }
 
+    const open = Boolean(anchorEl);
+
     return (
-        <div className="EmojiPicker-Container" style={props.style}>
-            <Emoji emoji="grinning" size={28} onClick={onClick} />
-            {showPicker && (
-                <div
-                    style={{ position: 'absolute', top: '40px', left: '0px', zIndex: '10' }}
-                    onMouseLeave={onMouseLeave}>
+        <div style={props.style}>
+            <IconButton onClick={onClick}>
+                <Emoji emoji="grinning" size={28} />
+            </IconButton>
+            <Popper
+                open={open}
+                anchorEl={anchorEl}
+                placement="bottom-start"
+                onMouseLeave={handleClose}
+            >
+                <ClickAwayListener onClickAway={() => handleClose()}>
                     <Picker
                         showPreview={false}
-                        //   useButton={false}
                         title="Pick your emoji"
                         emoji="grinning"
                         perLine={10}
                         onSelect={onSelect}
                     />
-                </div>
-            )}
+                </ClickAwayListener>
+            </Popper>
         </div>
     )
 }

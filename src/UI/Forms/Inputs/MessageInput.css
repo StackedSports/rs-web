@@ -13,11 +13,6 @@
     border: 1px solid #3871da !important;
 }
 
-.MessageInput.Large {
-    /* align-items: flex-start; */
-    /* padding-top: 20px; */
-}
-
 .MessageInput .Label {
     /* margin: 0; */
     /* flex: 1 */
@@ -26,15 +21,6 @@
 
 .MessageInput .Label p {
     margin: 0;
-}
-
-.MessageInput.Large .Label p {
-    /* margin-top: 10px; */
-}
-
-.MessageInput .Input {
-    /* margin: 0; */
-    /* flex: 1 */
 }
 
 .MessageInput .Input.Flex1 {
@@ -53,7 +39,6 @@
     margin-right: 16px;
     padding: 8px 16px;
 }
-
 
 .MessageInput .Row {
     display: flex;
@@ -85,7 +70,6 @@
 .MessageInput .Input .Container.Large.Media {
     position: relative;
     padding: 0;
-
 }
 
 .MessageInput .Input .MediaSelected {
@@ -153,14 +137,4 @@
     height: 100px;
     margin-top: 20px;
     /* background-color: #d8d8d8; */
-}
-
-.MessageInput .Input .EmojiPicker-Container {
-    position: relative;
-}
-
-.MessageInput .Input .EmojiPicker-Picker {
-    position: absolute;
-    top: 0;
-    left: 0;
 }
