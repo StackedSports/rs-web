@@ -1,3 +1,4 @@
 export { TextMessage } from './TextMessage';
 export { ChatWindow } from './ChatWindow';
-export { ChatListItem } from './ChatListItem';
+export { ChatInboxItem as ChatListItem } from './ChatInboxItem';
+export { ChatInbox } from './ChatInbox'

@@ -308,6 +308,12 @@ export const getContacts = (page, perPage) => {
     return AXIOS('get', `contacts?page=${page}&per_page=${perPage}`)
 }
 
+export const getArchivedContacts = (page, perPage) => {
+
+    return AXIOS('get', `contacts?page=${page}&per_page=${perPage}&only_archived=true`)
+    //https://api.recruitsuite.co/api/contacts?page=1&per_page=25&sort_column=first_name&sort_dir=asc&only_archived=true
+}
+
 export const filterContacts = (page, perPage, filters) => {
 
     const data = {
@@ -1384,4 +1390,42 @@ export const getStuckMessages = () => {
 
 export const requeueMessage = (id) => {
     return PUT(`messages/${id}/requeue`)
+}
+
+// /api/inboxes -> para receber os contatos com a ultimas mensagens 
+// /api/inboxes_contacts -> para receber os team_contacts se for admin ou o próprio user
+// /api/inboxes_conversations 
+
+export const getInboxes = () => {
+    return GET(`inboxes_contacts`)
+}
+
+export const getInbox = (id) => {
+    return GET(`inboxes`)
+}
+
+export const getInboxSMS = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_sms?per_page=15`, body)
+}
+
+export const getInboxDM = (teamMemberId) => {
+    const body = {
+        user_id: teamMemberId,
+    }
+
+    return GET(`inboxes_dms?per_page=15`, body)
+}
+
+export const getInboxConversation = ({ contact_id, inbox_type, user_id }, page = 1, perPage = 20) => {
+    const body = {
+        team_contact_id: contact_id,
+        inbox_type: inbox_type, // 'sms' | 'dm'
+        user_id: user_id
+    }
+
+    return GET(`inboxes_conversations?page=${page}&per_page=${perPage}`, body)
 }

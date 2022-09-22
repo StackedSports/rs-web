@@ -89,7 +89,16 @@ export const Dropdown = ({
             handleClose();
         }
     }
-    const activeOptions = useMemo(() => searchText ? onSearch ? options : filteredOptions : options, [searchText, onSearch, filteredOptions, options])
+    const activeOptions = useMemo(() => {
+        if(searchText) {
+            if(onSearch)
+                return options
+            else
+                return filteredOptions
+        } else {
+            return options
+        }
+    }, [searchText, onSearch, filteredOptions, options])
 
     const handleClickOption = (option) => {
 
@@ -184,9 +193,8 @@ export const Dropdown = ({
                                     No results found
                                 </MenuItem>
                             </RenderIf>
-
-                            {// if options is array of objects
-                                Array.isArray(activeOptions) ? activeOptions?.map((option, i) => (
+                            {/** // if options is array of objects */}
+                            {activeOptions && Array.isArray(activeOptions) && activeOptions?.map((option, i) => (
                                     <MenuItem
                                         key={option.id || i}
                                         onClick={() => handleClickOption(option)}
@@ -201,10 +209,9 @@ export const Dropdown = ({
                                             primaryTypographyProps={{ noWrap: true }}
                                         />
                                     </MenuItem>
-                                ))
-                                    :
-                                    // if options is an object with array will creat subheader to each key
-                                    Object.keys(options).map((key, index) => (
+                            ))}
+                            {/** if options is an object with array will creat subheader to each key */}
+                            {activeOptions && !Array.isArray(activeOptions) && Object.keys(activeOptions).map((key, index) => (
                                         [
                                             <ListSubheader sx={{ fontWeight: 'bold', textTransform: 'capitalize' }} >{key.replace('_', ' ')}</ListSubheader>,
                                             Array.isArray(options[key]) && options[key]?.map((option, i) => (
@@ -216,9 +223,7 @@ export const Dropdown = ({
                                                 </MenuItem>
                                             ))
                                         ]
-                                    ))
-                            }
-
+                                    ))}
                         </MenuList>
                     </ClickAwayListener>
                 </Paper>

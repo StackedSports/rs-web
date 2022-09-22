@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useMemo, RefObject } from 'react';
-import { debounce } from 'lodash';
+import lodashDebounce from 'lodash.debounce';
 
 /**
  * @description
@@ -12,7 +12,7 @@ import { debounce } from 'lodash';
  */
 export const useBottomScrollListener = (onBottom: () => void, offset: number = 0, triggerOnNoScroll: boolean = false): RefObject<HTMLElement> => {
 
-    const debouncedOnBottom = useMemo(() => debounce(onBottom, 200, { leading: true }), [onBottom]);
+    const debouncedOnBottom = useMemo(() => lodashDebounce(onBottom, 400, { leading: true }), [onBottom]);
     const containerRef = useRef<HTMLElement>(null);
 
     const handleOnScroll = useCallback(() => {
@@ -33,7 +33,7 @@ export const useBottomScrollListener = (onBottom: () => void, offset: number = 0
                 debouncedOnBottom();
             }
         }
-    }, [offset, onBottom, containerRef.current]);
+    }, [offset, debouncedOnBottom, containerRef.current]);
 
     useEffect((): (() => void) => {
         const ref: HTMLElement | null = containerRef.current;
@@ -54,7 +54,7 @@ export const useBottomScrollListener = (onBottom: () => void, offset: number = 0
                 window.removeEventListener('scroll', handleOnScroll);
             }
         };
-    }, [handleOnScroll, debounce]);
+    }, [handleOnScroll]);
 
     return containerRef;
 }

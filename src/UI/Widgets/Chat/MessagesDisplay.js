@@ -262,9 +262,9 @@ export const MessagesDisplay = (props) => {
     const { messages,
         contact_profile_image,
         coach_profile_image,
-    } = props.messages || {};
+    } = props;
 
-    const scrollRef = props.onScrollEnd && useBottomScrollListener(props.onScrollEnd);
+    const scrollRef = props.onScrollEnd ? useBottomScrollListener(props.onScrollEnd, 200, true) : null;
 
     const [checkedMessagesIds, setCheckedMessagesIds] = useState([])
     const [showActions, setShowActions] = useState(false)
@@ -313,7 +313,7 @@ export const MessagesDisplay = (props) => {
                             action={{
                                 name: 'Action',
                                 variant: 'text',
-                                options: props.actions,
+                                options: props.actions || [],
                             }}
                         />
                     }
@@ -340,7 +340,7 @@ export const MessagesDisplay = (props) => {
                     }
                 }}
             >
-                {messages && messages.map(message => (
+                {messages && messages.map((message, index) => (
                     <TextMessage
                         key={message.id}
                         owner={message.direction === 'out'}

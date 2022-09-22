@@ -130,7 +130,7 @@ export const useTextPlaceholders = () => {
 
     return {
         ...reactQuery,
-        items: reactQuery.data,
+        items: reactQuery.data||{},
         loading: reactQuery.isLoading,
     }
 }

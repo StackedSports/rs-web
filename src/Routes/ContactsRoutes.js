@@ -18,7 +18,7 @@ const ContactsRoutes = (props) => (
       exact
       path={contactsRoutes.archived}
     >
-      <ContactsPage {...props} include_archived={true} />
+      <ContactsPage {...props} only_archived={true} />
     </Route>
     <Route
       exact

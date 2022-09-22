@@ -235,26 +235,26 @@ export default function BaseContactsPage(props) {
             props.onPanelFilterChange(filter)
     }
 
-    const onSendMessageClick = (e) => {
+    const onSendMessageClick = () => {
         let selectedData = contactsMultipageSelection.selectedData
         if (props.onSendMessage)
             props.onSendMessage(selectedData)
     }
 
-    const onExportAsCSVClick = (e) => {
+    const onExportAsCSVClick = () => {
         gridApiRef.current.exportDataAsCsv()
     }
 
-    const onRemoveTagClick = (e) => {
+    const onRemoveTagClick = () => {
         isTagDialogFunctionRemoveRef.current = true
         setOpenSelectTagDialog(true)
     }
-    const onAddTagClick = (e) => {
+    const onAddTagClick = () => {
         isTagDialogFunctionRemoveRef.current = false
         setOpenSelectTagDialog(true)
     }
 
-    const onFollowOnTwitterClick = (e) => {
+    const onFollowOnTwitterClick = () => {
         setOpenFollowOnTwitterDialog(true)
     }
 
@@ -295,12 +295,12 @@ export default function BaseContactsPage(props) {
         setEditBoard(false)
     }
 
-    const boardEditedFailure = (error) => {
+    const boardEditedFailure = () => {
         app.alert.setError('Failed to edit board.')
         // setEditBoard(false)
     }
 
-    const onDeleteBoard = (e) => {
+    const onDeleteBoard = () => {
         const title = "Delete Board"
         confirmDialog.show(title, "You cannot undo this action. Are you sure you want to continue? ", () => {
 
@@ -320,7 +320,7 @@ export default function BaseContactsPage(props) {
         })
     }
 
-    const onAddTagsToContacts = async (selectedTagsIds) => {
+    const onAddTagsToContacts = async (selectedTagsIds: string) => {
 
         let contactIds = contactsMultipageSelection.selectionModel
 
@@ -380,6 +380,33 @@ export default function BaseContactsPage(props) {
     const onContactCreated = () => {
         app.alert.setSuccess('Contact created successfully!')
     }
+
+    const selectedContatsActions = useMemo(() => {
+        let options = []
+
+        if (props.kanbanView)
+            options = [
+                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                { name: 'Archive Contact', onClick: onArchiveContactClick }
+            ]
+        else if (props.onlyArchived)
+            options = [
+                { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+            ]
+        else
+            options = [
+                { name: 'Export as CSV', onClick: onExportAsCSVClick },
+                { name: 'Remove Tag', onClick: onRemoveTagClick },
+                { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
+                { name: 'Archive Contact', onClick: onArchiveContactClick }
+            ]
+        return options
+
+    }, [props.kanbanView, props.onlyArchived])
+
 
     return (
         <MainLayout
@@ -444,17 +471,7 @@ export default function BaseContactsPage(props) {
                                 icon: ArrowDropDownIcon,
                                 disabled: contactsMultipageSelection.count === 0,
                                 style: { whiteSpace: "nowrap" },
-                                options: props.kanbanView ? [
-                                    { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                    { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                    { name: 'Archive Contact', onClick: onArchiveContactClick }
-                                ] :
-                                    [
-                                        { name: 'Export as CSV', onClick: onExportAsCSVClick },
-                                        { name: 'Remove Tag', onClick: onRemoveTagClick },
-                                        { name: 'Follow on Twitter', onClick: onFollowOnTwitterClick },
-                                        { name: 'Archive Contact', onClick: onArchiveContactClick }
-                                    ]
+                                options: selectedContatsActions
                             }}
                         />
                     </RenderIf>
@@ -503,7 +520,7 @@ export default function BaseContactsPage(props) {
                             redirectToDetails
                             contacts={contacts.items}
                             pagination={contacts.pagination}
-                            loading={contacts.loading}
+                            loading={contacts.isFetching}
                             apiRef={gridApiRef}
                             columnsControl={props.columnsControl}
                             onSortModelChange={props.onSortingChange}

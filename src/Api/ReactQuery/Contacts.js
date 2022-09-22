@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery, useQueryClient, useMutation } from "react-query"
-import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact } from "Api/Endpoints"
+import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact, getArchivedContacts } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useContact = (id) => {
@@ -105,15 +105,15 @@ export const useContactStats = (id) => {
     }
 }
 
-export const useContacts = (currentPage, itemsPerPage, initialFilters) => {
+export const useContacts = (currentPage, itemsPerPage, initialFilters, only_archived) => {
     const [filters, setFilters] = useState(initialFilters)
     const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
     const [contacts, setContacts] = useState()
 
-    const get = filters && !lodash.isEmpty(filters) ? filterContacts : getContacts
+    const get = only_archived ? getArchivedContacts : (filters && !lodash.isEmpty(filters)) ? filterContacts : getContacts
 
-    const reactQuery = useQuery(['contacts', pagination.currentPage, pagination.itemsPerPage, filters], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
-        refetchOnWindowFocus: false,
+    const reactQuery = useQuery(['contacts', pagination.currentPage, pagination.itemsPerPage, filters, only_archived], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
+        keepPreviousData:true
     })
 
     useEffect(() => {
