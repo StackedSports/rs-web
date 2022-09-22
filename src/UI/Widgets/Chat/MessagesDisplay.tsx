@@ -2,13 +2,13 @@ import React, { useState, useCallback } from 'react';
 import {
     Stack,
     CircularProgress,
-    Box,
     Button,
+    List,
 } from "@mui/material";
 
 import { PanelDropdown } from 'UI/Layouts/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { IConversatition } from 'Interfaces';
 
 interface IMessagesDisplay {
@@ -85,31 +85,28 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                     }
                 </Stack>
             )}
-
-            <Stack // messages list
+            <List // messages list
+                id='list-chat'
                 sx={{
                     flex: '1 0 0',
                     overflowY: 'auto',
                     overflowX: 'hidden',
                     overscrollBehaviorBlock: 'contain',
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
                     '::-webkit-scrollbar': {
                         width: '5px',
                     },
                 }}
             >
                 <InfiniteScroll
-                    loadMore={() => props.onLoadMore && props.onLoadMore()}
-                    hasMore={props.hasMore}
-                    useWindow={false}
-                    isReverse={true}
-                    element='ul'
-                    loader={<CircularProgress key={0} size={20} sx={{ mx: "auto" }} />}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        margin: 0,
-                        padding: 0,
-                    }}
+                    dataLength={messages.length}
+                    next={() => props.onLoadMore && props.onLoadMore()}
+                    hasMore={props.hasMore || false}
+                    inverse={true}
+                    loader={<CircularProgress size={25} sx={{ mx: "auto", my: 1 }} />}
+                    scrollableTarget='list-chat'
+                    style={{ display: "flex", flexDirection: "column-reverse" }}
                 >
                     {messages && messages.map((message) => (
                         <TextMessage
@@ -124,7 +121,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                         />
                     ))}
                 </InfiniteScroll>
-            </Stack>
+            </List>
         </>
     )
 }

@@ -18,7 +18,7 @@ import SmsIcon from '@mui/icons-material/Sms';
 
 import { ChatInput } from './ChatInput';
 import { MessagesDisplay } from './MessagesDisplay';
-import { useInboxConversationInfinte } from 'Api/ReactQuery'
+import { useInboxConversationInfinty } from 'Api/ReactQuery'
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 
 import { formatPhoneNumber } from 'utils/Parser'
@@ -35,15 +35,16 @@ interface ChatWindowProps {
 
 export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 
-	const messages = useInboxConversationInfinte({
+	const messages = useInboxConversationInfinty({
 		contact_id: props.conversationControl.contact_id,
 		inbox_type: props.conversationControl.inbox_type,
 		user_id: props.conversationControl.user_id
 	})
 
 	const loadNextPageMessages = () => {
-		if (!messages.hasNextPage || messages.isFetchingNextPage) return
-		messages.fetchNextPage()
+		if (messages.hasNextPage && !messages.isFetching) {
+			messages.fetchNextPage()
+		}
 	}
 
 	const onCloseConversation = () => {
@@ -155,8 +156,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							coach_profile_image={props.conversationControl.coach_profile_image}
 							actions={actionOptions}
 							onLoadMore={loadNextPageMessages}
-							loading={messages.isFetching}
-							hasMore={messages.hasNextPage}
+							loading={messages.isLoading}
+							hasMore={messages.hasNextPage || messages.isLoading}
 						/>
 						
 						<ChatInput />

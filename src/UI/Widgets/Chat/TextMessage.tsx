@@ -59,8 +59,9 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     )}
                     {props.message.media && Array.isArray(props.message.media) && (
                         <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
-                            {props.message.media?.map(media =>
+                            {props.message.media?.map((media, index) =>
                                 <RenderMediaType
+                                    key={index}
                                     url={media?.urls?.original}
                                     type={getFileType(media.file_type)}
                                 />
