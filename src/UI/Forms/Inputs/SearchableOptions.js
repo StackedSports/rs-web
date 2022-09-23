@@ -1,18 +1,16 @@
 import { useState } from 'react'
 
-import { Stack } from '@mui/material'
-
 import {
+	Stack,
     Grid,
     Dialog,
     Snackbar,
-    makeStyles,
-    withStyles,
     Slider,
     Backdrop,
-} from "@material-ui/core";
+} from '@mui/material';
 
 import ClearIcon from "@mui/icons-material/Clear"; // ----
+import { makeStyles } from '@mui/styles';
 
 
 

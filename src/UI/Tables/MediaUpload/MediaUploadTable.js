@@ -2,10 +2,6 @@ import { useState } from 'react'
 
 import LinearProgress from '@mui/material/LinearProgress';
 
-import {
-  makeStyles,
-} from "@material-ui/core";
-
 import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
 
 
@@ -16,6 +12,7 @@ import ClearIcon from "@mui/icons-material/Clear"; // ----
 import SearchableSelector from 'UI/Forms/Inputs/SearchableSelector'
 
 import { getFullName } from "utils/Parser"
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   tags: {

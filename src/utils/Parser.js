@@ -341,7 +341,6 @@ const isThisYear = (date, now) => {
 }
 
 export const getNiceDate = (date, style) => {
-	console.log(date)
 
 	// style = 'short' || 'default'
 

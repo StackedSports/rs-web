@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-
 import { Grid } from "@mui/material";
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
@@ -18,7 +17,7 @@ import { InboxType, ISideFilter, IUserInboxItem } from "Interfaces"
 import useSearchParams from 'Hooks/SearchParamsHook';
 
 interface IInboxSelected {
-	team_member_id: number ,
+	team_member_id: number,
 	team_member_profile_image: string,
 	userId: string,
 	name: string,
@@ -42,23 +41,26 @@ const serializeInbox = (Inbox: IInboxSelected) => {
 	return Object.values(Inbox).join(';')
 }
 
-const deserializeInbox = (urlParamsString: string) => {
+const deserializeInbox = (urlParamsString: string | null) => {
 	//it must be in this order
-	const InboxKeys: (keyof IInboxSelected)[] = ['team_member_id', 'team_member_profile_image', 'userId', 'name', 'channel', 'type']
+	if (!urlParamsString) return null
+
+	const InboxKeys = ['team_member_id', 'team_member_profile_image', 'userId', 'name', 'channel', 'type']
 
 	const values = urlParamsString.split(';')
 
-	const newInbox: IInboxSelected = InboxKeys.reduce((prev, cur, index) => ({ ...prev, [cur]: values[index] }), {} as IInboxSelected)
-
-	console.log(newInbox)
+	//@ts-ignore
+	const newInbox: IInboxSelected = InboxKeys.reduce((prev, cur, index) => ({ ...prev, [cur]: values[index] }), {})
+	return newInbox
 }
 
 export default function ChatPage() {
 	const { user } = useContext(AuthContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
 	const { searchParams, setSearchParams } = useSearchParams()
+	const inboxSelected = useMemo(() => deserializeInbox(searchParams.get('inbox')), [searchParams])
 
-	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
+	//const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
 
 	const teamInboxes = useTeamInboxes()
@@ -178,9 +180,7 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: ISideFilter, itemIndex: number, filterIndex: number) => {
-		console.log(itemIndex)
-		console.log(filterIndex)
+	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, itemIndex: number, filterIndex: number) => {
 
 		const type = filterIndex === 0 ? 'dm' : 'sms'
 
@@ -188,7 +188,6 @@ export default function ChatPage() {
 			return
 
 		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id == item.id && inbox.type === type)
-		console.log("inbox", inbox)
 
 		if (!inbox)
 			return
@@ -210,14 +209,13 @@ export default function ChatPage() {
 			type: inbox.type
 		}
 
-		setSearchParams({ inbox: serializeInbox(selected) })
+		setSearchParams({ inbox: serializeInbox(selected) }, inboxSelected === null)
 
 		//console.log("Selected inbox", selected)
 
-		setInboxSelected(selected)
+		//setInboxSelected(selected)
 		setSelectedConversationControl([])
 	}
-
 
 	const filters = useMemo(() => {
 		return [
@@ -244,6 +242,17 @@ export default function ChatPage() {
 					}))
 			}
 		]
+	}, [teamInboxes, inboxSelected])
+
+	useEffect(() => {
+		if (!inboxSelected && teamInboxes.items) {
+			const item = teamInboxes.items.at(0)
+			if (item) {
+				const id = item.team_member_id
+				const typeIndex = item.type === 'dm' ? 0 : 1
+				onFilterSelected({ id: id }, 0, typeIndex)
+			}
+		}
 	}, [teamInboxes, inboxSelected])
 
 	return (
