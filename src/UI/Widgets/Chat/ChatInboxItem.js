@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Avatar, IconButton, ListItemButton, Stack, Typography } from '@mui/material';
-import { formatDate, formatPhoneNumber } from 'utils/Parser';
+import { formatDate, formatPhoneNumber, getNiceDate } from 'utils/Parser';
 import ArchiveIcon from '@mui/icons-material/Archive';
 
 export const ChatInboxItem = (props) => {
@@ -12,9 +12,10 @@ export const ChatInboxItem = (props) => {
 	}
 
 	const date = useMemo(() => {
-		//console.log(new Date(props.item.time))
+		//console.log(new Date(props.item.time)) getNiceDate
 
-		return formatDate(new Date(props.item.time), 'short', 'short')
+		// return formatDate(new Date(props.item.time), 'short', 'short')
+		return getNiceDate(new Date(props.item.time))
 	}, [props.item])
 
 	const from = useMemo(() => {

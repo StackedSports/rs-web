@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { RenderMediaType } from '../Media/RenderMediaType';
 import { getFileType } from 'utils/Helper';
-import { formatDate } from 'utils/Parser';
+import { formatDate, getNiceDate } from 'utils/Parser';
 import { IConversatition } from 'Interfaces';
 interface TextMessageProps {
     actionActive?: boolean;
@@ -89,7 +89,8 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     </Typography>
                 </Box>
                 <Time fontSize={9.5} color='text.secondary' textAlign={props.owner ? 'right' : 'left'}>
-                    {formatDate(props.message.created_at, 'short', 'short')}
+                    {/* {formatDate(props.message.created_at, 'short', 'short')} */}
+                    {getNiceDate(new Date(props.message.created_at))}
                 </Time>
             </Box>
 

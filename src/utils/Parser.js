@@ -1,4 +1,5 @@
 import { getHours, getMinutes } from "date-fns";
+import { date } from "yup";
 
 import { getCoachLabel } from "./Data";
 
@@ -305,3 +306,56 @@ export const formatDateWithoutUTC = (isoDate) => {
 export const removeSpaces = (string) => string.replace(/\s/g, '')
 
 export const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1)
+
+const getShortTime = (date) => date.toLocaleTimeString('en-US', { timeStyle: 'short' })
+
+const getDayOfWeek = (date) => {
+	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+	return days[date.getDay()]
+}
+
+const getMonth = (date) => {
+	const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	return months[date.getMonth()]
+}
+
+const isToday = (date, now) => {
+	return date.getDate() === now.getDate()
+		&& date.getMonth() === now.getMonth()
+		&& date.getFullYear() === now.getFullYear()
+}
+
+const isYesterday = (date, now) => {
+	return date.getDate() === now.getDate() - 1
+		&& date.getMonth() === now.getMonth()
+		&& date.getFullYear() === now.getFullYear()
+}
+
+const isThisWeek = (date, now) => {
+	return now.getTime() - date.getTime() < 1000 * 60 * 60 * 24 * 7
+		//&& now.getDay() > date.getDay() && date.getDay() <= 0
+}
+
+const isThisYear = (date, now) => {
+	return date.getFullYear() === now.getFullYear()
+}
+
+export const getNiceDate = (date) => {
+	console.log(date)
+
+	if (!date || !(date instanceof Date))
+		return ''
+
+	let now = new Date(Date.now())
+
+	if(isToday(date, now))
+		return getShortTime(date)
+	else if(isYesterday(date, now))
+		return `Yesterday, ${getShortTime(date)}`
+	else if(isThisWeek(date, now))
+		return `${getDayOfWeek(date)}, ${getShortTime(date)}`
+	else if(isThisYear(date, now))
+		return `${getMonth(date)} ${date.getDate()}, ${getShortTime(date)}`
+	else
+		return `${getMonth(date)} ${date.getDate()} ${date.getFullYear()}, ${getShortTime(date)}`
+}
