@@ -286,7 +286,7 @@ export const MediaDetailsPage = () => {
 
                                 <DetailsPreview label="File Name:" value={media?.file_name} />
                                 <DetailsPreview label="File Type:" value={media?.file_type} />
-                                <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at)} />
+                                <DetailsPreview label="Uploaded on :" value={formatDate(media?.created_at, 'medium', 'short')} />
                                 <DetailsPreview label="Uploaded by :" value={getFullName(media?.owner)} />
                                 <DetailsPreview label="File Size:" value={fileSizeFormatted} />
                                 <RenderIf condition={media?.discarded_at}>

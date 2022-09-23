@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import { formatDate } from 'utils/Parser'
+import { formatDate, getNiceDate } from 'utils/Parser'
 import { mediaRoutes } from 'Routes/Routes'
 
 const nameMedia = {
@@ -70,7 +70,7 @@ const updatedAt = {
     field: 'updated_at',
     type: 'date',
     headerName: 'Last Modified',
-    valueGetter: (params) => formatDate(new Date(params.value), 'short', 'short'),
+    valueGetter: (params) => getNiceDate(new Date(params.value)),
     flex: 1,
     // width: 200
 }

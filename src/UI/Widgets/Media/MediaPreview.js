@@ -21,7 +21,7 @@ import { AiOutlineGif } from 'react-icons/ai'
 import RenderIf from '../RenderIf'
 import { AppContext } from 'Context/AppProvider'
 
-import { formatDate } from "utils/Parser"
+import { getNiceDate } from "utils/Parser"
 
 const PlaceholderImage = (props) => {
     const images = props.placeholder?.media?.slice(0, 3).map(item => item.urls)
@@ -289,8 +289,7 @@ const MediaPreview = ({ type, ...props }) => {
                         </Stack>
                         {props.item?.created_at && (
                             <Typography noWrap variant='caption'>
-                                Uploaded at:
-                                {formatDate(props.item?.created_at)}
+                                {`${getNiceDate(new Date(props.item?.created_at))}`}
                             </Typography>
                         )}
                     </CardContent>

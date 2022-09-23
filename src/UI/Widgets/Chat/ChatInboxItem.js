@@ -15,7 +15,7 @@ export const ChatInboxItem = (props) => {
 		//console.log(new Date(props.item.time)) getNiceDate
 
 		// return formatDate(new Date(props.item.time), 'short', 'short')
-		return getNiceDate(new Date(props.item.time))
+		return getNiceDate(new Date(props.item.time), 'short')
 	}, [props.item])
 
 	const from = useMemo(() => {

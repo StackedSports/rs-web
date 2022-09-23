@@ -136,7 +136,7 @@ const TweetDetails = (props) => {
         if(!props.details | !props.details.timestamp)
             return ''
 
-        return formatDate(new Date(props.details.timestamp))
+        return formatDate(new Date(props.details.timestamp), 'medium', 'short')
     }, [props.details])
 
     return (

@@ -340,8 +340,10 @@ const isThisYear = (date, now) => {
 	return date.getFullYear() === now.getFullYear()
 }
 
-export const getNiceDate = (date) => {
+export const getNiceDate = (date, style) => {
 	console.log(date)
+
+	// style = 'short' || 'default'
 
 	if (!date || !(date instanceof Date))
 		return ''
@@ -357,5 +359,7 @@ export const getNiceDate = (date) => {
 	else if(isThisYear(date, now))
 		return `${getMonth(date)} ${date.getDate()}, ${getShortTime(date)}`
 	else
-		return `${getMonth(date)} ${date.getDate()} ${date.getFullYear()}, ${getShortTime(date)}`
+		return style === 'short'
+			?	`${getMonth(date)} ${date.getDate()} ${date.getFullYear()}`
+			:	`${getMonth(date)} ${date.getDate()} ${date.getFullYear()}, ${getShortTime(date)}`
 }
