@@ -1,5 +1,4 @@
- // @ts-nocheck
-import React, { useState, useContext, useEffect, createContext, useMemo } from 'react'
+import React, {  useContext, useEffect, createContext, useMemo } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 
@@ -7,7 +6,7 @@ import { AppContext } from 'Context/AppProvider'
 import { login as apiLogin, logout as apiLogout, loginWithTwitter as apiLoginWithTwitter } from 'Api/Endpoints'
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import { IMemberApi } from 'Interfaces/ISettings'
-import { useLocalStorage } from 'usehooks-ts'
+import useLocalStorage from 'Hooks/useLocalStorage'
 
 
 const AuthContext = createContext(null)
@@ -20,12 +19,9 @@ const AuthProvider: React.FC = (props) => {
     const auth = getAuth();
 
     const [user, setUser] = useLocalStorage<IMemberApi | null>('user', null)
-    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         // console.log(app.location)
-
-        setIsLoading(true)
 
         // save current location so when the user signs in
         // we redirect them to that location
@@ -37,12 +33,9 @@ const AuthProvider: React.FC = (props) => {
             app.redirect('/dashboard')
         }
 
-
-        setIsLoading(false)
-
     }, [user, app.location])
 
-    const login = (email, password) => {
+    const login = (email: string, password: string) => {
         return new Promise((resolve, reject) => {
             apiLogin(email, password)
                 .then(res => {
@@ -57,14 +50,15 @@ const AuthProvider: React.FC = (props) => {
                 })
         })
     }
+
     const loginWithTwitter = () => {
         return new Promise((resolve, reject) => {
             signInWithPopup(auth, provider)
                 .then((result) => {
-                    //console.log(result)
+                    console.log(result,result.user?.reloadUserInfo?.screenName)
                     const credential = TwitterAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    const secret = credential.secret;
+                    const token = credential?.accessToken;
+                    const secret = credential?.secret;
                     // The signed-in user info.
                     const handle = result.user?.reloadUserInfo?.screenName;
                     const email = result.user?.email
