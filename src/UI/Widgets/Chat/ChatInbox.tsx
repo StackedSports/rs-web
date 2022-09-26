@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Stack, List, Typography, Grid, Box } from "@mui/material";
+import { Stack, List, Typography, Grid, Box, Skeleton } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -56,7 +56,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
     React.useEffect(() => {
         const { conversationControl } = props
 
-        if(!conversationControl)
+        if (!conversationControl)
             return
 
         const map: Map<string, boolean> = new Map()
@@ -70,13 +70,13 @@ export const ChatInbox = (props: IChatInboxProps) => {
     }, [props.conversationControl])
 
     const from = React.useMemo(() => {
-		const { type, channel } = props
+        const { type, channel } = props
 
-		if (type === 'sms')
-			return formatPhoneNumber(channel)
-		else
-			return `@${channel}`
-	}, [props.type, props.channel])
+        if (type === 'sms')
+            return formatPhoneNumber(channel)
+        else
+            return `@${channel}`
+    }, [props.type, props.channel])
 
     const PlatformIcon = props.type === 'sms' ? SmsIcon : TwitterIcon
 
@@ -98,24 +98,24 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 borderBottom="solid 1px #dadada"
             >
                 <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
-                
+
                 <Stack ml={2} flex={1}>
                     <Typography component="h2" variant="h6">
-                        <b>{props.name}</b>
+                        {props.isLoading ? <Skeleton /> : <b>{props.name}</b>}
                     </Typography>
-                    
+
                     <Typography
-                      component="span"
-                      color="text.secondary"
-                      variant="body1">
-                        {from}
+                        component="span"
+                        color="text.secondary"
+                        variant="body1">
+                        {props.isLoading ? <Skeleton width={'50%'} /> : from}
                     </Typography>
                 </Stack>
 
                 <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
-                    <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }}/>		
+                    <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
                 </Stack>
-                
+
             </Stack>
 
             <Box sx={{ p: '20px' }}>

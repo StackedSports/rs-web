@@ -2,7 +2,6 @@
 import { Grid } from '@mui/material'
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 
-
 export default function MediaGrid(props) {
 
     return (
@@ -17,6 +16,7 @@ export default function MediaGrid(props) {
                         lg={props.lg || 3}
                         xl={props.xl || 2}>
                         <MediaPreview
+                            isLoading={props.isLoading}
                             type={props.type}
                             item={item}
                             linkTo={props.linkTo && `${props.linkTo}/${item.id}`}

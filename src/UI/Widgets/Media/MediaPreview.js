@@ -1,8 +1,18 @@
 import { useState, useRef, useEffect, useContext, useMemo } from 'react'
-
 import { Link } from "react-router-dom"
-
-import { Card, CardContent, CardActionArea, Typography, Stack, Box, Tooltip, Checkbox, IconButton, styled } from "@mui/material"
+import {
+    Card,
+    CardContent,
+    CardActionArea,
+    Typography,
+    Stack,
+    Box,
+    Tooltip,
+    Checkbox,
+    IconButton,
+    styled,
+    Skeleton
+} from "@mui/material"
 import {
     ImageOutlined,
     GifBoxOutlined,
@@ -11,16 +21,10 @@ import {
     Send as SendIcon,
     Fullscreen as FullscreenIcon
 } from '@mui/icons-material'
-
-import { IconContext } from "react-icons"
 import { GrDocumentPdf } from 'react-icons/gr'
-import { RiVideoLine } from 'react-icons/ri'
-import { MdOutlineImage } from 'react-icons/md'
-import { AiOutlineGif } from 'react-icons/ai'
 
 import RenderIf from '../RenderIf'
 import { AppContext } from 'Context/AppProvider'
-
 import { getNiceDate } from "utils/Parser"
 
 const PlaceholderImage = (props) => {
@@ -174,7 +178,9 @@ const MediaPreview = ({ type, ...props }) => {
     }, [isMedia, props.item])
 
     const cardActionProps = () => {
-        if (props.linkTo) {
+        if (props.isLoading)
+            return ({ disabled: true })
+        else if (props.linkTo) {
             return ({
                 component: Link,
                 to: props.linkTo,
@@ -228,32 +234,38 @@ const MediaPreview = ({ type, ...props }) => {
             <CardActionArea {...cardActionProps()} disableRipple >
                 <CardImage
                     isHovering={isHovering}
-                    showOverlay={selectable || showSendOnHover}
+                    showOverlay={(selectable || showSendOnHover) && !props.isLoading}
                     isChecked={isChecked}
                     size={width}
                 >
-                    {isMedia ? (
-                        <MediaImage media={props.item}  />
+                    {props.isLoading ? (
+                        <Skeleton sx={{ flex: 1, height: '100%' }} />
                     ) : (
-                        <PlaceholderImage placeholder={props.item} size={width} />
+                        <>
+                            {isMedia ? (
+                                <MediaImage media={props.item} />
+                            ) : (
+                                <PlaceholderImage placeholder={props.item} size={width} />
+                            )}
+                            {selectable && (isHovering || isChecked) &&
+                                <StyledCheckBoxContainer isHovering={isHovering}>
+                                    <StyledCheckBox
+                                        color="primary"
+                                        checked={isChecked}
+                                        disableRipple
+                                        onChange={onCheckboxChange}
+                                        onClick={e => e.stopPropagation()}
+                                    />
+                                </StyledCheckBoxContainer>
+                            }
+                        </>
                     )}
-                    {selectable && (isHovering || isChecked) &&
-                        <StyledCheckBoxContainer isHovering={isHovering}>
-                            <StyledCheckBox
-                                color="primary"
-                                checked={isChecked}
-                                disableRipple
-                                onChange={onCheckboxChange}
-                                onClick={e => e.stopPropagation()}
-                            />
-                        </StyledCheckBoxContainer>
-                    }
-                    <RenderIf condition={isHovering && props.onPreviewClick}>
+                    <RenderIf condition={isHovering && props.onPreviewClick && !props.isLoading}>
                         <StyledPreviewButton onMouseDown={onPreviewClick}>
                             <FullscreenIcon />
                         </StyledPreviewButton>
                     </RenderIf>
-                    <RenderIf condition={showSendOnHover && isHovering}>
+                    <RenderIf condition={showSendOnHover && isHovering && !props.isLoading}>
                         <StyledIconButton onMouseDown={onSendClick}>
                             <SendIcon />
                         </StyledIconButton>
@@ -261,37 +273,55 @@ const MediaPreview = ({ type, ...props }) => {
                 </CardImage>
                 {!props.mini && (
                     <CardContent>
-                        <Stack direction='row'>
-                            <RenderIf condition={isMedia && fileType === 'image'}>
-                                <ImageOutlined />
-                            </RenderIf>
-                            <RenderIf condition={isMedia && fileType === 'video'}>
-                                <SmartDisplayOutlined />
-                            </RenderIf>
-                            <RenderIf condition={isMedia && fileType === 'gif'}>
-                                <GifBoxOutlined />
-                            </RenderIf>
-                            <RenderIf condition={isMedia && fileType === 'pdf'}>
-                                <div>
-                                    <GrDocumentPdf />
-                                </div>
-                            </RenderIf>
-                            <RenderIf condition={!isMedia}>
-                                <PermMediaOutlined />
-                            </RenderIf>
-                            <Tooltip
-                                title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
-                            >
-                                <Typography noWrap fontWeight='bold' ml={1}>
-                                    {props.item?.name ? props.item?.name : props.item?.file_name}
-                                </Typography>
-                            </Tooltip>
-                        </Stack>
-                        {props.item?.created_at && (
-                            <Typography noWrap variant='caption'>
-                                {`${getNiceDate(new Date(props.item?.created_at))}`}
-                            </Typography>
-                        )}
+                        {
+                            props.isLoading ? (
+                                <>
+                                    <Stack direction='row'>
+                                        <Skeleton>
+                                            <FullscreenIcon />
+                                        </Skeleton>
+                                        <Skeleton width={'60%'} sx={{ ml: 1 }} />
+                                    </Stack>
+                                    <Typography variant='caption'>
+                                        <Skeleton width={'50%'} />
+                                    </Typography>
+                                </>
+                            ) : (
+                                <>
+                                    <Stack direction='row'>
+                                        <RenderIf condition={isMedia && fileType === 'image'}>
+                                            <ImageOutlined />
+                                        </RenderIf>
+                                        <RenderIf condition={isMedia && fileType === 'video'}>
+                                            <SmartDisplayOutlined />
+                                        </RenderIf>
+                                        <RenderIf condition={isMedia && fileType === 'gif'}>
+                                            <GifBoxOutlined />
+                                        </RenderIf>
+                                        <RenderIf condition={isMedia && fileType === 'pdf'}>
+                                            <div>
+                                                <GrDocumentPdf />
+                                            </div>
+                                        </RenderIf>
+                                        <RenderIf condition={!isMedia}>
+                                            <PermMediaOutlined />
+                                        </RenderIf>
+                                        <Tooltip
+                                            title={props.item?.name ? props.item?.name : props.item?.file_name || ''}
+                                        >
+                                            <Typography noWrap fontWeight='bold' ml={1}>
+                                                {props.item?.name ? props.item?.name : props.item?.file_name}
+                                            </Typography>
+                                        </Tooltip>
+                                    </Stack>
+                                    {props.item?.created_at && (
+                                        <Typography noWrap variant='caption'>
+                                            {`${getNiceDate(new Date(props.item?.created_at))}`}
+                                        </Typography>
+                                    )}
+                                </>
+                            )
+                        }
                     </CardContent>
                 )}
             </CardActionArea>
@@ -312,61 +342,69 @@ const StyledCard = styled(Card)(({ theme, width }) => ({
 
 }));
 
-const CardImage = styled(Box)(({ theme, isHovering, isChecked, showOverlay, size }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: size,
-    backgroundColor: '#efefef',
-    position: 'relative',
-    overflow: 'hidden',
-
-    '.MuiSvgIcon-root': {
-        color: isHovering ? theme.palette.common.white : theme.palette.primary.main,
-    },
-
-    '&::after': ((isHovering || isChecked) && showOverlay) ? {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
+const CardImage = styled(Box)(
+    ({ theme, isHovering, isChecked, showOverlay, size }) => ({
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        zIndex: 0,
-    } : '',
+        height: size,
+        backgroundColor: '#efefef',
+        position: 'relative',
+        overflow: 'hidden',
 
-}));
+        '.MuiSvgIcon-root': {
+            color: isHovering ? theme.palette.common.white : theme.palette.primary.main,
+        },
 
-const StyledCheckBoxContainer = styled(Box)(({ theme, isHovering }) => ({
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    zIndex: 1,
-    backgroundColor: isHovering ? 'transparent' : 'white',
-    borderRadius: 4
-}))
+        '&::after': ((isHovering || isChecked) && showOverlay) ? {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            zIndex: 0,
+        } : '',
 
-const StyledCheckBox = styled(Checkbox)(({ theme }) => ({
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    // zIndex: 1,
-    color: 'primary',
-    padding: 0
-}));
+    })
+);
+
+const StyledCheckBoxContainer = styled(Box)(
+    ({ theme, isHovering }) => ({
+        position: 'absolute',
+        top: 5,
+        left: 5,
+        zIndex: 1,
+        backgroundColor: isHovering ? 'transparent' : 'white',
+        borderRadius: 4
+    })
+)
+
+const StyledCheckBox = styled(Checkbox)(
+    ({ theme }) => ({
+        // position: 'absolute',
+        // top: 0,
+        // left: 0,
+        // zIndex: 1,
+        color: 'primary',
+        padding: 0
+    }));
 
 const StyledPreviewButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     right: 36,
     zIndex: 1,
-}));
+})
+);
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    zIndex: 1,
-}));
+const StyledIconButton = styled(IconButton)(
+    ({ theme }) => ({
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        zIndex: 1,
+    })
+);

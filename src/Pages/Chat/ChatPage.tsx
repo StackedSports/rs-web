@@ -93,6 +93,17 @@ export default function ChatPage() {
 		}
 	}, [user, inboxSelected, selectedConversationControl, setPinnedChats])
 
+	useEffect(() => {
+		if (!inboxSelected && teamInboxes.items) {
+			const item = teamInboxes.items.at(0)
+			if (item) {
+				const id = item.team_member_id
+				const typeIndex = item.type === 'dm' ? 0 : 1
+				onFilterSelected({ id: id }, 0, typeIndex)
+			}
+		}
+	}, [teamInboxes, inboxSelected])
+
 	const onTopActionClick = () => {
 		console.log("onTopActionClick")
 	}
@@ -242,17 +253,6 @@ export default function ChatPage() {
 					}))
 			}
 		]
-	}, [teamInboxes, inboxSelected])
-
-	useEffect(() => {
-		if (!inboxSelected && teamInboxes.items) {
-			const item = teamInboxes.items.at(0)
-			if (item) {
-				const id = item.team_member_id
-				const typeIndex = item.type === 'dm' ? 0 : 1
-				onFilterSelected({ id: id }, 0, typeIndex)
-			}
-		}
 	}, [teamInboxes, inboxSelected])
 
 	return (
