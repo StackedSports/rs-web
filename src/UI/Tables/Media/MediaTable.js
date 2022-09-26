@@ -108,13 +108,11 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
                         checkboxSelection
                         disableSelectionOnClick
                         hidePagination={true}
+                        loading={props.loading}
                         onCellClick={onCellClick}
                         disableMultipleSelection={props.disableMultipleSelection}
                     />
                 )}
-                <StyledLoadingOverlay isLoading={props.loading && props.items && props.items.length > 0} display='flex' justifyContent='center'>
-                    <CircularProgress sx={{ position: 'sticky', left: '50%', top: '50%' }} />
-                </StyledLoadingOverlay>
             </Box>
             <RenderIf condition={props.pagination && props.pagination?.totalPages > 1}>
                 <CustomPagination

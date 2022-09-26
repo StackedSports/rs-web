@@ -239,7 +239,8 @@ const MediaPreview = ({ type, ...props }) => {
                     size={width}
                 >
                     {props.isLoading ? (
-                        <Skeleton sx={{ flex: 1, height: '100%' }} />
+                        <></>
+                       // <Skeleton sx={{ flex: 1, height: '100%' }} />
                     ) : (
                         <>
                             {isMedia ? (

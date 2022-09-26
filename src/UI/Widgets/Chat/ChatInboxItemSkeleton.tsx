@@ -1,10 +1,10 @@
 import React from 'react';
-import { Avatar, ListItemButton, Skeleton, Stack, Typography } from '@mui/material';
+import { Avatar, ListItem, Skeleton, Stack, Typography } from '@mui/material';
 
 export const ChatInboxItemSkeleton = () => {
 
 	return (
-		<ListItemButton
+		<ListItem
 			sx={{
 				padding: "15px",
 				position: "relative",
@@ -12,7 +12,7 @@ export const ChatInboxItemSkeleton = () => {
 			}}
 		>
 			<Stack flex={1} direction="row" spacing={2} alignItems="center">
-				<Skeleton>
+				<Skeleton variant='circular'>
 					<Avatar style={{
 						width: "56px",
 						height: "56px",
@@ -24,14 +24,14 @@ export const ChatInboxItemSkeleton = () => {
 						<Skeleton />
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						<Skeleton />
+						<Skeleton width={'60%'} />
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						<Skeleton />
+						<Skeleton width={'30%'} />
 					</Typography>
 				</Stack>
 			</Stack>
-		</ListItemButton>
+		</ListItem>
 	)
 }
 
