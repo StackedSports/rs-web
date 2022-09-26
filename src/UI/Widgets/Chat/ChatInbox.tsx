@@ -13,6 +13,7 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 import { IUserInboxItem } from "Interfaces"
 import { formatPhoneNumber } from 'utils/Parser'
+import ChatInboxItemSkeleton from './ChatInboxItemSkeleton';
 interface IChatInboxProps {
     name?: string | null,
     type?: string,
@@ -97,6 +98,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 alignItems="start"
                 borderBottom="solid 1px #dadada"
             >
+
                 <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
 
                 <Stack ml={2} flex={1}>
@@ -112,37 +114,47 @@ export const ChatInbox = (props: IChatInboxProps) => {
                     </Typography>
                 </Stack>
 
-                <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
-                    <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
-                </Stack>
+                {!props.isLoading &&
+                    <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
+                        <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
+                    </Stack>
+                }
 
             </Stack>
 
             <Box sx={{ p: '20px' }}>
-                <SearchBar
-                    style={{ margin: 0 }}
-                    searchOnChange
-                    placeholder="Search"
-                    onSearch={onSearch}
-                    onClear={onSearchClear}
-                    onChange={onSearch}
-                />
+                {props.isLoading ? (
+                    <Skeleton variant='rounded' height={'36px'} />
+                ) : (
+                    <SearchBar
+                        style={{ margin: 0 }}
+                        searchOnChange
+                        placeholder="Search"
+                        onSearch={onSearch}
+                        onClear={onSearchClear}
+                        onChange={onSearch}
+                    />
+                )}
             </Box>
-            {props.isLoading && <LoadingPanel />}
-            {props.items && Array.isArray(props.items) && (
-                <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
-                    {activeOptions.map(item => (
-                        <ChatListItem
-                            key={item.contact_id}
-                            item={item}
-                            active={chatSelected.current.get(item.contact_id)}
-                            onToggleChat={props.onChatClick}
-                            onArchiveConversation={props.onArchiveConversation}
-                        />
-                    ))}
-                </List>
-            )}
-
+            <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
+                {props.isLoading ? (
+                    Array.from(new Array(3)).map((_, index) =>
+                        <ChatInboxItemSkeleton key={index} />
+                    )
+                ) : (
+                    props.items && Array.isArray(props.items) && (
+                        activeOptions.map(item => (
+                            <ChatListItem
+                                key={item.contact_id}
+                                item={item}
+                                active={chatSelected.current.get(item.contact_id)}
+                                onToggleChat={props.onChatClick}
+                                onArchiveConversation={props.onArchiveConversation}
+                            />
+                        ))
+                    )
+                )}
+            </List>
         </Grid>
     )
 }
