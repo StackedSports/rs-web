@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-
 import { Grid } from "@mui/material";
 import Page, { Content } from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
@@ -15,6 +14,7 @@ import { ChatWindow, ChatInbox } from 'UI/Widgets/Chat';
 
 import { useTeamInboxes, useInbox, useTeamMembers } from 'Api/ReactQuery'
 import { InboxType, ISideFilter, IUserInboxItem } from "Interfaces"
+import useSearchParams from 'Hooks/SearchParamsHook';
 
 interface IInboxSelected {
 	team_member_id: number,
@@ -37,26 +37,42 @@ export interface IConversationControl {
 	coach_profile_image: string,
 }
 
+const serializeInbox = (Inbox: IInboxSelected) => {
+	return Object.values(Inbox).join(';')
+}
+
+const deserializeInbox = (urlParamsString: string | null) => {
+	//it must be in this order
+	if (!urlParamsString) return null
+
+	const InboxKeys = ['team_member_id', 'team_member_profile_image', 'userId', 'name', 'channel', 'type']
+
+	const values = urlParamsString.split(';')
+
+	//@ts-ignore
+	const newInbox: IInboxSelected = InboxKeys.reduce((prev, cur, index) => ({ ...prev, [cur]: values[index] }), {})
+	return newInbox
+}
+
 export default function ChatPage() {
 	const { user } = useContext(AuthContext)
 	const confirmDialog = useContext(ConfirmDialogContext)
+	const { searchParams, setSearchParams } = useSearchParams()
+	const inboxSelected = useMemo(() => deserializeInbox(searchParams.get('inbox')), [searchParams])
 
-	const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
+	//const [inboxSelected, setInboxSelected] = useState<IInboxSelected | null>(null)
 	const inbox = useInbox(inboxSelected?.team_member_id, inboxSelected?.type)
 
-	// console.log(inboxSMS)
 	const teamInboxes = useTeamInboxes()
 
 	// console.log(userInbox)
 	const teamMembers = useTeamMembers()
 
+	const KEY_LOCAL_STORAGE_PIN = `${user?.id}${inboxSelected?.team_member_id}`
 	const [pinnedChats, setPinnedChats] = useLocalStorage<[string, IConversationControl[]][]>('pinnedConversations', [])
-
-	const [displayFilters, setDisplayFilters] = useState(true)
 	const [selectedConversationControl, setSelectedConversationControl] = useState<IConversationControl[]>([])
 
-	const KEY_LOCAL_STORAGE_PIN = `${user?.id}${inboxSelected?.team_member_id}`
-
+	const [displayFilters, setDisplayFilters] = useState(true)
 
 	const pinnedChatsMap = useMemo(() => {
 		return new Map(pinnedChats)
@@ -76,6 +92,17 @@ export default function ChatPage() {
 			setPinnedChats([...pinnedChatsMap])
 		}
 	}, [user, inboxSelected, selectedConversationControl, setPinnedChats])
+
+	useEffect(() => {
+		if (!inboxSelected && teamInboxes.items) {
+			const item = teamInboxes.items.at(0)
+			if (item) {
+				const id = item.team_member_id
+				const typeIndex = item.type === 'dm' ? 0 : 1
+				onFilterSelected({ id: id }, 0, typeIndex)
+			}
+		}
+	}, [teamInboxes, inboxSelected])
 
 	const onTopActionClick = () => {
 		console.log("onTopActionClick")
@@ -164,9 +191,7 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: ISideFilter, itemIndex: number, filterIndex: number) => {
-		console.log(itemIndex)
-		console.log(filterIndex)
+	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, itemIndex: number, filterIndex: number) => {
 
 		const type = filterIndex === 0 ? 'dm' : 'sms'
 
@@ -174,7 +199,6 @@ export default function ChatPage() {
 			return
 
 		const inbox = teamInboxes.items?.find(inbox => inbox.team_member_id == item.id && inbox.type === type)
-		console.log("inbox", inbox)
 
 		if (!inbox)
 			return
@@ -183,9 +207,6 @@ export default function ChatPage() {
 			const fullName = `${teamMember.first_name} ${teamMember.last_name}`
 			return inbox.name.includes(fullName)
 		})
-		
-		//console.log("team member", teamMember)
-
 
 		if (!teamMember)
 			return
@@ -199,17 +220,18 @@ export default function ChatPage() {
 			type: inbox.type
 		}
 
+		setSearchParams({ inbox: serializeInbox(selected) }, inboxSelected === null)
+
 		//console.log("Selected inbox", selected)
 
-		setInboxSelected(selected)
+		//setInboxSelected(selected)
 		setSelectedConversationControl([])
 	}
-
 
 	const filters = useMemo(() => {
 		return [
 			{
-				id: 'inboxes-sms',
+				id: 'inboxes-dm',
 				name: 'Twitter DM',
 				items: teamInboxes?.items?.filter(inbox => inbox.type === 'dm')
 					.map(inbox => ({
@@ -220,7 +242,7 @@ export default function ChatPage() {
 					}))
 			},
 			{
-				id: 'inboxes-dm',
+				id: 'inboxes-sms',
 				name: 'Stacked Text',
 				items: teamInboxes?.items?.filter(inbox => inbox.type === 'sms')
 					.map(inbox => ({
@@ -255,7 +277,7 @@ export default function ChatPage() {
 							channel={inboxSelected?.channel}
 							filterOpen={displayFilters}
 							items={inbox?.items}
-							isLoading={inbox?.isLoading}
+							isLoading={ inbox?.isLoading}
 							conversationControl={selectedConversationControl}
 							onChatClick={onClickChatListItem}
 							onArchiveConversation={onArchiveConversation}

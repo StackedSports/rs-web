@@ -10,7 +10,7 @@ export interface ISideFilterButton {
 }
 
 export interface ISideFilter {
-    id: string,
+    id: string | number,
     name: string,
     path?: string,
     items?: ISideFilterItem[],

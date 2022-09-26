@@ -79,40 +79,41 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
             }}
         >
             <Box position='relative' flex={1}>
-                {!props.loading && props.items && props.items.length === 0 && (
+                {(!props.loading && props.items && props.items.length === 0) ? (
                     <span>No media available</span>
-                )}
-                {view === 'grid' ? (
-                    <MediaGrid
-                        type={type}
-                        items={props.items}
-                        linkTo={props.linkTo}
-                        selectionModel={multiPageSelection.selectionModel}
-                        onSelectedChange={onMediaGridSelectionChange}
-                        onSendClick={props.onSendClick}
-                        onPreviewClick={type === 'media' && onPreviewClick}
-                        xs={props.xs}
-                        sm={props.sm}
-                        md={props.md}
-                        lg={props.lg}
-                        xl={props.xl}
-                    />
                 ) : (
-                    <DataTable
-                        items={props.items}
-                        columns={columns}
-                        selection={multiPageSelection.selectionModel}
-                        onSelectionChange={multiPageSelection.onSelectionModelChange}
-                        checkboxSelection
-                        disableSelectionOnClick
-                        hidePagination={true}
-                        onCellClick={onCellClick}
-                        disableMultipleSelection={props.disableMultipleSelection}
-                    />
+                    view === 'grid' ? (
+                        <MediaGrid
+                            isLoading={props.loading}
+                            skeletonSize={props.skeletonSize}
+                            type={type}
+                            items={props.items}
+                            linkTo={props.linkTo}
+                            selectionModel={multiPageSelection.selectionModel}
+                            onSelectedChange={onMediaGridSelectionChange}
+                            onSendClick={props.onSendClick}
+                            onPreviewClick={type === 'media' && onPreviewClick}
+                            xs={props.xs}
+                            sm={props.sm}
+                            md={props.md}
+                            lg={props.lg}
+                            xl={props.xl}
+                        />
+                    ) : (
+                        <DataTable
+                            items={props.items}
+                            columns={columns}
+                            selection={multiPageSelection.selectionModel}
+                            onSelectionChange={multiPageSelection.onSelectionModelChange}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            hidePagination={true}
+                            loading={props.loading}
+                            onCellClick={onCellClick}
+                            disableMultipleSelection={props.disableMultipleSelection}
+                        />
+                    )
                 )}
-                <StyledLoadingOverlay isLoading={props.loading} display='flex' justifyContent='center'>
-                    <CircularProgress sx={{ position: 'sticky', left: '50%', top: '50%' }} />
-                </StyledLoadingOverlay>
             </Box>
             <RenderIf condition={props.pagination && props.pagination?.totalPages > 1}>
                 <CustomPagination
@@ -144,6 +145,7 @@ const StyledLoadingOverlay = styled(Box)(({ theme, isLoading }) => ({
     left: 0,
     width: '100%',
     height: '100%',
+    minHeight: '100px',
     backgroundColor: 'rgba(255, 255, 255, 0.6)',
     transition: 'opacity 0.3s ease-in-out',
     visibility: isLoading ? 'visible' : 'hidden',

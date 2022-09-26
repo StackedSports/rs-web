@@ -1,7 +1,7 @@
 import { useState, useMemo, useContext, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune, Clear } from '@mui/icons-material'
-import { Stack, Typography, Box, CircularProgress, IconButton } from '@mui/material'
+import { Stack, Typography, Box, CircularProgress, IconButton, Skeleton } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import lodash from "lodash"
@@ -242,8 +242,9 @@ export const MainMediaPage = (props) => {
             </Stack>
 
             <MediaTable
-                items={media.items || []}
+                items={media.items}
                 loading={media.loading}
+                skeletonSize={6}
                 view={viewGrid ? 'grid' : 'list'}
                 type="media"
                 linkTo={mediaRoutes.mediaDetails}
@@ -279,6 +280,7 @@ export const MainMediaPage = (props) => {
             <MediaTable
                 items={placeholders.items}
                 loading={placeholders.loading}
+                skeletonSize={6}
                 view={viewGrid ? 'grid' : 'list'}
                 type="placeholder"
                 linkTo={mediaRoutes.placeholderDetails}
@@ -302,46 +304,69 @@ export const MainMediaPage = (props) => {
                     </Box>
                 </Stack>
                 <Stack direction='row' flexWrap='wrap' gap={3}>
-                    {tags.items.slice(0, 12).map(tag => (
-                        <Stack
-                            component={Link}
-                            to={{
-                                pathname: mediaRoutes.media,
-                                search: new URLSearchParams({
-                                    page: 1,
-                                    filters: filterObjectToQueryParams({
-                                        tag_id: {
-                                            label: tag.name, value: tag.id
-                                        }
-                                    }),
-                                }).toString(),
-                            }}
-                            direction={'row'}
-                            alignItems='center'
-                            key={tag.id}
-                            sx={{
-                                height: '50px',
-                                paddingInline: '20px',
-                                maxWidth: '200px',
-                                border: '1px solid #E0E0E0',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <LocalOfferOutlined
-                                style={{ color: '#3871DA' }}
-                            />
-                            <Typography
-                                color='text.primary'
-                                noWrap
-                                style={{
-                                    fontWeight: 'bold',
-                                    marginLeft: '10px',
+                    {tags.isLoading ? (
+                        Array.from(new Array(12)).map((item, index) =>
+                            <Stack
+                                direction={'row'}
+                                alignItems='center'
+                                key={index}
+                                sx={{
+                                    height: '50px',
+                                    paddingInline: '20px',
+                                    maxWidth: '200px',
+                                    border: '1px solid #E0E0E0',
+                                    cursor: 'pointer',
                                 }}
                             >
-                                {tag.name}
-                            </Typography>
-                        </Stack>
-                    ))}
+                                <LocalOfferOutlined
+                                    style={{ color: '#3871DA' }}
+                                />
+                                <Typography>
+                                    <Skeleton width={'65px'} />
+                                </Typography>
+                            </Stack>
+                        )) : (
+                        tags.items.slice(0, 12).map(tag => (
+                            <Stack
+                                component={Link}
+                                to={{
+                                    pathname: mediaRoutes.media,
+                                    search: new URLSearchParams({
+                                        page: 1,
+                                        filters: filterObjectToQueryParams({
+                                            tag_id: {
+                                                label: tag.name, value: tag.id
+                                            }
+                                        }),
+                                    }).toString(),
+                                }}
+                                direction={'row'}
+                                alignItems='center'
+                                key={tag.id}
+                                sx={{
+                                    height: '50px',
+                                    paddingInline: '20px',
+                                    maxWidth: '200px',
+                                    border: '1px solid #E0E0E0',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <LocalOfferOutlined
+                                    style={{ color: '#3871DA' }}
+                                />
+                                <Typography
+                                    color='text.primary'
+                                    noWrap
+                                    style={{
+                                        fontWeight: 'bold',
+                                        marginLeft: '10px',
+                                    }}
+                                >
+                                    {tag.name}
+                                </Typography>
+                            </Stack>
+                        ))
+                    )}
                 </Stack>
             </Box>
             <SelectTagDialog

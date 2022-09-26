@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Stack, List, Typography, Grid, Box } from "@mui/material";
+import { Stack, List, Typography, Grid, Box, Skeleton } from "@mui/material";
 import SearchBar from 'UI/Widgets/SearchBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -13,6 +13,7 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 import { IUserInboxItem } from "Interfaces"
 import { formatPhoneNumber } from 'utils/Parser'
+import ChatInboxItemSkeleton from './ChatInboxItemSkeleton';
 interface IChatInboxProps {
     name?: string | null,
     type?: string,
@@ -56,7 +57,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
     React.useEffect(() => {
         const { conversationControl } = props
 
-        if(!conversationControl)
+        if (!conversationControl)
             return
 
         const map: Map<string, boolean> = new Map()
@@ -70,13 +71,13 @@ export const ChatInbox = (props: IChatInboxProps) => {
     }, [props.conversationControl])
 
     const from = React.useMemo(() => {
-		const { type, channel } = props
+        const { type, channel } = props
 
-		if (type === 'sms')
-			return formatPhoneNumber(channel)
-		else
-			return `@${channel}`
-	}, [props.type, props.channel])
+        if (type === 'sms')
+            return formatPhoneNumber(channel)
+        else
+            return `@${channel}`
+    }, [props.type, props.channel])
 
     const PlatformIcon = props.type === 'sms' ? SmsIcon : TwitterIcon
 
@@ -97,52 +98,63 @@ export const ChatInbox = (props: IChatInboxProps) => {
                 alignItems="start"
                 borderBottom="solid 1px #dadada"
             >
+
                 <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
-                
+
                 <Stack ml={2} flex={1}>
                     <Typography component="h2" variant="h6">
-                        <b>{props.name}</b>
+                        {props.isLoading ? <Skeleton /> : <b>{props.name}</b>}
                     </Typography>
-                    
+
                     <Typography
-                      component="span"
-                      color="text.secondary"
-                      variant="body1">
-                        {from}
+                        component="span"
+                        color="text.secondary"
+                        variant="body1">
+                        {props.isLoading ? <Skeleton width={'50%'} /> : from}
                     </Typography>
                 </Stack>
 
-                <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
-                    <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }}/>		
-                </Stack>
-                
+                {!props.isLoading &&
+                    <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
+                        <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
+                    </Stack>
+                }
+
             </Stack>
 
             <Box sx={{ p: '20px' }}>
-                <SearchBar
-                    style={{ margin: 0 }}
-                    searchOnChange
-                    placeholder="Search"
-                    onSearch={onSearch}
-                    onClear={onSearchClear}
-                    onChange={onSearch}
-                />
+                {props.isLoading ? (
+                    <Skeleton variant='rounded' height={'36px'} />
+                ) : (
+                    <SearchBar
+                        style={{ margin: 0 }}
+                        searchOnChange
+                        placeholder="Search"
+                        onSearch={onSearch}
+                        onClear={onSearchClear}
+                        onChange={onSearch}
+                    />
+                )}
             </Box>
-            {props.isLoading && <LoadingPanel />}
-            {props.items && Array.isArray(props.items) && (
-                <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
-                    {activeOptions.map(item => (
-                        <ChatListItem
-                            key={item.contact_id}
-                            item={item}
-                            active={chatSelected.current.get(item.contact_id)}
-                            onToggleChat={props.onChatClick}
-                            onArchiveConversation={props.onArchiveConversation}
-                        />
-                    ))}
-                </List>
-            )}
-
+            <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
+                {props.isLoading ? (
+                    Array.from(new Array(3)).map((_, index) =>
+                        <ChatInboxItemSkeleton key={index} />
+                    )
+                ) : (
+                    props.items && Array.isArray(props.items) && (
+                        activeOptions.map(item => (
+                            <ChatListItem
+                                key={item.contact_id}
+                                item={item}
+                                active={chatSelected.current.get(item.contact_id)}
+                                onToggleChat={props.onChatClick}
+                                onArchiveConversation={props.onArchiveConversation}
+                            />
+                        ))
+                    )
+                )}
+            </List>
         </Grid>
     )
 }

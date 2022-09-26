@@ -14,7 +14,7 @@ export default function useSearchParams() {
         }
     }, [searchParams]);
 
-    const setSearchParams = (params) => {
+    const setSearchParams = (params, replace) => {
         const newParams = new URLSearchParams();
         if (params) {
             Object.entries(params).forEach(([key, value]) => {
@@ -29,7 +29,7 @@ export default function useSearchParams() {
         }
         const newParamsStr = newParams.toString()
         if (searchParams.toString() !== newParamsStr) {
-            if (!searchParams.has('page') && newParams.get('page') === '1')
+            if ((!searchParams.has('page') && newParams.get('page') === '1') || replace)
                 history.replace({ search: newParamsStr })
             else
                 history.push({ search: newParamsStr })
