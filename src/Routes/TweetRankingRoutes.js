@@ -23,7 +23,7 @@ const TweetRankingRoutes = (props) => (
     />
     <Route
       exact
-      path={tweetRankingRoutes.ranking}
+      path={tweetRankingRoutes.search}
       component={TweetRankingPage}
     />
     <Route

@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 import SendIcon from '@mui/icons-material/Send';
-import { Divider, Stack } from '@mui/material';
+import { Divider } from '@mui/material';
 
-import { tweetPostRoutes } from 'Routes/Routes';
 import { AppContext } from 'Context/AppProvider';
 
-import TweetPage from "./TweetPage";
 import MessageInput from 'UI/Forms/Inputs/MessageInput';
 import DateTimePicker from 'UI/Widgets/DateTimePicker';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
@@ -15,8 +13,11 @@ import { formatDate } from 'utils/Parser';
 import { postTo } from 'utils/Data';
 import { useUser } from 'Api/Hooks';
 import { useSnippets, useTeamMembers, useMediaMutation } from 'Api/ReactQuery';
+import { BaseTweetPage } from './BaseTweetPage';
+import { IMember } from 'Interfaces/ISettings';
+import { tweetRoutes } from 'Routes/Routes';
 
-const TweetCreatePage = (props) => {
+export const TweetCreatePage = () => {
   const app = useContext(AppContext)
   const user = useUser()
   const snippets = useSnippets()
@@ -24,7 +25,7 @@ const TweetCreatePage = (props) => {
   const { create: uploadMedia } = useMediaMutation()
 
   const [sendAt, setSendAt] = useState('ASAP')
-  const [postToOptions, setPostToOptions] = useState([])
+  const [postToOptions, setPostToOptions] = useState<(IMember | string)[]>([])
   const [postToSelected, setPostToSelected] = useState([])
   const [showTimePicker, setShowTimePicker] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
@@ -39,12 +40,8 @@ const TweetCreatePage = (props) => {
       return
     // console.log(teamMembers.items)
 
-    setPostToOptions(postTo.concat(teamMembers.items))
+    setPostToOptions([...postTo, ...teamMembers.items])
   }, [teamMembers.items])
-
-  const onTopActionClick = () => {
-
-  }
 
   const onSaveAndCloseAction = () => {
     console.log("onSaveAndCloseAction")
@@ -52,29 +49,44 @@ const TweetCreatePage = (props) => {
 
   const onPreviewAndPostAction = () => {
     console.log("onPreviewAndPostAction")
+    app.redirect(tweetRoutes.details)
   }
 
-  const filters = [
-    { // Category
-      id: '0',
-      name: 'Drafts',
-      items: [
-        // Filters
-        { id: '0', name: 'Ben Graves', path: tweetPostRoutes.main },
-      ]
-    },
-    { // Category
-      id: '1',
-      name: 'Posts',
-      items: [
-        // Filters
-        { id: 'scheduled', name: 'Scheduled', path: tweetPostRoutes.main },
-        { id: 'published', name: 'Published', path: tweetPostRoutes.main },
-        { id: 'expired', name: 'Expired', path: tweetPostRoutes.main },
-        { id: 'archived', name: 'Archived', path: tweetPostRoutes.main },
-      ]
-    },
-  ]
+  const onCreateMessage = (control) => {
+    setLoading(true)
+    const messageDataApi = {
+      platform: 'Twitter',
+    }
+
+    if (control !== 'save' && control !== 'preview')
+      return
+
+    if (control === 'save') {
+
+      if (typeof postToSelected[0] === String)
+        messageDataApi.send_as_coach = postToSelected[0] === 'Area Coach' ? 'area' : 'recruiting'
+      else if (postToSelected[0] && postToSelected[0].id)
+        messageDataApi.user_id = postToSelected[0].id
+      else
+        return app.alert.setError("Please select a Post To")
+
+      if (sendAt instanceof Date)
+        messageDataApi.send_at = formatDate(sendAt)
+
+      if (textMessage.trim().length > 0)
+        messageDataApi.body = textMessage
+      else if (mediaSelected) {
+        if (mediaSelected.type === 'media')
+          messageData.media_id = mediaSelected.item.id
+        else if (mediaSelected.type === 'placeholder')
+          messageData.media_placeholder_id = mediaSelected.item.id
+      }
+      else
+        return app.alert.setError("Please enter a message or select a media")
+
+      app.alert.setWarning("This functionality is not yet available")
+    }
+  }
 
   const actions = [
     {
@@ -101,7 +113,7 @@ const TweetCreatePage = (props) => {
     }
   ]
 
-  const onTextAreaChange = (value) => {
+  const onTextAreaChange = (value: string) => {
     setTextMessage(value)
   }
 
@@ -110,7 +122,7 @@ const TweetCreatePage = (props) => {
     setPostToSelected([selected])
   }
 
-  const onDateTimeSave = (date) => {
+  const onDateTimeSave = (date: Date | string) => {
     // date = 'ASAP' or UTC Date
     setSendAt(date)
     setShowTimePicker(false)
@@ -121,13 +133,13 @@ const TweetCreatePage = (props) => {
     setPostToSelected([])
   }
 
-  const onRemoveMedia = (e) => {
+  const onRemoveMedia = () => {
     e.stopPropagation()
     setMediaRemoved(mediaSelected.item.id)
     setMediaSelected(null)
   }
 
-  const handleImportFiles = (file) => {
+  const handleImportFiles = (file: File) => {
     console.log(file)
     setUploadingMedia(true)
 
@@ -144,12 +156,14 @@ const TweetCreatePage = (props) => {
     }
   }
 
-  const onDrop = (e) => {
+  const onDrop = (e: DragEvent) => {
     e.preventDefault();
-    if (e.dataTransfer.files.length > 1) {
+    if (e.dataTransfer && e.dataTransfer.files.length > 1) {
       app.alert.setWarning("It is not possible to select more than one media.")
-    } else {
+    } else if (e.dataTransfer) {
       handleImportFiles(e.dataTransfer.files[0])
+    } else {
+      app.alert.setError("Erro, no media found.")
     }
   }
 
@@ -162,7 +176,7 @@ const TweetCreatePage = (props) => {
     setShowMediaDialog(false)
   }
 
-  const onUploadMedia = (file) => {
+  const onUploadMedia = (file: File) => {
     const media = {
       file: file,
       owner: user.item?.id
@@ -184,18 +198,16 @@ const TweetCreatePage = (props) => {
     })
   }
 
-  const onMediaSelectedClick = (e) => {
+  const onMediaSelectedClick = () => {
     setShowMediaDialog(true)
   }
 
   console.log(sendAt)
 
   return (
-    <TweetPage
+    <BaseTweetPage
       title="Create Post"
       topActionName="+ New Post"
-      onTopActionClick={onTopActionClick}
-      filters={filters}
       actions={actions}
     >
       <Divider />
@@ -254,7 +266,7 @@ const TweetCreatePage = (props) => {
         onChange={onTextAreaChange}
       />
 
-    </TweetPage>
+    </BaseTweetPage>
   )
 }
 
