@@ -16,6 +16,7 @@ import { usePlaceholders } from 'Api/ReactQuery'
 import { addTagsToMedias, deleteTagsFromMedias } from "Api/Endpoints"
 import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import RenderIf from "UI/Widgets/RenderIf"
+import useLocalStorage from "Hooks/useLocalStorage"
 
 export const AllMediaPlaceholderPage = (props) => {
   const queryClient = useQueryClient();
@@ -23,9 +24,9 @@ export const AllMediaPlaceholderPage = (props) => {
   const confirmDialog = useContext(ConfirmDialogContext)
   const app = useContext(AppContext)
   const panelRef = useRef()
-
+  const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`placeholder-table-perPage`, 24)
   const page = searchParams.page
-  const placeholders = usePlaceholders(page, 24)
+  const placeholders = usePlaceholders(page, perPageLocalStorage)
 
   const [viewGrid, setViewGrid] = useState(true)
   const [openSelectTagDialog, setOpenSelectTagDialog] = useState(false)
@@ -47,6 +48,10 @@ export const AllMediaPlaceholderPage = (props) => {
   useEffect(() => {
     searchParams.appendSearchParams('page', placeholders.pagination.currentPage)
   }, [placeholders.pagination.currentPage])
+
+  useEffect(() => {
+    setperPageLocalStorage(placeholders.pagination.itemsPerPage)
+  }, [placeholders.pagination.itemsPerPage])
 
   const onAddTagsToMedias = async (tagsIds, mediasIds) => {
 
@@ -191,6 +196,7 @@ export const AllMediaPlaceholderPage = (props) => {
         type='placeholder'
         pagination={placeholders.pagination}
         loading={placeholders.loading}
+        skeletonSize={perPageLocalStorage}
         view={viewGrid ? 'grid' : 'list'}
         linkTo={mediaRoutes.placeholderDetails}
         multiPageSelection={multiPageSelection}

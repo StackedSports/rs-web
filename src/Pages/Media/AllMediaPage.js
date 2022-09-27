@@ -240,6 +240,7 @@ export const AllMediaPage = () => {
 				multiPageSelection={multiPageSelection}
 				onSendClick={(media) => app.sendMediaInMessage(media, 'media')}
 				scrollToTopRef={panelRef}
+				skeletonSize={perPageLocalStorage}
 			/>
 
 			<SelectTagDialog
