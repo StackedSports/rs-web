@@ -44,7 +44,6 @@ export default function MediaGrid(props) {
                                 onPreviewClick={props.onPreviewClick && ((item) => props.onPreviewClick(item))}
                             />
                         </Grid>
-
                     )
                 )
             }

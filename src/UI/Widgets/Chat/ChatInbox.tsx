@@ -90,71 +90,78 @@ export const ChatInbox = (props: IChatInboxProps) => {
             border: "1px solid #dadada",
         }}
         >
-            <Stack
-                p={2}
-                direction="row"
-                flexWrap="nowrap"
-                gap={1}
-                alignItems="start"
-                borderBottom="solid 1px #dadada"
-            >
+            {!props.name ? (
+                <></>
+            ) : (
+                <>
+                    <Stack
+                        p={2}
+                        direction="row"
+                        flexWrap="nowrap"
+                        gap={1}
+                        alignItems="start"
+                        borderBottom="solid 1px #dadada"
+                    >
 
-                <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
+                        <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
 
-                <Stack ml={2} flex={1}>
-                    <Typography component="h2" variant="h6">
-                        {props.isLoading ? <Skeleton /> : <b>{props.name}</b>}
-                    </Typography>
+                        <Stack ml={2} flex={1}>
+                            <Typography component="h2" variant="h6">
+                                {props.isLoading ? <Skeleton /> : <b>{props.name}</b>}
+                            </Typography>
 
-                    <Typography
-                        component="span"
-                        color="text.secondary"
-                        variant="body1">
-                        {props.isLoading ? <Skeleton width={'50%'} /> : from}
-                    </Typography>
-                </Stack>
+                            <Typography
+                                component="span"
+                                color="text.secondary"
+                                variant="body1">
+                                {props.isLoading ? <Skeleton width={'50%'} /> : from}
+                            </Typography>
+                        </Stack>
 
-                {!props.isLoading &&
-                    <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
-                        <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
+                        {!props.isLoading &&
+                            <Stack direction='row' gap={1} alignItems='center' mt={"6px"}>
+                                <PlatformIcon sx={{ color: "text.secondary", fontSize: '20px' }} />
+                            </Stack>
+                        }
+
                     </Stack>
-                }
 
-            </Stack>
-
-            <Box sx={{ p: '20px' }}>
-                {props.isLoading ? (
-                    <Skeleton variant='rounded' height={'36px'} />
-                ) : (
-                    <SearchBar
-                        style={{ margin: 0 }}
-                        searchOnChange
-                        placeholder="Search"
-                        onSearch={onSearch}
-                        onClear={onSearchClear}
-                        onChange={onSearch}
-                    />
-                )}
-            </Box>
-            <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
-                {props.isLoading ? (
-                    Array.from(new Array(3)).map((_, index) =>
-                        <ChatInboxItemSkeleton key={index} />
-                    )
-                ) : (
-                    props.items && Array.isArray(props.items) && (
-                        activeOptions.map(item => (
-                            <ChatListItem
-                                key={item.contact_id}
-                                item={item}
-                                active={chatSelected.current.get(item.contact_id)}
-                                onToggleChat={props.onChatClick}
-                                onArchiveConversation={props.onArchiveConversation}
+                    <Box sx={{ p: '20px' }}>
+                        {props.isLoading ? (
+                            <Skeleton variant='rounded' height={'36px'} />
+                        ) : (
+                            <SearchBar
+                                style={{ margin: 0 }}
+                                searchOnChange
+                                placeholder="Search"
+                                onSearch={onSearch}
+                                onClear={onSearchClear}
+                                onChange={onSearch}
                             />
-                        ))
-                    )
-                )}
-            </List>
+                        )}
+                    </Box>
+                    <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
+                        {props.isLoading ? (
+                            Array.from(new Array(3)).map((_, index) =>
+                                <ChatInboxItemSkeleton key={index} />
+                            )
+                        ) : (
+                            props.items && Array.isArray(props.items) && (
+                                activeOptions.map(item => (
+                                    <ChatListItem
+                                        key={item.contact_id}
+                                        item={item}
+                                        active={chatSelected.current.get(item.contact_id)}
+                                        onToggleChat={props.onChatClick}
+                                        onArchiveConversation={props.onArchiveConversation}
+                                    />
+                                ))
+                            )
+                        )}
+                    </List>
+                </>
+            )}
+
         </Grid>
     )
 }
