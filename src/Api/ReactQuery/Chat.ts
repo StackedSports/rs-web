@@ -96,8 +96,6 @@ export const useInboxConversation = (params: getInboxConversationParams, initial
     const [conversation, setConversation] = useState<IConversatition[]>([])
     const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
 
-
-
     const reactQuery = useQuery(['inbox', 'conversation', params, initialPage, itemsPerPage],
         // @ts-ignore: Unreachable code error 
         () => getInboxConversation(params, initialPage, itemsPerPage),

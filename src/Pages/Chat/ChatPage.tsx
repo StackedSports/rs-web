@@ -277,7 +277,7 @@ export default function ChatPage() {
 							channel={inboxSelected?.channel}
 							filterOpen={displayFilters}
 							items={inbox?.items}
-							isLoading={ inbox?.isLoading}
+							isLoading={inbox?.isLoading}
 							conversationControl={selectedConversationControl}
 							onChatClick={onClickChatListItem}
 							onArchiveConversation={onArchiveConversation}
