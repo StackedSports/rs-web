@@ -51,7 +51,7 @@ export const BaseMediaPage = (props) => {
             },
             {
                 id: ++index,
-                name: 'My Media',
+                name: 'Team Media',
                 items: teamMembers.items.map(item => {
                     const obj = {
                         id: item.id,
