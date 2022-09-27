@@ -17,7 +17,7 @@ export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'
 import { ISideFilter } from 'Interfaces'
 import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
 
-interface MainLayoutProps {
+export interface IMainLayoutProps {
     topActionName?: string;
     onTopActionClick?: () => void;
     filtersDisabled?: boolean;
@@ -36,7 +36,7 @@ interface MainLayoutProps {
     alert?: any;
 }
 
-export default function MainLayout(props: MainLayoutProps) {
+export default function MainLayout(props: IMainLayoutProps) {
     const [displayFilters, setDisplayFilters] = useState(true)
 
     return (

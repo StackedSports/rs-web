@@ -6,11 +6,11 @@ import { Stack, Divider } from '@mui/material'
 import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
 import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from '../Tweet/TweetPage'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { AppContext } from 'Context/AppProvider'
 import { tweetRankingRoutes } from 'Routes/Routes'
+import { BaseTweetRankingPage } from './BaseTweetRankingPage'
 
 const TweetRankingPage = (props) => {
 	const { user } = useContext(AuthContext)
@@ -37,7 +37,7 @@ const TweetRankingPage = (props) => {
 	}
 
 	return (
-		<TweetPage
+		<BaseTweetRankingPage
 		  title="Post Deep Dive"
 		>
 			<Stack spacing={3}>
@@ -83,7 +83,7 @@ const TweetRankingPage = (props) => {
                     </Stack>
 				</RenderIf>
 			</Stack >
-		</TweetPage >
+		</BaseTweetRankingPage >
 	)
 }
 

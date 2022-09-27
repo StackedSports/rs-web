@@ -1429,3 +1429,21 @@ export const getInboxConversation = ({ contact_id, inbox_type, user_id }, page =
 
     return GET(`inboxes_conversations?page=${page}&per_page=${perPage}`, body)
 }
+
+export const updateTweet = (id, data) => {
+    const body = {
+        "published_tweet": { ...data }
+    }
+    return PUT(`tweets/${id}`, body)
+}
+
+export const createTweet = (data) => {
+    const body = {
+        "published_tweet": { ...data }
+    }
+    return POST(`tweets`, body)
+}
+
+export const deleteTweet = (id, archived) => {
+    return DELETE(`tweets/${id}${archived && '?status=archived'}`)
+}
