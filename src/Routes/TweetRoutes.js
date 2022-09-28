@@ -1,16 +1,12 @@
 import { TweetCreatePage, TweetsPage, TweetDetailsPage } from 'Pages/Tweet';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 
 import { routes, tweetRoutes } from './Routes';
 
 const TweetRoutes = (props) => (
-  <>
-    <Route
-      exact
-      path={tweetRoutes.all}
-      component={TweetsPage}
-    />
+  <Switch>
+    
     <Route
       exact
       path={tweetRoutes.create}
@@ -21,7 +17,11 @@ const TweetRoutes = (props) => (
       path={tweetRoutes.details}
       component={TweetDetailsPage}
     />
-  </>
+    <Route
+      path={tweetRoutes.all}
+      component={TweetsPage}
+    />
+  </Switch>
 )
 
 export default TweetRoutes

@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 
 import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { routes, messageRoutes } from 'Routes/Routes'
+import { routes, messageRoutes, tweetRoutes } from 'Routes/Routes'
 
 const regularItems = [
     routes.dashboard,
@@ -15,7 +15,7 @@ const regularItems = [
     { ...routes.messages, path: messageRoutes.create },
     routes.media,
     routes.tweet,
-    routes.tweetPost,
+    { ...routes.tweetPost, path: tweetRoutes.create },
     // routes.twitterPosts,
     // routes.twitterStream,
     routes.settings,
