@@ -51,7 +51,7 @@ export const routes = {
     },
     tweetPost: {
         title: 'Tweet Post',
-        path: '/tweets/create',
+        path: '/tweets',
         icon: TwitterIcon
     },
     userSettings: {
