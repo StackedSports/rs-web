@@ -341,7 +341,19 @@ const InputTime = (props) => <InputSelector icon={FaCalendarAlt} name={props.nam
 // }
 
 const InputMedia = (props) => {
-    if (props.selected) {
+    if (props.selected && Array.isArray(props.selected.item)) {
+        return props.selected.item.map((item, index) =>
+            <InputSelected
+                key={index}
+                miniImage
+                style={{ width: "300px" }}
+                variant={props.selected.type}
+                item={item}
+                onClick={() => props.onSelectedClick(index)}
+                onRemove={(e) => { e.stopPropagation(); props.onRemove(index) }}
+            />
+        )
+    } else if (props.selected) {
         return (
             <InputSelected
                 miniImage
@@ -360,7 +372,7 @@ const InputMedia = (props) => {
                 </Stack>
                 :
                 <FileDropZone
-                    style={{ margin: 0, padding: '50px 0' }}
+                    style={{ margin: 0, padding: '50px 0', flex: 1 }}
                     browseAction={props.browseAction}
                     onDrop={props.onDrop}
                 />
@@ -540,7 +552,7 @@ const InputText = (props) => {
                 ref={textArea}
                 className='TextArea'
                 type='text'
-                rows='10'
+                rows='8'
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={onChange}
@@ -629,6 +641,10 @@ export default function MessageInput(props) {
     if (props.type === 'media' || props.type === 'text' || props.type === 'chat') {
         containerClass += ' Large'
         inputClass += ' Flex1'
+    }
+
+    if (props.type === 'media') {
+        inputClass += ' Flex'
     }
 
     return (
