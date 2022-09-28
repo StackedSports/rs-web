@@ -1,4 +1,5 @@
 import { createTweet, deleteTweet, updateTweet } from "Api/Endpoints";
+import { IPublishTweetMessage } from "Pages/Tweet";
 import { useMutation, useQueryClient } from "react-query";
 
 export const useTweetMutation = () => {
@@ -9,7 +10,6 @@ export const useTweetMutation = () => {
             onSuccess: (_data, variables, _context) => {
                 queryClient.invalidateQueries(['tweet', variables.id], { active: true })
                 queryClient.invalidateQueries('tweets')
-
             },
         })
 
@@ -21,7 +21,7 @@ export const useTweetMutation = () => {
             }
         })
 
-    const create = useMutation((tweet) => createTweet(tweet),
+    const create = useMutation((tweet: IPublishTweetMessage) => createTweet(tweet),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries('tweets')

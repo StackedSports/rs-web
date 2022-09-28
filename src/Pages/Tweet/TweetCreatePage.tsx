@@ -12,80 +12,89 @@ import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import { formatDate } from 'utils/Parser';
 import { postTo } from 'utils/Data';
 import { useUser } from 'Api/Hooks';
-import { useSnippets, useTeamMembers, useMediaMutation } from 'Api/ReactQuery';
+import { useMediaMutation, useSnippets, useTeamMembers, useTweetMutation } from 'Api/ReactQuery';
 import { BaseTweetPage } from './BaseTweetPage';
 import { IMember } from 'Interfaces/ISettings';
 import { tweetRoutes } from 'Routes/Routes';
 
-export const TweetCreatePage = () => {
+export type IPublishTweetMessage = {
+  send_at: string;
+  post_as: string[];
+  status: 'draft' | 'pending';
+} & (
+    { body: string; } |
+    { media: string[]; }
+  )
+
+interface ITweetCreatePageProps {
+  edit?: boolean
+}
+
+export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
   const app = useContext(AppContext)
   const user = useUser()
   const snippets = useSnippets()
   const teamMembers = useTeamMembers()
   const { create: uploadMedia } = useMediaMutation()
+  const { create: createTweet } = useTweetMutation()
 
   const [sendAt, setSendAt] = useState('ASAP')
-  const [postToOptions, setPostToOptions] = useState<(IMember | string)[]>([])
-  const [postToSelected, setPostToSelected] = useState([])
+  const [postAsSelected, setPostAsSelected] = useState<IMember[]>([])
   const [showTimePicker, setShowTimePicker] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
-  const [mediaSelected, setMediaSelected] = useState(null)
+  const [mediasSelected, setMediasSelected] = useState<null | { item: any[], type: "media" }>()
   const [showMediaDialog, setShowMediaDialog] = useState(false)
-  const [mediaRemoved, setMediaRemoved] = useState(null)
   const [textMessage, setTextMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
+  const onCreateMessage = (control: 'save' | 'preview') => {
 
-  useEffect(() => {
-    if (!teamMembers.items)
+    if (loading)
       return
-    // console.log(teamMembers.items)
 
-    setPostToOptions([...postTo, ...teamMembers.items])
-  }, [teamMembers.items])
-
-  const onSaveAndCloseAction = () => {
-    console.log("onSaveAndCloseAction")
-  }
-
-  const onPreviewAndPostAction = () => {
-    console.log("onPreviewAndPostAction")
-    app.redirect(tweetRoutes.details)
-  }
-
-  const onCreateMessage = (control) => {
     setLoading(true)
-    const messageDataApi = {
-      platform: 'Twitter',
+
+    const messageData: Partial<IPublishTweetMessage> = {}
+
+    if (postAsSelected.length === 0)
+      return app.alert.setError("Please select at least one person to publish a tweet")
+    else
+      messageData.post_as = postAsSelected.map(member => member.id)
+
+    if (sendAt !== 'ASAP')
+      messageData['send_at'] = sendAt
+
+    if (textMessage.trim().length > 0)
+      messageData.body = textMessage
+
+    else if (mediasSelected.length > 0) {
+      messageData.media = mediasSelected.map(media => media.id)
+    }
+    else
+      return app.alert.setError("Please enter a message or select a media")
+
+
+    if (props.edit) {
+
+    } else {
+      createTweet(messageData, {
+        onSuccess: (result) => {
+          let message = result.data
+
+          switch (control) {
+            case 'save':
+              app.redirect(`${tweetRoutes.all}`)
+              break
+            case 'preview':
+              app.redirect(`${tweetRoutes.details}/${message.id}`)
+              break
+            default:
+              throw new Error("Error control create message")
+          }
+        }
+      })
     }
 
-    if (control !== 'save' && control !== 'preview')
-      return
-
-    if (control === 'save') {
-
-      if (typeof postToSelected[0] === String)
-        messageDataApi.send_as_coach = postToSelected[0] === 'Area Coach' ? 'area' : 'recruiting'
-      else if (postToSelected[0] && postToSelected[0].id)
-        messageDataApi.user_id = postToSelected[0].id
-      else
-        return app.alert.setError("Please select a Post To")
-
-      if (sendAt instanceof Date)
-        messageDataApi.send_at = formatDate(sendAt)
-
-      if (textMessage.trim().length > 0)
-        messageDataApi.body = textMessage
-      else if (mediaSelected) {
-        if (mediaSelected.type === 'media')
-          messageData.media_id = mediaSelected.item.id
-        else if (mediaSelected.type === 'placeholder')
-          messageData.media_placeholder_id = mediaSelected.item.id
-      }
-      else
-        return app.alert.setError("Please enter a message or select a media")
-
-      app.alert.setWarning("This functionality is not yet available")
-    }
   }
 
   const actions = [
@@ -103,13 +112,13 @@ export const TweetCreatePage = () => {
       name: 'Save and Close',
       icon: CheckIcon,
       variant: 'outlined',
-      onClick: onSaveAndCloseAction,
+      onClick: () => onCreateMessage('save'),
     },
     {
       name: 'Preview and Post',
       icon: SendIcon,
       variant: 'contained',
-      onClick: onPreviewAndPostAction,
+      onClick: () => onCreateMessage("preview"),
     }
   ]
 
@@ -117,9 +126,8 @@ export const TweetCreatePage = () => {
     setTextMessage(value)
   }
 
-  const onPostToSelected = (selected) => {
-    console.log(selected)
-    setPostToSelected([selected])
+  const onPostToSelected = (selected: IMember) => {
+    setPostAsSelected(prev => [...new Set([...prev, selected])])
   }
 
   const onDateTimeSave = (date: Date | string) => {
@@ -128,15 +136,24 @@ export const TweetCreatePage = () => {
     setShowTimePicker(false)
   }
 
-  const onPostToRemove = () => {
-    console.log('onPostToRemove')
-    setPostToSelected([])
+  const onPostToRemove = (selectedIndex: number) => {
+    setPostAsSelected(prev => prev.filter((_, index) => index !== selectedIndex))
   }
 
-  const onRemoveMedia = () => {
-    e.stopPropagation()
-    setMediaRemoved(mediaSelected.item.id)
-    setMediaSelected(null)
+  const onRemoveMedia = (index: number) => {
+    setMediasSelected(prev => {
+      if (prev) {
+        const items = prev.item.filter((_, i) => i !== index)
+        if (items.length === 0)
+          return null
+        else
+          return ({
+            ...prev,
+            item: prev?.item.filter((_, i) => i !== index)
+          })
+      } else
+        return null
+    })
   }
 
   const handleImportFiles = (file: File) => {
@@ -168,11 +185,10 @@ export const TweetCreatePage = () => {
   }
 
   const onMediaSelected = (item, type) => {
-    setMediaSelected({
+    setMediasSelected({
       item,
       type
     })
-    setMediaRemoved('')
     setShowMediaDialog(false)
   }
 
@@ -202,8 +218,6 @@ export const TweetCreatePage = () => {
     setShowMediaDialog(true)
   }
 
-  console.log(sendAt)
-
   return (
     <BaseTweetPage
       title="Create Post"
@@ -213,11 +227,12 @@ export const TweetCreatePage = () => {
       <Divider />
 
       <MediaSelectDialog
+        onlyMedias
         open={showMediaDialog}
-        removedItem={mediaRemoved}
-        uniqueSelection
         onSelected={onMediaSelected}
+        selectedItem={mediasSelected}
         onClose={() => setShowMediaDialog(false)}
+        limit={4}
       />
 
       <DateTimePicker
@@ -228,13 +243,13 @@ export const TweetCreatePage = () => {
 
       <MessageInput
         type='sender'
-        label='Post to:'
+        label='Post as:'
         name='Posting Account'
-        contacts={postToOptions}
-        selected={postToSelected}
+        contacts={teamMembers.items}
+        selected={postAsSelected}
         onSelected={onPostToSelected}
         onRemove={onPostToRemove}
-        canAddMore={postToSelected.length === 0}
+        canAddMore={postAsSelected.length < 5}
       />
 
       <MessageInput
@@ -249,7 +264,7 @@ export const TweetCreatePage = () => {
         onDrop={onDrop}
         label='Add Media:'
         loading={uploadingMedia}
-        selected={mediaSelected}
+        selected={mediasSelected}
         onRemove={onRemoveMedia}
         browseAction={setShowMediaDialog}
         onSelectedClick={onMediaSelectedClick}

@@ -27,6 +27,12 @@
     flex: 1;
 }
 
+.MessageInput .Input.Flex {
+    display: flex;
+    gap:5px;
+    flex-wrap: wrap;
+}
+
 .MessageInput .Input .Container {
     display: flex;
     flex-direction: row;
@@ -82,6 +88,7 @@
     position: relative;
     background-color: #d8d8d8;
     width: fit-content;
+
 }
 
 .MessageInput .Input .Icon {
@@ -118,13 +125,13 @@
 
 .MessageInput .Input .TextArea {
     width: 100%;
-    /* flex: 1; */
     resize: none;
     border: 0px solid transparent;
     outline: 0px solid transparent;
     min-height: 300px;
     margin-top: 20px;
-    /* background-color: #d8d8d8; */
+    font-size: 1rem;
+    font-family: "Proxima Nova", "Roboto", "sans-serif";
 }
 
 .TextArea-chat {
