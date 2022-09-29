@@ -14,7 +14,7 @@ const TweetRoutes = (props) => (
     />
     <Route
       exact
-      path={tweetRoutes.details}
+      path={`${tweetRoutes.details}/:id`}
       component={TweetDetailsPage}
     />
     <Route

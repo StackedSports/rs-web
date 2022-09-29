@@ -48,7 +48,7 @@ export const BaseTweetPage: React.FC<BaseTweetPageProps> = (props) => {
     return (
         <MainLayout
             title={props.title || 'Tweet'}
-            topActionName={props.topActionName || '+ New Search'}
+            topActionName={props.topActionName || '+ New Post'}
             onTopActionClick={onTopActionClick}
             filters={props.filters || filters}
             actions={props.actions}

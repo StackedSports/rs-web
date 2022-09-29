@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useTags, useTeamMembers } from 'Api/ReactQuery';
+import { useTags, useTeamMembers, useTweets } from 'Api/ReactQuery';
 
 import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import Tune from '@mui/icons-material/Tune';
@@ -13,10 +13,11 @@ import TweetDisplay from 'UI/Widgets/Tweet/TweetDisplay';
 import useSearchParams from 'Hooks/SearchParamsHook';
 import { IPanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
 
-const getTitle = (type) => {
+const getTitle = (type: string | null) => {
+    console.log(type)
     switch (type) {
-        case 'schedule':
-            return 'Schedule';
+        case 'scheduled':
+            return 'Scheduled';
         case 'published':
             return 'Published';
         case 'expired':
@@ -30,6 +31,7 @@ const getTitle = (type) => {
 
 export const TweetsPage = () => {
     const { searchParams } = useSearchParams();
+    const tweets = useTweets()
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
@@ -88,6 +90,7 @@ export const TweetsPage = () => {
             onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
         },
     ]
+    console.log(tweets.items)
 
     return (
         <BaseTweetPage
@@ -98,11 +101,9 @@ export const TweetsPage = () => {
         >
             <Divider sx={{ mb: 3 }} />
 
-            <TweetDisplay>
-                <Typography variant="h6" component="h6">
-                    Tweet 1
-                </Typography>
-            </TweetDisplay>
+            {Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
+                return <TweetDisplay key={index} tweet={item} loading={tweets.loading} />
+            })}
 
         </BaseTweetPage>
     )

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckIcon from '@mui/icons-material/Check';
 import SendIcon from '@mui/icons-material/Send';
 import { Divider } from '@mui/material';
@@ -10,7 +9,6 @@ import MessageInput from 'UI/Forms/Inputs/MessageInput';
 import DateTimePicker from 'UI/Widgets/DateTimePicker';
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog';
 import { formatDate } from 'utils/Parser';
-import { postTo } from 'utils/Data';
 import { useUser } from 'Api/Hooks';
 import { useMediaMutation, useSnippets, useTeamMembers, useTweetMutation } from 'Api/ReactQuery';
 import { BaseTweetPage } from './BaseTweetPage';
@@ -18,7 +16,7 @@ import { IMember } from 'Interfaces/ISettings';
 import { tweetRoutes } from 'Routes/Routes';
 
 export type IPublishTweetMessage = {
-  send_at: string;
+  send_at: string | Date;
   post_as: string[];
   status: 'draft' | 'pending';
 } & (
@@ -48,41 +46,41 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
   const [loading, setLoading] = useState(false)
 
   const onCreateMessage = (control: 'save' | 'preview') => {
-
-    if (loading)
-      return
-
-    setLoading(true)
+    console.log(control)
 
     const messageData: Partial<IPublishTweetMessage> = {}
+
+    messageData.status = 'draft'
 
     if (postAsSelected.length === 0)
       return app.alert.setError("Please select at least one person to publish a tweet")
     else
       messageData.post_as = postAsSelected.map(member => member.id)
 
-    if (sendAt !== 'ASAP')
-      messageData['send_at'] = sendAt
+    messageData['send_at'] = sendAt === 'ASAP' ? new Date() : sendAt
+
+    if (textMessage.trim().length <= 0 && (!mediasSelected || mediasSelected?.item.length <= 0))
+      return app.alert.setError("Please enter a message or select a media")
 
     if (textMessage.trim().length > 0)
       messageData.body = textMessage
 
-    else if (mediasSelected.length > 0) {
-      messageData.media = mediasSelected.map(media => media.id)
+    if (mediasSelected && mediasSelected?.item.length > 0) {
+      messageData.media = mediasSelected.item.map(media => media.id)
     }
-    else
-      return app.alert.setError("Please enter a message or select a media")
+
 
 
     if (props.edit) {
-
+      console.log("edit")
     } else {
       createTweet(messageData, {
         onSuccess: (result) => {
           let message = result.data
-
+          console.log(message)
           switch (control) {
             case 'save':
+              console.log('save')
               app.redirect(`${tweetRoutes.all}`)
               break
             case 'preview':
@@ -91,23 +89,16 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
             default:
               throw new Error("Error control create message")
           }
-        }
+        },
+        onError: (error) => {
+          console.log(error)
+        },
       })
     }
 
   }
 
   const actions = [
-    {
-      name: 'More',
-      icon: ArrowDropDownIcon,
-      variant: 'outlined',
-      type: 'dropdown',
-      // disabled: ,
-      options: [
-        // { name: '', onClick:  },
-      ]
-    },
     {
       name: 'Save and Close',
       icon: CheckIcon,
@@ -130,7 +121,7 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
     setPostAsSelected(prev => [...new Set([...prev, selected])])
   }
 
-  const onDateTimeSave = (date: Date | string) => {
+  const onDateTimeSave = (date: string) => {
     // date = 'ASAP' or UTC Date
     setSendAt(date)
     setShowTimePicker(false)
@@ -175,13 +166,15 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
-    if (e.dataTransfer && e.dataTransfer.files.length > 1) {
-      app.alert.setWarning("It is not possible to select more than one media.")
-    } else if (e.dataTransfer) {
-      handleImportFiles(e.dataTransfer.files[0])
-    } else {
-      app.alert.setError("Erro, no media found.")
-    }
+    return
+
+    /*  if (e.dataTransfer && e.dataTransfer.files.length > 1) {
+       app.alert.setWarning("It is not possible to select more than one media.")
+     } else if (e.dataTransfer) {
+       handleImportFiles(e.dataTransfer.files[0])
+     } else {
+       app.alert.setError("Erro, no media found.")
+     } */
   }
 
   const onMediaSelected = (item, type) => {
