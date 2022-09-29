@@ -63,7 +63,7 @@ export default function MediaSelectDialog(props) {
             if (props.limit && selectionIds.length > props.limit) {
                 setSelectedItem(selectionItems.slice(0, 4))
                 setDisableOnConfirmSelection(true)
-                app.alert.setWarning(`Max selection items is ${props.limit}`)
+                app.alert.setWarning(`It's limited to ${props.limit} media`)
             }
             else
                 setSelectedItem(selectionItems)

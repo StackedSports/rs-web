@@ -129,13 +129,13 @@ export default function SelectDialogTab(props) {
             <Button
               style={{
                 minWidth: 120,
-                backgroundColor: "#3871da",
                 fontWeight: "bold",
                 textTransform: "capitalize",
                 padding: '8px 16px',
                 marginRight: 20
               }}
               onClick={props.onConfirmSelection}
+              color='primary'
               disableElevation
               variant="contained"
               disabled={props.disableOnConfirmSelection}
