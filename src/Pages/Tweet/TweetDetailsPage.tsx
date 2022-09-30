@@ -63,16 +63,16 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
                 <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%', mt: '2%', margin: '2% auto' }}>
                     {tweet.item && tweet.item.media.length > 0 && (
                         <CardMedia
-                        component={tweet.loading ? Skeleton : "img"}
-                        src={tweet.item && tweet.item.media?.[0].urls.large}
-                        sx={{
+                          component={tweet.loading ? Skeleton : "img"}
+                          src={tweet.item && tweet.item.media?.[0].urls.large}
+                          sx={{
                             aspectRatio: '16/9',
                             objectFit: 'cover',
                             pointerEvents: 'none',
                             userSelect: 'none',
                             userDrag: 'none',
-                        }}
-                    />
+                          }}
+                        />
                     )}
                     <CardHeader
                         sx={{
