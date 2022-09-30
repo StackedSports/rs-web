@@ -44,6 +44,8 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
         }
     ]
 
+    console.log(tweet.item)
+
     return (
         <BaseTweetPage
             title="Tweet Preview"
@@ -58,8 +60,9 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
             </RenderIf>
 
             <RenderIf condition={tweet.item || tweet.loading}>
-                <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%', mt: '2%' }}>
-                    <CardMedia
+                <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%', mt: '2%', margin: '2% auto' }}>
+                    {tweet.item && tweet.item.media.length > 0 && (
+                        <CardMedia
                         component={tweet.loading ? Skeleton : "img"}
                         src={tweet.item && tweet.item.media?.[0].urls.large}
                         sx={{
@@ -70,6 +73,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
                             userDrag: 'none',
                         }}
                     />
+                    )}
                     <CardHeader
                         sx={{
                             '.MuiCardHeader-title': { fontWeight: 'bold', fontSize: '1.1rem' },

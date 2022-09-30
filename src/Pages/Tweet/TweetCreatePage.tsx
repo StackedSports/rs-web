@@ -42,39 +42,39 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
   const [uploadingMedia, setUploadingMedia] = useState(false)
   const [mediasSelected, setMediasSelected] = useState<null | { item: any[], type: "media" }>()
   const [showMediaDialog, setShowMediaDialog] = useState(false)
-  const [textMessage, setTextMessage] = useState('')
+  const [postText, setPostText] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const onCreateMessage = (control: 'save' | 'preview') => {
+  const onCreatePost = (control: 'save' | 'preview') => {
     console.log(control)
 
-    const messageData: Partial<IPublishTweetMessage> = {}
+    const postData: Partial<IPublishTweetMessage> = {}
 
-    messageData.status = 'draft'
+    postData.status = 'draft'
 
     if (postAsSelected.length === 0)
-      return app.alert.setError("Please select at least one person to publish a tweet")
+      return app.alert.setError("Please select at least one posting account")
     else
-      messageData.post_as = postAsSelected.map(member => member.id)
+      postData.post_as = postAsSelected.map(member => member.id)
 
-    messageData['send_at'] = sendAt === 'ASAP' ? new Date() : sendAt
+    postData['send_at'] = sendAt === 'ASAP' ? new Date() : sendAt
 
-    if (textMessage.trim().length <= 0 && (!mediasSelected || mediasSelected?.item.length <= 0))
-      return app.alert.setError("Please enter a message or select a media")
+    if (postText.trim().length <= 0 && (!mediasSelected || mediasSelected?.item.length <= 0))
+      return app.alert.setError("Please write something for your post or select a media")
 
-    if (textMessage.trim().length > 0)
-      messageData.body = textMessage
+    if (postText.trim().length > 0)
+      postData.body = postText
 
     if (mediasSelected && mediasSelected?.item.length > 0) {
-      messageData.media = mediasSelected.item.map(media => media.id)
+      postData.media = mediasSelected.item.map(media => media.id)
     }
 
-
+    // return console.log(postData)
 
     if (props.edit) {
       console.log("edit")
     } else {
-      createTweet(messageData, {
+      createTweet(postData, {
         onSuccess: (result) => {
           let message = result.data
           console.log(message)
@@ -103,18 +103,18 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
       name: 'Save and Close',
       icon: CheckIcon,
       variant: 'outlined',
-      onClick: () => onCreateMessage('save'),
+      onClick: () => onCreatePost('save'),
     },
     {
       name: 'Preview and Post',
       icon: SendIcon,
       variant: 'contained',
-      onClick: () => onCreateMessage("preview"),
+      onClick: () => onCreatePost("preview"),
     }
   ]
 
   const onTextAreaChange = (value: string) => {
-    setTextMessage(value)
+    setPostText(value)
   }
 
   const onPostToSelected = (selected: IMember) => {
@@ -266,11 +266,11 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
 
       <MessageInput
         type='text'
-        label='Message Text:'
-        placeholder='Type message'
+        label='Post Message:'
+        placeholder='Type something here...'
         snippets={snippets.items}
         hideTextPlaceholders
-        value={textMessage}
+        value={postText}
         onChange={onTextAreaChange}
       />
 
