@@ -30,6 +30,7 @@ import {
 	createPlaceholder,
 	addTagToMedia
 } from 'Api/Endpoints'
+import { isFileValid } from 'utils/FileUtils';
 
 export const FileDropZone = (props) => {
 
@@ -203,18 +204,6 @@ export default function UploadMediaDialog(props) {
 					})
 			})
 		})
-	}
-
-	const isFileValid = (file) => {
-		const { type, size } = file
-		const PERMITTED_IMAGES_TYPES = ["/png", "/jpeg", "/jpg", "/gif",]
-		const MAX_IMAGE_SIZE = 5000000 // 5MB
-		const isImageValid = PERMITTED_IMAGES_TYPES.some(extension => type.toLowerCase().includes(extension)) && size < MAX_IMAGE_SIZE
-
-		const PERMITTED_OTHER_TYPES = ["/pdf", "/mp4"]
-		const MAX_OTHER_FILES_SIZE = 15000000 // 15MB
-		const isOtherFilesValid = PERMITTED_OTHER_TYPES.some(extension => type.toLowerCase().includes(extension)) && size < MAX_OTHER_FILES_SIZE
-		return isImageValid || isOtherFilesValid
 	}
 
 	const handleImportFiles = (files) => {

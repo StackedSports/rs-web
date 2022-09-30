@@ -24,7 +24,7 @@ const round = (num) => {
     return Math.round(m) / 100 * Math.sign(num)
 }
 
-const Stat = (props) => (
+export const Stat = (props) => (
     <Stack>
         <Typography
             variant="h6"

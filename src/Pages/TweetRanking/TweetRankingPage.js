@@ -82,8 +82,8 @@ const TweetRankingPage = (props) => {
                         </p>
                     </Stack>
 				</RenderIf>
-			</Stack >
-		</BaseTweetRankingPage >
+			</Stack>
+		</BaseTweetRankingPage>
 	)
 }
 

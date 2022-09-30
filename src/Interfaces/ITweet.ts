@@ -1,9 +1,9 @@
 import { IUrls } from "./Shared";
 
-interface IMediaTweet {
+export interface IMediaTweet {
     id: number;
     name: string;
-    file_name: string;
+    file_name?: string;
     file_type: string;
     size?: number;
     created_at: Date;

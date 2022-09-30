@@ -6,10 +6,15 @@ import { routes, tweetRoutes } from './Routes';
 
 const TweetRoutes = (props) => (
   <Switch>
-    
+
     <Route
       exact
       path={tweetRoutes.create}
+      component={TweetCreatePage}
+    />
+    <Route
+      exact
+      path={tweetRoutes.edit}
       component={TweetCreatePage}
     />
     <Route

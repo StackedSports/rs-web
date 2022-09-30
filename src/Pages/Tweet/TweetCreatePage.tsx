@@ -14,6 +14,9 @@ import { useMediaMutation, useSnippets, useTeamMembers, useTweetMutation } from 
 import { BaseTweetPage } from './BaseTweetPage';
 import { IMember } from 'Interfaces/ISettings';
 import { tweetRoutes } from 'Routes/Routes';
+import { isFileValid } from 'utils/FileUtils';
+import { IMediaTweet, ITweet } from 'Interfaces';
+import { useLocation } from 'react-router-dom';
 
 export type IPublishTweetMessage = {
   send_at: string | Date;
@@ -24,19 +27,16 @@ export type IPublishTweetMessage = {
     { media: string[]; }
   )
 
-interface ITweetCreatePageProps {
-  edit?: boolean
-}
-
-export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
+export const TweetCreatePage: React.FC = (props) => {
   const app = useContext(AppContext)
+  const { edit }: { edit?: ITweet } = useLocation().state || { edit: undefined }
   const user = useUser()
   const snippets = useSnippets()
   const teamMembers = useTeamMembers()
-  const { create: uploadMedia } = useMediaMutation()
-  const { create: createTweet } = useTweetMutation()
+  const { createAsync: uploadMedia } = useMediaMutation()
+  const { create: createTweet, update: updateTweet } = useTweetMutation()
 
-  const [sendAt, setSendAt] = useState('ASAP')
+  const [sendAt, setSendAt] = useState<string | Date>('ASAP')
   const [postAsSelected, setPostAsSelected] = useState<IMember[]>([])
   const [showTimePicker, setShowTimePicker] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
@@ -44,6 +44,16 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
   const [showMediaDialog, setShowMediaDialog] = useState(false)
   const [postText, setPostText] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (edit) {
+      console.log("edito from path", edit)
+      edit.send_at && setSendAt(edit.send_at)
+      edit.media.length > 0 && setMediasSelected({ item: edit.media, type: 'media' })
+      edit.body && setPostText(edit.body)
+      // setPostAsSelected(edit.posted_as) Different types
+    }
+  }, [edit])
 
   const onCreatePost = (control: 'save' | 'preview') => {
     console.log(control)
@@ -71,8 +81,27 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
 
     // return console.log(postData)
 
-    if (props.edit) {
-      console.log("edit")
+    if (edit && edit.id) {
+      updateTweet({ id: edit.id, data: postData }, {
+        onSuccess: (result) => {
+          let message = result.data
+          console.log(message)
+          switch (control) {
+            case 'save':
+              console.log('save')
+              app.redirect(`${tweetRoutes.all}`)
+              break
+            case 'preview':
+              app.redirect(`${tweetRoutes.details}/${message.id}`)
+              break
+            default:
+              throw new Error("Error control create message")
+          }
+        },
+        onError: (error) => {
+          console.log(error)
+        },
+      })
     } else {
       createTweet(postData, {
         onSuccess: (result) => {
@@ -122,7 +151,6 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
   }
 
   const onDateTimeSave = (date: string) => {
-    // date = 'ASAP' or UTC Date
     setSendAt(date)
     setShowTimePicker(false)
   }
@@ -147,64 +175,63 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
     })
   }
 
-  const handleImportFiles = (file: File) => {
-    console.log(file)
+  const handleImportFiles = (files: FileList) => {
     setUploadingMedia(true)
 
-    if (((file.type.includes("/jpg") || file.type.includes("/jpeg") || file.type.includes("/png")) && file.size < 5000000)
-      || ((file.type.includes("/pdf") || file.type.includes("/mp4")) && file.size < 15000000)) {
-      // 5MB for image and 15MB for videos
+    const filteredFiles = Array.from(files).filter(file => isFileValid(file))
 
-      onUploadMedia(file)
-
-    } else {
+    if (filteredFiles.length === 0) {
       setUploadingMedia(false)
       app.alert.setWarning("File not added because it does not match the file upload criteria")
       return
     }
+    if (files.length != filteredFiles.length) {
+      app.alert.setWaning("One or more files were not added since they do not match the file upload criteria")
+    }
+
+    onUploadMedia(filteredFiles)
   }
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
-    return
 
-    /*  if (e.dataTransfer && e.dataTransfer.files.length > 1) {
-       app.alert.setWarning("It is not possible to select more than one media.")
-     } else if (e.dataTransfer) {
-       handleImportFiles(e.dataTransfer.files[0])
-     } else {
-       app.alert.setError("Erro, no media found.")
-     } */
+    if (e.dataTransfer && e.dataTransfer.files.length > 4) {
+      app.alert.setWarning("It is limited to the max of 4 media")
+    } else if (e.dataTransfer) {
+      handleImportFiles(e.dataTransfer.files)
+    } else {
+      app.alert.setError("Erro, no media found.")
+    }
   }
 
-  const onMediaSelected = (item, type) => {
+  const onMediaSelected = (items: IMediaTweet[], type: "media") => {
     setMediasSelected({
-      item,
+      item: items,
       type
     })
     setShowMediaDialog(false)
   }
 
-  const onUploadMedia = (file: File) => {
-    const media = {
+  const onUploadMedia = (files: File[]) => {
+    const medias = files.map(file => ({
       file: file,
-      owner: user.item?.id
-    }
-    // console.log(media)
+    }))
 
-    uploadMedia(media, {
-      onSuccess: (res) => {
-        app.alert.setSuccess("Uploaded media successfully!")
-        onMediaSelected(res, "media")
-      },
-      onError: (err) => {
-        app.alert.setError("Failed to upload media.")
-        console.log(err)
-      },
-      onSettled: () => {
-        setUploadingMedia(false)
-      }
-    })
+    Promise.allSettled(medias.map(media => uploadMedia(media))).
+      then(result => {
+        let failed = 0
+        result.forEach(res => {
+          if (res.status === "fulfilled") {
+            setMediasSelected(prev => ({ type: 'media', item: [...(prev?.item || []), res.value] }))
+          } else {
+            failed++
+          }
+        })
+        if (failed > 0)
+          app.alert.setWarning("One or more media faild to upload")
+      }).
+      finally(() => setUploadingMedia(false))
+
   }
 
   const onMediaSelectedClick = () => {
@@ -242,7 +269,7 @@ export const TweetCreatePage: React.FC<ITweetCreatePageProps> = (props) => {
         selected={postAsSelected}
         onSelected={onPostToSelected}
         onRemove={onPostToRemove}
-        canAddMore={postAsSelected.length < 5}
+        canAddMore={true}
       />
 
       <MessageInput
