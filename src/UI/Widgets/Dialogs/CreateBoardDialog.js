@@ -103,17 +103,18 @@ export const CreateBoardDialog = (props) => {
   // console.log(props.selectedFilters)
   return (
     <Dialog
-      component="form"
       open={props.open}
       onClose={handleClose}
       aria-labelledby='form-dialog-save-board'
       fullWidth
       maxWidth='sm'
-      onSubmit={formik.handleSubmit}
+      PaperProps={{
+        onSubmit: formik.handleSubmit,
+        component: "form",
+      }}
     >
       <DialogTitle
         sx={{
-          textAlign: 'center',
           fontWeight: 'bold !important',
         }}
       >

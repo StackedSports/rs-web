@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { usePagination } from "Api/Pagination"
 import { useQuery, useQueryClient, useMutation } from "react-query"
-import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact, getArchivedContacts } from "Api/Endpoints"
+import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact, getArchivedContacts, archiveContact } from "Api/Endpoints"
 import lodash from "lodash"
 
 export const useContact = (id) => {
@@ -113,7 +113,7 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters, only_arch
     const get = only_archived ? getArchivedContacts : (filters && !lodash.isEmpty(filters)) ? filterContacts : getContacts
 
     const reactQuery = useQuery(['contacts', pagination.currentPage, pagination.itemsPerPage, filters, only_archived], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
-        keepPreviousData:true
+        keepPreviousData: true
     })
 
     useEffect(() => {
@@ -177,10 +177,18 @@ export const useContactMutation = () => {
             },
         })
 
+    const archive = useMutation(id => archiveContact(id), {
+        onSuccess: () => {
+            queryClient.invalidateQueries('contacts')
+            queryClient.invalidateQueries('contact', { active: true })
+        },
+    })
+
     return {
         update: update.mutate,
         updateAsync: update.mutateAsync,
         create: create.mutate,
         createAsync: create.mutateAsync,
+        archive: archive.mutate
     }
 }

@@ -11,20 +11,22 @@ export const FormBaseDialog = (props) => {
         }
     }, [props.error])
 
-    const handleClose = (e,reason) => {
+    const handleClose = (e, reason) => {
         setError(null)
         if (props.onClose)
-            props.onClose(e,reason)
+            props.onClose(e, reason)
     }
 
     return (
         <Dialog
-            component="form"
             maxWidth="md"
             fullWidth
             open={props.open}
             onClose={handleClose}
-            onSubmit={props.onSubmit}
+            PaperProps={{
+                onSubmit: props.onSubmit,
+                component: "form",
+            }}
         >
             <DialogTitle
                 sx={{

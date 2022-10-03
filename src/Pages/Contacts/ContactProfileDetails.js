@@ -62,7 +62,7 @@ const ContactProfileDetails = (props) => {
 		)
 
 	const app = useContext(AppContext)
-	const { update: updateContact } = useContactMutation()
+	const { update: updateContact, archive } = useContactMutation()
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
 	const [savingContact, setSavingContact] = useState([false, false, false, false, false, false, false, false])
@@ -484,6 +484,16 @@ const ContactProfileDetails = (props) => {
 		console.log(value)
 		onAccordionFieldChange(1)
 		setFieldValue('status_2', value)
+	}
+
+	const handleArchived = () => {
+		if (props.contact.id) {
+			if (props.contact.archived)
+				updateContact({ id: props.contact.id, data: { unarchive: true } })
+			else
+				archive(props.contact.id)
+		} else
+			app.alert.setWarning("Erro, invalid contact id")
 	}
 
 	return (
@@ -1033,11 +1043,10 @@ const ContactProfileDetails = (props) => {
 				setExpanded={setExpandedAccordion}
 			>
 				<Button
-					name="Archive"
+					name={props.contact.archived ? "Unarchive" : "Archive"}
 					type="button"
-					variant='contained'
-					color='neutral'
-					onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
+					variant='outlined'
+					onClick={() => handleArchived()}
 				/>
 			</AccordionComponent>
 

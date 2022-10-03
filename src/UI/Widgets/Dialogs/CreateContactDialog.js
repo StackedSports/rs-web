@@ -97,7 +97,7 @@ export const CreateContactDialog = (props) => {
 
     const FormPanel = useMemo(() => (
         <>
-            <DialogContent>
+            <DialogContent dividers>
 
                 <Stack direction='row' gap={2} mb={1}>
 
@@ -188,9 +188,9 @@ export const CreateContactDialog = (props) => {
                         {error.message}
                     </Alert>
                 }
-
             </DialogContent>
-            <DialogActions sx={{ padding: '0 20px 24px' }}>
+
+            <DialogActions sx={{ paddingBottom: 2, paddingInline: 3 }}>
                 <Button
                     onClick={handleClose}
                     color='primary'
@@ -218,7 +218,7 @@ export const CreateContactDialog = (props) => {
 
     const CreatedProfilePanel = useMemo(() => (
         <>
-            <DialogContent>
+            <DialogContent dividers>
                 <Box sx={{ textAlign: 'center', mt: 1 }} >
                     <CheckCircleOutline color="success" sx={{ fontSize: '5rem !important' }} />
                     <Typography variant='h5' sx={{ mt: 1 }} gutterBottom>
@@ -228,9 +228,9 @@ export const CreateContactDialog = (props) => {
                         click here to see the profile page
                     </Link>
                 </Box>
-
             </DialogContent>
-            <DialogActions sx={{ padding: '0 20px 24px' }}>
+
+            <DialogActions sx={{ paddingBottom: 2, paddingInline: 3 }}>
                 <Button
                     onClick={() => setShowCreatedContact(old => !old)}
                     variant='contained'
@@ -242,20 +242,24 @@ export const CreateContactDialog = (props) => {
 
     return (
         <Dialog
-            component="form"
             open={props.open}
             onClose={handleClose}
             fullWidth
             maxWidth='sm'
-            onSubmit={formik.handleSubmit}
+            PaperProps={{
+                onSubmit: formik.handleSubmit,
+                component: "form",
+            }}
         >
+
             <DialogTitle
                 sx={{
                     fontWeight: 'bold',
                     fontSize: '1rem',
                 }}
             >
-                <PersonOutline color='primary' /> New Contact Profile
+                <PersonOutline color='primary' sx={{ verticalAlign: 'middle', mr:1 }} />
+                New Contact Profile
                 <IconButton
                     aria-label="close"
                     onClick={handleClose}
@@ -275,7 +279,6 @@ export const CreateContactDialog = (props) => {
                     CreatedProfilePanel :
                     FormPanel
             }
-
         </Dialog>
     )
 }
