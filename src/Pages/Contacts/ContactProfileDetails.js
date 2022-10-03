@@ -1031,14 +1031,15 @@ const ContactProfileDetails = (props) => {
 				title='ACTIONS'
 				expandedId={expandedAccordionId}
 				setExpanded={setExpandedAccordion}
-			// saving={savingContact[0]}
-			// showButtonSummary
-			// onFieldChange={handleChange}
-			// onFieldValue={setFieldValue}
-			// items={[
-			// 	{ label: 'Archive', name: 'archived', value: values.archived, component: TextField },
-			// ]}
-			/>
+			>
+				<Button
+					name="Archive"
+					type="button"
+					variant='contained'
+					color='neutral'
+					onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
+				/>
+			</AccordionComponent>
 
 		</Stack>
 	)

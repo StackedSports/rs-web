@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
@@ -10,9 +10,13 @@ import { useContact } from 'Api/ReactQuery';
 import ContactProfileDetails from './ContactProfileDetails';
 import ContactMessageDetails from 'UI/Widgets/Contact/ContactMessageDetails';
 import ContactChat from 'UI/Widgets/Contact/ContactChat';
+import { AppContext } from 'Context/AppProvider';
+import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
 
 export default function ContactsProfilePage(props) {
+    const app = useContext(AppContext)
     const { id } = useParams();
+    const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
 
     const [redirect, setRedirect] = useState('')
 
@@ -29,11 +33,15 @@ export default function ContactsProfilePage(props) {
     }, [id])
 
     const onTopActionClick = (e) => {
-        console.log('top action click')
+        setOpenCreateContactDialog(true)
     }
 
     const onContactUpdated = (newContact) => {
         contact.refetch()
+    }
+
+    const onContactCreated = () => {
+        app.alert.setSuccess('Contact created successfully!')
     }
 
     return (
@@ -62,6 +70,12 @@ export default function ContactsProfilePage(props) {
                     contact={contact.item}
                 />
             </Stack>
+
+            <CreateContactDialog
+                open={openCreateContactDialog}
+                onClose={() => setOpenCreateContactDialog(false)}
+                onContactCreated={onContactCreated}
+            />
         </MainLayout>
     )
 }
