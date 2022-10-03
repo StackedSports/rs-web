@@ -57,7 +57,7 @@ export default function ContactsProfilePage(props) {
             redirect={redirect}
         >
             {openAlert &&
-                <Alert severity="warning" onClose={() => setOpenAlert(false)} sx={{ mb: 1 }}>
+                <Alert severity="warning" variant="filled" onClose={() => setOpenAlert(false)} sx={{ mb: 1 }}>
                     This contact is archived.
                 </Alert>
             }
