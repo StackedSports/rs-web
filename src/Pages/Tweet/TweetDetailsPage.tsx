@@ -53,6 +53,9 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
         actions.push({ name: 'Schedule', variant: 'contained', icon: EventAvailableIcon, onClick: () => changeStatus('pending') })
     }
 
+    if (tweet.item?.status === 'published')
+        actions.splice(0, actions.length)
+
     console.log(tweet.item)
 
     const changeStatus = (status: 'draft' | 'pending') => {
@@ -111,7 +114,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
                                 <TwitterIcon color='primary' />
                             </IconButton>
                         }
-                        title={tweet.loading ? <Skeleton /> : tweet.item && tweet.item.queued_by}
+                        title={tweet.loading ? <Skeleton /> : tweet.item && tweet.item.posted_as}
                         subheader={tweet.item && tweet.item.twitter}
 
                     />

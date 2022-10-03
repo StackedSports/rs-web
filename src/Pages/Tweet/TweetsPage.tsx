@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useTags, useTeamMembers, useTweets } from 'Api/ReactQuery';
 
 import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
@@ -12,6 +12,8 @@ import TweetDisplay from 'UI/Widgets/Tweet/TweetDisplay';
 
 import useSearchParams from 'Hooks/SearchParamsHook';
 import { IPanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
+import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
+import useLocalStorage from 'Hooks/useLocalStorage';
 
 const getTitle = (type: string | null) => {
     console.log(type)
@@ -30,11 +32,18 @@ const getTitle = (type: string | null) => {
 }
 
 export const TweetsPage = () => {
-    const { searchParams } = useSearchParams();
-    const tweets = useTweets()
+    const { searchParams, appendSearchParams } = useSearchParams();
+    const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`tweets-table-perPage`, 10)
+    const page = searchParams.page
+    const scrollToTopTableRef = useRef<null | HTMLElement>()
+    const tweets = useTweets(page, perPageLocalStorage)
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+
+    useEffect(() => {
+        appendSearchParams('page', tweets.pagination.currentPage)
+    }, [tweets.pagination.currentPage])
 
     const panelFilters: IPanelFilters = useMemo(() =>
     ({
@@ -90,7 +99,20 @@ export const TweetsPage = () => {
             onClick: () => setShowPanelFilters(oldShowFilter => !oldShowFilter),
         },
     ]
-    console.log(tweets.items)
+
+    const onPageChange = (e, page: number) => {
+        if (scrollToTopTableRef.current)
+            scrollToTopTableRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+
+        tweets.pagination.getPage(page)
+    }
+
+    const onPerPageChange = (value: number) => {
+        if (scrollToTopTableRef.current) {
+            scrollToTopTableRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        }
+        setperPageLocalStorage(value)
+    }
 
     return (
         <BaseTweetPage
@@ -98,6 +120,7 @@ export const TweetsPage = () => {
             actions={actions}
             showPanelFilters={showPanelFilters}
             panelFilters={panelFilters}
+            panelRef={scrollToTopTableRef}
         >
             <Divider sx={{ mb: 3 }} />
 
@@ -105,6 +128,18 @@ export const TweetsPage = () => {
                 return <TweetDisplay key={index} tweet={item} loading={tweets.loading} />
             })}
 
+            {!tweets.loading && tweets.items && tweets.items.length > 0 && (
+                <CustomPagination
+                    totalPages={tweets.pagination.totalPages}
+                    currentPage={tweets.pagination.currentPage}
+                    perPage={tweets.pagination.itemsPerPage}
+                    totalItems={tweets.pagination.totalItems}
+                    disabled={tweets.loading}
+                    onPageChange={onPageChange}
+                    onPerPageChange={onPerPageChange}
+                    perPageOptions={[10, 20, 50, 100]}
+                />
+            )}
         </BaseTweetPage>
     )
 }

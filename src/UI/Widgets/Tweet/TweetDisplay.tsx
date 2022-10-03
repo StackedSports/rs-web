@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo, ReactNode } from 'react'
-import { Box, Checkbox, Stack, Grid, Typography, Skeleton, Button, Link as LinkMui, Divider } from '@mui/material'
+import { Box, Checkbox, Stack, Grid, Typography, Skeleton, Link as LinkMui, Divider } from '@mui/material'
 import MediaPreview from '../Media/MediaPreview'
 import { ITweet } from 'Interfaces'
 import { getNiceDate } from 'utils/Parser';
 import { Link } from 'react-router-dom';
 import { tweetRoutes } from 'Routes/Routes';
-import RenderIf from '../RenderIf';
 import { Stat } from 'Pages/TweetRanking/Components/TweetDetails';
-import { borderColor } from '@mui/system';
 
 interface DetailsProps {
     label: string;

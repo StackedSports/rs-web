@@ -68,7 +68,8 @@ export const useTweet = (id: string) => {
         enabled: Boolean(id),
         select: (data: [ITweet, IPaginationApi]) => ({
             ...data[0],
-            twitter: data[0].posted_as.match('\\B@\\w+')?.[0] || ''
+            posted_as: data[0].posted_as.replaceAll(/@\w+/g, ""),
+            twitter: data[0].posted_as.split(",").map(s => s.match('\\B@\\w+')?.[0]).join(", ") || ''
         }),
     })
 

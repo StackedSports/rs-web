@@ -31,7 +31,7 @@ const filters: ISideFilter[] = [
     },
 ]
 
-interface BaseTweetPageProps extends Pick<IMainLayoutProps, 'title' | 'topActionName' | 'filters' | 'actions'> {
+interface BaseTweetPageProps extends Pick<IMainLayoutProps, 'title' | 'topActionName' | 'filters' | 'actions' | 'panelRef'> {
     showPanelFilters?: boolean;
     panelFilters?: IPanelFilters;
     onPanelFilterChange?: (selectedFilters: ISelectedFilters) => void;
@@ -53,6 +53,7 @@ export const BaseTweetPage: React.FC<BaseTweetPageProps> = (props) => {
             onTopActionClick={onTopActionClick}
             filters={props.filters || filters}
             actions={props.actions}
+            panelRef={props.panelRef}
             propsPanelFilters={{
                 open: props.showPanelFilters,
                 filters: props.panelFilters,
