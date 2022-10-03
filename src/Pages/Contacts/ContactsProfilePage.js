@@ -12,19 +12,22 @@ import ContactMessageDetails from 'UI/Widgets/Contact/ContactMessageDetails';
 import ContactChat from 'UI/Widgets/Contact/ContactChat';
 import { AppContext } from 'Context/AppProvider';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
+import { Alert } from '@mui/material';
 
 export default function ContactsProfilePage(props) {
     const app = useContext(AppContext)
     const { id } = useParams();
+    const history = useHistory()
+    const contact = useContact(id)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
+    const [openAlert, setOpenAlert] = useState(contact.item?.archived || true);
+
 
     const [redirect, setRedirect] = useState('')
 
     const [loading, setLoading] = useState(false)
 
 
-    const history = useHistory()
-    const contact = useContact(id)
 
     useEffect(() => {
         if (!contact)
@@ -53,6 +56,11 @@ export default function ContactsProfilePage(props) {
             loading={loading}
             redirect={redirect}
         >
+            {openAlert &&
+                <Alert severity="info" onClose={() => setOpenAlert(false)} sx={{ mb: 1 }}>
+                    This contact is archived.
+                </Alert>
+            }
             <Stack
                 flex={1}
                 direction="row"
