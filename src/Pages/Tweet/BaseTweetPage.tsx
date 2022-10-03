@@ -22,6 +22,7 @@ const filters: ISideFilter[] = [
         name: 'Posts',
         items: [
             // Filters
+            { id: 'draft', name: 'Draft', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
             { id: 'scheduled', name: 'Scheduled', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
             { id: 'published', name: 'Published', path: { pathname: tweetRoutes.all, search: 'status=published' } },
             { id: 'expired', name: 'Expired', path: { pathname: tweetRoutes.all, search: 'status=expired' } },

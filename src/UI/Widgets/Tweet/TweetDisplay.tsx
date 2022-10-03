@@ -7,15 +7,17 @@ import { Link } from 'react-router-dom';
 import { tweetRoutes } from 'Routes/Routes';
 import RenderIf from '../RenderIf';
 import { Stat } from 'Pages/TweetRanking/Components/TweetDetails';
+import { borderColor } from '@mui/system';
 
 interface DetailsProps {
     label: string;
     value: string | ReactNode | null;
     column?: boolean;
-    loading?: boolean
+    loading?: boolean;
+    color?: string
 }
 
-const Details = ({ label, value, column, loading }: DetailsProps) => {
+const Details = ({ label, value, column, loading, color }: DetailsProps) => {
 
     return (
         <Stack direction={column ? 'column' : 'row'} mb={.5} columnGap={1.5}>
@@ -24,6 +26,8 @@ const Details = ({ label, value, column, loading }: DetailsProps) => {
                 flex={1}
                 variant='body1'
                 fontWeight='bold'
+                color={color || 'text.primary'}
+                textTransform={'capitalize'}
             >
                 {loading ? <Skeleton sx={{ width: '100%', maxWidth: '300px' }} /> : value ? value : "-"}
             </Typography>
@@ -49,10 +53,15 @@ interface TweetDisplayProps {
 }
 
 export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = true }) => {
+
+    const statusColor = tweet?.status ?
+        ({ 'published': 'success.main', 'error': 'error.main' }[tweet.status] ?? 'text.primary') :
+        'text.primary'
+
     return (
         <Box
             display='grid'
-            gridTemplateColumns='55px 1fr'
+            gridTemplateColumns='55px 1fr 250px'
             border={1}
             borderColor='divider'
         >
@@ -63,6 +72,7 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
                 borderLeft={1}
                 borderColor='divider'
             >
+
                 {tweet && tweet.media?.[0] && (
                     <Grid item xs='auto' p={2} >
                         <MediaPreview
@@ -79,13 +89,15 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
                         Post Details
                     </Typography>
 
-                    <Details label='Message Status' value={tweet?.status} loading={loading} />
+                    <Details label='Message Status' value={tweet?.status} loading={loading} color={statusColor} />
                     <Details label='Published on' value='Twitter' loading={loading} />
                     <Details label='Published to' value={tweet?.twitter} loading={loading} />
                     <Details label='Published Time' value={tweet?.send_at && getNiceDate(new Date(tweet.send_at))} loading={loading} />
                     {/* <Details label='Tags' value={<Tags tags={['OV Weekend', 'June Camps']} />} /> */}
                     <Details label='Post Text' value={tweet?.body} column loading={loading} />
+                </Grid>
 
+                <Grid xs={12} mt={'auto'} p={1}>
                     <Typography fontSize='18px' color='text.secondary' marginTop='auto' >
                         {loading ?
                             <Skeleton /> :
@@ -94,47 +106,47 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
                     </Typography>
                 </Grid>
 
-                <Grid item xs={2} >
-                    <Typography
-                        variant="subtitle1"
-                        style={{ width: "100%", textAlign: "center", fontWeight: 'bold' }}
-                    >
-                        Post Stats
-                    </Typography>
-
-                    <Divider />
-
-                    <Stack spacing={3}>
-                        <Stat
-                            label="Contact Engagement"
-                            value={0}
-                            total={0}
-                        />
-                        <Stat
-                            label="Likes Rate"
-                            value={0}
-                            total={0}
-                        />
-
-
-                        <Stat
-                            label="Retweet Rate"
-                            value={0}
-                            total={0}
-                        />
-
-
-                        <LinkMui
-                            sx={{ alignSelf: 'center' }}
-                            component={Link}
-                            to={`${tweetRoutes.details}/${tweet?.id}`}
-                        >
-                            View Details
-                        </LinkMui>
-                    </Stack>
-
-                </Grid>
             </Grid>
+
+            <Stack sx={{ borderLeft: 1, borderColor: 'divider', py: 2 }}>
+                <Typography
+                    variant="subtitle1"
+                    style={{ width: "100%", textAlign: "center", fontWeight: 'bold' }}
+                >
+                    Post Stats
+                </Typography>
+
+                <Divider />
+
+                <Stack spacing={3}>
+                    <Stat
+                        label="Contact Engagement"
+                        value={0}
+                        total={0}
+                    />
+                    <Stat
+                        label="Likes Rate"
+                        value={0}
+                        total={0}
+                    />
+
+
+                    <Stat
+                        label="Retweet Rate"
+                        value={0}
+                        total={0}
+                    />
+
+
+                    <LinkMui
+                        sx={{ alignSelf: 'center' }}
+                        component={Link}
+                        to={`${tweetRoutes.details}/${tweet?.id}`}
+                    >
+                        View Details
+                    </LinkMui>
+                </Stack>
+            </Stack>
         </Box>
     )
 }

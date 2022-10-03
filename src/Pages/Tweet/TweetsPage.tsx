@@ -4,7 +4,7 @@ import { useTags, useTeamMembers, useTweets } from 'Api/ReactQuery';
 import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import Tune from '@mui/icons-material/Tune';
 
-import { Divider, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
 
 import { BaseTweetPage } from "./BaseTweetPage";
 import { getFullName } from 'utils/Parser';
