@@ -113,9 +113,23 @@ export default function Panel(props) {
     const showMenuBtn = useMemo(() => !props.menuDisabled, [props.menuDisabled])
 
     return (
-        <Box className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`} sx={props.sx} ref={props.panelRef} >
+        <Box
+            className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`}
+            ref={props.panelRef}
+            sx={props.sx}
+        >
             {!props.hideHeader &&
-                <div style={{ marginBottom: 10, position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1000 }}>
+                <Box
+                    sx={{
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        marginBottom: 10,
+                        position: 'sticky',
+                        top: 0,
+                        backgroundColor: 'background.paper',
+                        zIndex: 1000
+                    }}
+                >
                     <div className='Header'>
                         {showBackBtn && <ArrowBack className='IconBack' onClick={props.onBackClick} />}
                         {showMenuBtn && <Icon className='Icon' onClick={props.onMenuIconClick} />}
@@ -134,7 +148,7 @@ export default function Panel(props) {
                         </div>
                     </div>
                     <PanelFilters {...props.propsPanelFilters} />
-                </div>
+                </Box>
             }
             {props.children}
         </Box>

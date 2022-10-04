@@ -78,7 +78,6 @@ const TweetsPage = (props) => {
             title="Tweet Reports"
         >
             <Stack spacing={3}>
-                <Divider />
 
                 <RenderIf condition={loading}>
                     <LoadingPanel />

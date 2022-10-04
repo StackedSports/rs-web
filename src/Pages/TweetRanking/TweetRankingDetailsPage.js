@@ -72,7 +72,6 @@ const TweetRankingDetailsPage = (props) => {
 	return (
 		<TweetPage title="Post Deep Dive">
 			<Stack spacing={3}>
-				<Divider />
 
 				{/* <SearchBar
 				  style={{

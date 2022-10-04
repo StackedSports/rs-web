@@ -159,7 +159,6 @@ export const BaseMediaPage = (props) => {
                 selectedFilters: selectedFilters
             }}
         >
-            <Divider />
             <Box
                 sx={{ position: 'relative' }}
                 onDragEnter={(e) => {
@@ -206,7 +205,7 @@ export const BaseMediaPage = (props) => {
                     >
                         <CloudIcon sx={{ fontSize: 70, color: 'primary.main', position: 'absolute', top: -75 }} />
                         <CloudUploadIcon sx={{ fontSize: 80, color: 'common.white', position: 'absolute', top: -80 }} />
-                        
+
                         <Typography
                             sx={{
                                 backgroundColor: 'primary.main',
