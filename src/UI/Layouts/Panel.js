@@ -127,7 +127,8 @@ export default function Panel(props) {
                         position: 'sticky',
                         top: 0,
                         backgroundColor: 'background.paper',
-                        zIndex: 1000
+                        zIndex: 1000,
+                        mb:0.5
                     }}
                 >
                     <div className='Header'>

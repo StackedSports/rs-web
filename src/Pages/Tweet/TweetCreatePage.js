@@ -198,7 +198,6 @@ const TweetCreatePage = (props) => {
       filters={filters}
       actions={actions}
     >
-      <Divider />
 
       <MediaSelectDialog
         open={showMediaDialog}
