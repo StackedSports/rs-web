@@ -33,11 +33,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
             icon: EditRoundedIcon,
             variant: 'outlined',
             type: "link",
-            to: {
-                pathname: `${tweetRoutes.edit}`,
-                state: { edit: tweet.item }
-            },
-
+            to: `${tweetRoutes.edit}/${tweet.item?.id}`,
         },
         {
             name: 'Save and Close',
@@ -75,6 +71,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
         <BaseTweetPage
             title="Tweet Preview"
             actions={actions}
+
         >
             <Divider />
             <RenderIf condition={tweet.isError}>

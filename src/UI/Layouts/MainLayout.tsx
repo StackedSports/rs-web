@@ -20,6 +20,7 @@ import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
 export interface IMainLayoutProps {
     topActionName?: string;
     onTopActionClick?: () => void;
+    onTopActionTo?: string | { pathname: string, state?: unknown, search?: string };
     filtersDisabled?: boolean;
     title?: string;
     filters?: ISideFilter[];
@@ -44,6 +45,7 @@ export default function MainLayout(props: IMainLayoutProps) {
             <TopBar
                 actionTitle={props.topActionName}
                 onActionClick={props.onTopActionClick}
+                onActionLink={props.onTopActionTo}
             />
             <SideBar />
             <Content>

@@ -1,4 +1,4 @@
-import { TweetCreatePage, TweetsPage, TweetDetailsPage } from 'Pages/Tweet';
+import { TweetCreatePage, TweetsPage, TweetDetailsPage, TweetEditPage } from 'Pages/Tweet';
 import { Route, Switch } from 'react-router-dom';
 
 
@@ -14,8 +14,8 @@ const TweetRoutes = (props) => (
     />
     <Route
       exact
-      path={tweetRoutes.edit}
-      component={TweetCreatePage}
+      path={`${tweetRoutes.edit}/:id`}
+      component={TweetEditPage}
     />
     <Route
       exact

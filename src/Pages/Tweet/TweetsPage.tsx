@@ -16,7 +16,6 @@ import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
 import useLocalStorage from 'Hooks/useLocalStorage';
 
 const getTitle = (type: string | null) => {
-    console.log(type)
     switch (type) {
         case 'scheduled':
             return 'Scheduled';
@@ -100,7 +99,7 @@ export const TweetsPage = () => {
         },
     ]
 
-    const onPageChange = (e, page: number) => {
+    const onPageChange = (_e: React.ChangeEvent<unknown>, page: number) => {
         if (scrollToTopTableRef.current)
             scrollToTopTableRef.current.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 

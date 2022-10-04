@@ -31,7 +31,7 @@ const filters: ISideFilter[] = [
     },
 ]
 
-interface BaseTweetPageProps extends Pick<IMainLayoutProps, 'title' | 'topActionName' | 'filters' | 'actions' | 'panelRef'> {
+interface BaseTweetPageProps extends Pick<IMainLayoutProps, 'title' | 'topActionName' | 'filters' | 'actions' | 'panelRef' | 'onTopActionTo'> {
     showPanelFilters?: boolean;
     panelFilters?: IPanelFilters;
     onPanelFilterChange?: (selectedFilters: ISelectedFilters) => void;
@@ -40,17 +40,12 @@ interface BaseTweetPageProps extends Pick<IMainLayoutProps, 'title' | 'topAction
 }
 
 export const BaseTweetPage: React.FC<BaseTweetPageProps> = (props) => {
-    const { redirect } = useContext(AppContext)
-
-    const onTopActionClick = () => {
-        redirect(tweetRoutes.create)
-    }
 
     return (
         <MainLayout
             title={props.title || 'Tweet'}
             topActionName={props.topActionName || '+ New Post'}
-            onTopActionClick={onTopActionClick}
+            onTopActionTo={tweetRoutes.create}
             filters={props.filters || filters}
             actions={props.actions}
             panelRef={props.panelRef}

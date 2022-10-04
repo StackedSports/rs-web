@@ -10,6 +10,7 @@ import SearchBar from '../Widgets/SearchBar'
 
 import Logo from 'images/logoRight.png'
 import DefaultTeamLogo from "images/stacked-favicon.png"
+import { Button } from '@mui/material';
 
 export default function TopBar(props) {
     const { user } = useContext(AuthContext)
@@ -32,9 +33,19 @@ export default function TopBar(props) {
                 <img src={teamLogo} onError={onTeamLogoError} />
             </div>
             {props.actionTitle && (
-                <div className='Button' onClick={props.onActionClick}>
-                    {props.actionTitle}
-                </div>
+                props.onActionLink ? (
+                    <Button
+                        className='Button'
+                        component={Link}
+                        to={props.onActionLink}
+                    >
+                        {props.actionTitle}
+                    </Button>
+                ) : (
+                    <div className='Button' onClick={props.onActionClick}>
+                        {props.actionTitle}
+                    </div>
+                )
             )}
             <div className='FlexRight'>
                 {/* <SearchBar placeholder='Power search' /> */}

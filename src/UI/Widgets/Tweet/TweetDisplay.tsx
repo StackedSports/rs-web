@@ -72,7 +72,7 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
                 borderColor='divider'
             >
 
-                {tweet && tweet.media?.[0] && (
+                {!loading && tweet && tweet.media?.[0] && (
                     <Grid item xs='auto' p={2} >
                         <MediaPreview
                             type={'media'}

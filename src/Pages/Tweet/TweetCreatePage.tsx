@@ -16,7 +16,6 @@ import { IMember } from 'Interfaces/ISettings';
 import { tweetRoutes } from 'Routes/Routes';
 import { isFileValid } from 'utils/FileUtils';
 import { IMediaTweet, ITweet } from 'Interfaces';
-import { useLocation } from 'react-router-dom';
 
 export type IPublishTweetMessage = {
   send_at: string | Date;
@@ -27,9 +26,8 @@ export type IPublishTweetMessage = {
     { media: string[]; }
   )
 
-export const TweetCreatePage: React.FC = (props) => {
+export const TweetCreatePage: React.FC<{ edit?: ITweet }> = (props) => {
   const app = useContext(AppContext)
-  const { edit }: { edit?: ITweet } = useLocation().state || { edit: undefined }
   const user = useUser()
   const snippets = useSnippets()
   const teamMembers = useTeamMembers()
@@ -46,14 +44,14 @@ export const TweetCreatePage: React.FC = (props) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (edit) {
-      console.log("edito from path", edit)
-      edit.send_at && setSendAt(edit.send_at)
-      edit.media.length > 0 && setMediasSelected({ item: edit.media, type: 'media' })
-      edit.body && setPostText(edit.body)
+    if (props.edit) {
+      console.log("edit from path", props.edit)
+      props.edit.send_at && setSendAt(props.edit.send_at)
+      props.edit.media.length > 0 && setMediasSelected({ item: props.edit.media, type: 'media' })
+      props.edit.body && setPostText(props.edit.body)
       // setPostAsSelected(edit.posted_as) Different types
     }
-  }, [edit])
+  }, [props.edit])
 
   const onCreatePost = (control: 'save' | 'preview') => {
     console.log(control)
@@ -81,8 +79,8 @@ export const TweetCreatePage: React.FC = (props) => {
 
     // return console.log(postData)
 
-    if (edit && edit.id) {
-      updateTweet({ id: edit.id, data: postData }, {
+    if (props.edit && props.edit.id) {
+      updateTweet({ id: props.edit.id, data: postData }, {
         onSuccess: (result) => {
           let message = result.data
           console.log(message)
