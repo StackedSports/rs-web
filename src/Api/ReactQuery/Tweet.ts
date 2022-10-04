@@ -5,6 +5,8 @@ import { IPublishTweetMessage } from "Pages/Tweet";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { usePagination } from "Api/Pagination";
 import lodash from 'lodash'
+import { useTeamMembers } from "./TeamMembers";
+import { IMember } from "Interfaces/ISettings";
 
 export const useTweets = (initialPage: number = 1, itemsPerPage: number = 10, initialFilters?: Record<string, unknown[]> | null) => {
     const [tweets, setTweets] = useState<ITweet[]>([])
@@ -14,15 +16,18 @@ export const useTweets = (initialPage: number = 1, itemsPerPage: number = 10, in
     const reactQuery = useQuery<IApiResponse<ITweetApi>>(['tweets', pagination.currentPage, pagination.itemsPerPage, filters], () => getTweets(pagination.currentPage, pagination.itemsPerPage, filters))
 
     useEffect(() => {
-        if (reactQuery.isSuccess, reactQuery.data) {
+        if (reactQuery.isSuccess) {
             const [apiTweets, apiPagination] = reactQuery.data
             setPagination(apiPagination)
             setTweets(apiTweets.map(tweet => ({
                 ...tweet,
                 twitter: tweet.posted_as.match('\\B@\\w+')?.[0] || ''
             })))
+        } else if (reactQuery.isError) {
+            console.log("setando []")
+            setTweets([])
         }
-    }, [reactQuery.isSuccess, reactQuery.data])
+    }, [reactQuery.isSuccess, reactQuery.data, reactQuery.isError])
 
     useEffect(() => {
         if (initialPage && initialPage != pagination.currentPage) {
@@ -64,13 +69,20 @@ export const useTweets = (initialPage: number = 1, itemsPerPage: number = 10, in
 }
 
 export const useTweet = (id: string) => {
+    const { items } = useTeamMembers()
     const reactQuery = useQuery(['tweet', id], () => getTweet(id), {
         enabled: Boolean(id),
-        select: (data: [ITweet, IPaginationApi]) => ({
-            ...data[0],
-            posted_as: data[0].posted_as.replaceAll(/@\w+/g, ""),
-            twitter: data[0].posted_as.split(",").map(s => s.match('\\B@\\w+')?.[0]).join(", ") || ''
-        }),
+        select: (data: [ITweet, IPaginationApi]) => {
+            const posted_as_names = data[0].posted_as.replaceAll(/@\w+/g, "").trim().toLowerCase()
+            const avatarImages = getAvatarImage(posted_as_names, items)
+            console.log(avatarImages)
+            return {
+                ...data[0],
+                posted_as: posted_as_names,
+                twitter: data[0].posted_as.split(",").map(s => s.match('\\B@\\w+')?.[0]).join(", ") || '',
+                posted_as_avatar: avatarImages
+            }
+        },
     })
 
     return {
@@ -113,4 +125,9 @@ export const useTweetMutation = () => {
         create: create.mutate,
         createAsync: create.mutateAsync,
     }
+}
+
+function getAvatarImage(posted_as: string, teamMembers: IMember[]) {
+    return teamMembers.filter(member => posted_as.includes(member.first_name.toLowerCase()) || posted_as.includes(member.last_name.toLowerCase())).
+        map(member => member.twitter_profile.profile_image)
 }

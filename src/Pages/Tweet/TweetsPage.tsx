@@ -14,6 +14,8 @@ import useSearchParams from 'Hooks/SearchParamsHook';
 import { IPanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
 import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
 import useLocalStorage from 'Hooks/useLocalStorage';
+import RenderIf from 'UI/Widgets/RenderIf';
+import ErrorPanel from 'UI/Layouts/ErrorPanel';
 
 const getTitle = (type: string | null) => {
     switch (type) {
@@ -31,14 +33,15 @@ const getTitle = (type: string | null) => {
 }
 
 export const TweetsPage = () => {
-    const { searchParams, appendSearchParams } = useSearchParams();
+    const { searchParams, appendSearchParams, page } = useSearchParams();
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`tweets-table-perPage`, 10)
-    const page = searchParams.page
     const scrollToTopTableRef = useRef<null | HTMLElement>()
     const tweets = useTweets(page, perPageLocalStorage)
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
+
+    console.log(tweets.pagination.currentPage, page)
 
     useEffect(() => {
         appendSearchParams('page', tweets.pagination.currentPage)
@@ -123,7 +126,14 @@ export const TweetsPage = () => {
         >
             <Divider sx={{ mb: 3 }} />
 
-            {Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
+            <RenderIf condition={tweets.isError}>
+                <ErrorPanel
+                    title={`${tweets.error?.response?.status} ${tweets.error?.response?.statusText}`}
+                    body={tweets.error?.response?.data?.errors[0]?.message}
+                />
+            </RenderIf>
+
+            {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
                 return <TweetDisplay key={index} tweet={item} loading={tweets.loading} />
             })}
 

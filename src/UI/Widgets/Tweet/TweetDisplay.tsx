@@ -1,38 +1,12 @@
-import React, { useState, useEffect, useMemo, ReactNode } from 'react'
+import React from 'react'
 import { Box, Checkbox, Stack, Grid, Typography, Skeleton, Divider, Button } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import MediaPreview from '../Media/MediaPreview'
 import { ITweet } from 'Interfaces'
 import { getNiceDate } from 'utils/Parser';
 import { tweetRoutes } from 'Routes/Routes';
-import { Stat } from './components';
+import { Details, Stat } from './components';
 import { Link as RouterLink } from 'react-router-dom';
-
-interface DetailsProps {
-    label: string;
-    value: string | ReactNode | null;
-    column?: boolean;
-    loading?: boolean;
-    color?: string
-}
-
-const Details = ({ label, value, column, loading, color }: DetailsProps) => {
-
-    return (
-        <Stack direction={column ? 'column' : 'row'} mb={.5} columnGap={1.5}>
-            <Typography variant='body1'>{label}:</Typography>
-            <Typography
-                flex={1}
-                variant='body1'
-                fontWeight='bold'
-                color={color || 'text.primary'}
-                textTransform={'capitalize'}
-            >
-                {loading ? <Skeleton sx={{ width: '100%', maxWidth: '300px' }} /> : value ? value : "-"}
-            </Typography>
-        </Stack>
-    )
-}
 
 const Tags = ({ tags }: { tags: string[] }) => {
     return (

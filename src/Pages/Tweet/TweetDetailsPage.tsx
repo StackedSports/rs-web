@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 
 import { BaseTweetPage } from "./BaseTweetPage";
 import ErrorPanel from 'UI/Layouts/ErrorPanel'
@@ -11,7 +11,7 @@ import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutline';
 import RepeatIcon from '@mui/icons-material/RepeatOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { Avatar, Divider, Card, CardHeader, Button, IconButton, CardContent, CardActions, Typography, CardMedia, Skeleton, TextField, InputBase } from '@mui/material';
+import { Avatar, Divider, Card, CardHeader, Button, IconButton, CardContent, CardActions, Typography, CardMedia, Skeleton, InputBase, AvatarGroup } from '@mui/material';
 
 import { RouteComponentProps } from 'react-router-dom';
 import { useTweet, useTweetMutation } from 'Api/ReactQuery';
@@ -102,9 +102,11 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
                             '.MuiCardHeader-subheader': { fontSize: '1rem' }
                         }}
                         avatar={
-                            <Avatar>
-                                R
-                            </Avatar>
+                            <AvatarGroup max={2}>
+                                {
+                                    tweet.item?.posted_as_avatar.map(src => <Avatar alt="Remy Sharp" src={src} />)
+                                }
+                            </AvatarGroup>
                         }
                         action={
                             <IconButton disabled>
