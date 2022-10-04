@@ -34,6 +34,7 @@ interface MainLayoutProps {
     loading?: boolean;
     children?: React.ReactNode;
     alert?: any;
+    hideHeader?: boolean
 }
 
 export default function MainLayout(props: MainLayoutProps) {
@@ -65,6 +66,7 @@ export default function MainLayout(props: MainLayoutProps) {
                     showBackBoardToContacts={props.showBackBoardToContacts}
                     onBackBoardToContacts={props.onBackBoardToContacts}
                     panelRef={props.panelRef}
+                    hideHeader={props.hideHeader}
                 >
                     {props.alert && (
                         <Snackbar
