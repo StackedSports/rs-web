@@ -24,7 +24,7 @@ const round = (num) => {
     return Math.round(m) / 100 * Math.sign(num)
 }
 
-export const Stat = (props) => (
+const Stat = (props) => (
     <Stack>
         <Typography
             variant="h6"
@@ -106,8 +106,8 @@ const TweetDetails = (props) => {
     useEffect(() => {
         const likesColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-likes`)
         const unsub = onSnapshot(likesColRef, (snapshot) => {
-                setContactsLikes(snapshot.docs.map(doc => doc.data()))
-            })
+            setContactsLikes(snapshot.docs.map(doc => doc.data()))
+        })
 
         return () => unsub()
     }, [])
@@ -115,15 +115,15 @@ const TweetDetails = (props) => {
     useEffect(() => {
         const retweetsColRef = collection(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}/contacts-retweets`)
         const unsub = onSnapshot(retweetsColRef, (snapshot) => {
-                setContactsRetweets(snapshot.docs.map(doc => doc.data()))
-            })
-            
+            setContactsRetweets(snapshot.docs.map(doc => doc.data()))
+        })
+
         return () => unsub()
     }, [])
 
     const onArchive = (e) => {
         updateDoc(
-            doc(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}`), 
+            doc(db, `orgs/${user.team.org.id}/tweet-ranking/${props.tweetId}`),
             { archived: !props.details.archived }
         )
     }
@@ -133,7 +133,7 @@ const TweetDetails = (props) => {
     }
 
     const reportDate = useMemo(() => {
-        if(!props.details | !props.details.timestamp)
+        if (!props.details | !props.details.timestamp)
             return ''
 
         return formatDate(new Date(props.details.timestamp), 'medium', 'short')
@@ -163,11 +163,11 @@ const TweetDetails = (props) => {
                     </Typography>
 
                     <DropdownButton
-                      id={`tweet-details-more-btn-${props.tweetId}`}
-                      actions={[
-                        { label: props.details.archived ? 'Unarchive' : 'Archive', onClick: onArchive }
-                        // { label: 'Delete', onClick: onDelete }
-                      ]}
+                        id={`tweet-details-more-btn-${props.tweetId}`}
+                        actions={[
+                            { label: props.details.archived ? 'Unarchive' : 'Archive', onClick: onArchive }
+                            // { label: 'Delete', onClick: onDelete }
+                        ]}
                     />
 
                 </Stack>
@@ -176,7 +176,7 @@ const TweetDetails = (props) => {
 
                 <Typography
                     variant="body"
-                    // style={{ fontWeight: 'bold' }}
+                // style={{ fontWeight: 'bold' }}
                 >
                     Created at: {reportDate}
                 </Typography>
@@ -195,7 +195,7 @@ const TweetDetails = (props) => {
                 <Divider />
 
                 <RenderIf condition={props.loading}>
-                    <LoadingPanel/>
+                    <LoadingPanel />
                 </RenderIf>
 
                 <RenderIf condition={!props.loading}>
@@ -211,7 +211,7 @@ const TweetDetails = (props) => {
                         </RenderIf>
 
                         <RenderIf condition={!likes}>
-                            <LoadingPanel height={100}/>
+                            <LoadingPanel height={100} />
                         </RenderIf>
 
                         <Stat
@@ -225,7 +225,7 @@ const TweetDetails = (props) => {
                         </RenderIf>
 
                         <RenderIf condition={!retweets}>
-                            <LoadingPanel height={100}/>
+                            <LoadingPanel height={100} />
                         </RenderIf>
                     </Stack>
 
@@ -261,7 +261,7 @@ const TweetDetails = (props) => {
                     </Box>
                 </RenderIf>
 
-                
+
             </Stack>
             <TweetRankingDialog
                 open={openDialog}

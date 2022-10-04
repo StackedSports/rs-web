@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, ReactNode } from 'react'
-import { Box, Checkbox, Stack, Grid, Typography, Skeleton, Link as LinkMui, Divider } from '@mui/material'
+import { Box, Checkbox, Stack, Grid, Typography, Skeleton, Divider, Button } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search';
 import MediaPreview from '../Media/MediaPreview'
 import { ITweet } from 'Interfaces'
 import { getNiceDate } from 'utils/Parser';
-import { Link } from 'react-router-dom';
 import { tweetRoutes } from 'Routes/Routes';
-import { Stat } from 'Pages/TweetRanking/Components/TweetDetails';
+import { Stat } from './components';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface DetailsProps {
     label: string;
@@ -106,43 +107,50 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
 
             </Grid>
 
-            <Stack sx={{ borderLeft: 1, borderColor: 'divider', py: 2 }}>
+            <Stack sx={{ borderLeft: 1, borderColor: 'divider', py: 2 }} gap={1}>
                 <Typography
                     variant="subtitle1"
                     style={{ width: "100%", textAlign: "center", fontWeight: 'bold' }}
                 >
-                    Post Stats
+                    {loading ? <Skeleton /> : "Post Stats"}
                 </Typography>
 
                 <Divider />
 
-                <Stack spacing={3}>
-                    <Stat
-                        label="Contact Engagement"
-                        value={0}
-                        total={0}
-                    />
-                    <Stat
-                        label="Likes Rate"
-                        value={0}
-                        total={0}
-                    />
+                <Stack spacing={3} divider={<Divider />}>
+                    <Stack gap={2}>
+                        <Stat
+                            loading={loading}
+                            label="Contact Engagement"
+                            value={0}
+                            total={0}
+                        />
+                        <Stat
+                            loading={loading}
+                            label="Likes Rate"
+                            value={0}
+                            total={0}
+                        />
+                        <Stat
+                            loading={loading}
+                            label="Retweet Rate"
+                            value={0}
+                            total={0}
+                        />
+                    </Stack>
 
-
-                    <Stat
-                        label="Retweet Rate"
-                        value={0}
-                        total={0}
-                    />
-
-
-                    <LinkMui
-                        sx={{ alignSelf: 'center' }}
-                        component={Link}
-                        to={`${tweetRoutes.details}/${tweet?.id}`}
-                    >
-                        View Details
-                    </LinkMui>
+                    {loading ?
+                        <Skeleton /> :
+                        <Button
+                            variant='outlined'
+                            endIcon={<SearchIcon />}
+                            sx={{ alignSelf: 'center' }}
+                            component={RouterLink}
+                            to={`${tweetRoutes.details}/${tweet?.id}`}
+                        >
+                            View Details
+                        </Button>
+                    }
                 </Stack>
             </Stack>
         </Box>
