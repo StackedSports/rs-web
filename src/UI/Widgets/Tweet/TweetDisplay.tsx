@@ -7,6 +7,7 @@ import { getNiceDate } from 'utils/Parser';
 import { tweetRoutes } from 'Routes/Routes';
 import { Details, Stat } from './components';
 import { Link as RouterLink } from 'react-router-dom';
+import { TweetPost } from './TweetPost';
 
 const Tags = ({ tags }: { tags: string[] }) => {
     return (
@@ -22,10 +23,11 @@ const Tags = ({ tags }: { tags: string[] }) => {
 
 interface TweetDisplayProps {
     tweet?: ITweet;
-    loading: boolean
+    loading: boolean;
+    showDetails: boolean
 }
 
-export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = true }) => {
+export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = true, showDetails = false }) => {
 
     const statusColor = tweet?.status ?
         ({ 'published': 'success.main', 'error': 'error.main' }[tweet.status] ?? 'text.primary') :
@@ -41,36 +43,36 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
             <Stack justifyContent='flex-start'>
                 <Checkbox />
             </Stack>
-            <Grid container
+            <Grid
+                container
                 borderLeft={1}
                 borderColor='divider'
             >
+                <Grid item xs={12} p={2} pb={0}>
+                    <Typography fontSize='18px' fontWeight='bold' >
+                        Post Details
+                    </Typography>
+                </Grid>
 
-                {!loading && tweet && tweet.media?.[0] && (
-                    <Grid item xs='auto' p={2} >
-                        <MediaPreview
-                            type={'media'}
-                            item={tweet.media?.[0]}
-                            miniImage
-                            cardStyle={{ marginRight: 15, width: '300px' }}
-                        />
+                <Grid item xs={'auto'} p={2} pr={0} >
+                    <Box width={'500px'}>
+                        <TweetPost tweet={tweet} loading={loading} />
+                    </Box>
+                </Grid>
+
+                {showDetails && (
+                    <Grid item xs container direction='column' p={2} >
+
+                        <Details label='Post Status' value={tweet?.status} loading={loading} color={statusColor} />
+                        <Details label='Published on' value='Twitter' loading={loading} />
+                        <Details label='Published to' value={tweet?.twitter} loading={loading} />
+                        <Details label='Published Time' value={tweet?.send_at && getNiceDate(new Date(tweet.send_at))} loading={loading} />
+                        {/* <Details label='Tags' value={<Tags tags={['OV Weekend', 'June Camps']} />} /> */}
+                        <Details label='Post Text' value={tweet?.body} column loading={loading} />
                     </Grid>
                 )}
 
-                <Grid item xs container direction='column' p={2}>
-                    <Typography fontSize='18px' fontWeight='bold' mb={2} >
-                        Post Details
-                    </Typography>
-
-                    <Details label='Message Status' value={tweet?.status} loading={loading} color={statusColor} />
-                    <Details label='Published on' value='Twitter' loading={loading} />
-                    <Details label='Published to' value={tweet?.twitter} loading={loading} />
-                    <Details label='Published Time' value={tweet?.send_at && getNiceDate(new Date(tweet.send_at))} loading={loading} />
-                    {/* <Details label='Tags' value={<Tags tags={['OV Weekend', 'June Camps']} />} /> */}
-                    <Details label='Post Text' value={tweet?.body} column loading={loading} />
-                </Grid>
-
-                <Grid xs={12} mt={'auto'} p={1}>
+                <Grid xs={12} mt='auto' p={1}>
                     <Typography fontSize='18px' color='text.secondary' marginTop='auto' >
                         {loading ?
                             <Skeleton /> :

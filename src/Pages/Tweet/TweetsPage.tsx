@@ -134,11 +134,9 @@ export const TweetsPage = () => {
                 />
             </RenderIf>
 
-            <Stack gap={2} alignItems={'center'}>
-                {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
-                    return <TweetDisplay tweet={item} loading={tweets.loading} key={index} />
-                })}
-            </Stack>
+            {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
+                return <TweetDisplay tweet={item} loading={tweets.loading} key={index} />
+            })}
 
             {!tweets.loading && tweets.items && tweets.items.length > 0 && (
                 <CustomPagination

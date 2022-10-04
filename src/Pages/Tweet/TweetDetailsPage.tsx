@@ -79,7 +79,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
             </RenderIf>
 
             <RenderIf condition={tweet.item || tweet.loading}>
-                <TweetDisplay tweet={tweet.item} loading={tweet.loading} />
+                <TweetDisplay tweet={tweet.item} loading={tweet.loading} showDetails />
             </RenderIf>
         </BaseTweetPage>
     )
