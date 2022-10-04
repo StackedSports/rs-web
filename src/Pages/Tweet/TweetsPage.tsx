@@ -4,7 +4,7 @@ import { useTags, useTeamMembers, useTweets } from 'Api/ReactQuery';
 import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import Tune from '@mui/icons-material/Tune';
 
-import { Divider } from '@mui/material';
+import { Box, Divider, Stack } from '@mui/material';
 
 import { BaseTweetPage } from "./BaseTweetPage";
 import { getFullName } from 'utils/Parser';
@@ -16,6 +16,7 @@ import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
 import useLocalStorage from 'Hooks/useLocalStorage';
 import RenderIf from 'UI/Widgets/RenderIf';
 import ErrorPanel from 'UI/Layouts/ErrorPanel';
+import { TweetPost } from 'UI/Widgets/Tweet/TweetPost';
 
 const getTitle = (type: string | null) => {
     switch (type) {
@@ -133,9 +134,11 @@ export const TweetsPage = () => {
                 />
             </RenderIf>
 
-            {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
-                return <TweetDisplay key={index} tweet={item} loading={tweets.loading} />
-            })}
+            <Stack gap={2} alignItems={'center'}>
+                {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
+                    return <TweetDisplay tweet={item} loading={tweets.loading} key={index} />
+                })}
+            </Stack>
 
             {!tweets.loading && tweets.items && tweets.items.length > 0 && (
                 <CustomPagination

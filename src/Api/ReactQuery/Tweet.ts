@@ -12,6 +12,7 @@ export const useTweets = (initialPage: number = 1, itemsPerPage: number = 10, in
     const [tweets, setTweets] = useState<ITweet[]>([])
     const [pagination, setPagination] = usePagination(initialPage, itemsPerPage)
     const [filters, setFilters] = useState(initialFilters)
+    const { items } = useTeamMembers()
 
     const reactQuery = useQuery<IApiResponse<ITweetApi>>(['tweets', pagination.currentPage, pagination.itemsPerPage, filters], () => getTweets(pagination.currentPage, pagination.itemsPerPage, filters))
 
@@ -19,10 +20,17 @@ export const useTweets = (initialPage: number = 1, itemsPerPage: number = 10, in
         if (reactQuery.isSuccess) {
             const [apiTweets, apiPagination] = reactQuery.data
             setPagination(apiPagination)
-            setTweets(apiTweets.map(tweet => ({
-                ...tweet,
-                twitter: tweet.posted_as.match('\\B@\\w+')?.[0] || ''
-            })))
+            setTweets(apiTweets.map(tweet => {
+                const posted_as_names = tweet.posted_as.replaceAll(/@\w+/g, "").trim().toLowerCase()
+                const avatarImages = getAvatarImage(posted_as_names, items)
+                return {
+                    ...tweet,
+                    media: tweet.media || [],
+                    posted_as: posted_as_names,
+                    twitter: tweet.posted_as.split(",").map(s => s.match('\\B@\\w+')?.[0]).join(", ") || '',
+                    posted_as_avatar: avatarImages
+                }
+            }))
         } else if (reactQuery.isError) {
             console.log("setando []")
             setTweets([])
@@ -72,12 +80,12 @@ export const useTweet = (id: string) => {
     const { items } = useTeamMembers()
     const reactQuery = useQuery(['tweet', id], () => getTweet(id), {
         enabled: Boolean(id),
-        select: (data: [ITweet, IPaginationApi]) => {
+        select: (data: [ITweetApi, IPaginationApi]): ITweet => {
             const posted_as_names = data[0].posted_as.replaceAll(/@\w+/g, "").trim().toLowerCase()
             const avatarImages = getAvatarImage(posted_as_names, items)
-            console.log(avatarImages)
             return {
                 ...data[0],
+                media: data[0].media || [],
                 posted_as: posted_as_names,
                 twitter: data[0].posted_as.split(",").map(s => s.match('\\B@\\w+')?.[0]).join(", ") || '',
                 posted_as_avatar: avatarImages

@@ -20,7 +20,7 @@ export interface ITweetApi {
     created_at: Date;
     updated_at: Date;
     status: string;
-    media: IMediaTweet[];
+    media: IMediaTweet[] | null;
     url: string;
 }
 
@@ -28,6 +28,7 @@ export interface ITweet {
     id: string;
     queued_by: string;
     posted_as: string;
+    posted_as_avatar: string[];
     body: string;
     send_at: Date;
     created_at: Date;

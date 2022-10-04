@@ -7,18 +7,15 @@ import CheckIcon from '@mui/icons-material/Check';
 import SendIcon from '@mui/icons-material/Send';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutline';
-import RepeatIcon from '@mui/icons-material/RepeatOutlined';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import { Avatar, Divider, Card, CardHeader, Button, IconButton, CardContent, CardActions, Typography, CardMedia, Skeleton, InputBase, AvatarGroup } from '@mui/material';
+import { Divider } from '@mui/material';
 
 import { RouteComponentProps } from 'react-router-dom';
 import { useTweet, useTweetMutation } from 'Api/ReactQuery';
 import RenderIf from 'UI/Widgets/RenderIf';
-import { getNiceDate } from 'utils/Parser';
 import { tweetRoutes } from 'Routes/Routes';
 import { AppContext } from 'Context/AppProvider';
+import { TweetPost } from 'UI/Widgets/Tweet/TweetPost';
+import TweetDisplay from 'UI/Widgets/Tweet/TweetDisplay';
 
 interface TweetDetailsPageProps extends RouteComponentProps<{ id: string }> { }
 
@@ -82,70 +79,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
             </RenderIf>
 
             <RenderIf condition={tweet.item || tweet.loading}>
-                <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%', mt: '2%', margin: '2% auto' }}>
-                    {tweet.item && tweet.item.media.length > 0 && (
-                        <CardMedia
-                            component={tweet.loading ? Skeleton : "img"}
-                            src={tweet.item && tweet.item.media?.[0].urls.large}
-                            sx={{
-                                aspectRatio: '16/9',
-                                objectFit: 'cover',
-                                pointerEvents: 'none',
-                                userSelect: 'none',
-                                userDrag: 'none',
-                            }}
-                        />
-                    )}
-                    <CardHeader
-                        sx={{
-                            '.MuiCardHeader-title': { fontWeight: 'bold', fontSize: '1.1rem' },
-                            '.MuiCardHeader-subheader': { fontSize: '1rem' }
-                        }}
-                        avatar={
-                            <AvatarGroup max={2}>
-                                {
-                                    tweet.item?.posted_as_avatar.map(src => <Avatar alt="Remy Sharp" src={src} />)
-                                }
-                            </AvatarGroup>
-                        }
-                        action={
-                            <IconButton disabled>
-                                <TwitterIcon color='primary' />
-                            </IconButton>
-                        }
-                        title={tweet.loading ? <Skeleton /> : tweet.item && tweet.item.posted_as}
-                        subheader={tweet.item && tweet.item.twitter}
-
-                    />
-                    <CardContent sx={{ paddingBlock: 1 }}>
-                        {tweet.loading ? (
-                            <Skeleton variant='rectangular' height={'200px'} />) : (
-                            <InputBase
-                                fullWidth
-                                multiline
-                                readOnly
-                                sx={{ fontSize: '1.1rem', color: 'text.primary', pb: 1 }}
-                                value={tweet.item && tweet.item?.body || ''}
-                            />
-                        )}
-
-
-                        <Typography variant="body2" color="text.secondary" >
-                            {tweet.loading ? <Skeleton /> : tweet.item && getNiceDate(new Date(tweet.item.send_at))}
-                        </Typography>
-                    </CardContent>
-                    <CardActions sx={{ justifyContent: 'space-between', color: "text.primary" }}>
-                        <Button startIcon={<ChatBubbleIcon />} color="inherit" size='large' >
-                            ?
-                        </Button>
-                        <Button startIcon={<RepeatIcon />} color="inherit" size='large'  >
-                            ?
-                        </Button>
-                        <Button startIcon={<FavoriteIcon />} color="inherit" size='large'  >
-                            ?
-                        </Button>
-                    </CardActions>
-                </Card>
+                <TweetDisplay tweet={tweet.item} loading={tweet.loading} />
             </RenderIf>
         </BaseTweetPage>
     )
