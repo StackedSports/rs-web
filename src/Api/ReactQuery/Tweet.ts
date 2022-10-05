@@ -136,6 +136,8 @@ export const useTweetMutation = () => {
 }
 
 function getAvatarImage(posted_as: string, teamMembers: IMember[]) {
-    return teamMembers.filter(member => posted_as.includes(member.first_name.toLowerCase()) || posted_as.includes(member.last_name.toLowerCase())).
+    const profilesImage = teamMembers.filter(member =>
+        posted_as.includes(member.first_name.toLowerCase()) || posted_as.includes(member.last_name.toLowerCase())).
         map(member => member.twitter_profile.profile_image)
+    return lodash.uniq(profilesImage)
 }

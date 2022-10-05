@@ -1,22 +1,20 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useTags, useTeamMembers, useTweets } from 'Api/ReactQuery';
 
+import { Divider } from '@mui/material';
 import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import Tune from '@mui/icons-material/Tune';
-
-import { Box, Divider, Stack } from '@mui/material';
 
 import { BaseTweetPage } from "./BaseTweetPage";
 import { getFullName } from 'utils/Parser';
 import TweetDisplay from 'UI/Widgets/Tweet/TweetDisplay';
 
+import useLocalStorage from 'Hooks/useLocalStorage';
 import useSearchParams from 'Hooks/SearchParamsHook';
 import { IPanelFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
 import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination';
-import useLocalStorage from 'Hooks/useLocalStorage';
 import RenderIf from 'UI/Widgets/RenderIf';
 import ErrorPanel from 'UI/Layouts/ErrorPanel';
-import { TweetPost } from 'UI/Widgets/Tweet/TweetPost';
 
 const getTitle = (type: string | null) => {
     switch (type) {
@@ -41,8 +39,6 @@ export const TweetsPage = () => {
     const tags = useTags()
     const teamMembers = useTeamMembers()
     const [showPanelFilters, setShowPanelFilters] = useState(false)
-
-    console.log(tweets.pagination.currentPage, page)
 
     useEffect(() => {
         appendSearchParams('page', tweets.pagination.currentPage)
@@ -135,7 +131,7 @@ export const TweetsPage = () => {
             </RenderIf>
 
             {!tweets.isError && Array.from(tweets.items.length > 0 ? tweets.items : new Array(10)).map((item, index) => {
-                return <TweetDisplay tweet={item} loading={tweets.loading} key={index} />
+                return <TweetDisplay tweet={item} loading={tweets.loading} key={index} showCheckbox />
             })}
 
             {!tweets.loading && tweets.items && tweets.items.length > 0 && (

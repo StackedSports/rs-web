@@ -7,8 +7,10 @@ import RepeatIcon from '@mui/icons-material/RepeatOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import { getNiceDate } from 'utils/Parser';
 import { ITweet } from 'Interfaces';
+import Linkify from 'react-linkify';
 
 export const TweetPost = ({ tweet, loading = false }: { tweet?: ITweet, loading: boolean }) => {
+    console.log(tweet)
     return (
         <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%' }}>
             {tweet && tweet.media.length > 0 && (
@@ -16,7 +18,7 @@ export const TweetPost = ({ tweet, loading = false }: { tweet?: ITweet, loading:
                     component={loading ? Skeleton : "img"}
                     src={tweet && tweet.media?.[0].urls.large}
                     sx={{
-                        aspectRatio: '16/9',
+                        aspectRatio: '16/12',
                         objectFit: 'cover',
                         pointerEvents: 'none',
                         userSelect: 'none',
@@ -33,7 +35,9 @@ export const TweetPost = ({ tweet, loading = false }: { tweet?: ITweet, loading:
                     <AvatarGroup max={2}>
                         {
                             (tweet && tweet.posted_as_avatar.length > 0) ?
-                                tweet?.posted_as_avatar.map(src => <Avatar alt="Remy Sharp" src={src} key={src} />) :
+                                tweet?.posted_as_avatar.map((src, index) =>
+                                    <Avatar src={src} key={index} />
+                                ) :
                                 <Avatar>
                                     <PersonIcon />
                                 </Avatar>
@@ -53,18 +57,27 @@ export const TweetPost = ({ tweet, loading = false }: { tweet?: ITweet, loading:
                 {loading ? (
                     <Skeleton variant='rectangular' height={'200px'} />
                 ) : (
-                    <InputBase
-                        fullWidth
-                        multiline
-                        readOnly
-                        sx={{ fontSize: '1.1rem', color: 'text.primary', pb: 1 }}
-                        value={tweet && tweet?.body || ''}
-                    />
+                    <Typography
+                        sx={{
+                            whiteSpace: 'pre-line',
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                        }}
+                    >
+                        <Linkify
+                            componentDecorator={(decoratedHref, decoratedText, key) => (
+                                <a target="blank" href={decoratedHref} key={key}>
+                                    {decoratedText}
+                                </a>
+                            )}
+                        >
+                            {tweet?.body || ''}
+                        </Linkify>
+                    </Typography>
                 )}
 
-
                 <Typography variant="body2" color="text.secondary" >
-                    {loading ? <Skeleton /> : tweet && getNiceDate(new Date(tweet.send_at))}
+                    {loading ? <Skeleton /> : tweet?.send_at && getNiceDate(new Date(tweet.send_at))}
                 </Typography>
             </CardContent>
             <CardActions sx={{ justifyContent: 'space-between', color: "text.primary" }}>
