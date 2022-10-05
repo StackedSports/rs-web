@@ -7,6 +7,7 @@ import { tweetRoutes } from 'Routes/Routes';
 import { Details, Stat } from './components';
 import { Link as RouterLink } from 'react-router-dom';
 import { TweetPost } from './TweetPost';
+import RenderIf from '../RenderIf';
 
 const Tags = ({ tags }: { tags: string[] }) => {
     return (
@@ -97,8 +98,8 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
 
                 <Divider />
 
-                <Stack gap={3} divider={<Divider />} flex={1}>
-                    <Stack gap={2}>
+                <Stack gap={3} flex={1}>
+                    <Stack gap={2} flex={1} >
                         <Stat
                             loading={loading}
                             label="Contact Engagement"
@@ -118,22 +119,25 @@ export const TweetDisplay: React.FC<TweetDisplayProps> = ({ tweet, loading = tru
                             total={0}
                         />
                     </Stack>
-
-                    {loading ?
-                        <Skeleton /> :
-                        <Button
-                            variant='outlined'
-                            endIcon={<SearchIcon />}
-                            sx={{ alignSelf: 'center' }}
-                            component={RouterLink}
-                            to={`${tweetRoutes.details}/${tweet?.id}`}
-                        >
-                            View Details
-                        </Button>
-                    }
+                    <RenderIf condition={!showDetails}>
+                        {loading ?
+                            <Skeleton /> :
+                            <Stack borderTop={1} borderColor='divider' pt={2} >
+                                <Button
+                                    variant='outlined'
+                                    endIcon={<SearchIcon />}
+                                    sx={{ alignSelf: 'center' }}
+                                    component={RouterLink}
+                                    to={`${tweetRoutes.details}/${tweet?.id}`}
+                                >
+                                    View Details
+                                </Button>
+                            </Stack>
+                        }
+                    </RenderIf>
                 </Stack>
-            </Stack>
-        </Box>
+            </Stack >
+        </Box >
     )
 }
 
