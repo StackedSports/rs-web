@@ -27,7 +27,7 @@ const getTitle = (type: string | null) => {
         case 'archived':
             return 'Archived';
         default:
-            return 'All';
+            return 'All Posts';
     }
 }
 
@@ -116,9 +116,9 @@ export const TweetsPage = () => {
     return (
         <BaseTweetPage
             title={getTitle(searchParams.get('status'))}
-            actions={actions}
-            showPanelFilters={showPanelFilters}
-            panelFilters={panelFilters}
+            //actions={actions}
+            //showPanelFilters={showPanelFilters}
+            //panelFilters={panelFilters}
             panelRef={scrollToTopTableRef}
         >
             <Divider sx={{ mb: 3 }} />

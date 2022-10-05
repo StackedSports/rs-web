@@ -1,32 +1,32 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
 import MainLayout, { IMainLayoutProps } from 'UI/Layouts/MainLayout'
 
 import { tweetRoutes } from 'Routes/Routes'
 
-import { AppContext } from 'Context/AppProvider'
 import { IPanelFilters, ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters'
 import { ISideFilter } from 'Interfaces'
 
 const filters: ISideFilter[] = [
-    { // Category
+    /* { // Category
         id: '0',
         name: 'Drafts',
         items: [
             // Filters
-            { id: '0', name: 'Ben Graves', path: 'wew' },
+            { id: '0', name: 'Ben Graves', path: '' },
         ]
-    },
+    }, */
     { // Category
         id: '1',
-        name: 'Posts',
+        name: 'Tweet Posts',
         items: [
             // Filters
-            { id: 'draft', name: 'Draft', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
-            { id: 'scheduled', name: 'Scheduled', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
-            { id: 'published', name: 'Published', path: { pathname: tweetRoutes.all, search: 'status=published' } },
-            { id: 'expired', name: 'Expired', path: { pathname: tweetRoutes.all, search: 'status=expired' } },
-            { id: 'archived', name: 'Archived', path: { pathname: tweetRoutes.all, search: 'status=archived' } },
+            { id: 'post', name: 'All Posts', path: { pathname: tweetRoutes.all, search: 'status=posts' } },
+            /*  { id: 'draft', name: 'Draft', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
+             { id: 'scheduled', name: 'Scheduled', path: { pathname: tweetRoutes.all, search: 'status=scheduled' } },
+             { id: 'published', name: 'Published', path: { pathname: tweetRoutes.all, search: 'status=published' } },
+             { id: 'expired', name: 'Expired', path: { pathname: tweetRoutes.all, search: 'status=expired' } },
+             { id: 'archived', name: 'Archived', path: { pathname: tweetRoutes.all, search: 'status=archived' } }, */
         ]
     },
 ]
