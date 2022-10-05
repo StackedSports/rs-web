@@ -57,7 +57,7 @@ export const TweetDetailsPage: React.FC<TweetDetailsPageProps> = (props) => {
             updateTweet({ id: tweet.item?.id, data: { status: status, send_at: sendAt } }, {
                 onSuccess: (res) => {
                     console.log("update", res)
-                    app.alert.setSuccess("Send message")
+                    app.alert.setSuccess("Tweet queued")
                     app.redirect(tweetRoutes.all)
                 }
             })

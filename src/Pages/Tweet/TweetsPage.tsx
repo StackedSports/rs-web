@@ -44,6 +44,8 @@ export const TweetsPage = () => {
         appendSearchParams('page', tweets.pagination.currentPage)
     }, [tweets.pagination.currentPage])
 
+    console.log(tweets.items)
+
     const panelFilters: IPanelFilters = useMemo(() =>
     ({
         "type": {
