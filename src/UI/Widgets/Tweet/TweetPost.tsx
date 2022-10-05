@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, AvatarGroup, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, InputBase, Skeleton, Typography } from '@mui/material'
+import { Avatar, AvatarGroup, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Skeleton, Typography } from '@mui/material'
 import TwitterIcon from '@mui/icons-material/Twitter';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -10,7 +10,7 @@ import { ITweet } from 'Interfaces';
 import Linkify from 'react-linkify';
 
 export const TweetPost = ({ tweet, loading = false }: { tweet?: ITweet, loading: boolean }) => {
-    console.log(tweet)
+    
     return (
         <Card variant="outlined" sx={{ maxWidth: '500px', width: '100%' }}>
             {tweet && tweet.media.length > 0 && (
