@@ -6,6 +6,7 @@ import { useUserPreference } from 'Api/ReactQuery/UserPrefences';
 
 export const UserSettingsPreferencesPage: React.FC = () => {
     const preferences = useUserPreference()
+    console.log("user PRefenreces", preferences)
 
     const initialValues = preferences.data || {
         showColumnOnFilter: true,
