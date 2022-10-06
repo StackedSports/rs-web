@@ -1427,7 +1427,7 @@ export const getInboxConversation = ({ contact_id, inbox_type, user_id }, page =
         user_id: user_id
     }
 
-    return GET(`inboxes_conversations?page=${page}&per_page=${perPage}`, body)
+    return GET(`inboxes_conversations?page=${page || 1}&per_page=${perPage || 20}`, body)
 }
 
 export const updateTweet = (id, data) => {
