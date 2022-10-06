@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import MainLayout from 'UI/Layouts/MainLayout'
 import { userRoutes } from 'Routes/Routes'
@@ -11,6 +11,7 @@ interface UserSettingsPageProps {
     onTopActionClick?: () => void;
     topActionName?: string;
     actions?: Record<string, unknown>[];
+    children?: ReactNode
 }
 
 export const UserSettingsPage: React.FC<UserSettingsPageProps> = (props) => {

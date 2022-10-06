@@ -7,14 +7,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { Divider, Tooltip,Box } from "@mui/material";
+import { Divider, Tooltip, Box } from "@mui/material";
 import { Formik, Form, Field } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { mask, unMask } from 'remask';
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
 import { useMainLayoutAlert } from 'UI/Layouts/MainLayout';
-import {UserSettingsPage} from "./UserSettingsPage";
+import { UserSettingsPage } from "./UserSettingsPage";
 import { updateUser } from 'Api/Endpoints';
 import { useUser } from 'Api/Hooks';
 
@@ -163,7 +163,7 @@ const UserSettingsProfilePage = (props) => {
               <Button style={{ fontSize: "12px" }} component="label" htmlFor="contained-button-file" onClick={onUploadPicture}>
                 UPLOAD PICTURE
               </Button>
-              <Button style={{ fontSize: "12px" }} component="label" onClick={onRemovePicture} disabled={disableBtnRemovePicture}>
+              <Button style={{ fontSize: "12px" }} component="label" onClick={onRemovePicture} disabled={disableBtnRemovePicture()}>
                 REMOVE PICTURE
               </Button>
             </Stack>

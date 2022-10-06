@@ -35,10 +35,10 @@ export interface IMemberApi {
     last_name: string;
     email: string;
     phone: string;
-    sms_number?: number;
+    sms_number?: number | null;
     status: string;
     last_login_at?: Date;
-    role: string;
+    role: "Admin" | string;
     twitter_profile: ITwitterProfile;
     team: ITeam;
     settings: ISettings;

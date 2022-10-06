@@ -1,4 +1,4 @@
-import React, {  useContext, useEffect, createContext, useMemo } from 'react'
+import React, { useContext, useEffect, createContext, useMemo, ReactNode } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 
@@ -8,11 +8,23 @@ import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import { IMemberApi } from 'Interfaces/ISettings'
 import useLocalStorage from 'Hooks/useLocalStorage'
 
+type AuthContextType = {
+    user: IMemberApi | null;
+    login?: (email: string, password: string) => Promise<IMemberApi>;
+    loginWithTwitter?: () => Promise<IMemberApi>;
+    logout?: () => void;
+    isAdmin: boolean;
+}
 
-const AuthContext = createContext(null)
+const initalState: AuthContextType = {
+    user: null,
+    isAdmin: false,
+}
+
+const AuthContext = createContext<AuthContextType>(initalState)
 AuthContext.displayName = 'AuthContext'
 
-const AuthProvider: React.FC = (props) => {
+const AuthProvider: React.FC<{ children: ReactNode }> = (props) => {
     const queryClient = useQueryClient()
     const app = useContext(AppContext)
     const provider = new TwitterAuthProvider();
@@ -36,12 +48,11 @@ const AuthProvider: React.FC = (props) => {
     }, [user, app.location])
 
     const login = (email: string, password: string) => {
-        return new Promise((resolve, reject) => {
+        return new Promise<IMemberApi>((resolve, reject) => {
             apiLogin(email, password)
                 .then(res => {
                     console.log(res.data)
                     setUser(res.data)
-                    //localStorage.setItem('user', JSON.stringify(res.data))
                     resolve(res.data)
                 })
                 .catch(error => {
@@ -52,22 +63,20 @@ const AuthProvider: React.FC = (props) => {
     }
 
     const loginWithTwitter = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<IMemberApi>((resolve, reject) => {
             signInWithPopup(auth, provider)
                 .then((result) => {
-                    console.log(result,result.user?.reloadUserInfo?.screenName)
                     const credential = TwitterAuthProvider.credentialFromResult(result);
                     const token = credential?.accessToken;
                     const secret = credential?.secret;
                     // The signed-in user info.
+                    // @ts-ignore: Unreachable code error
                     const handle = result.user?.reloadUserInfo?.screenName;
                     const email = result.user?.email
                     const id = result.user?.providerData[0]?.uid
 
                     apiLoginWithTwitter({ token, secret, email, handle, id }).then((res) => {
-                        console.log(res.data)
                         setUser(res.data)
-                        //localStorage.setItem('user', JSON.stringify(res.data))
                         resolve(res.data)
                     }).catch((error) => {
                         console.log(error)
@@ -81,8 +90,6 @@ const AuthProvider: React.FC = (props) => {
     }
 
     const logout = () => {
-        console.log('logout')
-
         apiLogout()
             .then(res => {
                 console.log(res)

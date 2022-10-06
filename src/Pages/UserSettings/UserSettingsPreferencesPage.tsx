@@ -1,21 +1,15 @@
- // @ts-nocheck
 import React, { useContext } from 'react'
 import { UserSettingsPage } from './UserSettingsPage'
 import { List, ListItem, ListItemText, ListSubheader, Switch } from '@mui/material'
 import { useFormik } from 'formik';
-import { db } from 'Api/Firebase'
-import { collection, doc } from 'firebase/firestore';
-import { AuthContext } from 'Context/Auth/AuthProvider'
+import { useUserPreference } from 'Api/ReactQuery/UserPrefences';
 
 export const UserSettingsPreferencesPage: React.FC = () => {
-    const { user } = useContext(AuthContext)
+    const preferences = useUserPreference()
 
-    const initialValues = {
+    const initialValues = preferences.data || {
         showColumnOnFilter: true,
     };
-
-    const contactPreferenceRef = doc(collection(db, 'orgs', user.team.org.id, 'kanbans'))
-
 
     const formik = useFormik({
         initialValues,
