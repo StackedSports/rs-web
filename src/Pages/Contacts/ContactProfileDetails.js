@@ -83,12 +83,12 @@ const ContactProfileDetails = (props) => {
 
 	//console.log(status2)
 
-/* 	useEffect(() => {
-		if (props.contact) {
-			console.log("Effect details contact")
-			console.log(props.contact)
-		}
-	}, [props.contact]) */
+	/* 	useEffect(() => {
+			if (props.contact) {
+				console.log("Effect details contact")
+				console.log(props.contact)
+			}
+		}, [props.contact]) */
 
 	const initialValues = useMemo(() => ({
 		general: {
@@ -156,7 +156,8 @@ const ContactProfileDetails = (props) => {
 					newData[key] = data[key].name
 					break
 				case 'rank':
-					newData[key] = data[key].id
+					newData[`${key}_id`] = data[key].id
+					break
 				default:
 					newData[key] = data[key] || ''
 					break
@@ -167,7 +168,7 @@ const ContactProfileDetails = (props) => {
 	}
 
 	const onUpdateContact = (values, control, index) => {
-
+		console.log(values)
 		let data = getOnlyNewValues(initialValues[control], values)
 		console.log(data)
 		console.log(parseValues(data))
