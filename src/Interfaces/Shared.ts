@@ -44,3 +44,7 @@ export interface IFilterOption<T> {
     label: string;
     value: T;
 }
+
+export interface IUserPrefenreces {
+    showColumnOnFilter: boolean;
+}
