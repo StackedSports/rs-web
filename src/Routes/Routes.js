@@ -51,7 +51,7 @@ export const routes = {
     },
     tweetPost: {
         title: 'Tweet Post',
-        path: '/tweet-post',
+        path: '/tweets',
         icon: TwitterIcon
     },
     userSettings: {
@@ -142,11 +142,17 @@ export const userRoutes = {
 }
 
 export const tweetRankingRoutes = {
-    ranking: "/tweet-ranking/new",
     archived: '/tweet-ranking/archived',
-    search: "/tweet-search",
+    search: "/tweet-ranking/search",
+    details: '/tweet-ranking/details',
     tweets: "/tweet-ranking",
-    details: '/tweet-ranking/details'
+}
+
+export const tweetRoutes = {
+    all: '/tweets',
+    create: '/tweets/create',
+    edit: '/tweets/edit',
+    details: '/tweets/details',
 }
 
 export const tweetPostRoutes = {

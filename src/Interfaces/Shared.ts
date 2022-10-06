@@ -44,3 +44,10 @@ export interface IFilterOption<T> {
     label: string;
     value: T;
 }
+
+export interface IUrls {
+    thumb: string;
+    medium: string;
+    large: string;
+    original: string;
+}

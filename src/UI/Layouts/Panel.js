@@ -4,6 +4,10 @@ import { useMemo } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { default as ArrowBack } from '@mui/icons-material/ArrowBackIos';
+import { Button as ButtonMui } from '@mui/material';
+import {
+    Link as RouterLink,
+} from 'react-router-dom';
 
 // import Button from '@mui/material/Button';
 import Button, { IconButton } from 'UI/Widgets/Buttons/Button'
@@ -86,6 +90,18 @@ const renderActions = (actions) => {
             else if (action.type === 'dropdown')
                 return (
                     <PanelDropdown key={action.name} action={action} />
+                )
+            else if (action.type === 'link')
+                return (
+                    <ButtonMui
+                        LinkComponent={RouterLink}
+                        to={action.to}
+                        variant={action.variant}
+                        endIcon={<action.icon />}
+                        disabled={action.disabled}
+                    >
+                        {action.name}
+                    </ButtonMui>
                 )
             else
                 return (

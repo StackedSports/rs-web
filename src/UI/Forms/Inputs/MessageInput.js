@@ -196,7 +196,7 @@ const InputSenders = (props) => {
     )
 
     return (
-        <div className='Row'>
+        <Stack direction={'row'} flexWrap='wrap' alignItems={'center'} gap={1}>
             {props.canAddMore && (
                 <Dropdown
                     header={header}
@@ -210,28 +210,28 @@ const InputSenders = (props) => {
             )}
             {props.selected && props.selected.length > 0 && (
                 props.selected.map((selection, index) => (
-                    <div className='Row'>
+                    <>
                         <InputSelected
                             type='contact'
                             img={typeof selection == 'string' ? null : constructProperty(selection, 'twitter_profile.profile_image')}
                             name={constructProperty(selection, ['first_name', 'last_name'])}
                             onRemove={(e) => props.onRemove(index)} />
                         {index == 0 && props.selected.length > 1 && typeof selection == 'string' && <p className='Or'>OR</p>}
-                    </div>
+                    </>
                 ))
             )}
 
-        </div>
+        </Stack>
     )
 }
 
 const ReceiverSelectionGroup = (props) => {
     return (
-        <div className='Row'>
+        <>
             {props.selection && (
                 props.selection.length < 4 ? (
                     props.selection.map((item, index) => (
-                        <InputSelected key={item.id} style={{ marginBottom: 10 }}
+                        <InputSelected key={item.id}
                             type='contact'
                             img={constructProperty(item, props.imgDef)}
                             name={constructProperty(item, props.nameDef)}
@@ -239,7 +239,7 @@ const ReceiverSelectionGroup = (props) => {
                             onRemove={(e) => props.onRemove(index, item.id, props.type, e)} />
                     ))
                 ) : (
-                    <InputSelected style={{ marginBottom: 10 }}
+                    <InputSelected
                         type='contact'
                         img={null}
                         name={`${props.selection.length} ${props.label}`}
@@ -247,28 +247,22 @@ const ReceiverSelectionGroup = (props) => {
                         onRemove={(e) => props.onRemove('all', 'all', props.type, e)} />
                 )
             )}
-        </div>
+        </>
     )
 }
 
 const InputReceivers = (props) => {
-
-    // selected
-    let showMargin = false
-
+    
     if (props.selected) {
         let lengths = props.selected.privateBoards.length
             + props.selected.teamBoards.length
             + props.selected.contacts.length
             + props.selected.recipients.length
-
-        if (lengths > 0)
-            showMargin = true
     }
 
     return (
-        <div className='Row'>
-            <InputSelector style={{ marginBottom: showMargin ? 10 : 0 }} icon={FaPlus} name={props.name} onClick={props.onClick} />
+        <Stack direction='row' flexWrap='wrap' alignItems='center' gap={1.5}>
+            <InputSelector icon={FaPlus} name={props.name} onClick={props.onClick} />
             {props.selected && (
                 <ReceiverSelectionGroup
                     selection={props.selected.privateBoards}
@@ -313,7 +307,7 @@ const InputReceivers = (props) => {
                     onRemove={props.onRemove}
                 />
             )}
-        </div>
+        </Stack>
 
     )
 }
@@ -341,7 +335,19 @@ const InputTime = (props) => <InputSelector icon={FaCalendarAlt} name={props.nam
 // }
 
 const InputMedia = (props) => {
-    if (props.selected) {
+    if (props.selected && Array.isArray(props.selected.item)) {
+        return props.selected.item.map((item, index) =>
+            <InputSelected
+                key={index}
+                miniImage
+                style={{ width: "300px" }}
+                variant={props.selected.type}
+                item={item}
+                onClick={() => props.onSelectedClick(index)}
+                onRemove={(e) => { e.stopPropagation(); props.onRemove(index) }}
+            />
+        )
+    } else if (props.selected) {
         return (
             <InputSelected
                 miniImage
@@ -360,7 +366,7 @@ const InputMedia = (props) => {
                 </Stack>
                 :
                 <FileDropZone
-                    style={{ margin: 0, padding: '50px 0' }}
+                    style={{ margin: 0, padding: '50px 0', flex: 1 }}
                     browseAction={props.browseAction}
                     onDrop={props.onDrop}
                 />
@@ -523,8 +529,8 @@ const InputText = (props) => {
     }
 
     return (
-        <div>
-            <div className="Row" style={{ maringBottom: 20 }}>
+        <>
+            <Stack direction='row' gap={1.5} style={{ maringBottom: 20 }}>
                 {!props.hideTextPlaceholders &&
                     <TextPlaceholders
                         placeholders={props.textPlaceholders}
@@ -535,12 +541,12 @@ const InputText = (props) => {
                     onSelected={onSnippetSelected}
                 />
                 <EmojiPicker onEmojiSelected={onEmojiSelected} />
-            </div>
+            </Stack>
             <textarea
                 ref={textArea}
                 className='TextArea'
                 type='text'
-                rows='10'
+                rows='8'
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={onChange}
@@ -553,7 +559,7 @@ const InputText = (props) => {
             >
                 Message length {props.value.length}/{maxLength}
             </span>
-        </div>
+        </>
     )
 }
 
@@ -629,6 +635,10 @@ export default function MessageInput(props) {
     if (props.type === 'media' || props.type === 'text' || props.type === 'chat') {
         containerClass += ' Large'
         inputClass += ' Flex1'
+    }
+
+    if (props.type === 'media') {
+        inputClass += ' Flex'
     }
 
     return (

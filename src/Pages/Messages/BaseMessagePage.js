@@ -25,13 +25,13 @@ const BaseMessagePage = (props) => {
 
     const sideFilters = useMemo(() => {
         const filter = [
-            {
-                id: 'create',
-                name: 'Message Create',
-                items: [
-                    { id: 'draft', name: 'Drafts', path: { pathname: messageRoutes.all, search: getStatusQueryString('Drafts') } },
-                ]
-            },
+            // {
+            //     id: 'create',
+            //     name: 'Message Create',
+            //     items: [
+            //         { id: 'draft', name: 'Drafts', path: { pathname: messageRoutes.all, search: getStatusQueryString('Drafts') } },
+            //     ]
+            // },
             {
                 id: 'messages',
                 name: 'Messages',
@@ -40,6 +40,11 @@ const BaseMessagePage = (props) => {
                         id: 'all',
                         name: 'All Messages',
                         path: { pathname: messageRoutes.all, search: 'page=1' }
+                    },
+                    { 
+                        id: 'draft',
+                        name: 'Drafts',
+                        path: { pathname: messageRoutes.all, search: getStatusQueryString('Drafts') }
                     },
                     {
                         id: 'scheduled',

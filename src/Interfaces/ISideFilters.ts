@@ -1,7 +1,7 @@
 export interface ISideFilterItem {
     id: string,
     name: string,
-    path: string
+    path: string | { pathname: string, search: string }
 }
 
 export interface ISideFilterButton {
@@ -12,7 +12,7 @@ export interface ISideFilterButton {
 export interface ISideFilter {
     id: string | number,
     name: string,
-    path?: string,
+    path?: string | { pathname: string, search: string },
     items?: ISideFilterItem[],
     button?: ISideFilterButton
 }
