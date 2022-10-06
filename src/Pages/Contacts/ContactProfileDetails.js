@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { ListItemButton, List, ListItem } from '@mui/material';
+import { ListItemButton, List, ListItem, Box } from '@mui/material';
 import * as Yup from "yup";
 import { subYears } from "date-fns";
 import lodash from 'lodash'
@@ -501,7 +501,14 @@ const ContactProfileDetails = (props) => {
 		<Stack
 			pr={1}
 			spacing={1}
-			sx={{ width: '350px', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			flex={'1 0 0'}
+			sx={{
+				maxWidth: '350px',
+				overflowY: "auto",
+				borderRight: "#efefef  1px solid",
+				minHeight: 0,
+				overscrollBehavior: 'contain'
+			}}
 		>
 			<CreatePersonDialog
 				open={openNewFamilyMemberDialog}
@@ -1050,7 +1057,6 @@ const ContactProfileDetails = (props) => {
 					onClick={() => handleArchived()}
 				/>
 			</AccordionComponent>
-
 		</Stack>
 	)
 }
