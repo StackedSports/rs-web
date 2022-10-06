@@ -67,6 +67,7 @@ export default function ContactsProfilePage(props) {
                 direction="row"
                 spacing={1}
                 mt={1}
+                minHeight={0}
             >
                 <ContactProfileDetails
                     loading={contact.loading}
