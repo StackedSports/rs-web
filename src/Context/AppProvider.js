@@ -9,6 +9,7 @@ import { messageRoutes } from 'Routes/Routes'
 
 import AuthProvider from './Auth/AuthProvider'
 import { ConfirmDialogProvider } from 'Context/ConfirmDialogProvider'
+import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
 
 const AppContext = createContext()
 AppContext.displayName = 'AppContext'
@@ -115,16 +116,16 @@ const AppProvider = (props) => {
 
                     {alert && (
                         <Snackbar
-                          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                          open={alert.visible}
-                          autoHideDuration={6000}
-                          onClose={alert.dismiss}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={alert.visible}
+                            autoHideDuration={6000}
+                            onClose={alert.dismiss}
                         >
                             <MuiAlert
-                              variant="filled"
-                              onClose={alert.dismiss}
-                              severity={alert.severity}
-                              sx={{ width: '100%' }}
+                                variant="filled"
+                                onClose={alert.dismiss}
+                                severity={alert.severity}
+                                sx={{ width: '100%' }}
                             >
                                 {alert.message}
                             </MuiAlert>

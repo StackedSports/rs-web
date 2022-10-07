@@ -2,23 +2,24 @@ import React, { useContext } from 'react'
 import { UserSettingsPage } from './UserSettingsPage'
 import { List, ListItem, ListItemText, ListSubheader, Switch } from '@mui/material'
 import { useFormik } from 'formik';
-import { useUserPreference } from 'Api/ReactQuery/UserPrefences';
+import { useUserPreference, useUserPreferenceMutation } from 'Api/ReactQuery/UserPrefences';
+import { AppContext } from 'Context/AppProvider';
 
 export const UserSettingsPreferencesPage: React.FC = () => {
+    const { alert } = useContext(AppContext)
+    const updatePreference = useUserPreferenceMutation()
     const preferences = useUserPreference()
-    console.log("user PRefenreces", preferences)
-
-    const initialValues = preferences.data || {
-        showColumnOnFilter: true,
-    };
 
     const formik = useFormik({
-        initialValues,
+        enableReinitialize: true,
+        initialValues: preferences.item,
         onSubmit: (values, formikHelpers) => {
-            //TODO Function to save goes here
-            console.log(values)
-            formikHelpers.setSubmitting(false)
-        }
+            updatePreference.mutate(values, {
+                onSuccess: () => alert.setSuccess("Preferences updated"),
+                onSettled: () => formikHelpers.setSubmitting(false)
+            })
+        },
+
     });
 
     const mainActions = [

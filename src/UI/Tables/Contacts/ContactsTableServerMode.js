@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -15,6 +15,9 @@ import { contactsRoutes } from 'Routes/Routes';
 import { columnsMini, columnsFull, parseColumnsNames } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
+import { AppContext } from "Context/AppProvider";
+import { useUserPreference } from "Api/ReactQuery/UserPrefences";
+
 
 export default function ContactsTableServerMode({
     contacts,
@@ -32,9 +35,10 @@ export default function ContactsTableServerMode({
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
+    const preferences = useUserPreference()
 
     useEffect(() => {
-        if (!selectedFilters) return
+        if (!selectedFilters || !preferences.item.showColumnOnFilter) return
         const collums = Object.keys(selectedFilters).map(key => parseColumnsNames(key))
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).

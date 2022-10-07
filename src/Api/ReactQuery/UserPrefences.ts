@@ -1,58 +1,63 @@
-import React, { useContext, useMemo } from "react"
+import React, { useContext, useEffect, useMemo } from "react"
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AuthContext } from "Context/Auth/AuthProvider"
 import { db } from 'Api/Firebase'
 import { IUserPrefenreces } from "Interfaces";
 import {
-    addDoc,
     setDoc,
-    getDoc,
-    getDocs,
-    collection,
     doc,
     onSnapshot,
-    updateDoc,
-    deleteDoc,
-    query,
-    where
 } from 'firebase/firestore'
-import { rejects } from "assert";
-
 
 export function useUserPreference() {
     const queryClient = useQueryClient();
     const { user } = useContext(AuthContext)
 
-    const KEY = useMemo(() => ['orgs', user?.team.org.id, 'userPreferences', user?.id], [user])
+    const INITIAL_VALUES = {
+        showColumnOnFilter: true,
+    }
 
-    const contactPreferenceRef = user && doc(db, 'orgs', user.team.org.id, 'userPreferences', user.id)
+    const KEY = useMemo(() => ['user-preferences', user?.id], [user])
 
-    React.useEffect(() => {
+    const contactPreferenceRef = useMemo(() => user && doc(db, 'user-preferences', user.id), [user, db])
+
+    useEffect(() => {
         if (!contactPreferenceRef) return
         const unsubscribe = onSnapshot(contactPreferenceRef, (snapshot) => {
-            console.log("snapshot data", snapshot.data())
+            console.log("snapshot", snapshot)
             queryClient.setQueryData(KEY, snapshot.data());
         })
 
         return () => unsubscribe();
-    }, [queryClient, KEY]);
+    }, [queryClient, KEY, contactPreferenceRef]);
 
-    return useQuery<IUserPrefenreces>(
+    const reactQuery = useQuery<IUserPrefenreces>(
         KEY,
         () => new Promise<IUserPrefenreces>(() => { }),
     );
+
+    return {
+        ...reactQuery,
+        data: reactQuery.data,
+        item: reactQuery.data ?? INITIAL_VALUES
+    }
 }
+
+
 
 export const useUserPreferenceMutation = () => {
     const { user } = useContext(AuthContext)
+    const queryClient = useQueryClient();
 
-    const contactPreferenceRef = user && doc(db, 'orgs', user?.team.org.id, 'userPreferences', user?.id)
+    const contactPreferenceRef = useMemo(() => user && doc(db, 'user-preferences', user.id), [user, db])
 
     return useMutation((preference: IUserPrefenreces) => {
         if (!contactPreferenceRef)
-            return Promise.reject(new Error('user id not set'))
+            return Promise.reject(new Error('user is not set'))
         else
             return setDoc(contactPreferenceRef, preference)
+    }, {
+        onSuccess: () => { queryClient.invalidateQueries('user-preferences', { active: true }) }
     })
 
 }
