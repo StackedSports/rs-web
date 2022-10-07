@@ -25,9 +25,6 @@ const OrganizationSettingsPage = (props) => {
 
         setTeamLogo(user.team.org.logo.original)
     }, [user])
-    console.log(teamLogo)
-
-    console.log(user)
 
     const initialValues = {
         organization: user?.team.org.name,

@@ -99,8 +99,8 @@ const UserAccountCard = (props) => {
 				<Button
 					variant="contained"
 					disabled={props.disabled}
-					disableRipple={props.disabled || props.account}
-					disableElevation={props.disabled || props.account}
+					disableRipple={props.disabled || Boolean(props.account)}
+					disableElevation={props.disabled || Boolean(props.account)}
 					onClick={onLinkAccount}
 					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%", textTransform: "none" }}
 				>
@@ -145,8 +145,6 @@ const UserSettingsAccountPage = (props) => {
 		token: "provider_token",
 		secret: "provider_secret",
 	}
-
-	console.log(user.item)
 
 	return (
 		<UserSettingsPage title='Account'>
