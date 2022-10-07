@@ -24,7 +24,7 @@ const getSelectionLabel = (selectionCount, clearSelection) => {
     )
 }
 
-export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
+export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm, disabledSelection }) => {
 
     const [perPageLocalStorage, setperPageLocalStorage] = useLocalStorage(`contacts-select-dialog-perPage`, 50)
     const contacts = useContacts(1, perPageLocalStorage);
@@ -159,6 +159,7 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
                     pagination={contacts.pagination}
                     loading={contacts.loading}
                     selectedFilters={selectedFilters}
+                    isRowSelectable={(params) => disabledSelection.every(ids => ids !== params.row.id)}
                     {...multipageSelection}
                 />
             </TabPanel>

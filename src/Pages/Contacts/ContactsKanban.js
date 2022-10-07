@@ -25,7 +25,7 @@ import { ContactsSelectDialog } from 'UI/Widgets/Contact/components/ContactsSele
 export const ContactsKanban = () => {
     const { id: kanbanId } = useParams()
     const app = useContext(AppContext);
-    const multipageSelection = useMultiPageSelection_V2([]) // only use set
+    const multipageSelection = useMultiPageSelection_V2([]) // only used set
     const { set: setSelectedContacts, selectedData: selectedContacts } = multipageSelection
 
     const contacts = useContacts();
@@ -33,6 +33,13 @@ export const ContactsKanban = () => {
     const [loading, setLoading] = useState(true)
     const [kanban, setKanban] = useState(null)
     const [showContactSelectDialog, setShowContactSelectDialog] = useState(false);
+    const addedContactsIds = useMemo(() => {
+        if (kanban)
+            return kanban.columns.map(column => column.contacts).flat().map(contact => contact.id)
+        else
+            return []
+
+    }, [kanban])
 
     const tempColumnName = useRef();
 
@@ -218,7 +225,6 @@ export const ContactsKanban = () => {
         _lists[currentIndex].contacts.splice(source.index, 1);
         // insert into next
         _lists[nextIndex].contacts.splice(destination.index, 0, target);
-
         return _lists
     };
 
@@ -343,6 +349,7 @@ export const ContactsKanban = () => {
                 open={showContactSelectDialog}
                 onClose={onCloseSelectionDialog}
                 onSelectionConfirm={onSelectionConfirm}
+                disabledSelection={addedContactsIds}
             />
         </BaseContactsPage>
     )
