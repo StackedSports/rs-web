@@ -35,10 +35,10 @@ export default function ContactsTableServerMode({
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
-    const preferences = useUserPreference()
+    const { item: preferences } = useUserPreference()
 
     useEffect(() => {
-        if (!selectedFilters || !preferences.item.showColumnOnFilter) return
+        if (!selectedFilters || !preferences.showColumnOnFilter) return
         const collums = Object.keys(selectedFilters).map(key => parseColumnsNames(key))
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).
