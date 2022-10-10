@@ -10,6 +10,7 @@ import SearchBar from '../Widgets/SearchBar'
 
 import Logo from 'images/logoRight.png'
 import DefaultTeamLogo from "images/stacked-favicon.png"
+import { Box } from '@mui/material';
 
 export default function TopBar(props) {
     const { user } = useContext(AuthContext)
@@ -27,7 +28,12 @@ export default function TopBar(props) {
     }
 
     return (
-        <div className='TopBar'>
+        <Box
+            className='TopBar'
+            sx={{
+                backgroundColor:'background.paper'
+            }}
+        >
             <div className='TeamLogo'>
                 <img src={teamLogo} onError={onTeamLogoError} />
             </div>
@@ -43,6 +49,6 @@ export default function TopBar(props) {
                 {/* <BiChat className='IconBtn' /> */}
                 <img className='Logo' src={Logo} />
             </div>
-        </div>
+        </Box>
     )
 }

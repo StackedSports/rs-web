@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query"
 import { getContacts, filterContacts, getContact, getContactAssociatedMedia, getContactSentMedia, getContactConversation, getContactStats, updateContact, createContact, getArchivedContacts, archiveContact } from "Api/Endpoints"
 import lodash from "lodash"
 
-export const useContact = (id) => {
+export const useContact = (id: string) => {
     const reactQuery = useQuery(['contact', id], () => getContact(id), {
         select: (data) => data[0],
         enabled: !!id
@@ -17,7 +17,7 @@ export const useContact = (id) => {
     }
 }
 
-export const useContactAssociatedMedia = (id, page, perPage) => {
+export const useContactAssociatedMedia = (id: string, page: number, perPage: number) => {
     const [pagination, setPagination] = usePagination(page, perPage)
     const [associatedMedia, setAssociatedMedia] = useState([])
 
@@ -42,7 +42,7 @@ export const useContactAssociatedMedia = (id, page, perPage) => {
     }
 }
 
-export const useContactSentMedia = (id, page, perPage) => {
+export const useContactSentMedia = (id: string, page?: number, perPage?: number) => {
     const [pagination, setPagination] = usePagination(page, perPage)
     const [sentMedia, setSentMedia] = useState([])
 
@@ -67,7 +67,7 @@ export const useContactSentMedia = (id, page, perPage) => {
     }
 }
 
-export const useContactConversation = (id, page, perPage) => {
+export const useContactConversation = (id: string, page: number, perPage: number) => {
     const [pagination, setPagination] = usePagination(page, perPage)
     const [conversation, setConversation] = useState([])
 
@@ -92,7 +92,7 @@ export const useContactConversation = (id, page, perPage) => {
     }
 }
 
-export const useContactStats = (id) => {
+export const useContactStats = (id: string) => {
     const reactQuery = useQuery(['contact', 'stats', id], () => getContactStats(id), {
         enabled: !!id,
         select: (data) => data[0],
@@ -105,9 +105,9 @@ export const useContactStats = (id) => {
     }
 }
 
-export const useContacts = (currentPage, itemsPerPage, initialFilters, only_archived) => {
+export const useContacts = (page, itemsPerPage, initialFilters, only_archived: boolean = false) => {
     const [filters, setFilters] = useState(initialFilters)
-    const [pagination, setPagination] = usePagination(currentPage, itemsPerPage)
+    const [pagination, setPagination] = usePagination(page, itemsPerPage)
     const [contacts, setContacts] = useState()
 
     const get = only_archived ? getArchivedContacts : (filters && !lodash.isEmpty(filters)) ? filterContacts : getContacts
@@ -125,10 +125,10 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters, only_arch
     }, [reactQuery.isSuccess, reactQuery.data])
 
     useEffect(() => {
-        if (currentPage && currentPage != pagination.currentPage) {
-            pagination.getPage(currentPage)
+        if (page && page != pagination.currentPage) {
+            pagination.getPage(page)
         }
-    }, [currentPage])
+    }, [page])
 
     useEffect(() => {
         if (itemsPerPage && itemsPerPage != pagination.itemsPerPage) {
@@ -161,9 +161,9 @@ export const useContacts = (currentPage, itemsPerPage, initialFilters, only_arch
 export const useContactMutation = () => {
     const queryClient = useQueryClient();
 
-    const update = useMutation(({ id, data }) => updateContact(id, data),
+    const update = useMutation(({ id, data }: { id: string, data: unknown }) => updateContact(id, data),
         {
-            onSuccess: (data, variables, context) => {
+            onSuccess: (_data, variables, _context) => {
                 queryClient.invalidateQueries(['contact', variables.id], { active: true })
                 queryClient.invalidateQueries('contacts')
             },

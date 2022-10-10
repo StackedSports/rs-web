@@ -20,7 +20,7 @@ export const getPagination = (res: any) => {
     }
 }
 
-export const usePagination = (initialPage: number, itemsPerPag: number): [IPagination, (pagination: IPaginationApi) => void] => {
+export const usePagination = (initialPage: number = 1, itemsPerPag: number = 50): [IPagination, (pagination: IPaginationApi) => void] => {
 
     const [currentPage, setCurrentPage] = useState(Number(initialPage) || 1)
     const [itemsPerPage, setItemsPerPage] = useState(Number(itemsPerPag) || 50)

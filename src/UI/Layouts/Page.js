@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import './Page.css'
 
 export function Content(props) {
@@ -9,8 +10,13 @@ export function Content(props) {
 }
 export default function Page(props) {
     return (
-        <div className='Page'>
+        <Box
+            className='Page'
+            sx={{
+                backgroundColor: 'background.secondary'
+            }}
+        >
             {props.children}
-        </div>
+        </Box>
     )
 }

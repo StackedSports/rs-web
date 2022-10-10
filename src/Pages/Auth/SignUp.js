@@ -54,12 +54,12 @@ export default function Signup() {
   const loginUserUsingTwitter = () => {
     setLoading(true);
     auth.loginWithTwitter().
-    catch(error => {
-      app.alert.setError(`You need link your account with Twitter: ${error.response.data.error}`);
-    }).
-    finally(() => {
-      setLoading(false);
-    })
+      catch(error => {
+        app.alert.setError(`You need link your account with Twitter: ${error.response.data.error}`);
+      }).
+      finally(() => {
+        setLoading(false);
+      })
   }
 
   const formik = useFormik({
@@ -210,7 +210,7 @@ export default function Signup() {
                 ),
               }}
             />
-            <Button color='neutral' sx={{ color: '#888888', fontSize: '1rem', ml: 'auto' }}>
+            <Button color='neutral' sx={{ fontSize: '1rem', ml: 'auto' }}>
               Forgot Password?
             </Button>
           </Stack>

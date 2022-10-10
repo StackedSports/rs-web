@@ -15,6 +15,7 @@ export function useUserPreference() {
 
     const INITIAL_VALUES = {
         showColumnOnFilter: true,
+        darkMode: false,
     }
 
     const KEY = useMemo(() => ['user-preferences', user?.id], [user])
@@ -24,7 +25,7 @@ export function useUserPreference() {
     useEffect(() => {
         if (!contactPreferenceRef) return
         const unsubscribe = onSnapshot(contactPreferenceRef, (snapshot) => {
-            console.log("snapshot", snapshot)
+            console.log("snapshot", snapshot.data())
             queryClient.setQueryData(KEY, snapshot.data());
         })
 
@@ -39,11 +40,9 @@ export function useUserPreference() {
     return {
         ...reactQuery,
         data: reactQuery.data,
-        item: reactQuery.data ?? INITIAL_VALUES
+        preferences: reactQuery.data ?? INITIAL_VALUES
     }
 }
-
-
 
 export const useUserPreferenceMutation = () => {
     const { user } = useContext(AuthContext)

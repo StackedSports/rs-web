@@ -9,7 +9,6 @@ import { messageRoutes } from 'Routes/Routes'
 
 import AuthProvider from './Auth/AuthProvider'
 import { ConfirmDialogProvider } from 'Context/ConfirmDialogProvider'
-import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
 
 const AppContext = createContext()
 AppContext.displayName = 'AppContext'

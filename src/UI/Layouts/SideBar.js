@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack'
 import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
 import { routes, messageRoutes } from 'Routes/Routes'
+import { Box } from '@mui/material'
 
 const regularItems = [
     routes.dashboard,
@@ -40,7 +41,12 @@ export default function SideBar(props) {
     // console.log(privateItems)
 
     return (
-        <div className='SideBar'>
+        <Box
+            className='SideBar'
+            sx={{
+                backgroundColor: 'background.paper'
+            }}
+        >
             {privateItems.map(item => (
                 <NavLink key={item.path} className='navLink' activeClassName='selected' to={item.path}>
                     <item.icon className='icon' />
@@ -55,6 +61,6 @@ export default function SideBar(props) {
             >
                 <AccountMenu />
             </Stack>
-        </div>
+        </Box>
     )
 }

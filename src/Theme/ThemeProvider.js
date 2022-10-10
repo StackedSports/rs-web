@@ -7,12 +7,16 @@ import {
     createTheme,
     ThemeProvider as MuiThemeProvider,
     StyledEngineProvider,
-    CssBaseline
+    CssBaseline,
 } from '@mui/material'
 
 import typography from './Components/DataDisplay/Typography'
+import { darkPallete, lightPallete } from './Components/DataDisplay/Pallete'
+import { components } from './Components/DataDisplay/Components'
+import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
+import { useEffect, useMemo } from 'react'
 
-let theme = createTheme({
+/* let theme = createTheme({
     palette: {
         mode: 'light',
         primary: {
@@ -99,6 +103,7 @@ theme = createTheme(theme, {
         }
     }
 })
+ */
 
 //  /**
 //   * Material UI theme config for "Light Mode"
@@ -125,15 +130,61 @@ theme = createTheme(theme, {
 //          },
 //          ...FONT_COLORS,
 //      },
-
 //  };
 
-/**
- * Material UI Provider with Light and Dark themes depending on global "state.darkMode"
- */
+let theme2 = createTheme({
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: '#3871da',
+            contrastText: '#fff',
+        },
+        secondary: {
+            main: '#ffb74d',
+            contrastText: '#000',
+        },
+        info: {
+            main: '#0277bd',
+            contrastText: '#FFFFFF',
+        },
+        success: {
+            main: '#2e7d32',
+            contrastText: '#FFFFFF',
+        },
+        warning: {
+            main: '#f9a825',
+            contrastText: '#FFFFFF',
+        },
+        error: {
+            main: '#c62828',
+            contrastText: '#FFFFFF',
+        },
+        neutral: {
+            main: '#1f1919',
+            contrastText: '#FFFFFF',
+        },
+        background: {
+            default: '#FFFFFF',
+            paper: '#FFFFFF',
+        },
+    },
+    typography,
+})
+
+const getDesignTokens = (isDarkMode) => ({
+    palette: isDarkMode ? darkPallete : lightPallete,
+    components: components,
+    typography: typography
+})
+
+
 const ThemeProvider = ({ children }) => {
 
-    //    const theme = createTheme(LIGHT_THEME);
+    const { preferences } = useUserPreference()
+
+    const theme = useMemo(() => createTheme(getDesignTokens(preferences.darkMode)), [preferences]);
+    
+    useEffect(()=>{console.log(preferences.darkMode)},[preferences])
 
     return (
         <StyledEngineProvider injectFirst>

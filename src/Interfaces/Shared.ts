@@ -47,4 +47,5 @@ export interface IFilterOption<T> {
 
 export interface IUserPrefenreces {
     showColumnOnFilter: boolean;
+    darkMode: boolean
 }

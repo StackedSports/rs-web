@@ -35,7 +35,7 @@ export default function ContactsTableServerMode({
     const columns = mini ? columnsMini : columnsFull
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
-    const { item: preferences } = useUserPreference()
+    const { preferences } = useUserPreference()
 
     useEffect(() => {
         if (!selectedFilters || !preferences.showColumnOnFilter) return

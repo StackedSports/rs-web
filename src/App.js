@@ -48,8 +48,8 @@ const queryClient = new QueryClient({
 	}
 })
 
-const localStoragePersistor = createWebStoragePersistor({storage: window.localStorage})
- 
+const localStoragePersistor = createWebStoragePersistor({ storage: window.localStorage })
+
 persistQueryClient({
 	queryClient,
 	persistor: localStoragePersistor,
@@ -57,9 +57,9 @@ persistQueryClient({
 
 function App() {
 	return (
-		<ThemeProvider>
-			<QueryClientProvider client={queryClient}>
-				<AppProvider>
+		<QueryClientProvider client={queryClient}>
+			<AppProvider>
+				<ThemeProvider>
 					<FirebaseDataCollection>
 						<div className="body">
 							<Switch>
@@ -79,14 +79,14 @@ function App() {
 								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 
-								<Route path="/super" component={StuckMessages}/>
+								<Route path="/super" component={StuckMessages} />
 							</Switch>
 						</div>
 					</FirebaseDataCollection>
-				</AppProvider>
-				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
-			</QueryClientProvider>
-		</ThemeProvider>
+					{/* <ReactQueryDevtools initialIsOpen={false} /> */}
+				</ThemeProvider>
+			</AppProvider>
+		</QueryClientProvider>
 	);
 }
 

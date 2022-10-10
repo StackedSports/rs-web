@@ -116,7 +116,10 @@ export default function Panel(props) {
         <Box
             className={`${props.hideHeader ? 'PainelBlank' : 'Panel'}`}
             ref={props.panelRef}
-            sx={props.sx}
+            sx={{
+                backgroundColor: 'background.paper',
+                ...props.sx
+            }}
         >
             {!props.hideHeader &&
                 <Box
@@ -124,11 +127,12 @@ export default function Panel(props) {
                         borderBottom: 1,
                         borderColor: 'divider',
                         marginBottom: 10,
+                        paddingInline: '30px',
                         position: 'sticky',
                         top: 0,
                         backgroundColor: 'background.paper',
                         zIndex: 1000,
-                        mb:0.5
+                        mb: 0.5
                     }}
                 >
                     <div className='Header'>
@@ -151,7 +155,9 @@ export default function Panel(props) {
                     <PanelFilters {...props.propsPanelFilters} />
                 </Box>
             }
-            {props.children}
+            <Box className='Content'>
+                {props.children}
+            </Box>
         </Box>
     )
 }

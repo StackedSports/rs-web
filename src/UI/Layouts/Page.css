@@ -3,14 +3,13 @@
     width: 100%;
     min-height: 0;
     height: 100vh;
-    background-color: rgb(233, 234, 239);
     transition: none;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
 }
 
-.Page .Content {
+.Page > .Content {
     position: relative;
     margin-left: 0;
     padding: 10px;
@@ -24,7 +23,7 @@
 }
 
 @media screen and (min-width: 1000px) {
-    .Page .Content {
+    .Page > .Content {
         padding-right: 16px;
         margin-left: 60px;
     }
