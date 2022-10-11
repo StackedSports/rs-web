@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useMemo, RefObject } from 'react';
-import lodashDebounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 
 /**
  * @description
@@ -12,7 +12,7 @@ import lodashDebounce from 'lodash.debounce';
  */
 export const useBottomScrollListener = (onBottom: () => void, offset: number = 0, triggerOnNoScroll: boolean = false): RefObject<HTMLElement> => {
 
-    const debouncedOnBottom = useMemo(() => lodashDebounce(onBottom, 400, { leading: true }), [onBottom]);
+    const debouncedOnBottom = useMemo(() => debounce(onBottom, 400, { leading: true }), [onBottom]);
     const containerRef = useRef<HTMLElement>(null);
 
     const handleOnScroll = useCallback(() => {

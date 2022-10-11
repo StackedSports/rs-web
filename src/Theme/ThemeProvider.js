@@ -10,9 +10,9 @@ import {
     CssBaseline,
 } from '@mui/material'
 
-import typography from './Components/DataDisplay/Typography'
-import { darkPallete, lightPallete } from './Components/DataDisplay/Pallete'
-import { components } from './Components/DataDisplay/Components'
+import typography from './Components/Typography'
+import { darkPallete, lightPallete } from './Components/Pallete'
+import { components } from './Components/Components'
 import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
 import { useEffect, useMemo } from 'react'
 
