@@ -1,5 +1,5 @@
 import './SideBar.css'
-import { useContext, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 
 import { NavLink } from 'react-router-dom'
 

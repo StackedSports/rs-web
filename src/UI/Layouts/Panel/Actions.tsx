@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, IconButton } from '@mui/material';
-import { actionType, PanelDropdown, panelDropdownOptionsType } from './PanelDropdown';
+import { PanelDropdown, panelDropdownOptionsType } from './PanelDropdown';
 
 type iconType = {
     type: 'icon',
