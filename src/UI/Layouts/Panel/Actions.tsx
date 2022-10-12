@@ -36,7 +36,6 @@ export type ActionsProps = {
 } & (iconType | dropdownType | buttonType)
 
 export const Actions: React.FC<ActionsProps> = (props) => {
-    console.log(props)
     if (props.type === 'icon')
         return (
             <IconButton

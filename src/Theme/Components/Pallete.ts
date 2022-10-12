@@ -1,6 +1,7 @@
 const common = {
     primary: {
         main: '#3871da',
+        dark: '#7289da',
     },
     secondary: {
         main: '#f50057',
@@ -25,20 +26,23 @@ const common = {
 
 export const lightPallete = {
     mode: 'light',
+    ...common,
     background: {
         paper: '#fff',
         default: '#fafafa',
         secondary: '#e9eaef'
     },
-    ...common
 }
 
 export const darkPallete = {
     mode: 'dark',
+    ...common,
+    primary: {
+        main: '#5865f2',
+    },
     background: {
         default: '#303030',
         paper: '#424242',
         secondary: '#303030'
     },
-    ...common
 }
