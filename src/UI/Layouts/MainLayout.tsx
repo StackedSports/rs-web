@@ -7,7 +7,7 @@ import MuiAlert from '@mui/material/Alert'
 import Page from './Page'
 import Content from './Content'
 import TopBar from './TopBar'
-import SideBar from './SideBar/SideBar'
+import SideBar from './SideBar'
 import Panel from './Panel'
 
 import SideFilter from '../Widgets/SideFilter'

@@ -1,10 +1,13 @@
 import React from 'react'
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, SvgIconTypeMap } from '@mui/material';
 import { PanelDropdown, panelDropdownOptionsType } from './PanelDropdown';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 type iconType = {
     type: 'icon',
-    icon: React.ReactElement,
+    icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+        muiName: string;
+    },
     onClick: () => void,
     variant?: never,
     style?: never,
@@ -41,7 +44,8 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                 disabled={props.disabled}
                 onClick={props.onClick}
             >
-                {props.icon && <props.icon />}
+
+                {<props.icon />}
             </IconButton>
         )
     else if (props.type === 'dropdown')
@@ -61,6 +65,7 @@ export const Actions: React.FC<ActionsProps> = (props) => {
         return (
             <Button
                 variant={props.variant}
+                // @ts-ignore: dont know how to fix this error
                 endIcon={props.icon && <props.icon />}
                 onClick={props.onClick}
                 disabled={props.disabled}

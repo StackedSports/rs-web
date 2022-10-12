@@ -1,6 +1,6 @@
 const common = {
     primary: {
-        main: '#0277bd',
+        main: '#3871da',
     },
     secondary: {
         main: '#f50057',

@@ -31,6 +31,7 @@ export const PanelDropdown: React.FC<PanelDropdownProps> = ({ action, header }) 
             <Button
                 style={{ marginLeft: 0, ...action?.style }}
                 variant={action.variant}
+                // @ts-ignore: Unreachable code error 
                 endIcon={<action.icon />}
             >
                 {action.name}
