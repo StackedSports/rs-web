@@ -79,7 +79,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                             action={{
                                 name: 'Action',
                                 variant: 'text',
-                                options: props.actions || [],
+                                options: props.actions || [],                                
                             }}
                         />
                     }

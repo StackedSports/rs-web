@@ -6,13 +6,12 @@ import { BiChat, BiBell } from "react-icons/bi";
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
-import SearchBar from '../Widgets/SearchBar'
 
 import Logo from 'images/logoRight.png'
 import DefaultTeamLogo from "images/stacked-favicon.png"
 import { Box } from '@mui/material';
 
-export default function TopBar(props) {
+export const TopBar = (props) => {
     const { user } = useContext(AuthContext)
     const [teamLogo, setTeamLogo] = useState(DefaultTeamLogo)
 
@@ -31,7 +30,7 @@ export default function TopBar(props) {
         <Box
             className='TopBar'
             sx={{
-                backgroundColor:'background.paper'
+                backgroundColor: 'background.paper'
             }}
         >
             <div className='TeamLogo'>
@@ -43,10 +42,7 @@ export default function TopBar(props) {
                 </div>
             )}
             <div className='FlexRight'>
-                {/* <SearchBar placeholder='Power search' /> */}
-                {/* <BiBell className='IconBtn' /> */}
                 <Link to="/new-chat"><BiChat className='IconBtn' /></Link>
-                {/* <BiChat className='IconBtn' /> */}
                 <img className='Logo' src={Logo} />
             </div>
         </Box>

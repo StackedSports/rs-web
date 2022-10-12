@@ -17,7 +17,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import WrapTextIcon from '@mui/icons-material/WrapText';
 
 import Button from 'UI/Widgets/Buttons/Button';
-import { PanelDropdown } from 'UI/Layouts/Panel';
+import { PanelDropdown } from 'UI/Layouts/Panel/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
 import { EmojiPicker } from 'UI/Forms/Inputs/MessageInput';
 import { Dropdown } from 'UI/Widgets/DropdownMui';

@@ -4,9 +4,10 @@ import { Redirect } from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 
-import Page, { Content } from './Page'
+import Page from './Page'
+import Content from './Content'
 import TopBar from './TopBar'
-import SideBar from './SideBar'
+import SideBar from './SideBar/SideBar'
 import Panel from './Panel'
 
 import SideFilter from '../Widgets/SideFilter'
@@ -16,6 +17,7 @@ export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'
 
 import { ISideFilter } from 'Interfaces'
 import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
+import { ActionsProps } from './Panel/Actions'
 
 interface MainLayoutProps {
     topActionName?: string;
@@ -24,7 +26,7 @@ interface MainLayoutProps {
     title?: string;
     filters?: ISideFilter[];
     onFilterSelected?: (item: any, itemIndex: number, index: number) => void;
-    actions?: Record<string, unknown>[];
+    actions?: ActionsProps[];
     onBackClick?: () => void;
     propsPanelFilters?: IPanelFilterProps;
     panelRef?: React.Ref<unknown> | undefined;

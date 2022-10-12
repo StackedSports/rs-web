@@ -1,15 +1,6 @@
-.Page {
-    /* position: relative; */
-    width: 100%;
-    min-height: 0;
-    height: 100vh;
-    transition: none;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
+import { Box, styled } from '@mui/material'
 
-.Page > .Content {
+export const ContentWrapper = styled(Box)`
     position: relative;
     margin-left: 0;
     padding: 10px;
@@ -20,11 +11,9 @@
     overflow-y: auto;
     max-height: 100vh;
     margin-bottom: 8px;
-}
 
-@media screen and (min-width: 1000px) {
-    .Page > .Content {
+    @media screen and (min-width: 1000px) {
         padding-right: 16px;
         margin-left: 60px;
     }
-}
+`
