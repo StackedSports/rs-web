@@ -18,7 +18,7 @@ type dropdownType = {
     options?: panelDropdownOptionsType[]
 }
 type buttonType = {
-    onClick: () => void
+    onClick: () => void,
     type?: 'button',
     variant?: "text" | "outlined" | "contained",
     style?: never,

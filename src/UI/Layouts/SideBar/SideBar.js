@@ -44,7 +44,7 @@ export default function SideBar(props) {
         <Box
             className='SideBar'
             sx={{
-                backgroundColor: 'background.paper'
+                backgroundColor: 'background.default'
             }}
         >
             {privateItems.map(item => (
