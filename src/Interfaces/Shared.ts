@@ -45,6 +45,13 @@ export interface IFilterOption<T> {
     value: T;
 }
 
+export interface IUrls {
+    thumb: string;
+    medium: string;
+    large: string;
+    original: string;
+}
+
 export interface IUserPrefenreces {
     showColumnOnFilter: boolean;
     darkMode: boolean

@@ -402,7 +402,7 @@ export const coachTypes = [
 ]
 
 export const postTo = [
-    'Send on the behalf of',
+    //'Send on the behalf of',
     'Area Recruiting Coach',
     'Position Coach'
 ]

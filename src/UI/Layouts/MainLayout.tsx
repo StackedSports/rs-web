@@ -19,9 +19,10 @@ import { ISideFilter } from 'Interfaces'
 import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
 import { ActionsProps } from './Panel/Actions'
 
-interface MainLayoutProps {
+export interface IMainLayoutProps {
     topActionName?: string;
     onTopActionClick?: () => void;
+    onTopActionTo?: string | { pathname: string, state?: unknown, search?: string };
     filtersDisabled?: boolean;
     title?: string;
     filters?: ISideFilter[];
@@ -36,9 +37,10 @@ interface MainLayoutProps {
     loading?: boolean;
     children?: React.ReactNode;
     alert?: any;
+    hideHeader?: boolean
 }
 
-export default function MainLayout(props: MainLayoutProps) {
+export default function MainLayout(props: IMainLayoutProps) {
     const [displayFilters, setDisplayFilters] = useState(true)
 
     return (
@@ -46,6 +48,7 @@ export default function MainLayout(props: MainLayoutProps) {
             <TopBar
                 actionTitle={props.topActionName}
                 onActionClick={props.onTopActionClick}
+                onActionLink={props.onTopActionTo}
             />
             <SideBar />
             <Content>
@@ -67,6 +70,7 @@ export default function MainLayout(props: MainLayoutProps) {
                     showBackBoardToContacts={props.showBackBoardToContacts}
                     onBackBoardToContacts={props.onBackBoardToContacts}
                     panelRef={props.panelRef}
+                    hideHeader={props.hideHeader}
                 >
                     {props.alert && (
                         <Snackbar

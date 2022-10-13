@@ -13,7 +13,6 @@ import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
 import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from '../Tweet/TweetPage'
 
 import TweetDetails from './Components/TweetDetails'
 
@@ -21,6 +20,7 @@ import { AppContext } from 'Context/AppProvider'
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import { tweetPostRoutes } from 'Routes/Routes'
+import { BaseTweetRankingPage } from './BaseTweetRankingPage'
 
 const TweetsArchivedPage = (props) => {
     const { redirect } = useContext(AppContext)
@@ -76,7 +76,7 @@ const TweetsArchivedPage = (props) => {
     }
 
 	return (
-		<TweetPage
+		<BaseTweetRankingPage
 		  title="Tweet Reports"
 		>
 			<Stack spacing={3}>
@@ -124,7 +124,7 @@ const TweetsArchivedPage = (props) => {
                     </Stack>
                 </RenderIf>
 			</Stack >
-		</TweetPage >
+		</BaseTweetRankingPage >
 	)
 }
 

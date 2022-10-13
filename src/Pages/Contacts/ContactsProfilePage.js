@@ -20,7 +20,7 @@ export default function ContactsProfilePage(props) {
     const history = useHistory()
     const contact = useContact(id)
     const [openCreateContactDialog, setOpenCreateContactDialog] = useState(false)
-    const [openAlert, setOpenAlert] = useState(contact.item?.archived || true);
+    const [openAlert, setOpenAlert] = useState(contact.item?.archived || false)
 
 
     const [redirect, setRedirect] = useState('')
@@ -55,8 +55,9 @@ export default function ContactsProfilePage(props) {
             onBackClick={() => history.goBack()}
             loading={loading}
             redirect={redirect}
+            // hideHeader
         >
-            {openAlert &&
+            {contact.item?.archived &&
                 <Alert severity="warning" variant="filled" onClose={() => setOpenAlert(false)} sx={{ mb: 1 }}>
                     This contact is archived.
                 </Alert>
@@ -65,6 +66,7 @@ export default function ContactsProfilePage(props) {
                 flex={1}
                 direction="row"
                 spacing={1}
+                mt={1}
             >
                 <ContactProfileDetails
                     loading={contact.loading}

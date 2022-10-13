@@ -190,7 +190,8 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 									selectionModel={selectedFilters[filterName]}
 									checkboxSelection
 									showSearchInput
-									{...filter}
+									options={filter.options}
+									label={filter.label}
 								/>
 							)
 					})}

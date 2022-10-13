@@ -26,7 +26,8 @@ import {
 	UserSettingsRoutes,
 	routes,
 	TweetRankingRoutes,
-	ChatRoutes
+	ChatRoutes,
+	TweetRoutes
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
@@ -71,7 +72,7 @@ function App() {
 								<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 								<Route path={routes.dashboard.path} component={NewDashboard} />
 								<Route path={routes.tweet.path} component={TweetRankingRoutes} />
-								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
+								<Route path={routes.tweetPost.path} component={TweetRoutes} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 
 								<Route path="/super" component={StuckMessages} />
