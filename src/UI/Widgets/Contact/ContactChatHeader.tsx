@@ -53,7 +53,7 @@ const ContactChatHeader = (props) => {
 	const [availablePlatforms, setAvailablePlatforms] = useState<IMessagingPlatform[] | null>(null)
 	const [platformSelectedId, setPlatformSelectedId] = useState<TMessagingPlatformID | null>(null)
 
-	console.log(props.contact)
+	//console.log(props.contact)
 
 	useEffect(() => {
 		if (!props.contact)

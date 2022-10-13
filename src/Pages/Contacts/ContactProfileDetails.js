@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { ListItemButton, List, ListItem } from '@mui/material';
+import { ListItemButton, List, ListItem, Box } from '@mui/material';
 import * as Yup from "yup";
 import { subYears } from "date-fns";
 import lodash from 'lodash'
@@ -83,12 +83,12 @@ const ContactProfileDetails = (props) => {
 
 	//console.log(status2)
 
-	useEffect(() => {
-		if (props.contact) {
-			console.log("Effect details contact")
-			console.log(props.contact)
-		}
-	}, [props.contact])
+	/* 	useEffect(() => {
+			if (props.contact) {
+				console.log("Effect details contact")
+				console.log(props.contact)
+			}
+		}, [props.contact]) */
 
 	const initialValues = useMemo(() => ({
 		general: {
@@ -104,9 +104,9 @@ const ContactProfileDetails = (props) => {
 			graduation_year: props.contact?.grad_year,
 			high_school: props.contact?.high_school,
 			state: props.contact?.state,
-			status: props.contact?.status?.status,
+			status: props.contact?.status,
 			status_2: props.contact?.status_2 || "",
-			rank: props.contact?.rank?.rank,
+			rank: props.contact?.rank,
 			ets_code: props.contact?.ets_code || "",
 			time_zone: props.contact?.time_zone,
 		},
@@ -139,7 +139,6 @@ const ContactProfileDetails = (props) => {
 		Object.keys(data).forEach(key => {
 			switch (key) {
 				case 'status':
-				case 'rank':
 				case 'position_coach':
 				case 'recruiting_coach':
 				case 'coordinator':
@@ -156,6 +155,9 @@ const ContactProfileDetails = (props) => {
 				case 'time_zone':
 					newData[key] = data[key].name
 					break
+				case 'rank':
+					newData[`${key}_id`] = data[key].id
+					break
 				default:
 					newData[key] = data[key] || ''
 					break
@@ -167,9 +169,7 @@ const ContactProfileDetails = (props) => {
 
 	const onUpdateContact = (values, control, index) => {
 		console.log(values)
-
 		let data = getOnlyNewValues(initialValues[control], values)
-		// console.log('aa')
 		console.log(data)
 		console.log(parseValues(data))
 
@@ -188,18 +188,20 @@ const ContactProfileDetails = (props) => {
 
 				let countEqual = 0
 				let countDif = 0
+				const totalUpdate = Object.keys(updateData).length
 
-				Object.keys(updateData)
+				Object.keys(props.contact)
 					.forEach(key => {
-						if (lodash.isEqual(updateData[key], res.data[key]))
+						if (lodash.isEqual(props.contact[key], res.data[key]))
 							countEqual++
-						else
+						else {
 							countDif++
+						}
 					})
 
-				if (countEqual === 0) {
+				if (countDif === 0) {
 					app.alert.setError('Contact update failed!')
-				} else if (countDif === 0) {
+				} else if (countDif === totalUpdate) {
 					props.onContactUpdated(res.data)
 					app.alert.setSuccess('Contact updated successfully!')
 					onAccordionFieldReset(index)
@@ -395,7 +397,6 @@ const ContactProfileDetails = (props) => {
 		}
 
 		if (data.excludeTagsIds) {
-			console.log("excludeTagsIds", data.excludeTagsIds)
 			setSavingContactAtIndex(indexAccordion, true)
 			untagContact(data.excludeTagsIds, props.contact.id)
 				.then(res => {
@@ -449,10 +450,10 @@ const ContactProfileDetails = (props) => {
 
 	const onSuccessRelationship = (relationship) => {
 		if (familyMember) {
-			console.log("relationship updated ", relationship)
+			//console.log("relationship updated ", relationship)
 			app.alert.setSuccess(`Relationship updated: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
 		} else {
-			console.log("new relationship Created ", relationship)
+			//console.log("new relationship Created ", relationship)
 			app.alert.setSuccess(`New relationship created: ${relationship?.relationship_type?.description}: ${getFullName(relationship)} !`)
 		}
 		props.refreshContact()
@@ -500,7 +501,14 @@ const ContactProfileDetails = (props) => {
 		<Stack
 			pr={1}
 			spacing={1}
-			sx={{ width: '350px', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			flex={'1 0 0'}
+			sx={{
+				maxWidth: '350px',
+				overflowY: "auto",
+				borderRight: "#efefef  1px solid",
+				minHeight: 0,
+				overscrollBehavior: 'contain'
+			}}
 		>
 			<CreatePersonDialog
 				open={openNewFamilyMemberDialog}
@@ -656,8 +664,8 @@ const ContactProfileDetails = (props) => {
 								value={formikProps.values.status}
 								options={status.items || []}
 								loading={status.loading}
-								isOptionEqualToValue={(option, value) => option?.status === value}
-								getOptionLabel={(option) => option.status || option || ""}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								getOptionLabel={(option) => option.status}
 								onChange={(newValue) => {
 									console.log(newValue)
 									formikProps.setFieldValue('status', newValue)
@@ -670,10 +678,10 @@ const ContactProfileDetails = (props) => {
 								label="Status2"
 								placeholder="Search"
 								value={formikProps.values.status_2}
-								options={status2.items || []}
+								options={status2.items.map(status => status.value)}
 								loading={status2.loading}
 								isOptionEqualToValue={(option, value) => option === value}
-								getOptionLabel={(option) => option || ""}
+								getOptionLabel={(option) => option}
 								freeSolo
 								onChange={(newValue) => {
 									// console.log(newValue)
@@ -690,9 +698,9 @@ const ContactProfileDetails = (props) => {
 								value={formikProps.values.rank}
 								options={ranks.items}
 								loading={ranks.loading}
-								isOptionEqualToValue={(option, value) => option.rank === value || option.rank === value?.rank}
-								getOptionLabel={(option) => option.rank || option}
-								getChipLabel={(option) => option.rank}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								getOptionLabel={(option) => option?.rank || option}
+								getChipLabel={(option) => option?.rank || option}
 								onChange={(newValue) => {
 									formikProps.setFieldValue('rank', newValue)
 									onAccordionFieldChange(1)
@@ -1049,7 +1057,6 @@ const ContactProfileDetails = (props) => {
 					onClick={() => handleArchived()}
 				/>
 			</AccordionComponent>
-
 		</Stack>
 	)
 }
