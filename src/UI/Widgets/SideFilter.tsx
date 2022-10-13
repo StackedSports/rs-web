@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { ISideFilter } from 'Interfaces';
 
 function Category(props) {
     // TODO: change to expanded
@@ -61,7 +60,7 @@ function Category(props) {
                     else
                         return (
                             <p key={item.id}
-                                style={item.isSelected ? { color: '#222', fontWeight: 'bold' } : null}
+                                style={item.isSelected ? { color: '#222', fontWeight: 'bold' } : undefined}
                                 onClick={(e) => onItemClick(e, item, index)}
                             >
                                 {item.name}

@@ -502,6 +502,7 @@ const ContactProfileDetails = (props) => {
 			pr={1}
 			spacing={1}
 			flex={'1 0 0'}
+			minHeight={0}
 			sx={{
 				maxWidth: '350px',
 				overflowY: "auto",
