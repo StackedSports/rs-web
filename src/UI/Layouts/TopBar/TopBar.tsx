@@ -11,7 +11,7 @@ import { TopBarWrapper } from './TopBar.styled';
 interface TopBarProps {
     actionTitle?: string,
     onActionClick?: () => void,
-    onActionLink?: string
+    onActionLink?: string | { pathname: string, state?: unknown, search?: string };
 }
 
 export const TopBar: React.FC<TopBarProps> = (props) => {
@@ -38,6 +38,7 @@ export const TopBar: React.FC<TopBarProps> = (props) => {
                 props.onActionLink ? (
                     <Button
                         className='Button'
+                        variant='contained'
                         component={Link}
                         to={props.onActionLink}
                     >
@@ -48,7 +49,6 @@ export const TopBar: React.FC<TopBarProps> = (props) => {
                         className='Button'
                         variant='contained'
                         onClick={props.onActionClick}
-                        disableElevation
                     >
                         {props.actionTitle}
                     </Button>

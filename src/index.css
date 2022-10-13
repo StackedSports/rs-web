@@ -7,11 +7,8 @@ body {
   -ms-overflow-style: none !important; /* IE and Edge */
   scrollbar-width: none !important;
   scroll-behavior: smooth;
-  min-height:100vh;
-
+  min-height: 100vh;
 }
-
-
 
 /* width */
 ::-webkit-scrollbar {
@@ -21,17 +18,17 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #ccc; 
+  background: #ccc;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #999; 
+  background: #999;
 }
 
 code {
