@@ -1,4 +1,6 @@
-export const components = {
+import { colors, Components, Theme } from "@mui/material"
+
+export const components: Components<Omit<Theme, "components">> = {
     MuiTooltip: {
         styleOverrides: {
             tooltip: {
@@ -7,37 +9,14 @@ export const components = {
         }
     },
     MuiButton: {
+        defaultProps: {
+            disableElevation: true,
+        },
         styleOverrides: {
             root: {
                 fontFamily: 'ProximaNovaSemibold',
                 textTransform: "capitalize",
             },
-            outlined: {
-                color: '#212529',
-                border: '1px solid #ddd',
-                '&:focus': {
-                    backgroundColor: 'white',
-                    border: '1px solid theme.palette.primary.main',
-                    color: 'theme.palette.primary.main'
-                }
-            },
-            contained: {
-                color: 'white',
-
-            },
-            endIcon: ({ ownerState, theme }) => {
-                let color = theme.palette.primary.main
-
-                if (ownerState.variant === 'contained')
-                    color = 'white'
-                if (ownerState.disabled)
-                    color = 'inherit'
-
-                return {
-                    color
-                }
-            }
-
         }
     }
 }

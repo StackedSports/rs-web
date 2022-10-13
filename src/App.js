@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 
 import Signup from "Pages/Auth/SignUp";
 // import Dashboard from "./components/dashboard/index";
@@ -16,8 +15,6 @@ import Signup from "Pages/Auth/SignUp";
 
 import StuckMessages from './Pages/AdminPanel/StuckMessages'
 import NewDashboard from "./Pages/Dashboard";
-
-// import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
 import FirebaseDataCollection from 'Api/Firebase/FirebaseDataCollection'
 
