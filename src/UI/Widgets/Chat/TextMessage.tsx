@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { RenderMediaType } from '../Media/RenderMediaType';
 import { getFileType } from 'utils/Helper';
-import { formatDate, getNiceDate } from 'utils/Parser';
+import { getNiceDate } from 'utils/Parser';
 import { IConversatition } from 'Interfaces';
 interface TextMessageProps {
     actionActive?: boolean;
@@ -74,6 +74,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                             maxWidth: '300px',
                             wordWrap: 'break-word',
                             overflowWrap: 'break-word',
+                            whiteSpace: 'pre-line',
                             '>a': { textDecoration: 'underline', color: 'primary.main' }
                         }}
                     >

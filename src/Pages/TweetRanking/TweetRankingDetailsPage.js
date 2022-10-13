@@ -11,11 +11,11 @@ import { db, functions } from 'Api/Firebase'
 import SearchBar from 'UI/Widgets/SearchBar'
 import Button from 'UI/Widgets/Buttons/Button'
 import RenderIf from 'UI/Widgets/RenderIf'
-import TweetPage from '../Tweet/TweetPage'
 
 import TweetDetails from './Components/TweetDetails'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
+import { BaseTweetRankingPage } from './BaseTweetRankingPage'
 
 const TweetRankingDetailsPage = (props) => {
 	const { user } = useContext(AuthContext)
@@ -70,7 +70,9 @@ const TweetRankingDetailsPage = (props) => {
 	}
 
 	return (
-		<TweetPage title="Post Deep Dive">
+		<BaseTweetRankingPage
+		title="Post Deep Dive"
+		>
 			<Stack spacing={3}>
 
 				{/* <SearchBar
@@ -131,7 +133,7 @@ const TweetRankingDetailsPage = (props) => {
 					</Stack>
 				</RenderIf>
 			</Stack >
-		</TweetPage >
+		</BaseTweetRankingPage >
 	)
 }
 

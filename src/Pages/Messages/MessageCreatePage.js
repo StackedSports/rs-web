@@ -360,6 +360,7 @@ export default function MessageCreatePage(props) {
     }
 
     const onMediaSelected = (item, type) => {
+        console.log(item,type)
         setMediaSelected({
             item,
             type

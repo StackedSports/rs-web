@@ -1,3 +1,4 @@
+import { IUrls } from "./Shared"
 
 
 export type InboxType = 'sms' | 'dm'
@@ -44,18 +45,11 @@ export interface IUserInboxAPI {
     last_message: IUserInboxMessageAPI,
     team_contact: IUserInboxContactAPI
 }
-
-export interface Urls {
-    thumb: string;
-    medium: string;
-    large: string;
-    original: string;
-}
-export interface IMedia {
+export interface IMediaChat {
     id?: number | string;
     name: string;
     file_type: string;
-    urls: Urls;
+    urls: IUrls;
     hashid: string;
 }
 
@@ -65,7 +59,7 @@ export interface IConversatitionAPI {
     from: string;
     to?: any;
     created_at: Date;
-    media: IMedia | IMedia[];
+    media: IMediaChat | IMediaChat[];
     team_contact_id: number;
 }
 export interface IConversatition {
@@ -75,7 +69,7 @@ export interface IConversatition {
     from: string;
     to?: any;
     created_at: Date;
-    media: IMedia | IMedia[];
+    media: IMediaChat | IMediaChat[];
     team_contact_id: number;
 }
 

@@ -34,6 +34,7 @@ export const PanelWrapper = styled(Box)(({ theme }) => ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-end',
+            gap: theme.spacing(1.3)
         },
 
         '.Title': {

@@ -26,7 +26,7 @@ export const UserSettingsPreferencesPage: React.FC = () => {
         {
             name: 'Save Settings',
             onClick: formik.submitForm,
-            variant: 'contained',
+            variant: 'outlined',
         },
     ]
 

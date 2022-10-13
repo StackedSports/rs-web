@@ -24,7 +24,6 @@ interface PanelDropdownProps {
 }
 
 export const PanelDropdown: React.FC<PanelDropdownProps> = ({ action, header }) => {
-    console.log(action)
     if (!header) {
 
         header = () => (

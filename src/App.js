@@ -7,7 +7,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 
 import Signup from "Pages/Auth/SignUp";
 // import Dashboard from "./components/dashboard/index";
@@ -16,8 +15,6 @@ import Signup from "Pages/Auth/SignUp";
 
 import StuckMessages from './Pages/AdminPanel/StuckMessages'
 import NewDashboard from "./Pages/Dashboard";
-
-// import MessageCreatePage from 'Pages/Messages/MessageCreatePage'
 
 import FirebaseDataCollection from 'Api/Firebase/FirebaseDataCollection'
 
@@ -29,7 +26,8 @@ import {
 	UserSettingsRoutes,
 	routes,
 	TweetRankingRoutes,
-	ChatRoutes
+	ChatRoutes,
+	TweetRoutes
 } from 'Routes'
 
 import ThemeProvider from 'Theme/ThemeProvider'
@@ -74,7 +72,7 @@ function App() {
 								<Route path={routes.userSettings.path} component={UserSettingsRoutes} />
 								<Route path={routes.dashboard.path} component={NewDashboard} />
 								<Route path={routes.tweet.path} component={TweetRankingRoutes} />
-								<Route path={routes.tweetPost.path} component={TweetCreatePage} />
+								<Route path={routes.tweetPost.path} component={TweetRoutes} />
 								<Route path={chatRoutes.all} component={ChatRoutes} />
 
 								<Route path="/super" component={StuckMessages} />
