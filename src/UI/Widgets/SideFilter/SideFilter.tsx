@@ -1,16 +1,20 @@
 import './SideFilter.css'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
+import { ISideFilter } from 'Interfaces'
 
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { Button, Collapse, ListItemButton, Stack } from '@mui/material';
+import { SideFilterWrapper } from './SideFilters.styled';
 
 function Category(props) {
     // TODO: change to expanded
-    const [collapsed, setCollapsed] = useState(true)//)
+    const [collapsed, setCollapsed] = useState(true)
 
-    const onHeaderClick = (e) => {
-        setCollapsed(!collapsed)
+    const onHeaderClick = () => {
+        setCollapsed((prev) => !prev)
     }
 
     const onItemClick = (e, item, index) => {
@@ -27,35 +31,50 @@ function Category(props) {
 
     if (!props.items) {
         return (
-            <div className='Category'>
-                <div className='Category-Header'>
-                    <NavLink exact={false} className='Category-Header link' to={props?.path || ''}>
-                        <ArrowForwardIosIcon className='IconNormal' />
-                        <h3 className='Title'>{props.title}</h3>
-                    </NavLink>
-                </div>
+            <div className='Category-Header'>
+                <NavLink className='Category-Header link' to={props?.path || ''}>
+                    <ArrowForwardIosIcon className='IconNormal' />
+                    <h3 className='Title'>{props.title}</h3>
+                </NavLink>
             </div>
         )
     }
 
     return (
-        <div className='Category'>
-            <div className='Category-Header' onClick={onHeaderClick}>
-                <ArrowForwardIosIcon className={iconClass} />
-                <h3 className='Title'>{props.title}</h3>
-            </div>
-            <div className={contentClass}>
+        <Stack>
+            <Button
+                className='Category-Header'
+                variant='text'
+                color='neutral'
+                onClick={onHeaderClick}
+                startIcon={<KeyboardArrowRightIcon className={iconClass} />}
+            >
+                {props.title}
+            </Button>
+            <Collapse in={collapsed} className={contentClass}>
                 {props.button && (
-                    <p onClick={(e) => props.button.onClick(e)}>
+                    <ListItemButton
+                        color='neutral'
+                        className="link"
+                        onClick={(e) => props.button.onClick(e)}
+                    >
                         {props.button.label}
-                    </p>
+                    </ListItemButton>
                 )}
                 {props.items.map((item, index) => {
                     if (item.path)
                         return (
-                            <NavLink key={item.id} exact className="link" activeClassName="linkActive" to={item.path}>
-                                <p>{item.name}</p>
-                            </NavLink>
+                            <ListItemButton
+                                component={NavLink}
+                                exact
+                                key={item.id}
+                                className="link"
+                                activeClassName="Mui-selected"
+                                to={item.path}
+                                dense
+                            >
+                                {item.name}
+                            </ListItemButton>
                         )
                     else
                         return (
@@ -68,17 +87,17 @@ function Category(props) {
                         )
                 })}
 
-            </div>
-        </div>
+            </Collapse>
+        </Stack>
     )
 }
 
 type SideFilterProps = {
     visible: boolean,
     title: string,
-    filters: any,
+    filters: ISideFilter[],
     collapsed: boolean,
-    onFilterSelected?: (item: any, itemIndex: number, index: number) => void;
+    onFilterSelected?: (item: ISideFilter, itemIndex: number, index: number) => void;
 }
 
 export const SideFilter: React.FC<SideFilterProps> = (props) => {
@@ -86,7 +105,7 @@ export const SideFilter: React.FC<SideFilterProps> = (props) => {
         return <></>
 
     return (
-        <div className='SideFilter'>
+        <SideFilterWrapper >
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
@@ -98,7 +117,7 @@ export const SideFilter: React.FC<SideFilterProps> = (props) => {
                     />
                 )
             })}
-        </div>
+        </SideFilterWrapper>
     )
 }
 

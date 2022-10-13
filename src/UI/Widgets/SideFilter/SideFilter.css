@@ -32,7 +32,7 @@
 .SideFilter .Category-Header {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .SideFilter .Category-Header:hover {
