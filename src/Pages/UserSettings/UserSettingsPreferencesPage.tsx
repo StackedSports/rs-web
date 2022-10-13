@@ -62,7 +62,7 @@ export const UserSettingsPreferencesPage: React.FC = () => {
                 <ListItem divider>
                     <ListItemText
                         primary="Show column on filter"
-                        secondary="If the filtered column of the table is hidden it will show up" />
+                        secondary="Automatically shows table columns when filtering for that column" />
                     <Switch
                         edge="end"
                         name="showColumnOnFilter"
