@@ -29,6 +29,7 @@ export const UserSettingsPreferencesPage: React.FC = () => {
             variant: 'contained',
         },
     ]
+
     return (
         <UserSettingsPage
             title='User Preferences'
