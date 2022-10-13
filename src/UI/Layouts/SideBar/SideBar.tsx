@@ -3,6 +3,7 @@ import React, { useContext, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip';
 
 import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
@@ -45,17 +46,19 @@ export const SideBar: React.FC = () => {
     return (
         <SiderBarWrapper >
             {privateItems.map(item => (
-                <Button
-                    color='inherit'
-                    component={NavLink}
-                    key={item.path}
-                    className='navLink'
-                    activeClassName='selected'
-                    to={item.path}
-                    disableRipple
-                >
-                    <item.icon />
-                </Button>
+                <Tooltip title={item.title} enterDelay={1200} placement={'right'} arrow>
+                    <Button
+                        color='inherit'
+                        component={NavLink}
+                        key={item.path}
+                        className='navLink'
+                        activeClassName='selected'
+                        to={item.path}
+                        disableRipple
+                    >
+                        <item.icon />
+                    </Button>
+                </Tooltip>
             ))}
             <Stack
                 flex={1}

@@ -9,9 +9,6 @@ export const components = {
     MuiButton: {
         styleOverrides: {
             root: {
-                // Some CSS
-                // minWidth: 120,
-                // padding: '8px 16px',
                 fontFamily: 'ProximaNovaSemibold',
                 textTransform: "capitalize",
             },

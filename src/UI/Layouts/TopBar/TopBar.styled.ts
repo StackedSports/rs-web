@@ -1,4 +1,4 @@
-import { Stack, styled } from "@mui/material";
+import { colors, Stack, styled } from "@mui/material";
 
 export const TopBarWrapper = styled(Stack)(({ theme }) => ({
     position: 'sticky',
@@ -10,14 +10,14 @@ export const TopBarWrapper = styled(Stack)(({ theme }) => ({
     zIndex: 2,
     backgroundColor: theme.palette.background.paper,
     borderBottomWidth: '2px',
-    borderBottomColor: '#e9eaef',
+    borderBottomColor: theme.palette.mode === 'light' ? colors.grey[300] : colors.grey.A700,
     borderBottomStyle: 'solid',
 
     '.TeamLogo': {
         width: '60px',
         height: '70px',
         borderRightWidth: '2px',
-        borderRightColor: 'rgb(233, 234, 239)',
+        borderRightColor: theme.palette.mode === 'light' ? colors.grey[300] : colors.grey.A700,
         borderRightStyle: 'solid',
         display: 'flex',
         alignItems: 'center',
