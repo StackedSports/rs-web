@@ -6,7 +6,7 @@ import Page from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
 import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
-import SideFilter from 'UI/Widgets/SideFilter';
+import SideFilter from 'UI/Widgets/SideFilter/SideFilter';
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';

@@ -10,7 +10,7 @@ import TopBar from './TopBar'
 import SideBar from './SideBar'
 import Panel from './Panel'
 
-import SideFilter from '../Widgets/SideFilter'
+import SideFilter from '../Widgets/SideFilter/SideFilter'
 import LoadingOverlay from '../Widgets/LoadingOverlay'
 
 export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'

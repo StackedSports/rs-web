@@ -1,0 +1,1 @@
+export { SideFilter as default } from './SideFilter'
