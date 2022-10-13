@@ -54,7 +54,6 @@ export default function MainLayout(props: IMainLayoutProps) {
             <Content>
                 <SideFilter
                     visible={displayFilters && !props.filtersDisabled}
-                    title={props.title}
                     filters={props.filters}
                     collapsed={true}
                     onFilterSelected={props.onFilterSelected}

@@ -37,8 +37,8 @@ export const TopBarWrapper = styled(Stack)(({ theme }) => ({
     },
 
     '.Logo': {
-        height: '38px',
-        margin: '0 44px 0 44px',
+        height: 30,
+        marginRight: 30,
     },
 
 }))
