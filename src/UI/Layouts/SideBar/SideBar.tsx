@@ -7,7 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 import AccountMenu from 'UI/Widgets/AccountMenu'
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { routes, messageRoutes } from 'Routes/Routes'
+import { routes, messageRoutes, tweetRoutes } from 'Routes/Routes'
 import { SiderBarWrapper } from './SideBar.styled'
 import { Button, SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
@@ -18,7 +18,7 @@ const REGULAR_ITEMS = [
     { ...routes.messages, path: messageRoutes.create },
     routes.media,
     routes.tweet,
-    routes.tweetPost,
+    { ...routes.tweetPost, path: tweetRoutes.create },
     routes.settings,
 ]
 

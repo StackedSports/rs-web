@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom';
 import { Button, IconButton, SvgIconTypeMap } from '@mui/material';
 import { PanelDropdown, panelDropdownOptionsType } from './PanelDropdown';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
@@ -27,13 +28,21 @@ type buttonType = {
     style?: never,
     options?: never,
 }
+type linkType = {
+    type?: 'link',
+    to: string,
+    onClick?: never,
+    variant?: "text" | "outlined" | "contained",
+    style?: never,
+    options?: never,
+}
 
 export type ActionsProps = {
     name: string;
     disabled?: boolean,
     icon?: React.ReactElement,
     color?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning",
-} & (iconType | dropdownType | buttonType)
+} & (iconType | dropdownType | buttonType | linkType)
 
 export const Actions: React.FC<ActionsProps> = (props) => {
     if (props.type === 'icon')
@@ -59,6 +68,19 @@ export const Actions: React.FC<ActionsProps> = (props) => {
                     variant: props.variant
                 }}
             />
+        )
+    else if (props.type === 'link')
+        return (
+            <Button
+                component={RouterLink}
+                to={props.to}
+                variant={props.variant}
+                // @ts-ignore: dont know how to fix this error
+                endIcon={props.icon && <props.icon />}
+                disabled={props.disabled}
+            >
+                {props.name}
+            </Button>
         )
     else
         return (

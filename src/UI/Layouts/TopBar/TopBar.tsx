@@ -10,7 +10,8 @@ import { TopBarWrapper } from './TopBar.styled';
 
 interface TopBarProps {
     actionTitle?: string,
-    onActionClick?: () => void
+    onActionClick?: () => void,
+    onActionLink?: string
 }
 
 export const TopBar: React.FC<TopBarProps> = (props) => {
@@ -34,14 +35,24 @@ export const TopBar: React.FC<TopBarProps> = (props) => {
                 <img src={teamLogo} onError={onTeamLogoError} />
             </div>
             {props.actionTitle && (
-                <Button
-                    className='Button'
-                    variant='contained'
-                    onClick={props.onActionClick}
-                    disableElevation
-                >
-                    {props.actionTitle}
-                </Button>
+                props.onActionLink ? (
+                    <Button
+                        className='Button'
+                        component={Link}
+                        to={props.onActionLink}
+                    >
+                        {props.actionTitle}
+                    </Button>
+                ) : (
+                    <Button
+                        className='Button'
+                        variant='contained'
+                        onClick={props.onActionClick}
+                        disableElevation
+                    >
+                        {props.actionTitle}
+                    </Button>
+                )
             )}
             <Stack
                 marginLeft='auto'
