@@ -16,7 +16,12 @@ export const components: Components<Omit<Theme, "components">> = {
             root: {
                 fontFamily: 'ProximaNovaSemibold',
                 textTransform: "capitalize",
+                letterSpacing: 1,
             },
+            outlined: ({ theme }) => ({
+                borderColor: theme.palette.divider,
+                color: theme.palette.text.primary,
+            }),
         }
     }
 }

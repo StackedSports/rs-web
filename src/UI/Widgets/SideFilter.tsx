@@ -1,8 +1,10 @@
 import './SideFilter.css'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 
+
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { ISideFilter } from 'Interfaces';
 
 function Category(props) {
     // TODO: change to expanded
@@ -59,8 +61,8 @@ function Category(props) {
                     else
                         return (
                             <p key={item.id}
-                              style={item.isSelected ? { color: '#222', fontWeight: 'bold'} : null}
-                              onClick={(e) => onItemClick(e, item, index)}
+                                style={item.isSelected ? { color: '#222', fontWeight: 'bold' } : null}
+                                onClick={(e) => onItemClick(e, item, index)}
                             >
                                 {item.name}
                             </p>
@@ -72,15 +74,20 @@ function Category(props) {
     )
 }
 
-export default function SideFilter(props) {
+type SideFilterProps = {
+    visible: boolean,
+    title: string,
+    filters: any,
+    collapsed: boolean,
+    onFilterSelected?: (item: any, itemIndex: number, index: number) => void;
+}
+
+export const SideFilter: React.FC<SideFilterProps> = (props) => {
     if (!props.visible)
         return <></>
 
-    // console.log(props.filters)
-
     return (
         <div className='SideFilter'>
-            {/* <h2 className='Title'>{props.title}</h2> */}
             {props.filters && props.filters.map((category, index) => {
                 return (
                     <Category key={category.id}
@@ -95,3 +102,5 @@ export default function SideFilter(props) {
         </div>
     )
 }
+
+export default SideFilter
