@@ -40,6 +40,9 @@ export const darkPallete = {
     primary: {
         main: '#5865f2',
     },
+    neutral: {
+        main: '#fff',
+    },
     background: {
         default: '#303030',
         paper: '#424242',
