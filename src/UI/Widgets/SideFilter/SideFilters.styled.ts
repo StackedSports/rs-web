@@ -18,6 +18,8 @@ export const SideFilterWrapper = styled(Stack)(({ theme }) => ({
 
     '.Category-Header': {
         justifyContent: 'flex-start',
+        fontSize:'1rem',
+        letterSpacing:0,
 
         '.Icon': {
             transform: 'rotate(90deg)',
