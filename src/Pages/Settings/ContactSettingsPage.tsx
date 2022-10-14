@@ -2,29 +2,36 @@ import React, { useEffect, useState, useMemo, useContext } from 'react'
 
 import SettingsPage from './SettingsPage'
 import { AuthContext } from 'Context/Auth/AuthProvider'
-import { DragDropContext, DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd'
 import { IContact } from 'Interfaces/IContact'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Box, Paper, Stack, Typography } from '@mui/material'
+import { DraggebleRow } from 'UI/Widgets/ContactSettings/DraggebleRow'
 
-const CONTATCT_KEYS: contactKeysType[] = [
-    'advisor',
-    'archived',
-    'area_coach',
-    'arms_id',
-    'associated_media',
-    'coordinator',
-    'dob',
-    'email',
-    'ets_code',
-    'first_name',
-    'grad_year',
-    'high_school',
-    'hudl',
-    'id',
-    'instagram_handle',
-]
+type contactKeys =
+    'full_name' |
+    'first_name' |
+    'last_name' |
+    'twitter_profile' |
+    'dob' |
+    'phone' |
+    'nick_name' |
+    'state' |
+    'high_school' |
+    'grad_year' |
+    'relationships' |
+    'opponents' |
+    'positions' |
+    'area_coach' |
+    'position_coach' |
+    'coordinator' | //recruiting coach
+    'status' |
+    'status_2' |
+    'tags' |
+    'rank' |
+    'time_zone';
 
-type contactKeysType = keyof IContact;
+
+//type contactKeysType = keyof IContact;
 
 type values = {
     label: string,
@@ -33,7 +40,97 @@ type values = {
     index: number
 }
 
-type labelType = Record<contactKeysType, values>
+type labelType = Record<string, values>
+
+type inputType = 'text' | 'select' | 'multi-select' | 'date-picker'
+
+
+const INITIAL_VALUES: Record<contactKeys, { type: inputType, customizable: boolean }> = {
+    full_name: {
+        type: 'text',
+        customizable: false,
+    },
+    first_name: {
+        type: 'text',
+        customizable: false,
+    },
+    last_name: {
+        type: 'text',
+        customizable: false,
+    },
+    twitter_profile: {
+        type: 'text',
+        customizable: false,
+    },
+    dob: {
+        type: 'date-picker',
+        customizable: false,
+    },
+    phone: {
+        type: 'text',
+        customizable: false,
+    },
+    nick_name: {
+        type: 'text',
+        customizable: true,
+    },
+    state: {
+        type: 'select',
+        customizable: true,
+    },
+    high_school: {
+        type: 'text',
+        customizable: true,
+    },
+    grad_year: {
+        type: 'text',
+        customizable: true,
+    },
+    relationships: {
+        type: 'multi-select',
+        customizable: true,
+    },
+    opponents: {
+        type: 'multi-select',
+        customizable: true,
+    },
+    positions: {
+        type: 'multi-select',
+        customizable: true,
+    },
+    area_coach: {
+        type: 'select',
+        customizable: true,
+    },
+    position_coach: {
+        type: 'select',
+        customizable: true,
+    },
+    coordinator: {
+        type: 'select',
+        customizable: true,
+    }, //recruiting coach
+    status: {
+        type: 'select',
+        customizable: true,
+    },
+    status_2: {
+        type: 'select',
+        customizable: true,
+    },
+    tags: {
+        type: 'multi-select',
+        customizable: true,
+    },
+    rank: {
+        type: 'multi-select',
+        customizable: true,
+    },
+    time_zone: {
+        type: 'select',
+        customizable: true,
+    },
+}
 
 const ContactSettingsPage = () => {
     //  const { isAdmin } = useContext(AuthContext)
@@ -77,35 +174,41 @@ const ContactSettingsPage = () => {
         >
             <DragDropContext onDragEnd={onDragEnd}>
 
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Dessert (100g serving)</TableCell>
-                                <TableCell align="right">Calories</TableCell>
-                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
+                <Typography fontWeight={'bold'} color='text.secondary'>
+                    Showm in table
+                </Typography>
+                <Droppable droppableId="shown">
+                    {(provided: DroppableProvided) => (
+                        <Stack
+                            gap={2}
+                            sx={{ py: 2 }}
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            <DraggebleRow index={1} id={'1'} />
+                            <DraggebleRow index={2} id={'2'} />
+                            {provided.placeholder}
+                        </Stack>
+                    )}
+                </Droppable>
 
-                            <TableRow
-                                key={'row.name'}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {'row.name'}
-                                </TableCell>
-                                <TableCell align="right">{'row.calories'}</TableCell>
-                                <TableCell align="right">{'row.fat'}</TableCell>
-                                <TableCell align="right">{'row.carbs'}</TableCell>
-                                <TableCell align="right">{'row.protein'}</TableCell>
-                            </TableRow>
-
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Typography fontWeight={'bold'} color='text.secondary'>
+                    Hidden in table
+                </Typography>
+                <Droppable droppableId="hidden">
+                    {(provided: DroppableProvided) => (
+                        <Stack
+                            gap={2}
+                            sx={{ py: 2 }}
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            <DraggebleRow index={1} id={'1'} />
+                            <DraggebleRow index={2} id={'2'} />
+                            {provided.placeholder}
+                        </Stack>
+                    )}
+                </Droppable>
 
             </DragDropContext>
 
