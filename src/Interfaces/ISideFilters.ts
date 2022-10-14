@@ -1,18 +1,25 @@
 export interface ISideFilterItem {
     id: string,
     name: string,
-    path: string | { pathname: string, search: string }
+    path: string | { pathname: string, search: string },
+    isSelected?: boolean
 }
 
 export interface ISideFilterButton {
     label: string,
-    onClick: Function
+    onClick: (e: React.MouseEvent<HTMLElement>) => void,
 }
 
-export interface ISideFilter {
+export type ISideFilter = {
     id: string | number,
     name: string,
+} & ({
     path?: string | { pathname: string, search: string },
+    items?: never,
+    button?: never,
+} |
+{
     items?: ISideFilterItem[],
-    button?: ISideFilterButton
-}
+    button?: ISideFilterButton,
+    path?: never,
+}) 

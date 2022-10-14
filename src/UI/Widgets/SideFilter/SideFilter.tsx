@@ -1,15 +1,30 @@
-import './SideFilter.css'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import { ISideFilter } from 'Interfaces'
+import { ISideFilter, ISideFilterButton, ISideFilterItem } from 'Interfaces'
 
 
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button, Collapse, ListItemButton, Stack } from '@mui/material';
 import { SideFilterWrapper } from './SideFilters.styled';
 
-function Category(props) {
+type CategoryHeaderLink = {
+    items?: never,
+    path?: string | { pathname: string, search: string },
+    button?: never,
+}
+
+type CategoryList = {
+    items?: ISideFilterItem[],
+    path?: never,
+    button?: ISideFilterButton,
+}
+
+type CategoryProps = {
+    title: string,
+    onItemClick: (item: ISideFilter, index: number) => void,
+} & (CategoryHeaderLink | CategoryList)
+
+const Category: React.FC<CategoryProps> = (props) => {
     // TODO: change to expanded
     const [collapsed, setCollapsed] = useState(true)
 
@@ -17,26 +32,21 @@ function Category(props) {
         setCollapsed((prev) => !prev)
     }
 
-    const onItemClick = (e, item, index) => {
+    const onItemClick = (item: ISideFilter, index: number) => {
         props.onItemClick(item, index)
-    }
-
-    let iconClass = 'Icon'
-    let contentClass = 'Category-Content'
-
-    if (collapsed) {
-        iconClass += ' collapsed'
-        contentClass += ' collapsed'
     }
 
     if (!props.items) {
         return (
-            <div className='Category-Header'>
-                <NavLink className='Category-Header link' to={props?.path || ''}>
-                    <ArrowForwardIosIcon className='IconNormal' />
-                    <h3 className='Title'>{props.title}</h3>
-                </NavLink>
-            </div>
+            <Button
+                className='Category-Header'
+                component={NavLink}
+                to={props?.path || ''}
+                color='neutral'
+                startIcon={<KeyboardArrowRightIcon />}
+            >
+                {props.title}
+            </Button>
         )
     }
 
@@ -47,16 +57,16 @@ function Category(props) {
                 variant='text'
                 color='neutral'
                 onClick={onHeaderClick}
-                startIcon={<KeyboardArrowRightIcon className={iconClass} />}
+                startIcon={<KeyboardArrowRightIcon className={`Icon ${collapsed ? 'collapsed' : ''}`} />}
             >
                 {props.title}
             </Button>
-            <Collapse in={collapsed} className={contentClass}>
+            <Collapse in={collapsed}>
                 {props.button && (
                     <ListItemButton
                         color='neutral'
                         className="link"
-                        onClick={(e) => props.button.onClick(e)}
+                        onClick={(e) => props.button?.onClick(e)}
                     >
                         {props.button.label}
                     </ListItemButton>
@@ -78,12 +88,13 @@ function Category(props) {
                         )
                     else
                         return (
-                            <p key={item.id}
-                                style={item.isSelected ? { color: '#222', fontWeight: 'bold' } : undefined}
-                                onClick={(e) => onItemClick(e, item, index)}
+                            <ListItemButton
+                                key={item.id}
+                                selected={item.isSelected}
+                                onClick={() => onItemClick(item, index)}
                             >
                                 {item.name}
-                            </p>
+                            </ListItemButton>
                         )
                 })}
 
@@ -108,7 +119,8 @@ export const SideFilter: React.FC<SideFilterProps> = (props) => {
         <SideFilterWrapper >
             {props.filters && props.filters.map((category, index) => {
                 return (
-                    <Category key={category.id}
+                    <Category
+                        key={category.id}
                         title={category.name}
                         items={category.items}
                         button={category.button}
