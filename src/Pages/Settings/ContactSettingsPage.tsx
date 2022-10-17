@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
-
-import SettingsPage from './SettingsPage'
-import { AuthContext } from 'Context/Auth/AuthProvider'
+import React, { useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
 import { DragDropContext, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd'
-import { IContact } from 'Interfaces/IContact'
-import { Box, Paper, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
+import { AuthContext } from 'Context/Auth/AuthProvider'
+import SettingsPage from './SettingsPage'
 import { DraggebleRow } from 'UI/Widgets/ContactSettings/DraggebleRow'
+import { ContactConfigModal } from 'UI/Widgets/ContactSettings/ContactConfigModal'
+import { ContactSettingsRow } from 'UI/Widgets/ContactSettings/ContactSettingsRow';
 
 type contactKeys =
     'full_name' |
@@ -30,118 +31,133 @@ type contactKeys =
     'rank' |
     'time_zone';
 
-
-//type contactKeysType = keyof IContact;
-
-type values = {
+export type labelValues = {
+    id: string,
     label: string,
     enabled: boolean,
-    editable: boolean,
-    index: number
+    index: number,
+    type: inputType,
+    customizable: boolean
 }
+export type inputType = 'text' | 'select' | 'multi-select' | 'date-picker'
+type labelType = [contactKeys, labelValues]
 
-type labelType = Record<string, values>
-
-type inputType = 'text' | 'select' | 'multi-select' | 'date-picker'
-
-
-const INITIAL_VALUES: Record<contactKeys, { type: inputType, customizable: boolean }> = {
-    full_name: {
+const CONFIG_VALUES: [contactKeys, Pick<labelValues, 'customizable' | 'type'>][] = [
+    ['full_name', {
         type: 'text',
         customizable: false,
-    },
-    first_name: {
+    }],
+    ['first_name', {
         type: 'text',
         customizable: false,
-    },
-    last_name: {
+    }],
+    ['last_name', {
         type: 'text',
         customizable: false,
-    },
-    twitter_profile: {
+    }],
+    ['twitter_profile', {
         type: 'text',
         customizable: false,
-    },
-    dob: {
+    }],
+    ['dob', {
         type: 'date-picker',
         customizable: false,
-    },
-    phone: {
+    }],
+    ['phone', {
         type: 'text',
         customizable: false,
-    },
-    nick_name: {
+    }],
+    ['nick_name', {
         type: 'text',
         customizable: true,
-    },
-    state: {
+    }],
+    ['state', {
         type: 'select',
         customizable: true,
-    },
-    high_school: {
+    }],
+    ['high_school', {
         type: 'text',
         customizable: true,
-    },
-    grad_year: {
+    }],
+    ['grad_year', {
         type: 'text',
         customizable: true,
-    },
-    relationships: {
+    }],
+    ['relationships', {
         type: 'multi-select',
         customizable: true,
-    },
-    opponents: {
+    }],
+    ['opponents', {
         type: 'multi-select',
         customizable: true,
-    },
-    positions: {
+    }],
+    ['positions', {
         type: 'multi-select',
         customizable: true,
-    },
-    area_coach: {
+    }],
+    ['area_coach', {
         type: 'select',
         customizable: true,
-    },
-    position_coach: {
+    }],
+    ['position_coach', {
         type: 'select',
         customizable: true,
-    },
-    coordinator: {
+    }],
+    ['coordinator', {
         type: 'select',
         customizable: true,
-    }, //recruiting coach
-    status: {
+    }], //recruiting coach
+    ['status', {
         type: 'select',
         customizable: true,
-    },
-    status_2: {
+    }],
+    ['status_2', {
         type: 'select',
         customizable: true,
-    },
-    tags: {
+    }],
+    ['tags', {
         type: 'multi-select',
         customizable: true,
-    },
-    rank: {
+    }],
+    ['rank', {
         type: 'multi-select',
         customizable: true,
-    },
-    time_zone: {
+    }],
+    ['time_zone', {
         type: 'select',
         customizable: true,
-    },
+    }],
+]
+
+const createDefaultValues = (key: contactKeys, config: Pick<labelValues, 'customizable' | 'type'>, index: number): labelValues => ({
+    id: uuidv4(),
+    ...config,
+    enabled: true,
+    index: index,
+    label: key,
+})
+
+const generateDefaultLabels = (): labelType[] => {
+    return CONFIG_VALUES.map(
+        ([key, values], i) => [key, createDefaultValues(key, values, i)]
+    )
 }
 
 const ContactSettingsPage = () => {
     //  const { isAdmin } = useContext(AuthContext)
-    const [labels, setLabels] = useState<labelType>()
+    const [labels, setLabels] = useState<labelType[]>(generateDefaultLabels())
+    const [configModalIndex, setConfigModalIndex] = useState<number | null>(null)
 
-    const reorder = (list: any[], startIndex: number, endIndex: number) => {
+    const reorder = (list: labelType[], startIndex: number, endIndex: number): labelType[] => {
         const result = [...list];
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
-        return result;
-    };
+        return result.map(([key, value], i) => [key, { ...value, index: i }]);
+    }
+
+    useEffect(() => {
+        console.log(labels)
+    }, [labels])
 
     const onDragEnd = (result: DropResult) => {
         // dropped outside the list
@@ -157,16 +173,36 @@ const ContactSettingsPage = () => {
             return;
         }
 
-        /*         const quotes = reorder(
-                    this.state.quotes,
-                    result.source.index,
-                    result.destination.index,
-                );
-        
-                this.setState({
-                    quotes,
-                }); */
+        const reaoderedLabels = reorder(
+            labels,
+            result.source.index,
+            result.destination.index,
+        );
+
+        setLabels(reaoderedLabels);
     };
+
+    const onChangeLabel = (data: Partial<labelValues>, index: number | null) => {
+        if (index === null) return
+
+        const newLabels: labelType[] = labels.map(([key, value], i) => {
+            if (i === index)
+                return [key, { ...value, ...data }]
+            else
+                return [key, value]
+        })
+        setLabels(newLabels)
+        setConfigModalIndex(null)
+    }
+
+    const onToggleEnable = (index: number) => {
+        const enabled = !labels[index][1].enabled
+        onChangeLabel({ enabled: enabled }, index)
+    }
+
+    const onOpenConfigModal = (index: number) => {
+        setConfigModalIndex(index)
+    }
 
     return (
         <SettingsPage
@@ -174,44 +210,53 @@ const ContactSettingsPage = () => {
         >
             <DragDropContext onDragEnd={onDragEnd}>
 
-                <Typography fontWeight={'bold'} color='text.secondary'>
+                <Typography fontWeight={'bold'} color='text.secondary' my={1}>
                     Showm in table
                 </Typography>
                 <Droppable droppableId="shown">
                     {(provided: DroppableProvided) => (
                         <Stack
-                            gap={2}
-                            sx={{ py: 2 }}
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            <DraggebleRow index={1} id={'1'} />
-                            <DraggebleRow index={2} id={'2'} />
+                            {
+                                labels.filter(label => label[1].enabled).map(([_, values]) =>
+                                    <DraggebleRow
+                                        values={values}
+                                        key={values.id}
+                                        onOpenModal={onOpenConfigModal}
+                                        onToggleEnable={onToggleEnable}
+                                    />
+                                )
+                            }
                             {provided.placeholder}
                         </Stack>
                     )}
                 </Droppable>
 
-                <Typography fontWeight={'bold'} color='text.secondary'>
+                <Typography fontWeight={'bold'} color='text.secondary' my={1}>
                     Hidden in table
                 </Typography>
-                <Droppable droppableId="hidden">
-                    {(provided: DroppableProvided) => (
-                        <Stack
-                            gap={2}
-                            sx={{ py: 2 }}
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            <DraggebleRow index={1} id={'1'} />
-                            <DraggebleRow index={2} id={'2'} />
-                            {provided.placeholder}
-                        </Stack>
-                    )}
-                </Droppable>
-
+                <Box>
+                    {
+                        labels.filter(label => !label[1].enabled).map(([_, values]) =>
+                            <ContactSettingsRow
+                                values={values}
+                                key={values.id}
+                                onOpenModal={onOpenConfigModal}
+                                onToggleEnable={onToggleEnable}
+                            />
+                        )
+                    }
+                </Box>
             </DragDropContext>
 
+            <ContactConfigModal
+                open={configModalIndex !== null}
+                onClose={() => setConfigModalIndex(null)}
+                onSubmit={(form) => onChangeLabel(form, configModalIndex)}
+                value={configModalIndex !== null ? labels[configModalIndex][1] : undefined}
+            />
         </SettingsPage>
     )
 }
