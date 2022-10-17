@@ -211,7 +211,7 @@ const ContactSettingsPage = () => {
             <DragDropContext onDragEnd={onDragEnd}>
 
                 <Typography fontWeight={'bold'} color='text.secondary' my={1}>
-                    Showm in table
+                    Enabled
                 </Typography>
                 <Droppable droppableId="shown">
                     {(provided: DroppableProvided) => (
@@ -235,7 +235,7 @@ const ContactSettingsPage = () => {
                 </Droppable>
 
                 <Typography fontWeight={'bold'} color='text.secondary' my={1}>
-                    Hidden in table
+                    Disabled
                 </Typography>
                 <Box>
                     {
