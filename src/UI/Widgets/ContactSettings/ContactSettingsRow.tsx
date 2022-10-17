@@ -51,19 +51,27 @@ export const ContactSettingsRow: React.FC<ContactSettingsRowProps> = ({
             <Typography textTransform={'capitalize'}>
                 {values.label}
             </Typography>
-            <IconButton
-                sx={{ color: 'text.secondary', ml: 'auto' }}
-                onClick={() => onToggleEnable(values.index)}
+            <Stack
+                direction='row'
+                alignItems={'center'}
+                ml={'auto'}
             >
-                {values.enabled ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </IconButton>
-            <IconButton
-                sx={{ color: 'text.secondary' }}
-                onClick={() => onOpenModal(values.index)}
-                disabled={!values.customizable}
-            >
-                <MoreVertIcon />
-            </IconButton>
+                <IconButton
+                    sx={{ color: 'text.secondary' }}
+                    onClick={() => onToggleEnable(values.index)}
+                >
+                    {values.enabled ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
+                {values.enabled && (
+                    <IconButton
+                        sx={{ color: 'text.secondary' }}
+                        onClick={() => onOpenModal(values.index)}
+                        disabled={!values.customizable}
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                )}
+            </Stack>
         </Stack>
 
     )
