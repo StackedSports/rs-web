@@ -12,7 +12,7 @@ import {
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
-import { columnsMini, columnsFull, parseColumnsNames } from './DataGridConfig';
+import { columnsMini, columnsFull, parseColumnsNames, getColumnsByPreferences } from './DataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
 
@@ -29,7 +29,7 @@ export default function ContactsTableServerMode({
     ...restOfProps
 }) {
     const history = useHistory();
-    const columns = mini ? columnsMini : columnsFull
+    const columns = mini ? columnsMini : getColumnsByPreferences()
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
 

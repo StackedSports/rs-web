@@ -4,6 +4,9 @@ import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid-pro';
 import { formatDate, formatPhoneNumber, getFullName } from 'utils/Parser'
 
 import AvatarImg from "images/avatar.png";
+import { getColumns } from '../Messages/DataGridConfig';
+import { PreferencesContext } from 'Context/PreferencesProvider';
+import { useContext } from 'react';
 
 
 const getImg = (profile_image) => {
@@ -12,7 +15,7 @@ const getImg = (profile_image) => {
 }
 
 const profileImg = {
-    field: 'profileImg',
+    field: 'profile_image',
     headerName: '',
     width: 50,
     sortable: false,
@@ -30,7 +33,7 @@ const profileImg = {
 }
 
 const fullName = {
-    field: 'fullName',
+    field: 'full_name',
     headerName: 'Full Name',
     // width: 180,
     flex: 2,
@@ -45,7 +48,7 @@ const fullName = {
 }
 
 const firstName = {
-    field: 'firstName',
+    field: 'first_name',
     headerName: 'First Name',
     flex: 1,
     minWidth: 100,
@@ -59,7 +62,7 @@ const firstName = {
 }
 
 const lastName = {
-    field: 'lastName',
+    field: 'last_name',
     headerName: 'Last Name',
     flex: 1,
     minWidth: 100,
@@ -73,7 +76,7 @@ const lastName = {
 }
 
 const nickName = {
-    field: 'nickName',
+    field: 'nick_name',
     headerName: 'Nick Name',
     flex: 1,
     minWidth: 100,
@@ -87,7 +90,7 @@ const nickName = {
 }
 
 const twitterName = {
-    field: 'twitterProfile',
+    field: 'twitter_profile',
     headerName: 'Twitter',
     // width: 130,
     flex: 1,
@@ -131,7 +134,7 @@ const state = {
 }
 
 const school = {
-    field: 'school',
+    field: 'high_school',
     headerName: 'School',
     flex: 1,
     minWidth: 150,
@@ -144,7 +147,7 @@ const school = {
 }
 
 const gradYear = {
-    field: 'gradYear',
+    field: 'grad_year',
     headerName: 'Grad Year',
     flex: 'fit-content',
     valueGetter: (params) => params.row.grad_year ? params.row.grad_year : '',
@@ -156,7 +159,7 @@ const gradYear = {
 }
 
 const positions = {
-    field: 'position',
+    field: 'positions',
     headerName: 'Position',
     flex: 1,
     minWidth: 100,
@@ -169,7 +172,7 @@ const positions = {
 }
 
 const areaCoach = {//array
-    field: 'areaCoach',
+    field: 'area_coach',
     headerName: 'Area Coach',
     flex: 1,
     minWidth: 150,
@@ -182,7 +185,7 @@ const areaCoach = {//array
 }
 
 const positionCoach = {
-    field: 'positionCoach',
+    field: 'position_coach',
     headerName: 'Position Coach',
     flex: 1,
     minWidth: 150,
@@ -195,7 +198,7 @@ const positionCoach = {
 }
 
 const recruitingCoach = {
-    field: 'recruitingCoach',
+    field: 'coordinator',
     headerName: 'Recruiting Coach',
     flex: 1,
     minWidth: 150,
@@ -287,7 +290,7 @@ const dateAdded = {
 }
 
 const timeZone = {
-    field: 'timeZone',
+    field: 'time_zone',
     headerName: 'Time Zone',
     flex: 1,
     minWidth: 100,
@@ -300,8 +303,8 @@ const timeZone = {
 }
 
 const birthday = {
-    field: 'birthday',
-    headerName: 'Birthday ',
+    field: 'dob',
+    headerName: 'Birthday',
     flex: 1,
     minWidth: 100,
     valueGetter: (params) => params.row.dob ? new Date(params.row.dob.split('-')) : '',
@@ -349,6 +352,28 @@ export const columnsFull = [
     timeZone,
     birthday,
 ]
+
+export const getColumnsByPreferences = () => {
+    const preferences = useContext(PreferencesContext)
+    if (!preferences)
+        return columnsFull
+
+    const { labels } = preferences
+    const labelsMap = new Map(labels)
+
+    const filteredColumns = columnsFull.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
+    return filteredColumns.map(colum => {
+        const temp = labelsMap.get(colum.field)
+        if (temp) {
+            return {
+                ...colum,
+                headerName: temp.label
+            }
+        }
+        else
+            return colum
+    })
+}
 
 export const parseColumnsNames = (property) => {
     switch (property) {

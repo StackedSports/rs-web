@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid';
+import React, { useContext, useEffect, useState } from 'react'
 import { DragDropContext, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd'
 import { Box, Stack, Typography } from '@mui/material'
-import { AuthContext } from 'Context/Auth/AuthProvider'
 import SettingsPage from './SettingsPage'
 import { DraggebleRow } from 'UI/Widgets/ContactSettings/DraggebleRow'
 import { ContactConfigModal } from 'UI/Widgets/ContactSettings/ContactConfigModal'
 import { ContactSettingsRow } from 'UI/Widgets/ContactSettings/ContactSettingsRow';
+import { PreferencesContext } from 'Context/PreferencesProvider'
 
-type contactKeys =
+export type contactKeys =
     'full_name' |
     'first_name' |
     'last_name' |
@@ -40,124 +39,22 @@ export type labelValues = {
     customizable: boolean
 }
 export type inputType = 'text' | 'select' | 'multi-select' | 'date-picker'
-type labelType = [contactKeys, labelValues]
+export type labelType = [contactKeys, labelValues][]
 
-const CONFIG_VALUES: [contactKeys, Pick<labelValues, 'customizable' | 'type'>][] = [
-    ['full_name', {
-        type: 'text',
-        customizable: false,
-    }],
-    ['first_name', {
-        type: 'text',
-        customizable: false,
-    }],
-    ['last_name', {
-        type: 'text',
-        customizable: false,
-    }],
-    ['twitter_profile', {
-        type: 'text',
-        customizable: false,
-    }],
-    ['dob', {
-        type: 'date-picker',
-        customizable: false,
-    }],
-    ['phone', {
-        type: 'text',
-        customizable: false,
-    }],
-    ['nick_name', {
-        type: 'text',
-        customizable: true,
-    }],
-    ['state', {
-        type: 'select',
-        customizable: true,
-    }],
-    ['high_school', {
-        type: 'text',
-        customizable: true,
-    }],
-    ['grad_year', {
-        type: 'text',
-        customizable: true,
-    }],
-    ['relationships', {
-        type: 'multi-select',
-        customizable: true,
-    }],
-    ['opponents', {
-        type: 'multi-select',
-        customizable: true,
-    }],
-    ['positions', {
-        type: 'multi-select',
-        customizable: true,
-    }],
-    ['area_coach', {
-        type: 'select',
-        customizable: true,
-    }],
-    ['position_coach', {
-        type: 'select',
-        customizable: true,
-    }],
-    ['coordinator', {
-        type: 'select',
-        customizable: true,
-    }], //recruiting coach
-    ['status', {
-        type: 'select',
-        customizable: true,
-    }],
-    ['status_2', {
-        type: 'select',
-        customizable: true,
-    }],
-    ['tags', {
-        type: 'multi-select',
-        customizable: true,
-    }],
-    ['rank', {
-        type: 'multi-select',
-        customizable: true,
-    }],
-    ['time_zone', {
-        type: 'select',
-        customizable: true,
-    }],
-]
-
-const createDefaultValues = (key: contactKeys, config: Pick<labelValues, 'customizable' | 'type'>, index: number): labelValues => ({
-    id: uuidv4(),
-    ...config,
-    enabled: true,
-    index: index,
-    label: key,
-})
-
-const generateDefaultLabels = (): labelType[] => {
-    return CONFIG_VALUES.map(
-        ([key, values], i) => [key, createDefaultValues(key, values, i)]
-    )
-}
 
 const ContactSettingsPage = () => {
-    //  const { isAdmin } = useContext(AuthContext)
-    const [labels, setLabels] = useState<labelType[]>(generateDefaultLabels())
+    const preferences = useContext(PreferencesContext)
     const [configModalIndex, setConfigModalIndex] = useState<number | null>(null)
 
-    const reorder = (list: labelType[], startIndex: number, endIndex: number): labelType[] => {
+    if (!preferences) return <></>
+    const { labels, setLabels } = preferences
+
+    const reorder = (list: labelType, startIndex: number, endIndex: number): labelType => {
         const result = [...list];
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
         return result.map(([key, value], i) => [key, { ...value, index: i }]);
     }
-
-    useEffect(() => {
-        console.log(labels)
-    }, [labels])
 
     const onDragEnd = (result: DropResult) => {
         // dropped outside the list
@@ -182,10 +79,10 @@ const ContactSettingsPage = () => {
         setLabels(reaoderedLabels);
     };
 
-    const onChangeLabel = (data: Partial<labelValues>, index: number | null) => {
+    const onChangeLabel = (data: Partial<labelValues>, index: number) => {
         if (index === null) return
 
-        const newLabels: labelType[] = labels.map(([key, value], i) => {
+        const newLabels: labelType = labels.map(([key, value], i) => {
             if (i === index)
                 return [key, { ...value, ...data }]
             else
@@ -198,6 +95,11 @@ const ContactSettingsPage = () => {
     const onToggleEnable = (index: number) => {
         const enabled = !labels[index][1].enabled
         onChangeLabel({ enabled: enabled }, index)
+    }
+
+    const onSubmitModal = (data: labelValues) => {
+        if (configModalIndex === null) return
+        onChangeLabel(data, configModalIndex)
     }
 
     const onOpenConfigModal = (index: number) => {
@@ -254,7 +156,7 @@ const ContactSettingsPage = () => {
             <ContactConfigModal
                 open={configModalIndex !== null}
                 onClose={() => setConfigModalIndex(null)}
-                onSubmit={(form) => onChangeLabel(form, configModalIndex)}
+                onSubmit={onSubmitModal}
                 value={configModalIndex !== null ? labels[configModalIndex][1] : undefined}
             />
         </SettingsPage>
