@@ -58,10 +58,10 @@ persistQueryClient({
 
 function App() {
 	return (
-		<ThemeProvider>
-			<QueryClientProvider client={queryClient}>
-				<AppProvider>
-					<FirebaseDataCollection>
+		<QueryClientProvider client={queryClient}>
+			<AppProvider>
+				<FirebaseDataCollection>
+					<ThemeProvider>
 						<div className="body">
 							<Switch>
 								{/** Only Route left from old code */}
@@ -83,11 +83,11 @@ function App() {
 								<Route path="/super" component={StuckMessages} />
 							</Switch>
 						</div>
-					</FirebaseDataCollection>
-				</AppProvider>
-				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
-			</QueryClientProvider>
-		</ThemeProvider>
+					</ThemeProvider>
+				</FirebaseDataCollection>
+			</AppProvider>
+			{/* <ReactQueryDevtools initialIsOpen={false} /> */}
+		</QueryClientProvider>
 	);
 }
 
