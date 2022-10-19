@@ -99,10 +99,12 @@ export const getContactPanelFiltersData = () => {
 
             const entries = Object.entries(initalPanelFilters).map(([key, filter]) => {
                 const label = labelsMap.get(key)
-                return label ?
-                    [key, { ...filter, label: label.label }] :
-                    [key, filter]
-            })
+                if (label) {
+                    return label.enabled ? [key, { ...filter, label: label.label }] : null
+                } else
+                    return [key, filter]
+
+            }).filter(entry => entry !== null)
             const filterPreferences: IPanelFilters = Object.fromEntries(entries)
             setFilters(filterPreferences)
         }
