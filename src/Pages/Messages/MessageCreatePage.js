@@ -8,7 +8,7 @@ import SendIcon from '@mui/icons-material/Send'
 
 import BaseMessagePage from './BaseMessagePage'
 import MessageInput from 'UI/Forms/Inputs/MessageInput'
-import ReceiverSelectDialog, { tabs as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
+import ReceiverSelectDialog, { RECEIVER_SELECT_DIALOG_TABS as receiverDialogTabs } from 'UI/Widgets/Messages/ReceiverSelectDialog'
 import MediaSelectDialog from 'UI/Widgets/Media/MediaSelectDialog'
 import DateTimePicker from 'UI/Widgets/DateTimePicker'
 

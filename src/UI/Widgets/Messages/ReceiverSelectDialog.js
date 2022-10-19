@@ -4,10 +4,8 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, Button, IconButton } from '@mui/material';
 
-
 import SelectDialogTab from 'UI/Widgets/Dialogs/SelectDialogTab'
 import SearchBar from 'UI/Widgets/SearchBar'
-//import ContactsTable from 'UI/Tables/Contacts/ContactsTable'
 import ContactsTableServerMode from 'UI/Tables/Contacts/ContactsTableServerMode';
 import BoardsTable from 'UI/Tables/Boards/BoardsTable'
 
@@ -24,7 +22,7 @@ import { states, timeZones } from 'utils/Data';
 import { getFullName } from 'utils/Parser';
 import RenderIf from '../RenderIf';
 
-export const tabs = {
+export const RECEIVER_SELECT_DIALOG_TABS = {
     privateBoard: '0',
     teamBoard: '1',
     contact: '2'
@@ -171,7 +169,7 @@ export default function ReceiverSelectDialog(props) {
             return newfilters
         })
     }
-    
+
     const getPropsRecipientsSeletectionModel = () => {
         if (!props.recipientsSelected) return
 
@@ -185,7 +183,7 @@ export default function ReceiverSelectDialog(props) {
             setSelectedTeamBoards(props.recipientsSelected.teamBoards.map(b => b.id))
     }
 
-    
+
 
     const onSearch = (searchTerm) => {
         setSelectedFilters(prev => {

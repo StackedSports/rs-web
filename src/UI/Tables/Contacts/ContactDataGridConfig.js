@@ -95,7 +95,7 @@ const twitterName = {
     // width: 130,
     flex: 1,
     minWidth: 120,
-    // resizable: true,
+    sortable: false,
     valueGetter: (params) => {
         let contact = params.row
         if (contact.tweetUsername)
@@ -175,6 +175,7 @@ const areaCoach = {//array
     field: 'area_coach',
     headerName: 'Area Coach',
     flex: 1,
+    sortable: false,
     minWidth: 150,
     valueGetter: (params) => params.row.area_coach?.full_name || '',
     renderCell: (params) => (
@@ -187,6 +188,7 @@ const areaCoach = {//array
 const positionCoach = {
     field: 'position_coach',
     headerName: 'Position Coach',
+    sortable: false,
     flex: 1,
     minWidth: 150,
     valueGetter: (params) => params.row.position_coach?.full_name || '',
@@ -200,6 +202,7 @@ const positionCoach = {
 const recruitingCoach = {
     field: 'coordinator',
     headerName: 'Recruiting Coach',
+    sortable: false,
     flex: 1,
     minWidth: 150,
     valueGetter: (params) => params.row.coordinator?.full_name || '',
@@ -213,6 +216,7 @@ const recruitingCoach = {
 const status = {
     field: 'status',
     headerName: 'Status',
+    sortable: false,
     flex: 1,
     minWidth: 100,
     valueGetter: (params) => params.row.status ? params.row.status.status : '',
@@ -239,7 +243,8 @@ const status2 = {
 const tags = {
     field: 'tags',
     headerName: 'Tags',
-    // width: 120,
+    sortable: false,
+    minWidth: 100,
     flex: 1,
     valueGetter: (params) => params.row.tags ? params.row.tags.map(tag => tag.name).join(", ") : '',
     renderCell: (params) => (
@@ -252,6 +257,7 @@ const tags = {
 const rank = {
     field: 'rank',
     headerName: 'Rank',
+    sortable: false,
     flex: 1,
     minWidth: 70,
     valueGetter: (params) => params.row.rank ? params.row.rank.rank : '',
@@ -353,15 +359,17 @@ export const columnsFull = [
     birthday,
 ]
 
-export const getColumnsByPreferences = () => {
+export const getColumnsByPreferences = (isMini) => {
     const preferences = useContext(PreferencesContext)
+    const columns = isMini ? columnsMini : columnsFull
+
     if (!preferences)
-        return columnsFull
+        return columns
 
     const { labels } = preferences
     const labelsMap = new Map(labels)
 
-    const filteredColumns = columnsFull.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
+    const filteredColumns = columns.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
     return filteredColumns.map(colum => {
         const temp = labelsMap.get(colum.field)
         if (temp) {
@@ -411,4 +419,14 @@ export const parseColumnsNames = (property) => {
         default:
             return property
     }
+}
+
+export const getApiModel = (sortModel) => {
+    if (sortModel.length === 0) return {}
+    const result = {
+        sort_column: sortModel[0].field,
+        sort_dir: sortModel[0].sort
+    }
+    console.log(result)
+    return result
 }

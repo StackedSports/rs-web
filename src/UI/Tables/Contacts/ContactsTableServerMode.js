@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -12,9 +12,10 @@ import {
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
-import { columnsMini, columnsFull, parseColumnsNames, getColumnsByPreferences } from './DataGridConfig';
+import { columnsMini, columnsFull, parseColumnsNames, getColumnsByPreferences } from './ContactDataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
+import { PreferencesContext } from "Context/PreferencesProvider";
 
 export default function ContactsTableServerMode({
     contacts,
@@ -29,13 +30,14 @@ export default function ContactsTableServerMode({
     ...restOfProps
 }) {
     const history = useHistory();
-    const columns = mini ? columnsMini : getColumnsByPreferences()
+    const columns = getColumnsByPreferences(mini)
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
+    const preferences = useContext(PreferencesContext)
 
     useEffect(() => {
         if (!selectedFilters) return
-        const collums = Object.keys(selectedFilters).map(key => parseColumnsNames(key))
+        const collums = Object.keys(selectedFilters)
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).
             map(([key]) => key)
@@ -47,7 +49,6 @@ export default function ContactsTableServerMode({
             setTempVisibleColumns(null)
         }
     }, [selectedFilters, visibleColumns.items])
-
 
     const onColumnVisibilityModelChange = (newModel) => {
         visibleColumns.onChange(newModel)
@@ -102,6 +103,14 @@ export default function ContactsTableServerMode({
         minWidth: 200,
     }
 
+    const getGroupingColDefPreference = useCallback(() => {
+        if (!preferences) return groupingColDef
+        else {
+            const relationshipsLabel = new Map(preferences.labels).get('relationships')?.label
+            return relationshipsLabel ? { ...groupingColDef, headerName: relationshipsLabel } : groupingColDef
+        }
+    }, [preferences])
+
     return (
         <Stack flex={height ? 0 : 1} sx={{ minHeight: '55vh', height: height ? height : '100%' }}>
             <DataGridPro
@@ -118,7 +127,7 @@ export default function ContactsTableServerMode({
                 disableChildrenSorting
                 getTreeDataPath={getTreeDataPath}
                 isRowSelectable={mini ? null : getIsRowSelectable}
-                groupingColDef={groupingColDef}
+                groupingColDef={getGroupingColDefPreference()}
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
@@ -138,7 +147,6 @@ export default function ContactsTableServerMode({
                 }}
                 onCellClick={redirectToDetails && redirectToDetailsPage}
                 hideFooter={contacts?.length === 0}
-
                 {...restOfProps}
             />
         </Stack>
