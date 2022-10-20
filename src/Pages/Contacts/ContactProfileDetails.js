@@ -50,6 +50,7 @@ const detailsFormValidation = Yup.object().shape({
 const ContactProfileDetails = (props) => {
 	const app = useContext(AppContext)
 	const preferences = useContext(PreferencesContext)
+	const preferenceLabel = new Map(preferences?.labels)
 
 	const { update: updateContact, archive } = useContactMutation()
 
@@ -587,14 +588,14 @@ const ContactProfileDetails = (props) => {
 							items={[
 
 								{
-									label: 'Graduation Year',
+									label: preferenceLabel.get('grad_year')?.label || 'Graduation Year',
 									name: 'graduation_year',
 									type: "number",
 									value: formikProps.values.graduation_year,
 									component: TextField
 								},
 								{
-									label: 'Current School',
+									label: preferenceLabel.get('high_school')?.label || 'Current School',
 									name: 'high_school',
 									value: formikProps.values.high_school,
 									component: TextField,
@@ -608,7 +609,7 @@ const ContactProfileDetails = (props) => {
 							]}
 						>
 							<DatePicker
-								label='Birthday'
+								label={preferenceLabel.get('dob')?.label || 'Birthday'}
 								name='dob'
 								format='MM/dd/yyyy'
 								disableFuture
@@ -621,7 +622,7 @@ const ContactProfileDetails = (props) => {
 								helperText={formikProps.errors.dob ? formikProps.errors.dob : ''}
 							/>
 							<SearchableSelector
-								label="State"
+								label={preferenceLabel.get('state')?.label || "State"}
 								placeholder="Search"
 								value={formikProps.values.state}
 								options={states || []}
@@ -636,7 +637,7 @@ const ContactProfileDetails = (props) => {
 								clearOnBlur
 							/>
 							<SearchableSelector
-								label="Timezone"
+								label={preferenceLabel.get('time_zone')?.label || "Timezone"}
 								placeholder="Search"
 								value={formikProps.values.time_zone}
 								options={timeZones}
@@ -650,7 +651,7 @@ const ContactProfileDetails = (props) => {
 								clearOnBlur
 							/>
 							<SearchableSelector
-								label="Status"
+								label={preferenceLabel.get('status')?.label || "Status"}
 								placeholder="Search"
 								// multiple
 								value={formikProps.values.status}
@@ -667,7 +668,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Status2"
+								label={preferenceLabel.get('status_2')?.label || "Status 2"}
 								placeholder="Search"
 								value={formikProps.values.status_2}
 								options={status2.items || []}
@@ -685,7 +686,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Rank"
+								label={preferenceLabel.get('rank')?.label || "Rank"}
 								placeholder="Search"
 								value={formikProps.values.rank}
 								options={ranks.items}
@@ -724,7 +725,7 @@ const ContactProfileDetails = (props) => {
 						>
 
 							<SearchableSelector
-								label="Position Coach"
+								label={preferenceLabel.get('position_coach')?.label || "Position Coach"}
 								placeholder="Search"
 								value={formikProps.values.position_coach}
 								options={teamMembers.items || []}
@@ -740,7 +741,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Area Coach"
+								label={preferenceLabel.get('area_coach')?.label || "Area Coach"}
 								placeholder="Search"
 								value={formikProps.values.recruiting_coach}
 								options={teamMembers.items || []}
@@ -756,7 +757,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Coordinator"
+								label={preferenceLabel.get('coordinator')?.label || "Coordinator"}
 								placeholder="Search"
 								value={formikProps.values.coordinator}
 								options={teamMembers.items || []}
@@ -785,7 +786,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='positions'
 							id='positions'
-							title='POSITIONS'
+							title={preferenceLabel.get('positions')?.label || 'POSITIONS'}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[3]}
@@ -794,7 +795,7 @@ const ContactProfileDetails = (props) => {
 							onDiscard={(e) => onDiscard(e, 3, formikProps)}
 						>
 							<SearchableSelector
-								label="Positions"
+								label={preferenceLabel.get('positions')?.label || 'Positions'}
 								placeholder="Search"
 								variant="contained"
 								multiple
@@ -826,7 +827,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='relationships'
 							id='family-relationship'
-							title='FAMILY & RELATIONSHIP'
+							title={preferenceLabel.get('relationships')?.label || 'FAMILY & RELATIONSHIP'}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[4]}
@@ -911,7 +912,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='opponents'
 							id='opponents'
-							title='OPPONENTS'
+							title={preferenceLabel.get('opponents')?.label || 'OPPONENTS'}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[5]}
@@ -1004,7 +1005,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='tags'
 							id='tags'
-							title='TAGS'
+							title={preferenceLabel.get('tags')?.label || 'TAGS'}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[7]}
@@ -1013,7 +1014,7 @@ const ContactProfileDetails = (props) => {
 							onDiscard={(e) => onDiscard(e, 7, formikProps)}
 						>
 							<SearchableSelector
-								label="Tags"
+								label={preferenceLabel.get('tags')?.label || 'Tags'}
 								placeholder="Search"
 								variant="contained"
 								multiple
