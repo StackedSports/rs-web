@@ -22,7 +22,6 @@ export const ContactConfigModal: React.FC<ContactConfigModalProps> = (props) => 
     const formik = useFormik<labelValues>({
         initialValues: initalValues,
         onSubmit: (values) => {
-            console.log(values)
             props.onSubmit(values)
         },
         enableReinitialize: true,

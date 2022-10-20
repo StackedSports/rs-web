@@ -8,7 +8,7 @@ import useSearchParams from "Hooks/SearchParamsHook";
 import useLocalStorage from "Hooks/useLocalStorage";
 
 import { useBoard, useBoardContacts } from 'Api/ReactQuery'
-import { parseColumnsNames } from 'UI/Tables/Contacts/DataGridConfig';
+import { parseColumnsNames } from 'UI/Tables/Contacts/ContactDataGridConfig';
 
 
 export default function BoardPage(props) {
