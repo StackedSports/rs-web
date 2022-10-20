@@ -25,54 +25,56 @@ export const getContactPanelFiltersData = () => {
     const teamMembers = useTeamMembers()
     const [filter, setFilters] = useState({})
 
+   /*  type contactFiltersKeys = "status" | "rank" | "grad_year" | "tags" | "positions" | "area_coach" | "area_coach" | "position_coach" | "time_zone" | "dob" | "state" | "status_2" */
+
     const initalPanelFilters = useMemo<IPanelFilters>(
         () => ({
-            status: {
+            "status": {
                 label: "Status",
                 options: status.items,
             },
-            rank: {
+            "rank": {
                 label: "Rank",
                 options: ranks.items,
             },
-            grad_year: {
+            "grad_year": {
                 label: "Grad Year",
                 options: gradYears.items,
             },
-            tags: {
+            "tags": {
                 label: "Tags",
                 options: tags.items,
                 onSearch: (search) => tags.search(search),
             },
-            positions: {
+            "positions": {
                 label: "Position",
                 options: positions.items,
             },
-            area_coach: {
+            "area_coach": {
                 label: "Area Coach",
                 options: teamMembers.items,
                 optionsLabel: (option) => getFullName(option),
             },
-            position_coach: {
+            "position_coach": {
                 label: "Position Coach",
                 options: teamMembers.items,
             },
-            time_zone: {
+            "time_zone": {
                 label: "Time Zone",
                 options: timeZones,
             },
-            dob: {
+            "dob": {
                 label: "Birthday",
                 type: "date",
                 format: "MM/dd",
                 optionsLabel: (dates) => dates.join(" - "),
                 isUnique: true,
             },
-            state: {
+            "state": {
                 label: "State",
                 options: states,
             },
-            status_2: {
+            "status_2": {
                 label: "Status 2",
                 options: status2.items,
             },

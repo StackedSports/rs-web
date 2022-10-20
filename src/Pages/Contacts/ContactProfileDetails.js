@@ -13,8 +13,6 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 import DatePicker from 'UI/Forms/Inputs/DatePicker';
-
-
 import { states, timeZones } from 'utils/Data';
 import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags, useContactMutation } from 'Api/ReactQuery';
 
@@ -22,7 +20,6 @@ import {
 	addTagsToContact,
 	untagContact,
 } from 'Api/Endpoints'
-
 import { AppContext } from 'Context/AppProvider'
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
@@ -30,6 +27,7 @@ import { objectNotNull } from 'utils/Validation'
 import Button from 'UI/Widgets/Buttons/Button';
 import PeopleDialog from 'UI/Widgets/Dialogs/PeopleDialog';
 import OpponentDialog from 'UI/Widgets/Dialogs/OpponentDialog';
+import { PreferencesContext } from 'Context/PreferencesProvider';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -50,18 +48,9 @@ const detailsFormValidation = Yup.object().shape({
 })
 
 const ContactProfileDetails = (props) => {
-	if (props.loading)
-		return (
-			<Stack
-				pr={1}
-				spacing={1}
-				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
-			>
-				<LoadingPanel />
-			</Stack>
-		)
-
 	const app = useContext(AppContext)
+	const preferences = useContext(PreferencesContext)
+
 	const { update: updateContact, archive } = useContactMutation()
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
@@ -495,6 +484,17 @@ const ContactProfileDetails = (props) => {
 		} else
 			app.alert.setWarning("Erro, invalid contact id")
 	}
+
+	if (props.loading || preferences.loading)
+		return (
+			<Stack
+				pr={1}
+				spacing={1}
+				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			>
+				<LoadingPanel />
+			</Stack>
+		)
 
 	return (
 		<Stack

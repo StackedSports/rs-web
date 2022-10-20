@@ -41,7 +41,7 @@ export const ContactsKanban = () => {
             return
 
         const unsub = getKanban(kanbanId, (kanban) => {
-            console.log(kanban)
+            //console.log(kanban)
 
             setKanban(kanban)
             setLoading(false)

@@ -64,7 +64,7 @@ export default function BaseContactsPage(props) {
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [editBoard, setEditBoard] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState({})
+    const [selectedFilters, setSelectedFilters] = useState<ISelectedFilters>({})
 
     // handle filters options
     const contacts = useMemo(() => props.contacts, [props.contacts])
@@ -74,6 +74,7 @@ export default function BaseContactsPage(props) {
 
     const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = props.multiPageSelection || useMultiPageSelection_V2(contacts.items)
+    const panelFiltersData = getContactPanelFiltersData()
 
     useEffect(() => {
         if (props.selectedFilters)
@@ -99,8 +100,6 @@ export default function BaseContactsPage(props) {
         setTeamBoards(teamBoards)
     }, [boards.items])
 
-    const panelFiltersData = getContactPanelFiltersData()
-
     const mainActions = useMemo(() => {
         if (props.kanbanView)
             return props.mainActions
@@ -111,7 +110,7 @@ export default function BaseContactsPage(props) {
                 icon: AccountBox,
                 onClick: () => setOpenCreateBoardDialog(true),
                 variant: 'outlined',
-                disabled: Object.keys(selectedFilters).length === 0,
+                disabled: selectedFilters && Object.keys(selectedFilters).length === 0,
             },
             {
                 name: 'Filter',
@@ -221,7 +220,7 @@ export default function BaseContactsPage(props) {
         setOpenCreateBoardDialog(true)
     }
 
-    const boardEditedSuccess = (res) => {
+    const boardEditedSuccess = () => {
         setOpenCreateBoardDialog(false)
         app.alert.setSuccess('Board edited successfully!')
         boards.refetch()

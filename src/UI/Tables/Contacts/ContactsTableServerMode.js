@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -12,12 +12,12 @@ import {
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
-import { columnsMini, columnsFull, parseColumnsNames, getColumnsByPreferences } from './ContactDataGridConfig';
+import { columnsMini, columnsFull, getColumnsByPreferences } from './ContactDataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
 import { PreferencesContext } from "Context/PreferencesProvider";
 
-export default function ContactsTableServerMode({
+const ContactsTableServerMode = ({
     contacts,
     pagination,
     id,
@@ -28,7 +28,7 @@ export default function ContactsTableServerMode({
     sortingMode,
     selectedFilters,
     ...restOfProps
-}) {
+}) => {
     const history = useHistory();
     const columns = getColumnsByPreferences(mini)
     const visibleColumns = useContactTableColumns(columnsControl, id)
@@ -204,3 +204,5 @@ function CustomFooter(props) {
         </Typography>
     </Box>
 }
+
+export default ContactsTableServerMode

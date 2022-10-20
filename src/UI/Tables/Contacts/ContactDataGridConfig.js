@@ -388,34 +388,24 @@ export const parseColumnsNames = (property) => {
         case 'created_at':
         case 'last_messaged_at':
             return null
-        case 'profile_image':
-            return 'profileImg'
-        case 'first_name':
-            return 'firstName'
-        case 'last_name':
-            return 'lastName'
-        case 'nick_name':
-            return 'nickName'
         case 'twitter_name':
         case 'twitter':
-            return 'twitterName'
+            return 'twitter_profile'
         case 'ranks':
             return 'rank'
         case 'years':
-            return 'gradYear'
+            return 'grad_year'
         case 'positions':
         case 'team_positions':
-            return 'position'
+            return 'positions'
         case 'area_coaches':
-            return 'areaCoach'
+            return 'area_coach'
         case 'position_coaches':
-            return 'positionCoach'
+            return 'position_coach'
         case 'timezones':
-            return 'timeZone'
+            return 'time_zone'
         case 'states':
             return 'state'
-        case 'dob':
-            return 'birthday'
         default:
             return property
     }

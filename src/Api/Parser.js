@@ -4,7 +4,6 @@ import lodash from 'lodash'
 
 export const getFilterContactsCriteria = (filters) => {
     if (!filters) return null
-    console.log(filters)
 
     let criteria = {}
     if (filters.search) {
@@ -40,7 +39,7 @@ export const getFilterContactsCriteria = (filters) => {
     }
 
     if (filters.area_coach) {
-        criteria['area_coaches'] = filters.area_coaches.map(areaCoach => areaCoach.id)
+        criteria['area_coaches'] = filters.area_coach.map(areaCoach => areaCoach.id)
     }
 
     if (filters.position_coach) {

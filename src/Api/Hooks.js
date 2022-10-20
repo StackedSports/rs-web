@@ -1413,20 +1413,20 @@ export const useStats = (startDate, endDate) => {
 const getStoredColumns = (id) => JSON.parse(localStorage.getItem(id + '-table-columns'))
 
 const getColumns = (control) => ({
-    profileImg: true,
-    fullname: true,
-    firstName: false,
-    lastName: false,
-    nickName: false,
-    twitterName: false,
+    profile_image: true,
+    full_name: true,
+    first_name: false,
+    last_name: false,
+    nick_name: false,
+    twitter_profile: false,
     phone: false,
     state: false,
-    school: false,
-    gradYear: false,
-    position: false,
-    areaCoach: false,
-    positionCoach: false,
-    recruitingCoach: false,
+    high_school: false,
+    grad_year: false,
+    positions: false,
+    area_coach: false,
+    position_coach: false,
+    coordinator: false,
     status: false,
     status_2: false,
     tags: false,
@@ -1434,8 +1434,8 @@ const getColumns = (control) => ({
     // lastMessaged: false,
     // mostActiveTime: false,
     // dateAdded: false,
-    timeZone: false,
-    birthday: false,
+    time_zone: false,
+    dob: false,
     ...control
 })
 
