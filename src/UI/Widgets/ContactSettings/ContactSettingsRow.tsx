@@ -47,7 +47,7 @@ export const ContactSettingsRow: React.FC<ContactSettingsRowProps> = ({
             >
                 <DragIndicatorIcon />
             </IconButton>
-            <TypeIcon sx={{ color: 'text.secondary', mr: 1 }} />
+            <TypeIcon sx={{ color: 'text.secondary', mr: 2, fontSize: '20px' }} />
             <Typography textTransform={'capitalize'}>
                 {values.label}
             </Typography>
