@@ -10,11 +10,9 @@ import { useBoard, useBoardContacts } from 'Api/ReactQuery'
 import { parseColumnsNames } from 'UI/Tables/Contacts/ContactDataGridConfig';
 import { ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
 import { IContact } from 'Interfaces/IContact';
-import { PreferencesContext } from 'Context/PreferencesProvider';
 
 export default function BoardPage() {
     const app = useContext(AppContext);
-    const preferences = useContext(PreferencesContext)
     const { boardId } = useParams<{ boardId: string }>();
     const TABLE_ID = `board-perPage`
 
@@ -56,24 +54,18 @@ export default function BoardPage() {
     }
 
     const selectedFilters = useMemo<ISelectedFilters>(() => {
-        if (!board.item || !preferences)
+        if (!board.item)
             return null
 
         const { criteria } = board.item
-        const preferenceMap = new Map(preferences.labels)
 
         const entries = Object.entries(criteria).map(([k, v]) => {
-            const label = preferenceMap.get(k)
             const value = v.map(v => ({ ...v, disabled: true }))
-            if (label) {
-                return label.enabled ? [k, value] : null
-            } else
-                return [k, value]
-        }).filter(entry => entry !== null)
-
+            return [k, value]
+        })
         const filters: ISelectedFilters = Object.fromEntries(entries)
         return filters
-    }, [board.item, preferences])
+    }, [board.item])
 
     const visibleTableColumns = useMemo(() => {
         let columns: Record<string, boolean> = {
@@ -95,7 +87,7 @@ export default function BoardPage() {
                 })
             return columns
         }
-    }, [board.item, preferences])
+    }, [board.item])
 
     const boardInfo = {
         id: board.item?.id,

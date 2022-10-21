@@ -359,7 +359,7 @@ export const columnsFull = [
     birthday,
 ]
 
-export const getColumnsByPreferences = (isMini) => {
+export const getColumnsByPreferences = (isMini, showDisabledColumns = false) => {
     const preferences = useContext(PreferencesContext)
     const tempColumns = useMemo(() => isMini ? columnsMini : columnsFull, [isMini])
     const [columns, setColumns] = useState(tempColumns)
@@ -370,7 +370,7 @@ export const getColumnsByPreferences = (isMini) => {
         const { labels } = preferences
         const labelsMap = new Map(labels)
 
-        const filteredColumns = tempColumns.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
+        const filteredColumns = tempColumns.filter(colum => !labelsMap.get(colum.field) || showDisabledColumns || labelsMap.get(colum.field).enabled)
         const parsedColumns = filteredColumns.map(colum => {
             const temp = labelsMap.get(colum.field)
             if (temp) {

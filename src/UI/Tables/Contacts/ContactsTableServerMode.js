@@ -27,10 +27,11 @@ const ContactsTableServerMode = ({
     columnsControl,
     sortingMode,
     selectedFilters,
+    showDisabledColumns,
     ...restOfProps
 }) => {
     const history = useHistory();
-    const columns = getColumnsByPreferences(mini)
+    const columns = getColumnsByPreferences(mini,showDisabledColumns)
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
     const preferences = useContext(PreferencesContext)

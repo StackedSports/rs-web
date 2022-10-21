@@ -459,6 +459,7 @@ export default function BaseContactsPage(props) {
                             onSortModelChange={props.onSortingChange}
                             sortingMode={props.sortingMode}
                             selectedFilters={selectedFilters}
+                            showDisabledColumns={Boolean(props.boardInfo)}
                             {...contactsMultipageSelection}
                         />
                     )
