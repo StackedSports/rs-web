@@ -6,7 +6,7 @@ import { formatDate, formatPhoneNumber, getFullName } from 'utils/Parser'
 import AvatarImg from "images/avatar.png";
 import { getColumns } from '../Messages/DataGridConfig';
 import { PreferencesContext } from 'Context/PreferencesProvider';
-import { useContext } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 
 const getImg = (profile_image) => {
@@ -361,26 +361,30 @@ export const columnsFull = [
 
 export const getColumnsByPreferences = (isMini) => {
     const preferences = useContext(PreferencesContext)
-    const columns = isMini ? columnsMini : columnsFull
+    const tempColumns = useMemo(() => isMini ? columnsMini : columnsFull, [isMini])
+    const [columns, setColumns] = useState(tempColumns)
 
-    if (!preferences)
-        return columns
+    useEffect(() => {
+        if (!preferences)
+            return
+        const { labels } = preferences
+        const labelsMap = new Map(labels)
 
-    const { labels } = preferences
-    const labelsMap = new Map(labels)
-
-    const filteredColumns = columns.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
-    return filteredColumns.map(colum => {
-        const temp = labelsMap.get(colum.field)
-        if (temp) {
-            return {
-                ...colum,
-                headerName: temp.label
+        const filteredColumns = tempColumns.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
+        const parsedColumns = filteredColumns.map(colum => {
+            const temp = labelsMap.get(colum.field)
+            if (temp) {
+                return {
+                    ...colum,
+                    headerName: temp.label
+                }
             }
-        }
-        else
-            return colum
-    })
+            else
+                return colum
+        })
+        setColumns(parsedColumns)
+    }, [preferences, tempColumns])
+    return columns
 }
 
 export const parseColumnsNames = (property) => {

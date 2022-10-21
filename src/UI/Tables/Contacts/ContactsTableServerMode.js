@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -71,7 +71,7 @@ const ContactsTableServerMode = ({
         return Object.hasOwnProperty.call(params.row, 'relationships')
     }
 
-    const getTreeData = () => {
+    const treeData = useMemo(() => {
         if (!contacts) return []
         if (mini) return contacts
 
@@ -87,23 +87,23 @@ const ContactsTableServerMode = ({
             }).flat()
         }
         return contacts
-    }
+    }, [contacts, mini])
 
     const getTreeDataPath = (row) => row.hierarchy;
 
-    const groupingColDef = {
-        headerName: 'Relationships',
-        valueGetter: (params) => {
-            if (params.rowNode.depth === 0)
-                return params.rowNode.children ? 'Members' : ''
-            else
-                return params.row?.relationship_type?.description
-        },
-        flex: 1,
-        minWidth: 200,
-    }
+    const groupingColDefPreference = useMemo(() => {
+        const groupingColDef = {
+            headerName: 'Relationships',
+            valueGetter: (params) => {
+                if (params.rowNode.depth === 0)
+                    return params.rowNode.children ? 'Members' : ''
+                else
+                    return params.row?.relationship_type?.description
+            },
+            flex: 1,
+            minWidth: 200,
+        }
 
-    const getGroupingColDefPreference = useCallback(() => {
         if (!preferences) return groupingColDef
         else {
             const relationshipsLabel = new Map(preferences.labels).get('relationships')?.label
@@ -121,13 +121,13 @@ const ContactsTableServerMode = ({
                 checkboxSelection
                 disableSelectionOnClick
                 keepNonExistentRowsSelected
-                rows={getTreeData()}
+                rows={treeData}
                 treeData={mini ? false : true}
                 disableChildrenFiltering
                 disableChildrenSorting
                 getTreeDataPath={getTreeDataPath}
                 isRowSelectable={mini ? null : getIsRowSelectable}
-                groupingColDef={getGroupingColDefPreference()}
+                groupingColDef={groupingColDefPreference}
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
