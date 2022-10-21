@@ -28,17 +28,6 @@ export default function ContactsPage(props) {
         setperPageLocalStorage(pagination.itemsPerPage)
     }, [contacts.pagination.itemsPerPage, contacts.pagination.currentPage])
 
-    const visibleTableRows = {
-        profileImg: false,
-        twitterName: true,
-        phone: true,
-        state: true,
-        school: true,
-        gradYear: true,
-        rank: true,
-        timeZone: true,
-    }
-
     const onPanelFilterChange = (filter) => {
         setSelectedFilters(filter)
         contacts.filter({ ...filter, ...selectedSort })
@@ -74,7 +63,6 @@ export default function ContactsPage(props) {
             onSortingChange={onSortingChange}
             onPanelFilterChange={onPanelFilterChange}
             tableId="contacts-table"
-            columnsControl={visibleTableRows}
             onContactSearch={!props.only_archived && onContactSearch}
             onContactSearchClear={onContactSearchClear}
         />
