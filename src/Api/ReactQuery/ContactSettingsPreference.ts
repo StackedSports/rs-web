@@ -120,17 +120,16 @@ const CONFIG_VALUES: [contactKeys, Pick<labelValues, 'customizable' | 'type' | '
     }],
 ]
 
-const createDefaultValues = (key: contactKeys, config: Pick<labelValues, 'customizable' | 'type'>, index: number): labelValues => ({
+const createDefaultValues = (config: Pick<labelValues, 'customizable' | 'type' | 'label'>, index: number): labelValues => ({
     id: uuidv4(),
     ...config,
     enabled: true,
     index: index,
-    label: key,
 })
 
-const generateDefaultLabels = (): labelType => {
+export const generateDefaultLabels = (): labelType => {
     return CONFIG_VALUES.map(
-        ([key, values], i) => [key, createDefaultValues(key, values, i)]
+        ([key, values], i) => [key, createDefaultValues(values, i)]
     )
 }
 
@@ -147,7 +146,7 @@ export const useContactSettings = () => {
         const unsubscribe = onSnapshot<Record<contactKeys, labelValues>>(contactPreferenceRef, (snapshot: DocumentSnapshot<Record<contactKeys, labelValues>>) => {
             if (!snapshot.data()) {
                 const initialValues = generateDefaultLabels()
-                createContactSettings(initialValues, user)
+                createContactSettings(initialValues, user?.team?.org?.id)
                     .then(() => {
                         console.log("new prefrence created")
                         setValue(initialValues)
@@ -170,7 +169,7 @@ export const useContactSettings = () => {
     const setLabels = (value: labelType | ((prev: labelType) => labelType)) => {
 
         const newValue = value instanceof Function ? value(storadeValue) : value
-        updateContactSettings(newValue, user)
+        updateContactSettings(newValue, user?.team?.org?.id)
             .then(() => {
                 console.log("new updated created")
             })
@@ -185,17 +184,17 @@ export const useContactSettings = () => {
     }
 }
 
-export const createContactSettings = (labels: labelType, user: any) => {
-    if (!user) return Promise.reject(new Error('user is not set'))
+export const createContactSettings = (labels: labelType, orgId: string) => {
+    if (!orgId) return Promise.reject(new Error('user is not set'))
 
-    const contactPreferenceRef = doc(db, 'orgs', user.team.org.id, 'preferences', 'contact_labels')
+    const contactPreferenceRef = doc(db, 'orgs', orgId, 'preferences', 'contact_labels')
 
     return setDoc(contactPreferenceRef, Object.fromEntries(labels))
 }
-export const updateContactSettings = (labels: labelType, user: any) => {
-    if (!user) return Promise.reject(new Error('user is not set'))
+export const updateContactSettings = (labels: labelType, orgId: string) => {
+    if (!orgId) return Promise.reject(new Error('user is not set'))
 
-    const contactPreferenceRef = doc(db, 'orgs', user.team.org.id, 'preferences', 'contact_labels')
+    const contactPreferenceRef = doc(db, 'orgs', orgId, 'preferences', 'contact_labels')
 
     return updateDoc(contactPreferenceRef, Object.fromEntries(labels))
 }

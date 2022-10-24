@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconButton, Stack, SvgIconTypeMap, Typography } from '@mui/material'
+import { Divider, IconButton, Stack, SvgIconTypeMap, Typography } from '@mui/material'
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -59,18 +59,17 @@ export const ContactSettingsRow: React.FC<ContactSettingsRowProps> = ({
                 <IconButton
                     sx={{ color: 'text.secondary' }}
                     onClick={() => onToggleEnable(values.index)}
+                    disabled={!values.customizable}
                 >
                     {values.enabled ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
-                {values.enabled && (
-                    <IconButton
-                        sx={{ color: 'text.secondary' }}
-                        onClick={() => onOpenModal(values.index)}
-                        disabled={!values.customizable}
-                    >
-                        <MoreVertIcon />
-                    </IconButton>
-                )}
+                <IconButton
+                    sx={{ color: 'text.secondary' }}
+                    onClick={() => onOpenModal(values.index)}
+                    disabled={!values.customizable}
+                >
+                    <MoreVertIcon />
+                </IconButton>
             </Stack>
         </Stack>
 
