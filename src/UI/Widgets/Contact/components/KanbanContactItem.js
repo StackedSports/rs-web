@@ -1,14 +1,12 @@
 import { useState, useContext, useMemo } from 'react'
 import { AppContext } from 'Context/AppProvider'
-import { Avatar, Box, Stack, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox } from '@mui/material';
+import { Avatar, Box, Stack, Typography, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Checkbox, styled } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import SendIcon from '@mui/icons-material/Send'
 
 import RenderIf from 'UI/Widgets/RenderIf'
 import { getFullName } from 'utils/Parser';
-
-import styled from 'styled-components';
 
 const getPositionsString = (positions) => {
     if (positions.length == 0)
@@ -51,7 +49,7 @@ export const KanbanContactItem = (props) => {
     }
 
     const onRemoveContactClick = (e) => {
-        if (props.onRemoveContact){
+        if (props.onRemoveContact) {
             props.onRemoveContact(contact)
         }
     }
@@ -124,7 +122,9 @@ export const KanbanContactItem = (props) => {
     );
 }
 
-const Container = styled(Box)((props) => `
+const Container = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'isDragging'
+})((props) => `
   border-radius: 8px;
   border: 1px solid transparent;
   background-color: ${props.isDragging ? '#dadada' : '#ffff'};

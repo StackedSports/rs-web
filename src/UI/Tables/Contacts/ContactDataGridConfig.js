@@ -6,7 +6,7 @@ import { formatDate, formatPhoneNumber, getFullName } from 'utils/Parser'
 import AvatarImg from "images/avatar.png";
 import { getColumns } from '../Messages/DataGridConfig';
 import { PreferencesContext } from 'Context/PreferencesProvider';
-import { useContext } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 
 const getImg = (profile_image) => {
@@ -359,28 +359,32 @@ export const columnsFull = [
     birthday,
 ]
 
-export const getColumnsByPreferences = (isMini) => {
+export const getColumnsByPreferences = (isMini, showDisabledColumns = false) => {
     const preferences = useContext(PreferencesContext)
-    const columns = isMini ? columnsMini : columnsFull
+    const tempColumns = useMemo(() => isMini ? columnsMini : columnsFull, [isMini])
+    const [columns, setColumns] = useState(tempColumns)
 
-    if (!preferences)
-        return columns
+    useEffect(() => {
+        if (!preferences)
+            return
+        const { labels } = preferences
+        const labelsMap = new Map(labels)
 
-    const { labels } = preferences
-    const labelsMap = new Map(labels)
-
-    const filteredColumns = columns.filter(colum => !labelsMap.get(colum.field) || labelsMap.get(colum.field).enabled)
-    return filteredColumns.map(colum => {
-        const temp = labelsMap.get(colum.field)
-        if (temp) {
-            return {
-                ...colum,
-                headerName: temp.label
+        const filteredColumns = tempColumns.filter(colum => !labelsMap.get(colum.field) || showDisabledColumns || labelsMap.get(colum.field).enabled)
+        const parsedColumns = filteredColumns.map(colum => {
+            const temp = labelsMap.get(colum.field)
+            if (temp) {
+                return {
+                    ...colum,
+                    headerName: temp.label
+                }
             }
-        }
-        else
-            return colum
-    })
+            else
+                return colum
+        })
+        setColumns(parsedColumns)
+    }, [preferences, tempColumns])
+    return columns
 }
 
 export const parseColumnsNames = (property) => {
@@ -388,34 +392,24 @@ export const parseColumnsNames = (property) => {
         case 'created_at':
         case 'last_messaged_at':
             return null
-        case 'profile_image':
-            return 'profileImg'
-        case 'first_name':
-            return 'firstName'
-        case 'last_name':
-            return 'lastName'
-        case 'nick_name':
-            return 'nickName'
         case 'twitter_name':
         case 'twitter':
-            return 'twitterName'
+            return 'twitter_profile'
         case 'ranks':
             return 'rank'
         case 'years':
-            return 'gradYear'
+            return 'grad_year'
         case 'positions':
         case 'team_positions':
-            return 'position'
+            return 'positions'
         case 'area_coaches':
-            return 'areaCoach'
+            return 'area_coach'
         case 'position_coaches':
-            return 'positionCoach'
+            return 'position_coach'
         case 'timezones':
-            return 'timeZone'
+            return 'time_zone'
         case 'states':
             return 'state'
-        case 'dob':
-            return 'birthday'
         default:
             return property
     }

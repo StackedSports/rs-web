@@ -92,7 +92,9 @@ export const KanbanListItems = (props) => {
     )
 }
 
-const Wrapper = styled(Box)`
+const Wrapper = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'isDraggingFrom' && prop !== 'isDraggingOver' && prop !== 'isDropDisabled',
+})`
   background-color: ${(props) =>
         getBackgroundColor(props.isDraggingOver, props.isDraggingFrom)};
   display: flex;
