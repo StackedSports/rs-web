@@ -3,7 +3,7 @@ import lodash from "lodash";
 
 import { Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
-import { useContactConversation } from 'Api/ReactQuery'
+import { useContactConversation, useInboxConversationInfinty } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 
@@ -11,6 +11,7 @@ import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 const ContactChat = (props) => {
 
   const contactConversation = useContactConversation(props.contact?.id)
+  const contatcSmSConversation = useInboxConversationInfinty({ inbox_type: "sms", user_id: props.contact?.id })
   const [loadedMessages, setLoadedMessages] = useState({})
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const ContactChat = (props) => {
       flex={1}
       spacing={1}
     >
-      <ContactChatHeader contact={props.contact} />
+      <ContactChatHeader contact={props.contact} onPlatformChange={(id) => console.log(id)} />
       <MessagesDisplay
         contact_profile_image={loadedMessages.contact_profile_image}
         coach_profile_image={loadedMessages.coach_profile_image}

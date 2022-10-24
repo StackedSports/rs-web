@@ -18,7 +18,16 @@ interface TextMessageProps {
     onCheck: (message: IConversatition) => void
 }
 
+const hasMedia = (media: Pick<IConversatition, 'media'>): boolean => {
+    if (!media) return false
+    if (Array.isArray(media) && media.length < 1) return false
+    return true
+}
+
 export const TextMessage: React.FC<TextMessageProps> = (props) => {
+
+    if (!props.message.text && !hasMedia(props.message.media))
+        return <></>
 
     return (
         <ListItem
@@ -50,7 +59,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                     }}
                 >
                     {props.message.media && !Array.isArray(props.message.media) && (
-                        <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
+                        <Box sx={{ width: '100%', maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
                             <RenderMediaType
                                 url={props.message.media?.urls?.original}
                                 type={getFileType(props.message?.media)}
@@ -58,7 +67,7 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
                         </Box>
                     )}
                     {props.message.media && Array.isArray(props.message.media) && (
-                        <Box sx={{ maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
+                        <Box sx={{ width: '100%', maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
                             {props.message.media?.map((media, index) =>
                                 <RenderMediaType
                                     key={index}

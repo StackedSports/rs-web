@@ -64,12 +64,12 @@ export interface IConversatitionAPI {
 }
 export interface IConversatition {
     id: string
-    text: string;
+    text?: string | null;
     direction: 'out' | 'in';
     from: string;
     to?: any;
     created_at: Date;
-    media: IMediaChat | IMediaChat[];
+    media?: IMediaChat | IMediaChat[] | null;
     team_contact_id: number;
 }
 
