@@ -14,8 +14,9 @@ import { getFullName } from "utils/Parser";
 import { states, timeZones } from "utils/Data";
 import { PreferencesContext } from "Context/PreferencesProvider";
 
-export const getContactPanelFiltersData = () => {
+export const useContactPanelFiltersData = () => {
     const preferences = useContext(PreferencesContext)
+    
     const status = useStatuses()
     const status2 = useStatus2()
     const ranks = useRanks()
@@ -23,6 +24,7 @@ export const getContactPanelFiltersData = () => {
     const tags = useTags() //useTagsWithContacts()
     const positions = usePositions()
     const teamMembers = useTeamMembers()
+
     const [filter, setFilters] = useState({})
 
     const initalPanelFilters = useMemo<IPanelFilters>(
@@ -105,11 +107,13 @@ export const getContactPanelFiltersData = () => {
                     return [key, filter]
 
             }).filter(entry => entry !== null)
+
             const filterPreferences: IPanelFilters = Object.fromEntries(entries)
             setFilters(filterPreferences)
         }
 
     }, [initalPanelFilters, preferences])
+
     return filter
 
 }

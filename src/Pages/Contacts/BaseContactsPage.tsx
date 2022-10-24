@@ -42,7 +42,7 @@ import RenderIf from 'UI/Widgets/RenderIf';
 
 import { IBoard, ISideFilter } from 'Interfaces'
 import { ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
-import { getContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
+import { useContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)
@@ -72,6 +72,8 @@ export default function BaseContactsPage(props) {
     const boards = useBoards()
     const kanbans = useKanbans()
 
+    const panelFiltersData = useContactPanelFiltersData()
+
     const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = props.multiPageSelection || useMultiPageSelection_V2(contacts.items)
 
@@ -99,7 +101,7 @@ export default function BaseContactsPage(props) {
         setTeamBoards(teamBoards)
     }, [boards.items])
 
-    const panelFiltersData = getContactPanelFiltersData()
+    
 
     const mainActions = useMemo(() => {
         if (props.kanbanView)
