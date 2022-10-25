@@ -12,7 +12,7 @@ import { useContacts, useGradYears, usePositions, useRanks, useStatus2, useStatu
 import { states, timeZones } from 'utils/Data'
 import { getFullName } from 'utils/Parser'
 import useLocalStorage from 'Hooks/useLocalStorage';
-import { getContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
+import { useContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
 
 const getSelectionLabel = (selectionCount, clearSelection) => {
     return (
@@ -31,7 +31,7 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
     const contacts = useContacts(1, perPageLocalStorage);
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
     const [selectedFilters, setSelectedFilters] = useState({})
-    const panelFiltersData = getContactPanelFiltersData()
+    const panelFiltersData = useContactPanelFiltersData()
 
     useEffect(() => {
         setperPageLocalStorage(contacts.pagination.itemsPerPage)

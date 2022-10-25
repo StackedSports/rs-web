@@ -21,7 +21,7 @@ import PanelFilters from '../PanelFilters';
 import { states, timeZones } from 'utils/Data';
 import { getFullName } from 'utils/Parser';
 import RenderIf from '../RenderIf';
-import { getContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
+import { useContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
 
 export const RECEIVER_SELECT_DIALOG_TABS = {
     privateBoard: '0',
@@ -68,7 +68,7 @@ export default function ReceiverSelectDialog(props) {
     // Contacts
     const contacts = useContacts()
 
-    const panelFiltersData = getContactPanelFiltersData()
+    const panelFiltersData = useContactPanelFiltersData()
 
     const [showContactFilters, setShowContactFilters] = useState(false)
     const [selectedFilters, setSelectedFilters] = useState({})

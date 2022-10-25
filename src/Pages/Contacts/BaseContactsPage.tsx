@@ -76,7 +76,6 @@ export default function BaseContactsPage(props) {
 
     const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = props.multiPageSelection || useMultiPageSelection_V2(contacts.items)
-    const panelFiltersData = getContactPanelFiltersData()
 
     useEffect(() => {
         if (props.selectedFilters)
