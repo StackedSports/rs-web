@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { contactsRoutes } from 'Routes/Routes';
 import { useHistory } from "react-router-dom";
-import { columnsMini, columnsFull } from './DataGridConfig';
+import { columnsMini, columnsFull } from './ContactDataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 
 export default function ContactsTable(props) {

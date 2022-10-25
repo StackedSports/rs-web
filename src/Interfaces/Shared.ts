@@ -8,7 +8,7 @@ export interface IPaginationApi {
 export type IApiResponse<T> = [T[], IPaginationApi]
 
 export interface ITwitterProfile {
-    screen_name: string;
+    screen_name?: string | null;
     profile_image: string;
 }
 

@@ -63,7 +63,7 @@ export default function SelectDialogTab(props) {
             >
               <span style={{ marginLeft: marginLeft }}></span>
 
-              <TabList onChange={handleChange} aria-label="basic tabs example">
+              <TabList onChange={handleChange}>
                 {props.tabs.map(tab => (
                   <Tab
                     key={tab.id}

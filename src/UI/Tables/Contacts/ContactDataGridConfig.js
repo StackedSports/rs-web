@@ -4,6 +4,9 @@ import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid-pro';
 import { formatDate, formatPhoneNumber, getFullName } from 'utils/Parser'
 
 import AvatarImg from "images/avatar.png";
+import { getColumns } from '../Messages/DataGridConfig';
+import { PreferencesContext } from 'Context/PreferencesProvider';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 
 const getImg = (profile_image) => {
@@ -12,7 +15,7 @@ const getImg = (profile_image) => {
 }
 
 const profileImg = {
-    field: 'profileImg',
+    field: 'profile_image',
     headerName: '',
     width: 50,
     sortable: false,
@@ -30,7 +33,7 @@ const profileImg = {
 }
 
 const fullName = {
-    field: 'fullName',
+    field: 'full_name',
     headerName: 'Full Name',
     // width: 180,
     flex: 2,
@@ -45,7 +48,7 @@ const fullName = {
 }
 
 const firstName = {
-    field: 'firstName',
+    field: 'first_name',
     headerName: 'First Name',
     flex: 1,
     minWidth: 100,
@@ -59,7 +62,7 @@ const firstName = {
 }
 
 const lastName = {
-    field: 'lastName',
+    field: 'last_name',
     headerName: 'Last Name',
     flex: 1,
     minWidth: 100,
@@ -73,7 +76,7 @@ const lastName = {
 }
 
 const nickName = {
-    field: 'nickName',
+    field: 'nick_name',
     headerName: 'Nick Name',
     flex: 1,
     minWidth: 100,
@@ -87,12 +90,12 @@ const nickName = {
 }
 
 const twitterName = {
-    field: 'twitterProfile',
+    field: 'twitter_profile',
     headerName: 'Twitter',
     // width: 130,
     flex: 1,
     minWidth: 120,
-    // resizable: true,
+    sortable: false,
     valueGetter: (params) => {
         let contact = params.row
         if (contact.tweetUsername)
@@ -131,7 +134,7 @@ const state = {
 }
 
 const school = {
-    field: 'school',
+    field: 'high_school',
     headerName: 'School',
     flex: 1,
     minWidth: 150,
@@ -144,7 +147,7 @@ const school = {
 }
 
 const gradYear = {
-    field: 'gradYear',
+    field: 'grad_year',
     headerName: 'Grad Year',
     flex: 'fit-content',
     valueGetter: (params) => params.row.grad_year ? params.row.grad_year : '',
@@ -156,7 +159,7 @@ const gradYear = {
 }
 
 const positions = {
-    field: 'position',
+    field: 'positions',
     headerName: 'Position',
     flex: 1,
     minWidth: 100,
@@ -169,9 +172,10 @@ const positions = {
 }
 
 const areaCoach = {//array
-    field: 'areaCoach',
+    field: 'area_coach',
     headerName: 'Area Coach',
     flex: 1,
+    sortable: false,
     minWidth: 150,
     valueGetter: (params) => params.row.area_coach?.full_name || '',
     renderCell: (params) => (
@@ -182,8 +186,9 @@ const areaCoach = {//array
 }
 
 const positionCoach = {
-    field: 'positionCoach',
+    field: 'position_coach',
     headerName: 'Position Coach',
+    sortable: false,
     flex: 1,
     minWidth: 150,
     valueGetter: (params) => params.row.position_coach?.full_name || '',
@@ -195,8 +200,9 @@ const positionCoach = {
 }
 
 const recruitingCoach = {
-    field: 'recruitingCoach',
+    field: 'coordinator',
     headerName: 'Recruiting Coach',
+    sortable: false,
     flex: 1,
     minWidth: 150,
     valueGetter: (params) => params.row.coordinator?.full_name || '',
@@ -210,6 +216,7 @@ const recruitingCoach = {
 const status = {
     field: 'status',
     headerName: 'Status',
+    sortable: false,
     flex: 1,
     minWidth: 100,
     valueGetter: (params) => params.row.status ? params.row.status.status : '',
@@ -236,7 +243,8 @@ const status2 = {
 const tags = {
     field: 'tags',
     headerName: 'Tags',
-    // width: 120,
+    sortable: false,
+    minWidth: 100,
     flex: 1,
     valueGetter: (params) => params.row.tags ? params.row.tags.map(tag => tag.name).join(", ") : '',
     renderCell: (params) => (
@@ -249,6 +257,7 @@ const tags = {
 const rank = {
     field: 'rank',
     headerName: 'Rank',
+    sortable: false,
     flex: 1,
     minWidth: 70,
     valueGetter: (params) => params.row.rank ? params.row.rank.rank : '',
@@ -287,7 +296,7 @@ const dateAdded = {
 }
 
 const timeZone = {
-    field: 'timeZone',
+    field: 'time_zone',
     headerName: 'Time Zone',
     flex: 1,
     minWidth: 100,
@@ -300,8 +309,8 @@ const timeZone = {
 }
 
 const birthday = {
-    field: 'birthday',
-    headerName: 'Birthday ',
+    field: 'dob',
+    headerName: 'Birthday',
     flex: 1,
     minWidth: 100,
     valueGetter: (params) => params.row.dob ? new Date(params.row.dob.split('-')) : '',
@@ -350,40 +359,68 @@ export const columnsFull = [
     birthday,
 ]
 
+export const getColumnsByPreferences = (isMini, showDisabledColumns = false) => {
+    const preferences = useContext(PreferencesContext)
+    const tempColumns = useMemo(() => isMini ? columnsMini : columnsFull, [isMini])
+    const [columns, setColumns] = useState(tempColumns)
+
+    useEffect(() => {
+        if (!preferences)
+            return
+        const { labels } = preferences
+        const labelsMap = new Map(labels)
+
+        const filteredColumns = tempColumns.filter(colum => !labelsMap.get(colum.field) || showDisabledColumns || labelsMap.get(colum.field).enabled)
+        const parsedColumns = filteredColumns.map(colum => {
+            const temp = labelsMap.get(colum.field)
+            if (temp) {
+                return {
+                    ...colum,
+                    headerName: temp.label
+                }
+            }
+            else
+                return colum
+        })
+        setColumns(parsedColumns)
+    }, [preferences, tempColumns])
+    return columns
+}
+
 export const parseColumnsNames = (property) => {
     switch (property) {
         case 'created_at':
         case 'last_messaged_at':
             return null
-        case 'profile_image':
-            return 'profileImg'
-        case 'first_name':
-            return 'firstName'
-        case 'last_name':
-            return 'lastName'
-        case 'nick_name':
-            return 'nickName'
         case 'twitter_name':
         case 'twitter':
-            return 'twitterName'
+            return 'twitter_profile'
         case 'ranks':
             return 'rank'
         case 'years':
-            return 'gradYear'
+            return 'grad_year'
         case 'positions':
         case 'team_positions':
-            return 'position'
+            return 'positions'
         case 'area_coaches':
-            return 'areaCoach'
+            return 'area_coach'
         case 'position_coaches':
-            return 'positionCoach'
+            return 'position_coach'
         case 'timezones':
-            return 'timeZone'
+            return 'time_zone'
         case 'states':
             return 'state'
-        case 'dob':
-            return 'birthday'
         default:
             return property
     }
+}
+
+export const getApiModel = (sortModel) => {
+    if (sortModel.length === 0) return {}
+    const result = {
+        sort_column: sortModel[0].field,
+        sort_dir: sortModel[0].sort
+    }
+    console.log(result)
+    return result
 }

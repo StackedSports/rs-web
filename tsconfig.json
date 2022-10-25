@@ -22,6 +22,7 @@
     "noUnusedParameters": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "downlevelIteration": true,    
     "noEmit": true,
     "jsx": "react",
     "baseUrl": "src"

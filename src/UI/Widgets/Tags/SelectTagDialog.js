@@ -125,7 +125,6 @@ const SelectTagDialog = (props) => {
 
     return (
         <BaseDialog
-            keepMounted
             open={props.open}
             onConfirm={onConfirm}
             onClose={onClose}
