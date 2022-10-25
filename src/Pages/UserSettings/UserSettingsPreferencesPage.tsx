@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { UserSettingsPage } from './UserSettingsPage'
 import { List, ListItem, ListItemText, ListSubheader, Switch } from '@mui/material'
 import { useFormik } from 'formik';
 import { useUserPreference, useUserPreferenceMutation } from 'Api/ReactQuery/UserPrefences';
-import { AppContext } from 'Context/AppProvider';
+//import { AppContext } from 'Context/AppProvider';
 
 export const UserSettingsPreferencesPage: React.FC = () => {
-    const { alert } = useContext(AppContext)
+    // const { alert } = useContext(AppContext)
     const updatePreference = useUserPreferenceMutation()
     const { preferences } = useUserPreference()
 
@@ -15,25 +15,21 @@ export const UserSettingsPreferencesPage: React.FC = () => {
         initialValues: preferences,
         onSubmit: (values, formikHelpers) => {
             updatePreference.mutate(values, {
-                onSuccess: () => alert.setSuccess("Preferences updated"),
+                //onSuccess: () => alert.setSuccess("Preferences updated"),
                 onSettled: () => formikHelpers.setSubmitting(false)
             })
         },
-
     });
 
-    const mainActions = [
-        {
-            name: 'Save Settings',
-            onClick: formik.submitForm,
-            variant: 'outlined',
-        },
-    ]
+    const handleFormChange = (e: React.ChangeEvent<any>) => {
+        formik.handleChange(e)
+        formik.submitForm()
+    }
+
 
     return (
         <UserSettingsPage
             title='User Preferences'
-            actions={mainActions}
         >
             <List
                 component={'form'}
@@ -51,7 +47,7 @@ export const UserSettingsPreferencesPage: React.FC = () => {
                         edge="end"
                         name="darkMode"
                         checked={formik.values.darkMode}
-                        onChange={formik.handleChange}
+                        onChange={handleFormChange}
                     />
                 </ListItem>
 
@@ -67,7 +63,7 @@ export const UserSettingsPreferencesPage: React.FC = () => {
                         edge="end"
                         name="showColumnOnFilter"
                         checked={formik.values.showColumnOnFilter}
-                        onChange={formik.handleChange}
+                        onChange={handleFormChange}
                     />
                 </ListItem>
 
