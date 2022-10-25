@@ -19,11 +19,11 @@ const filters = [
         name: 'Configurations',
         items: [
             // Filters
+            { id: 'contacts', name: 'Contacts', path: settingsRoutes.team.contact },
             { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
             { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
             { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },
             { id: 'snippets', name: 'Snippets', path: settingsRoutes.team.snippets },
-            { id: 'contacts', name: 'Contacts', path: settingsRoutes.team.contact },
             // { id: 'grad-years', name: 'Grad Years', path: settingsRoutes.team.gradYears },
             // { id: 'platforms', name: 'Board', path: settingsRoutes.team.platforms },
             // { id: 'placeholders', name: 'Placeholders', path: settingsRoutes.team.placeholders },
