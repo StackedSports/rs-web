@@ -113,6 +113,7 @@ export const settingsRoutes = {
         ranks: '/settings/ranks',
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
+        contact: '/settings/contact',
 
         // gradYears: '/settings/grad-years',
         // placeholders: '/settings/placeholders',
@@ -138,7 +139,8 @@ export const contactsRoutes = {
 export const userRoutes = {
     profile: "/user/profile",
     account: "/user/account",
-    notifications: "/user/notifications",
+    preferences: "/user/preferences",
+    //notifications: "/user/notifications",
 }
 
 export const tweetRankingRoutes = {

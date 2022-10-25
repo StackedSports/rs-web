@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect, useContext, useRef } from 'react';
+ // @ts-nocheck
+import React, { useState, useMemo, useEffect, useContext, useRef, useCallback } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 import { useQueryClient } from 'react-query';
 
@@ -24,14 +25,7 @@ import useMultiPageSelection_V2 from 'Hooks/MultiPageSelectionHook_V2'
 import {
     useBoards,
     useBoardMutation,
-    useStatus2,
-    useGradYears,
-    useStatuses,
-    useRanks,
     useTeamMembers,
-    usePositions,
-    useTags,
-    useTagsWithContacts
 } from 'Api/ReactQuery';
 import { useKanbans } from 'Api/Firebase/Kanban/Kanban'
 
@@ -42,15 +36,14 @@ import {
 } from 'Api/Endpoints';
 
 import { contactsRoutes } from 'Routes/Routes';
-import { getFullName } from 'utils/Parser';
-import { timeZones, states } from 'utils/Data';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AppContext } from 'Context/AppProvider';
 import { IconButton } from '@mui/material';
 import RenderIf from 'UI/Widgets/RenderIf';
 
 import { IBoard, ISideFilter } from 'Interfaces'
-import { IPanelFilters, ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
+import { ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
+import { useContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
 
 export default function BaseContactsPage(props) {
     const app = useContext(AppContext)
@@ -72,19 +65,15 @@ export default function BaseContactsPage(props) {
     const [openFollowOnTwitterDialog, setOpenFollowOnTwitterDialog] = useState(false)
     const [showPanelFilters, setShowPanelFilters] = useState(false)
     const [editBoard, setEditBoard] = useState(false)
-    const [selectedFilters, setSelectedFilters] = useState({})
+    const [selectedFilters, setSelectedFilters] = useState<ISelectedFilters>({})
 
     // handle filters options
     const contacts = useMemo(() => props.contacts, [props.contacts])
-    const status = useStatuses()
-    const status2 = useStatus2()
-    const ranks = useRanks()
-    const gradYears = useGradYears()
-    const tags = useTags() //useTagsWithContacts()
-    const positions = usePositions()
     const teamMembers = useTeamMembers()
     const boards = useBoards()
     const kanbans = useKanbans()
+
+    const panelFiltersData = useContactPanelFiltersData()
 
     const gridApiRef = useGridApiRef()
     const contactsMultipageSelection = props.multiPageSelection || useMultiPageSelection_V2(contacts.items)
@@ -113,60 +102,6 @@ export default function BaseContactsPage(props) {
         setTeamBoards(teamBoards)
     }, [boards.items])
 
-    const panelFiltersData: IPanelFilters = useMemo(() =>
-    ({
-        status: {
-            label: 'Status',
-            options: status.items,
-        },
-        ranks: {
-            label: 'Rank',
-            options: ranks.items,
-        },
-        years: {
-            label: 'Grad Year',
-            options: gradYears.items,
-        },
-        tags: {
-            label: 'Tags',
-            options: tags.items,
-            onSearch: (search) => tags.search(search),
-        },
-        positions: {
-            label: 'Position',
-            options: positions.items,
-        },
-        area_coaches: {
-            label: 'Area Coach',
-            options: teamMembers.items,
-            optionsLabel: (option) => getFullName(option),
-        },
-        position_coaches: {
-            label: 'Position Coach',
-            options: teamMembers.items,
-        },
-        timezones: {
-            label: 'Time Zone',
-            options: timeZones,
-        },
-        dob: {
-            label: 'Birthday',
-            type: 'date',
-            format: 'MM/dd',
-            optionsLabel: (dates) => dates.join(' - '),
-            isUnique: true
-        },
-        states: {
-            label: 'State',
-            options: states,
-
-        },
-        status_2: {
-            label: 'Status 2',
-            options: status2.items,
-        },
-    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
-
     const mainActions = useMemo(() => {
         if (props.kanbanView)
             return props.mainActions
@@ -177,7 +112,7 @@ export default function BaseContactsPage(props) {
                 icon: AccountBox,
                 onClick: () => setOpenCreateBoardDialog(true),
                 variant: 'outlined',
-                disabled: Object.keys(selectedFilters).length === 0,
+                disabled: selectedFilters && Object.keys(selectedFilters).length === 0,
             },
             {
                 name: 'Filter',
@@ -258,7 +193,7 @@ export default function BaseContactsPage(props) {
         setOpenFollowOnTwitterDialog(true)
     }
 
-    const onArchiveContactClick = (e) => {
+    const onArchiveContactClick = () => {
         console.log("onArchiveContactClick")
         let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
         setLoading(true)
@@ -287,7 +222,7 @@ export default function BaseContactsPage(props) {
         setOpenCreateBoardDialog(true)
     }
 
-    const boardEditedSuccess = (res) => {
+    const boardEditedSuccess = () => {
         setOpenCreateBoardDialog(false)
         app.alert.setSuccess('Board edited successfully!')
         boards.refetch()
@@ -297,7 +232,6 @@ export default function BaseContactsPage(props) {
 
     const boardEditedFailure = () => {
         app.alert.setError('Failed to edit board.')
-        // setEditBoard(false)
     }
 
     const onDeleteBoard = () => {
@@ -526,6 +460,7 @@ export default function BaseContactsPage(props) {
                             onSortModelChange={props.onSortingChange}
                             sortingMode={props.sortingMode}
                             selectedFilters={selectedFilters}
+                            showDisabledColumns={Boolean(props.boardInfo)}
                             {...contactsMultipageSelection}
                         />
                     )

@@ -13,8 +13,6 @@ export const useBoard = (id: string) => {
         enabled: !!id,
     })
 
-    console.log(reactQuery.data)
-
     return {
         ...reactQuery,
         item: reactQuery.data,
@@ -82,7 +80,7 @@ export const useBoardMutation = () => {
     });
 
     const remove = useMutation((id: string) => deleteBoard(id), {
-        onSuccess: (data, variables, context) => {
+        onSuccess: (_data, variables, _context) => {
             queryClient.cancelQueries(['board', variables])
             queryClient.cancelQueries('boards')
         }
@@ -113,7 +111,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }))
                 break;
             case 'ranks':
-                output[key] = value.map((rank: {
+                output['rank'] = value.map((rank: {
                     rank: string; id: string
                 }) => ({
                     ...rank,
@@ -122,7 +120,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }))
                 break;
             case 'years':
-                output[key] = value.map((year: number) => ({
+                output['grad_year'] = value.map((year: number) => ({
                     label: year,
                     value: year
                 }))
@@ -140,7 +138,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }))
                 break;
             case 'area_coaches':
-                output[key] = value.map((areaCoach: {
+                output['area_coach'] = value.map((areaCoach: {
                     full_name: string; id: string
                 }) => ({
                     ...areaCoach,
@@ -149,7 +147,7 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }))
                 break;
             case 'position_coaches':
-                output[key] = value.map((positionCoach: {
+                output['position_coach'] = value.map((positionCoach: {
                     full_name: string; id: string
                 }) => ({
                     ...positionCoach,
@@ -158,13 +156,13 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                 }))
                 break;
             case 'states':
-                output[key] = value.map((state: string) => ({
+                output['state'] = value.map((state: string) => ({
                     label: state,
                     value: state
                 }))
                 break;
             case 'timezones':
-                output[key] = value.map((timezone: string) => ({
+                output['time_zone'] = value.map((timezone: string) => ({
                     label: timezone,
                     value: timezone,
                 }))
@@ -174,6 +172,12 @@ function parseCriteriaBoard(criteria: IBoardCriteriaApi): IBoardCriteria {
                     label: status2,
                     value: status2
                 }))
+                break;
+            case 'dob':
+                output[key] = [{
+                    label: value.join("-"),
+                    value: value
+                }]
                 break;
             default:
                 break;

@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
-import UserSettingsPage from "./UserSettingsPage";
+import { UserSettingsPage } from "./UserSettingsPage";
 import { useUser } from 'Api/Hooks';
 
 import { AuthContext } from 'Context/Auth/AuthProvider';
@@ -99,8 +99,8 @@ const UserAccountCard = (props) => {
 				<Button
 					variant="contained"
 					disabled={props.disabled}
-					disableRipple={props.disabled || props.account}
-					disableElevation={props.disabled || props.account}
+					disableRipple={props.disabled || Boolean(props.account)}
+					disableElevation={props.disabled || Boolean(props.account)}
 					onClick={onLinkAccount}
 					style={{ display: 'flex', justifyContent: 'space-evenly', width: "90%", textTransform: "none" }}
 				>
@@ -119,7 +119,7 @@ const UserAccountCard = (props) => {
 
 			<Button
 				variant="text"
-				disabled={props.disabled || !props.account}
+				disabled={props.disabled || !Boolean(props.account)}
 				onClick={onUnlinkAccount}
 			>
 				UNLINK
@@ -145,8 +145,6 @@ const UserSettingsAccountPage = (props) => {
 		token: "provider_token",
 		secret: "provider_secret",
 	}
-
-	console.log(user.item)
 
 	return (
 		<UserSettingsPage title='Account'>

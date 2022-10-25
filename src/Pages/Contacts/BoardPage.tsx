@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useContext } from 'react';
+import React, { useMemo, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import BaseContactsPage from './BaseContactsPage';
@@ -6,14 +6,14 @@ import BaseContactsPage from './BaseContactsPage';
 import { AppContext } from 'Context/AppProvider';
 import useSearchParams from "Hooks/SearchParamsHook";
 import useLocalStorage from "Hooks/useLocalStorage";
-
 import { useBoard, useBoardContacts } from 'Api/ReactQuery'
-import { parseColumnsNames } from 'UI/Tables/Contacts/DataGridConfig';
+import { parseColumnsNames } from 'UI/Tables/Contacts/ContactDataGridConfig';
+import { ISelectedFilters } from 'UI/Widgets/PanelFilters/PanelFilters';
+import { IContact } from 'Interfaces/IContact';
 
-
-export default function BoardPage(props) {
+export default function BoardPage() {
     const app = useContext(AppContext);
-    const { boardId } = useParams();
+    const { boardId } = useParams<{ boardId: string }>();
     const TABLE_ID = `board-perPage`
 
     const searchParams = useSearchParams();
@@ -30,12 +30,12 @@ export default function BoardPage(props) {
         setperPageLocalStorage(pagination.itemsPerPage)
     }, [boardContacts.pagination.itemsPerPage, boardContacts.pagination.currentPage, boardId])
 
-    useEffect(() => {
-        if (!board.item)
-            return
-
-        console.log("board.item", board.item)
-    }, [board.item])
+    /*     useEffect(() => {
+            if (!board.item)
+                return
+    
+            console.log("board.item", board.item)
+        }, [board.item]) */
 
     const title = useMemo(() => {
         if (board.item)
@@ -44,7 +44,7 @@ export default function BoardPage(props) {
             return 'Board'
     }, [board.item])
 
-    const onSendMessage = (selectedData) => {
+    const onSendMessage = (selectedData?: IContact[]) => {
 
         if (selectedData && selectedData.length > 0) {
             app.sendMessageToContacts(selectedData)
@@ -53,29 +53,25 @@ export default function BoardPage(props) {
         }
     }
 
-    const selectedFilters = useMemo(() => {
+    const selectedFilters = useMemo<ISelectedFilters>(() => {
         if (!board.item)
-            return null
+            return {}
 
         const { criteria } = board.item
 
-        const filters = Object.fromEntries(Object.entries(criteria).map(([k, v]) => [k,
-            v.map(v => ({
-                ...v,
-                disabled: true
-            }))
-        ]))
-
-        console.log(filters)
-
+        const entries = Object.entries(criteria).map(([k, v]) => {
+            const value = v.map(v => ({ ...v, disabled: true }))
+            return [k, value]
+        })
+        const filters: ISelectedFilters = Object.fromEntries(entries)
         return filters
     }, [board.item])
 
     const visibleTableColumns = useMemo(() => {
-        let columns = {
-            profileImg: true,
-            fullName: true,
-            twitterName: true,
+        let columns: Record<string, boolean> = {
+            profile_image: true,
+            full_name: true,
+            twitter_profile: true,
             phone: true,
         }
 
@@ -87,7 +83,7 @@ export default function BoardPage(props) {
                 Object.values(board.item.settings.selected_columns).forEach(value => {
                     const columnName = parseColumnsNames(value);
                     if (columnName)
-                        columns[parseColumnsNames(value)] = true
+                        columns[columnName] = true
                 })
             return columns
         }

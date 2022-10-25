@@ -1,6 +1,7 @@
+ // @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Collapse, Stack, Box } from '@mui/material';
+import { Collapse, Stack } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import lodash from 'lodash';
 
@@ -38,7 +39,7 @@ type ISelectedOption = IFilterOption<unknown> & { disabled?: boolean }
 
 type IFilter = IFilterTypeDropdown | IFilterTypeDate | IFilterTypeHidden
 export type IPanelFilters = Record<string, IFilter>
-export type ISelectedFilters = Record<string, ISelectedOption[]>
+export type ISelectedFilters = Record<string, ISelectedOption[]> | null
 
 export interface IPanelFilterProps {
 	open?: boolean;
@@ -149,7 +150,7 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 			<Stack id="selected-filters-stack" direction='row' flexWrap='wrap' pb={1}>
 				{props.filters && selectedFilters && Object.keys(selectedFilters).map(filterName =>
 					selectedFilters[filterName].map((selectedOption, index) => {
-						if (props.filters?.[filterName].label)
+						if (props.filters?.[filterName]?.label)
 							return (
 								<SearchableOptionSelected
 									style={{ marginLeft: 0 }}
@@ -162,7 +163,7 @@ export const PanelFilters = (props: IPanelFilterProps): JSX.Element => {
 					}))}
 			</Stack>
 
-			<Collapse in={props.open}>
+			<Collapse in={props.open} unmountOnExit>
 				<Stack direction='row' gap={2} pb={2} flexWrap='wrap' alignItems='center'>
 					{props.filters && Object.keys(props.filters).map(filterName => {
 						const filter = props.filters?.[filterName];

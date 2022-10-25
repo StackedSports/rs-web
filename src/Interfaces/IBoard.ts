@@ -31,6 +31,7 @@ export interface IBoardCriteriaApi {
     states?: string[];
     timezones?: string[];
     status_2?: string[];
+    dob?: [string, string];
 }
 interface Contacts {
     count: number;
@@ -62,19 +63,21 @@ interface IPositionsFilter extends IFilterOption<string> { }
 interface IStatesFilter extends IFilterOption<string> { }
 interface ITimezonesFilter extends IFilterOption<string> { }
 interface IStatus_2Filter extends IFilterOption<string> { }
+interface dobFilter extends IFilterOption<string> { }
 
 
 export interface IBoardCriteria {
     status?: IStatusFilter[];
-    ranks?: IRankFilter[];
-    years?: IYearFilter[];
+    rank?: IRankFilter[];
+    grad_year?: IYearFilter[];
     tags?: ITagsFilter[];
     positions?: IPositionsFilter[];
-    area_coaches?: IAreaCoachesFilter[];
-    position_coaches?: IPositionCoachesFilter[];
-    states?: IStatesFilter[];
-    timezones?: ITimezonesFilter[];
+    area_coach?: IAreaCoachesFilter[];
+    position_coach?: IPositionCoachesFilter[];
+    state?: IStatesFilter[];
+    time_zone?: ITimezonesFilter[];
     status_2?: IStatus_2Filter[];
+    dob?: dobFilter[];
 }
 export interface IBoard {
     id: string;

@@ -112,7 +112,7 @@ const FirebaseDataCollection = ({ children }) => {
     const { user } = useContext(AuthContext)
 
     useEffect(() => {
-        console.log(user)
+        //console.log(user)
 
         if(!user) return
 

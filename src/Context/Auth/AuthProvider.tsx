@@ -1,28 +1,39 @@
-import { useState, useContext, useEffect, createContext, useMemo } from 'react'
-import { useLocation, Redirect } from 'react-router-dom'
+import React, { useContext, useEffect, createContext, useMemo, ReactNode } from 'react'
+import { Redirect } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 
 import { AppContext } from 'Context/AppProvider'
 import { login as apiLogin, logout as apiLogout, loginWithTwitter as apiLoginWithTwitter } from 'Api/Endpoints'
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import { IMemberApi } from 'Interfaces/ISettings'
+import useLocalStorage from 'Hooks/useLocalStorage'
 
+type AuthContextType = {
+    user: IMemberApi | null;
+    login?: (email: string, password: string) => Promise<IMemberApi>;
+    loginWithTwitter?: () => Promise<IMemberApi>;
+    logout?: () => void;
+    isAdmin: boolean;
+}
 
-const AuthContext = createContext()
+const initalState: AuthContextType = {
+    user: null,
+    isAdmin: false,
+}
+
+const AuthContext = createContext<AuthContextType>(initalState)
 AuthContext.displayName = 'AuthContext'
 
-const AuthProvider = (props) => {
+const AuthProvider: React.FC<{ children: ReactNode }> = (props) => {
     const queryClient = useQueryClient()
     const app = useContext(AppContext)
     const provider = new TwitterAuthProvider();
     const auth = getAuth();
 
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [user, setUser] = useLocalStorage<IMemberApi | null>('user', null)
 
     useEffect(() => {
         // console.log(app.location)
-
-        setIsLoading(true)
 
         // save current location so when the user signs in
         // we redirect them to that location
@@ -34,18 +45,14 @@ const AuthProvider = (props) => {
             app.redirect('/dashboard')
         }
 
-
-        setIsLoading(false)
-
     }, [user, app.location])
 
-    const login = (email, password) => {
-        return new Promise((resolve, reject) => {
+    const login = (email: string, password: string) => {
+        return new Promise<IMemberApi>((resolve, reject) => {
             apiLogin(email, password)
                 .then(res => {
                     console.log(res.data)
                     setUser(res.data)
-                    localStorage.setItem('user', JSON.stringify(res.data))
                     resolve(res.data)
                 })
                 .catch(error => {
@@ -54,23 +61,22 @@ const AuthProvider = (props) => {
                 })
         })
     }
+
     const loginWithTwitter = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<IMemberApi>((resolve, reject) => {
             signInWithPopup(auth, provider)
                 .then((result) => {
-                    //console.log(result)
                     const credential = TwitterAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    const secret = credential.secret;
+                    const token = credential?.accessToken;
+                    const secret = credential?.secret;
                     // The signed-in user info.
+                    // @ts-ignore: Unreachable code error
                     const handle = result.user?.reloadUserInfo?.screenName;
                     const email = result.user?.email
                     const id = result.user?.providerData[0]?.uid
 
                     apiLoginWithTwitter({ token, secret, email, handle, id }).then((res) => {
-                        console.log(res.data)
                         setUser(res.data)
-                        localStorage.setItem('user', JSON.stringify(res.data))
                         resolve(res.data)
                     }).catch((error) => {
                         console.log(error)
@@ -84,8 +90,6 @@ const AuthProvider = (props) => {
     }
 
     const logout = () => {
-        console.log('logout')
-
         apiLogout()
             .then(res => {
                 console.log(res)
@@ -96,20 +100,13 @@ const AuthProvider = (props) => {
             .catch(error => {
                 console.log(error)
                 // TODO: only temporary, don't know if this should
-                // still be here
-                setUser(null)
-                localStorage.removeItem('user')
-                //app.redirect('/')
             })
             .finally(() => {
                 setUser(null)
-                localStorage.removeItem('user')
+                // localStorage.removeItem('user')
                 app.redirect('/')
                 queryClient.clear()
             })
-        // localStorage.removeItem('user')
-        //setUser(null)
-        //localStorage.removeItem('user')
     }
 
     const utils = useMemo(() => ({

@@ -4,7 +4,6 @@ import lodash from 'lodash'
 
 export const getFilterContactsCriteria = (filters) => {
     if (!filters) return null
-    //console.log(filters)
 
     let criteria = {}
     if (filters.search) {
@@ -15,12 +14,12 @@ export const getFilterContactsCriteria = (filters) => {
         criteria['status'] = filters.status.map(status => status.id)
     }
 
-    if (filters.ranks) {
-        criteria['ranks'] = filters.ranks.map(rank => rank.id)
+    if (filters.rank) {
+        criteria['ranks'] = filters.rank.map(rank => rank.id)
     }
 
-    if (filters.years) {
-        criteria['years'] = filters.years.map(year => year.value)
+    if (filters.grad_year) {
+        criteria['years'] = filters.grad_year.map(year => year.value)
     }
 
     if (filters.tags) {
@@ -39,45 +38,27 @@ export const getFilterContactsCriteria = (filters) => {
         })
     }
 
-    if (filters.area_coaches) {
-        criteria['area_coaches'] = []
-
-        filters.area_coaches.forEach(areaCoach => {
-            criteria.area_coaches.push(areaCoach.id)
-        })
+    if (filters.area_coach) {
+        criteria['area_coaches'] = filters.area_coach.map(areaCoach => areaCoach.id)
     }
 
-    if (filters.position_coaches) {
-        criteria['position_coaches'] = []
-
-        filters.position_coaches.forEach(positionCoach => {
-            criteria.position_coaches.push(positionCoach.id)
-        })
+    if (filters.position_coach) {
+        criteria['position_coaches'] = filters.position_coach.map(positionCoach => positionCoach.id)
     }
 
-    if (filters.states) {
-        criteria['states'] = []
-
-        filters.states.forEach(state => {
-            criteria.states.push(state.abbreviation)
-        })
+    if (filters.state) {
+        criteria['states'] = filters.state.map(state => state.abbreviation)
     }
 
-    if (filters.timezones) {
-        criteria['timezones'] = []
-
-        filters.timezones.forEach(timezone => {
-            criteria.timezones.push(timezone.name)
-        })
+    if (filters.time_zone) {
+        criteria['timezones'] = filters.time_zone.map(timezone => timezone.name)
     }
 
     if (filters.dob) {
-        //console.log(filters.birthday[0])
         criteria['dob'] = filters.dob[0].value
     }
 
     if (filters.status_2) {
-        //console.log(filters.status_2)
         criteria['status_2'] = filters.status_2.map(status => status.value)
     }
 
