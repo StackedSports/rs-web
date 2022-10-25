@@ -16,6 +16,9 @@ import { columnsMini, columnsFull, getColumnsByPreferences } from './ContactData
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
 import { PreferencesContext } from "Context/PreferencesProvider";
+import { AppContext } from "Context/AppProvider";
+import { useUserPreference } from "Api/ReactQuery/UserPrefences";
+
 
 const ContactsTableServerMode = ({
     contacts,
@@ -31,13 +34,14 @@ const ContactsTableServerMode = ({
     ...restOfProps
 }) => {
     const history = useHistory();
-    const columns = getColumnsByPreferences(mini,showDisabledColumns)
+    const columns = getColumnsByPreferences(mini, showDisabledColumns)
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
     const preferences = useContext(PreferencesContext)
+    const { item: userPreference } = useUserPreference()
 
     useEffect(() => {
-        if (!selectedFilters) return
+        if (!selectedFilters || !userPreference.showColumnOnFilter) return
         const collums = Object.keys(selectedFilters)
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).

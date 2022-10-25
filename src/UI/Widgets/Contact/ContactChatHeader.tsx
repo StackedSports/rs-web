@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Avatar, Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';

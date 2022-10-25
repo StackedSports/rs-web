@@ -421,6 +421,5 @@ export const getApiModel = (sortModel) => {
         sort_column: sortModel[0].field,
         sort_dir: sortModel[0].sort
     }
-    console.log(result)
     return result
 }

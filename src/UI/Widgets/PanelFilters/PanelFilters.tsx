@@ -1,6 +1,7 @@
+ // @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Collapse, Stack, Box } from '@mui/material';
+import { Collapse, Stack } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import lodash from 'lodash';
 

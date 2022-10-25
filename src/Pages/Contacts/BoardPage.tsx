@@ -55,7 +55,7 @@ export default function BoardPage() {
 
     const selectedFilters = useMemo<ISelectedFilters>(() => {
         if (!board.item)
-            return null
+            return {}
 
         const { criteria } = board.item
 

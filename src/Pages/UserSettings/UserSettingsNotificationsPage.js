@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { Divider, Typography } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 
-import UserSettingsPage from "./UserSettingsPage";
+import { UserSettingsPage } from "./UserSettingsPage";
 import UserSettingsNotificationsList from './UserSettingsNotificationsList';
 
 const UserSettingsNotificationsPage = (props) => {
@@ -119,7 +119,7 @@ const UserSettingsNotificationsPage = (props) => {
           </Form>
         )}
       </Formik>
-    </UserSettingsPage >
+    </UserSettingsPage>
   )
 }
 

@@ -5,7 +5,8 @@ import {
   UserSettingsPage,
   UserSettingsProfilePage,
   UserSettingsAccountPage,
-  UserSettingsNotificationsPage
+  UserSettingsNotificationsPage,
+  UserSettingsPreferencesPage
 } from 'Pages/UserSettings';
 
 const UserSettingsRoutes = (props) => (
@@ -24,6 +25,11 @@ const UserSettingsRoutes = (props) => (
       exact
       path={userRoutes.account}
       component={UserSettingsAccountPage}
+    />
+    <Route
+      exact
+      path={userRoutes.preferences}
+      component={UserSettingsPreferencesPage}
     />
     {/* <Route
       exact

@@ -93,6 +93,6 @@
     "@types/react-linkify": "^1.0.1",
     "@types/uuid": "^8.3.4",
     "file-loader": "^6.2.0",
-    "typescript": "^3.9.10"
+    "typescript": "^4"
   }
 }

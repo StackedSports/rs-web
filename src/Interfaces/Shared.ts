@@ -45,6 +45,10 @@ export interface IFilterOption<T> {
     value: T;
 }
 
+export interface IUserPrefenreces {
+    showColumnOnFilter: boolean;
+}
+
 export interface IUrls {
     thumb: string;
     medium: string;
