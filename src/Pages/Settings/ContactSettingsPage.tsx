@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DragDropContext, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Divider, Stack, Typography } from '@mui/material'
 import SettingsPage from './SettingsPage'
 import { DraggebleRow } from 'UI/Widgets/ContactSettings/DraggebleRow'
 import { ContactConfigModal } from 'UI/Widgets/ContactSettings/ContactConfigModal'
@@ -48,6 +48,9 @@ const ContactSettingsPage = () => {
 
     if (!preferences) return <></>
     const { labels, setLabels } = preferences
+
+    const enabledLabels = labels.filter(label => label[1].enabled && label[1].customizable)
+    const disabledLabels = labels.filter(label => !label[1].enabled)
 
     const reorder = (list: labelType, startIndex: number, endIndex: number): labelType => {
         const result = [...list];
@@ -115,14 +118,15 @@ const ContactSettingsPage = () => {
                 <Typography fontWeight={'bold'} color='text.secondary' my={1}>
                     Enabled
                 </Typography>
-                <Droppable droppableId="shown">
+                <Droppable droppableId="enabled">
                     {(provided: DroppableProvided) => (
                         <Stack
                             ref={provided.innerRef}
                             {...provided.droppableProps}
+                            divider={<Divider />}
                         >
                             {
-                                labels.filter(label => label[1].enabled).map(([_, values]) =>
+                                enabledLabels.map(([_, values]) =>
                                     <DraggebleRow
                                         values={values}
                                         key={values.id}
@@ -136,21 +140,30 @@ const ContactSettingsPage = () => {
                     )}
                 </Droppable>
 
-                <Typography fontWeight={'bold'} color='text.secondary' my={1}>
-                    Disabled
-                </Typography>
-                <Box>
-                    {
-                        labels.filter(label => !label[1].enabled).map(([_, values]) =>
-                            <ContactSettingsRow
-                                values={values}
-                                key={values.id}
-                                onOpenModal={onOpenConfigModal}
-                                onToggleEnable={onToggleEnable}
-                            />
-                        )
-                    }
-                </Box>
+                {disabledLabels.length > 0 && (
+                    <Box
+                        mt={2}
+                    >
+                        <Typography fontWeight={'bold'} color='text.secondary' my={1}>
+                            Disabled
+                        </Typography>
+                        <Stack
+                            divider={<Divider />}
+                        >
+                            {
+                                disabledLabels.map(([_, values]) =>
+                                    <ContactSettingsRow
+                                        values={values}
+                                        key={values.id}
+                                        onOpenModal={onOpenConfigModal}
+                                        onToggleEnable={onToggleEnable}
+                                    />
+                                )
+                            }
+                        </Stack>
+                    </Box>
+                )}
+
             </DragDropContext>
 
             <ContactConfigModal
