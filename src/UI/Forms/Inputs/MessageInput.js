@@ -32,7 +32,7 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
 import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
-import { Stack, CircularProgress, Popper, Button, IconButton, ClickAwayListener } from '@mui/material';
+import { Stack, CircularProgress, Popper, Button, IconButton, ClickAwayListener, TextField } from '@mui/material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
@@ -252,7 +252,7 @@ const ReceiverSelectionGroup = (props) => {
 }
 
 const InputReceivers = (props) => {
-    
+
     if (props.selected) {
         let lengths = props.selected.privateBoards.length
             + props.selected.teamBoards.length
@@ -530,7 +530,7 @@ const InputText = (props) => {
 
     return (
         <>
-            <Stack direction='row' gap={1.5} style={{ maringBottom: 20 }}>
+            <Stack direction='row' gap={1.5} sx={{ maringBottom: 20 }}>
                 {!props.hideTextPlaceholders &&
                     <TextPlaceholders
                         placeholders={props.textPlaceholders}
@@ -542,10 +542,16 @@ const InputText = (props) => {
                 />
                 <EmojiPicker onEmojiSelected={onEmojiSelected} />
             </Stack>
-            <textarea
+            <TextField
+                multiline
                 ref={textArea}
                 className='TextArea'
+                variant='standard'
                 type='text'
+                fullWidth
+                InputProps={{
+                    disableUnderline: true
+                }}
                 rows='8'
                 placeholder={props.placeholder}
                 value={props.value}

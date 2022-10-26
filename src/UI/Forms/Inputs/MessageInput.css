@@ -1,12 +1,15 @@
 .MessageInput {
     border: 1px solid #d8d8d8;
     border-radius: 4px;
-    /* min-height: 70px; */
     margin-top: 16px;
     padding: 16px;
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.MessageInput:last-of-type {
+    margin-bottom: 16px;
 }
 
 .MessageInput:hover {
@@ -120,11 +123,7 @@
 }
 
 .MessageInput .Input .TextArea {
-    width: 100%;
     resize: none;
-    border: 0px solid transparent;
-    outline: 0px solid transparent;
-    min-height: 300px;
     margin-top: 20px;
     font-size: 1rem;
     font-family: "Proxima Nova", "Roboto", "sans-serif";

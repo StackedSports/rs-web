@@ -49,7 +49,7 @@ export const PanelWrapper = styled(Box)(({ theme }) => ({
         display: 'flex',
         flexDirection: 'column',
         paddingInline: '20px',
-        minHeight:0
+        minHeight: 0,
     },
 
     '&.PainelBlank .Content': {

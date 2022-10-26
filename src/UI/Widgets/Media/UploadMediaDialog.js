@@ -42,14 +42,13 @@ export const FileDropZone = (props) => {
 		<Stack
 			alignItems="center"
 			justify="center"
-			style={{
+			sx={{
 				height: "max-content",
-				background: "#fafcfd",
-				// marginTop: 16,
-				marginBottom: 16,
-				borderRadius: 4,
+				backgroundColor: 'background.default' ,//#fafcfd
+				marginBottom: '16px',
+				borderRadius: '4px',
 				border: "1px dotted gray",
-				padding: 16,
+				padding: '16px',
 				...props.style
 			}}
 			onDragOver={(e) => e.preventDefault()}
