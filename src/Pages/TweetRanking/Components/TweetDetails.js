@@ -157,7 +157,6 @@ const TweetDetails = (props) => {
                 >
                     <Typography
                         variant="info-bold"
-                        style={{ textAlign: "center", fontWeight: 'bold' }}
                     >
                         Tweet Details
                     </Typography>

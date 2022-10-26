@@ -65,7 +65,6 @@ export default function ContactsProfilePage(props) {
             <Stack
                 flex={1}
                 direction="row"
-                spacing={1}
                 mt={1}
                 minHeight={0}
             >

@@ -59,8 +59,8 @@ export const Panel: React.FC<PanelProps> = (props) => {
                 >
                     <div className='Header'>
                         {showBackBtn &&
-                            <IconButton size='small' className='IconBack' onClick={props.onBackClick}>
-                                <ArrowBackIosNewIcon />
+                            <IconButton size='small' className='IconBack' onClick={props.onBackClick} >
+                                <ArrowBackIosNewIcon sx={{ fontSize: '20px' }} />
                             </IconButton>
                         }
                         {showMenuBtn &&

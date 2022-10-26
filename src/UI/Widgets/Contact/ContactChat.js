@@ -40,6 +40,11 @@ const ContactChat = (props) => {
     <Stack
       flex={1}
       spacing={1}
+      sx={{
+        '&>:first-child': {
+          px: 1
+        }
+      }}
     >
       <ContactChatHeader contact={props.contact} />
       <MessagesDisplay

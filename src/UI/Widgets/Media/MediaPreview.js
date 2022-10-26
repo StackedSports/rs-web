@@ -350,7 +350,7 @@ const CardImage = styled(Box)(
         alignItems: 'center',
         width: '100%',
         height: size,
-        backgroundColor: '#efefef',
+        backgroundColor: theme.palette.mode ==='light' ? '#efefef' : '#cdcdcdcd',
         position: 'relative',
         overflow: 'hidden',
 

@@ -23,13 +23,13 @@ export default function AccordionComponent(props) {
 			elevation={0}
 		>
 			<AccordionSummary
-				sx={{ backgroundColor: '#f7f7f7', padding: '1 2' }}
+				sx={{ backgroundColor: 'background.default',padding: '1 2' }}
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls={`${props.id}-content`}
 				id={`${props.id}-header`}
 			>
 				<Stack sx={{ width: "95%" }} direction="row" spacing={1} justifyContent="space-between" alignItems="center">
-					<Typography fontWeight="bold" sx={{ flex: 1}}>
+					<Typography fontWeight="bold" sx={{ flex: 1 }}>
 						{props.title}
 					</Typography>
 					<LoadingButton

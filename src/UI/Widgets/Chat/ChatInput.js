@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p={1} sx={{ backgroundColor: '#fff', borderTop: 1, borderColor: 'divider' }}>
+            <Box p={1} sx={{ backgroundColor: 'background.default', borderTop: 1, borderColor: 'divider' }}>
                 <TextField
                     fullWidth
                     multiline
@@ -97,6 +97,12 @@ export const ChatInput = (props) => {
                     helperText={props.isTyping && `${props.name} is typing...`}
                     FormHelperTextProps={{
                         sx: { marginInline: 0 }
+                    }}
+                    sx={{
+                        backgroundColor:'background.paper',
+                        '& .MuiOutlinedInput-root.Mui-focused fieldset':{
+                            borderColor:'inherit'
+                        }
                     }}
                 />
                 {mediaSelected && (
