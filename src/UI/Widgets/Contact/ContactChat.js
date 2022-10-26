@@ -7,7 +7,6 @@ import { useContactConversation } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 
-
 const ContactChat = (props) => {
 
   const contactConversation = useContactConversation(props.contact?.id)

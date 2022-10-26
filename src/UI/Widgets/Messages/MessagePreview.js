@@ -2,11 +2,10 @@ import './MessagePreview.css'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Stack, Grid, Typography, TextField } from '@mui/material'
+import { Stack, Grid, Typography, TextField, Link } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
-//import Typography from 'UI/Widgets/Typography'
 import LoadingOverlay from 'UI/Widgets/LoadingOverlay'
 
 import {
@@ -175,17 +174,25 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
 
                     <Details label="Message Text" textArea value={message.body} direction="column" style={{ marginTop: 10 }} />
                 </div>
-                <Grid item >
+                <Grid item container direction={'column'} width='fit-content' alignItems='center'  >
                     <h3>Message Stats</h3>
 
                     {messageStats && (
-                        <Grid container direction="column" alignItems="center" style={{ marginTop: 10, marginBottom: 30 }}>
+                        <Stack alignItems="center" sx={{ marginTop: 1.3, marginBottom: 3.8 }}>
                             <Typography fontSize={26} fontWeight="bold"> {`${messageStats.delivery}%`} </Typography>
                             <Typography>{`Delivery Rate (${messageStats.sent}/${messageStats.total})`}</Typography>
-                        </Grid>
+                        </Stack>
                     )}
 
-                    {link && <NavLink to={`${messageRoutes.details}/${message.id}`}>View Details</NavLink>}
+                    {link && (
+                        <Link
+                            component={NavLink}
+                            to={`${messageRoutes.details}/${message.id}`}
+                            sx={{ mt: 'auto' }}
+                        >
+                            View Details
+                        </Link>
+                    )}
                 </Grid>
             </Grid>
 
