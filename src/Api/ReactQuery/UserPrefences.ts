@@ -26,7 +26,7 @@ export function useUserPreference() {
         if (!contactPreferenceRef) return
         
         const unsubscribe = onSnapshot(contactPreferenceRef, (snapshot) => {
-            console.log("snapshot", snapshot.data())
+            //console.log("snapshot", snapshot.data())
             queryClient.setQueryData(KEY, snapshot.data());
         })
 

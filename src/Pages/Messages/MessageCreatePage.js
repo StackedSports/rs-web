@@ -360,7 +360,7 @@ export default function MessageCreatePage(props) {
     }
 
     const onMediaSelected = (item, type) => {
-        console.log(item,type)
+        console.log(item, type)
         setMediaSelected({
             item,
             type
@@ -797,7 +797,6 @@ export default function MessageCreatePage(props) {
                 textPlaceholders={textPlaceholders}
                 value={textMessage}
                 onChange={onTextAreaChange}
-                style={{ marginBottom: 50 }}
             />
         </BaseMessagePage>
     )

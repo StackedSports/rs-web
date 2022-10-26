@@ -2,8 +2,7 @@ import { Stack, styled } from "@mui/material";
 
 export const SideFilterWrapper = styled(Stack)(({ theme }) => ({
     width: 220,
-    marginRight: 20,
-    paddingTop: 20,
+    marginRight: 10,
     overflowY: 'auto',
 
     '&::-webkit-scrollbar': {
@@ -18,8 +17,12 @@ export const SideFilterWrapper = styled(Stack)(({ theme }) => ({
 
     '.Category-Header': {
         justifyContent: 'flex-start',
-        fontSize:'1rem',
-        letterSpacing:0,
+        fontSize: '1rem',
+        letterSpacing: 0,
+
+        '	.MuiButton-startIcon': {
+            marginRight: 0,
+        },
 
         '.Icon': {
             transform: 'rotate(90deg)',
@@ -33,6 +36,7 @@ export const SideFilterWrapper = styled(Stack)(({ theme }) => ({
 
     '.link': {
         fontSize: 12,
+        paddingLeft: 23,
 
         '&.Mui-selected': {
             fontWeight: 'bold'

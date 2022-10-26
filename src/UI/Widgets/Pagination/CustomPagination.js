@@ -26,7 +26,8 @@ export const CustomPagination = (props) => {
                 bottom: 0,
                 bgcolor: 'background.paper',
                 flexDirection: 'row',
-                paddingBlock: 1
+                paddingBlock: 1,
+                marginTop: 'auto'
             }}
         >
             <Stack

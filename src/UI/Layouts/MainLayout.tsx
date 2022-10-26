@@ -18,6 +18,7 @@ export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'
 import { ISideFilter } from 'Interfaces'
 import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
 import { ActionsProps } from './Panel/Actions'
+import { SxProps, Theme } from '@mui/material'
 
 export interface IMainLayoutProps {
     topActionName?: string;
@@ -31,6 +32,7 @@ export interface IMainLayoutProps {
     onBackClick?: () => void;
     propsPanelFilters?: IPanelFilterProps;
     panelRef?: React.Ref<unknown> | undefined;
+    panelSx?: SxProps<Theme>,
     showBackBoardToContacts?: boolean;
     onBackBoardToContacts?: () => void;
     redirect?: string;
@@ -70,6 +72,7 @@ export default function MainLayout(props: IMainLayoutProps) {
                     onBackBoardToContacts={props.onBackBoardToContacts}
                     panelRef={props.panelRef}
                     hideHeader={props.hideHeader}
+                    sx={props.panelSx}
                 >
                     {props.alert && (
                         <Snackbar

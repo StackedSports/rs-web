@@ -41,7 +41,7 @@ const BaseMessagePage = (props) => {
                         name: 'All Messages',
                         path: { pathname: messageRoutes.all, search: 'page=1' }
                     },
-                    { 
+                    {
                         id: 'draft',
                         name: 'Drafts',
                         path: { pathname: messageRoutes.all, search: getStatusQueryString('Drafts') }
@@ -118,6 +118,11 @@ const BaseMessagePage = (props) => {
                 onFilterChange: props.onPanelFilterChange,
                 selectedFilters: props.selectedFilters
 
+            }}
+            panelSx={{
+                '& .Content': {
+                    minHeight: 'unset'
+                }
             }}
         >
             {props.children}

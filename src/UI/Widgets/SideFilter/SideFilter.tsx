@@ -56,6 +56,7 @@ const Category: React.FC<CategoryProps> = (props) => {
                 className='Category-Header'
                 variant='text'
                 color='neutral'
+                size='small'
                 onClick={onHeaderClick}
                 startIcon={<KeyboardArrowRightIcon className={`Icon ${collapsed ? 'collapsed' : ''}`} />}
             >
@@ -66,6 +67,7 @@ const Category: React.FC<CategoryProps> = (props) => {
                     <ListItemButton
                         color='neutral'
                         className="link"
+                        dense
                         onClick={(e) => props.button?.onClick(e)}
                     >
                         {props.button.label}
@@ -92,6 +94,7 @@ const Category: React.FC<CategoryProps> = (props) => {
                                 key={item.id}
                                 selected={item.isSelected}
                                 onClick={() => onItemClick(item, index)}
+                                dense
                             >
                                 {item.name}
                             </ListItemButton>

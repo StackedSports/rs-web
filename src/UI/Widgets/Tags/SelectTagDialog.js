@@ -140,7 +140,7 @@ const SelectTagDialog = (props) => {
                 sx={{ marginBottom: selectedTags.length > 0 ? 1 : 2 }}
             >
                 <Stack flex={1}>
-                    <Typography variant="h1" component="h3">
+                    <Typography variant="h1" component="h3" color={'inherit'}>
                         {props.title || 'Select Tags'}
                     </Typography>
                 </Stack>
