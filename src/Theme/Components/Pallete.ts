@@ -38,7 +38,7 @@ export const darkPallete = {
     mode: 'dark',
     ...common,
     primary: {
-        main: '#5865f2',
+        main: '#3a28ff', // 19b2ff 5865f2 199bff 1500ff 3a28ff
     },
     neutral: {
         main: '#fff',
