@@ -1,5 +1,6 @@
 import './Dropdown.css'
 import { useState } from 'react'
+import { Paper } from '@mui/material'
 
 const Dropdown = (props) => {
     const [displayContent, setDisplayContent] = useState(false)
@@ -35,9 +36,9 @@ const Dropdown = (props) => {
                 onBlur={onHeaderBlur}>
                 <props.header />
             </div>
-            <div className={className} style={props.contentStyle}>
+            <Paper className={className} style={props.contentStyle}>
                 <props.content />
-            </div>
+            </Paper>
         </div>
     )
 }

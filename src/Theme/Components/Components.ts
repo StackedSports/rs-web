@@ -1,11 +1,16 @@
-import { Components, Theme } from "@mui/material"
+import { Components, Theme, alpha } from "@mui/material"
 
 export const components: Components<Omit<Theme, "components">> = {
     MuiTooltip: {
         styleOverrides: {
-            tooltip: {
-                fontSize: '14px'
-            }
+            tooltip: ({ theme }) => ({
+                fontSize: '14px',
+                backgroundColor: alpha(theme.palette.common.black, .8),
+                '.MuiTooltip-arrow': {
+                    color: alpha(theme.palette.common.black, .8),
+                }
+
+            })
         }
     },
     MuiButton: {
@@ -23,5 +28,5 @@ export const components: Components<Omit<Theme, "components">> = {
                 color: theme.palette.text.primary,
             }),
         }
-    }
+    },
 }

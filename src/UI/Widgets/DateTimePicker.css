@@ -1,4 +1,3 @@
-
 .DateTimePicker .Header {
     background-color: rgba(37, 110, 220);
     display: flex;
@@ -32,17 +31,14 @@
     margin: 28px;
 }
 
-.DateTimePicker .MuiCalendarPicker {
-    font-size: 5em;
-    transform: scale(1.2);
-}
-
 .DateTimePicker .Cancel {
     width: 100px;
     height: 45px;
     border: 1px solid rgb(238, 238, 238);
     border-radius: 4px;
     margin-left: 10px;
+    background-color: white;
+    color: black;
 }
 
 .DateTimePicker .Action {

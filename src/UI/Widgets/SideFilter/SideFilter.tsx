@@ -36,6 +36,14 @@ const Category: React.FC<CategoryProps> = (props) => {
         props.onItemClick(item, index)
     }
 
+    const isLinkActive = (location: string, path: string | { pathname: string, search: string }): boolean => {
+        if (typeof path === 'string' || path instanceof String) {
+            return location === path
+        } else {
+            return location === `${path.pathname}?${path.search}`
+        }
+    }
+
     if (!props.items) {
         return (
             <Button
@@ -79,6 +87,7 @@ const Category: React.FC<CategoryProps> = (props) => {
                             <ListItemButton
                                 component={NavLink}
                                 exact
+                                isActive={(_, { pathname, search }) => isLinkActive(`${pathname}${search}`, item.path)}
                                 key={item.id}
                                 className="link"
                                 activeClassName="Mui-selected"

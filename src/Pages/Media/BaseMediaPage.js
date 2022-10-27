@@ -46,8 +46,39 @@ export const BaseMediaPage = (props) => {
         return [
             {
                 id: index,
-                name: 'Quick Access',
-                path: mediaRoutes.all,
+                name: 'Medias',
+                items: [
+                    {
+                        id: ++index,
+                        name: 'Quick Access',
+                        path: mediaRoutes.all
+                    },
+                    {
+                        id: ++index,
+                        name: 'Medias',
+                        path: mediaRoutes.media
+                    },
+                    {
+                        id: ++index,
+                        name: 'Placeholders',
+                        path: `${mediaRoutes.placeholders}?page=1`,
+                    },
+                    ...mediaTypes.items.map(item => ({
+                        id: ++index,
+                        name: item.name,
+                        path: {
+                            pathname: mediaRoutes.media,
+                            search: new URLSearchParams({
+                                page: 1,
+                                filters: filterObjectToQueryParams({
+                                    type: {
+                                        label: item.name, value: item.id
+                                    }
+                                }),
+                            }).toString()
+                        },
+                    })),
+                ]
             },
             {
                 id: ++index,
@@ -71,26 +102,6 @@ export const BaseMediaPage = (props) => {
                     return isAdmin ? obj : item.id === user.id ? obj : null
                 }).filter(item => !!item),
             },
-            ...mediaTypes.items.map(item => ({
-                id: ++index,
-                name: item.name,
-                path: {
-                    pathname: mediaRoutes.media,
-                    search: new URLSearchParams({
-                        page: 1,
-                        filters: filterObjectToQueryParams({
-                            type: {
-                                label: item.name, value: item.id
-                            }
-                        }),
-                    }).toString()
-                },
-            })),
-            {
-                id: ++index,
-                name: 'Placeholders',
-                path: `${mediaRoutes.placeholders}?page=1`,
-            }
         ]
     }, [mediaTypes.items, teamMembers.items, user, isAdmin])
 

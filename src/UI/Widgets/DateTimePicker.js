@@ -7,17 +7,17 @@ import {
     TextField,
     Stack,
     Button,
-    Box
+    Box,
+    Divider
 } from '@mui/material'
 
 import { DesktopTimePicker, StaticDatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import enLocale from 'date-fns/locale/en-US';
-import { isValid, addMinutes } from 'date-fns';
+import { isValid, addMinutes, subMinutes } from 'date-fns';
 import { useGetMostRecentSendTimes } from 'Api/ReactQuery';
 
-import { Divider } from 'UI'
 
 import { deconstructDate } from 'utils/Parser'
 
@@ -102,7 +102,7 @@ export default function DateTimePicker(props) {
             fullWidth={true}
             onClose={props.onClose}
             scroll={"body"}
-            PaperProps={{ style: { borderRadius: 4, padding: 0, background: "white" } }}
+            PaperProps={{ sx: { borderRadius: 2, padding: 0 } }}
         >
             <Stack className='DateTimePicker'>
                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
@@ -133,14 +133,14 @@ export default function DateTimePicker(props) {
                     <Grid
                         container
                         direction='row'
-                        sx={{ pt: 3 }}
+                        sx={{ pt: 2 }}
                     >
                         <Grid item md={6} xs={12}
                             container
                             justifyContent={'center'}
                             alignItems='center'
                         >
-                            <StaticDatePicker className='MuiCalendarPicker'
+                            <StaticDatePicker
                                 displayStaticWrapperAs="desktop"
                                 showToolbar
                                 disablePast
@@ -149,46 +149,43 @@ export default function DateTimePicker(props) {
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </Grid>
-                        <Stack
+                        <Grid item md={6} xs={12}
                             spacing={2}
                             mt={4}
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                // justifyContent: 'center',
-                                // alignItems: 'center',
-                                // backgroundColor: '#999',
-                                maxWidth: 300
+                                px: 4
                             }}
                         >
                             <DesktopTimePicker
                                 value={date}
                                 onChange={onTimeChange}
-                                minTime={props.isExpirationTime ? addMinutes(new Date(), 10) : new Date()}
+                                minTime={props.isExpirationTime ? addMinutes(new Date(), 10) : subMinutes(new Date(), 1)}
                                 disableIgnoringDatePartForTimeValidation={true}
                                 renderInput={(params) => <TextField {...params} />}
                             />
-                            <Box>
+                            <Stack gap={1} direction='row' mt={1.2} flexWrap='wrap'>
                                 {
                                     mostRecentSendTimes.data &&
                                     mostRecentSendTimes.data.length > 0 &&
                                     mostRecentSendTimes.data.map(time => {
                                         return (
-                                            <Button key={time} onClick={() => parseTime(time)}>
+                                            <Button key={time} onClick={() => parseTime(time)} variant='outlined'>
                                                 {time}
                                             </Button>
                                         )
                                     })
                                 }
-                            </Box>
-                        </Stack>
+                            </Stack>
+                        </Grid>
                     </Grid>
                     <Grid
                         container
                         direction='row'
                         alignItems='center'
                         justify='flex-end'
-                        style={{ paddingRight: 16 }}
+                        sx={{ paddingRight: 2 }}
                     >
                         <button
                             style={{ marginLeft: 'auto' }}
@@ -199,26 +196,27 @@ export default function DateTimePicker(props) {
                         </button>
                     </Grid>
 
-                    <Divider />
+                    <Divider sx={{ my: 2 }} />
                     <Stack
                         direction='row'
                         alignItems='center'
                         justifyContent={'flex-end'}
-                        style={{ paddingBottom: 16, paddingRight: 16 }}
+                        sx={{ paddingBottom: 2, paddingRight: 2 }}
                     >
-                        <button
+                        <Button
                             className='Cancel'
+                            variant='contained'
                             onClick={onClose}
                         >
                             Cancel
-                        </button>
+                        </Button>
 
-                        <button
+                        <Button
                             className='Action Bold'
                             onClick={onSave}
                         >
                             SAVE
-                        </button>
+                        </Button>
                     </Stack>
 
                 </LocalizationProvider>

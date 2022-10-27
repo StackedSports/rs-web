@@ -44,13 +44,13 @@ export const FileDropZone = (props) => {
 			justify="center"
 			sx={{
 				height: "max-content",
-				backgroundColor: 'background.default' ,//#fafcfd
+				backgroundColor: 'background.default',//#fafcfd
 				marginBottom: '16px',
 				borderRadius: '4px',
 				border: "1px dotted gray",
 				padding: '16px',
-				...props.style
 			}}
+			style={props.style}
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
@@ -530,6 +530,7 @@ export default function UploadMediaDialog(props) {
 							<MediaInputTitle title="Owner" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Assigning an owner to your media upload enables the media owner to select “My Media” in the media library, and filter out all media owned by them."
@@ -556,6 +557,7 @@ export default function UploadMediaDialog(props) {
 							<MediaInputTitle title="Tags" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Add a tag to your media for better organization and easier filtering. (Think of a tag like adding media to a folder)"
@@ -583,6 +585,7 @@ export default function UploadMediaDialog(props) {
 							<MediaInputTitle title="Associate to placeholder or create new" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Create a new placeholder or add media to an existing placeholder for sending personalized media to contacts."

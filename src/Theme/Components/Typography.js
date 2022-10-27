@@ -1,12 +1,5 @@
-import {
-    createTheme,
-    ThemeProvider as MuiThemeProvider,
-    StyledEngineProvider,
-    CssBaseline
-} from '@mui/material';
 
-
-const typography = {
+export const lightTypography = {
     fontFamily: [
         'Proxima Nova',
         'Roboto',
@@ -25,12 +18,26 @@ const typography = {
         color: '#212529',
         fontWeight: 'bold'
     },
-    typography: {
-        'info-bold': {
-            color: '#212529',
-            fontWeight: 'bold'
-        }
-    }
 }
 
-export default typography
+export const darkTypography = {
+    fontFamily: [
+        'Proxima Nova',
+        'Roboto',
+        'sans-serif',
+    ].join(','),
+    h1: {
+        fontSize: '18px',
+        color: '#ddd',
+        fontWeight: 'bold'
+    },
+
+    info: {
+        color: '#d9d9d9',
+    },
+    'info-bold': {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+}
+

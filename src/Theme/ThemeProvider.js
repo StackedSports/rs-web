@@ -10,8 +10,8 @@ import {
     CssBaseline,
 } from '@mui/material'
 
-import typography from './Components/Typography'
-import { darkPallete, lightPallete } from './Components/Pallete'
+import { lightTypography, darkTypography } from './Components/Typography'
+import { darkPallete, lightPallete } from './Components/Palette'
 import { components } from './Components/Components'
 import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
 import { useEffect, useMemo } from 'react'
@@ -52,13 +52,13 @@ let theme2 = createTheme({
             paper: '#FFFFFF',
         },
     },
-    typography,
+    typography: lightTypography,
 })
 
 const getDesignTokens = (isDarkMode) => ({
     palette: isDarkMode ? darkPallete : lightPallete,
     components: components,
-    typography: typography
+    typography: isDarkMode ? darkTypography : lightTypography
 })
 
 const ThemeProvider = ({ children }) => {
