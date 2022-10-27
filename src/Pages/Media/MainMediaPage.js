@@ -220,10 +220,10 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Quick Access
-                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                    <Typography component='p' color='primary.light' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
                         <RenderIf condition={mediaMultiPageSelection.count > 0}>
                             {`${mediaMultiPageSelection.count} media${mediaMultiPageSelection.count > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => mediaMultiPageSelection.clear()}>
+                            <IconButton size='small' color='inherit' onClick={() => mediaMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
                         </RenderIf>
@@ -255,10 +255,10 @@ export const MainMediaPage = (props) => {
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Placeholders
-                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                    <Typography component='p' color='primary.light' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
                         <RenderIf condition={placeholdersMultiPageSelection.count > 0}>
                             {`${placeholdersMultiPageSelection.count} placeholder${placeholdersMultiPageSelection.count > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => placeholdersMultiPageSelection.clear()}>
+                            <IconButton size='small' color='inherit' onClick={() => placeholdersMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
                         </RenderIf>

@@ -216,15 +216,15 @@ export const AllMediaPage = () => {
 			<RenderIf condition={medias.items && medias.items.length > 0}>
 				<Typography fontWeight='bold'>
 					You have
-					<Typography component='span' color='primary' fontWeight='bold'>
+					<Typography component='span' color='primary.light' fontWeight='bold'>
 						{` ${medias.pagination.totalItems || 0} `}
 					</Typography>
 					medias
 				</Typography>
-				<Typography component='span' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+				<Typography component='span' color='primary.light' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
 					<RenderIf condition={selectedMediasCount > 0}>
 						{`${selectedMediasCount} media${selectedMediasCount > 1 ? "s" : ""} selected`}
-						<IconButton size='small' color='primary' onClick={() => clearSelection()}>
+						<IconButton size='small' color='inherit' onClick={() => clearSelection()}>
 							<Clear fontSize="inherit" />
 						</IconButton>
 					</RenderIf>
