@@ -12,6 +12,7 @@ import { useContacts, useGradYears, usePositions, useRanks, useStatus2, useStatu
 import { states, timeZones } from 'utils/Data'
 import { getFullName } from 'utils/Parser'
 import useLocalStorage from 'Hooks/useLocalStorage';
+import { useContactPanelFiltersData } from 'UI/Tables/Contacts/ContactFilters';
 
 const getSelectionLabel = (selectionCount, clearSelection) => {
     return (
@@ -30,14 +31,7 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
     const contacts = useContacts(1, perPageLocalStorage);
     const multipageSelection = useMultiPageSelection_V2(contacts.items)
     const [selectedFilters, setSelectedFilters] = useState({})
-    //filters
-    const status = useStatuses()
-    const status2 = useStatus2()
-    const ranks = useRanks()
-    const gradYears = useGradYears()
-    const tags = useTags()
-    const positions = usePositions()
-    const teamMembers = useTeamMembers()
+    const panelFiltersData = useContactPanelFiltersData()
 
     useEffect(() => {
         setperPageLocalStorage(contacts.pagination.itemsPerPage)
@@ -81,63 +75,6 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
         })
     }
 
-    const panelFiltersData = useMemo(() =>
-    ({
-        status: {
-            label: 'Status',
-            options: status.items || [],
-            optionsLabel: 'status',
-        },
-        ranks: {
-            label: 'Rank',
-            options: ranks.items || [],
-            optionsLabel: 'rank',
-        },
-        years: {
-            label: 'Grad Year',
-            options: gradYears.items?.map((item, index) => ({ id: index, name: item })) || [],
-        },
-        tags: {
-            label: 'Tags',
-            options: tags.items || [],
-            onSearch: (search) => tags.search(search),
-        },
-        positions: {
-            label: 'Position',
-            options: positions.items || [],
-        },
-        area_coaches: {
-            label: 'Area Coach',
-            options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option),
-        },
-        position_coaches: {
-            label: 'Position Coach',
-            options: teamMembers.items || [],
-            optionsLabel: (option) => getFullName(option),
-        },
-        timezones: {
-            label: 'Time Zone',
-            options: timeZones,
-        },
-        dob: {
-            label: 'Birthday',
-            type: 'date',
-            format: 'MM/dd',
-            optionsLabel: (dates) => dates.join(' - '),
-            isUnique: true
-        },
-        states: {
-            label: 'State',
-            options: states,
-
-        },
-        status_2: {
-            label: 'Status 2',
-            options: status2.items.map((status2, index) => ({ name: status2 })) || [],
-        },
-    }), [status.items, ranks.items, gradYears.items, tags.items, positions.items, teamMembers.items, status2.items])
-
     return (
         <SelectDialogTab
             maxWidth={'lg'}
@@ -162,7 +99,6 @@ export const ContactsSelectDialog = ({ open, onClose, onSelectionConfirm }) => {
                     {...multipageSelection}
                 />
             </TabPanel>
-
         </SelectDialogTab>
     )
 }

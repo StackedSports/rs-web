@@ -71,7 +71,7 @@ export default function MediaSelectDialog(props) {
     }
 
     const onPlaceholderSelectionChange = (selectionIds, selectionItems) => {
-         setDisableOnConfirmSelection(false)
+        setDisableOnConfirmSelection(false)
         setSelectedType('placeholder')
         setSelectionLabel('Selected: Placeholder')
 

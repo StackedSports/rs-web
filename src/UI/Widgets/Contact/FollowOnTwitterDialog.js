@@ -110,6 +110,7 @@ const FollowOnTwitterDialog = (props) => {
             columnVisibilityModel={visibleTableRows}
             selectionModel={props.selectedContacts}
             onSelectionModelChange={props.onSelectionChange}
+            sortingMode='client'
           />
         </Stack>
 
@@ -128,6 +129,7 @@ const FollowOnTwitterDialog = (props) => {
               selectionModel={selectedTeamMembers}
               columnVisibilityModel={visibleTableRows}
               onSelectionModelChange={onSelectionChange}
+              sortingMode='client'
             />
           </Stack>
           <Typography sx={{ fontWeight: 500 }}>Select the accounts you would like to have follow the selected contacts.</Typography>

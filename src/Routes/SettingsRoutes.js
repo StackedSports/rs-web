@@ -19,6 +19,7 @@ import {
 
 import { settingsRoutes } from './Routes'
 import TagSettingsPage from 'Pages/Settings/TagSettingsPage'
+import ContactSettingsPage from 'Pages/Settings/ContactSettingsPage'
 
 const SettingsRoutes = (props) => (
   <>
@@ -62,6 +63,11 @@ const SettingsRoutes = (props) => (
       exact
       path={settingsRoutes.team.snippets}
       component={SnippetsSettingsPage}
+    />
+    <Route
+      exact
+      path={settingsRoutes.team.contact}
+      component={ContactSettingsPage}
     />
     <Route
       exact

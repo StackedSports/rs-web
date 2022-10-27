@@ -110,7 +110,7 @@ export const useContacts = (page, itemsPerPage, initialFilters, only_archived: b
     const [pagination, setPagination] = usePagination(page, itemsPerPage)
     const [contacts, setContacts] = useState()
 
-    const get = only_archived ? getArchivedContacts : (filters && !lodash.isEmpty(filters)) ? filterContacts : getContacts
+    const get = only_archived ? getArchivedContacts : lodash.isEmpty(filters) ? getContacts : filterContacts
 
     const reactQuery = useQuery(['contacts', pagination.currentPage, pagination.itemsPerPage, filters, only_archived], () => get(pagination.currentPage, pagination.itemsPerPage, filters), {
         keepPreviousData: true

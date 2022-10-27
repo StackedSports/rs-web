@@ -13,8 +13,6 @@ import LoadingPanel from 'UI/Widgets/LoadingPanel'
 import CreatePersonDialog from 'UI/Widgets/Contact/CreatePersonDialog';
 import CreateOpponentDialog from 'UI/Widgets/Contact/CreateOpponentDialog';
 import DatePicker from 'UI/Forms/Inputs/DatePicker';
-
-
 import { states, timeZones } from 'utils/Data';
 import { useStatus2, useStatuses, useRanks, usePositions, useTeamMembers, useTags, useContactMutation } from 'Api/ReactQuery';
 
@@ -22,7 +20,6 @@ import {
 	addTagsToContact,
 	untagContact,
 } from 'Api/Endpoints'
-
 import { AppContext } from 'Context/AppProvider'
 
 import { formatPhoneNumber, getFullName } from 'utils/Parser';
@@ -30,6 +27,7 @@ import { objectNotNull } from 'utils/Validation'
 import Button from 'UI/Widgets/Buttons/Button';
 import PeopleDialog from 'UI/Widgets/Dialogs/PeopleDialog';
 import OpponentDialog from 'UI/Widgets/Dialogs/OpponentDialog';
+import { PreferencesContext } from 'Context/PreferencesProvider';
 
 const regexPhoneNumber = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -50,18 +48,35 @@ const detailsFormValidation = Yup.object().shape({
 })
 
 const ContactProfileDetails = (props) => {
-	if (props.loading)
-		return (
-			<Stack
-				pr={1}
-				spacing={1}
-				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
-			>
-				<LoadingPanel />
-			</Stack>
-		)
-
 	const app = useContext(AppContext)
+	const preferences = useContext(PreferencesContext)
+	const labels = useMemo(() => {
+		const preferenceMap = new Map(preferences?.labels)
+		return {
+			'full_name': preferenceMap.get('full_name')?.label || '',
+			'first_name': preferenceMap.get('first_name')?.label || '',
+			'last_name': preferenceMap.get('last_name')?.label || '',
+			'twitter_profile': preferenceMap.get('twitter_profile')?.label || '',
+			'dob': preferenceMap.get('dob')?.label || '',
+			'phone': preferenceMap.get('phone')?.label || '',
+			'nick_name': preferenceMap.get('nick_name')?.label || '',
+			'state': preferenceMap.get('state')?.label || '',
+			'high_school': preferenceMap.get('high_school')?.label || '',
+			'grad_year': preferenceMap.get('grad_year')?.label || '',
+			'relationships': preferenceMap.get('relationships')?.label || 'FAMILY & RELATIONSHIP',
+			'opponents': preferenceMap.get('opponents')?.label || '',
+			'positions': preferenceMap.get('positions')?.label || '',
+			'area_coach': preferenceMap.get('area_coach')?.label || '',
+			'position_coach': preferenceMap.get('position_coach')?.label || '',
+			'coordinator': preferenceMap.get('coordinator')?.label || '', //recruiting coach
+			'status': preferenceMap.get('status')?.label || '',
+			'status_2': preferenceMap.get('status_2')?.label || '',
+			'tags': preferenceMap.get('tags')?.label || '',
+			'rank': preferenceMap.get('rank')?.label || '',
+			'time_zone': preferenceMap.get('time_zone')?.label || '',
+		}
+	}, [preferences])
+
 	const { update: updateContact, archive } = useContactMutation()
 
 	const [expandedAccordionId, setExpandedAccordion] = useState()
@@ -80,15 +95,6 @@ const ContactProfileDetails = (props) => {
 	const status2 = useStatus2()
 	const ranks = useRanks()
 	const tags = useTags()
-
-	//console.log(status2)
-
-	/* 	useEffect(() => {
-			if (props.contact) {
-				console.log("Effect details contact")
-				console.log(props.contact)
-			}
-		}, [props.contact]) */
 
 	const initialValues = useMemo(() => ({
 		general: {
@@ -497,6 +503,17 @@ const ContactProfileDetails = (props) => {
 			app.alert.setWarning("Erro, invalid contact id")
 	}
 
+	if (props.loading || preferences.loading)
+		return (
+			<Stack
+				pr={1}
+				spacing={1}
+				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+			>
+				<LoadingPanel />
+			</Stack>
+		)
+
 	return (
 		<Stack
 			pr={1}
@@ -561,12 +578,12 @@ const ContactProfileDetails = (props) => {
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 0, formikProps)}
 							items={[
-								{ label: 'First Name', name: 'first_name', value: formikProps.values.first_name, component: TextField },
-								{ label: 'Last Name', name: 'last_name', value: formikProps.values.last_name, component: TextField },
-								{ label: 'Nick Name', name: 'nick_name', value: formikProps.values.nick_name, component: TextField },
-								{ label: 'Phone Number', name: 'phone', type: "tel", value: formikProps.values.phone, component: TextField, error: formikProps.errors.phone, touch: formikProps.touched.phone },
+								{ label: labels.first_name, name: 'first_name', value: formikProps.values.first_name, component: TextField },
+								{ label: labels.last_name, name: 'last_name', value: formikProps.values.last_name, component: TextField },
+								{ label: labels.nick_name, name: 'nick_name', value: formikProps.values.nick_name, component: TextField },
+								{ label: labels.phone, name: 'phone', type: "tel", value: formikProps.values.phone, component: TextField, error: formikProps.errors.phone, touch: formikProps.touched.phone },
 								{ label: 'Email', name: 'email', type: "email", value: formikProps.values.email, component: TextField, error: formikProps.errors.email, touch: formikProps.touched.email },
-								{ label: 'Twitter Handle', name: 'twitter_handle', value: formikProps.values.twitter_handle, component: TextField },
+								{ label: labels.twitter_profile, name: 'twitter_handle', value: formikProps.values.twitter_handle, component: TextField },
 							]}
 						/>
 					</Form>
@@ -596,14 +613,14 @@ const ContactProfileDetails = (props) => {
 							items={[
 
 								{
-									label: 'Graduation Year',
+									label: labels.grad_year,
 									name: 'graduation_year',
 									type: "number",
 									value: formikProps.values.graduation_year,
 									component: TextField
 								},
 								{
-									label: 'Current School',
+									label: labels.high_school,
 									name: 'high_school',
 									value: formikProps.values.high_school,
 									component: TextField,
@@ -617,7 +634,7 @@ const ContactProfileDetails = (props) => {
 							]}
 						>
 							<DatePicker
-								label='Birthday'
+								label={labels.dob}
 								name='dob'
 								format='MM/dd/yyyy'
 								disableFuture
@@ -630,7 +647,7 @@ const ContactProfileDetails = (props) => {
 								helperText={formikProps.errors.dob ? formikProps.errors.dob : ''}
 							/>
 							<SearchableSelector
-								label="State"
+								label={labels.state}
 								placeholder="Search"
 								value={formikProps.values.state}
 								options={states || []}
@@ -645,7 +662,7 @@ const ContactProfileDetails = (props) => {
 								clearOnBlur
 							/>
 							<SearchableSelector
-								label="Timezone"
+								label={labels.time_zone}
 								placeholder="Search"
 								value={formikProps.values.time_zone}
 								options={timeZones}
@@ -659,7 +676,7 @@ const ContactProfileDetails = (props) => {
 								clearOnBlur
 							/>
 							<SearchableSelector
-								label="Status"
+								label={labels.status}
 								placeholder="Search"
 								// multiple
 								value={formikProps.values.status}
@@ -676,7 +693,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Status2"
+								label={labels.status_2}
 								placeholder="Search"
 								value={formikProps.values.status_2}
 								options={status2.items.map(status => status.value)}
@@ -694,7 +711,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Rank"
+								label={labels.rank}
 								placeholder="Search"
 								value={formikProps.values.rank}
 								options={ranks.items}
@@ -733,7 +750,7 @@ const ContactProfileDetails = (props) => {
 						>
 
 							<SearchableSelector
-								label="Position Coach"
+								label={labels.position_coach}
 								placeholder="Search"
 								value={formikProps.values.position_coach}
 								options={teamMembers.items || []}
@@ -749,7 +766,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Area Coach"
+								label={labels.area_coach}
 								placeholder="Search"
 								value={formikProps.values.recruiting_coach}
 								options={teamMembers.items || []}
@@ -765,7 +782,7 @@ const ContactProfileDetails = (props) => {
 							/>
 
 							<SearchableSelector
-								label="Coordinator"
+								label={labels.coordinator}
 								placeholder="Search"
 								value={formikProps.values.coordinator}
 								options={teamMembers.items || []}
@@ -794,7 +811,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='positions'
 							id='positions'
-							title='POSITIONS'
+							title={labels.positions}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[3]}
@@ -803,7 +820,7 @@ const ContactProfileDetails = (props) => {
 							onDiscard={(e) => onDiscard(e, 3, formikProps)}
 						>
 							<SearchableSelector
-								label="Positions"
+								label={labels.positions}
 								placeholder="Search"
 								variant="contained"
 								multiple
@@ -835,7 +852,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='relationships'
 							id='family-relationship'
-							title='FAMILY & RELATIONSHIP'
+							title={labels.relationships}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[4]}
@@ -844,12 +861,9 @@ const ContactProfileDetails = (props) => {
 							onFieldChange={(e) => onFieldChange(e, 4, formikProps)}
 							onFieldValue={formikProps.setFieldValue}
 							onDiscard={(e) => onDiscard(e, 4, formikProps)}
-							items={[
-								// { label: 'People', name: 'relationships', value: formikProps.values.relationships, component: TextField },
-							]}
 						>
 							<Button
-								name="Add new relationship"
+								name={`Add new ${labels.relationships}`}
 								type="button"
 								variant='contained'
 								onClick={() => { setOpenNewFamilyMemberDialog(true); setFamilyMember(null) }}
@@ -887,24 +901,6 @@ const ContactProfileDetails = (props) => {
 									</ListItem>
 								}
 							</List>
-							{/* <Button
-								name="View People"
-								type="button"
-								variant='contained'
-								endIcon={<ArrowDropDownIcon />}
-								onClick={() => setOpenCollapsePeople(!openCollapsePeople)}
-							/>
-							<Collapse
-								style={{
-									position: "relative",
-								}}
-								timeout="auto"
-								unmountOnExit
-								in={openCollapsePeople}
-							>
-								
-							</Collapse> */}
-
 						</AccordionComponent>
 					</Form>
 				)}
@@ -920,7 +916,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='opponents'
 							id='opponents'
-							title='OPPONENTS'
+							title={labels.opponents}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[5]}
@@ -932,7 +928,7 @@ const ContactProfileDetails = (props) => {
 							clearOnBlur
 						>
 							<Button
-								name="Add new opponent"
+								name={`Add new ${labels.opponents}`}
 								type="button"
 								variant='contained'
 								onClick={() => setOpenNewOpponentDialog(true)}
@@ -1013,7 +1009,7 @@ const ContactProfileDetails = (props) => {
 						<AccordionComponent
 							key='tags'
 							id='tags'
-							title='TAGS'
+							title={labels.tags}
 							expandedId={expandedAccordionId}
 							setExpanded={setExpandedAccordion}
 							saving={savingContact[7]}
@@ -1022,7 +1018,7 @@ const ContactProfileDetails = (props) => {
 							onDiscard={(e) => onDiscard(e, 7, formikProps)}
 						>
 							<SearchableSelector
-								label="Tags"
+								label={labels.tags}
 								placeholder="Search"
 								variant="contained"
 								multiple

@@ -19,6 +19,7 @@ const filters = [
         name: 'Configurations',
         items: [
             // Filters
+            { id: 'contacts', name: 'Contacts', path: settingsRoutes.team.contact },
             { id: 'positions', name: 'Positions', path: settingsRoutes.team.positions },
             { id: 'statuses', name: 'Status', path: settingsRoutes.team.statuses },
             { id: 'ranks', name: 'Ranks', path: settingsRoutes.team.ranks },

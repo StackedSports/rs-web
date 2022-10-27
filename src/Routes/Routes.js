@@ -114,6 +114,7 @@ export const settingsRoutes = {
         ranks: '/settings/ranks',
         snippets: '/settings/snippets',
         platforms: '/settings/platforms',
+        contact: '/settings/contact',
 
         // gradYears: '/settings/grad-years',
         // placeholders: '/settings/placeholders',

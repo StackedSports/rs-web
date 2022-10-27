@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, ReactElement } from "react";
+import React, { useState, useMemo, useEffect, useRef, ReactElement } from "react";
 
 import {
     Box,
@@ -54,7 +54,6 @@ export const Dropdown = ({
         }
     }, [searchText])
 
-
     useEffect(() => {
         if (selectionModel && selectionModel.length > 0)
             setCheckedItemsId(selectionModel.map(item => {
@@ -90,8 +89,8 @@ export const Dropdown = ({
         }
     }
     const activeOptions = useMemo(() => {
-        if(searchText) {
-            if(onSearch)
+        if (searchText) {
+            if (onSearch)
                 return options
             else
                 return filteredOptions
@@ -195,35 +194,35 @@ export const Dropdown = ({
                             </RenderIf>
                             {/** // if options is array of objects */}
                             {activeOptions && Array.isArray(activeOptions) && activeOptions?.map((option, i) => (
-                                    <MenuItem
-                                        key={option.id || i}
-                                        onClick={() => handleClickOption(option)}
-                                    >
-                                        <RenderIf condition={checkboxSelection}>
-                                            <ListItemIcon>
-                                                <Checkbox checked={isChecked(option)} />
-                                            </ListItemIcon>
-                                        </RenderIf>
-                                        <ListItemText
-                                            primary={getOptionLabel ? getOptionLabel(option) : option}
-                                            primaryTypographyProps={{ noWrap: true }}
-                                        />
-                                    </MenuItem>
+                                <MenuItem
+                                    key={option.id || i}
+                                    onClick={() => handleClickOption(option)}
+                                >
+                                    <RenderIf condition={checkboxSelection}>
+                                        <ListItemIcon>
+                                            <Checkbox checked={isChecked(option)} />
+                                        </ListItemIcon>
+                                    </RenderIf>
+                                    <ListItemText
+                                        primary={getOptionLabel ? getOptionLabel(option) : option}
+                                        primaryTypographyProps={{ noWrap: true }}
+                                    />
+                                </MenuItem>
                             ))}
                             {/** if options is an object with array will creat subheader to each key */}
                             {activeOptions && !Array.isArray(activeOptions) && Object.keys(activeOptions).map((key, index) => (
-                                        [
-                                            <ListSubheader sx={{ fontWeight: 'bold', textTransform: 'capitalize' }} >{key.replace('_', ' ')}</ListSubheader>,
-                                            Array.isArray(options[key]) && options[key]?.map((option, i) => (
-                                                <MenuItem key={option.id || i} onClick={() => handleClickOption(option)}>
-                                                    <ListItemText
-                                                        primary={getOptionLabel ? getOptionLabel(option) : option}
-                                                        primaryTypographyProps={{ noWrap: true }}
-                                                    />
-                                                </MenuItem>
-                                            ))
-                                        ]
-                                    ))}
+                                [
+                                    <ListSubheader sx={{ fontWeight: 'bold', textTransform: 'capitalize' }} >{key.replace('_', ' ')}</ListSubheader>,
+                                    Array.isArray(options[key]) && options[key]?.map((option, i) => (
+                                        <MenuItem key={option.id || i} onClick={() => handleClickOption(option)}>
+                                            <ListItemText
+                                                primary={getOptionLabel ? getOptionLabel(option) : option}
+                                                primaryTypographyProps={{ noWrap: true }}
+                                            />
+                                        </MenuItem>
+                                    ))
+                                ]
+                            ))}
                         </MenuList>
                     </ClickAwayListener>
                 </Paper>

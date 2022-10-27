@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Box, Stack, Pagination as MuiPagination, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import {
     DataGridPro,
@@ -12,14 +12,15 @@ import {
 import { useHistory } from "react-router-dom";
 
 import { contactsRoutes } from 'Routes/Routes';
-import { columnsMini, columnsFull, parseColumnsNames } from './DataGridConfig';
+import { columnsMini, columnsFull, getColumnsByPreferences } from './ContactDataGridConfig';
 import { useContactTableColumns } from 'Api/Hooks'
 import lodash from 'lodash'
+import { PreferencesContext } from "Context/PreferencesProvider";
 import { AppContext } from "Context/AppProvider";
 import { useUserPreference } from "Api/ReactQuery/UserPrefences";
 
 
-export default function ContactsTableServerMode({
+const ContactsTableServerMode = ({
     contacts,
     pagination,
     id,
@@ -29,17 +30,19 @@ export default function ContactsTableServerMode({
     columnsControl,
     sortingMode,
     selectedFilters,
+    showDisabledColumns,
     ...restOfProps
-}) {
+}) => {
     const history = useHistory();
-    const columns = mini ? columnsMini : columnsFull
+    const columns = getColumnsByPreferences(mini, showDisabledColumns)
     const visibleColumns = useContactTableColumns(columnsControl, id)
     const [tempVisibleColumns, setTempVisibleColumns] = useState(null)
-    const { preferences } = useUserPreference()
+    const preferences = useContext(PreferencesContext)
+    const { item: userPreference } = useUserPreference()
 
     useEffect(() => {
-        if (!selectedFilters || !preferences.showColumnOnFilter) return
-        const collums = Object.keys(selectedFilters).map(key => parseColumnsNames(key))
+        if (!selectedFilters || !userPreference.showColumnOnFilter) return
+        const collums = Object.keys(selectedFilters)
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).
             map(([key]) => key)
@@ -51,7 +54,6 @@ export default function ContactsTableServerMode({
             setTempVisibleColumns(null)
         }
     }, [selectedFilters, visibleColumns.items])
-
 
     const onColumnVisibilityModelChange = (newModel) => {
         visibleColumns.onChange(newModel)
@@ -74,7 +76,7 @@ export default function ContactsTableServerMode({
         return Object.hasOwnProperty.call(params.row, 'relationships')
     }
 
-    const getTreeData = () => {
+    const treeData = useMemo(() => {
         if (!contacts) return []
         if (mini) return contacts
 
@@ -90,21 +92,29 @@ export default function ContactsTableServerMode({
             }).flat()
         }
         return contacts
-    }
+    }, [contacts, mini])
 
     const getTreeDataPath = (row) => row.hierarchy;
 
-    const groupingColDef = {
-        headerName: 'Relationships',
-        valueGetter: (params) => {
-            if (params.rowNode.depth === 0)
-                return params.rowNode.children ? 'Members' : ''
-            else
-                return params.row?.relationship_type?.description
-        },
-        flex: 1,
-        minWidth: 200,
-    }
+    const groupingColDefPreference = useMemo(() => {
+        const groupingColDef = {
+            headerName: 'Relationships',
+            valueGetter: (params) => {
+                if (params.rowNode.depth === 0)
+                    return params.rowNode.children ? 'Members' : ''
+                else
+                    return params.row?.relationship_type?.description
+            },
+            flex: 1,
+            minWidth: 200,
+        }
+
+        if (!preferences) return groupingColDef
+        else {
+            const relationshipsLabel = new Map(preferences.labels).get('relationships')?.label
+            return relationshipsLabel ? { ...groupingColDef, headerName: relationshipsLabel } : groupingColDef
+        }
+    }, [preferences])
 
     return (
         <Stack flex={height ? 0 : 1} sx={{ minHeight: '55vh', height: height ? height : '100%' }}>
@@ -116,13 +126,13 @@ export default function ContactsTableServerMode({
                 checkboxSelection
                 disableSelectionOnClick
                 keepNonExistentRowsSelected
-                rows={getTreeData()}
+                rows={treeData}
                 treeData={mini ? false : true}
                 disableChildrenFiltering
                 disableChildrenSorting
                 getTreeDataPath={getTreeDataPath}
                 isRowSelectable={mini ? null : getIsRowSelectable}
-                groupingColDef={groupingColDef}
+                groupingColDef={groupingColDefPreference}
                 rowCount={pagination?.totalItems}
                 columns={columns}
                 paginationMode={pagination && 'server'}
@@ -142,7 +152,6 @@ export default function ContactsTableServerMode({
                 }}
                 onCellClick={redirectToDetails && redirectToDetailsPage}
                 hideFooter={contacts?.length === 0}
-
                 {...restOfProps}
             />
         </Stack>
@@ -200,3 +209,5 @@ function CustomFooter(props) {
         </Typography>
     </Box>
 }
+
+export default ContactsTableServerMode
