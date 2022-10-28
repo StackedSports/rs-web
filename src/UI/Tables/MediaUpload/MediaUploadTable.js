@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import LinearProgress from '@mui/material/LinearProgress';
 
-import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
+import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce, IconButton } from "@mui/material"
 
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever"; // ----
@@ -91,12 +91,6 @@ const useStyles = makeStyles({
     background: "#006644",
     color: "white",
   },
-
-  deleteForverIcon: {
-    "&:hover": {
-      cursor: "pointer"
-    },
-  }
 });
 
 export const MediaTableItemLoading = (props) => {
@@ -117,10 +111,10 @@ export const MediaTableItemLoading = (props) => {
 
 export const MediaUploadStatus = (props) => {
   switch (props.status) {
-    case "none": return <p style={{ color: "#aaa", margin: 0 }}></p>
-    case "ready": return <p style={{ color: "#aaa", margin: 0 }}>Ready To Upload</p>
-    case "failed": return <p style={{ color: "red", margin: 0 }}>Failed To Upload</p>
-    case "success": return <p style={{ color: "green", margin: 0 }}>Upload Successfull!</p>
+    case "none": return <Typography color='text.secondary' fontWeight='bold'></Typography>
+    case "ready": return <Typography color='text.secondary' fontWeight='bold' >Ready To Upload</Typography>
+    case "failed": return <Typography color={'error.main'} fontWeight='bold'>Failed To Upload</Typography>
+    case "success": return <Typography color={'success.light'} fontWeight='bold' >Upload Successfull!</Typography>
 
     case "uploading":
       return (
@@ -144,10 +138,9 @@ export const MediaUploadHeader = (props) => {
 
   return (
     <Grid
-      spacing={1}
       container
       sx={{
-        background: "#f6f8fa",
+        background: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[600],
         height: 50,
       }}
       alignItems="center"
@@ -168,10 +161,7 @@ export const MediaUploadHeader = (props) => {
 export const MediaUploadItem = (props) => {
   const classes = useStyles();
 
-  // const [inputValue, setInputValue] = useState('')
-
   const onInputChange = debounce(input => {
-    console.log(input)
 
     // setInputValue(input)
 
@@ -180,12 +170,6 @@ export const MediaUploadItem = (props) => {
     else
       props.onClearSearch()
   }, 500)
-
-  // const onInputChange = (input) => {
-  //   console.log(input)
-
-  //   setInputValue(input)
-  // }
 
   return (
     <Grid container padding={1.5} spacing={1} alignItems="center" >
@@ -269,19 +253,19 @@ export const MediaUploadItem = (props) => {
         }
       </Grid>
       <Grid item xs={3}>
-        <Stack direction='row' >
+        <Stack direction='row' alignItems='center' >
           <Box flex={1}>
             <MediaUploadStatus status={props.itemUploadStatus} />
           </Box>
 
           {!props.disableAssociateInput &&
-            <DeleteForeverIcon
-              className={classes.deleteForverIcon}
-              style={{ color: "#444" }}
+            <IconButton
               onClick={() => {
                 props.onDeleteMedia()
               }}
-            />
+            >
+              <DeleteForeverIcon />
+            </IconButton>
           }
 
         </Stack>

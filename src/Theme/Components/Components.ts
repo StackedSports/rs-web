@@ -1,6 +1,30 @@
 import { Components, Theme, alpha } from "@mui/material"
 
 export const components: Components<Omit<Theme, "components">> = {
+    MuiCssBaseline: {
+        styleOverrides: (theme) => ({
+            /* width */
+            '::-webkit-scrollbar': {
+                width: '5px',
+                height: '5px',
+            },
+
+            /* Track */
+            '::-webkit-scrollbar-track': {
+                background: theme.palette.mode === 'light' ? theme.palette.grey.A100 : theme.palette.grey.A400,
+            },
+
+            /* Handle */
+            '::-webkit-scrollbar-thumb': {
+                background: theme.palette.mode === 'light' ? '#ccc' : theme.palette.grey.A700,
+            },
+
+            /* Handle on hover */
+            '::-webkit-scrollbar-thumb:hover': {
+                background: '#999',
+            },
+        })
+    },
     MuiTooltip: {
         styleOverrides: {
             tooltip: ({ theme }) => ({

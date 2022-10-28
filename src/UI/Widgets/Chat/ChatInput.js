@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p={1} sx={{ backgroundColor: 'background.default', borderTop: 1, borderColor: 'divider' }}>
+            <Box p={1} sx={{ backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[700], borderTop: 1, borderColor: 'divider' }}>
                 <TextField
                     fullWidth
                     multiline
@@ -99,9 +99,9 @@ export const ChatInput = (props) => {
                         sx: { marginInline: 0 }
                     }}
                     sx={{
-                        backgroundColor:'background.paper',
-                        '& .MuiOutlinedInput-root.Mui-focused fieldset':{
-                            borderColor:'inherit'
+                        backgroundColor: 'background.paper',
+                        '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+                            borderColor: 'inherit'
                         }
                     }}
                 />
