@@ -12,6 +12,7 @@ import Link from '@mui/material/Link';
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import Logout from '@mui/icons-material/Logout'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
@@ -87,14 +88,14 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-                <MenuItem component={RouterLink} to={userRoutes.profile} sx={{pb:0}}>
+                <MenuItem component={RouterLink} to={userRoutes.profile} sx={{ pb: 0 }}>
                     <Avatar
                         alt={getFullName(auth?.user)}
                         src={auth.user?.twitter_profile?.profile_image}
                     />
                     My Profile
                 </MenuItem>
-                <Divider sx={{m:0}} />
+                <Divider sx={{ m: 0 }} />
                 {/* <MenuItem>
                     <ListItemIcon>
                         <PersonAdd fontSize="small" />
@@ -106,6 +107,12 @@ export default function AccountMenu() {
                         <AccountCircleIcon fontSize="small" />
                     </ListItemIcon>
                     Account
+                </MenuItem>
+                <MenuItem component={RouterLink} to={userRoutes.preferences}>
+                    <ListItemIcon>
+                        <ToggleOnIcon fontSize="small" />
+                    </ListItemIcon>
+                    Preferences
                 </MenuItem>
                 {/* <Link to={userRoutes.notifications} style={{ color: "inherit" }}>
                     <MenuItem>

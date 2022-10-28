@@ -1,6 +1,6 @@
 import './Dropdown.css'
 import { useState } from 'react'
-import { Paper } from '@mui/material'
+import { MenuItem, MenuList, Paper } from '@mui/material'
 
 const Dropdown = (props) => {
     const [displayContent, setDisplayContent] = useState(false)
@@ -45,19 +45,27 @@ const Dropdown = (props) => {
 
 Dropdown.List = (props) => {
     return (
-        <div className='DropDown-List' style={props.style}>
+        <MenuList
+            style={props.style}
+            sx={{ p: 0 }}
+        >
             {props.children}
-        </div>
+        </MenuList>
     )
 }
 
 Dropdown.Item = (props) => (
-    <span style={props.style}
-        className={`${props.disabled ? "DropDown-Item-disabled" : "DropDown-Item"}`}
+    <MenuItem
+        style={props.style}
+        disabled={props.disabled}
         onClick={props.onClick}
+        sx={{
+            justifyContent: 'flex-end',
+            padding: '8 10',
+        }}
     >
         {props.name}
-    </span>
+    </MenuItem>
 )
 
 // Dropdown.Content = (props) => {

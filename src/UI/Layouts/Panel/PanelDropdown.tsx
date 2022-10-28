@@ -44,7 +44,6 @@ export const PanelDropdown: React.FC<PanelDropdownProps> = ({ action, header }) 
             {action.options && action.options.map(option => (
                 <Dropdown.Item
                     key={option.name}
-                    style={{ justifyContent: 'flex-end', color: option.color ? option.color : 'inherit' }}
                     name={option.name}
                     onClick={option.onClick}
                     disabled={option?.disabled}

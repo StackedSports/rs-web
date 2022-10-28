@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { Dialog, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
+import { Dialog, Stack, debounce, Alert, Button as MuiButton, Typography } from "@mui/material"
 import Tooltip from '@mui/material/Tooltip';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -44,22 +44,23 @@ export const FileDropZone = (props) => {
 			justify="center"
 			sx={{
 				height: "max-content",
-				backgroundColor: 'background.default',//#fafcfd
+				backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[600],//#fafcfd
 				marginBottom: '16px',
 				borderRadius: '4px',
 				border: "1px dotted gray",
 				padding: '16px',
+				gap: .8,
 			}}
 			style={props.style}
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
 			<img src={Upload} style={{ userSelect: 'none', userDrag: 'none' }} />
-			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+			<Typography color='text.secondary'>
 				Upload Media
-			</p>
+			</Typography>
 
-			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+			<Typography color='text.secondary'>
 				Drag and Drop or{" "}
 				<span
 					style={{ color: "#6aa8f4", cursor: "pointer" }}
@@ -68,7 +69,7 @@ export const FileDropZone = (props) => {
 					Browse
 				</span>{" "}
 				your {props.browseAction ? "Media Library" : "files here"}
-			</p>
+			</Typography>
 		</Stack>
 	);
 }

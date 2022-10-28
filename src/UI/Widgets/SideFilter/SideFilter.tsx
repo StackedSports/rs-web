@@ -117,8 +117,7 @@ const Category: React.FC<CategoryProps> = (props) => {
 
 type SideFilterProps = {
     visible: boolean,
-    title: string,
-    filters: ISideFilter[],
+    filters?: ISideFilter[],
     collapsed: boolean,
     onFilterSelected?: (item: ISideFilter, itemIndex: number, index: number) => void;
 }

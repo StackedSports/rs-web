@@ -88,11 +88,11 @@ const CustomChip = styled(Chip)(({ theme }) => ({
     margin: 8,
 
     '.MuiChip-deleteIcon': {
-        color: 'red',//theme.palette.error.main,
+        color: theme.palette.error.light,
         width: 16,
         height: 16,
         '&:hover': {
-            color: theme.palette.error.dark,
+            color: theme.palette.error.main,
             borderRadius: '50%',
         }
     }

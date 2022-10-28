@@ -46,7 +46,6 @@ const TweetRankingPage = (props) => {
 				  style={{
 					width: "100%",
 					maxWidth: '100%'
-					// border: '1px solid #ddd'
 					}}
 				  value={input}
 				  searchOnChange

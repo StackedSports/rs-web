@@ -2,7 +2,7 @@ import './MessagePreview.css'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Stack, Grid, Typography, TextField, Link } from '@mui/material'
+import { Stack, Grid, Typography, TextField, Link, Button } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 
 import MediaPreview from 'UI/Widgets/Media/MediaPreview'
@@ -185,13 +185,15 @@ const MessagePreview = ({ message, recipients, mini = false, style, link = false
                     )}
 
                     {link && (
-                        <Link
+                        <Button
                             component={NavLink}
+                            fullWidth
                             to={`${messageRoutes.details}/${message.id}`}
+                            variant='outlined'
                             sx={{ mt: 'auto' }}
                         >
                             View Details
-                        </Link>
+                        </Button>
                     )}
                 </Grid>
             </Grid>

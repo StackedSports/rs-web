@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef, useContext } from 'react'
 
-import { Stack,Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@mui/material'
+import { Stack, Avatar, Box, Card, CardContent, CardHeader, CardMedia, Divider, Typography } from '@mui/material'
 import Collapse from '@mui/material/Collapse'
 
 import { collection, onSnapshot, query, where, orderBy, limit } from 'firebase/firestore'
@@ -25,24 +25,24 @@ import { BaseTweetRankingPage } from './BaseTweetRankingPage'
 const TweetsArchivedPage = (props) => {
     const { redirect } = useContext(AppContext)
 
-	const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
-	const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     const [tweets, setTweets] = useState(null)
 
-	const listener = useRef(null)
-	const listener2 = useRef(null)
+    const listener = useRef(null)
+    const listener2 = useRef(null)
 
-	// console.log(user)
+    // console.log(user)
 
-	useEffect(() => {
-		const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
+    useEffect(() => {
+        const q = query(collection(db, 'orgs', user.team.org.id, 'tweet-ranking'),
             where('archived', '==', true),
             where('error', '==', false),
             orderBy('timestamp', 'desc'),
             // limit(10))
         )
-            // , where("state", "==", "CA")
+        // , where("state", "==", "CA")
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             let tweets = []
@@ -57,54 +57,55 @@ const TweetsArchivedPage = (props) => {
         });
 
         return () => unsubscribe()
-	}, [])
+    }, [])
 
-	useEffect(() => {
-		if(!listener.current)
-			return
+    useEffect(() => {
+        if (!listener.current)
+            return
 
-		return () => {
-			if(listener.curent)
-				listener.current()
-			if(listener2.current)
-				listener2.current()
-		}
-	}, [listener.current])
-	
-	const onNewSearchClick = (e) => {
+        return () => {
+            if (listener.curent)
+                listener.current()
+            if (listener2.current)
+                listener2.current()
+        }
+    }, [listener.current])
+
+    const onNewSearchClick = (e) => {
         redirect(tweetPostRoutes.ranking)
     }
 
-	return (
-		<BaseTweetRankingPage
-		  title="Tweet Reports"
-		>
-			<Stack spacing={3}>
+    return (
+        <BaseTweetRankingPage
+            title="Tweet Reports"
+        >
+            <Stack spacing={3}>
 
-				<RenderIf condition={loading}>
-                    <LoadingPanel/>
+                <RenderIf condition={loading}>
+                    <LoadingPanel />
                 </RenderIf>
 
-				<RenderIf condition={tweets && tweets.length > 0}>
-					{tweets && tweets.map(tweet => (
+                <RenderIf condition={tweets && tweets.length > 0}>
+                    {tweets && tweets.map(tweet => (
                         <Stack
-                          key={tweet.id}
-                          style={{
-                            border: '1px solid #ddd'
-                          }}
+                            key={tweet.id}
+                            sx={{
+                                border: 1,
+                                borderColor: 'divider'
+                            }}
                         >
-                            <TweetDetails 
-                              tweetId={tweet.tweetId}
-                              loading={false}
-                              details={tweet}
+                            <TweetDetails
+                                tweetId={tweet.tweetId}
+                                loading={false}
+                                details={tweet}
                             />
                         </Stack>
                     ))}
-				</RenderIf>
+                </RenderIf>
 
                 <RenderIf condition={tweets && tweets.length == 0}>
-                    <Stack sx={{  }} alignItems="center" justifyContent="center">
-                        <p style={{ fontWeight: 'bold', marginTop: 20 }}> 
+                    <Stack sx={{}} alignItems="center" justifyContent="center">
+                        <p style={{ fontWeight: 'bold', marginTop: 20 }}>
                             You have no archived Tweet Reports at the moment.
                         </p>
                         {/* <p style={{ fontSize: 16, margin: 0 }}>
@@ -123,9 +124,9 @@ const TweetsArchivedPage = (props) => {
                         /> */}
                     </Stack>
                 </RenderIf>
-			</Stack >
-		</BaseTweetRankingPage >
-	)
+            </Stack>
+        </BaseTweetRankingPage>
+    )
 }
 
 export default TweetsArchivedPage
