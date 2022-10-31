@@ -3,7 +3,7 @@ import lodash from "lodash";
 
 import { Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
-import { useContactConversation, useInboxConversationInfinty } from 'Api/ReactQuery'
+import { useConversationMutation, useContactConversation, useInboxConversationInfinty } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 import { AuthContext } from "Context/Auth/AuthProvider";
@@ -16,6 +16,7 @@ const ContactChat = (props) => {
     contact_id: props.contact?.id,
     inbox_type: conversationType,
   })
+  const sendMessage = useConversationMutation()
 
   const loadNextPageMessages = () => {
     if (messages.hasNextPage && !messages.isFetching) {
@@ -37,6 +38,16 @@ const ContactChat = (props) => {
     }
   }
 
+  const handleSendMessage = (message) => {
+    console.log(message)
+    if (props.contact?.id)
+      sendMessage.mutate({
+        team_contact_id: props.contact.id,
+        message: message,
+        type: conversationType
+      })
+  }
+
   return (
     <Stack
       flex={1}
@@ -51,7 +62,7 @@ const ContactChat = (props) => {
         loading={messages.isLoading}
         hasMore={messages.hasNextPage || messages.isLoading}
       />
-      <ChatInput />
+      <ChatInput onSendMessage={handleSendMessage} />
     </Stack>
   )
 }

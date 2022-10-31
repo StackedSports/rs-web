@@ -17,7 +17,7 @@ import { InboxType, ISideFilter, IUserInboxItem } from "Interfaces"
 import useSearchParams from 'Hooks/SearchParamsHook';
 
 interface IInboxSelected {
-	team_member_id: number,
+	team_member_id: string,
 	team_member_profile_image: string,
 	userId: string,
 	name: string,
@@ -31,7 +31,7 @@ export interface IConversationControl {
 	contact_name: string,
 	from: string,
 	inbox_type: InboxType,
-	user_id: number,
+	user_id: string,
 	isPinned: boolean,
 	contact_profile_image: string,
 	coach_profile_image: string,
@@ -191,7 +191,7 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, itemIndex: number, filterIndex: number) => {
+	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, _itemIndex: number, filterIndex: number) => {
 
 		const type = filterIndex === 0 ? 'dm' : 'sms'
 
