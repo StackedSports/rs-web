@@ -4,13 +4,7 @@ import { Avatar, ListItem, Skeleton, Stack, Typography } from '@mui/material';
 export const ChatInboxItemSkeleton = () => {
 
 	return (
-		<ListItem
-			sx={{
-				padding: "15px",
-				position: "relative",
-				borderTop: "solid 1px #efefef",
-			}}
-		>
+		<ListItem>
 			<Stack flex={1} direction="row" spacing={2} alignItems="center">
 				<Skeleton variant='circular'>
 					<Avatar style={{

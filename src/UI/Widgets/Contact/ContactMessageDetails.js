@@ -5,7 +5,7 @@ import lodash from 'lodash';
 import ContactMediaPreview from './ContactMediaPreview';
 import ContactMessageStats from './ContactMessageStats';
 import Stack from '@mui/material/Stack';
-import { Box, Button, IconButton, Paper, Slide, Typography } from '@mui/material';
+import { Box, Button, Divider, IconButton, Paper, Slide, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ContactMessageDetails = (props) => {
@@ -52,13 +52,13 @@ const ContactMessageDetails = (props) => {
 
 	return (
 		<Stack
-			sx={{ width: "300px", borderLeft: "#efefef  1px solid", position: "relative" }}
+			sx={{ width: "300px", position: "relative" }}
 			alignItems="center"
 			justifyContent="start"
 			pl={1}
 			ref={containerRef}
 		>
-			<Stack gap={2} flex={1} sx={{ height: '100%' }}>
+			<Stack gap={1} flex={1} sx={{ height: '100%' }} divider={<Divider />}>
 				<ContactMessageStats stats={contactStats.item} loading={contactStats.loading} />
 				<ContactMediaPreview
 					id="sentMedia"

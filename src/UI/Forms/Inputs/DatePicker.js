@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { TextField, styled } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers-pro';
+import { DatePicker as MuiDatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { isDate } from 'date-fns';
 
 export const DatePicker = (props) => {

@@ -87,8 +87,9 @@ export const TweetsPage = (props) => {
                     {tweets && tweets.map(tweet => (
                         <Stack
                             key={tweet.id}
-                            style={{
-                                border: '1px solid #ddd'
+                            sx={{
+                                border: 1,
+                                borderColor:'divider'
                             }}
                         >
                             <TweetDetails

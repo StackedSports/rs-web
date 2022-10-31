@@ -28,9 +28,7 @@ const ContactMediaPreview = (props) => {
     <Stack
       flex={1}
       gap={1}
-      // alignItems="center"
-      sx={{ width: "100%", borderTop: "#efefef  1px solid", minHeight: 0 }}
-      pt={1}
+      sx={{ width: "100%", minHeight: 0 }}
       justifyContent="start"
     >
       <RenderIf condition={!props.hideHeader}>

@@ -157,6 +157,9 @@ export const Dropdown = ({
                         <MenuList
                             autoFocusItem={open}
                             onKeyDown={handleListKeyDown}
+                            sx={{
+                                pt:0,
+                            }}
                         >
                             <RenderIf condition={(onSearch && onSearch instanceof Function) || showSearchInput}>
                                 <ListSubheader sx={{ pt: 1 }}>

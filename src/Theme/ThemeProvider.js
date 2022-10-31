@@ -7,14 +7,18 @@ import {
     createTheme,
     ThemeProvider as MuiThemeProvider,
     StyledEngineProvider,
-    CssBaseline
+    CssBaseline,
 } from '@mui/material'
 
-import typography from './Components/DataDisplay/Typography'
+import { lightTypography, darkTypography } from './Components/Typography'
+import { darkPallete, lightPallete } from './Components/Palette'
+import { components } from './Components/Components'
+import { useUserPreference } from 'Api/ReactQuery/UserPrefences'
+import { useEffect, useMemo } from 'react'
 
-let theme = createTheme({
+let theme2 = createTheme({
     palette: {
-        mode: 'light',
+        mode: 'dark',
         primary: {
             main: '#3871da',
             contrastText: '#fff',
@@ -48,97 +52,24 @@ let theme = createTheme({
             paper: '#FFFFFF',
         },
     },
-    typography,
+    typography: lightTypography,
 })
 
-theme = createTheme(theme, {
-    components: {
-        MuiTooltip: {
-            styleOverrides: {
-                tooltip: {
-                    fontSize: '14px'
-                }
-            }
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    // Some CSS
-                    // minWidth: 120,
-                    // padding: '8px 16px',
-                    fontFamily: 'ProximaNovaSemibold',
-                    textTransform: "capitalize",
-                },
-                outlined: {
-                    color: '#212529',
-                    border: '1px solid #ddd',
-                    '&:focus': {
-                        backgroundColor: 'white',
-                        border: `1px solid ${theme.palette.primary.main}`,
-                        color: theme.palette.primary.main
-                    }
-                },
-                contained: {
-                    color: 'white',
-
-                },
-                endIcon: ({ ownerState, theme }) => {
-                    let color = theme.palette.primary.main
-
-                    if (ownerState.variant === 'contained')
-                        color = 'white'
-                    if (ownerState.disabled)
-                        color = 'inherit'
-
-                    return {
-                        color
-                    }
-                }
-
-            }
-        }
-    }
+const getDesignTokens = (isDarkMode) => ({
+    palette: isDarkMode ? darkPallete : lightPallete,
+    components: components,
+    typography: isDarkMode ? darkTypography : lightTypography
 })
 
-//  /**
-//   * Material UI theme config for "Light Mode"
-//   */
-//  const LIGHT_THEME = {
-//      palette: {
-//          mode: 'light',
-//          typography: {
-//              fontFamily: [
-//                  'ProximaNova-Regular',
-//                  'Arial',
-//                  'sans-serif',
-//              ].join(','),
-//              h1: {
-//                  fontFamily: 'ProximaNovaRegular',
-//              },
-//              subtitle1: {
-//                  fontFamily: 'ProximaNovaRegular',
-//              },
-//          },
-//          background: {
-//              paper: '#f5f5f5', // Gray 100 - Background of "Paper" based component
-//              default: '#FFFFFF',
-//          },
-//          ...FONT_COLORS,
-//      },
-
-//  };
-
-/**
- * Material UI Provider with Light and Dark themes depending on global "state.darkMode"
- */
 const ThemeProvider = ({ children }) => {
 
-    //    const theme = createTheme(LIGHT_THEME);
+    const { preferences } = useUserPreference()
+    const theme = useMemo(() => createTheme(getDesignTokens(preferences.darkMode)), [preferences]);
 
     return (
         <StyledEngineProvider injectFirst>
             <MuiThemeProvider theme={theme}>
-                <CssBaseline /* Material UI Styles */ />
+                <CssBaseline  /* Material UI Styles */ />
                 {children}
             </MuiThemeProvider>
         </StyledEngineProvider>

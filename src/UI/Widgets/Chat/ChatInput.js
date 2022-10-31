@@ -17,7 +17,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import WrapTextIcon from '@mui/icons-material/WrapText';
 
 import Button from 'UI/Widgets/Buttons/Button';
-import { PanelDropdown } from 'UI/Layouts/Panel';
+import { PanelDropdown } from 'UI/Layouts/Panel/Panel';
 import { TextMessage } from 'UI/Widgets/Chat';
 import { EmojiPicker } from 'UI/Forms/Inputs/MessageInput';
 import { Dropdown } from 'UI/Widgets/DropdownMui';
@@ -84,7 +84,7 @@ export const ChatInput = (props) => {
 
     return (
         <>
-            <Box p={1} sx={{ backgroundColor: '#fff', borderTop: 1, borderColor: 'divider' }}>
+            <Box p={1} sx={{ backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[700], borderTop: 1, borderColor: 'divider' }}>
                 <TextField
                     fullWidth
                     multiline
@@ -97,6 +97,12 @@ export const ChatInput = (props) => {
                     helperText={props.isTyping && `${props.name} is typing...`}
                     FormHelperTextProps={{
                         sx: { marginInline: 0 }
+                    }}
+                    sx={{
+                        backgroundColor: 'background.paper',
+                        '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+                            borderColor: 'inherit'
+                        }
                     }}
                 />
                 {mediaSelected && (

@@ -78,7 +78,6 @@ const FollowOnTwitterDialog = (props) => {
           gridColumnGap: "40px",
           gridTemplateColumns: "1fr 1fr",
           gridTemplateRows: ".1fr .1fr 1.8fr",
-          borderBottom: "1px #dadada solid",
         }}>
 
         <Stack

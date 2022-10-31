@@ -400,7 +400,6 @@ export default function BaseContactsPage(props) {
                             action={{
                                 id: 'selected-contacts-actions',
                                 name: `${contactsMultipageSelection.count} selected contact${contactsMultipageSelection.count > 1 ? "s" : ""}`,
-                                type: 'dropdown',
                                 variant: 'contained',
                                 icon: ArrowDropDownIcon,
                                 disabled: contactsMultipageSelection.count === 0,

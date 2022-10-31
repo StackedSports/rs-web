@@ -95,7 +95,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							minHeight: 0,
 							display: 'flex',
 							flexDirection: 'column',
-							backgroundColor: '#fbfbfb'
+							backgroundColor: 'background.secondary'
 						}}
 						ref={provided.innerRef}
 					>

@@ -7,7 +7,6 @@ import { useContactConversation } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
 
-
 const ContactChat = (props) => {
 
   const contactConversation = useContactConversation(props.contact?.id)
@@ -41,6 +40,11 @@ const ContactChat = (props) => {
     <Stack
       flex={1}
       spacing={1}
+      sx={{
+        '&>:first-child': {
+          px: 1
+        }
+      }}
     >
       <ContactChatHeader contact={props.contact} />
       <MessagesDisplay

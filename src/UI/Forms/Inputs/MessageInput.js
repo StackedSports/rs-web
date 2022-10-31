@@ -32,7 +32,8 @@ import MediaPreview from 'UI/Widgets/Media/MediaPreview'
 import { constructProperty } from 'utils/Parser'
 import { stringSplice } from 'utils/Helper'
 import { FileDropZone } from 'UI/Widgets/Media/UploadMediaDialog';
-import { Stack, CircularProgress, Popper, Button, IconButton, ClickAwayListener } from '@mui/material';
+import { Stack, CircularProgress, Popper, Button, IconButton, ClickAwayListener, TextField, Box } from '@mui/material';
+import { BorderColor } from '@mui/icons-material';
 
 const platforms = [
     { name: 'Twitter Dm', icon: FaTwitter },
@@ -48,12 +49,20 @@ const InputSelector = (props) => {
     }
 
     return (
-        <div style={props.style} className={props.large ? 'Container Large' : 'Container'}
+        <Button
+            style={props.style}
+            className={props.large ? 'Container Large' : 'Container'}
             onClick={onClick}
+            startIcon={<props.icon className='Icon' />}
+            disableRipple
+            color='inherit'
+            sx={{
+                border: 2,
+                borderColor: 'divider',
+            }}
         >
-            <props.icon className='Icon' />
-            <div className='Name'>{props.name}</div>
-        </div>
+            {props.name}
+        </Button>
     )
 }
 
@@ -85,23 +94,26 @@ const InputSelected = (props) => {
     }
 
     return (
-        <div style={props.style} className={props.large ? 'Container Large' : 'Container'} onClick={onClick}>
+        <Box
+            style={props.style}
+            className={props.large ? 'Container Large' : 'Container'}
+            onClick={onClick}
+            sx={{
+                border: 2,
+                borderColor: 'divider',
+                fontWeight:'bold',
+            }}
+        >
             {props.type == 'contact' ?
                 props.img ? <img className='Image' src={props.img} /> : <></>
                 : (
                     <props.icon className='Icon' />
                 )}
-            <div className='Name'>{props.name}</div>
+            {props.name}
             <CloseIcon className='Clear' onClick={props.onRemove} />
-        </div>
+        </Box>
     )
 }
-
-// const platforms = [
-//     { name: 'Twitter Dm', icon: FaTwitter },
-//     { name: 'Personal Text', icon: FaPhone },
-//     { name: 'Rs Text', icon: FaComment }
-// ]
 
 const InputPlatform = (props) => {
     const [availablePlatforms, setAvailablePlatforms] = useState([])
@@ -128,8 +140,6 @@ const InputPlatform = (props) => {
             //     { name: 'SMS/MMS', icon: FaComment }
             // ]
         }
-
-        // tmp.push(platforms[2])
 
         setAvailablePlatforms(tmp)
     }, [props.platforms])
@@ -252,7 +262,7 @@ const ReceiverSelectionGroup = (props) => {
 }
 
 const InputReceivers = (props) => {
-    
+
     if (props.selected) {
         let lengths = props.selected.privateBoards.length
             + props.selected.teamBoards.length
@@ -530,7 +540,7 @@ const InputText = (props) => {
 
     return (
         <>
-            <Stack direction='row' gap={1.5} style={{ maringBottom: 20 }}>
+            <Stack direction='row' gap={1.5} sx={{ maringBottom: 20 }}>
                 {!props.hideTextPlaceholders &&
                     <TextPlaceholders
                         placeholders={props.textPlaceholders}
@@ -542,10 +552,16 @@ const InputText = (props) => {
                 />
                 <EmojiPicker onEmojiSelected={onEmojiSelected} />
             </Stack>
-            <textarea
+            <TextField
+                multiline
                 ref={textArea}
                 className='TextArea'
+                variant='standard'
                 type='text'
+                fullWidth
+                InputProps={{
+                    disableUnderline: true
+                }}
                 rows='8'
                 placeholder={props.placeholder}
                 value={props.value}
@@ -642,7 +658,14 @@ export default function MessageInput(props) {
     }
 
     return (
-        <div className={containerClass} style={props.style}>
+        <Box
+            className={containerClass}
+            style={props.style}
+            sx={{
+                border: 1,
+                borderColor: 'divider'
+            }}
+        >
             {!props.hideLabel &&
                 <div className='Label'>
                     <p>{props.label}</p>
@@ -651,6 +674,6 @@ export default function MessageInput(props) {
             <div className={inputClass}>
                 <Input type={props.type} {...props} />
             </div>
-        </div>
+        </Box>
     )
 }

@@ -143,8 +143,9 @@ const TweetDetails = (props) => {
         <Stack ml={10} direction="row">
             <Stack
                 sx={{
-                    borderLeft: "1px solid #ddd",
-                    borderRight: "1px solid #ddd",
+                    borderLeft: 1,
+                    borderRight: 1,
+                    borderColor: 'divider'
                 }}
                 p={5}
                 flex={1}
@@ -157,7 +158,6 @@ const TweetDetails = (props) => {
                 >
                     <Typography
                         variant="info-bold"
-                        style={{ textAlign: "center", fontWeight: 'bold' }}
                     >
                         Tweet Details
                     </Typography>

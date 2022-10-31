@@ -1,13 +1,12 @@
 import { useState, useMemo, useContext, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { LocalOfferOutlined, KeyboardArrowDown, AutoFixHigh, GridView, FormatListBulleted, Tune, Clear } from '@mui/icons-material'
-import { Stack, Typography, Box, CircularProgress, IconButton, Skeleton } from '@mui/material'
+import { Stack, Typography, Box, CircularProgress, IconButton, Skeleton, Divider } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import lodash from "lodash"
 
 import Button from 'UI/Widgets/Buttons/Button'
-import { Divider } from 'UI'
 import MediaTable from 'UI/Tables/Media/MediaTable'
 import SelectTagDialog from 'UI/Widgets/Tags/SelectTagDialog'
 import BaseMediaPage from './BaseMediaPage'
@@ -218,14 +217,13 @@ export const MainMediaPage = (props) => {
             showPanelFilters={showPanelFilters}
             onFilterRedirect={mediaRoutes.media}
         >
-
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Quick Access
-                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                    <Typography component='p' color='primary.light' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
                         <RenderIf condition={mediaMultiPageSelection.count > 0}>
                             {`${mediaMultiPageSelection.count} media${mediaMultiPageSelection.count > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => mediaMultiPageSelection.clear()}>
+                            <IconButton size='small' color='inherit' onClick={() => mediaMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
                         </RenderIf>
@@ -253,20 +251,20 @@ export const MainMediaPage = (props) => {
                 disablePagination
             />
 
-            <Divider />
-
+            <Divider sx={{ my: 2, borderBottomWidth: '2px' }} />
             <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                 <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                     Placeholders
-                    <Typography component='p' color='primary' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
+                    <Typography component='p' color='primary.light' fontWeight='bold' fontSize={'14px'} sx={{ minHeight: '28px' }}>
                         <RenderIf condition={placeholdersMultiPageSelection.count > 0}>
                             {`${placeholdersMultiPageSelection.count} placeholder${placeholdersMultiPageSelection.count > 1 ? "s" : ""} selected`}
-                            <IconButton size='small' color='primary' onClick={() => placeholdersMultiPageSelection.clear()}>
+                            <IconButton size='small' color='inherit' onClick={() => placeholdersMultiPageSelection.clear()}>
                                 <Clear fontSize="inherit" />
                             </IconButton>
                         </RenderIf>
                     </Typography>
                 </Typography>
+
                 <Box>
                     <Button
                         component={Link}
@@ -288,7 +286,7 @@ export const MainMediaPage = (props) => {
                 onSendClick={(placeholder) => app.sendMediaInMessage(placeholder, 'placeholder')}
                 disablePagination
             />
-
+            <Divider sx={{ mt: 2, borderBottomWidth: '2px' }} />
             <Box my={2} >
                 <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
                     <Typography variant='subtitle1' style={{ fontWeight: 'bold' }}>
@@ -347,12 +345,16 @@ export const MainMediaPage = (props) => {
                                     height: '50px',
                                     paddingInline: '20px',
                                     maxWidth: '200px',
-                                    border: '1px solid #E0E0E0',
+                                    border: 1,
+                                    borderColor: 'divider',
                                     cursor: 'pointer',
+                                    textDecoration: 'none',
+                                    bgcolor: 'background.secondary',
+                                    borderRadius: '5px'
                                 }}
                             >
                                 <LocalOfferOutlined
-                                    style={{ color: '#3871DA' }}
+                                    color='primary'
                                 />
                                 <Typography
                                     color='text.primary'

@@ -16,13 +16,13 @@ const ContactMessageStats = (props) => {
   }
 
   return (
-    <Stack sx={{ width: "100%" }} flex={1} justifyContent="flex-start" alignItems="center" spacing={2}>
+    <Stack sx={{ width: "100%" }} flex={1} justifyContent="flex-start" alignItems="center" >
       <Stack sx={{ width: "100%", maxHeight: 50 }}
         flex={1}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        spacing={1}
+        gap={1}
       >
         <Typography align='left' variant='subtitle1' component="p">
           Message Stats

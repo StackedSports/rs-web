@@ -18,6 +18,10 @@ const BaseDialog = (props) => {
       open={props.open}
       onClose={props.onClose}
       sx={props.sx}
+      PaperProps={{
+        variant: 'outlined',
+        elevation: 0
+      }}
     >
       {props.title && <DialogTitle sx={{ mr: '40px' }} >{props.title}</DialogTitle>}
 

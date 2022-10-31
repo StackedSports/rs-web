@@ -1,5 +1,4 @@
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -7,6 +6,8 @@ import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 import CachedIcon from '@mui/icons-material/Cached'
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
 export const routes = {
     dashboard: {
@@ -17,7 +18,7 @@ export const routes = {
     contacts: {
         title: 'Contacts',
         path: '/contacts',
-        icon: PersonOutlineOutlinedIcon
+        icon: GroupsOutlinedIcon
     },
     messages: {
         title: 'Messages',

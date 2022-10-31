@@ -17,10 +17,11 @@ import { getMessagesCriteriaFromQueryString, getMessagesQueryCriteriaObjFromFilt
 import lodash from "lodash"
 import useLocalStorage from 'Hooks/useLocalStorage'
 import { CustomPagination } from 'UI/Widgets/Pagination/CustomPagination'
+import { Divider } from '@mui/material'
 
 const MessagesPage = (props) => {
     const searchParams = useSearchParams()
-    const { isAdmin,user } = useContext(AuthContext)
+    const { isAdmin, user } = useContext(AuthContext)
     const scrollToTopTableRef = useRef()
     const senders = useTeamMembers()
     const tags = useTagsWithMessage()
@@ -162,14 +163,13 @@ const MessagesPage = (props) => {
                     </Stack>
                 </Stack>
             </RenderIf>
-            {messages.items && messages.items.map((message, index) => {
-                // console.log('rendering message ' + index)
-                // console.log(message.recipient_count.status)
-                // console.log(message.platform)
-                return (
-                    <MessagePreview key={index} message={message} mini style={styles.divider} link />
-                )
-            })}
+            <Stack divider={<Divider sx={{ borderBottomWidth: '2px' }} />} gap={1}>
+                {messages.items && messages.items.map((message, index) => {
+                    return (
+                        <MessagePreview key={index} message={message} mini link />
+                    )
+                })}
+            </Stack>
 
             {!messages.loading && messages.items && messages.items.length > 0 && (
                 <CustomPagination
@@ -195,14 +195,6 @@ const MessagesPage = (props) => {
             )}
         </BaseMessagePage>
     )
-}
-
-const styles = {
-    divider: {
-        paddingBottom: 0,
-        marginBottom: 20,
-        borderBottom: '2px solid #eee'
-    }
 }
 
 export default MessagesPage
