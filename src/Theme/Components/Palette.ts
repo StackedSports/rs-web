@@ -1,3 +1,5 @@
+import { grey } from "@mui/material/colors"
+
 const common = {
     primary: {
         main: '#3871da',
@@ -38,7 +40,7 @@ export const darkPallete = {
     mode: 'dark',
     ...common,
     primary: {
-        main: '#3a28ff', // 19b2ff 5865f2 199bff 1500ff 3a28ff
+        main: '#2383e2', // 19b2ff 5865f2 199bff 1500ff 3a28ff
     },
     neutral: {
         main: '#fff',
@@ -46,6 +48,6 @@ export const darkPallete = {
     background: {
         secondary: '#303030',
         paper: '#424242',
-        default: '#1C1D26'
+        default: grey[700] //'#1C1D26'
     },
 }

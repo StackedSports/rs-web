@@ -57,16 +57,18 @@ const OrganizationSettingsPage = (props) => {
 
                 <Stack
                     component="div"
-                    style={{
+                    sx={{
                         borderRadius: "7px",
-                        border: "#dadada 1px solid",
+                        border: 1,
+                        borderColor: 'divider',
                     }}
                     direction="column" justifyContent="space-between"
                     alignItems="start" flexWrap="wrap" flex={2} spacing={1}
                 >
-                    <Stack style={{
+                    <Stack sx={{
                         padding: "20px",
-                        borderBottom: "#dadada  1px solid",
+                        borderBottom: 1,
+                        borderColor: 'divider',
                     }}
                         width="100%" flex={1} direction="row" justifyContent="space-between"
                         alignItems="center" flexWrap="nowrap">
@@ -91,10 +93,6 @@ const OrganizationSettingsPage = (props) => {
                                     id="organization"
                                     InputProps={inputProps}
                                     defaultValue={initialValues.organization}
-                                    sx={{
-                                        border: "#dadada 1px solid",
-                                        borderRadius: "5px"
-                                    }}
                                 />
                                 <FormHelperText id="organization" >Organization</FormHelperText>
                             </FormControl>
@@ -178,11 +176,12 @@ const OrganizationSettingsPage = (props) => {
                     </Stack>
                 </Stack>
                 <Stack flex={1} direction="column"
-                    style={{
+                    sx={{
                         height: "40%",
                         borderRadius: "7px",
                         justifyContent: "flex-start",
-                        border: "#dadada  1px solid",
+                        border: 1,
+                        borderColor: 'divider'
                     }
                     }>
                     <Stack flex={3} direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding="20px">
@@ -190,11 +189,11 @@ const OrganizationSettingsPage = (props) => {
                             <Typography variant="h6" component="p">Org Favicon Logo</Typography>
                         </Stack>
                         <Stack flex={1} direction="column" justifyContent="flex-start" alignItems="center" spacing={1}>
-                            <Avatar sx={{ objectFit: "cover", width: "96px", height: "96px", border: "#dadada 1px solid", padding: "15px", }} alt="org favicon" src={teamLogo} />
+                            <Avatar sx={{ objectFit: "cover", width: "96px", height: "96px", padding: "15px", }} alt="org favicon" src={teamLogo} />
                         </Stack>
                     </Stack>
 
-                    <Stack flex={1} direction="row" justifyContent="space-evenly" alignItems="center" style={{ borderTop: "#dadada 1px solid", }}>
+                    <Stack flex={1} direction="row" justifyContent="space-evenly" alignItems="center" sx={{ borderTop: 2, borderColor: 'divider' }}>
                         <input hidden accept="image/*" id="contained-button-file" multiple type="file" />
                         <Button style={{ fontSize: "12px" }} component="label" htmlFor="contained-button-file" onClick={onUploadPicture}>
                             UPLOAD PICTURE
@@ -203,7 +202,7 @@ const OrganizationSettingsPage = (props) => {
                             REMOVE PICTURE
                         </Button>
                     </Stack>
-                </Stack >
+                </Stack>
             </Stack>
         </SettingsPage>
     )

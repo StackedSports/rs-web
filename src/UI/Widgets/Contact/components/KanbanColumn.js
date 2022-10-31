@@ -102,7 +102,7 @@ export const KanbanColumn = ({
                             <Typography variant='h6' fontWeight={600} onClick={onNameClick} sx={{ fontSize: 16 }}>
                                 {title}
                             </Typography>
-                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
+                            <Typography variant='h6' color='inherit' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
                                 {contacts.length}
                             </Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>
