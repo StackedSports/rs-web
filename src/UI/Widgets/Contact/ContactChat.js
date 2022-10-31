@@ -39,6 +39,7 @@ const ContactChat = (props) => {
   }
 
   const handleSendMessage = (message) => {
+    if (conversationType !== 'sms') return
     console.log(message)
     if (props.contact?.id)
       sendMessage.mutate({
