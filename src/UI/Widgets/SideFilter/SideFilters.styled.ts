@@ -35,7 +35,7 @@ export const SideFilterWrapper = styled(Stack)(({ theme }) => ({
     },
 
     '.link': {
-        fontSize: 12,
+        fontSize: 13,
         paddingLeft: 23,
 
         '&.Mui-selected': {

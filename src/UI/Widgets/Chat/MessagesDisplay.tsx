@@ -45,7 +45,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
             setCheckedMessagesIds([...checkedMessagesIds, message.id])
     }
 
-    const isMessageChecked = useCallback((message) => {
+    const isMessageChecked = useCallback((message: IConversatition) => {
         return checkedMessagesIds.some(id => id === message.id)
     }, [checkedMessagesIds])
 
@@ -79,7 +79,7 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
                             action={{
                                 name: 'Action',
                                 variant: 'text',
-                                options: props.actions || [],                                
+                                options: props.actions || [],
                             }}
                         />
                     }

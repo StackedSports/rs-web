@@ -27,15 +27,17 @@ export const ChatInboxItem = (props) => {
 			return `@${props.item.from}`
 	}, [props.item])
 
-
+	const getActiveBgColor = (isActive, theme) => {
+		if (isActive)
+			return theme.palette.mode === 'light' ? '#ededed' : theme.palette.grey[600]
+		else
+			return 'background.paper'
+	}
 
 	return (
 		<ListItemButton
 			sx={{
-				padding: "15px",
-				position: "relative",
-				borderTop: "solid 1px #efefef",
-				backgroundColor: props.active ? '#ededed' : 'background.paper'
+				backgroundColor: (theme) => getActiveBgColor(props.active, theme)
 			}}
 			key={props.item.id}
 			onMouseEnter={() => setShowIconClose(true)}

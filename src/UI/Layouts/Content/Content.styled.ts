@@ -10,7 +10,6 @@ export const ContentWrapper = styled(Box)`
     flex: 1 0 0;
     overflow-y: auto;
     max-height: 100vh;
-    margin-bottom: 8px;
 
     @media screen and (min-width: 1000px) {
         padding-right: 16px;

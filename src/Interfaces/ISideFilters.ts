@@ -1,7 +1,7 @@
 export interface ISideFilterItem {
-    id: string,
+    id: string | number,
     name: string,
-    path: string | { pathname: string, search: string },
+    path?: string | { pathname: string, search: string },
     isSelected?: boolean
 }
 

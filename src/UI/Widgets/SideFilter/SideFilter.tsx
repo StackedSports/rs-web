@@ -26,21 +26,21 @@ type CategoryProps = {
 
 const Category: React.FC<CategoryProps> = (props) => {
     // TODO: change to expanded
-    const [collapsed, setCollapsed] = useState(true)
+    const [expanded, setExpanded] = useState(true)
 
     const onHeaderClick = () => {
-        setCollapsed((prev) => !prev)
+        setExpanded((prev) => !prev)
     }
 
     const onItemClick = (item: ISideFilter, index: number) => {
         props.onItemClick(item, index)
     }
 
-    const isLinkActive = (location: string, path: string | { pathname: string, search: string }): boolean => {
+    const isLinkActive = (location: string, path?: string | { pathname: string, search: string }): boolean => {
         if (typeof path === 'string' || path instanceof String) {
             return location === path
         } else {
-            return location === `${path.pathname}?${path.search}`
+            return location === `${path?.pathname}?${path?.search}`
         }
     }
 
@@ -66,11 +66,11 @@ const Category: React.FC<CategoryProps> = (props) => {
                 color='neutral'
                 size='small'
                 onClick={onHeaderClick}
-                startIcon={<KeyboardArrowRightIcon className={`Icon ${collapsed ? 'collapsed' : ''}`} />}
+                startIcon={<KeyboardArrowRightIcon className={`Icon ${expanded ? 'collapsed' : ''}`} />}
             >
                 {props.title}
             </Button>
-            <Collapse in={collapsed}>
+            <Collapse in={expanded}>
                 {props.button && (
                     <ListItemButton
                         color='neutral'
@@ -102,6 +102,7 @@ const Category: React.FC<CategoryProps> = (props) => {
                             <ListItemButton
                                 key={item.id}
                                 selected={item.isSelected}
+                                 className="link"
                                 onClick={() => onItemClick(item, index)}
                                 dense
                             >

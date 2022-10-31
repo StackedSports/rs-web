@@ -12,7 +12,7 @@ import ContactMessageDetails from 'UI/Widgets/Contact/ContactMessageDetails';
 import ContactChat from 'UI/Widgets/Contact/ContactChat';
 import { AppContext } from 'Context/AppProvider';
 import CreateContactDialog from 'UI/Widgets/Dialogs/CreateContactDialog';
-import { Alert } from '@mui/material';
+import { Alert, Divider } from '@mui/material';
 
 export default function ContactsProfilePage(props) {
     const app = useContext(AppContext)
@@ -55,7 +55,7 @@ export default function ContactsProfilePage(props) {
             onBackClick={() => history.goBack()}
             loading={loading}
             redirect={redirect}
-            // hideHeader
+        // hideHeader
         >
             {contact.item?.archived &&
                 <Alert severity="warning" variant="filled" onClose={() => setOpenAlert(false)} sx={{ mb: 1 }}>
@@ -67,6 +67,7 @@ export default function ContactsProfilePage(props) {
                 direction="row"
                 mt={1}
                 minHeight={0}
+                divider={<Divider orientation='vertical' />}
             >
                 <ContactProfileDetails
                     loading={contact.loading}

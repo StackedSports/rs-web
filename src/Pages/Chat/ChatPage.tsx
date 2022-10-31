@@ -192,7 +192,7 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, itemIndex: number, filterIndex: number) => {
+	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, _itemIndex: number, filterIndex: number) => {
 
 		const type = filterIndex === 0 ? 'dm' : 'sms'
 

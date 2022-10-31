@@ -12,16 +12,18 @@ export const components: Components<Omit<Theme, "components">> = {
             /* Track */
             '::-webkit-scrollbar-track': {
                 background: theme.palette.mode === 'light' ? theme.palette.grey.A100 : theme.palette.grey.A400,
+                borderRadius: '5px'
             },
 
             /* Handle */
             '::-webkit-scrollbar-thumb': {
                 background: theme.palette.mode === 'light' ? '#ccc' : theme.palette.grey.A700,
+                borderRadius: '5px'
             },
 
             /* Handle on hover */
             '::-webkit-scrollbar-thumb:hover': {
-                background: '#999',
+                background: theme.palette.mode === 'light' ? '#999' : theme.palette.grey.A700,
             },
         })
     },
