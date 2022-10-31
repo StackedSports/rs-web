@@ -44,7 +44,11 @@ export const KanbanAddListButton = (props) => {
           sx={{
             mb: .5,
             display: expanded ? 'inline-flex' : 'none',
-            bgcolor: '#fff',
+          }}
+          InputProps={{
+            sx: {
+              bgcolor: 'background.paper',
+            }
           }}
         />
         <Stack direction='row' justifyContent='space-between'>
@@ -53,6 +57,7 @@ export const KanbanAddListButton = (props) => {
             disableRipple
             type='submit'
             onClick={handleAddList}
+            color='inherit'
             sx={{ textTransform: 'none', justifyContent: 'flex-start' }}
             startIcon={<Add />}
           >
