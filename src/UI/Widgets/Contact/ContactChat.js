@@ -1,39 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import lodash from "lodash";
 
 import { Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
-import { useContactConversation } from 'Api/ReactQuery'
+import { useConversationMutation, useContactConversation, useInboxConversationInfinty } from 'Api/ReactQuery'
 import { MessagesDisplay } from "UI/Widgets/Chat/MessagesDisplay";
 import { ChatInput } from "UI/Widgets/Chat/ChatInput";
+import { AuthContext } from "Context/Auth/AuthProvider";
 
 const ContactChat = (props) => {
+  const { user } = useContext(AuthContext)
+  const [conversationType, setConversationType] = useState('dm') //"dm" | "sms"
+  const messages = useInboxConversationInfinty({
+    contact_id: props.contact?.id,
+    inbox_type: conversationType,
+  })
+  const sendMessage = useConversationMutation()
 
-  const contactConversation = useContactConversation(props.contact?.id)
-  const [loadedMessages, setLoadedMessages] = useState({})
+  const loadNextPageMessages = () => {
+    if (messages.hasNextPage && !messages.isFetching) {
+      messages.fetchNextPage()
+    }
+  }
 
-  useEffect(() => {
-    if (!contactConversation.loading) {
-      setLoadedMessages(prev => {
-        const prevMessages = prev?.messages || []
-        const newMessages = contactConversation.items?.messages || []
-        return {
-          ...contactConversation.items,
-          messages: lodash.uniqBy([...prevMessages, ...newMessages], "id").reverse()
-        }
+  const handlePlatformChange = (type) => {
+    switch (type) {
+      case 'twitter-dm':
+        setConversationType('dm')
+        break;
+      case 'rs-text':
+        setConversationType('sms')
+        break;
+      default:
+        setConversationType(null)
+        break;
+    }
+  }
+
+  const handleSendMessage = (message) => {
+    if (conversationType !== 'sms') return
+    console.log(message)
+    if (props.contact?.id)
+      sendMessage.mutate({
+        team_contact_id: props.contact.id,
+        message: message,
+        type: conversationType
       })
-    }
-  }, [contactConversation.items])
-
-  const hasMorePages = contactConversation.pagination.currentPage < contactConversation.pagination.currentPage.totalPages
-
-  const handleOnScrollEnd = () => {
-    const pagination = contactConversation.pagination
-    const loading = contactConversation.loading
-    const { currentPage, totalPages, getPage } = pagination;
-    if (hasMorePages && !loading) {
-      getPage(currentPage + 1)
-    }
   }
 
   return (
@@ -46,15 +58,16 @@ const ContactChat = (props) => {
         }
       }}
     >
-      <ContactChatHeader contact={props.contact} />
+      <ContactChatHeader contact={props.contact} onPlatformChange={handlePlatformChange} />
       <MessagesDisplay
-        contact_profile_image={loadedMessages.contact_profile_image}
-        coach_profile_image={loadedMessages.coach_profile_image}
-        messages={loadedMessages.messages || []}
-        onLoadMore={handleOnScrollEnd}
-        hasMore={hasMorePages}
+        contact_profile_image={props.contact?.twitter_profile?.profile_image}
+        coach_profile_image={user?.twitter_profile?.profile_image}
+        messages={messages.items}
+        onLoadMore={loadNextPageMessages}
+        loading={messages.isLoading}
+        hasMore={messages.hasNextPage || messages.isLoading}
       />
-      <ChatInput />
+      <ChatInput onSendMessage={handleSendMessage} />
     </Stack>
   )
 }

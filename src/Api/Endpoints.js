@@ -1430,6 +1430,17 @@ export const getInboxConversation = ({ contact_id, inbox_type, user_id }, page =
     return GET(`inboxes_conversations?page=${page || 1}&per_page=${perPage || 20}`, body)
 }
 
+export const sendConversation = ({ user_id, team_contact_id, message, media }) => {
+    const body = {
+        user_id,
+        team_contact_id,
+        message,
+        media
+    }
+
+    return POST(`inboxes_conversations/send`,body)
+}
+
 export const updateTweet = (id, data) => {
     const body = {
         "published_tweet": { ...data }

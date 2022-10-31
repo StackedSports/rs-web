@@ -18,7 +18,7 @@ import useSearchParams from 'Hooks/SearchParamsHook';
 import Content from 'UI/Layouts/Content';
 
 interface IInboxSelected {
-	team_member_id: number,
+	team_member_id: string,
 	team_member_profile_image: string,
 	userId: string,
 	name: string,
@@ -32,7 +32,7 @@ export interface IConversationControl {
 	contact_name: string,
 	from: string,
 	inbox_type: InboxType,
-	user_id: number,
+	user_id: string,
 	isPinned: boolean,
 	contact_profile_image: string,
 	coach_profile_image: string,
