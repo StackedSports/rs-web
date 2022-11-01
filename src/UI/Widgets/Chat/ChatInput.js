@@ -79,6 +79,7 @@ export const ChatInput = (props) => {
         if (textMessage.length > 0 || mediaSelected) {
             props.onSendMessage(textMessage, mediaSelected)
             setTextMessage('')
+            setMediaSelected(null)
         }
     }
 
@@ -168,13 +169,20 @@ export const ChatInput = (props) => {
                         loading={snippets.loading}
                     />
 
-                    <Button name="Send" variant="contained" sx={{ ml: 'auto' }} onClick={onSendMessage} />
+                    <Button
+                        name="Send"
+                        variant="contained"
+                        sx={{ ml: 'auto' }}
+                        onClick={onSendMessage}
+                        startIcon={props.sendIcon}
+                    />
                 </Stack>
             </Box>
 
             <MediaSelectDialog
                 open={showMediaDialog}
                 removedItem={mediaRemoved}
+                onlyMedias
                 uniqueSelection
                 onSelected={onAddImage}
                 onClose={() => setShowMediaDialog(false)}

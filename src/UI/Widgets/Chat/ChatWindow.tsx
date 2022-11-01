@@ -82,11 +82,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 
 	const PlatformIcon = props.conversationControl.inbox_type === 'sms' ? SmsIcon : TwitterIcon
 
-	const handleSendMessage = (message: string) => {
+	const handleSendMessage = (message: string, media: { type: 'media' | 'placeholder', item: any }) => {
 		if (props.conversationControl.inbox_type !== 'sms') return
 		sendMessage.mutate({
 			team_contact_id: props.conversationControl.contact_id,
 			message: message,
+			media: media?.item?.id,
 			type: props.conversationControl.inbox_type,
 			user_id: props.conversationControl.user_id
 		})

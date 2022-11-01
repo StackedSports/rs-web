@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Grid, TextField, MenuItem, CircularProgress, Box } from '@mui/material'
+import { Grid, TextField, MenuItem, CircularProgress, Box, useTheme } from '@mui/material'
 
 import BaseSection from './Components/BaseSection'
 import SelecRangeDates from './Components/SelecRangeDates'
@@ -12,6 +12,8 @@ export const MessagesGraphs = (props) => {
   const [rightTimeRangeIndex, setRightTimeRangeIndex] = useState(0);
   const [leftGraph, setLeftGraph] = useState([]);
   const [rightGraph, setRightGraph] = useState([]);
+
+  const theme = useTheme()
 
   useEffect(() => {
     if (!props.stats[leftTimeRangeIndex].loading && props.stats[leftTimeRangeIndex]?.data === null)
@@ -44,8 +46,8 @@ export const MessagesGraphs = (props) => {
     datasets: [
       {
         backgroundColor: ['#007bff', '#dc3545', '#ffc107'],
-        borderColor: ['#007bff', '#dc3545', '#ffc107'],
-        borderWidth: 1,
+        //borderColor: ['#fff', '#fff', '#fff'],
+        borderWidth: 0,
         data: [leftGraph.total_dms, leftGraph.total_personal_texts, leftGraph.total_rs_texts],
       },
     ],
@@ -71,7 +73,18 @@ export const MessagesGraphs = (props) => {
           }
         >
           {!props.stats[leftTimeRangeIndex].loading ?
-            <Pie data={pieConfig} options={{ legend: { position: 'bottom', labels: { padding: 30 } } }} />
+            <Pie
+              data={pieConfig}
+              options={{
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    padding: 30,
+                    fontColor: theme.palette.mode === 'light' ? '#666' : '#fff',
+                  }
+                },
+              }}
+            />
             :
             <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
               <CircularProgress size={60} />
@@ -92,7 +105,24 @@ export const MessagesGraphs = (props) => {
           }
         >
           {!props.stats[rightTimeRangeIndex].loading ?
-            <Bar data={barConfig} options={{ legend: { display: false } }} />
+            <Bar data={barConfig}
+              options={{
+                legend: { display: false },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      fontColor: theme.palette.mode === 'light' ? '#666' : '#fff',
+                    }
+                  }],
+                  xAxes: [{
+                    ticks: {
+                      fontColor: theme.palette.mode === 'light' ? '#666' : '#fff',
+                    }
+                  }]
+                },
+              }}
+
+            />
             :
             <Box sx={{ display: 'grid', placeItems: 'center', height: '120px' }}>
               <CircularProgress size={60} />
