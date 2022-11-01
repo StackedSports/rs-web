@@ -240,7 +240,7 @@ const MediaPreview = ({ type, ...props }) => {
                 >
                     {props.isLoading ? (
                         <></>
-                       // <Skeleton sx={{ flex: 1, height: '100%' }} />
+                        // <Skeleton sx={{ flex: 1, height: '100%' }} />
                     ) : (
                         <>
                             {isMedia ? (
@@ -343,14 +343,19 @@ const StyledCard = styled(Card)(({ theme, width }) => ({
 
 }));
 
-const CardImage = styled(Box)(
+const CardImage = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'isHovering' &&
+        prop !== 'isChecked' &&
+        prop !== 'showOverlay' &&
+        prop !== 'size'
+})(
     ({ theme, isHovering, isChecked, showOverlay, size }) => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         height: size,
-        backgroundColor: '#efefef',
+        backgroundColor: theme.palette.background.secondary,//mode === 'light' ? '#efefef' : '#cdcdcdcd'
         position: 'relative',
         overflow: 'hidden',
 
@@ -372,16 +377,16 @@ const CardImage = styled(Box)(
     })
 );
 
-const StyledCheckBoxContainer = styled(Box)(
-    ({ theme, isHovering }) => ({
-        position: 'absolute',
-        top: 5,
-        left: 5,
-        zIndex: 1,
-        backgroundColor: isHovering ? 'transparent' : 'white',
-        borderRadius: 4
-    })
-)
+const StyledCheckBoxContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'isHovering'
+})(({ theme, isHovering }) => ({
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    zIndex: 1,
+    backgroundColor: isHovering ? 'transparent' : 'white',
+    borderRadius: 4
+}))
 
 const StyledCheckBox = styled(Checkbox)(
     ({ theme }) => ({

@@ -41,7 +41,12 @@ const PERSONAL_TEXT = {
 	label: PLATFORM_LABEL[EPlatformType.PersonalText]
 }
 
-const ContactChatHeader = (props) => {
+interface ContactChatHeaderProps {
+	contact?: any,
+	onPlatformChange: (platformId: TMessagingPlatformID) => void,
+}
+
+const ContactChatHeader: React.FC<ContactChatHeaderProps> = (props) => {
 
 	const fullName = props.contact ? getFullName(props.contact) : "Loading..."
 	const profileImage = props.contact?.twitter_profile.profile_image
@@ -53,7 +58,7 @@ const ContactChatHeader = (props) => {
 	const [availablePlatforms, setAvailablePlatforms] = useState<IMessagingPlatform[] | null>(null)
 	const [platformSelectedId, setPlatformSelectedId] = useState<TMessagingPlatformID | null>(null)
 
-	//console.log(props.contact)
+	/* console.log(props.contact) */
 
 	useEffect(() => {
 		if (!props.contact)
@@ -112,6 +117,7 @@ const ContactChatHeader = (props) => {
 	const onPlatformSelected = (platformId: TMessagingPlatformID) => {
 		setPlatformSelectedId(platformId)
 		setOpen(false)
+		props.onPlatformChange(platformId)
 	}
 
 	return (
@@ -135,8 +141,7 @@ const ContactChatHeader = (props) => {
 				anchorEl={anchorRef.current}
 				placement="bottom-start"
 				transition
-				disablePortal
-				sx={{ zIndex: 'fab' }}
+
 			>
 				{({ TransitionProps, placement }) => (
 					<Grow

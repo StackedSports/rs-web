@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
-import { useQuery, useInfiniteQuery, InfiniteData } from "react-query"
-import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM } from "Api/Endpoints"
+import { useQuery, useInfiniteQuery, InfiniteData, useMutation, useQueryClient } from "react-query"
+import { getInboxes, getInboxConversation, getInboxSMS, getInboxDM, sendConversation } from "Api/Endpoints"
 import { usePagination } from "Api/Pagination"
-import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse } from "Interfaces"
+import { IPaginationApi, ITeamInboxItem, ITeamInboxAPI, IUserInboxItem, IUserInboxAPI, InboxType, IConversatitionAPI, IConversatition, IApiResponse, ISendConversation } from "Interfaces"
 
 export const useTeamInboxes = () => {
     const reactQuery = useQuery('team_inboxes', () => getInboxes(), {
@@ -10,14 +10,14 @@ export const useTeamInboxes = () => {
             let items: ITeamInboxItem[] = []
 
             data[0].forEach((inbox) => {
-                if(inbox.phone_number)
+                if (inbox.phone_number)
                     items.push({
                         team_member_id: inbox.id,
                         name: inbox.full_name,
                         channel: inbox.phone_number,
                         type: 'sms'
                     })
-                if(inbox.twitter_enable)
+                if (inbox.twitter_enable)
                     items.push({
                         team_member_id: inbox.id,
                         name: inbox.full_name,
@@ -162,4 +162,15 @@ export const useInboxConversationInfinty = (params: getInboxConversationParams, 
         items: reactQuery.data?.pages.flat() || [],
         loading: reactQuery.isLoading
     }
+}
+
+export const useConversationMutation = () => {
+    const queryClient = useQueryClient();
+
+    // @ts-ignore: Unreachable code error 
+    return useMutation((data: ISendConversation) => sendConversation(data), {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['inbox', 'conversation'], { active: true })
+        }
+    })
 }

@@ -118,8 +118,9 @@ const TweetRankingDetailsPage = (props) => {
 				<RenderIf condition={tweetId && tweetId !== ''}>
 					<Stack
 						// in={openTweet}
-					  style={{
-						border: '1px solid #ddd'
+					  sx={{
+						border: 1,
+						borderColor:'divider'
 					  }}
 					>
 						<TweetDetails 
@@ -132,8 +133,8 @@ const TweetRankingDetailsPage = (props) => {
 						/>
 					</Stack>
 				</RenderIf>
-			</Stack >
-		</BaseTweetRankingPage >
+			</Stack>
+		</BaseTweetRankingPage>
 	)
 }
 

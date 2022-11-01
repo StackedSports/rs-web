@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { TextField, styled, Stack } from '@mui/material';
-import { DateRangePicker as MuiDateRangePicker, DesktopDateRangePicker } from '@mui/x-date-pickers-pro'
+import { DateRangePicker as MuiDateRangePicker, DesktopDateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { format, isEqual } from 'date-fns';
 import Button from 'UI/Widgets/Buttons/Button';
 
@@ -45,7 +44,7 @@ export const DateRangePicker = (props) => {
     if (showCalendar) {
         const formatStyle = props.format ? props.format : 'MM/dd/yyyy';
         return (
-            <LocalizationProvider LocalizationProvider dateAdapter={AdapterDateFns} >
+            <LocalizationProvider dateAdapter={AdapterDateFns} >
                 <MuiDateRangePicker
                     open={open}
                     clearable

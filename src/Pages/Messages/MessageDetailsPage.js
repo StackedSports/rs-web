@@ -405,7 +405,7 @@ const MessageDetailsPage = (props) => {
         }
 
         actions = [
-            { name: 'Refresh', variant: 'text', icon: RefreshIcon, onClick: refreshMessage }, // type: icon
+            { name: 'Refresh', variant: 'outlined', icon: RefreshIcon, onClick: refreshMessage }, // type: icon
         ]
 
         if (showAction)

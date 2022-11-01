@@ -41,7 +41,7 @@ const ContactsTableServerMode = ({
     const { item: userPreference } = useUserPreference()
 
     useEffect(() => {
-        if (!selectedFilters || !userPreference.showColumnOnFilter) return
+        if (!selectedFilters || !userPreference?.showColumnOnFilter) return
         const collums = Object.keys(selectedFilters)
         const activeCollums = Object.entries(visibleColumns.items).
             filter(([, value]) => value === true).

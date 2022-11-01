@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-import { Dialog, Stack, debounce, Alert, Button as MuiButton } from "@mui/material"
+import { Dialog, Stack, debounce, Alert, Button as MuiButton, Typography, DialogTitle, Box } from "@mui/material"
 import Tooltip from '@mui/material/Tooltip';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { LoadingButton } from '@mui/lab';
 
@@ -42,25 +42,25 @@ export const FileDropZone = (props) => {
 		<Stack
 			alignItems="center"
 			justify="center"
-			style={{
+			sx={{
 				height: "max-content",
-				background: "#fafcfd",
-				// marginTop: 16,
-				marginBottom: 16,
-				borderRadius: 4,
+				backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[850],
+				marginBottom: '16px',
+				borderRadius: '4px',
 				border: "1px dotted gray",
-				padding: 16,
-				...props.style
+				padding: '16px',
+				gap: .8,
 			}}
+			style={props.style}
 			onDragOver={(e) => e.preventDefault()}
 			onDrop={props.onDrop}
 		>
 			<img src={Upload} style={{ userSelect: 'none', userDrag: 'none' }} />
-			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+			<Typography color='text.secondary'>
 				Upload Media
-			</p>
+			</Typography>
 
-			<p style={{ width: "100%", textAlign: "center", color: "#a2acc1", margin: 0 }}>
+			<Typography color='text.secondary'>
 				Drag and Drop or{" "}
 				<span
 					style={{ color: "#6aa8f4", cursor: "pointer" }}
@@ -69,7 +69,7 @@ export const FileDropZone = (props) => {
 					Browse
 				</span>{" "}
 				your {props.browseAction ? "Media Library" : "files here"}
-			</p>
+			</Typography>
 		</Stack>
 	);
 }
@@ -499,18 +499,15 @@ export default function UploadMediaDialog(props) {
 				onChange={handleFileChange}
 			/>
 
-			<Stack direction="row" margin={2} mb={0} spacing={2}>
-				<InsertDriveFileIcon
-					style={{ color: "#3871da" }}
+			<DialogTitle sx={{ display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+				<UploadFileIcon
+					sx={{ color: "#3871da", mr: 2 }}
 				/>
+				Create Placeholder & Upload Media
+			</DialogTitle>
 
-				<p style={{ width: "90%", fontWeight: 700 }}>
-					Create Placeholder & Upload Media
-				</p>
-			</Stack>
 
 			<Stack padding={2} pt={0} maxHeight={700} sx={{ overflowY: 'auto' }}>
-
 
 				{uploadFinished &&
 					<Stack
@@ -526,11 +523,12 @@ export default function UploadMediaDialog(props) {
 
 
 				{!uploadFinished &&
-					<Stack flex={1}>
+					<Stack flex={1} gap={2}>
 						<Stack flex={1}>
 							<MediaInputTitle title="Owner" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Assigning an owner to your media upload enables the media owner to select “My Media” in the media library, and filter out all media owned by them."
@@ -557,6 +555,7 @@ export default function UploadMediaDialog(props) {
 							<MediaInputTitle title="Tags" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Add a tag to your media for better organization and easier filtering. (Think of a tag like adding media to a folder)"
@@ -584,6 +583,7 @@ export default function UploadMediaDialog(props) {
 							<MediaInputTitle title="Associate to placeholder or create new" />
 
 							<Tooltip
+								disableInteractive
 								arrow
 								placement="top-end"
 								title="Create a new placeholder or add media to an existing placeholder for sending personalized media to contacts."
@@ -627,13 +627,13 @@ export default function UploadMediaDialog(props) {
 
 				{
 					files.length > 0 &&
-					<div
-						style={{
-							marginTop: 32,
-							marginBottom: 0,
+					<Box
+						sx={{
+							my: 2.5,
 							width: "100%",
-							border: "1px solid #dbe2ed",
-							borderRadius: 4,
+							border: 1,
+							borderColor: 'divider',
+							borderRadius: '4px',
 						}}
 					>
 						<MediaUploadHeader />
@@ -645,7 +645,7 @@ export default function UploadMediaDialog(props) {
 								disableAssociateInput={uploadFinished}
 								item={item}
 								options={contacts.items}
-								optionsLoading={contacts.loading}
+								optionsLoading={contacts.isFetching}
 								onOptionSelected={(option) => associateContactToMedia(option, index)}
 								optionSelected={associatedPeople[index]}
 								onRemoveOptionSelected={() => removeContactFromMedia(index)}
@@ -655,7 +655,7 @@ export default function UploadMediaDialog(props) {
 								onDeleteMedia={() => deleteMedia(index)}
 							/>
 						))}
-					</div>
+					</Box>
 				}
 
 				{

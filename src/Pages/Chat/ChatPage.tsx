@@ -2,11 +2,11 @@ import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { Grid } from "@mui/material";
-import Page, { Content } from 'UI/Layouts/Page';
+import Page from 'UI/Layouts/Page';
 import Panel from 'UI/Layouts/Panel';
 import TopBar from 'UI/Layouts/TopBar';
 import SideBar from 'UI/Layouts/SideBar';
-import SideFilter from 'UI/Widgets/SideFilter';
+import SideFilter from 'UI/Widgets/SideFilter/SideFilter';
 import { useLocalStorage } from 'Hooks/useLocalStorage';
 import ConfirmDialogContext from 'Context/ConfirmDialogProvider';
 import { AuthContext } from 'Context/Auth/AuthProvider';
@@ -15,9 +15,10 @@ import { ChatWindow, ChatInbox } from 'UI/Widgets/Chat';
 import { useTeamInboxes, useInbox, useTeamMembers } from 'Api/ReactQuery'
 import { InboxType, ISideFilter, IUserInboxItem } from "Interfaces"
 import useSearchParams from 'Hooks/SearchParamsHook';
+import Content from 'UI/Layouts/Content';
 
 interface IInboxSelected {
-	team_member_id: number,
+	team_member_id: string,
 	team_member_profile_image: string,
 	userId: string,
 	name: string,
@@ -31,7 +32,7 @@ export interface IConversationControl {
 	contact_name: string,
 	from: string,
 	inbox_type: InboxType,
-	user_id: number,
+	user_id: string,
 	isPinned: boolean,
 	contact_profile_image: string,
 	coach_profile_image: string,
@@ -191,7 +192,7 @@ export default function ChatPage() {
 		setSelectedConversationControl(reorder(selectedConversationControl, source.index, destination.index))
 	}
 
-	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, itemIndex: number, filterIndex: number) => {
+	const onFilterSelected = (item: Pick<ISideFilter, 'id'>, _itemIndex: number, filterIndex: number) => {
 
 		const type = filterIndex === 0 ? 'dm' : 'sms'
 

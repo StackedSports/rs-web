@@ -23,7 +23,7 @@ export default function AccordionComponent(props) {
 			elevation={0}
 		>
 			<AccordionSummary
-				sx={{ backgroundColor: '#f7f7f7', padding: '1 2' }}
+				sx={{ backgroundColor: 'background.default',padding: '1 2' }}
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls={`${props.id}-content`}
 				id={`${props.id}-header`}

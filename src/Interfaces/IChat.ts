@@ -4,14 +4,14 @@ import { IUrls } from "./Shared"
 export type InboxType = 'sms' | 'dm'
 
 export interface ITeamInboxItem {
-    team_member_id: number,
+    team_member_id: string,
     name: string,
     channel: number | string,
     type: InboxType
 }
 
 export interface ITeamInboxAPI {
-    id: number,
+    id: string,
     full_name: string,
     phone_number: number,
     twitter_enable: boolean
@@ -63,25 +63,27 @@ export interface IConversatitionAPI {
     team_contact_id: number;
 }
 export interface IConversatition {
-    id: string
-    text: string;
+    id: string;
+    text?: string | null;
     direction: 'out' | 'in';
     from: string;
     to?: any;
     created_at: Date;
-    media: IMediaChat | IMediaChat[];
+    media?: IMediaChat | IMediaChat[] | null;
     team_contact_id: number;
 }
 
-//from contacts
-/* export interface RootObject {
-    id: string;
-    message_type: string;
-    text: string;
-    created_at: Date;
-    direction: string;
-    media: Media;
-    platform: Platform;
-    placeholders: Placeholders;
-    recipient_media: RecipientMedia;
-} */
+export type ISendConversation = {
+    user_id?: string;
+    team_contact_id: string;
+    type: InboxType;
+} & (
+        {
+            message: string;
+            media?: string;
+        } |
+        {
+            message?: string;
+            media: string;
+        }
+    )

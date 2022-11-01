@@ -4,18 +4,21 @@ import { Redirect } from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 
-import Page, { Content } from './Page'
+import Page from './Page'
+import Content from './Content'
 import TopBar from './TopBar'
 import SideBar from './SideBar'
 import Panel from './Panel'
 
-import SideFilter from '../Widgets/SideFilter'
+import SideFilter from '../Widgets/SideFilter/SideFilter'
 import LoadingOverlay from '../Widgets/LoadingOverlay'
 
 export { default as useMainLayoutAlert } from './Hooks/MainLayoutAlertHook'
 
 import { ISideFilter } from 'Interfaces'
 import { IPanelFilterProps } from 'UI/Widgets/PanelFilters/PanelFilters'
+import { ActionsProps } from './Panel/Actions'
+import { SxProps, Theme } from '@mui/material'
 
 export interface IMainLayoutProps {
     topActionName?: string;
@@ -25,10 +28,11 @@ export interface IMainLayoutProps {
     title?: string;
     filters?: ISideFilter[];
     onFilterSelected?: (item: any, itemIndex: number, index: number) => void;
-    actions?: Record<string, unknown>[];
+    actions?: ActionsProps[];
     onBackClick?: () => void;
     propsPanelFilters?: IPanelFilterProps;
     panelRef?: React.Ref<unknown> | undefined;
+    panelSx?: SxProps<Theme>,
     showBackBoardToContacts?: boolean;
     onBackBoardToContacts?: () => void;
     redirect?: string;
@@ -52,7 +56,6 @@ export default function MainLayout(props: IMainLayoutProps) {
             <Content>
                 <SideFilter
                     visible={displayFilters && !props.filtersDisabled}
-                    title={props.title}
                     filters={props.filters}
                     collapsed={true}
                     onFilterSelected={props.onFilterSelected}
@@ -69,6 +72,7 @@ export default function MainLayout(props: IMainLayoutProps) {
                     onBackBoardToContacts={props.onBackBoardToContacts}
                     panelRef={props.panelRef}
                     hideHeader={props.hideHeader}
+                    sx={props.panelSx}
                 >
                     {props.alert && (
                         <Snackbar

@@ -4,11 +4,9 @@ import SearchBar from 'UI/Widgets/SearchBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import TextsmsIcon from '@mui/icons-material/Textsms';
 import SmsIcon from '@mui/icons-material/Sms';
 
 import { ChatListItem } from 'UI/Widgets/Chat'
-import LoadingPanel from 'UI/Widgets/LoadingPanel'
 
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 import { IUserInboxItem } from "Interfaces"
@@ -87,7 +85,8 @@ export const ChatInbox = (props: IChatInboxProps) => {
             overscrollBehaviorBlock: 'contain',
             borderEndStartRadius: '5px',
             borderStartStartRadius: '5px',
-            border: "1px solid #dadada",
+            border: 1,
+            borderColor: 'divider',
         }}
         >
             {!props.name ? (
@@ -100,7 +99,8 @@ export const ChatInbox = (props: IChatInboxProps) => {
                         flexWrap="nowrap"
                         gap={1}
                         alignItems="start"
-                        borderBottom="solid 1px #dadada"
+                        borderBottom="solid 1px"
+                        borderColor='divider'
                     >
 
                         <Icon sx={{ cursor: "pointer", marginTop: '2px' }} onClick={props.onBackClick} />
@@ -126,7 +126,7 @@ export const ChatInbox = (props: IChatInboxProps) => {
 
                     </Stack>
 
-                    <Box sx={{ p: '20px' }}>
+                    <Box sx={{ p: '20px', borderBottom: 1, borderColor: 'divider' }}>
                         {props.isLoading ? (
                             <Skeleton variant='rounded' height={'36px'} />
                         ) : (
@@ -140,7 +140,20 @@ export const ChatInbox = (props: IChatInboxProps) => {
                             />
                         )}
                     </Box>
-                    <List sx={{ overflowY: 'auto', flex: '1 0 0', '::-webkit-scrollbar': { width: '5px' } }}>
+
+                    <List
+                        sx={{
+                            overflowY: 'auto',
+                            flex: '1 0 0',
+                            '::-webkit-scrollbar': { width: '5px' },
+                            '.MuiListItemButton-root': {
+                                padding: "15px",
+                                position: "relative",
+                                borderBottom: "solid 1px",
+                                borderColor: 'divider'
+                            }
+                        }}
+                    >
                         {props.isLoading ? (
                             Array.from(new Array(3)).map((_, index) =>
                                 <ChatInboxItemSkeleton key={index} />

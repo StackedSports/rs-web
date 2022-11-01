@@ -127,7 +127,7 @@ const Container = styled(Box, {
 })((props) => `
   border-radius: 8px;
   border: 1px solid transparent;
-  background-color: ${props.isDragging ? '#dadada' : '#ffff'};
+  background-color: ${props.isDragging ? props.theme.palette.background.paper : props.theme.palette.background.default};
   border-color: ${props.isDragging ? '#afafaf' : '#dadada'};
   box-sizing: border-box;
   padding: 12px;

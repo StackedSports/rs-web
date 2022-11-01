@@ -8,15 +8,17 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
+import Link from '@mui/material/Link';
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import Logout from '@mui/icons-material/Logout'
 
 import { AuthContext } from 'Context/Auth/AuthProvider'
 
 import { getFullName } from 'utils/Parser'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { routes } from 'Routes'
 import { userRoutes } from 'Routes/Routes'
 
@@ -81,47 +83,37 @@ export default function AccountMenu() {
                             ml: -0.5,
                             mr: 1.5,
                         },
-                        // '&:before': {
-                        //     content: '""',
-                        //     display: 'block',
-                        //     position: 'absolute',
-                        //     top: 0,
-                        //     right: 14,
-                        //     width: 10,
-                        //     height: 10,
-                        //     bgcolor: 'background.paper',
-                        //     transform: 'translateY(-50%) rotate(45deg)',
-                        //     zIndex: 0,
-                        // },
                     },
                 }}
                 transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-                <Link to={userRoutes.profile} style={{ color: "inherit" }}>
-                    <MenuItem>
-                        <Avatar
-                            alt={getFullName(auth?.user)}
-                            src={auth.user?.twitter_profile?.profile_image}
-                        />
-                        My Profile
-                    </MenuItem>
-                </Link>
-                <Divider />
+                <MenuItem component={RouterLink} to={userRoutes.profile} sx={{ pb: 0 }}>
+                    <Avatar
+                        alt={getFullName(auth?.user)}
+                        src={auth.user?.twitter_profile?.profile_image}
+                    />
+                    My Profile
+                </MenuItem>
+                <Divider sx={{ m: 0 }} />
                 {/* <MenuItem>
                     <ListItemIcon>
                         <PersonAdd fontSize="small" />
                     </ListItemIcon>
                     Add another account
                 </MenuItem> */}
-                <Link to={userRoutes.account} style={{ color: "inherit" }}>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <AccountCircleIcon fontSize="small" />
-                        </ListItemIcon>
-                        Account
-                    </MenuItem>
-                </Link>
+                <MenuItem component={RouterLink} to={userRoutes.account}>
+                    <ListItemIcon>
+                        <AccountCircleIcon fontSize="small" />
+                    </ListItemIcon>
+                    Account
+                </MenuItem>
+                <MenuItem component={RouterLink} to={userRoutes.preferences}>
+                    <ListItemIcon>
+                        <ToggleOnIcon fontSize="small" />
+                    </ListItemIcon>
+                    Preferences
+                </MenuItem>
                 {/* <Link to={userRoutes.notifications} style={{ color: "inherit" }}>
                     <MenuItem>
                         <ListItemIcon>

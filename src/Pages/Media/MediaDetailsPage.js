@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useContext } from "react"
 import { useParams, useHistory } from "react-router-dom"
 import { AutoFixHigh, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material"
-import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce } from "@mui/material"
+import { Grid, Stack, Box, Typography, styled, Checkbox, Chip, debounce, Divider } from "@mui/material"
 import lodash from "lodash"
 
 import MainLayout, { useMainLayoutAlert } from 'UI/Layouts/MainLayout'
@@ -392,7 +392,7 @@ export const MediaDetailsPage = () => {
                     </GridItemLeft>
 
                     <GridItemRight item xs={4} xl={3} >
-                        <MediaStatsColumn>
+                        <MediaStatsColumn divider={<Divider />}>
                             <Typography variant='subtitle1'>
                                 Media Status
                             </Typography>
@@ -478,17 +478,17 @@ export const MediaDetailsPage = () => {
 
 const MediaStatsColumn = styled(Stack)(({ theme }) => ({
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
 
-    ' > *': {
+    ' > *:not(.MuiDivider-root)': {
         width: '100%',
-        height: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
-        border: '1px solid #efefef',
+    },
+
+    '&> .MuiDivider-root': {
+        padding: 0,
     },
 
     '.MuiTypography-subtitle1 , .MuiTypography-subtitle2': {

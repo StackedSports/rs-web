@@ -74,6 +74,18 @@ export const KanbanColumn = ({
         width: 275,
     });
 
+    const getBgColor = (isDragging, theme) => {
+        if (theme.palette.mode === 'dark') {
+            return isDragging ?
+                theme.palette.background.secondary :
+                theme.palette.background.default
+        } else {
+            return isDragging ?
+                '#afafaf' :
+                '#f5f6fa'
+        }
+    }
+
     return (
         <Draggable draggableId={title} index={index} direction="horizontal">
             {(provided, snapshot) => (
@@ -83,14 +95,14 @@ export const KanbanColumn = ({
                             direction='row'
                             alignItems='center'
                             sx={{ borderRadius: 1.2, padding: 2, width: '100%', height: '50px' }}
-                            bgcolor={snapshot.isDragging ? '#afafaf' : '#f5f6fa'}
+                            bgcolor={(theme) => getBgColor(snapshot.isDragging, theme)}
                             {...provided.dragHandleProps}
                             aria-label={`${title} list`}
                         >
                             <Typography variant='h6' fontWeight={600} onClick={onNameClick} sx={{ fontSize: 16 }}>
                                 {title}
                             </Typography>
-                            <Typography variant='h6' color='primary' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
+                            <Typography variant='h6' color='inherit' fontWeight={600} sx={{ ml: 2, fontSize: 16 }}>
                                 {contacts.length}
                             </Typography>
                             <Stack direction='row' alignItems='center' sx={{ ml: 'auto' }}>

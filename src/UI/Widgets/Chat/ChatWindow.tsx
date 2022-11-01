@@ -18,7 +18,7 @@ import SmsIcon from '@mui/icons-material/Sms';
 
 import { ChatInput } from './ChatInput';
 import { MessagesDisplay } from './MessagesDisplay';
-import { useInboxConversationInfinty } from 'Api/ReactQuery'
+import { useConversationMutation, useInboxConversationInfinty } from 'Api/ReactQuery'
 import { IConversationControl } from 'Pages/Chat/ChatPage';
 
 import { formatPhoneNumber } from 'utils/Parser'
@@ -40,6 +40,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 		inbox_type: props.conversationControl.inbox_type,
 		user_id: props.conversationControl.user_id
 	})
+
+	const sendMessage = useConversationMutation()
 
 	const loadNextPageMessages = () => {
 		if (messages.hasNextPage && !messages.isFetching) {
@@ -80,6 +82,16 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 
 	const PlatformIcon = props.conversationControl.inbox_type === 'sms' ? SmsIcon : TwitterIcon
 
+	const handleSendMessage = (message: string) => {
+		if (props.conversationControl.inbox_type !== 'sms') return
+		sendMessage.mutate({
+			team_contact_id: props.conversationControl.contact_id,
+			message: message,
+			type: props.conversationControl.inbox_type,
+			user_id: props.conversationControl.user_id
+		})
+	}
+
 	return (
 		<>
 			<Draggable
@@ -95,7 +107,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							minHeight: 0,
 							display: 'flex',
 							flexDirection: 'column',
-							backgroundColor: '#fbfbfb'
+							backgroundColor: 'background.secondary'
 						}}
 						ref={provided.innerRef}
 					>
@@ -123,18 +135,18 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 								src={props.conversationControl.contact_profile_image}
 							/>
 							<Stack flex={1}>
-							
+
 								<Stack direction='row' gap={1} alignItems='center'>
-										<Link
+									<Link
 										color={'common.white'}
 										underline="hover"
 										component={RouterLink}
 										to={`${contactsRoutes.profile}/${props.conversationControl.contact_id}`}
-										>
-											<Typography fontWeight={600}>
-												{props.conversationControl.contact_name}
-											</Typography>
-										</Link>
+									>
+										<Typography fontWeight={600}>
+											{props.conversationControl.contact_name}
+										</Typography>
+									</Link>
 									<PlatformIcon sx={{ fontSize: '1em' }} />
 								</Stack>
 
@@ -144,7 +156,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							</Stack>
 
 							{/* <PlatformIcon sx={{fontSize:'1em', marginRight: '8px'}}/> */}
-							
+
 							<IconButton onClick={onCloseConversation} size='small' color='inherit' sx={{ ml: 'auto' }} >
 								<CloseIcon />
 							</IconButton>
@@ -159,8 +171,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							loading={messages.isLoading}
 							hasMore={messages.hasNextPage || messages.isLoading}
 						/>
-						
-						<ChatInput />
+
+						<ChatInput onSendMessage={handleSendMessage} />
 					</Paper>
 				)}
 			</Draggable>

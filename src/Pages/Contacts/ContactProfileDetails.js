@@ -508,7 +508,7 @@ const ContactProfileDetails = (props) => {
 			<Stack
 				pr={1}
 				spacing={1}
-				sx={{ width: '350px', height: '100%', overflowY: "auto", borderRight: "#efefef  1px solid" }}
+				sx={{ width: '350px', height: '100%', overflowY: "auto" }}
 			>
 				<LoadingPanel />
 			</Stack>
@@ -519,10 +519,10 @@ const ContactProfileDetails = (props) => {
 			pr={1}
 			spacing={1}
 			flex={'1 0 0'}
+			minHeight={0}
 			sx={{
 				maxWidth: '350px',
 				overflowY: "auto",
-				borderRight: "#efefef  1px solid",
 				minHeight: 0,
 				overscrollBehavior: 'contain'
 			}}

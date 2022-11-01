@@ -27,7 +27,11 @@ export const KanbanAddListButton = (props) => {
 
   return (
     <Box>
-      <Box sx={{ width: '310px', bgcolor: '#dadada', padding: .5, borderRadius: 1.2 }} component='form' onSubmit={onSubmit}>
+      <Box
+        sx={{ width: '310px', bgcolor: 'background.default', padding: .5, borderRadius: 1.2 }}
+        component='form'
+        onSubmit={onSubmit}
+      >
         <TextField
           name='listName'
           label={null}
@@ -40,7 +44,11 @@ export const KanbanAddListButton = (props) => {
           sx={{
             mb: .5,
             display: expanded ? 'inline-flex' : 'none',
-            bgcolor: '#fff',
+          }}
+          InputProps={{
+            sx: {
+              bgcolor: 'background.paper',
+            }
           }}
         />
         <Stack direction='row' justifyContent='space-between'>
@@ -48,8 +56,8 @@ export const KanbanAddListButton = (props) => {
             fullWidth={!expanded}
             disableRipple
             type='submit'
-            size='small'
             onClick={handleAddList}
+            color='inherit'
             sx={{ textTransform: 'none', justifyContent: 'flex-start' }}
             startIcon={<Add />}
           >
