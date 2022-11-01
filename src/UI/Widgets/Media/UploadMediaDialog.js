@@ -44,7 +44,7 @@ export const FileDropZone = (props) => {
 			justify="center"
 			sx={{
 				height: "max-content",
-				backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[600],
+				backgroundColor: (theme) => theme.palette.mode === 'light' ? '#fafcfd' : theme.palette.grey[850],
 				marginBottom: '16px',
 				borderRadius: '4px',
 				border: "1px dotted gray",
