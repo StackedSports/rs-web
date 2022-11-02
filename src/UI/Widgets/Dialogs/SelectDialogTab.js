@@ -5,6 +5,7 @@ import { Dialog, Stack, Box, Button } from '@mui/material'
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography'
 
 import SearchBar from 'UI/Widgets/SearchBar'
 import RenderIf from '../RenderIf';
@@ -100,9 +101,14 @@ export default function SelectDialogTab(props) {
             alignItems='center'
             justifyContent='flex-start'
           >
-            <p style={{ color: '#3871DA', marginLeft: 28, marginBottom: 0 }}>
+            <Typography
+              sx={{
+                 color: (theme) => theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.grey[0],
+                 marginLeft: 3,
+                 marginBottom: 0
+              }}>
               {props.selectionLabel}
-            </p>
+            </Typography>
           </Stack>
 
           <Stack flex={1}
