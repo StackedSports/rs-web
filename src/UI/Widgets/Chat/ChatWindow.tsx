@@ -125,7 +125,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = (props) => {
 							sx={{ userSelect: 'none' }}
 						>
 							<IconButton onClick={() => props.onPin && props.onPin()} color='inherit' size='small'>
-								{props.conversationControl.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
+								{props.conversationControl.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon sx={{ transform: 'rotate(30deg)' }} />}
 							</IconButton>
 
 							<Avatar style={{
