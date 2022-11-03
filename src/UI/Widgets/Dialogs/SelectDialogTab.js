@@ -97,7 +97,7 @@ export default function SelectDialogTab(props) {
           alignItems='center'
           justifyContent='flex-start'
         >
-          <Typography sx={{ marginLeft: '28px' }} color='info.light' variant='body1'>
+          <Typography sx={{ marginLeft: '28px' }} variant='body1'>
             {props.selectionLabel}
           </Typography>
         </Stack>
