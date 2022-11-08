@@ -24,6 +24,7 @@ const OpponentDialog = (props) => {
       <OpponentsTable
         mini
         opponents={props.opponents}
+        onViewOpponent={props.onViewOpponent}
       />
     </BaseDialog>
   )
