@@ -24,10 +24,11 @@ export const CustomPagination = (props) => {
             sx={{
                 position: "sticky",
                 bottom: 0,
-                bgcolor: 'background.paper',
+                bgcolor: 'background.default',
                 flexDirection: 'row',
                 paddingBlock: 1,
-                marginTop: 'auto'
+                marginTop: 'auto',
+                px: 1,
             }}
         >
             <Stack

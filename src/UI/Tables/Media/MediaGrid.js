@@ -6,7 +6,7 @@ export default function MediaGrid(props) {
     const skeletonSize = props.skeletonSize || 10
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} mb={1} px={.5}>
             {
                 Array.from(props.items?.length > 0 ? props.items : new Array(skeletonSize)).map((item, index) =>
                     <Grid key={(item?.hashid || item?.id) || index}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Dialog, Stack, Box, Button } from '@mui/material'
+import { Dialog, Stack, Box, Button, DialogTitle, Typography, DialogContent, DialogActions } from '@mui/material'
 
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -52,101 +52,97 @@ export default function SelectDialogTab(props) {
       open={props.open}
       onClose={props.onClose}
     >
-      <Box style={{ padding: 16 }}>
-        <TabContext value={tabIndex}>
-          <Stack direction='row' mb={2}>
-            <Stack flex={1}
-              direction='row'
-              justify='flex-start'
-              alignItems='center'
-            // style={{marginLeft: 10}}
-            >
-              <span style={{ marginLeft: marginLeft }}></span>
-
-              <TabList onChange={handleChange}>
-                {props.tabs.map(tab => (
-                  <Tab
-                    key={tab.id}
-                    label={tab.label}
-                    value={tab.id}
-                    {...a11yProps(tab.id)}
-                  />
-                ))}
-              </TabList>
-            </Stack>
-            <Stack flex={1}
-              direction='row'
-              justifyContent='flex-end'
-              alignItems='center'
-            >
-              <RenderIf condition={!props.tabs[tabIndex]?.hideSearch}>
-                <SearchBar
-                  placeholder={`Search ${props.tabs[tabIndex].label}`}
-                  onSearch={(search) => props.onSearch(search, tabIndex)}
-                  onClear={() => props.onClearSearch(tabIndex)}
-                />
-              </RenderIf>
-            </Stack>
-          </Stack>
-
-          <Box sx={{ overflowY: 'auto' }}>
-            {props.children}
-          </Box>
-
-        </TabContext>
-        <Stack direction='row' mt={2}>
-          <Stack flex={1}
-            direction='row'
-            alignItems='center'
-            justifyContent='flex-start'
-          >
-            <p style={{ color: '#3871DA', marginLeft: 28, marginBottom: 0 }}>
-              {props.selectionLabel}
-            </p>
-          </Stack>
+      <TabContext value={tabIndex}>
+        <DialogTitle component={Stack}
+          direction='row'
+          justify='flex-start'
+          alignItems='center'
+          flex={1}
+        >
+          <TabList onChange={handleChange}>
+            {props.tabs.map(tab => (
+              <Tab
+                key={tab.id}
+                label={tab.label}
+                value={tab.id}
+                sx={{ fontWeight: 600, letterSpacing: '1px' }}
+                {...a11yProps(tab.id)}
+              />
+            ))}
+          </TabList>
 
           <Stack flex={1}
             direction='row'
-            alignItems='center'
             justifyContent='flex-end'
-          //   style={{margin: '0 16px'}}
+            alignItems='center'
           >
-            <Button
-              onClick={props.onClose}
-              style={{
-                minWidth: 120,
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                marginRight: 10,
-                padding: '8px 16px'
-              }}
-              disableElevation
-              variant="outlined"
-            >
-              Cancel
-            </Button>
-
-            <Button
-              style={{
-                minWidth: 120,
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                padding: '8px 16px',
-                marginRight: 20
-              }}
-              onClick={props.onConfirmSelection}
-              color='primary'
-              disableElevation
-              variant="contained"
-              disabled={props.disableOnConfirmSelection}
-            >
-              Add Selection
-            </Button>
-
+            <RenderIf condition={!props.tabs[tabIndex]?.hideSearch}>
+              <SearchBar
+                placeholder={`Search ${props.tabs[tabIndex].label}`}
+                onSearch={(search) => props.onSearch(search, tabIndex)}
+                onClear={() => props.onClearSearch(tabIndex)}
+              />
+            </RenderIf>
           </Stack>
+        </DialogTitle>
+
+        <DialogContent dividers sx={{ overflowY: 'auto', ' .MuiTabPanel-root': { p: 0, overflowY: 'auto' } }}>
+          {props.children}
+        </DialogContent>
+
+      </TabContext>
+      <DialogActions>
+        <Stack flex={1}
+          direction='row'
+          alignItems='center'
+          justifyContent='flex-start'
+        >
+          <Typography sx={{ marginLeft: '28px' }} variant='body1'>
+            {props.selectionLabel}
+          </Typography>
+        </Stack>
+
+        <Stack flex={1}
+          direction='row'
+          alignItems='center'
+          justifyContent='flex-end'
+        //   style={{margin: '0 16px'}}
+        >
+          <Button
+            onClick={props.onClose}
+            style={{
+              minWidth: 120,
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              marginRight: 10,
+              padding: '8px 16px'
+            }}
+            disableElevation
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+
+          <Button
+            style={{
+              minWidth: 120,
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              padding: '8px 16px',
+              marginRight: 20
+            }}
+            onClick={props.onConfirmSelection}
+            color='primary'
+            disableElevation
+            variant="contained"
+            disabled={props.disableOnConfirmSelection}
+          >
+            Add Selection
+          </Button>
 
         </Stack>
-      </Box>
+
+      </DialogActions>
     </Dialog>
   )
 }

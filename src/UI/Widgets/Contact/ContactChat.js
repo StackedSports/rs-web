@@ -1,6 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import lodash from "lodash";
 
+import TwitterIcon from '@mui/icons-material/Twitter';
+import SmsIcon from '@mui/icons-material/Sms';
 import { Stack } from "@mui/material";
 import ContactChatHeader from "./ContactChatHeader";
 import { useConversationMutation, useContactConversation, useInboxConversationInfinty } from 'Api/ReactQuery'
@@ -22,6 +24,8 @@ const ContactChat = (props) => {
       messages.fetchNextPage()
     }
   }
+
+  const TypeIcon = useMemo(() => conversationType === 'dm' ? TwitterIcon : SmsIcon, [conversationType])
 
   const handlePlatformChange = (type) => {
     switch (type) {
@@ -67,7 +71,7 @@ const ContactChat = (props) => {
         loading={messages.isLoading}
         hasMore={messages.hasNextPage || messages.isLoading}
       />
-      <ChatInput onSendMessage={handleSendMessage} />
+      <ChatInput onSendMessage={handleSendMessage} sendIcon={<TypeIcon />} />
     </Stack>
   )
 }

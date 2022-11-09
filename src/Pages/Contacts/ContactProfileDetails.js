@@ -483,6 +483,7 @@ const ContactProfileDetails = (props) => {
 		setOpenNewFamilyMemberDialog(true)
 	}
 	const onViewOpponent = (opponent) => {
+		console.log(opponent)
 		setOpponent(opponent)
 		setOpenNewOpponentDialog(true)
 	}
@@ -553,6 +554,7 @@ const ContactProfileDetails = (props) => {
 			<OpponentDialog
 				open={openOpponentDialog}
 				onClose={() => setOpenOpponentDialog(false)}
+				onViewOpponent={onViewOpponent}
 				opponents={props.contact?.opponents}
 			/>
 

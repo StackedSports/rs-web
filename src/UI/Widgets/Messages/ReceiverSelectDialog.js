@@ -54,7 +54,7 @@ const getSelectionLabel = (privateCount, teamCount, contactCount, clearSelection
     return (
         <>
             Selected: {selectionLabel}
-            <IconButton size='small' color='inherit' onClick={clearSelection}>
+            <IconButton size='small' color='inherit' sx={{ ml: .2 }} onClick={clearSelection}>
                 <Clear fontSize="inherit" />
             </IconButton>
         </>
@@ -251,7 +251,7 @@ export default function ReceiverSelectDialog(props) {
             onTabChange={onTabChange}
         >
             <RenderIf condition={showContactFilters}>
-                <Box paddingX={3}>
+                <Box>
                     <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFilterChange} />
                 </Box>
             </RenderIf>

@@ -18,7 +18,7 @@ const getSelectionLabel = (selectionCount, clearSelection) => {
     return (
         <>
             {`${selectionCount} Contacts Selected`}
-            <IconButton size='small' color='inherit' onClick={clearSelection}>
+            <IconButton size='small' color='inherit' sx={{ ml: .2 }} onClick={clearSelection}>
                 <Clear fontSize="inherit" />
             </IconButton>
         </>

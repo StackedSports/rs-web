@@ -5,25 +5,29 @@ export const components: Components<Omit<Theme, "components">> = {
         styleOverrides: (theme) => ({
             /* width */
             '::-webkit-scrollbar': {
-                width: '5px',
-                height: '5px',
+                width: '6px',
+                height: '6px',
             },
 
             /* Track */
             '::-webkit-scrollbar-track': {
-                background: theme.palette.mode === 'light' ? theme.palette.grey.A100 : theme.palette.grey.A400,
+                background: theme.palette.mode === 'light' ? theme.palette.grey.A100 : 'hsl(210,9%,30%)',
                 borderRadius: '5px'
             },
 
             /* Handle */
             '::-webkit-scrollbar-thumb': {
-                background: theme.palette.mode === 'light' ? '#ccc' : theme.palette.grey.A700,
+                background: theme.palette.mode === 'light' ? '#ccc' : 'hsl(216, 7%, 13%)', //
                 borderRadius: '5px'
             },
 
             /* Handle on hover */
             '::-webkit-scrollbar-thumb:hover': {
-                background: theme.palette.mode === 'light' ? '#999' : theme.palette.grey.A700,
+                background: theme.palette.mode === 'light' ? '#999' : 'hsl(216, 7%, 10%)',
+            },
+
+            ':: -webkit-scrollbar-corner': {
+                backgroundColor: 'transparent',
             },
         })
     },
