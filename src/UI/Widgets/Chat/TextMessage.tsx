@@ -18,7 +18,7 @@ interface TextMessageProps {
     onCheck: (message: IConversatition) => void
 }
 
-const hasMedia = (media: Pick<IConversatition, 'media'>): boolean => {
+const hasMedia = (media?: Pick<IConversatition, 'media'>): boolean => {
     if (!media) return false
     if (Array.isArray(media) && media.length < 1) return false
     return true
@@ -50,53 +50,65 @@ export const TextMessage: React.FC<TextMessageProps> = (props) => {
             <Box >
                 <Box
                     sx={{
-                        padding: '10px 15px',
                         color: "common.black", // props.owner ? "common.white" : "common.black",
                         backgroundColor: props.owner ? "#e8f0ff" : "common.white",
                         borderRadius: props.owner ? "10px 10px 0 10px" : "10px 10px 10px 0",
                         userSelect: 'text',
-                        boxShadow: 2
+                        boxShadow: 2,
+                        overflow: 'hidden'
                     }}
                 >
                     {props.message.media && !Array.isArray(props.message.media) && (
-                        <Box sx={{ width: '100%', maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
-                            <RenderMediaType
-                                url={props.message.media?.urls?.original}
-                                type={getFileType(props.message?.media)}
-                            />
-                        </Box>
+                        <RenderMediaType
+                            url={props.message.media?.urls?.original}
+                            type={getFileType(props.message?.media)}
+                            sx={{
+                                width: '100%',
+                                maxWidth: '300px',
+                                minHeight: '100px',
+                                minWidth: '100px',
+                            }}
+                        />
                     )}
                     {props.message.media && Array.isArray(props.message.media) && (
-                        <Box sx={{ width: '100%', maxWidth: '300px', '> *': { borderRadius: '5px' } }}>
-                            {props.message.media?.map((media, index) =>
-                                <RenderMediaType
-                                    key={index}
-                                    url={media?.urls?.original}
-                                    type={getFileType(media.file_type)}
-                                />
-                            )}
-                        </Box>
-                    )}
 
-                    <Typography
-                        sx={{
-                            maxWidth: '300px',
-                            wordWrap: 'break-word',
-                            overflowWrap: 'break-word',
-                            whiteSpace: 'pre-line',
-                            '>a': { textDecoration: 'underline', color: 'primary.main' }
-                        }}
-                    >
-                        <Linkify
-                            componentDecorator={(decoratedHref, decoratedText, key) => (
-                                <a target="blank" href={decoratedHref} key={key}>
-                                    {decoratedText}
-                                </a>
-                            )}
+                        props.message.media?.map((media, index) =>
+                            <RenderMediaType
+                                key={index}
+                                url={media?.urls?.original}
+                                type={getFileType(media)}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '300px',
+                                    minHeight: '100px',
+                                    minWidth: '100px',
+                                }}
+                            />
+                        )
+
+                    )}
+                    {(props.message.text && props.message.text?.length > 0) && (
+                        <Typography
+                            sx={{
+                                padding: '10px 15px',
+                                maxWidth: '300px',
+                                wordWrap: 'break-word',
+                                overflowWrap: 'break-word',
+                                whiteSpace: 'pre-line',
+                                '>a': { textDecoration: 'underline', color: 'primary.main' }
+                            }}
                         >
-                            {props.message.text}
-                        </Linkify>
-                    </Typography>
+                            <Linkify
+                                componentDecorator={(decoratedHref, decoratedText, key) => (
+                                    <a target="blank" href={decoratedHref} key={key}>
+                                        {decoratedText}
+                                    </a>
+                                )}
+                            >
+                                {props.message.text}
+                            </Linkify>
+                        </Typography>
+                    )}
                 </Box>
                 <Time fontSize={9.5} color='text.secondary' textAlign={props.owner ? 'right' : 'left'}>
                     {/* {formatDate(props.message.created_at, 'short', 'short')} */}

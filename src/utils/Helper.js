@@ -65,6 +65,7 @@ export const separeteNewTagsNameFromExistingTagsIds = (selectedTags) => {
 }
 
 export const getFileType = (file) => {
+
     switch (file?.file_type) {
         case 'image/png':
         case 'image/jpeg':

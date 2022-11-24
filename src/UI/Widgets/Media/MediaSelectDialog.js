@@ -139,6 +139,7 @@ export default function MediaSelectDialog(props) {
 
     return (
         <SelectDialogTab
+            maxWidth='lg'
             tabs={tabs}
             tabsMarginLeft={18}
             selectionLabel={selectionLabel}
@@ -149,7 +150,7 @@ export default function MediaSelectDialog(props) {
             onClose={props.onClose}
             disableOnConfirmSelection={disableOnConfirmSelection}
         >
-            <TabPanel value={'0'} index={0} sx={{ pt: 0 }}>
+            <TabPanel value={'0'} index={0}>
                 <PanelFilters open={true} filters={panelFiltersData} onFilterChange={onPanelFiltersChange} />
                 <MediaTable
                     mini

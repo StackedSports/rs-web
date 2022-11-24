@@ -554,7 +554,7 @@ const InputText = (props) => {
             </Stack>
             <TextField
                 multiline
-                ref={textArea}
+                inputRef={textArea}
                 className='TextArea'
                 variant='standard'
                 type='text'

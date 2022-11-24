@@ -49,6 +49,8 @@ export const MessagesDisplay: React.FC<IMessagesDisplay> = (props) => {
         return checkedMessagesIds.some(id => id === message.id)
     }, [checkedMessagesIds])
 
+    console.log(messages)
+
     return (
         <>
             {props.actions && false && (

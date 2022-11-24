@@ -138,16 +138,3 @@ const MediaTable = ({ view = 'grid', type = 'media', disablePagination = false, 
 }
 
 export default MediaTable
-
-const StyledLoadingOverlay = styled(Box)(({ theme, isLoading }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    minHeight: '100px',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-    transition: 'opacity 0.3s ease-in-out',
-    visibility: isLoading ? 'visible' : 'hidden',
-    zIndex: 30,
-}));
