@@ -1,4 +1,4 @@
- // @ts-nocheck
+// @ts-nocheck
 import React, { useState, useMemo, useEffect, useContext, useRef, useCallback } from 'react';
 import { useGridApiRef } from '@mui/x-data-grid-pro';
 import { useQueryClient } from 'react-query';
@@ -193,9 +193,8 @@ export default function BaseContactsPage(props) {
         setOpenFollowOnTwitterDialog(true)
     }
 
-    const onArchiveContactClick = () => {
-        console.log("onArchiveContactClick")
-        let contactIds = contactsMultipageSelection.selectedData.map(contact => contact.id)
+    const onArchiveContactClick = useCallback(() => {
+        let contactIds = [...contactsMultipageSelection.selectionModel]
         setLoading(true)
         archiveContacts(contactIds)
             .then(resp => {
@@ -209,7 +208,7 @@ export default function BaseContactsPage(props) {
                 app.alert.setError(`Failed to archive contact${contactIds.length > 1 && 's'}.`)
             })
             .finally(() => setLoading(false))
-    }
+    }, [contactsMultipageSelection])
 
     const onBoardCreated = () => {
         setOpenCreateBoardDialog(false)
@@ -339,7 +338,7 @@ export default function BaseContactsPage(props) {
             ]
         return options
 
-    }, [props.kanbanView, props.onlyArchived])
+    }, [props.kanbanView, props.onlyArchived, onArchiveContactClick])
 
 
     return (
